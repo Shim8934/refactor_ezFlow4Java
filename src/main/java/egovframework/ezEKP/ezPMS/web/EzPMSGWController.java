@@ -1635,9 +1635,6 @@ public class EzPMSGWController {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					// 해당 task관련 삭제
-					// ezPMSService.deleteMemberSchedule(null, projectId,
-					// tenantId, null, Long.parseLong(taskIdList[i]));
 				}
 			}
 
@@ -2465,40 +2462,6 @@ public class EzPMSGWController {
 			long taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2,
 					companyId, tenantId, lang);
 
-			// DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			// Date startDate = dateFormat.parse(planStartDate);
-			// Date endDate = dateFormat.parse(planEndDate);
-			//
-			// Calendar startCal = Calendar.getInstance();
-			// Calendar endCal = Calendar.getInstance();
-			//
-			// startCal.setTime(startDate);
-			// endCal.setTime(endDate);
-			//
-			// List<String> dateList = new ArrayList<String>();
-			//
-			// while (startCal.compareTo(endCal) != 1) {
-			// if (startCal.get(Calendar.DAY_OF_WEEK) == 1 ||
-			// startCal.get(Calendar.DAY_OF_WEEK) == 7) {
-			// startCal.add(Calendar.DATE, 1);
-			// } else {
-			// dateList.add(dateFormat.format(startCal.getTime()));
-			// startCal.add(Calendar.DATE, 1);
-			// }
-			// }
-			// List<String> dateList = ezPMSService.getDateList(planStartDate,
-			// planEndDate);
-
-			// for (int i = 0; i < taskMemberList2.size(); i++) {
-			// String memberId = taskMemberList2.get(i).getUserId();
-			// LOGGER.debug(memberId);
-			// for (int j = 0; j < dateList.size(); j++) {
-			// ezPMSService.addMemberSchedule(memberId, tenantId,
-			// dateList.get(j), Long.parseLong(projectId),
-			// taskId);
-			// }
-			// }
-
 			// 프로젝트 완료시 추가된 업무가 있으면 프로젝트 상태 수정
 			if (!request.getParameter("projectChangeDate").equals("")) {
 				String projectStatus = request.getParameter("projectStatus");
@@ -2800,11 +2763,6 @@ public class EzPMSGWController {
 
 				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId,	lang);
 
-				// taskId로 해당 date 삭제 후, 추가
-				// ezPMSService.deleteMemberSchedule(null,
-				// Long.parseLong(projectId), tenantId, null,
-				// Long.parseLong(taskId));
-
 				Date startDate = sdf.parse(planStartDate);
 				Date endDate = sdf.parse(planEndDate);
 
@@ -2824,17 +2782,6 @@ public class EzPMSGWController {
 						startCal.add(Calendar.DATE, 1);
 					}
 				}
-
-				// for (int i = 0; i < taskMemberList2.size(); i++) {
-				// String memberId = taskMemberList2.get(i).getUserId();
-				// LOGGER.debug(memberId);
-				// for (int j = 0; j < dateList.size(); j++) {
-				// ezPMSService.addMemberSchedule(memberId, tenantId,
-				// dateList.get(j), Long.parseLong(projectId),
-				// Long.parseLong(taskId));
-				// }
-				// }
-
 			}
 
 			if (groupId != originGroupId) {
@@ -3611,152 +3558,6 @@ public class EzPMSGWController {
 
 				ezPMSService.updateTaskStatus(projectTaskVO, companyId,
 						tenantId, lang);
-				// taskId로 해당 date 삭제 후, 추가
-				// ezPMSService.deleteMemberSchedule(null, projectId, tenantId,
-				// null,taskId);
-				// List<TaskMemberVO> taskMemberList =
-				// ezPMSService.getTaskMemberList(tenantId, taskId, lang);
-
-				// SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				// Date startDate = sdf.parse(planStartDate);
-				// Date endDate = sdf.parse(planEndDate);
-				//
-				// Calendar startCal = Calendar.getInstance();
-				// Calendar endCal = Calendar.getInstance();
-				//
-				// startCal.setTime(startDate);
-				// endCal.setTime(endDate);
-				//
-				// List<String> dateList = new ArrayList<String>();
-				//
-				// while (startCal.compareTo(endCal) != 1) {
-				// if (startCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||
-				// startCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-				// startCal.add(Calendar.DATE, 1);
-				// } else {
-				// dateList.add(sdf.format(startCal.getTime()));
-				// startCal.add(Calendar.DATE, 1);
-				// }
-				// }
-
-				// for (int i = 0; i < taskMemberList.size(); i++) {
-				// String memberId = taskMemberList.get(i).getUserId();
-				// LOGGER.debug(memberId);
-				// for (int j = 0; j < dateList.size(); j++) {
-				// ezPMSService.addMemberSchedule(memberId, tenantId,
-				// dateList.get(j), projectId, taskId);
-				// }
-				// }
-
-				// if (request.getParameter("endTime") != null) {
-				// long endTime =
-				// Long.parseLong(request.getParameter("endTime"));
-				// int rowIndex =
-				// Integer.parseInt(request.getParameter("rowIndex"));
-				//
-				// data.put("endDate", endTime);
-				//
-				// List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex,
-				// tenantId, projectId);
-				//
-				// if (preTaskList != null && preTaskList.size() != 0) {
-				// Date postTaskEndTime = new Date(endTime);
-				// DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				//
-				// for (int i = 0; i < preTaskList.size(); i++) {
-				// ProjectTaskVO postTask =
-				// ezPMSService.getTaskDetails(preTaskList.get(i), tenantId,
-				// lang);
-				// Date postPlanStartDate =
-				// dateFormat.parse(postTask.getPlanStartDate());
-				// Date postPlanEndDate =
-				// dateFormat.parse(postTask.getPlanEndDate());
-				//
-				// long diff = postPlanEndDate.getTime() -
-				// postPlanStartDate.getTime();
-				// int diffDays = (int) diff / (24 * 60 * 60 * 1000);
-				//
-				// Calendar cal = Calendar.getInstance();
-				// cal.setTime(postTaskEndTime);
-				// cal.add(Calendar.DATE, 1); // 다음날 지정
-				//
-				// int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-				//
-				// if (dayNum == 7) {
-				// cal.add(Calendar.DATE, 2);
-				// } else if (dayNum == 1) {
-				// cal.add(Calendar.DATE, 1);
-				// }
-				//
-				// Calendar cal2 = Calendar.getInstance();
-				// cal2.setTime(cal.getTime());
-				// cal2.add(Calendar.DATE, diffDays);
-				// int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
-				//
-				// if (dayNum2 == 7) {
-				// cal2.add(Calendar.DATE, -1);
-				// } else if (dayNum2 == 1) {
-				// cal2.add(Calendar.DATE, -2);
-				// }
-				//
-				// String calStartStr = dateFormat.format(cal.getTime());
-				// String calEndStr = dateFormat.format(cal2.getTime());
-				// Date calStart = new
-				// SimpleDateFormat("yyyy-MM-dd").parse(calStartStr);
-				// Date calEnd = new
-				// SimpleDateFormat("yyyy-MM-dd").parse(calEndStr);
-				//
-				// int workingdayPT = ezPMSService.getWorkingDays(calStart,
-				// calEnd, companyId, tenantId);
-				//
-				// LOGGER.debug("workingdayPT : " + workingdayPT);
-				//
-				// postTask.setPlanStartDate(calStartStr);
-				// postTask.setPlanEndDate(calEndStr);
-				// postTask.setWorkingday(workingdayPT);
-				// ezPMSService.updateTaskStatus(postTask, companyId, tenantId);
-				//
-				// // taskId로 해당 date 삭제 후, 추가
-				// ezPMSService.deleteMemberSchedule(null, projectId, tenantId,
-				// null, preTaskList.get(i));
-				// List<TaskMemberVO> postTaskMemberList =
-				// ezPMSService.getTaskMemberList(tenantId, preTaskList.get(i),
-				// lang);
-				//
-				// Date postStartDate = sdf.parse(calStartStr);
-				// Date postEndDate = sdf.parse(calEndStr);
-				//
-				// Calendar postStartCal = Calendar.getInstance();
-				// Calendar postEndCal = Calendar.getInstance();
-				//
-				// postStartCal.setTime(postStartDate);
-				// postEndCal.setTime(postEndDate);
-				//
-				// List<String> postDateList = new ArrayList<String>();
-				//
-				// while (postStartCal.compareTo(postEndCal) != 1) {
-				// if (postStartCal.get(Calendar.DAY_OF_WEEK) == 1 ||
-				// postStartCal.get(Calendar.DAY_OF_WEEK) == 7) {
-				// postStartCal.add(Calendar.DATE, 1);
-				// } else {
-				// postDateList.add(sdf.format(postStartCal.getTime()));
-				// postStartCal.add(Calendar.DATE, 1);
-				// }
-				// }
-				//
-				// for (int k = 0; k < postTaskMemberList.size(); k++) {
-				// String memberId = postTaskMemberList.get(k).getUserId();
-				// LOGGER.debug(memberId);
-				// for (int j = 0; j < postDateList.size(); j++) {
-				// ezPMSService.addMemberSchedule(memberId, tenantId,
-				// postDateList.get(j), projectId, preTaskList.get(i));
-				// }
-				// }
-				// }
-				//
-				// }
-				//
-				// }
 			}
 
 			Map<String, Object> map = new HashMap<String, Object>();

@@ -4596,22 +4596,6 @@
 			M.USER_ID
 	</select>
 	
-<!-- 	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">
-	<![CDATA[
-		INSERT INTO TBL_PMS_MEMBERSCHEDULE (
-			PROJECT_ID,		TENANT_ID,		USER_ID,		ASSIGNED_DATE, TASK_ID
-		) VALUES (
-			#projectId#,	#tenantId#,		#memberId#,		#assignedDate#, #taskId#
-		)
-		ON DUPLICATE KEY UPDATE
-			USER_ID = #memberId#,
-			ASSIGNED_DATE = #assignedDate#,
-			PROJECT_ID = #projectId#,
-			TENANT_ID = #tenantId#,
-			TASK_ID = #taskId#
-	]]>
-	</insert> -->
-	
 	<select id="EzPMSDAO.getTaskListByGroupId" resultMap="taskListByGroupId">
 	<![CDATA[
 		SELECT 
@@ -4946,27 +4930,6 @@
 			T.DEL_STATUS = 0
 	]]>
 	</select>
-	
-	<!-- <delete id="EzPMSDAO.deleteMemberSchedule" parameterClass="map">
-	<![CDATA[
-		DELETE FROM 
-			TBL_PMS_MEMBERSCHEDULE
-		WHERE
-			PROJECT_ID = #projectId#
-	]]>
-	<isNotNull property="memberId">
-		AND
-			USER_ID = #memberId#
-	</isNotNull>	
-	<isNotNull property="searchDate">
-		AND
-			ASSIGNED_DATE = #searchDate#
-	</isNotNull>
-		AND
-			TENANT_ID = #tenantId#
-		AND
-			TASK_ID = #taskId#
-	</delete> -->
 	
 	<select id="EzPMSDAO.getCustomHoliday" parameterClass="map" resultMap="projectHolidayVO">
 		<![CDATA[
