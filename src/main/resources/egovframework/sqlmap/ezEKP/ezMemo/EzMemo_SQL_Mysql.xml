@@ -5,4 +5,19 @@
 	<typeAlias  alias="MemoVO" type="egovframework.ezEKP.ezMemo.vo.MemoVO"/>
 	<typeAlias  alias="MemoConfigVO" type="egovframework.ezEKP.ezMemo.vo.MemoConfigVO"/>
 	<typeAlias  alias="MemoFolderVO" type="egovframework.ezEKP.ezMemo.vo.MemoFolderVO"/>
+	
+	<select id="EzMemoDAO.getMemoFolder" resultClass="MemoFolderVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				MEMO_FOLDER
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USERID = #userId#
+		]]>
+	</select>
 </sqlMap>
