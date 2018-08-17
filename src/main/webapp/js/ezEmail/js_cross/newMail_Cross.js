@@ -1924,6 +1924,8 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	                if (fileName.length > 3) {
 	                    if (fileName.substr(fileName.length - 3, 3) != tmpExt)
 	                        fileName += "." + tmpExt;
+	                } else {
+	                	fileName += "." + tmpExt;
 	                }
 	
 	                var fullPath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(fileHref) + "&filename=" + escape(fileName) + "&regData=" + regData;
