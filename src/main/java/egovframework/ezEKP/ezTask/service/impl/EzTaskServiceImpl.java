@@ -1460,24 +1460,27 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						for (Integer yoil : wDay) {
 							date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
 							calcuDate = nsdf.format(date_cal.getTime());
+							if ((date_cal.compareTo(sDate_cal) >= 0) && (date_cal.compareTo(eDate_cal) <= 0)) {
 							if (!rList.contains(calcuDate)) {
 								if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(vo.getEndDate())) <= 0) {
 									mapDateAndRepeatCount.put(calcuDate, count);
+									}							
 								}
-							
-						}
-						date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+							date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+							}
 						}
 					}else{								
 						for (Integer yoil : wDay) {
 							date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
 							calcuDate = nsdf.format(date_cal.getTime());
+							if ((date_cal.compareTo(sDate_cal) >= 0) && (date_cal.compareTo(eDate_cal) <= 0)) {
 								if (!rList.contains(calcuDate)) {
 									if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 ){
 										mapDateAndRepeatCount.put(calcuDate, count);
+										}
 									}
-								}
-						date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+							date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+							}
 						}
 					}
 					date_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);

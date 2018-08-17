@@ -106,6 +106,7 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	        var pCompanyID = "${userInfo.companyID}";
+	        var companyID = "${userInfo.companyID}";
 	        var KuyjeType = "002";
 	        var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optisSplit}";

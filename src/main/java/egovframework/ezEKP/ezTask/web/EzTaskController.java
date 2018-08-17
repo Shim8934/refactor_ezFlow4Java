@@ -1571,7 +1571,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");		
 		String date = request.getParameter("date");
-		String selectedDate = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
 		String completeRateList = "";
@@ -1609,7 +1608,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {
 			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String endDate = "";	
 			
 			//Get user today time
 			String[] offsetArr = offset.split("\\|");				
@@ -1621,43 +1619,9 @@ public class EzTaskController extends EgovFileMngUtil {
 	        calendar1.setTime(today); 
 	        
 			if (taskInfoVO.getTotalRep() != -1) {
-				endDate = taskInfoVO.getEndDate();
-				Date taskEndDate = sdf.parse(endDate); 
-		        Calendar calendar2 = Calendar.getInstance();  
-		        calendar2.setTime(taskEndDate);         
-		        
-		        if (calendar1.compareTo(calendar2) >= 0) {
-		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
-		        	date = endDate.substring(0, 10);
-		        }
-		        else {		        	
-		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
-		        	
-		        	for (String d: result.keySet()) {	        			        		
-		        		Date dDate = sdf.parse(d + " 00:00:00"); 
-		    	        Calendar calendar3 = Calendar.getInstance();  
-		    	        calendar3.setTime(dDate); 
-		    	        
-		    	        if (calendar3.compareTo(calendar1) >= 0) {		    	        	
-		    	        	date = d;
-		    	        	break;
-		    	        }
-		        	}
-		        }		        		        
-			}
-			else {				
+		        result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, taskInfoVO.getEndDate(), taskInfoVO.getStartDate(), "", tenantID);
+			} else {				
 				result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
-				
-	        	for (String d: result.keySet()) {
-	        		Date dDate = sdf.parse(d + " 00:00:00"); 
-	    	        Calendar calendar3 = Calendar.getInstance();  
-	    	        calendar3.setTime(dDate); 
-	    	        
-	    	        if (calendar3.compareTo(calendar1) >= 0) {
-	    	        	date = d;
-	    	        	break;
-	    	        }
-	        	}
 			}					        
 			
 			for (Map.Entry<String, Integer> entry : result.entrySet()) {
@@ -1680,14 +1644,12 @@ public class EzTaskController extends EgovFileMngUtil {
 			repeatCntList = repeatCntList.substring(0, repeatCntList.length() - 1);
 			
 			String realStartDate = date + " 00:00:00";
-			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
-			int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
+			int status = ezTaskService.getStatusOfRepTask(taskID, realStartDate, tenantID);
 			taskInfoVO.setTaskStatus(status);
-			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realStartDate, tenantID);
 			taskInfoVO.setCompleteRate(completionPercentage);			
 			taskInfoVO.setRepeatCount(result.get(date));	        			
-		}	
-		//end
+		}
 
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 
@@ -1704,7 +1666,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("repeatCount", taskInfoVO.getRepeatCount());
 		model.addAttribute("date", date);
-		model.addAttribute("selectedDate", selectedDate);
 		model.addAttribute("repetition", taskInfoVO.getRepetition());
 		model.addAttribute("dateList", dateList);	
 		model.addAttribute("completeRateList", completeRateList);

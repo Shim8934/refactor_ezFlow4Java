@@ -379,7 +379,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
