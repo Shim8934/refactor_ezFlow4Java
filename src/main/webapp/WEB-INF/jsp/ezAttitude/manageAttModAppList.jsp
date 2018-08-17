@@ -382,7 +382,7 @@
 	    	
 		    obj.apprUserName = searchAppr;
     		obj.writerDeptId = writerDept_search.value;
-	    	obj.writerDeptName = "";	
+	    	obj.writerDeptName = "";
 	    	obj.writerName = searchWriter;
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
@@ -423,7 +423,7 @@
 			
 		    obj.apprUserName = searchAppr;
     		obj.writerDeptId = writerDept_search.value;
-	    	obj.writerDeptName = "";	
+	    	obj.writerDeptName = "";
 	    	obj.writerName = $('#writer_search').val();
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
