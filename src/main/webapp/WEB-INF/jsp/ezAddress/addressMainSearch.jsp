@@ -153,7 +153,7 @@
 	                        
 	                        if (emailRows.length > 0) {
 	                        	var addrname = AddressObj.getAttribute("_Sname");
-	                        	if (pFolderType == "P")
+	                        	if (AddressObj.getAttribute("_foldertype") == "P")
 	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|P";
 	                            else
 	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|D";
