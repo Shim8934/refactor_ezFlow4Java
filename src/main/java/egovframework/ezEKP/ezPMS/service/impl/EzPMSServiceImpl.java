@@ -2091,6 +2091,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		int docNo = ezPMSDAO.getMaxDocNo(map) + 1;
 		map.put("docNo", docNo);
 		map.put("rootItemId", docNo);
+		map.put("upperDocNoTree", "{" + docNo + "}");
 		
 		for (String itemId : itemIds) {
 			map.put("itemId", itemId);
