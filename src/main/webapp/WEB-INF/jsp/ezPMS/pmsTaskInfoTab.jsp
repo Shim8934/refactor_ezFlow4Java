@@ -196,7 +196,7 @@
 	    <td class="" colspan="2"><fmt:formatNumber value="${taskDetails.weight == null ? 0 : taskDetails.weight}" pattern="0.0" />%</td>
 	  </tr>
 	  <tr>
-	    <th class="overviewTh"><spring:message code='ezPMS.t328' /></th>
+	    <th class="overviewTh"><spring:message code='ezPMS.t104' /></th>
 	    <td class="overviewTd" colspan="2"><div class="overviewDiv"><c:out value='${taskDetails.overview == null ? "-" : taskDetails.overview}'/></div></td>
 	  </tr>
 	</table>
