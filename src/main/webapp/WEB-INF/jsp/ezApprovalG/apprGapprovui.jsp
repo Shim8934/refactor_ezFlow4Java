@@ -7,22 +7,24 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1'/></title>
 		<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ApprovUI_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprovUI_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -101,13 +103,13 @@
 		    arr_userinfo[8]  = "${userInfo.email}";
 		    arr_userinfo[9]  = "";
 		    arr_userinfo[10] = "${susinAdmin}";
-		    var pCompanyID = "${userInfo.companyID}";
 		    arr_userinfo[11]  = "${userInfo.displayName1}";
 		    arr_userinfo[12]  = "${userInfo.displayName2}";
 		    arr_userinfo[13]  = "${userInfo.title1}";
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var pCompanyID = "${userInfo.companyID}";
 		    var KuyjeType = "002";
 		    var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optIsSplit}";
@@ -148,6 +150,10 @@
 			var agreeReturnType = "${agreeReturnType}";
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
+			var isHWP = "";
+			var ext = "mht";
+			var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 			
 			var docState = "${docState}";
 			
@@ -162,6 +168,11 @@
 		    	if(approvalFlag == "G") {
 	        		$("#btnAddSepAttach").css("display","");
 	        	} 
+		    	
+		    	if (nonElecRec == "Y") {
+			        getNonElecInfoSusinInit();
+					document.getElementById("btnAddSepAttach").style.display = "none";
+		        }
 		    };
 		    
 		    function getNextDocList()
@@ -266,8 +277,8 @@
 		            }
 		        }
 		    }
-		    function openOtherApprovUI()
-		    {
+		    
+		    function openOtherApprovUI() {
 		        var pArgument = new Array();
 		        pArgument[0] = NextDocID;
 		        pArgument[1] = NextDocUserID;
@@ -275,20 +286,15 @@
 		        pArgument[4] = NextDocUserName2;
 		        pArgument[3] = NextDocDeptID;
 		        var formURL = NextDocHref;
-		        if (NextDocExtended.toLowerCase() == "doc")
-		        {
+		        if (NextDocExtended.toLowerCase() == "doc") {
 		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else if (NextDocExtended.toLowerCase() == "hwp")
-		        {
-		            var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID="+escape(pArgument[0]);
-		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
-		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else
-		        {
+		        } else if (NextDocExtended.toLowerCase() == "hwp") {
+		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else {
 		            var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_CK.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
@@ -303,6 +309,7 @@
 		            btnClose_onclick();
 		        }
 		    }
+		    
 		    function DocumentComplete()
 		    {
 		        if (flag == false) 
@@ -905,8 +912,7 @@
 		        }
 		        check_openSingUI();
 		    }
-		    function btnReject_onclick()
-		    {
+		    function btnReject_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
 		        OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
 		    }
@@ -980,8 +986,7 @@
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
-		    function btnStay_onclick() 
-		    {
+		    function btnStay_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t39'/>";
 		       OpenInformationUI(pInformationContent, btnStay_onclick_Complete);
 		    }
@@ -1258,7 +1263,8 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+		        para[3] = ext;
+		        
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
@@ -1331,6 +1337,19 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+			    
+			    if (nonElecRec == "Y") {
+			    	if (pGubun != "1") {
+			        	parameter[47] = cabinetID;
+		        	} else {
+			        	parameter[47] = "nonElecRecTempCabinet";
+		        	}
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml;
+			        parameter[51] = sepAttachCheckYN;
+		        }
 		        
 		        if (approvalFlag == "S") {
 		        	parameter[13] = pOrgAprUserID;
@@ -1354,13 +1373,13 @@
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
 		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
-		                var savexmlhttp = createXMLHttpRequest();
 		                //결재선 저장
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
@@ -1384,8 +1403,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                } else {
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
@@ -1409,8 +1426,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                }
 		
@@ -1471,7 +1486,18 @@
 			                pPageNum = ret[13];
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
-			                setPublicFlag2();
+			                setPublicFlag();
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+				            	sepAttachCheckYN = ret[26];
+				            	if (ext == "hwp") {
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	}
+				            }
+			                
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
@@ -1496,7 +1522,6 @@
 		
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
 		            }
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");

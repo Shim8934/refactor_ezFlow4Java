@@ -7,19 +7,19 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t367'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/whokyulSign_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/sendMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/whokyulSign_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/sendMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = '${docID}';
 		    var pDocHref = '${docHref}';
@@ -64,6 +64,7 @@
 		    var docState = "${docState}";
 		    var WhoKyulCNT = "${whoKyulCount}";
 		    var checkPwdFlag = "${checkPwdFlag}";
+		    var ext = "${ext}";
 		    var opinionFlag;
 		    var includeOpinion = false;
 		    var signImageType = "${signImageType}";
@@ -212,7 +213,7 @@
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != 'hwp') {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -352,7 +353,7 @@
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
+		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "mht" );
 		    }
 		      
 		    function btnhistory_onclick_Complete() {

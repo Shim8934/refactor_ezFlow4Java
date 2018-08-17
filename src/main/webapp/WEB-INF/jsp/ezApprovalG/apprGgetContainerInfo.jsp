@@ -21,20 +21,20 @@
 			}
 	    </style>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery.js"></script>
-	    <!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	    <link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-	    <link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> --> 
-	    <script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
+	    <!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> --> 
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
@@ -592,13 +592,23 @@
 		            pURL = tr.getAttribute("DATA2");
 		
 		            var formid = tr.getAttribute("DATA6");
-		            var docState =  tr.getAttribute("DATA12");
+		            if (approvalFlag == 'S' ) {
+			            var docState =  tr.getAttribute("DATA12");
+		            } else {
+			            var docState =  tr.getAttribute("DATA7");
+		            }
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		            }
-		            else {
+		            	if (isIE()) {
+			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                } else {
+		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                	alert(pAlertContent);
+		                    
+		                    return;
+		                }
+		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
 		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;

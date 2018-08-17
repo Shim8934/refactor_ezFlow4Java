@@ -3224,7 +3224,12 @@
 		   	FROM 
 		   		TBL_CODELIST 
 		   	WHERE 
-		   		CODE1 = 'A51' 
+		   	<isEqual property="approvalFlag" compareValue="G">
+   				CODE1 = 'A51' 
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="S">
+	   			CODE1 = 'SA51' 
+			</isEqual>
 		   	AND  
 		   		ISUSE = 1
 		   	AND
@@ -3793,7 +3798,7 @@
 		    TBL_CABINET.RECTYPECODE,
 		    TBL_CABINET.CLASSCREATEDATE,
 		    TBL_CABINET.OWNERID,
-		    TBL_CABINET.SPECIALCATALOGFLAG,
+		    IFNULL(TBL_CABINET.SPECIALCATALOGFLAG, VTASKCLASS.SPECIALCATALOGFLAG) SPECIALCATALOGFLAG,
 		    TBL_CABINET.TERMINATEFLAG,
 		    TBL_CABINET.OWNERDEPTID,
 		    TBL_CABINET.OWNERTASK,
@@ -3803,7 +3808,6 @@
 		    VTASKCLASS.KEEPINGPERIOD,
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
-		    VTASKCLASS.SPECIALCATALOGFLAG,
 		    VTASKCLASS.SC1,
 		    VTASKCLASS.SC2,
 		    VTASKCLASS.SC3,
@@ -24593,6 +24597,30 @@
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
 			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
 		</isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getDocExt" parameterClass="Map" resultClass="String">
+		SELECT 
+			HREF
+		FROM
+			TBL_APRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
 	</select>
 	
 	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">

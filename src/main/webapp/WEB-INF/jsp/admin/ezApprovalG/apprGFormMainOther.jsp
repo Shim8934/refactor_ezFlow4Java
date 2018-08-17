@@ -6,21 +6,21 @@
 	<head>
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrlS_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezForm_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/ListView_list.js')}" ></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/TreeView.js')}" ></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrlS_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/FormMain_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js')}"></script>
 				
 		<script type="text/javascript">
 			var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
@@ -51,6 +51,8 @@
 		    var useEditor = "${useEditor}";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
+		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
+		    var ext = "${ext}";
 		    var locale = "<c:out value = '${locale}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -146,20 +148,19 @@
 		                    }
 		                }
 		            } else {
-		                Editor_Complete();
+						setTimeout(function() {
+							Editor_Complete();
+						}, 200);
 		            }
 		        }
 		        
-// 		        onloadflag = true;
 		    });
-// 			}
 		
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
-// 		                    document.getElementById("btn_OpinionSave").style.display = "";
-	                    message.HWP_LoadFile(realPath + formURL);
-		                    
+	                    message.HWP_LoadFile(formURL);
+	                    
 	                    if (message.HWP_GetDocumentElement() != "") {
 	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 	                        
@@ -781,7 +782,11 @@
 		    
 		    function btn_FormConnSave_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t1455'/>";
-		        OpenInformationUI(pInformationContent, FormConnSave_Complete);
+		        var Ans = OpenInformationUI(pInformationContent, FormConnSave_Complete);
+		        
+		        if (Ans) {
+		        	FormConnSave_Complete(Ans);
+		        }
 		    }
 		    
 		    function FormConnSave_Complete(Ans) {
@@ -927,7 +932,7 @@
                         </td>
                         <td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
                     </tr>
-                </table>  
+                </table>
 			</div>
 		</div>
         <div id="ApvForm_content3" style="width:100%;height:90%;display:none; padding-top:10px;">
@@ -947,9 +952,9 @@
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>
                         
-<%--                         <c:if test="${useEditor == 'HWP' }"> --%>
-<%--                         	<a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br> --%>
-<%--                         </c:if> --%>
+                        <c:if test="${useEditor == 'HWP' }">
+                       		<a class="imgbtn" id="btn_OpinionSave"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
+                        </c:if>
                         
                     </th>
                 </tr>

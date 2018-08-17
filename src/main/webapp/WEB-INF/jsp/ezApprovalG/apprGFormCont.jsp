@@ -5,16 +5,17 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t152'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>"   type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getFormCont_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}"   type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getFormCont_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/showModalDialogCallee.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();
@@ -29,14 +30,9 @@
 		    window.onload = function () {
 		        Get_Favoritelist();
 		
-// 		        document.getElementById("LocalloadHwp").style.display = "none";
-// 		        document.getElementById("LocalloadMht").style.display = "none";
 		        DocFileType = DocFileType.toLowerCase();
 		        Tree_setconfig();
-		        if (DocFileType == "mht")
-		            document.getElementById("LocalloadHwp").style.display = "none";
-		        else if (DocFileType == "hwp")
-		            document.getElementById("LocalloadMht").style.display = "none";
+		        
 		        var pFormKind;
 		        pDeptID = "${deptID}";
 		
@@ -51,7 +47,7 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		
+
 		        pFormKind = RetValue[1];
 		        if (pFormKind == "004") {
 		            document.getElementById('FromList').innerHTML = "";
@@ -60,15 +56,11 @@
 		            document.getElementById('FromList').value = "004";
 		            document.getElementById('Localload').style.display = "none";
 		        }
-		        else if (pFormKind == "999") {
-// 		            document.getElementById("LocalloadHwp").style.display = "none";
-// 		            document.getElementById("LocalloadMht").style.display = "none";
-		        }
 		        InitFormCont();
 		
 		        Rtnval[0] = "cancel";
 		        Rtnval[1] = "cancel";
-		        if (!CrossYN()) {
+		        if (!CrossYN() || DocFileType == "hwp") {
 		            window.returnValue = Rtnval;
 		        }
 		    };
@@ -173,26 +165,23 @@
 		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
-		                }
-		                else {
+		                } else {
 		                    window.returnValue = Rtnval;
 		                }
+		                
 		                window.close();
-		            }
-		            else {
+		            } else {
 		                if (DocFileType == "doc") {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1528'/>" + "<br>MHT, HWP " + "<spring:message code='ezApprovalG.t1529'/>";
-		                }
-		                else if (DocFileType == "hwp") {
+		                } else if (DocFileType == "hwp") {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1530'/>" + "<br>MHT," + "<spring:message code='ezApprovalG.t1531'/>";
-		                }
-		                else {
+		                } else {
 		                    var pAlertContent = "MHT " + "<spring:message code='ezApprovalG.t1532'/>" + "<br>HWP, " + "<spring:message code='ezApprovalG.t1531'/>";
 		                }
+		                
 		                OpenAlertUI(pAlertContent);
 		            }
-		        }
-		        else {
+		        } else {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		            OpenAlertUI(pAlertContent);
 		        }
@@ -320,7 +309,6 @@
 		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
 		                        Tab1_flag = false;
 		                    }
-		
 		                }
 		            }
 		        }
@@ -553,10 +541,8 @@
 	        </tr>
 	    </table>
 		<div class="btnposition btnpositionNew" >
-<%-- 		  <input type="button" name="LocalloadHwp" id="LocalloadHwp" value="<spring:message code='ezApprovalG.t1544'/>" onClick="return Localload_onclick('HWP')" style="width:210px;"> --%>
-<%-- 		  <input type="button" name="LocalloadMht" id="LocalloadMht" value="<spring:message code='ezApprovalG.t1545'/>" onClick="return Localload_onclick('MHT')" style="width:210px;"> --%>
-		
-			<a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+		  <a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+		  <a class="imgbtn"><span onClick="return btncancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

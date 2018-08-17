@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 		<!-- content_banner -->

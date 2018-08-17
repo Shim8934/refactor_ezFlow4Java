@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" >
 			var blockSize   = 10;
 			var searchStr   = "";
@@ -387,36 +386,29 @@
 							<li><a id="btnRefresh" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 						</ul>
 					</div>
-					<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: white; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
-						<div style="margin: 20px;">
-							<table style="border-collapse: collapse; width: 458px;">
+					<div id="searchPanel" class="popup wfpersonal" style="display: none;">
+						<h1><spring:message code='ezWebFolder.t23'/></h1> 
+						<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
+						<div style="margin: 10px 0px 15px;">
+							<table class="content wftable">
 								<tr>
-									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
-								</tr>
-								<tr>
-									<td class="wfSearchTh2" colspan="2"></td>
-								</tr>
-								<tr>
-									<th style="height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
+									<th><spring:message code='ezWebFolder.t141'/></th>
 									<td style="border: 1px solid #d2d2d2; background-color: #fff;">
-										<select id="searchOption" style="margin-left: 10px;">
-											<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
-											<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
-										</select>
-										<input id="inputSearch" type="text" style="width: 275px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<div style="margin-top: 10px; text-align: center;">
-											<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-											<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+										<div style="width: 100%; display : flex; align-items: center;">
+											<select id="searchOption" style="margin-left: 5px; height: 23px;">
+												<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
+												<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
+											</select>
+											<input id="inputSearch" type="text" style="flex: 1; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 										</div>
 									</td>
 								</tr>
 							</table>
 						</div>
-						<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
+						<div class="wfdivBttn">
+							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
+							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+						</div>
 					</div>
 				</div>
 				<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
@@ -448,7 +440,7 @@
 			
 			<div id="tblPageRayer"></div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
-			<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 		</div>
 	</body>
 </html>

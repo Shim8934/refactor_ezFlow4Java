@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title><spring:message code='ezStatistics.t1013'/></title>
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
 		<style>
 			.mainlist tr th {
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-    	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/control_Cross/ListView_list.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezStatistics/control_Cross/ListView_list.js')}"></script>
 		<script language="javascript" type="text/javascript">
 		    var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;

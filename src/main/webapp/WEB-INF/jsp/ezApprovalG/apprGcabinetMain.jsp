@@ -25,24 +25,24 @@
 	        }
 	    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js?ver=0.1"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js?ver=0.2"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> -->   
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfoCB_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
+		<!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> -->   
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
@@ -92,6 +92,7 @@
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
 			    var pOpenYaer = "${openYear}";
 		        var vWriterID;
+		        var ext= "";
 		        document.onselectstart = function () { return false; };
 		
 		        $(function () {
@@ -1068,14 +1069,15 @@
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
-		
-		        if (CrossYN()) {
+
+		        if (CrossYN() && ext != 'hwp') {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
 		            
+		            ezapropinion_cross_dialogArguments[2] = true;
 		            var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }

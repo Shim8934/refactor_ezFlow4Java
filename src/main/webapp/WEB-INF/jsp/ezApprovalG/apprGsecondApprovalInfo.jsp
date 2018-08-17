@@ -10,17 +10,17 @@
 		<style>
 			.datepicker { BEHAVIOR:url(include/datepicker.htc) }
 		</style>
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script ID="clientEventHandlersJS" LANGUAGE="javascript">
 		    function btncancel_onclick() {
 		        window.close();
 		    }
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" >
 		<h1>&nbsp;<spring:message code='ezApprovalG.t1776'/></h1>
 		<div id="close">
             <ul>

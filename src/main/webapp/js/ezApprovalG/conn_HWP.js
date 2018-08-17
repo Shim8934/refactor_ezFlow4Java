@@ -1,25 +1,33 @@
 
-function GetDocumentElement(HwpCtrl, CharName)
+function GetDocumentElement(HwpCtrl, CharName, gubun)
 {
 	var fChar = CharName.substring(0,1);
 	
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
-
-	var DocumentInfo = createXmlDom();
+	
+	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
-	    }
-	    
-		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		if (DocumentInfo.getElementsByTagName("KEYWORD")[0].childNodes.length == 0) {
+			var objNode;
+			objNode = document.createElement("CONNROOT");
+			setNodeText(objNode , "");
+			DocumentInfo.getElementsByTagName("KEYWORD")[0].appendChild(objNode);
+		}
+		
+		var DocumentKeywordInfo = new ActiveXObject("Microsoft.XMLDOM");
+		
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-			alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
-		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			//gubun = ture:tag포함, false:value값만
+			if (gubun == true) {
+				return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			} else {
+				return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			}
 		} else {
 			return "";
 		}
@@ -35,29 +43,33 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
 	
-	var DocumentInfo = createXmlDom();
+	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
+		if (DocumentInfo.getElementsByTagName("KEYWORD")[0].childNodes.length == 0) {
+			var objNode;
+			objNode = document.createElement("CONNROOT");
+			setNodeText(objNode , "");
+			DocumentInfo.getElementsByTagName("KEYWORD")[0].appendChild(objNode);
 	    }
-	    
-		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		
+		var DocumentKeywordInfo = new ActiveXObject("Microsoft.XMLDOM");
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-		    setNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0) , value);
-		    
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
+			var objNode = DocumentKeywordInfo.getElementsByTagName(CharName)[0];
+			setNodeText(objNode , value);
+			DocumentKeywordInfo.documentElement.appendChild(objNode);
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
 			
 			return true;
 		} else {
-			var objNode;
+			var objNode = document.createElement(CharName);
+			setNodeText(objNode , value);
+			DocumentKeywordInfo.documentElement.appendChild(objNode);
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
 			
-			createNodeAndAppandNodeText(DocumentKeywordInfo, DocumentKeywordInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
-			
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
 			return true;
 		}
 	} else {
@@ -88,50 +100,46 @@ function ExcuteInfo(pprocessIdx, currTD) {
 
     rtnVal = true;
 
-    var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT");
-    if (ConnRootText == "")
-        return true;
-
-    try {
-        var xmlData = createXmlDom();
-        xmlData.async = false;
-        xmlData.load(document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(ConnRootText));
-    } catch (e) {
+    var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT", true);
+    if (ConnRootText == "") {
         return true;
     }
-    if (xmlData.xml == "")
-        return true;
-
+    
+    xmlData = loadXMLString(ConnRootText);
     findFlag = false;
-    connNodes = xmlData.documentElement.childNodes
-
+    connNodes = GetChildNodes(xmlData.documentElement);
+    
     for (i = 0; i < connNodes.length; i++) {
-        processIdx = GetAttribute(connNodes(i),"processidx")
-        processTime = GetAttribute(connNodes(i),"processtime")
+        processIdx = GetAttribute(connNodes[i],"processidx");
+        processTime = GetAttribute(connNodes[i],"processtime");
 
         if (processIdx == pprocessIdx && processTime == pDraftFlag) {
             findFlag = true;
-            connNode = connNodes(i)
+            connNode = connNodes[i];
             break;
         }
     }
-
+    
     if (findFlag) {
-        connFlag = GetAttribute(connNode.childNodes(0),"flag");
-        connString = getNodeText(connNode.childNodes(0));
-        queryType = GetAttribute(connNode.childNodes(1),"qtype");
-        queryString = getNodeText(connNode.childNodes(1));
-
-        var strItemNames = "SA_DocID";
+        connFlag = GetAttribute(connNode.childNodes[0],"flag");
+        connString = getNodeText(connNode.childNodes[0]);
+        queryType = GetAttribute(connNode.childNodes[1],"qtype");
+        queryString = getNodeText(connNode.childNodes[1]);
+        
+//        var strItemNames = "SA_DocID";
+        var strItemNames = "SA_DocID,SA_AprType";
         var arrItemNames = strItemNames.split(",");
         var objNewItem;
+        
         for (i = 0; i < arrItemNames.length; i++) {
             objNewItem = xmlData.createElement("key");
             objNewItem.setAttribute("kind", "single");
-            setNodeText(objNewItem , arrItemNames[i]);
-            connNode.childNodes(2).appendChild(objNewItem);
+            setNodeText(objNewItem, arrItemNames[i]);
+            connNode.childNodes[2].appendChild(objNewItem);
         }
-        keyNodes = connNode.childNodes(2).childNodes;
+        
+        keyNodes = connNode.childNodes[2].childNodes;
+//alert(getXmlString(connNode.childNodes[2]));
 
         switch (queryType) {
             case "Q":
@@ -152,11 +160,11 @@ function ExcuteInfo(pprocessIdx, currTD) {
         }
         rtnVal = setData(xmlData, currTD);
     }
-    setMenuBar("btnHelper", true);
+//    setMenuBar("btnHelper", true);
     return rtnVal;
 }
 function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
-    var xmlpara = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
     var i;
     for (i = 0; i < pkeyNodes.length; i++) {
         arr_key[i] = getKeyValue(getNodeText(pkeyNodes(i)), prowNum)
@@ -179,8 +187,8 @@ function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
 
     return loadXMLString(xmlhttp.responseText);
 }
-function callNoneUIASP(pqueryString, pkeyNodes) {
-    var xmlpara = createXmlDom();
+/*function callNoneUIASP(pqueryString, pkeyNodes) {
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
     xmlpara.appendChild(objRoot);
@@ -189,10 +197,40 @@ function callNoneUIASP(pqueryString, pkeyNodes) {
     xmlhttp.send(xmlpara);
 
     return loadXMLString(xmlhttp.responseText);
+}*/
+function callNoneUIASP(pqueryString, pkeyNodes) {
+	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+	var objRoot = makeKeyValue(pkeyNodes, "A");
+//alert(getXmlString(objRoot));
+	var resResult = "";
+	
+	/*var linkageField = $('#message').contents().find(".linkageValue");
+	var linkageValue = linkageField.val();
+	
+	if(!linkageValue) {
+		linkageValue = linkageField.text();
+	}
+	
+    $.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : pqueryString,
+		data : {
+			docID : pDocID,
+			linkageValue : linkageValue
+		},
+		success: function(result){
+		},
+		error: function() {
+		}
+	});*/
+
+	return objRoot;
 }
 function callUIASP(pconnString, pqueryString, pkeyNodes) {
-    var xmlsend = createXmlDom();
-    var xmlpara = createXmlDom();
+    var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
     xmlsend.appendChild(objRoot);
@@ -200,15 +238,16 @@ function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var url = pqueryString;
     var parameter = xmlsend.xml;
 
-    var feature = pconnString
+    var feature = pconnString;
     parameter = window.showModalDialog(url, parameter, feature);
 
-    xmlpara = loadXMLString(parameter)
+    xmlpara = loadXMLString(parameter);
+    
     return xmlpara;
 }
 function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
-    var xmlsend = createXmlDom();
-    var xmlpara = createXmlDom();
+    var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
     xmlsend.appendChild(objRoot);
@@ -217,7 +256,8 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
     var feature = pconnString
     parameter = window.showModalDialog(url, xmlsend, feature);
 
-    xmlpara = loadXMLString(parameter)
+    xmlpara = loadXMLString(parameter);
+
     return xmlpara;
 }
 function getKeyValue(fieldID, num) {
@@ -251,7 +291,7 @@ function HwpCtrl_FieldClickNotify(name, fieldtype, access) {
 }
 function checkValidation(xmlPath) {
     var XMLURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(xmlPath);
-    var xmlpara = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
     xmlpara.async = false;
     xmlpara.load(XMLURL);
 
@@ -326,7 +366,7 @@ function checkValidation(xmlPath) {
         return "FALSE";
 }
 function chkAprLine(objNodes) {
-    var xmldom = createXmlDom();
+    var xmldom = new ActiveXObject("Microsoft.XMLDOM");
     xmldom.async = false;
     xmldom = loadXMLString(TempsaveAprlineinfo);
 
@@ -410,58 +450,58 @@ function checkValid(pField, pValue, pDesc) {
     return true;
 }
 function makeKeyValue(pkeyNodes, flag) {
-    var xmlpara = createXmlDom();
-    var xmlTbl = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlTbl = new ActiveXObject("Microsoft.XMLDOM");
     var i, j, k, customData, listCol, fieldVal, tblid, listKeyRow, tabObject
     var fieldName, colidx, tblinfoRow, cellValue, listnode
 
     var prowNum = "";
-    if (flag == "A")
+    if (flag == "A") {
         var objRow = xmlpara.createNode(1, "PARAMETER", "");
-    else
+    } else {
         var objRow = xmlpara.createNode(1, "ROW", "");
-
+    }
+    
     for (i = 0; i < pkeyNodes.length; i++) {
-        if (GetAttribute(pkeyNodes(i),"kind") == "single") {
-            customData = xmlpara.createNode(1, getNodeText(pkeyNodes(i)), "");
-            objRow.appendChild(customData)
-            fieldVal = getKeyValue(getNodeText(pkeyNodes(i)), prowNum)
-            setNodeText(customData, fieldVal);
-        }
-        else {
+        if (GetAttribute(pkeyNodes[i],"kind") == "single") {
+            customData = xmlpara.createNode(1, getNodeText(pkeyNodes[i]), "");
+            objRow.appendChild(customData);
+            fieldVal = getKeyValue(getNodeText(pkeyNodes[i]), prowNum);
+            customData.text = fieldVal;
+        } else {
             if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
                 xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"))
 
-                tblid = GetAttribute(pkeyNodes(i),"tableid")
+                tblid = GetAttribute(pkeyNodes[i],"tableid")
 
                 tblObject = fields.item(tblid).TagObject
 
-                listKeyRow = pkeyNodes(i).childNodes
+                listKeyRow = pkeyNodes[i].childNodes
                 customData = xmlpara.createNode(1, "RECORDROOT", "");
                 objRow.appendChild(customData);
 
                 var TagIdx = 0;
                 for (j = 0; j < tblObject.rows.length; j++) {
-                    if (GetAttribute(tblObject.rows(j),"header") || GetAttribute(tblObject.rows(j),"tail"))
+                    if (GetAttribute(tblObject.rows[j],"header") || GetAttribute(tblObject.rows[j],"tail"))
                         continue;
 
                     listnode = xmlpara.createNode(1, "R" + TagIdx, "");
                     customData.appendChild(listnode);
 
                     for (k = 0; k < listKeyRow.length; k++) {
-                        fieldName = getNodeText(listKeyRow(k))
+                        fieldName = getNodeText(listKeyRow[k])
                         tblinfoRow = xmlTbl.documentElement.selectSingleNode("/TableInfo/" + tblid)
                         var rowCnt;
                         var offset = tblinfoRow.childNodes.length;
                         for (rowCnt = 0; rowCnt < offset; rowCnt++) {
-                            if (GetAttribute(tblinfoRow.childNodes(rowCnt),fieldName)) {
-                                colidx = GetAttribute(tblinfoRow.childNodes(rowCnt),fieldName);
+                            if (GetAttribute(tblinfoRow.childNodes[rowCnt],fieldName)) {
+                                colidx = GetAttribute(tblinfoRow.childNodes[rowCnt],fieldName);
                                 break;
                             }
                         }
 
                         if (!colidx) cellValue = getKeyValue(fieldName, "")
-                        else cellValue = getNodeText(tblObject.rows(j + rowCnt).cells(parseInt(colidx)));
+                        else cellValue = getNodeText(tblObject.rows[j + rowCnt].cells(parseInt(colidx)));
 
                         listnode.setAttribute(fieldName, cellValue);
                     }
@@ -480,7 +520,7 @@ function setData(pobjXml, currTD) {
     var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR;
     flag = "false";
 
-    var xmlTbl = createXmlDom();
+    var xmlTbl = new ActiveXObject("Microsoft.XMLDOM");
     if (pobjXml.documentElement)
         flag = GetAttribute(pobjXml.documentElement,"RESULT")
 
@@ -507,8 +547,8 @@ function setData(pobjXml, currTD) {
                 if (GetAttribute(row(0),"name") != GetAttribute(rowBefore(0),"name"))
                     tblRowIdx = 0;
             }
-            if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
+            if (GetDocumentElement(HwpCtrl, "tblinfo", true) != "") {
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo", true));
                 tblinfoNodes = xmlTbl.documentElement.childNodes
 
                 fieldName = GetAttribute(row(0),"name")
@@ -545,7 +585,7 @@ function setData(pobjXml, currTD) {
                         cellidx = parseInt(GetAttribute(tblid,fieldName))
                         cellnode = currTR.cells(cellidx)
                         if (cellnode) {
-                            setNodeText(cellnode , getNodeText(row(k)));
+                        	cellnode.text = getNodeText(row(k));
                         }
                     }
                 }
@@ -629,7 +669,7 @@ function setData(pobjXml, currTD) {
                         currTR = tblObject.rows(tblRowIdx + j);
                         cellnode = currTR.cells(cellidx)
                         if (cellnode) {
-                            setNodeText(cellnode , getNodeText(row(k)));
+                        	cellnode.text = getNodeText(row(k));
                         }
                     }
                     tblRowIdx = tblRowIdx + offset;

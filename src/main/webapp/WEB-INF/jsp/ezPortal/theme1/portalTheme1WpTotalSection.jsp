@@ -5,9 +5,9 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
 		    
@@ -517,18 +517,16 @@
 	                if (!isIE()) {
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
+	                } else {
+	                    var openLocation = "/ezApprovalG/draftuiHWP.do";
 	                }
-	                else {
-	                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
-	                    var openLocation = "/ezApprovalG/draftui.do";
-	                }
-	            }
-	            else {
+	            } else {
                 	var openLocation = "/ezApprovalG/draftui.do";
-	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
 	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
 	            openwindow(openLocation, "", 890, 620);
 		    }
 

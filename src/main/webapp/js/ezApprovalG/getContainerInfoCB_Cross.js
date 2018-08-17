@@ -190,6 +190,7 @@ function lvtDoclist_SelChange() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var tr = DocList.GetSelectedRows();
+    ext = tr[0].getAttribute("DATA2").substr(tr[0].getAttribute("DATA2").lastIndexOf(".")+1);
     if (tr.length > 0) {
         processRowClick(tr[0]);
     }

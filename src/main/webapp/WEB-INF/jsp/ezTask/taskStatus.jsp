@@ -7,15 +7,15 @@
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezTask/circularProgressBar.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachItem_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachMain_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/circularProgressBar.js')}"></script>
 		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";

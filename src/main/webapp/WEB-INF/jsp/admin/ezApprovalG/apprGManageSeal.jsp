@@ -6,15 +6,15 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1279' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
 		</style>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		
 		<script type="text/javascript">
 			var g_xmlHTTP = createXMLHttpRequest();
@@ -49,7 +49,6 @@
 		    function OpenAlertUI(pAlertContent) {
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		            try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		        } else {
@@ -330,9 +329,9 @@
 		    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>		    	
 		  	</ul>
 		</div>
-	
-		<div class="listview"  style="width:790px; height:550px; overflow-y:auto; overflow-x:hidden">
-			<DIV id=lvtForm class="text" style="border:0; HEIGHT:300px; WIDTH:790px"></DIV>
+
+		<div class="listview" style="width:790px; height:550px; overflow-y:auto; overflow-x:hidden" >
+			<DIV id=lvtForm class="text" style="OVERFLOW-Y:auto; overflow-x:auto; border:0; HEIGHT:300px; WIDTH:790px"></DIV>
 		</div>
 	
 		<script type="text/javascript">

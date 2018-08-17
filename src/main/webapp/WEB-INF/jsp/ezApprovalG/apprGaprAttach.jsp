@@ -8,14 +8,14 @@
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }	    	
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attach_CK.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attach_CK.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pDocID = null;
 			var OrderCell = "";
@@ -59,6 +59,7 @@
 			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
+			var ext = "${ext}";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -261,9 +262,13 @@
 				}
 			  
 				if (CrossYN()) {
-				    parent.DivPopUpHidden();
-				}
-				else {
+					if (isIE() && window.dialogArguments) {
+					    window.returnValue = "cancel";
+					    window.close();
+					} else {
+					    parent.DivPopUpHidden();
+					}
+				} else {
 				    window.returnValue = "cancel";
 				    window.close();
 				}
@@ -289,8 +294,7 @@
 						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
 					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
 			
-						if(!CrossYN() && Ans)
-						{
+						if(Ans) {
 							var pAttachRow = listview.GetSelectedRows();
 							var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
 							var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);
@@ -380,8 +384,13 @@
 					}
 					
 					if (CrossYN()) {
-					    parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
-					    parent.DivPopUpHidden();
+						if (isIE() && window.dialogArguments) {
+						    window.returnValue = "Clear";
+						    window.close();
+						} else {
+						    parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+						    parent.DivPopUpHidden();
+						}
 					} else {
 					    window.returnValue = "Clear";
 					    window.close();
@@ -390,6 +399,7 @@
 					CheckHistory(0);
 					var Attachxml = APRAttachXMLParsing(ATTACH,pDocID);
 					SaveAttachListInfo(Attachxml);
+					
 					for (i=0 ; i < pDeleteFile.length ; i++) {
 						DeleteFileAtServer_true(pDeleteFile[i]);
 					}

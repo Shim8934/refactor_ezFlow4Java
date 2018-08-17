@@ -6,15 +6,15 @@
    <head>
       <title><spring:message code="ezResource.t375" /></title>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
-      <link type="text/css" rel="stylesheet" href="<spring:message code="main.lhm01" />" />
+      <link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+      <link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
       <style>
          .box{border:1px solid #ddd; padding:1px 18px 1px 1px; background-color:#fff;}
       </style>
-      <script type="text/javascript" src="<spring:message code='ezResource.e1'/>?ver=0.2"></script>
-      <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-      <script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
-      <script type="text/javascript" src="/js/ezResource/control/ListView.htc.js"></script>
+      <script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+      <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+      <script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script>
+      <script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView.htc.js')}"></script>
       <script id="clientEventHandlersJS" type="text/javascript">
          var Brd_Id      = "${brdID}";      
          var Brd_Nm      = "<c:out value='${brdNm}' />";      

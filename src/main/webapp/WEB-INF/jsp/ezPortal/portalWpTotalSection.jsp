@@ -199,9 +199,9 @@
    			</article>
 		</section>
 			
-		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -210,27 +210,27 @@
 			    display: none;
 			}
 		</style>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
 		<c:choose>
 			<c:when test="${checkBrowser == true}">
-				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
 			</c:when>
 			<c:otherwise>
-				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
 			#atti_area span{
 				width:35px;
@@ -821,14 +821,16 @@
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
 	                } else {
-	                   var openLocation = "/ezApprovalG/draftui.do";
+	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
 	                }
 	            } else {
 	                var openLocation = "/ezApprovalG/draftui.do";
-	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
 	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+                
 	            openwindow(openLocation, "", 890, 620);
 	        }
 
@@ -1034,7 +1036,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우

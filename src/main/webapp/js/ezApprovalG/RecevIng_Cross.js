@@ -53,7 +53,8 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        parameter[99] = "mht";
+        
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
@@ -273,6 +274,9 @@ function getDocInfo() {
 function getReceiveDocInfo() {
     try {
     	var result = "";
+    	var pdocXML;
+    	var xmlpara;
+    	var xmlString;
     	
         $.ajax({
     		type : "POST",

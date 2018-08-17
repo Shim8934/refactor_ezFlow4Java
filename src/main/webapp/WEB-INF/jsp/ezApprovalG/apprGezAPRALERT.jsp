@@ -5,8 +5,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t20'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -25,24 +25,27 @@
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction();
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
+	            } else {
+		        	window.returnValue = true;
 		            window.close();
-		        }
-		        else
-	        	   if( document.getElementById("pMessageContent").innerHTML == "<spring:message code='ezApprovalG.t146'/>")
-	            	{
-			            window.returnValue = true;
-	            	}
-		            window.close();
+	            }
 		    }
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.ezapralert_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezapralert_cross_dialogArguments[1];
+		            winFlag = parent.ezapralert_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezapralert_cross_dialogArguments[0];
 		                ReturnFunction = opener.ezapralert_cross_dialogArguments[1];
+			            winFlag = opener.ezapralert_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }

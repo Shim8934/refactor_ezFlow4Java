@@ -8,16 +8,16 @@
 		<title>PortalPage</title>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
 			</c:when>
 			<c:otherwise>
-				<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript">
 			var xmlhttp;
 			var QuickcurNum = 0;

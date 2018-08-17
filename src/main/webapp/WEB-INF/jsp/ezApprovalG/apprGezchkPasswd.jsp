@@ -5,16 +5,16 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1744'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var gUserID = "";
 		    var rsa = new RSAKey();
@@ -44,18 +44,20 @@
 					if (rtnVal != "FALSE") {
 				        if (ReturnFunction != null) {
 				            ReturnFunction(rtnVal);
-				            window.close();
-				        }
-				        else {
+				            
+				            if (winFlag) {
+				            	window.close();
+				            }
+				        } else {
 				            window.returnValue = rtnVal;
 				            window.close();
 				        }
 					} else {
-							flag = true;
-				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-				            //alert(pAlertContent);
-				            OpenAlertUI(pAlertContent);
-				            return;
+						flag = true;
+			            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+			            //alert(pAlertContent);
+			            OpenAlertUI(pAlertContent);
+			            return;
 					}
 			    }
 		    }
@@ -71,7 +73,7 @@
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            DivPopUpShow(330, 205, url);
+		            DivPopUpShow(325, 200, url);
 		        }
 		        else {
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
@@ -86,8 +88,11 @@
 		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
-		            window.close();
-		            ReturnFunction("cancel");            
+		            ReturnFunction("cancel");
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
 		        }
 		        else {
 		            window.returnValue = "cancel";
@@ -96,6 +101,7 @@
 		    }
 		    var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		    	document.getElementById('inpPassword').focus();
 		    	
@@ -108,10 +114,12 @@
 		        try {
 		            RetValue = parent.ezchkpasswd_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezchkpasswd_cross_dialogArguments[1];
+		            winFlag = parent.ezchkpasswd_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezchkpasswd_cross_dialogArguments[0];
 		                ReturnFunction = opener.ezchkpasswd_cross_dialogArguments[1];
+		                winFlag = opener.ezchkpasswd_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }

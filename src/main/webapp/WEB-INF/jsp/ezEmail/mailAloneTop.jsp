@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -7,7 +6,7 @@
     <head>
         <title>TopMenu</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />               
-        <link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
         <style type="text/css">
             <c:if test="${lang == '2'}">
                 #input_search { background:#f2f2f2 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
@@ -19,9 +18,9 @@
                 #input_search { background:#f2f2f2 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
         </style>    
-        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPortal/string_component.js")%>"></script>
-        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPortal/functionLib.js")%>"></script>          
-        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>          
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript">
         var skinnum = "";
         

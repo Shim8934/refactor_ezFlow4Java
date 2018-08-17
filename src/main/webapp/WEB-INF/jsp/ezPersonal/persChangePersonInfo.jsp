@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,29 +6,29 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>ChangePersonInfo</title>
-		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/datepicker.htc.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/composeappt.js")%>"></script>
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/jsbn.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rsa.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/prng4.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rng.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt_util.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/asn1.js")%>"></script>
+		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
 		<script type="text/javascript">
 			var rsa = new RSAKey();
 			
 			var getBirthDay = "${birthDay}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
-			
+			var locale = "${locale}";
 			$(function () {
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -89,6 +88,9 @@
 						$(".imgbtn span").css("line-height","22px");
 			    	}
 			    	
+			    	if (locale != 'ko') {
+			        	$(".onlyUseKo").css("display", "none");
+			        }
 			    }
 			    
 			    var personpicture_cross_dialogArguments = new Array();
@@ -367,7 +369,7 @@
         		</tr> 
         		<tr> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
-            		<td colspan="3">
+            		<td colspan="3" class="onlyUseKo">
                 		<c:if test="${primaryLang == '1'}">
                 			<c:if test="${useZipCodeSearch == 'YES'}">
                 				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
@@ -396,11 +398,11 @@
              			   <c:choose>
                 				<c:when test="${birthType eq 'Y'}">
                 					<input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/>
-                					<input type="radio" id="RadBirthType2" name="radioGroup"  ><spring:message code='ezPersonal.t2002'/>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup" ><spring:message code='ezPersonal.t2002'/></span>
                 				</c:when>
                 				<c:otherwise>
                 					<input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/>
-                					<input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/></span>
                 				</c:otherwise>
                 			</c:choose>
 		            </td>

@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,22 +6,22 @@
 	<head>
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<!-- date Picker -->
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css">
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	<!-- time picker-->
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	<script type="text/javascript">
 		var lang      = ${lang};
 		var strErr    = "<spring:message code = 'ezWebFolder.t107'/>";
@@ -564,17 +563,13 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
-	<div id="searchPanel"class="wfSearchPanel" style="display:none;">
-		<div style="margin: 20px;">
-			<table class="content" style="margin-top:10px;">  
+	<div id="searchPanel"class="popup wfSearchPanel" style="display:none;">
+		<h1><spring:message code='ezWebFolder.t10'/><spring:message code='ezWebFolder.t123' /></h1> 
+		<div class="wfClose" onclick="doLayerPopup();"><ul><li><span></span></li></ul></div>
+		<div style="margin: 10px 0px 15px;">
+			<table class="content wftable">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
-				</tr>
-				<tr>
-					<td class="wfSearchTh2" colspan="2"></td>
-				</tr>
-				<tr>
-					<th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
+					<th class="wfSearchTh"><spring:message code='ezWebFolder.t190' /></th>
 					<td>
 						<input type="text" class="datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
 						&nbsp;~&nbsp;
@@ -582,7 +577,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th style="text-align:center"><spring:message code='ezWebFolder.t288' /></th>
+					<th class="wfSearchTh"><spring:message code='ezWebFolder.t288' /></th>
 					<td>
 						<input type="text" class="datepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
 						&nbsp;~&nbsp;
@@ -590,29 +585,23 @@
 					</td>
 				</tr>
 				<tr>
-					<th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
-					<td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+					<th class="wfSearchTh"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
+					<td class="wfSearchTd"><input type="text" id="searchExt" value="" name="searchExt"></td>
 				</tr>
 				<tr>
-					<th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
-					<td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+					<th class="wfSearchTh"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
+					<td class="wfSearchTd"><input type="text" id="searchFileName" value="" name="searchFileName"></td>
 				</tr>
 				<tr>
-					<th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
-					<td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
-				</tr>
-			</table>
-			<br/>
-			<table style="width:100%">
-				<tr>
-					<td style="text-align:center;">
-						<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
-						<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
-					</td>
+					<th class="wfSearchTh"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
+					<td class="wfSearchTd"><input type="text" id="searchCreateName" value="" name="searchCreateName"></td>
 				</tr>
 			</table>
 		</div>
-		<span class="wfCloseBttn" onClick="doLayerPopup();"></span>
+		<div class="wfdivBttn">
+			<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
+			<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
+		</div>
 	</div>	
 	
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">

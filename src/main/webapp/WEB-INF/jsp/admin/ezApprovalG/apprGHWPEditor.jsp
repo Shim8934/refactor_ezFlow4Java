@@ -6,30 +6,37 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t518' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var pDocID;      
-		    var pDocHref;    
-		    var pFormID;     
+			var pDocID;
+		    var pDocHref;
+		    var pFormID;
 		    var pOpinionFlag;
 		    var pListTypeValue;
 		    var flag = false;
 		    var FormText;
 		    var g_toggleFlag = false;
 	
-		    $(document).ready(function() {
+		    /* $(document).ready(function() {
 		        HwpCtrl.SetImgReg();
 		        HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 		        HwpCtrl.SetSaveMode(1);
-		    });
+		    }); */
+		    
+		    window.onload = function () {
+		    	HwpCtrl.SetImgReg();
+		        HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+		        HwpCtrl.SetSaveMode(1);
+		    }
 	
 		    function HWP_LoadFile(formURL) {
-		        HwpCtrl.LoadFile(formURL, false);
+		    	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(formURL);
+		        HwpCtrl.LoadFile(URL, false);
 		    }
 	
 		    function HWP_GetCloneData() {
@@ -37,7 +44,7 @@
 		    }
 	
 		    function HWP_GetDocumentElement() {
-		        return GetDocumentElement(HwpCtrl, "CONNROOT");
+		        return GetDocumentElement(HwpCtrl, "CONNROOT", true);
 		    }
 	
 		    function HWP_SetDocumentElement(ConnValue) {

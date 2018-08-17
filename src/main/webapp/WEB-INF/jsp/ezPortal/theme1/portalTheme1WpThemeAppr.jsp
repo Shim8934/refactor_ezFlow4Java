@@ -5,10 +5,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var arr_userinfo = new Array();
@@ -205,20 +205,19 @@
 	                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID=" + escape(pArgument[0]);
 	                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	                }
-	                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + escape(pArgument[0]);
-	                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-	                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	                }
-	                else {
-	                    if (CrossYN()) {
-	                        openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    }
-	                    else {
-	                    	openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    }
-
+	                } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                	if (isIE()) {
+		                    openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
+		                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0" + "&docState=" + escape(pDocState);
+	                	} else {
+	                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                        alert(pAlertContent);
+	                        
+	                        return;
+	                	}
+	                } else {
+                        openLocation = "/ezApprovalG/approvui.do?docID=";
 	                    openLocation = openLocation + escape(pArgument[0]);
 	                    openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
 	                    openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
@@ -247,18 +246,20 @@
 	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
 	                }
 	                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	                    openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
+	                	if (isIE()) {
+		                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
+		                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&listSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+		                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
+		                    openLocation = openLocation + "&listType=" + escape(pArgument[7]);
+	                	} else {
+	                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                        alert(pAlertContent);
+	                        
+	                        return;
+	                	}
 	                }
 	                else {
-	                    if (CrossYN()) {
-	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    }
-	                    else {
-	                    	openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    }
+                    	openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	                    openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
 	                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
 	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
@@ -435,8 +436,8 @@
 	                            openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
 	                        }
 	                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                            var openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                            openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
+	                            var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pDocID) + "&docHref=" + escape(pHref);
+	                            openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&odoc=&isOpinion=&listType=2";
 	                        }
 	                        else {
 	                            <% if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
