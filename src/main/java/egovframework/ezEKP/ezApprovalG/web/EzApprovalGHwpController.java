@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -34,6 +35,9 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 @Controller
 public class EzApprovalGHwpController extends EgovFileMngUtil{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGHwpController.class);
+	
+	@Autowired
+	private Properties config;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -737,6 +741,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+
+	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
+	    String companyID = config.getProperty("config.companyNum");
+	    userInfo.setCompanyID(companyID);
 
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("docID", docID);
