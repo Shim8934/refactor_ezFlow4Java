@@ -147,6 +147,7 @@ INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTIO
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'mobileUseMailAddrAutoComplete','NO','메일 쓰기창의 받는사람,참조,숨은참조에 수신인의 이름이 자동완성 되어지는 기능(default : NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useAutoSaveMailAddress','NO','외부로 메일을 보낼경우 주소록에 저장되지 않은 메일 개인주소록에 자동저장 YES 는 저장 NO는 저장안함.');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'containLow','NO','YES: 하위부서 포함하여 카운트표시 default NO');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'howToSendOffer','0','발송의뢰시 발송자 지정 ( 0 : 심사자를 선택해서 발송의뢰 , 1 : 기안자가 발송 )',);
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailReceiveScreen','NO','수신확인 화면 설정 (YES:사용)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useLadder','YES','사다리게임 모듈 사용여부(YES, NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0, 'useReceiveDocNo', 'YES', '접수 시 채번방식설정여부 (YES : 접수/편철/전결 시 채번. NO : 최종결재/편철/전결 시 채번)');
@@ -416,7 +417,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','0  ','변환문서','0','변환문서URL','변환문서','변환문서','변환문서','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','001','/files/upload_approvalG/form/2003000007.mht','1','합의문서','/files/upload_approvalG/form/2003000007.mht','/files/upload_approvalG/form/2003000007.mht','/files/upload_approvalG/form/2003000007.mht','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','002','/upload_approvalG/Top/form/2006000001.hwp','1','감사문서','/upload_approval/Top/form/2003000008.mht','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
-INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','003','/upload_approvalG/Top/form/2006000001.hwp','1','유통문서(중계)','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','003','/files/upload_approvalG/form/relay001.hwp','1','유통문서(중계)','/files/upload_approvalG/form/relay001.hwp','/files/upload_approvalG/form/relay001.hwp','/files/upload_approvalG/form/relay001.hwp','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','004','/upload_approvalG/Top/form/2006000001.hwp','1','행정문서(연계)','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','005','/upload_approvalG/Top/form/2006000001.hwp','1','전자기안문','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','006','/ekp/Upload_ApprovalG/','1','Document Path','/ekp/Upload_ApprovalG/','//ekp/Upload_ApprovalG/','//ekp/Upload_ApprovalG/','Top',0);
@@ -2853,3 +2854,7 @@ Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_IC
 
 --webfolder config
 INSERT INTO TBL_WEBFOLDER_CONFIG VALUES(0,'Top',1,1);
+
+--nonElecRec initData
+Insert into TBL_FORMINFO (FORMCONTID,FORMID,FORMNAME,FORMNAME2,FORMDOCTYPE,FORMDESCRIPTION,FORMFILELOCATION,FORMCONNFLAG,FORMORDER,TENANT_ID,COMPANYID,FORMDRAFTALLFLAG) values ('2018000000','2018000000','비전자문서양식','비전자문서양식','003','비전자문서양식','/fileroot/0/files/upload_approvalG/Top/form/2018000000.hwp','N',null,0,'Top','1');
+

@@ -457,7 +457,7 @@ function btn_AprDeptTempletDel_onclick() {
     temp_CheckAprDeptTempletSN = p_CheckAprDeptTempletSN;
     var pInformationContent = linealt16;
     var Ans = OpenInformationUI(pInformationContent, btn_AprDeptTempletDel_onclick_Complete);
-    if (!CrossYN() && Ans) {
+    if (Ans) {
         DelAprDeptTempletList(pUserID, pFormID, p_CheckAprDeptTempletSN);
     }
 }

@@ -6,8 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}"   type="text/css">
-		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -161,30 +161,26 @@
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>", "<c:out value='${level}'/>");
 		</script>
 		
-		<div id="searchPanel" class="wfSearchPanel" style="display:none;">
-			<div style="margin: 20px;">
+		<div id="searchPanel" class="popup wfSearchPanel" style="display:none;">
+			<h1><spring:message code='ezWebFolder.t21'/></h1> 
+			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
+			<div style="margin: 10px 0px 15px;">
 				<table class="content wftable">
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t21'/></th>
-					</tr>
-					<tr>
-						<td class="wfSearchTh2" colspan="2"></td>
-					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
 						<td class="wfSearchTd"><input type="text" id="Sdatepicker" style="width:80px; text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px; text-align:center" readonly="readonly"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
-						<td class="wfSearchTd"><input id="fileExtVal" type="text" style="height: 23px; width: 200px;"></td>
+						<td class="wfSearchTd"><input id="fileExtVal" type="text" style="height: 23px;"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t153'/></th>
-						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px; width: 200px;"></td>
+						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px;"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
-						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;"></td>
+						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px;"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t188'/></th>
@@ -201,12 +197,11 @@
 						</td>
 					</tr>
 				</table>
-					<div class="wfdivBttn">
-						<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-						<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
-					</div>
 			</div>
-			<span class="wfCloseBttn"></span>
+			<div class="wfdivBttn">
+				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
+				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+			</div>
 		</div>
 		
 		<div id="progress-wrp" style="display: none; margin-left: 5px;">

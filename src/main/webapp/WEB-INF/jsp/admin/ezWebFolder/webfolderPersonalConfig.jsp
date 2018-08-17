@@ -386,36 +386,29 @@
 							<li><a id="btnRefresh" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 						</ul>
 					</div>
-					<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: white; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
-						<div style="margin: 20px;">
-							<table style="border-collapse: collapse; width: 458px;">
+					<div id="searchPanel" class="popup wfpersonal" style="display: none;">
+						<h1><spring:message code='ezWebFolder.t23'/></h1> 
+						<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
+						<div style="margin: 10px 0px 15px;">
+							<table class="content wftable">
 								<tr>
-									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
-								</tr>
-								<tr>
-									<td class="wfSearchTh2" colspan="2"></td>
-								</tr>
-								<tr>
-									<th style="height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
+									<th><spring:message code='ezWebFolder.t141'/></th>
 									<td style="border: 1px solid #d2d2d2; background-color: #fff;">
-										<select id="searchOption" style="margin-left: 10px;">
-											<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
-											<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
-										</select>
-										<input id="inputSearch" type="text" style="width: 275px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<div style="margin-top: 10px; text-align: center;">
-											<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-											<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+										<div style="width: 100%; display : flex; align-items: center;">
+											<select id="searchOption" style="margin-left: 5px; height: 23px;">
+												<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
+												<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
+											</select>
+											<input id="inputSearch" type="text" style="flex: 1; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 										</div>
 									</td>
 								</tr>
 							</table>
 						</div>
-						<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
+						<div class="wfdivBttn">
+							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
+							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+						</div>
 					</div>
 				</div>
 				<div style="position: absolute; top: 0px; right: 2px; height: 27px;">

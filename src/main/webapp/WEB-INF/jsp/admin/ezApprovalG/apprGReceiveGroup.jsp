@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js')}" type="text/javascript"></script>
 		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
@@ -268,7 +268,7 @@
 		    function deleteAllCont_onclick() {
 
 		        var selRow = lvtDeptSelect.GetDataRows()
-		        if (selRow.length > 0) {
+		        if (selRow.length > 0 && selRow[0].id != "lvtDeptSelForm_TR_noItems") {
 		            for (i = selRow.length - 1; i >= 0; i--) {
 		                var rtn = deleteGroupSubiteminfo(selRow[i]);
 		                if (rtn == "TRUE") {
@@ -397,6 +397,7 @@
 	            if (CrossYN()) {
 	                ezapropinion_cross_dialogArguments[0] = pInformationContent;
 	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	                ezapropinion_cross_dialogArguments[2] = true;
 	                var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
 	                try { ezAPROPINION_Cross.focus(); } catch (e) {
 	                }

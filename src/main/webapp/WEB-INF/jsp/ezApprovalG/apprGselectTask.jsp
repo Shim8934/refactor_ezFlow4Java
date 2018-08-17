@@ -23,15 +23,18 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = window_onload;
 		    function window_onload() {
 		        try {
 		            RetValue = parent.selecttask_cross_dialogArguments[0];
 		            ReturnFunction = parent.selecttask_cross_dialogArguments[1];
+		            winFlag = parent.selecttask_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.selecttask_cross_dialogArguments[0];
 		                ReturnFunction = opener.selecttask_cross_dialogArguments[1];
+		                winFlag = opener.selecttask_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
@@ -242,11 +245,16 @@
 		    }
 		    function cmdCancel_onclick() {
 		        rtnVal[0] = "FALSE";
-		        if (ReturnFunction != null)
+		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		        else
-		            window.returnValue = rtnVal;
-		        window.close();
+		        	
+		            if (winFlag) {
+		            	window.close();
+		            }
+		        } else {
+		        	window.returnValue = rtnVal;
+			        window.close();
+		        }
 		    }
 		    function cmdConfirm_onclick() {
 		        var List = new ListView();
@@ -256,15 +264,19 @@
 		        if (totalRows.length > 0) {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = GetSelTaskInfoXml();
-		            if (ReturnFunction != null)
+		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		            else
+		                
+			            if (winFlag) {
+			            	window.close();
+			            }
+		            } else {
 		                window.returnValue = rtnVal;
-		            window.close();
+			            window.close();
+		            }
 		        }
 		        else {
 		            alert("<spring:message code='ezApprovalG.t1131'/>");
-		
 		        }
 		    }
 		</script>

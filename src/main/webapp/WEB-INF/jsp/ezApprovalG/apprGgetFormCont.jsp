@@ -30,14 +30,9 @@
 		    window.onload = function () {
 		        Get_Favoritelist();
 		
-// 		        document.getElementById("LocalloadHwp").style.display = "none";
-// 		        document.getElementById("LocalloadMht").style.display = "none";
 		        DocFileType = DocFileType.toLowerCase();
 		        Tree_setconfig();
-		        if (DocFileType == "mht")
-		            document.getElementById("LocalloadHwp").style.display = "none";
-		        else if (DocFileType == "hwp")
-		            document.getElementById("LocalloadMht").style.display = "none";
+		        
 		        var pFormKind;
 		        pDeptID = "${deptID}";
 		
@@ -61,10 +56,7 @@
 		            document.getElementById('FromList').value = "004";
 		            document.getElementById('Localload').style.display = "none";
 		        }
-		        else if (pFormKind == "999") {
-// 		            document.getElementById("LocalloadHwp").style.display = "none";
-// 		            document.getElementById("LocalloadMht").style.display = "none";
-		        }
+		        
 		        InitFormCont();
 		
 		        Rtnval[0] = "cancel";
