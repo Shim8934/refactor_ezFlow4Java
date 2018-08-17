@@ -14,8 +14,8 @@
 
 .webFolderImg {height: 16px; width: 16px;}
 
-#progress-wrp {border: 1px solid rgb(195, 245, 235); padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff;}
-#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: rgb(235, 255, 255); width: 0;}
+#progress-wrp {border: 1px solid rgb(160,230,243); padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff;}
+#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: rgb(160,230,243); width: 0;}
 #progress-wrp .status {top:4px; left:48%; position:absolute; display:inline-block; color: #333; font-weight: bold; font-family: monospace;}
 
 .webfolderBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
