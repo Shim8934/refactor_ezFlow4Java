@@ -93,8 +93,10 @@
 		}
 		
 		function displaySubFolder(divTree, divElmt, list, level) {
-			if (level > 0) {
-				for (var j = 0; j < level; j++) {
+			var nodelevel = list["folderLevel"];
+
+			if (nodelevel > 0) {
+				for (var j = 0; j < nodelevel; j++) {
 					var imgTag = document.createElement("img");
 					imgTag.setAttribute("class", "webfolderImg");
 					imgTag.src="/images/OrganTree_cross/dot_continue.gif";

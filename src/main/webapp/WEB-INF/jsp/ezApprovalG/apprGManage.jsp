@@ -1246,8 +1246,10 @@
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
-		
-		            if (BDim[3] <= "${nowDate}" && BDim[4] >= "${nowDate}") {
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+					
+		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
 		                return true;
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
