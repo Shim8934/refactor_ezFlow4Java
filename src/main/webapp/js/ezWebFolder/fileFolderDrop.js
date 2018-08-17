@@ -130,3 +130,29 @@ function getFileSize(fileSize) {
 	
 	return fileSize_;
 }
+
+function scroll() {
+	var webfolderList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+	var webfolderDivHeight = document.getElementById("tblFileList").clientHeight;
+	
+	 if (webfolderList_BODYHeight > webfolderListDivHeight) {
+		if ($("#tblFileList1 tr th#forScroll").length > 0) {
+			$("#tblFileList1 tr th#forScroll").remove();
+		}
+	} else {
+		if ($("#tblFileList1 tr th#forScroll").length < 1) {
+			$("#tblFileList1 tr th#forScroll").remove();
+			$("#tblFileList1 tr").append("<th></th>");
+			
+				var lastTh = $("#tblFileList1 tr th").last();
+				lastTh.attr("id", "forScroll");
+				lastTh.css("width", "15px");
+				
+		}
+	}
+	 
+	/*var lastTh = $("#BoardList_TH th").last();
+	if (lastTh.attr("id") == null) {
+		lastTh.css("display", "none");
+	}*/
+}
