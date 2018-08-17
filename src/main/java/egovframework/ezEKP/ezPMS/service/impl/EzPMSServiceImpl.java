@@ -3181,20 +3181,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return memberScheduleVOs;
 	}
 
-//	@Override
-//	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId) {
-//		LOGGER.debug("[SERVICE] addMemberSchedule started.");
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("projectId", projectId);
-//		map.put("tenantId", tenantId);
-//		map.put("memberId", memberId);
-//		map.put("assignedDate", assignedDate);
-//		map.put("taskId", taskId);
-//		
-//		ezPMSDAO.addMemberSchedule(map);
-//		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
-//	}
-
 	@Override
 	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId) {
 		LOGGER.debug("[SERVICE] getTaskListByGroupId started.");
@@ -3457,19 +3443,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		return ezPMSDAO.getDateTaskCount(map);
 	}
-
-//	@Override
-//	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId) {
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("searchDate", date);
-//		map.put("projectId", projectId);
-//		map.put("tenantId", tenantId);
-//		map.put("memberId", memberId);
-//		map.put("taskId", taskId);
-//		
-//		ezPMSDAO.deleteMemberSchedule(map);
-//		
-//	}
 
 	@Override
 	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId, String lang) throws Exception {
