@@ -6251,8 +6251,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("docnumber", hwpFile)) {
-							//docNO = userInfo.getDeptName()+ "-" + createDocNO(cabinetSN , docNumZeroCnt);
-							docNO = userInfo.getDeptName()+ "-" + cabinetSN; 
+							docNO = getRecRegSNToName(userInfo.getDeptName(), createDocNO(cabinetSN , docNumZeroCnt), userInfo.getDeptID(), userInfo.getTenantId());
 							setHwpText("docnumber", docNO, hwpFile);
 						}
 						
@@ -8851,7 +8850,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				case "dtRegisterNo" :						// 기록물 등록번호
 					//기록물 등록번호(처리과기관코드+기록물등록연번)
 					resultXML.append(getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(k).getTextContent()),
-						makeListField(docXML.getElementsByTagName("RECREGSN").item(k).getTextContent())));
+						makeListField(docXML.getElementsByTagName("RECREGSN").item(k).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(k).getTextContent()), tenantID));
 					break;
 
 				case "dtRegisterType" :						// 등록구분
@@ -17256,8 +17255,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return getCabinetCode2Name("003", pCode, companyID, lang, tenantID);
 	}
 
-	public String getRecRegSNToName(String deptName, String regNo) {
-		return deptName + "-" + regNo;
+	public String getRecRegSNToName(String deptName, String regNo, String deptID, int tenantID) throws Exception {
+		String symbolDeptName = getDeptSymbol(deptID, tenantID);
+
+		if (symbolDeptName != null && !symbolDeptName.equals("")) {
+			return symbolDeptName + "-" + regNo;
+		} else {
+			return deptName + "-" + regNo;
+		}
+	}
+
+	private String getDeptSymbol(String deptID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptID", deptID);
+		map.put("tenantID", tenantID);
+		
+		return ezApprovalGDAO.getDeptSymbol(map);
 	}
 
 	public String getCabinetNo(String strDeptCode, String strTaskCode, String strPYear, String strRegSerialNo, String strVolNo) {
@@ -20041,7 +20054,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<DEPTCODE>" + makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()) + "</DEPTCODE>");
 		resultXML.append("<DEPTNAME>" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "</DEPTNAME>");
 		
-		resultXML.append("<REGNO>" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()),makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent())) + "</REGNO>");
+		resultXML.append("<REGNO>" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()), tenantID) + "</REGNO>");
 		
 		resultXML.append("<APRMEMBER>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "</APRMEMBER>");
 		resultXML.append("<DRAFTER>" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "</DRAFTER>");
@@ -25531,6 +25544,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  			fop.flush();
  			fop.close();
  		} catch (Exception e) {
+ 			e.printStackTrace();
  		} 
        
          return strDocID + ".xml::" + strRtnXML.replace("\n", "").replace("\t", "");
@@ -25578,6 +25592,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			result = "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "FALSE";
 		} 
 		return result;

@@ -1027,6 +1027,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.lastHabYuiSN", map);
 	}
 	
+	public String getDeptSymbol(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDeptSymbol", map);
+	}
+	
 	public int checkReceivedDoc(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkReceivedDoc", map);
 	}
@@ -3060,4 +3064,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getExtAttr1(Map<String, Object> map) throws Exception{
 		return (String)select("EzApprovalG.getExtAttr1", map);
 	}
+
 }

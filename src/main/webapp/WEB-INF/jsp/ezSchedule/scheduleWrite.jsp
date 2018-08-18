@@ -37,7 +37,10 @@
 	        var contentpath = "${contentPath}";
 	        var ispublic = "<c:out value='${isPublic}'/>";
 	        var importance = "<c:out value='${importance}'/>";
-	        var repetition = "<c:out value='${repetition}'/>";	        
+	        var repetition = "<c:out value='${repetition}'/>";
+	        if(repetition==" "){
+	        	repetition = "";
+	        }
 	        var scheduletype = "<c:out value='${scheduleType}'/>";
 	        var changekey = "<c:out value='${changeKey}'/>";
 	        var pattern = "<c:out value='${pattern}'/>";

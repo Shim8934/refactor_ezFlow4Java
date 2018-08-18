@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -34,6 +35,9 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 @Controller
 public class EzApprovalGHwpController extends EgovFileMngUtil{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGHwpController.class);
+	
+	@Autowired
+	private Properties config;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -161,6 +165,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String docState = request.getParameter("docState");
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
+		String mode = request.getParameter("mode");
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -193,13 +198,40 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         	allFlag = "0";
         }
         
-		Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
-		
-		if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-			if(mailChk != null && mailChk.equals("Y")) {
-				model.addAttribute("chk", "no");
+        if (docID != null && !docID.equals("")) {
+			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
+			String[] proxyUserArray = proxyUser.split(",");
+			boolean checkPermission = true;
+			
+			if (proxyUserArray.length > 1) {
+				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
+				
+				Document docXML = commonUtil.convertStringToDocument(docList);
+				
+				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("000")) {
+						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+						
+						for (int j = 0; j < proxyUserArray.length; j++) {
+							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
+								checkPermission = false;
+								break;
+							}
+						}
+					}
+				}
 			}
-			return "main/warning";
+			
+			if (checkPermission) {
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+				
+				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+					if(mailChk != null && mailChk.equals("Y")) {
+						model.addAttribute("chk", "no");
+					}
+					return "main/warning";
+				}
+			}
 		}
         
         String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
@@ -737,6 +769,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+
+	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
+	    String companyID = config.getProperty("config.companyNum");
+	    userInfo.setCompanyID(companyID);
 
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("docID", docID);

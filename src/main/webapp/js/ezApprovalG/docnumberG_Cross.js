@@ -47,8 +47,28 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
 	    	
 	    	dataNodes = GetChildNodes(loadXMLString(result));
 	    	SN = getNodeText(dataNodes[0]);
+	    	
     	} else {
-    		SN = fractionsymbol;
+    		if (approvalFlag == "G" && pDraftFlag == "SUSIN") {
+    			$.ajax({
+    	    		type : "POST",
+    	    		dataType : "text",
+    	    		async : false,
+    	    		url : "/ezApprovalG/getCabinetSN.do",
+    	    		data : {
+    	    			docID : pDocID,
+    	    			deptID : pDeptID
+    	    		},
+    	    		success: function(xml){
+    	    			result = xml;
+    	    		}
+    	    	});
+    			
+    			dataNodes = GetChildNodes(loadXMLString(result));
+    	    	SN = getNodeText(dataNodes[0]);
+    		} else {
+    			SN = fractionsymbol;
+    		}
     	}
 
         if (SN == "") {
@@ -86,10 +106,26 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
 	                    for (var i = 0; i < 6 - templen; i++) {
 	                    	tempNumString = "0" + tempNumString;
 	                    }
-	                    
 	                    DocNumCode = pDeptID + tempNumString;
+	                    
         			} else {
-        				DocNumCode = SN;
+        				if (approvalFlag == "G" && pDraftFlag == "SUSIN") {
+        					if (fractionsymbol == "") {
+        						fractionsymbol = arr_userinfo[5] + "-";
+        					}
+        					
+        					HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
+    	                    var tempNumString = SN;
+    	                    var templen = tempNumString.length;
+    	                    
+    	                    for (var i = 0; i < 6 - templen; i++) {
+    	                    	tempNumString = "0" + tempNumString;
+    	                    }
+    	                    DocNumCode = pDeptID + tempNumString;
+    	                    
+        				} else {
+        					DocNumCode = SN;
+        				}
         			}
 
         			if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
