@@ -1076,9 +1076,15 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
-		loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+		
+		if (lastLogin != null) {
+			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+			lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+			loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+		} else {
+			lastLogin = "";
+			loginIP = "";
+		}
 		
 		//전자설문
 		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
