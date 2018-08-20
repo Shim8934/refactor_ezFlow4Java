@@ -1981,23 +1981,29 @@
 		                        		<c:when test="${receptGubunYN eq 'Y'}">
 		                        			<c:if test="${docType eq '001'}">
 					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		                        			</c:if>
 		                        			<c:if test="${docType ne '001'}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+					                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+           		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+           		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        			</c:if>
 		                        		</c:when>
 		                        		<c:otherwise>
 				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		          			                <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        		</c:otherwise>
 		                        	</c:choose>
 	                        	</c:if>
 	                        	<c:if test="${approvalFlag ne 'G'}">
 		                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 		                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        	</c:if>
-	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
-	                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        </div>
 	                    </div>
 	                    <div id="ReceptOrgan" style="display: none;">
