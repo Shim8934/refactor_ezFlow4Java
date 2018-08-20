@@ -15,8 +15,12 @@
 </head>
 <script>
 			function close_onclick() {
-				// 값 저장 후 창 닫기
+				// delete_flag 변경 후 창 닫기
 				   window.close();
+			}
+			
+			window.onbeforeunload = function() {
+				// 창 닫을 때 값 저장
 			}
 </script>
 <body class="popup" style="overflow:hidden">
@@ -36,7 +40,7 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		  </script>
 		<table class="content">
-			<textarea style="margin: 0px; width: 320px; height: 430px;"></textarea>
+			<textarea style="margin: 0px; width: 320px; height: 430px; resize: none;"></textarea>
 		</table>
 </body>
 </html>
