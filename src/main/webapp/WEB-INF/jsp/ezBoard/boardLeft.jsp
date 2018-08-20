@@ -791,7 +791,7 @@
 					async : false,
 					url : "/ezMemo/getMemoFoldersInfo.do",
 					success: function(result){
-						alert(result["memoCount"]);
+						$('#countTotal').html("(" + result["memoCount"] + ")");
 					}     			
 				});
 		    }
@@ -907,7 +907,7 @@
 					<div>
 						<img border="0" src="/images/OrganTree_cross/plus.gif" style="width:18px;height:18px;">
 						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
-						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="count1"></span></span>
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="countTotal"></span></span>
 					</div>
 				</div>
 				<!-- 이쪽에 리스트 뿌려주기-->

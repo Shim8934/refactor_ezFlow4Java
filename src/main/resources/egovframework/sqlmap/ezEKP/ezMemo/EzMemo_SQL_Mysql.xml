@@ -11,13 +11,15 @@
 			SELECT
 				COUNT(*)
 			FROM
-				TBL_MEMO_FOLDER
+				TBL_MEMO
 			WHERE 
 				TENANT_ID = #tenant_id# 
 			AND 
 				COMPANY_ID = #company_id# 
 			AND 
 				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0;
 		]]>
 	</select>
 	
