@@ -2530,8 +2530,7 @@
 			$orderWhat$ $orderHow$,
 		</isNotEmpty>
 		B.root_item_id DESC, 
-		B.UPPER_DOC_NO_TREE ASC,
-		B.DOC_NO DESC
+		B.UPPER_DOC_NO_TREE ASC
 		
 		LIMIT #startRow#, #listCnt#
 	</select>
@@ -2565,7 +2564,7 @@
 			AND 
 				B.write_type in (1, 2)
 			ORDER BY 
-				B.item_id DESC
+				B.DOC_NO DESC
 		
 			LIMIT #startRow#, #listCnt#
 		]]>
