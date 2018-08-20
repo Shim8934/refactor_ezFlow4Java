@@ -224,7 +224,7 @@
 				<%-- <th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%"><spring:message code='ezPMS.t98' /></th> --%>
 				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%"><spring:message code='ezPMS.t115' /></th>
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%"><spring:message code='ezPMS.t114' /></th>
-				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="18%"><spring:message code='ezPMS.t119' /></th>
+				<th onclick="setListOrder(this)" data-order='WRITE_DATE' width="12%"><spring:message code='ezPMS.t119' /></th>
 				<th onclick="setListOrder(this)" data-order='READ_COUNT' width="7%"><spring:message code='ezPMS.t122' /></th>
 			</tr>
 		</thead>

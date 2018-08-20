@@ -167,6 +167,11 @@ function selectedTR(elem) {
 #projectListBody {
 	height: 400px !important;
 }
+
+.col1 {width : 57px;}
+.col3 {width : 195px;}
+.col4 {width : 67px;}
+.col5 {width : 115px;}
 </style>
 </head>
 <body>

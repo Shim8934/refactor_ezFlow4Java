@@ -285,6 +285,12 @@ function selectedTR(elem) {
 #searchArea input, #searchArea select {
 	height : 27px;
 }
+
+.col1 {width : 57px;}
+.col3 {width : 200px;}
+.col4 {width : 80px;}
+.col5 {width : 163px;}
+
 </style>
 </head>
 <body style="margin : 10px 10px 0px 10px">
