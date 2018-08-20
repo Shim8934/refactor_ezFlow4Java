@@ -399,10 +399,10 @@
 		display : inline-block;
 	}
 	
-	.col1 {width: 9%;}
-	.col2 {width: 14%;}
+	.col1 {width: 6%;}
+	.col2 {width: 18%;}
 	.col4 {width: 12%;}
-	.col5 {width: 10%}
+	.col5 {width: 7%}
 	.commentContent {width: 80%;}
 	
 	#searchArea input, #searchArea select {

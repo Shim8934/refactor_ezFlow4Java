@@ -43,8 +43,9 @@
 				$("#ReplyBtn").css("display", "none");
 			}
 			
-			var folderName = '${board.folderName}';
-			$("#folderName").text(replaceString(folderName));
+			/* var folderName = ${board.folderName};
+			console.log(folderName);
+			$("#folderName").text(replaceString(folderName)); */
 		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
@@ -317,7 +318,7 @@
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t340' /></th>
-						<td id="folderName"></td>
+						<td id="folderName"><c:out value="${board.folderName}"/></td>
 						<th><spring:message code='ezPMS.t119' /></th>
 						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>
 						
@@ -331,7 +332,7 @@
 		</tr>
 		<tr>
 			<td class="pad1" id="pad1" style="vertical-align: top; height: 100%;">
-				<div id="message" style="border:1px solid #d1d1d1; padding: 8px; height: 530px; overflow: auto;">
+				<div id="message" style="border:1px solid #d1d1d1; padding: 8px; height: 528px; overflow: auto;">
 					<div>
 						<img src="/images/minus.png" title="글자작게" id="smaller" style="cursor:pointer;">
 						<img src="/images/plus.png" title="글자크게" id="bigger" style="cursor: pointer;">
