@@ -867,6 +867,7 @@
 		            InitGlobals("RECORD", "0", "1");
 		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + tr.getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
 		            GetRecordList();
+		            $("#tdViewCabList").show();
 		        }
 		        else {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t513'/>");
@@ -1581,6 +1582,28 @@
 			            }
 			        }
 			    }
+		     
+			    function GetEndYConfirmList() {
+			    	switch (g_sFlag) {
+				    	case "m02":
+				    		isPeriodYear = false;
+		                    CabinetList_onclick();
+		                    break;
+		                    
+			    		case "m07" :
+			    			isPeriodYear = false;
+			    			DelayEndYRequest_onclick();
+			    			break;
+			    		
+			    		case "m08" :
+			    			isPeriodYear = false;
+			    			ArrTargetList_onclick();
+			    			break;
+			    		
+			    		default :
+							return;				    			
+			    	}
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1639,6 +1662,7 @@
 	            <li id="tdbtnSetRecRole" style="Display: None"><span id="btnSetRecRole" onclick="return btnSetRecUserRole_onclick()"><spring:message code='ezApprovalG.t944'/></span></li>
 	            <li id="tdbtnViewRecReadHist" style="Display: None"><span id="btnViewRecReadHist" onclick="return btnViewRecReadHist_onclick()"><spring:message code='ezApprovalG.t945'/></span></li>
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
+	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 	            <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdVeiwRecHist" style="Display: None"><span id="VeiwRecHist" onclick="return btnViewRecHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">

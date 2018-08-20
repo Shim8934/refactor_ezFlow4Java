@@ -196,6 +196,7 @@
 	        var nonElecRec = "";
 	        var nonElecRecInfoXml = "";
 	        var g_CabID = "";
+	        var useReceiveInfoName = "${useReceiveInfoName}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
