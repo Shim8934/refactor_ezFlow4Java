@@ -985,7 +985,7 @@
 	        }
 	        Rebody();
 	        
-	        document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+	        document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
@@ -1196,18 +1196,8 @@
 		
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
-	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, ""));
-	  	        	
-                    if (pUse_Editor == "NAMO") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    } else if (pUse_Editor == "CK") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    } else {
-                    	document.getElementById("plainTextArea").value =  message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    }	
-                    
+	        	if (confirm("<spring:message code='ezEmail.lhm28' />")) {
+	  	        	document.getElementById("plainTextArea").value =  message.GetEditorTextContent();
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -1217,19 +1207,7 @@
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
 	    	} else {
-	    		var texts = document.getElementById("plainTextArea").value.split("\n");
-	            var textData = "";
-	            for (var i=0; i<texts.length; i++) {
-	            	if (i == 0 && $.trim(texts[i]) == ""  && (pUse_Editor == "NAMO" || pUse_Editor == "CK")) {
-	            		textData = "<br/>";
-	            	}
-	            	if (texts[i] != "" && texts[i] != " ") {
-	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/gi, "\n");
-	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + " " + "</p>";
-	            	} 
-	            }
-	            
-	    		message.SetEditorContent(textData);
+	    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);
 	    		
 	    		document.getElementById("tbContentElement").style.display = "";
 				document.getElementById("plainTextArea").style.display = "none";

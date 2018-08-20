@@ -135,7 +135,7 @@ function scroll() {
 	var webfolderList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 	var webfolderDivHeight = document.getElementById("tblFileList").clientHeight;
 	
-	 if (webfolderList_BODYHeight > webfolderListDivHeight) {
+	 if (webfolderList_BODYHeight > webfolderDivHeight) {
 		if ($("#tblFileList1 tr th#forScroll").length > 0) {
 			$("#tblFileList1 tr th#forScroll").remove();
 		}
