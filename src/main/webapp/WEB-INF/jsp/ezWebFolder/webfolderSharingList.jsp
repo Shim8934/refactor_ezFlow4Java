@@ -932,6 +932,8 @@
 			
 			function getUserSimpleListStr(userListStr) {
 				var result = "";
+				
+				userListStr = userListStr.replace(/\,$/, "");
 				var userArr = userListStr.split(",");
 				var userArrSize = userArr.length;
 				
