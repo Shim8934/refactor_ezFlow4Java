@@ -31,13 +31,15 @@ $(function() {
 	
 	var taskId = $(".jstree-clicked").attr("id");
 	
-	if (taskId.indexOf("t") != -1) {
-		contentTitle = "<c:out value='${taskDetails.taskName}'/>";
-	} else {
-		contentTitle = "<c:out value='${taskDetails.groupName}'/>";
+	if (taskId != undefined) {
+		if (taskId.indexOf("t") != -1) {
+			contentTitle = "<c:out value='${taskDetails.taskName}'/>";
+		} else {
+			contentTitle = "<c:out value='${taskDetails.groupName}'/>";
+		}
 	}
 	
-	if(typeof setContentTitle != 'undefined') {
+	if (typeof setContentTitle != 'undefined') {
 		setContentTitle(contentTitle, "${taskLogListCount}");
 	}
 	

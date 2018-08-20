@@ -710,9 +710,6 @@ function deleteProject() {
 							addTaskLog(projectId, 3, groupId, null, logContent);
 						}
 						
-						console.log(startRow);
-						console.log(listNumber);
-						
 						setProjectList("new");
 					} else {
 						alert("<spring:message code='ezPMS.t9' />");
@@ -861,7 +858,7 @@ function addFavorite() {
 			url : "/ezPMS/addFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function(result) {
-				console.log(result);
+				
 				if (result == "0") {
 					checkedVal = "";
 

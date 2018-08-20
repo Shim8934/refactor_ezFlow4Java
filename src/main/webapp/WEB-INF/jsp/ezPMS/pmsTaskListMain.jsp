@@ -116,7 +116,6 @@
 				$("#contentList").html(contentList);
 				viewSetting();
 				setInitOrder();
-				console.log(userRole);
 				
 				if (userRole == 1) {
 					$("#addTaskBtn").parent().css("display", "");

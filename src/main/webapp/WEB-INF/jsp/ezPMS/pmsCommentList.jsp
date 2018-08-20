@@ -63,10 +63,10 @@
 					taskName = $("#taskNameArea").text();
 					//taskName = taskName.substring(0, taskName.lastIndexOf('-'));
 					
-					if(taskName == "") {
+					if (taskName == "") {
 						taskName = $("#taskName", parent.document).text();	
 					}
-					console.log(taskName);
+					
 					var logContent = "<spring:message code='ezPMS.t126' arguments='" + taskName.trim() + "," + commentContent.trim() + "'/>";
 					addTaskLog(projectId, 1, groupId, taskId, logContent);
 
