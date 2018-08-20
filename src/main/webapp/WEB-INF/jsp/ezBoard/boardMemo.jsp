@@ -51,7 +51,7 @@
     					font_size = $("#setFontSize option:selected").val();
     				}
     			}); 
-				alert("저장했습니다.");
+				alert("<spring:message code='ezMemo.t0025' />");
         	}
         	
         	function Cancel_Click() {
