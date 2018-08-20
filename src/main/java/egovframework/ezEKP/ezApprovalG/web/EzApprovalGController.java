@@ -244,6 +244,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String companyID = doc.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent();
         String companyName = doc.getElementsByTagName("COMPANY").item(0).getTextContent();
         String companyName2 = doc.getElementsByTagName("COMPANY2").item(0).getTextContent();
+        int deptListFlag = 0;
         
         myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
         
@@ -261,6 +262,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + title + "]" + "</option>";
 	        	}
 	        }
+	        deptListFlag++;
         }
         
         String lang = "";
@@ -269,7 +271,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	lang = "2";
         }
         
-        int deptListFlag = 0;
         if (!deptInfo.equals("")) {
         	String[] deptList = deptInfo.split(";");
         	
@@ -315,13 +316,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
 	                    }
 	                }
-	                deptListFlag += 1;
-	                if ((deptListFlag > 0 && companyID.equals(userInfo.getCompanyID())) || deptListFlag > 1) {
-	                	isSubTitle = true;
-					} 
+	                deptListFlag ++;
                 } 
         	}
         }
+        if (deptListFlag > 1) {
+        	isSubTitle = true;
+        } 
+        
         logger.debug("getUserSubTitle Value : subTitleString = " + subTitleString);
         logger.debug("getUserSubTitle Value : isSubTitle = " + isSubTitle);
 
