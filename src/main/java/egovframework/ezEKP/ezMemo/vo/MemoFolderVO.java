@@ -16,6 +16,8 @@ public class MemoFolderVO {
 	private int order;
 	/** 메모함 아이콘 아이디*/
 	private String icon_id;
+	/** 메모 갯수*/
+	private int count;
 	/** 컴퍼너 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -37,7 +39,7 @@ public class MemoFolderVO {
 	public String getUser_id() {
 		return user_id;
 	}
-	public void setUserId(String user_id) {
+	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
 	public String getReg_date() {
@@ -63,6 +65,13 @@ public class MemoFolderVO {
 	}
 	public void setIcon_id(String icon_id) {
 		this.icon_id = icon_id;
+	}
+	
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
 	}
 	public String getCompany_id() {
 		return company_id;

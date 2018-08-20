@@ -101,17 +101,17 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
-		param.put("userId",userInfo.getId());
+		param.put("user_id",userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		String memoCount = resultBody.get("memoCount").toString();
+		
 		if (status.equals("ok")) {			
-			
-			/*	JSONArray list = (JSONArray) resultBody.get("data");
-				model.addAttribute("list", list);*/
-				model.addAttribute("memoCount", memoCount);
-			}
+			JSONArray folders = (JSONArray) resultBody.get("data");
+			model.addAttribute("folders", folders);
+			model.addAttribute("memoCount", memoCount);
+		}
 			
 		logger.debug("memoFoldersInfo ended");
 		return "json";

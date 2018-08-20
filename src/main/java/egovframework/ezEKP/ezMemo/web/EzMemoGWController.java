@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezMemo.web;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -86,14 +87,15 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
 			memoFolderVO.setTenant_id(info.getTenantId());
 			
 			int memoCount = ezMemoService.getMemoCount(memoFolderVO);
+			List<MemoFolderVO> memoFolders  = ezMemoService.getMemoFolderInfo(memoFolderVO);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
+			result.put("data", memoFolders);
 			result.put("memoCount", memoCount);
 		} catch(Exception e) {
 			result.put("code", 1);

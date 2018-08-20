@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezMemo.service.impl;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -50,11 +51,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		return memoCount;
 	}
 
+	@Override
+	public List<MemoFolderVO> getMemoFolderInfo(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("getMemoFolderInfo started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		List<MemoFolderVO> memoFolders = ezMemoDAO.getMemoFolderInfo(map);
+		
+		logger.debug("getMemoFolderInfo ended.");
 
+		return memoFolders;
+	}
 	@Override
 	public MemoConfigVO getMemoConfig(MemoConfigVO memoConfigVO) throws Exception {
 		logger.debug("getMemoConfig started.");
-		memoConfigVO = ezMemoDAO.getMemoConfig(memoConfigVO);
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+		memoConfigVO = ezMemoDAO.getMemoConfig(map);
 		logger.debug("getMemoConfig ended.");
 		return memoConfigVO;
 	}
@@ -63,7 +81,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	@Override
 	public void setMemoConfig(MemoConfigVO memoConfigVO) throws Exception {
 		logger.debug("setMemoConfig started.");
-		ezMemoDAO.setMemoConfig(memoConfigVO);
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
 	}
+
 }

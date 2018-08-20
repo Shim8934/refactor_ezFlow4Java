@@ -791,7 +791,21 @@
 					async : false,
 					url : "/ezMemo/getMemoFoldersInfo.do",
 					success: function(result){
-						$('#countTotal').html("(" + result["memoCount"] + ")");
+						if(result["memoCount"]*1 >0){
+							$('#countTotal').html("(" + result["memoCount"] + ")");
+							var html="";
+							var folderList = result["folders"];
+							$('.memoNode').remove();
+							
+							folderList.forEach(function(list, index){
+								html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
+								html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
+								html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
+								html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
+								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
+							}); 
+							$('.memoFolders').append(html);
+						}
 					}     			
 				});
 		    }
@@ -903,11 +917,12 @@
 			</c:if>
 			
 			<ul>
-				<div class="tree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
+				<div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
 					<div>
 						<img border="0" src="/images/OrganTree_cross/plus.gif" style="width:18px;height:18px;">
 						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
 						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="countTotal"></span></span>
+						<div class="memoFolders"></div>
 					</div>
 				</div>
 				<!-- 이쪽에 리스트 뿌려주기-->

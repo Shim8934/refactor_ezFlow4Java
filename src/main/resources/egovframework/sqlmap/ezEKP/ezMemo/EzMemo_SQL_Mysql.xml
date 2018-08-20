@@ -23,6 +23,28 @@
 		]]>
 	</select>
 	
+	<select id="EzMemoDAO.getMemoFolderInfo" resultClass="MemoFolderVO">
+		<![CDATA[
+			SELECT 
+				A.FOLDER_ID, B.FOLDER_NAME, COUNT(A.FOLDER_ID) AS COUNT 
+			FROM 
+				TBL_MEMO A 
+			JOIN 
+				TBL_MEMO_FOLDER B 
+			ON A.FOLDER_ID = B.FOLDER_ID 
+			WHERE 
+				A.TENANT_ID = #tenant_id# 
+			AND 
+				A.USER_ID = #user_id#
+			AND 
+				A.COMPANY_ID = #company_id# 
+			AND 
+				A.DELETE_FLAG=0
+			GROUP BY
+				A.FOLDER_ID;
+		]]>
+	</select>
+	
 	<select id="EzMemoDAO.getMemoConfig" resultClass="MemoConfigVO">
 		<![CDATA[
 			SELECT
