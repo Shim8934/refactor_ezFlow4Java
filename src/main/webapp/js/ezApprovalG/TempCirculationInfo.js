@@ -28,7 +28,7 @@ function btn_AprDeptTempletDelCC_onclick() {
 //        var pInformationContent = linealt16;
         var pInformationContent = strLangPJG01;
         var Ans = OpenInformationUI(pInformationContent, btn_AprDeptTempletDelCC_onclick_Complete);
-        if (!CrossYN() && Ans) {
+        if (Ans) {
             DelAprDeptTempletListCC(pUserID, pFormIDCC, p_CheckAprDeptTempletSN);
         }
     } catch (e) {

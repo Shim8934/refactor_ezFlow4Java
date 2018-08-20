@@ -546,6 +546,15 @@ function InitListView() {
         			pAPRLINE.DataBind("APRLINE");
         		}
         	}
+        	// 비전자문서 기안 시, 마지막 결재선이 그대로 나오는 에러 수정
+        	if (nonElecRec == "Y" && pIniGubun == "1") {
+        		var DraftXml;
+        		document.getElementById("APRLINE").innerHTML = "";
+        		DraftXml = AddDraftUserFirst();
+        		Resultxml = loadXMLString(DraftXml);
+        		pAPRLINE.DataSource(Resultxml);
+        		pAPRLINE.DataBind("APRLINE");
+        	}
         	
         	LineAprTyepSetAll();
         	
@@ -1090,7 +1099,11 @@ function AddDraftUserFirst() {
     if (approvalFlag == "S") {
     	pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
     } else {
-    	pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    	if (approvalFlag == "G" && nonElecRec == "Y") {
+    		pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
+    	} else {
+    		pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    	}
     }
     pparsingXML += "<DATA12>" + strAprState1 + "</DATA12>";
     pparsingXML += "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
@@ -1110,7 +1123,11 @@ function AddDraftUserFirst() {
     if (approvalFlag == "S") {
     	pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
     } else {
-    	pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    	if (approvalFlag == "G" && nonElecRec == "Y") {
+    		pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
+    	} else {
+    		pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    	}
     }
     pparsingXML += "</CELL><CELL>";
     pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";

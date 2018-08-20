@@ -61,6 +61,7 @@ var strLang107 = "Classified"
 // DraftUI\draft.js
 var strLang124 = "Approval status"
 var strLang125 = "Status"
+var strLang126 = "Public"
 var strLang128 = "group"
 var strLang131 = "Error occurred."
 var strLang132 = "Please select the document again!"
@@ -507,6 +508,7 @@ var strLang713 = "Can not find the documentary information."
 var strLang714 = "Additional information initialization"
 var strLang715 = "Classification information initialization"
 var strLang716 = "Failed loading documentary classification information!"
+var strLang717 = "The opinion about contents of body is follow.]\15"
 // ezDocInfo\setLogData.js
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js
@@ -1007,6 +1009,8 @@ var strLangSpjj32 = "There was an error in hugyeol approval."
 
 var strLangSpjj33 = "Shortcut approval documents";
 var strLangSpjj34 = "The settlement documents are drafted's arrived <br> To the payment, please click the link below.";
+
+var strLang129 = "수신자"
 
 //2018-06-27 강민수92
 var strLanggarm01 = "Please add a department."

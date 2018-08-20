@@ -607,10 +607,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		//HWP사용유무
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		
-		if (useHWP.equals("")) {
-			useHWP = "NO";
-		}
-
 		//브라우저체크
 		String browser = ClientUtil.getClientInfo(req, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
@@ -1139,6 +1135,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String title = "";
 		String companyNm = "";
 		String lastLogin = "";
+		String loginIP = "";
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
@@ -1163,8 +1160,15 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+		
+		if (lastLogin != null) {
+			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+			lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+			loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+		} else {
+			lastLogin = "";
+			loginIP = "";
+		}
 		
 		//전자설문
 		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
@@ -1244,6 +1248,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("companyList", companyList);
+		model.addAttribute("loginIP", loginIP);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);

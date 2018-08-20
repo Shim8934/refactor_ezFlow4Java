@@ -598,13 +598,15 @@ function getNodeText(node) {
 
 function setNodeText(node, value) {
     if (CrossYN()) {
-        node.textContent = value;
-    }
-    else {
+    	if (typeof (node.textContent) != "undefined") {
+    		node.textContent = value;
+    	} else {
+    		node.text = value;
+    	}
+    } else {
         if (typeof (node.innerText) == "undefined") {
             node.text = value;
-        }
-        else {
+        } else {
             node.innerText = value;
         }
     }

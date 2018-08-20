@@ -95,15 +95,48 @@
 		// 검색값 입력 후 엔터키 입력 시 검색 호출
 	    function search_keypress(evt) {
 	        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
-	
-	        
-	        if (evtKeyCode == "13") {
+	     if (evtKeyCode == "13") {
 	            search(1);
 	        }
 	    }
-		
-		
-	    
+
+	        function lvSDoc_onSel_DBclick() {
+	            listview.LoadFromID("lvSDocForm");
+	            listview2.LoadFromID("lvTDocForm");
+	            var openLocation = "";
+	            var oArrRows = listview.GetSelectedRows();
+	            var length = listview.GetSelectedIndexes();
+	            var DocID = GetAttribute(oArrRows[0], "DATA1");
+	            var pURL = GetAttribute(oArrRows[0], "DATA2");
+	            var formID = GetAttribute(oArrRows[0], "DATA6");
+	            var orgDocid = GetAttribute(oArrRows[0], "DATA5");
+	            if (trim_Cross(GetAttribute(oArrRows[0], "DATA5")) == "" || escape(orgDocid.replace(/ /gi, "")) == "%0A")
+	                orgDocid = "";
+	            else
+	                orgDocid = GetAttribute(oArrRows[0], "DATA5");
+	
+	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+	            	if (isIE()) {
+		            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                } else {
+	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                	alert(pAlertContent);
+	                    
+	                    return;
+	                }
+	            }
+	            else {
+	                if (CrossYN()) {
+	                    openLocation = "/ezApprovalG/contDocView.do";
+	                } else {
+                        openLocation = "/ezApprovalG/contDocView.do";
+	                }
+	            }
+	            openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
+	            var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+	        }
+
+    
 	    // 날짜 아이콘 적용 및 날짜 검색
 		 function getTime() {
 			

@@ -32,11 +32,11 @@
 								</dt>
 	   						</c:when>
 							<c:otherwise>
-	        					<dt>${companyNm }</dt>
+		        				<dt>${companyNm}<br></dt>
 	        				</c:otherwise>
     					</c:choose>
 			 			<dd>${department} ${title}</dd>
-						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
+						<dd class="gray" title="${loginIP}"><spring:message code="main.t00016" />  ${lastLogin}</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>
@@ -836,14 +836,16 @@
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
 	                } else {
-	                   var openLocation = "/ezApprovalG/draftui.do";
+	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
 	                }
 	            } else {
 	                var openLocation = "/ezApprovalG/draftui.do";
-	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
 	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+                
 	            openwindow(openLocation, "", 890, 620);
 	        }
 
@@ -1049,7 +1051,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우

@@ -268,7 +268,7 @@
 		    function deleteAllCont_onclick() {
 
 		        var selRow = lvtDeptSelect.GetDataRows()
-		        if (selRow.length > 0) {
+		        if (selRow.length > 0 && selRow[0].id != "lvtDeptSelForm_TR_noItems") {
 		            for (i = selRow.length - 1; i >= 0; i--) {
 		                var rtn = deleteGroupSubiteminfo(selRow[i]);
 		                if (rtn == "TRUE") {
@@ -397,6 +397,7 @@
 	            if (CrossYN()) {
 	                ezapropinion_cross_dialogArguments[0] = pInformationContent;
 	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	                ezapropinion_cross_dialogArguments[2] = true;
 	                var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
 	                try { ezAPROPINION_Cross.focus(); } catch (e) {
 	                }

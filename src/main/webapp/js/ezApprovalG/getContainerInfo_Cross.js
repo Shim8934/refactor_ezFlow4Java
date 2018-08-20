@@ -407,7 +407,7 @@ function btnRemoveDoc_onclick() {
 	    var OpinionContent = strLangS387;
 	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
 	    
-	    if (!CrossYN()) {
+	    if (rtn) {
 	        RemoveDoc_Complete(rtn);
 	    }
     }
@@ -761,6 +761,7 @@ function lvtDoclist_SelChange() {
     var SelList = new ListView();
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();
+    ext = oArrRows[0].getAttribute("DATA3").substr(oArrRows[0].getAttribute("DATA3").lastIndexOf(".")+1);
 
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
@@ -1067,11 +1068,14 @@ var ezchkpasswd_cross_dialogArguments = new Array();
 function chk_Passwd(pUserID, CompleteFunction) {
     var parameter = pUserID;
     ezchkpasswd_cross_dialogArguments[0] = parameter;
-    if (CompleteFunction != undefined)
-        ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
-    else
-        ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    
+    if (CompleteFunction != undefined) {
+    	ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
+    } else {
+    	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    }
 
+    ezchkpasswd_cross_dialogArguments[2] = true;
     var url = "/ezApprovalG/ezchkPasswd.do";
     var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }

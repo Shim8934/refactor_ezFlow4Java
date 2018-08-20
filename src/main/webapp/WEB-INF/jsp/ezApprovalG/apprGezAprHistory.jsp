@@ -17,6 +17,7 @@
 		    var pDocID = "${docID}";
 		    var OrderCell = "";
 		    var orgCompanyID = parent.orgCompanyID;
+		    var ext = "${ext}";
 		    window.onload = function () {
 		        var rtnVal = new Array();
 		        getDocHistory();
@@ -30,7 +31,6 @@
 		        window.returnValue = rtnVal;
 		    };
 		    function lvDocList_DBSelChange() {
-		        var pUrl;
 		        var Arguments = new Array();
 		        var listview = new ListView();
 		        listview.LoadFromID("lvDocList");
@@ -43,10 +43,11 @@
 		        else if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "hwp") {
 		        	//hwp사용안함
 		            if (CrossYN()) {
-		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
+// 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
+		            	pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		            else {
-		                pUrl = "DocViewerHWP.aspx?DocHref=" + escapenew(Arguments[0]);
+		                pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		        }
 		        else {
@@ -152,6 +153,7 @@
 		        listview.SetSelectFlag(false);
 		        listview.DataSource(result);
 		        listview.DataBind("divAprLine");
+		        
 		    }
 		    function getAttachHistory() {
 		    	var result = "";
@@ -286,13 +288,12 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != "hwp") {
 		            parent.DivPopUpHidden();
-		        }
-		        else {
+		        } else {
 		            window.close();
 		        }
-		    }		    
+		    }
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}

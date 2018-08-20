@@ -60,6 +60,7 @@
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
 			var orgCompanyID = "${orgCompanyID}";
+			var ext = "${ext}";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -262,9 +263,13 @@
 				}
 			  
 				if (CrossYN()) {
-				    parent.DivPopUpHidden();
-				}
-				else {
+					if (isIE() && window.dialogArguments) {
+					    window.returnValue = "cancel";
+					    window.close();
+					} else {
+					    parent.DivPopUpHidden();
+					}
+				} else {
 				    window.returnValue = "cancel";
 				    window.close();
 				}
@@ -290,8 +295,7 @@
 						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
 					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
 			
-						if(!CrossYN() && Ans)
-						{
+						if(Ans) {
 							var pAttachRow = listview.GetSelectedRows();
 							var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
 							var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);
@@ -381,8 +385,13 @@
 					}
 					
 					if (CrossYN()) {
-					    parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
-					    parent.DivPopUpHidden();
+						if (isIE() && window.dialogArguments) {
+						    window.returnValue = "Clear";
+						    window.close();
+						} else {
+						    parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+						    parent.DivPopUpHidden();
+						}
 					} else {
 					    window.returnValue = "Clear";
 					    window.close();
@@ -391,6 +400,7 @@
 					CheckHistory(0);
 					var Attachxml = APRAttachXMLParsing(ATTACH,pDocID);
 					SaveAttachListInfo(Attachxml);
+					
 					for (i=0 ; i < pDeleteFile.length ; i++) {
 						DeleteFileAtServer_true(pDeleteFile[i]);
 					}

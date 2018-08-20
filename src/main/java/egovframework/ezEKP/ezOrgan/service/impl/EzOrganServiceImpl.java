@@ -1706,6 +1706,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("tenantID", tenantID);
 		return ezOrganDAO.getLastLogin(map);
 	}
+	
+	@Override
+	public String getLoginIP(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getLoginIP(map);
+	}
 
 	@Override
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception {

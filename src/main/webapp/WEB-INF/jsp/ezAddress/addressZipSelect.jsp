@@ -265,6 +265,7 @@
 
 	            ReturnValue[0] = getNodeText(SelectElement.childNodes[0]);
 	            ReturnValue[1] = getNodeText(SelectElement.childNodes[1].childNodes[1]);
+	            
 	            if (ReturnFunction != undefined)
 	                ReturnFunction(ReturnValue);
 	            else

@@ -1400,9 +1400,11 @@
 			function beforeprint() {
 	            var url = "/ezTask/taskReadPrint.do";
 		        var feature = "";
+		        var calDate = $(".ui-datepicker-year").val() + "-" + (parseInt($(".ui-datepicker-month").val()) + 1) + "-01";
 		        
 	        	feature = GetOpenPosition(790, 810);
-                window.open("/ezTask/taskReadPrint.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date, "", "height = 820px, width = 790px, scrollbars=1, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezTask/taskReadPrint.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&calDate=" + calDate, "", "height = 820px, width = 790px, scrollbars=1, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                
 			}
 
 			window.onunload = function (e) {

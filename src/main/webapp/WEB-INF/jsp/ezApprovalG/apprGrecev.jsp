@@ -112,6 +112,7 @@
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
 			var orgCompanyID = "";
+			var isHWP = "";
 			
 			window.onload = function () {
 			};
@@ -895,10 +896,10 @@
 		            tempdocnumcode = tempItemCode;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
-		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-		
+		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
 		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
