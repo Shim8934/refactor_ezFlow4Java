@@ -749,7 +749,7 @@ function getTaskDetails(elem) {
 <style type="text/css">
 .project_overview_right .overview_textbox {
 	overflow : auto;
-	max-height : 132px;
+	height : 132px;
 	word-wrap : break-word;
 }
 
