@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezMemo.dao.EzMemoDAO;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
+import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -47,5 +48,22 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		
 		logger.debug("getMemoCount ended.");
 		return memoCount;
+	}
+
+
+	@Override
+	public MemoConfigVO getMemoConfig(MemoConfigVO memoConfigVO) throws Exception {
+		logger.debug("getMemoConfig started.");
+		memoConfigVO = ezMemoDAO.getMemoConfig(memoConfigVO);
+		logger.debug("getMemoConfig ended.");
+		return memoConfigVO;
+	}
+
+
+	@Override
+	public void setMemoConfig(MemoConfigVO memoConfigVO) throws Exception {
+		logger.debug("setMemoConfig started.");
+		ezMemoDAO.setMemoConfig(memoConfigVO);
+		logger.debug("setMemoConfig ended.");
 	}
 }

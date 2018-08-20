@@ -8,4 +8,6 @@ import egovframework.ezEKP.ezMemo.vo.MemoVO;
 
 public interface EzMemoService {
 	public int getMemoCount(MemoFolderVO memoFolderVO) throws Exception;
+	public MemoConfigVO getMemoConfig(MemoConfigVO memoConfigVO) throws Exception;
+	public void setMemoConfig(MemoConfigVO memoConfigVO) throws Exception;
 }

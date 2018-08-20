@@ -16,7 +16,10 @@
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var g_windowReference = null;
-			var checkFlag 		  = "<c:out value='${hasConfig}'/>";
+			// var checkFlag 		  = "<c:out value='${hasConfig}'/>";
+			var use_date =  "<c:out value="${memoConfigVO.use_date}" />";
+			var use_gadget =  "<c:out value="${memoConfigVO.use_gadget}" />";
+			var font_size =  "<c:out value="${memoConfigVO.font_size}" />";
 			
          	document.onselectstart = function () { return false; };
          	
@@ -28,224 +31,38 @@
 	                document.body.style.oUserSelect = 'none';
                		document.body.style.UserSelect = 'none';
            		}	
-           		
-           		preProcess();
-        	}   
+        	}  
         	
-        	function preProcess() {
-        		if (checkFlag == "1") {
-        			//Set target
-        			document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
-        			
-        			//Set time
-        			var _sTime = "<c:out value='${startTime}'/>";
-        			var _eTime = "<c:out value='${endTime}'/>";
-        			
-        			_sTime = _sTime.replace(":", "");
-        			_eTime = _eTime.replace(":", "");
-
-    	        	$("#sTimePicker").val(_sTime).change();
-    	        	$("#eTimePicker").val(_eTime).change();            	 	
-        		} 
-        		
-        		$('#set_Target').on('change', function(e) {					
-    			    if ($(this).val() == '1') {    			    	
-    			    	var listTarget = "<c:out value='${listOfTarget}'/>";
-    			    	
-   			    		if (listTarget != "") {
-    			    		document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
-    			    		
-            				var newTargetDiv = document.getElementById("newTargetDiv");
-                	    	newTargetDiv.innerHTML = listTarget;
-                	    	newTargetDiv.setAttribute("title", listTarget);
-                	    	newTargetDiv.style.display = "";
-   			    		}
-   			    		
-    			    	$('#receiverBttn').show();
-    			    }
-    			    else {			    	
-    			    	document.getElementById("newTargetDiv").style.display = "none";	
-    			    	$('#receiverBttn').hide();
-    			    	
-			    		document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";			    
-    			    }
+        	function Change_Click() {
+        		$.ajax({
+    				type: "POST",
+    				url: "/ezBoard/boardMemoConfigSave.do",
+    				dataType: "json",
+    				traditional: true,
+    				async : false,
+    				data: {
+    					"use_date": $("#setDateFlag option:selected").val(),
+    					"use_gadget": $("#setQuickFlag option:selected").val(),
+    					"font_size" : $("#setFontSize option:selected").val() 
+    				},
+    				success: function() {
+    					use_date = $("#setDateFlag option:selected").val();
+    					use_gadget = $("#setQuickFlag option:selected").val();
+    					font_size = $("#setFontSize option:selected").val();
+    				}
     			}); 
+				alert("저장했습니다.");
         	}
         	
         	function Cancel_Click() {
-        		if (checkFlag == "1") {
-	    			//Set target
-	    			var listTarget = "<c:out value='${listOfTarget}'/>";
-	    			if (listTarget != "") {
-	    				$("#set_Target").val("1").change();
-	    				$("#receiverBttn").show();
-	    				
-	    				var newTargetDiv = document.getElementById("newTargetDiv");
-	        	    	newTargetDiv.innerHTML = listTarget;
-	        	    	newTargetDiv.setAttribute("title", listTarget);
-	        	    	newTargetDiv.style.display = "";    
-	        	    	document.getElementById("RangeXMLStr").value = sigBody.innerHTML;
-	    			}
-	    			else {	    				
-	    				$("#receiverBttn").hide();
-	    				document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";
-	    				$("#set_Target").val("0").change();
-	    			}	
-	        		
-	    			//Set time
-	    			var _sTime = "<c:out value='${startTime}'/>";
-	    			var _eTime = "<c:out value='${endTime}'/>";
-	    			
-	    			_sTime = _sTime.replace(":", "");
-	    			_eTime = _eTime.replace(":", "");
-	
-		        	$("#sTimePicker").val(_sTime).change();
-		        	$("#eTimePicker").val(_eTime).change(); 
-        		}
-        		else {
-        			//Set target
-        			var newTargetDiv = document.getElementById("newTargetDiv");
-	        	    newTargetDiv.innerHTML = "";
-	        	    newTargetDiv.setAttribute("title", "");
-	        	    newTargetDiv.style.display = "none";
-        			document.getElementById("RangeXMLStr").value = "<RANGE></RANGE>";     			
-        			$("#set_Target").val("0").change();
-        			$("#receiverBttn").hide();
-        			
-        			//Set time
-		        	$("#sTimePicker").val("0900").change();
-		        	$("#eTimePicker").val("1800").change(); 
-        		}
+        		$("#setDateFlag").val(use_date).attr("selected", "selected");
+        		$("#setQuickFlag").val(use_gadget).attr("selected", "selected");
+        		$("#setFontSize").val(font_size).attr("selected", "selected");
         	}
-        	function Change_Click() {        		        		
-        		var rangeSelect = document.getElementById("RangeXMLStr").value;
-        		var sTimePickerElmt = document.getElementById("sTimePicker");        		
-     			var startTime = sTimePickerElmt.options[sTimePickerElmt.selectedIndex].text;     			
-        		var eTimePickerElmt = document.getElementById("eTimePicker");        		
-     			var endTime = eTimePickerElmt.options[eTimePickerElmt.selectedIndex].text;
-     			
-     			if ($("#set_Target").val() == "1") {
-     				if (rangeSelect == null || rangeSelect == "" || rangeSelect == "<RANGE></RANGE>") {
-     					alert('<spring:message code="ezPoll.t235"/>');
-         				return;
-     				}
-     			}
-     		
-     			$.ajax({
-     				url : '/ezBoard/boardPollConfigSave.do',
-     				method : 'POST',
-     				dataType : 'text',
-     				data : {
-     					rangeSelect : rangeSelect,
-     					startTime : startTime,
-     					endTime : endTime	
-     				} ,
-	     			success : function(data, textStatus, jqXHR) {
-	     				alert('<spring:message code="ezEmail.t42" />');
-	     				window.location.reload();
-     				},
-     				error : function(jqXHR, textStatus, errorThrown) {
-                	    alert('Error : ' + jqXHR.status + ", " + textStatus);
-     				}
-     			});       
-        	}        
         	
-        	function menu_SelectRange() {
-	   	         if (CrossYN()) {   	            	   	   	            
-	   	            var szUrl = "/ezPoll/qstRangeSelect.do?brdID=6";  	  
-	   	            var _MSIE = 'MSIE';
-	   	            var useragentstr = navigator.userAgent;
-	   	            
-	   	            if (useragentstr.indexOf(_MSIE) != -1) {	            	
-	   	                var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
-	   	                var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
-	   	                
-	   	                if (rv[0] == "OK") {
-	   	                    //document.getElementById("set_Target").selectedIndex = 1;
-	   	                    //document.getElementById("hidTarget").value = "1";
-	   	                    //document.getElementById("select_YN").value = "YES";
-	   	                    document.getElementById("RangeXMLStr").value = rv[1];
-	   	                } 
-	   	                else if (rv[0] == "NO") {
-	   	                    //document.getElementById("set_Target").selectedIndex = 0;
-	   	                    //document.getElementById("hidTarget").value = "0";
-	   	                    //document.getElementById("selectYN").value = "NO";
-	   	                    document.getElementById("RangeXMLStr").value = "";
-	   	                }
-	   	            } 
-	   	            else {	            	
-	   	                if ((g_windowReference == null) || (g_windowReference.closed == true)) {
-	   	                    if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
-	   	                        var feature = GetOpenPosition(560, 730);
-	   	                        g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
-	   	                    } 
-	   	                    else {
-	   	                        var feature = GetOpenPosition(730, 700);
-	   	                        g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
-	   	                    }
-	   	                }
-	   	                
-	   	                g_windowReference.focus();
-	   	            }
-	   	         } 
-	   	         else {
-	   	             menu_SelectRange_IE();
-	   	         } 
-   	    	}
         	
-    	    function menu_SelectRange_IE() {
-    	        //var item_no = document.all("item_no").value;
-    	        var szUrl = "/ezPoll/qstRangeSelect.do?brdID=6"; 
-    	        
-    	        if ((g_windowReference == null) || (g_windowReference.closed == true)) {
-    	            if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
-    	                var feature = GetOpenPosition(560, 630);
-    	                g_windowReference = window.open(szUrl, "SelectRange", "height=630,width=560,resizable=no,center=yes" + feature);
-    	            } 
-    	            else {
-    	                var feature = GetOpenPosition(560, 700);
-    	                g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
-    	            }
-    	        }
-    	        
-    	        g_windowReference.focus();
-    	    }
-    	    
-        	function GetRangeValue() {
-    	        return document.getElementById("RangeXMLStr").value;
-    	    }
-        	
-    	    function updateTarget(listOfTarget) {
-    	    	var newTargetDiv = document.getElementById("newTargetDiv");
-    	    	newTargetDiv.innerHTML = listOfTarget;
-    	    	newTargetDiv.setAttribute("title", listOfTarget);
-    	    	newTargetDiv.style.display = "";	    	
-    	    }
-    	    
-    	    function updateParent(_element, _value, _Type) {
-    	        var elementRef = document.getElementsByName(_element);
-    	
-    	        if (elementRef && elementRef.length > 0) {
-    	            switch (_Type) {
-    	                case "selectedIndex":
-    	                    elementRef[0].selectedIndex = _value;
-    	                    break;
-    	                case "value":
-    	                    elementRef[0].value = _value;    	                    
-    	                    break;
-    	            }
-    	        }
-    	    }
-    	    
-    	    function closeWindow() {
-    	        if ((g_windowReference != null) && (g_windowReference.closed == false)) {
-    	            g_windowReference.close();
-    	            g_windowReference = null;
-    	        }
-    	    }
     	</script>
 	</head>
-		<xmp id="sigBody" style="display: none;">${xmlRange}</xmp>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
     		<h2><spring:message code="ezMemo.t001" /></h2>
@@ -259,28 +76,28 @@
             	<tr>
                 	<th><spring:message code="ezMemo.t005" /></th>
                 	<td> 
-						<select id="set_quickFlag" style="margin-left: 5px;">
-							<option value="0000"><spring:message code="ezMemo.t008"/></option>
-							<option value="0030"><spring:message code="ezMemo.t009"/></option>
+						<select id="setQuickFlag" style="margin-left: 5px;">
+							<option value="1" <c:if test = "${memoConfigVO.use_gadget eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
+							<option value="0" <c:if test = "${memoConfigVO.use_gadget eq '0' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>
 						</select>
                    	</td>                   	
             	</tr>
             	<tr>
                 	<th><spring:message code="ezMemo.t006" /></th>
                 	<td>
-                		<select id="set_DateFlag" style="margin-left: 5px;">							
-							<option value="0"><spring:message code="ezMemo.t008"/></option>
-							<option value="1"><spring:message code="ezMemo.t009"/></option>							
+                		<select id="setDateFlag" style="margin-left: 5px;">							
+							<option value="1" <c:if test = "${memoConfigVO.use_date eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
+							<option value="0" <c:if test = "${memoConfigVO.use_date eq '0' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>							
 						</select>
                 	</td>
             	</tr>
             	<tr>
                 	<th><spring:message code="ezMemo.t007" /></th>
                 	<td>
-               			<select id="set_fontSize" style="margin-left: 5px;">							
-							<option value="33"><spring:message code="ezMemo.t0010"/></option>
-							<option value="44"><spring:message code="ezMemo.t0011"/></option>
-							<option value="55"><spring:message code="ezMemo.t0012"/></option>							
+               			<select id="setFontSize" style="margin-left: 5px;">							
+							<option value="12" <c:if test = "${memoConfigVO.font_size eq '12' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0010"/></option>
+							<option value="13" <c:if test = "${memoConfigVO.font_size eq '13' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
+							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
 						</select>
                 	</td>
             	</tr>

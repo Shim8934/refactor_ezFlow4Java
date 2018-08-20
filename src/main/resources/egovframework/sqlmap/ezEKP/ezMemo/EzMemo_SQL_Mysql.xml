@@ -20,4 +20,34 @@
 				USER_ID = #user_id#
 		]]>
 	</select>
+	
+	<select id="EzMemoDAO.getMemoConfig" resultClass="MemoConfigVO">
+		<![CDATA[
+			SELECT
+				USE_DATE, USE_GADGET, FONT_SIZE
+			FROM
+				TBL_MEMO_CONFIG
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+		]]>
+	</select>
+	
+	<update id="EzMemoDAO.setMemoConfig" parameterClass="MemoConfigVO">
+		<![CDATA[
+			UPDATE
+				TBL_MEMO_CONFIG
+			SET
+				USE_DATE = #use_date#, USE_GADGET = #use_gadget#, FONT_SIZE = #font_size#
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+		]]>
+	</update>
 </sqlMap>

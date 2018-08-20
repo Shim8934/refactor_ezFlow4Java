@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+
+
 
 
 
@@ -68,6 +72,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezMemo.service.EzMemoService;
+import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -126,6 +132,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "EzMemoService")
+	private EzMemoService ezMemoService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
@@ -614,164 +623,57 @@ public class EzBoardController extends EgovFileMngUtil{
 	//end
 	
 	
-	// 2018-08-09 황윤호 추가
-		
-	@RequestMapping(value="/ezBoard/boardMemoSetting.do")
+	
+	/**
+	 * 게시판 메모 환경설정 호출
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoSetting.do", method = RequestMethod.GET)
 	public String boardMemoSetting(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-			
+		logger.debug("boardMemoSetting started");	
 		userInfo = commonUtil.userInfo(loginCookie); 
-			
-		String pUserID = userInfo.getId();
-			
-		String listOfTarget = "";
-			
-		String startTime = "";
-			
-		String endTime = "";
-			
-		StringBuffer strXMLRange = new StringBuffer();
-			
-		strXMLRange.append("<RANGE>"); 
-			
-			
-		BoardPollConfigVO boardPollConfigVO = ezBoardService.getPollConfig(pUserID, userInfo.getTenantId());
-			
-		if (boardPollConfigVO == null) {
-				
-			model.addAttribute("hasConfig", 0);
-			
-		}
-			
-		else {
-				
-			model.addAttribute("hasConfig", 1);
-				
-				
-			//Process time
-				
-			startTime = boardPollConfigVO.getDefaultStartTime();
-				
-			endTime = boardPollConfigVO.getDefaultEndTime();
-				
-				
-			//Process target
-		     
-			String[] departIdList = null;
-		        
-			String targetDepts = boardPollConfigVO.getTargetDepts();
-		        
-			if(targetDepts != null){
-		        	
-				departIdList = targetDepts.split(",");
-		        
-			}
-		        
-		        
-			String[] userIdList = null;
-		        
-			String targetUsers = boardPollConfigVO.getTargetUsers();
-		        
-			if(targetUsers != null){
-		        	
-				userIdList = targetUsers.split(",");
-		        
-			}
-		        
-		        
-			if (targetDepts != null && !departIdList[0].equals("")) {
-		        	
-				strXMLRange.append("<DEPT>"); 
-		        	
-			        
-				for (String deptID : departIdList) {
-			    
-					OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, userInfo.getPrimary(), userInfo.getTenantId());			        	
-			        
-					strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(organDeptVO.getCn()) + "\" nm=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName()) + 
-			        
-							"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
-			        	
-					
-			        
-					if (userInfo.getPrimary().equals("1")) {
-			        
-						listOfTarget += organDeptVO.getDisplayName1() + ",";
-			        	
-					}
-			        
-					else {
-			        
-						listOfTarget += organDeptVO.getDisplayName2() + ",";
-			        	
-					}
-			        	
-			        
-				}
-			        
-			    
-				strXMLRange.append("</DEPT>"); 
-		        
-			}
-		        
-		    
-			if (targetUsers != null && !userIdList[0].equals("")) {
-		    
-				strXMLRange.append("<MEMBER>"); 
-		        	
-		        
-				for (String userID : userIdList) {
-		        
-					LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
-		        	
-					strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
-			        
-							"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
-		        		
-			        	
-					if (userInfo.getPrimary().equals("1")) {
-			        
-						listOfTarget += user.getDisplayName1() + ",";
-			        	
-					}
-			        
-					else {
-			        
-						listOfTarget += user.getDisplayName2() + ",";
-			        	
-					}
-		        		
-		        	
-				}		        	
-		        	
-		        
-				strXMLRange.append("</MEMBER>");
-		        
-			}
-		        
-		    
-			if (listOfTarget.endsWith(",")) {
-		    
-				listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
-		        
-			}				
-			
-		}
 		
-		strXMLRange.append("</RANGE>");
+		MemoConfigVO memoConfigVO = new MemoConfigVO();
+		memoConfigVO.setUser_id(userInfo.getId());
+		memoConfigVO.setTenant_id(userInfo.getTenantId());
+		memoConfigVO.setCompany_id(userInfo.getCompanyID());
 		
-		model.addAttribute("startTime", startTime);
+		memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
 		
-		model.addAttribute("endTime", endTime);
+		model.addAttribute("memoConfigVO", memoConfigVO);
 		
-		model.addAttribute("listOfTarget", listOfTarget);
-		
-		model.addAttribute("xmlRange", strXMLRange.toString());
-		
-		
-		
-		return "ezBoard/boardMemo";
-		
+		logger.debug("boardMemoSetting ended");
+		return "ezBoard/boardMemo";	
 	}
+	
+	
+	/**
+	 * 게시판 메모 환경설정 저장
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param request
+	 * @param response
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoConfigSave.do", method = RequestMethod.POST)
+	public String boardMemoConfigSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, MemoConfigVO memoConfigVO) throws Exception {
+		logger.debug("boardMemoConfigSave started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		memoConfigVO.setUser_id(userInfo.getId());
+		memoConfigVO.setTenant_id(userInfo.getTenantId());
+		memoConfigVO.setCompany_id(userInfo.getCompanyID());
+		
+		ezMemoService.setMemoConfig(memoConfigVO);
+		logger.debug("boardMemoConfigSave ended");
+		return "json";
+	}
+	
 	/**
 	 * 게시판 부모게시판명 표출 Method
 	 */
