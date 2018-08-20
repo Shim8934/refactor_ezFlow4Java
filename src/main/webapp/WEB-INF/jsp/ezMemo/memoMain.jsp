@@ -74,6 +74,8 @@
 		var memoColor = [
 			"rgb(159, 212, 246)", "rgb(244, 232, 182)",  "rgb(246, 201, 159)", "rgb(165, 241, 197)", "rgb(233, 193, 250)", "rgb(255, 255, 255)"              
 		];
+		var listType = 0;		// 정렬 보기 방식 선택
+		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 
 	 	window.onresize = function () {
 	 		/* 메모리스트 size 변경 */
