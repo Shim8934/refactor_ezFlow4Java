@@ -359,7 +359,7 @@
 					
 					var divName = document.createElement("div");
 					divName.textContent = "<spring:message code='ezWebFolder.t214'/>";
-					divName.setAttribute("style", "font-size:15px;");
+					divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 					
 					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
@@ -427,13 +427,19 @@
 				dom.allCheckBox.checked = false;
 				
 				if (isSubSearching === "Y") {
-					$('#sharerHeader').css('display','none');
-					$('#shareDateHeader').css('display','none');
-					$('#updateDateHeader').css('display','');
+// 					$('#sharerHeader').css('display','none');
+// 					$('#shareDateHeader').css('display','none');
+// 					$('#updateDateHeader').css('display','');
+					$('.wfFileShareMember').css('display','none');
+					$('.wfFileShareDate2').css('display','none');
+					$('.wfFileShareDate').css('display','');
 				} else {
-					$('#updateDateHeader').css('display','none');
-					$('#sharerHeader').css('display','');
-					$('#shareDateHeader').css('display','');
+// 					$('#updateDateHeader').css('display','none');
+// 					$('#sharerHeader').css('display','');
+// 					$('#shareDateHeader').css('display','');
+					$('.wfFileShareDate').css('display','none');
+					$('.wfFileShareMember').css('display','');
+					$('.wfFileShareDate2').css('display','');
 				}
 				
 				if (result == null || result.length == 0) {
@@ -623,9 +629,12 @@
 				
 				dom.allCheckBox.checked = false;
 				
-				$('#sharerHeader').css('display','none');
-				$('#shareDateHeader').css('display','none');
-				$('#updateDateHeader').css('display','');
+// 				$('#sharerHeader').css('display','none');
+// 				$('#shareDateHeader').css('display','none');
+// 				$('#updateDateHeader').css('display','');
+				$('.wfFileShareMember').css('display','none');
+				$('.wfFileShareDate2').css('display','none');
+				$('.wfFileShareDate').css('display','');
 				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
@@ -684,8 +693,6 @@
 					creatorColumn.setAttribute("class", "wfFileShareMember");
 					createDateColumn.setAttribute("class", "wfFileShareDate");
 					updateDateColumn.setAttribute("class", "wfFileShareDate");
-					sharerColumn.setAttribute("class", "wfFileShareMember");
-					shareDateColumn.setAttribute("class", "wfFileShareDate");
 					absolutePathColumn.setAttribute("class", "wfFilePath");
 					shareStatusColumn.setAttribute("class", "wfFileShare");
 					
@@ -1031,11 +1038,11 @@
 								<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 								<th class="wfFileName" ><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 								<th class="wfFileSize" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-								<th class="wfFileShareMember" ><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-								<th class="wfFileShareDate" ><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+								<th class="wfFileShareMember2" ><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+								<th class="wfFileSharedDate" ><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
-								<th class="wfFileShareMember" id="sharerHeader" style=""><spring:message code='ezWebFolder.t320'/></th><!-- 공유자 -->
-								<th class="wfFileShareDate" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
+								<th class="wfFileShareMember" id="sharerHeader" style=""><spring:message code='ezWebFolder.t319'/></th><!-- 공유자 -->
+								<th class="wfFileShareDate2" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
 								<th class="wfFilePath" ><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
 								<th class="wfFileShare" style="margin:0px 0px 0px !important; text-align: center;"><spring:message code='ezWebFolder.t254'/></th><!-- 공유 -->
 							</tr>

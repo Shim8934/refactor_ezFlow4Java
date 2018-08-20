@@ -444,7 +444,8 @@
 		
 		    function TaskCode_Check() {
 		        if (cabinetID == "") {
-		        	if (!nonElecRec == "Y") {
+// 		        	if (!nonElecRec == "Y") {
+		        	if (nonElecRec != "Y") {
 			            btnSetTaskCode_onclick();
 		        	} else {
 			            TaskCode_Save();

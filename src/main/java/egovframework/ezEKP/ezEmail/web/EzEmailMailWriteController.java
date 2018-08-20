@@ -4002,7 +4002,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
-			    		        	// 전달, 회신 테스트
 			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
 			    		        }
 			    		        
