@@ -478,14 +478,20 @@ button.PHBtn {
 					</c:if>
 			</div>
 			<table class="detailsTable" style="clear:none">
+				<colgroup>
+					<col style="width:80px;">
+					<col>
+					<col style="width:80px;">
+					<col>
+				</colgroup>
 			  <tr>
 			  <c:choose>
 			  <c:when test="${empty target }">
-			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t98' /></th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t98' /></th>
 			    <td id="taskName" class="detailsTable-td" colspan="4"><c:out value="${taskDetails.taskName}"/></td>
 			  </c:when>
 			  <c:otherwise>
-			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t87' /></th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t87' /></th>
 			    <td id="taskName" class="detailsTable-td" colspan="4"><c:out value="${taskDetails.groupName}"/></td>
 			  </c:otherwise>
 			  </c:choose>
@@ -506,7 +512,7 @@ button.PHBtn {
 			  <tr>
 			    <th class="detailsTable-th"><spring:message code='ezPMS.t61' /></th>
 			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.planStartDate}"/></td>
-			    <th class="detailsTable-th" style="width:60px"><spring:message code='ezPMS.t61' /></th>
+			    <th class="detailsTable-th"><spring:message code='ezPMS.t61' /></th>
 			    <td class="detailsTable-td dateTd"><c:out value="${taskDetails.realStartDate == null ? '-' : taskDetails.realStartDate}"/></td>
 			    <td id="startDiff" class="detailsTable-td" name="startDiff"></td>
 			  </tr>
