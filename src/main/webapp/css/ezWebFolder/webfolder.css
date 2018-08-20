@@ -155,9 +155,11 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 .wfFileUploadDate 	{width: 9%;}
 .wfFileUpdateDate 	{width: 9%;}
 .wfFilePath 		{width: 25%}
-.wfFileShare 		{width: 4.5%; text-align: center;}
+.wfFileShare 		{width: 5.5%; text-align: center;}
 .wfFileShareDate	{width: 7%;}
+.wfFileShareDate2	{width: 7%;}
 .wfFileShareMember	{min-width:10px; width:6.5%;}
+.wfFileShareMember2	{min-width:10px; width:6.5%;}
 .wfFileSharedDate	{min-width:10px; width:7%;}
 .wfFileFavoriteSize		{min-width:10px; width:11%;}
 .wfFileFavoriteDate		{min-width:10px; width:13%;}
