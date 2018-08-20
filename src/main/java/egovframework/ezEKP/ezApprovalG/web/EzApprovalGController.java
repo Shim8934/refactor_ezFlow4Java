@@ -4801,6 +4801,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String listType = request.getParameter("listType");
 		String mode = "VIE";
 		String callBackType = request.getParameter("CallBackType");
+		String ext = request.getParameter("ext");
 		
 		if (listType.equals("1") || listType.equals("2") || listType.equals("3")) {
 			mode = "VIE";
@@ -4882,6 +4883,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("ext", ext);
 		
 		logger.debug("aprDocView ended.");
 		
