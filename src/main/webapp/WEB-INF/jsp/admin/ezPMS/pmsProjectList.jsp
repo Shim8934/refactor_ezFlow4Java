@@ -12,13 +12,15 @@
 		cursor: pointer;
 	}
 </style>
-
+<script>
+console.log("${paging.currentPage}");
+</script>
 <div id="divList" style="width: 100%;">
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='PROJECT_ID' style="width:60px; text-align: center;">NO</th>
-				<th onclick="setListOrder(this)" data-order='PROJECT_NAME' style="width:23%;"><spring:message code="ezPMS.t31"/></th>
+				<!-- <th onclick="setListOrder(this)" data-order='PROJECT_ID' style="width:60px; text-align: center;">NO</th> -->
+				<th onclick="setListOrder(this)" data-order='PROJECT_NAME' style="width:30%; padding-left:20px;"><spring:message code="ezPMS.t31"/></th>
 				<th onclick="setListOrder(this)" data-order='OVERVIEW'><spring:message code="ezPMS.t236"/></th>
 				<th onclick="setListOrder(this)" data-order='CREATOR_NAME' style="width:100px;"><spring:message code="ezPMS.t57"/></th>
 				<th onclick="setListOrder(this)" data-order='PLAN_START_DATE' style="width:140px;"><spring:message code="ezPMS.t61"/></th>
@@ -34,10 +36,10 @@
 					</tr>
 				</c:when>
 				<c:otherwise>
-					<c:forEach items="${projectList}" var="projectVO">
+					<c:forEach items="${projectList}" var="projectVO" varStatus="status">
 						<tr ondblclick="getProjectGeneralInfo(${projectVO.projectId})">
-							<td style="text-align: center;"><c:out value="${projectVO.projectId}"/></td>
-							<td><c:out value="${projectVO.projectName}"/></td>
+							<%-- <td style="text-align: center;"><c:out value="${paging.currentPage * 20 - (20 - (status.index + 1))}"/></td> --%>
+							<td style="padding-left : 20px;"><c:out value="${projectVO.projectName}"/></td>
 							<td><c:out value="${projectVO.overview}"/></td>
 							<td><c:out value="${projectVO.creatorName}"/></td>
 							<td><c:out value="${fn:substring(projectVO.planStartDate, 0, 19)}"/></td>
