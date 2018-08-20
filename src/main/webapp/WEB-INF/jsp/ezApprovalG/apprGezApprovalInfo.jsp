@@ -1683,7 +1683,7 @@
 		    	if (pIniGubun != "1") {
 		    		setCabInfoInit();
 		    	}
-		        if (g_CabID != "") {
+		        if (g_CabID != "" && g_CabID != "null") {
 		            var para = new Array();
 		            para[0] = g_SepAttachLVXml;
 		            para[1] = g_CabID;
