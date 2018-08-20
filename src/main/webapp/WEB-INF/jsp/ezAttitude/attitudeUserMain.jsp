@@ -468,7 +468,7 @@
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
 					data : {
-						
+						isRest : "all"
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {

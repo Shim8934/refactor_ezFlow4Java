@@ -560,9 +560,11 @@
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
                			<td>
-                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
-                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
-                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+               				<div style="vertical-align: middle;height: 74%;width: 100%;">
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+	                   		</div>
                 		</td>
                 		<th style="text-align: center; width: 100px"><spring:message code="ezQuestion.t481" /></th>
                 		<td style="width: 250px; white-space: nowrap">

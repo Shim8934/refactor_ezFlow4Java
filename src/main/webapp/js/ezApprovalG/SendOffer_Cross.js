@@ -10,7 +10,7 @@ function SendOffer(pUserID)
 		var DocList = new ListView();
         DocList.LoadFromID("DocList");   
         var tr = DocList.GetSelectedRows();
-	
+        ext = tr[0].getAttribute("DATA2").substring(tr[0].getAttribute("DATA2").lastIndexOf(".")+1);
 		if (tr.length <= 0)
 		{
 			var pAlertContent = strLang195;
@@ -287,7 +287,10 @@ function SendOfferCheck(pDocID, pUserID)
 		else if (rtnVal == "NORECEIPT")
 		{
 			var pInformationContent = " " + strLang201 + "<br> " + strLang202;
-			OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
+			var ret = OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
+			if (ret && ext == 'hwp') {
+			    SendOfferCheck_OpenUI(ret);
+			}
 			return "NORECEIPT";
 		}
 		else if (rtnVal == "NODEPT")
@@ -314,6 +317,9 @@ function SendOfferCheck(pDocID, pUserID)
 			OpenAlertUI(pAlertContent)
 			return false;
 		}
+		else if (rtnVal == "TOKIAN") {
+			sendOfferToKian();
+		}
 		else
 		{
 			var pAlertContent = strLang200;
@@ -327,6 +333,53 @@ function SendOfferCheck(pDocID, pUserID)
 		OpenAlertUI(pAlertContent)
 		return false;
 	}
+}
+
+function sendOfferToKian(){
+	var rtnVal = new Array("");
+	rtnVal[0] = "OK";
+    rtnVal[1] = arr_userinfo[1];	// ID
+    rtnVal[2] = arr_userinfo[2];  // NAME
+    rtnVal[3] = arr_userinfo[3];  // JobTitle
+    rtnVal[4] = arr_userinfo[4];		// DeptID
+    rtnVal[5] = arr_userinfo[5];	// DeptName
+    //2010.08.16 다국어 추가
+    rtnVal[6] = arr_userinfo[12]; //username2
+    rtnVal[7] = arr_userinfo[16]; //deptname2
+    rtnVal[8] = arr_userinfo[14]; //jobtitle2
+	
+	
+	var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var tr = DocList.GetSelectedRows();
+    var pDocID = tr[0].getAttribute("DATA1");
+    var pHref = tr[0].getAttribute("DATA2");
+
+    var newDocID = CreateNewDoc(pDocID, temppUserID );
+    if (newDocID == "") {
+        UndoUpdateProcessYN(pDocID);
+
+        var pAlertContent = strLang196;
+        OpenAlertUI(pAlertContent)
+        return;
+    }
+
+    var rvalue = UpdateReceiptOffer(newDocID, pDocID)
+    if (!rvalue) {
+        UndoCreateDoc(newDocID);
+
+        UndoUpdateProcessYN(pDocID);
+
+        var pAlertContent = strLang196;
+        OpenAlertUI(pAlertContent)
+        return;
+    }
+    var rvalue2 = doSendOffer(newDocID, pDocID, rtnVal, pHref);
+    if (!rvalue2) {
+        UndoCreateDoc(newDocID);
+
+        UndoUpdateProcessYN(pDocID);
+    }
 }
 
 function SendOfferCheck_OpenUI(Ans) {
@@ -403,14 +456,20 @@ function OpenSelectReceipts_Complete(ret) {
     if (ret[0] == "cancel")
         return false;
 
+    var uPYNResult = "";
     MDeptList = ret;
 
     if (MDeptList[0] == "OK") {
         for (var i = 0 ; i < MDeptList[1].length ; i++) {
-            UpdateProcessYN(temppDocID, MDeptList[1][i], "T", MDeptList[2][i], MDeptList[4][i]);
+        	uPYNResult = UpdateProcessYN(temppDocID, MDeptList[1][i], "T", MDeptList[2][i], MDeptList[4][i]);
         }
     }
-    OpenSendOfferUI();
+    
+    if (uPYNResult == "TOKIAN") {
+    	sendOfferToKian();
+	} else {
+		OpenSendOfferUI();
+	}
 }
 
 function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDeptName2)
@@ -438,7 +497,7 @@ function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDe
 		
 		if (xmlhttp.statusText == "OK") {
 			var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-	    	return getNodeText(dataNodes[0]);
+			return getNodeText(dataNodes[0]);
 		} else {
 			alert(strLang223);
 			return "";
@@ -455,16 +514,18 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
+    var RtnVal = "";
     if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else {
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -472,7 +533,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
+        RtnVal = window.showModalDialog(url, parameter, feature);
     }
     return RtnVal;
 }

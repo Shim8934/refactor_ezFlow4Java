@@ -37,6 +37,7 @@ function init(mode) {
 
 function setButtons(mode) {
 	tableView.setTableId("tblFileList");
+	tableView.setTabledHeader("tblFileList1");
 	tableView.setTableType("filelist");
 	tableView.setSelectedClass("bnkWebFolder2");
 	tableView.setUnselectClass("bnkWebFolder");
@@ -122,8 +123,9 @@ function reloadSelectBox() {
 
 function preProcessing() {
 	var divList          = document.getElementById("dragDropArea");
-	var reheight         = document.documentElement.clientHeight - 195;
+	var reheight         = document.documentElement.clientHeight - 240;
 	divList.style.height = reheight + "px";
+	scroll();
 }
 
 function openSearchPanel() {
@@ -208,6 +210,7 @@ function search_Set(pPage) {
 function renderData(result) {
 	tableView.setDataSource(result);
 	tableView.renderTable();
+	scroll();
 }
 
 function startSearch() {

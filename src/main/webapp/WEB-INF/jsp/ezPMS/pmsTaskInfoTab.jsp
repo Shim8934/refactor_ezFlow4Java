@@ -59,8 +59,8 @@
 	.tg tr {height: 30px;}
 	.tg td {padding:5px 5px;border:1px solid #ccc;}
 	.tg th {padding:5px 5px;border:1px solid #ccc;width:60px;}
-	th.overviewTh{height:298px;}
-	td.overviewTd{height:298px; vertical-align:top;}
+	th.overviewTh{height:260px;}
+	td.overviewTd{height:260px; vertical-align:top;}
 	.tooltip {
 	    position: relative;
 	    display: inline-block;

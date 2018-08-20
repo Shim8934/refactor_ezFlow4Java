@@ -10455,6 +10455,478 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_pms_board_folder`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_board_folder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_board_folder` (
+  `folder_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_id` int(11) DEFAULT NULL,
+  `folder_name` varchar(100) DEFAULT NULL,
+  `folder_name2` varchar(100) DEFAULT NULL,
+  `project_id` bigint(20) DEFAULT NULL,
+  `creator_id` varchar(100) DEFAULT NULL,
+  `folder_order` int(11) DEFAULT NULL,
+  `del_status` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`folder_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_comment`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_comment` (
+  `comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '의견 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `task_id` bigint(20) DEFAULT NULL COMMENT '업무 아이디',
+  `group_id` bigint(20) DEFAULT NULL COMMENT '그룹 아이디',
+  `update_date` datetime NOT NULL COMMENT '수정 일',
+  `comment_content` longtext NOT NULL COMMENT '의견 내용',
+  `writer_id` varchar(100) NOT NULL COMMENT '게시자 아이디',
+  `write_date` datetime NOT NULL COMMENT '게시 일',
+  `writer_name` varchar(100) NOT NULL COMMENT '게시자 명',
+  `writer_name2` varchar(100) NOT NULL COMMENT '게시자 명다국어',
+  `writer_deptname` varchar(100) DEFAULT NULL COMMENT '게시자 부서',
+  `writer_deptname2` varchar(100) DEFAULT NULL COMMENT '게시자 부서다국어',
+  `del_status` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`comment_id`),
+  KEY `FK_tbl_pms_comment_task_id_tbl_pms_task_task_id` (`task_id`),
+  KEY `FK_tbl_pms_comment_group_id_tbl_pms_group_group_id` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_comment_group_id_tbl_pms_group_group_id` FOREIGN KEY (`group_id`) REFERENCES `tbl_pms_group` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_comment_task_id_tbl_pms_task_task_id` FOREIGN KEY (`task_id`) REFERENCES `tbl_pms_task` (`task_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=384 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 의견';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_favorite`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_favorite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_favorite` (
+  `favorite_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '즐겨찾기 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  PRIMARY KEY (`favorite_id`),
+  KEY `FK_tbl_pms_favorite_project_id_tbl_pms_project_project_id` (`project_id`),
+  CONSTRAINT `FK_tbl_pms_favorite_project_id_tbl_pms_project_project_id` FOREIGN KEY (`project_id`) REFERENCES `tbl_pms_project` (`project_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_fixedholiday`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_fixedholiday`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_fixedholiday` (
+  `holiday_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `holiday_name` varchar(50) DEFAULT NULL,
+  `holiday_name2` varchar(50) DEFAULT NULL,
+  `holiday` varchar(10) NOT NULL,
+  `solarlunar` smallint(6) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`holiday_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_group`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_group` (
+  `group_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '그룹 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
+  `group_name` varchar(200) NOT NULL COMMENT '그룹 명',
+  `upper_group_id` bigint(20) NOT NULL COMMENT '상위 그룹 아이디',
+  `plan_start_date` date NOT NULL COMMENT '계획 시작 일',
+  `plan_end_date` date NOT NULL COMMENT '계획 종료 일',
+  `real_start_date` date DEFAULT NULL COMMENT '실제 시작 일',
+  `real_end_date` date DEFAULT NULL COMMENT '실제 종료 일',
+  `real_progress` float NOT NULL COMMENT '실제 진행률',
+  `overview` longtext COMMENT '개요',
+  `member_count` mediumint(9) NOT NULL COMMENT '참여 인원수',
+  `head_manager_id` varchar(100) NOT NULL COMMENT '총괄 담당자 아이디',
+  `head_manager_name` varchar(100) NOT NULL COMMENT '총괄 담당자 명',
+  `head_manager_name2` varchar(100) NOT NULL COMMENT '총괄 담당자 명다국어',
+  `head_manager_deptname` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 부서',
+  `head_manager_deptname2` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 부서다국어',
+  `creator_id` varchar(100) NOT NULL COMMENT '생성자 아이디',
+  `create_date` date NOT NULL COMMENT '생성 일',
+  `creator_name` varchar(100) NOT NULL COMMENT '생성자 명',
+  `creator_name2` varchar(100) NOT NULL COMMENT '생성자 명다국어',
+  `creator_deptname` varchar(100) DEFAULT NULL COMMENT '생성자 부서',
+  `creator_deptname2` varchar(100) DEFAULT NULL COMMENT '생성자 부서다국어',
+  `tree_depth` int(11) NOT NULL COMMENT '트리 깊이',
+  `ancester_group` varchar(45) NOT NULL COMMENT '조상 그룹',
+  `sort_order` int(11) NOT NULL COMMENT '정렬 순서',
+  `del_status` mediumint(9) NOT NULL COMMENT '삭제 상태',
+  `workingday` mediumint(9) NOT NULL COMMENT '업무일',
+  `rest_dueday` mediumint(9) NOT NULL COMMENT '남은 기한',
+  `issueYN` varchar(10) DEFAULT 'N',
+  `workingday_sum` float DEFAULT '0',
+  PRIMARY KEY (`group_id`),
+  KEY `FK_tbl_pms_group_project_id_tbl_pms_project_project_id` (`project_id`),
+  CONSTRAINT `FK_tbl_pms_group_project_id_tbl_pms_project_project_id` FOREIGN KEY (`project_id`) REFERENCES `tbl_pms_project` (`project_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=749 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 그룹';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_groupmember`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_groupmember`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_groupmember` (
+  `group_member_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '그룹 멤버 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `group_id` bigint(20) NOT NULL COMMENT '그룹 아이디',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `user_name` varchar(100) NOT NULL COMMENT '사용자 명',
+  `user_name2` varchar(100) NOT NULL COMMENT '사용자 명다국어',
+  `user_deptname` varchar(100) DEFAULT NULL COMMENT '사용자 부서',
+  `user_deptname2` varchar(100) DEFAULT NULL COMMENT '사용자 부서다국어',
+  `member_role_id` int(11) NOT NULL,
+  PRIMARY KEY (`group_member_id`),
+  KEY `FK_tbl_pms_groupmember_group_id_tbl_pms_group_group_id` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_groupmember_group_id_tbl_pms_group_group_id` FOREIGN KEY (`group_id`) REFERENCES `tbl_pms_group` (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1338 DEFAULT CHARSET=utf8mb4 COMMENT='그룹 담당자';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_item_attachment`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_item_attachment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_item_attachment` (
+  `file_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `item_id` int(11) NOT NULL COMMENT '게시물 아이디',
+  `file_path` varchar(250) NOT NULL COMMENT '파일 경로',
+  `file_size` varchar(45) NOT NULL COMMENT '파일 크기',
+  `file_name` varchar(100) NOT NULL COMMENT '파일 명',
+  PRIMARY KEY (`file_id`),
+  KEY `FK_tbl_pms_item_attachment_item_id_tbl_pms_item_list_item_id` (`item_id`),
+  CONSTRAINT `FK_tbl_pms_item_attachment_item_id_tbl_pms_item_list_item_id` FOREIGN KEY (`item_id`) REFERENCES `tbl_pms_item_list` (`item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=173 DEFAULT CHARSET=utf8mb4 COMMENT='게시물 첨부파일';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_item_list`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_item_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_item_list` (
+  `item_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '게시물 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `writer_id` varchar(100) NOT NULL COMMENT '게시자 아이디',
+  `title` varchar(400) NOT NULL COMMENT '제목',
+  `write_overview` longtext COMMENT '게시 개요',
+  `write_type` int(11) DEFAULT NULL COMMENT '게시 종류',
+  `write_content` longtext COMMENT '게시 내용',
+  `write_date` datetime NOT NULL COMMENT '게시 일',
+  `write_update_date` datetime DEFAULT NULL COMMENT '게시 수정 일',
+  `read_count` int(11) NOT NULL COMMENT '조회 수',
+  `task_id` bigint(20) DEFAULT NULL COMMENT '업무 아이디',
+  `group_id` bigint(20) DEFAULT NULL COMMENT '그룹 아이디',
+  `writer_name` varchar(100) NOT NULL COMMENT '게시자 명',
+  `writer_name2` varchar(100) NOT NULL COMMENT '게시자 명다국어',
+  `writer_deptname` varchar(100) DEFAULT NULL COMMENT '게시자 부서',
+  `writer_deptname2` varchar(100) DEFAULT NULL COMMENT '게시자 부서다국어',
+  `writer_position` varchar(100) DEFAULT NULL COMMENT '게시자 직위',
+  `writer_position2` varchar(100) DEFAULT NULL COMMENT '게시자 직위다국어',
+  `del_status` tinyint(1) NOT NULL DEFAULT '0',
+  `root_item_id` int(11) DEFAULT NULL,
+  `upper_item_id` int(11) DEFAULT NULL,
+  `item_level` int(11) NOT NULL DEFAULT '0',
+  `doc_no` int(11) NOT NULL,
+  `folder_id` bigint(20) DEFAULT '0',
+  `upper_doc_no_tree` longtext,
+  PRIMARY KEY (`item_id`),
+  KEY `FK_tbl_pms_item_list_task_id_tbl_pms_task_task_id` (`task_id`),
+  KEY `FK_tbl_pms_item_list_group_id_tbl_pms_group_group_id` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_item_list_group_id_tbl_pms_group_group_id` FOREIGN KEY (`group_id`) REFERENCES `tbl_pms_group` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_item_list_task_id_tbl_pms_task_task_id` FOREIGN KEY (`task_id`) REFERENCES `tbl_pms_task` (`task_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2674 DEFAULT CHARSET=utf8mb4 COMMENT='게시물 리스트';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_item_read`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_item_read`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_item_read` (
+  `read_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '조회 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
+  `item_id` int(11) NOT NULL COMMENT '게시물 아이디',
+  `read_date` datetime NOT NULL COMMENT '조회 일',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `user_name` varchar(100) NOT NULL COMMENT '사용자 명',
+  `user_name2` varchar(100) NOT NULL COMMENT '사용자 명다국어',
+  `user_deptname` varchar(100) NOT NULL COMMENT '사용자 부서',
+  `user_deptname2` varchar(100) NOT NULL COMMENT '사용자 부서다국어',
+  PRIMARY KEY (`read_id`),
+  KEY `FK_tbl_pms_item_read_item_id_tbl_pms_item_list_item_id` (`item_id`),
+  CONSTRAINT `FK_tbl_pms_item_read_item_id_tbl_pms_item_list_item_id` FOREIGN KEY (`item_id`) REFERENCES `tbl_pms_item_list` (`item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=418 DEFAULT CHARSET=utf8mb4 COMMENT='게시물 조회자';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_log`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_log` (
+  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '이력 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_id` bigint(20) DEFAULT NULL COMMENT '프로젝트 아이디',
+  `group_id` bigint(20) DEFAULT NULL COMMENT '그룹 아이디',
+  `task_id` bigint(20) DEFAULT NULL COMMENT '업무 아이디',
+  `log_date` datetime DEFAULT NULL,
+  `log_status` mediumint(9) NOT NULL COMMENT '이력 상태',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `user_name` varchar(100) NOT NULL COMMENT '사용자 명',
+  `user_name2` varchar(100) NOT NULL COMMENT '사용자 명다국어',
+  `user_deptname` varchar(100) DEFAULT NULL COMMENT '사용자 부서',
+  `user_deptname2` varchar(100) DEFAULT NULL COMMENT '사용자 부서다국어',
+  `log_content` varchar(500) NOT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `FK_tbl_pms_log_project_id_tbl_pms_project_project_id` (`project_id`),
+  KEY `FK_tbl_pms_log_group_id_tbl_pms_group_group_id` (`group_id`),
+  KEY `FK_tbl_pms_log_task_id_tbl_pms_task_task_id` (`task_id`),
+  CONSTRAINT `FK_tbl_pms_log_group_id_tbl_pms_group_group_id` FOREIGN KEY (`group_id`) REFERENCES `tbl_pms_group` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_log_project_id_tbl_pms_project_project_id` FOREIGN KEY (`project_id`) REFERENCES `tbl_pms_project` (`project_id`),
+  CONSTRAINT `FK_tbl_pms_log_task_id_tbl_pms_task_task_id` FOREIGN KEY (`task_id`) REFERENCES `tbl_pms_task` (`task_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7242 DEFAULT CHARSET=utf8mb4 COMMENT='작업이력';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_mainlist`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_mainlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_mainlist` (
+  `list_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '리스트 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
+  `kanban_order` varchar(45) NOT NULL COMMENT '칸반 순서',
+  PRIMARY KEY (`list_id`),
+  KEY `FK_tbl_pms_mainlist_project_id_tbl_pms_project_project_id` (`project_id`),
+  CONSTRAINT `FK_tbl_pms_mainlist_project_id_tbl_pms_project_project_id` FOREIGN KEY (`project_id`) REFERENCES `tbl_pms_project` (`project_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 상세보기 메인 custom';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_member`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_member` (
+  `member_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '멤버 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
+  `member_role_id` int(11) NOT NULL COMMENT '멤버 역할 아이디',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `user_name` varchar(100) DEFAULT NULL COMMENT '사용자 명',
+  `user_name2` varchar(100) DEFAULT NULL COMMENT '사용자 명다국어',
+  `user_deptname` varchar(100) DEFAULT NULL COMMENT '사용자 부서',
+  `user_deptname2` varchar(100) DEFAULT NULL COMMENT '사용자 부서다국어',
+  `user_position` varchar(100) DEFAULT NULL COMMENT '사용자 직위',
+  `user_position2` varchar(100) DEFAULT NULL COMMENT '사용자 직위다국어',
+  `user_id_type` varchar(100) NOT NULL COMMENT '사용자 아이디 종류',
+  PRIMARY KEY (`member_id`),
+  KEY `FK_tbl_pms_member_project_id_tbl_pms_project_project_id` (`project_id`),
+  CONSTRAINT `FK_tbl_pms_member_project_id_tbl_pms_project_project_id` FOREIGN KEY (`project_id`) REFERENCES `tbl_pms_project` (`project_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4081 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 참여자 관련 정보';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_pretaskrel`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_pretaskrel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_pretaskrel` (
+  `pretaskrel_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '선행작업관계 아이디',
+  `pretask` bigint(20) DEFAULT NULL COMMENT '선행작업',
+  `task_id` bigint(20) DEFAULT NULL COMMENT '업무 아이디',
+  `pregroup` bigint(20) DEFAULT NULL COMMENT '선행그룹',
+  `group_id` bigint(20) DEFAULT NULL COMMENT '그룹 아이디',
+  `tenant_id` mediumint(9) DEFAULT NULL,
+  `project_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`pretaskrel_id`),
+  KEY `FK_tbl_pms_pretaskrel_task_id_tbl_pms_task_task_id` (`task_id`),
+  KEY `FK_tbl_pms_pretaskrel_group_id_tbl_pms_group_group_id` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_pretaskrel_group_id_tbl_pms_group_group_id` FOREIGN KEY (`group_id`) REFERENCES `tbl_pms_group` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_pretaskrel_task_id_tbl_pms_task_task_id` FOREIGN KEY (`task_id`) REFERENCES `tbl_pms_task` (`task_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=709 DEFAULT CHARSET=utf8mb4 COMMENT='선행작업관계';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_project`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_project`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_project` (
+  `project_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '프로젝트 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_name` varchar(100) NOT NULL COMMENT '프로젝트 명',
+  `plan_start_date` date NOT NULL COMMENT '계획 시작 일',
+  `plan_end_date` date NOT NULL COMMENT '계획 종료 일',
+  `real_start_date` date DEFAULT NULL COMMENT '실제 시작 일',
+  `real_end_date` date DEFAULT NULL COMMENT '실제 종료 일',
+  `head_manager_id` varchar(100) NOT NULL COMMENT '총괄 담당자 아이디',
+  `head_manager_name` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 명',
+  `head_manager_name2` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 명다국어',
+  `head_manager_deptname` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 부서',
+  `head_manager_deptname2` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 부서다국어',
+  `status` varchar(45) NOT NULL COMMENT '상태',
+  `progress` float NOT NULL COMMENT '진행률',
+  `overview` longtext COMMENT '개요',
+  `weight_input` mediumint(9) NOT NULL COMMENT '가중치 입력',
+  `creator_id` varchar(100) NOT NULL COMMENT '생성자 아이디',
+  `create_date` date NOT NULL COMMENT '생성 일',
+  `creator_name` varchar(100) NOT NULL COMMENT '생성자 명',
+  `creator_name2` varchar(100) NOT NULL COMMENT '생성자 명다국어',
+  `creator_deptname` varchar(100) DEFAULT NULL COMMENT '생성자 부서',
+  `creator_deptname2` varchar(100) DEFAULT NULL COMMENT '생성자 부서다국어',
+  `workingday` float NOT NULL COMMENT '업무일',
+  `rest_dueday` mediumint(9) NOT NULL COMMENT '남은 기한',
+  `alam_mail_status` mediumint(9) DEFAULT NULL COMMENT '알림 메일 상태',
+  `del_status` mediumint(9) NOT NULL DEFAULT '0',
+  `workingday_sum` float DEFAULT '0',
+  `mail_repeat` smallint(6) DEFAULT '0',
+  PRIMARY KEY (`project_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=376 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 정보';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_setting`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_setting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_setting` (
+  `setting_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '환경설정 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `view_type` bigint(20) DEFAULT NULL COMMENT '화면 종류',
+  `progress_color` varchar(10) DEFAULT NULL COMMENT '진행률 색상',
+  `complete_color` varchar(10) DEFAULT NULL COMMENT '완료 색상',
+  `overdue_color` varchar(10) DEFAULT NULL COMMENT '지연 색상',
+  `hold_color` varchar(10) DEFAULT NULL COMMENT '보류 색상',
+  `project_sort` mediumint(9) DEFAULT NULL COMMENT '프로젝트 정렬',
+  `list_number` int(11) DEFAULT NULL COMMENT '리스트 개수',
+  `list_project_status` varchar(45) DEFAULT 'P',
+  PRIMARY KEY (`setting_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 환경설정 custom';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_task`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_task` (
+  `task_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '업무 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
+  `group_id` bigint(20) NOT NULL COMMENT '그룹 아이디',
+  `task_name` varchar(100) NOT NULL COMMENT '업무 명',
+  `status` varchar(45) NOT NULL COMMENT '상태',
+  `plan_start_date` date NOT NULL COMMENT '계획 시작 일',
+  `plan_end_date` date NOT NULL COMMENT '계획 종료 일',
+  `real_start_date` date DEFAULT NULL COMMENT '실제 시작 일',
+  `real_end_date` date DEFAULT NULL COMMENT '실제 종료 일',
+  `real_progress` float NOT NULL COMMENT '실제 진행률',
+  `weight` float NOT NULL COMMENT '가중치',
+  `overview` longtext NOT NULL COMMENT '개요',
+  `member_count` mediumint(9) NOT NULL COMMENT '참여 인원수',
+  `head_manager_id` varchar(100) NOT NULL COMMENT '총괄 담당자 아이디',
+  `head_manager_name` varchar(100) NOT NULL COMMENT '총괄 담당자 명',
+  `head_manager_name2` varchar(100) NOT NULL COMMENT '총괄 담당자 명다국어',
+  `head_manager_deptname` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 부서',
+  `head_manager_deptname2` varchar(100) DEFAULT NULL COMMENT '총괄 담당자 부서다국어',
+  `writer_id` varchar(100) NOT NULL COMMENT '게시자 아이디',
+  `write_date` date NOT NULL COMMENT '게시 일',
+  `writer_name` varchar(100) NOT NULL COMMENT '게시자 명',
+  `writer_name2` varchar(100) NOT NULL COMMENT '게시자 명다국어',
+  `writer_deptname` varchar(100) DEFAULT NULL COMMENT '게시자 부서',
+  `writer_deptname2` varchar(100) DEFAULT NULL COMMENT '게시자 부서다국어',
+  `tree_depth` int(11) DEFAULT '0' COMMENT '트리 깊이',
+  `ancester_group` varchar(45) DEFAULT NULL COMMENT '조상 그룹',
+  `sort_order` int(11) NOT NULL COMMENT '정렬 순서',
+  `workingday` float NOT NULL COMMENT '업무일',
+  `rest_dueday` mediumint(9) DEFAULT NULL COMMENT '남은 기한',
+  `link_task_id` bigint(20) DEFAULT NULL COMMENT '업무관리 업무 아이디',
+  `del_status` mediumint(9) NOT NULL DEFAULT '0' COMMENT '삭제 상태',
+  `real_workingday` int(11) DEFAULT '0',
+  PRIMARY KEY (`task_id`),
+  KEY `FK_tbl_pms_task_project_id_tbl_pms_project_project_id` (`project_id`),
+  KEY `FK_tbl_pms_task_group_id_tbl_pms_group_group_id` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_task_group_id_tbl_pms_group_group_id` FOREIGN KEY (`group_id`) REFERENCES `tbl_pms_group` (`group_id`),
+  CONSTRAINT `FK_tbl_pms_task_project_id_tbl_pms_project_project_id` FOREIGN KEY (`project_id`) REFERENCES `tbl_pms_project` (`project_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=801 DEFAULT CHARSET=utf8mb4 COMMENT='프로젝트 작업';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_pms_taskmember`
+--
+
+DROP TABLE IF EXISTS `tbl_pms_taskmember`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_pms_taskmember` (
+  `task_member_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '업무 멤버 아이디',
+  `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
+  `task_id` bigint(20) NOT NULL COMMENT '업무 아이디',
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `user_name` varchar(100) NOT NULL COMMENT '사용자 명',
+  `user_name2` varchar(100) NOT NULL COMMENT '사용자 명다국어',
+  `user_deptname` varchar(100) DEFAULT NULL COMMENT '사용자 부서',
+  `user_deptname2` varchar(100) DEFAULT NULL COMMENT '사용자 부서다국어',
+  `pctinput` float NOT NULL COMMENT '투입률',
+  PRIMARY KEY (`task_member_id`),
+  KEY `FK_tbl_pms_taskmember_task_id_tbl_pms_task_task_id` (`task_id`),
+  CONSTRAINT `FK_tbl_pms_taskmember_task_id_tbl_pms_task_task_id` FOREIGN KEY (`task_id`) REFERENCES `tbl_pms_task` (`task_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1656 DEFAULT CHARSET=utf8mb4 COMMENT='작업 담당자';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 

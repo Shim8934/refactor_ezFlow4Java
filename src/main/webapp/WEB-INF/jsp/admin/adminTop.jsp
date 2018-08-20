@@ -7,7 +7,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script>
+			var useHWP = "${useHWP}";
 			function window_onload(){
 				process();
 			}
@@ -24,6 +26,14 @@
 				<c:if test="${use_portal != 'YES'}">
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
+				
+				<c:if test="${useHWP == 'YES'}">
+					var userAgent = window.navigator.userAgent;
+					
+					if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
+						GetObject();
+					}
+		    	</c:if>
 			}
 			
 			function menu_change(width, e){
@@ -100,6 +110,20 @@
 				}
 			}
 			
+			function GetObject() {
+                i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                }
+                else {
+                    finish_download();
+                }
+            }
+			
 			function finish_download() {
                 OfficeBugPatch();
             }
@@ -115,6 +139,11 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
+		<c:if test="${useHWP == 'YES'}">
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
+        </c:if>
 		<form method="post">
 			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
 			<div id="adminmenu">
@@ -183,6 +212,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
+		<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
 	</body>
 </html>
 

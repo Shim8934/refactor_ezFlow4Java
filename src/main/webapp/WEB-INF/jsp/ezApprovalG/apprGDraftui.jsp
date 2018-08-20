@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -151,6 +152,11 @@
 			var agreeResultType = "${agreeResultType}";
 			var curDocNum = "";
 			var isEditorComplete = false;
+			var isHWP = "";
+			var ext = "mht";
+			var nonElecRec = "${nonElecRec}";
+			var nonElecRecInfoXml = "";
+			var nonSepAttachLVXml = "";
 			
 		    window.onload = function ()
 		    {
@@ -165,6 +171,12 @@
 		        if(approvalFlag == "G") {
 		        	$("#btnAddSepAttach").css("display","");
 	        	}
+		        
+		        if(nonElecRec == "Y") {
+		        	document.getElementById("btnSelForm").style.display = "none";
+                	document.getElementById("btnAddSepAttach").style.display = "none";
+                	document.getElementById("btnSaveServer").style.display = "none";
+		        }
 		    };
 		    function dragNdrapNo()
 		    {
@@ -521,16 +533,24 @@
 			            }
 			            
 			            if (approvalFlag == "G") {
+			            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+			            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+				                OpenAlertUI(pAlertContent);
+				                return;
+			            	}
+			            	
 				            if (cabinetID == "") {
 				                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
 				                OpenAlertUI(pAlertContent, check_btnSendDraft);
 				                return;
 				            }
 				            
-				            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
-				                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
-				                OpenAlertUI(pAlertContent);
-				                return;
+				            if (nonElecRec != "Y") {
+					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+					                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
+					                OpenAlertUI(pAlertContent);
+					                return;
+					            }
 				            }
 			            } else {
 				            if (cabinetID == "") {
@@ -594,13 +614,16 @@
 			            setDrafterAddress();
 			            if (pDraftFlag == "REDRAFT")
 			                delOpinionInfo();
-			            if (LastSignSN == 1 || DraftLastFlag) {
-			                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-			                OpenInformationUI(pInformationContent, check_btnSendDraft4);
-			            }
-			            else
+			            if (nonElecRec != "Y") {
+				            if (LastSignSN == 1 || DraftLastFlag) {
+				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            }
+				            else
+				                CheckPassWord();
+			            } else {
 			                CheckPassWord();
-		        		
+			            }
 		        	} else {
 		        		OpenAlertUI("<spring:message code='ezApprovalG.pjg02'/>");
 		        	}		            
@@ -782,12 +805,6 @@
 	                        sendAlertMail("APR", 1, "DRAFT");
 		                }
 		                UpdateLineHistory();
-		                if (LastSignSN == 1) {
-		                    SendAckForExch("approval", "END");
-		                }
-		                else {
-		                    SendAckForExch("submit", "ING");
-		                }
 		
 		                pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 		                OpenAlertUI(pAlertContent, Complete_Deaft2);
@@ -1070,7 +1087,7 @@
 		        if (!field) return;
 		        var PublicType = pPublicityCode.substring(0, 1);
 		        var PublicLevel = pPublicityCode.substring(1, 9);
-		        var PublicType2 = pPublicityCode2;
+		        // var PublicType2 = pPublicityCode2;
 		        var PublicText = "";
 		        if (pLimitRange != "")
 		            PublicText = " (" + pLimitRange + ")";
@@ -1083,12 +1100,13 @@
 		        else
 		            PublicText = " ";
 		        
-		        if (PublicType2 == "1")
-		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
-		        else if (PublicType2 == "2")
-		            PublicText = "<spring:message code='ezApprovalG.t150'/>";
-		        else
-		            PublicText = " ";
+// 		        if (PublicType2 == "1")
+// 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+// 		        else if (PublicType2 == "2")
+// 		            PublicText = "<spring:message code='ezApprovalG.t150'/>";
+// 		        else
+// 		            PublicText = " ";
+
 		        field.innerHTML = PublicText;
 		    }
 			
@@ -1191,7 +1209,8 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+				para[3] = ext;
+				
 		        var url = "/ezApprovalG/insSepAttach.do";
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
@@ -1314,6 +1333,13 @@
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+		        
+		        if (nonElecRec == "Y") {
+			        parameter[47] = "nonElecRecTempCabinet";
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+		        }
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1324,7 +1350,9 @@
 				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
 					pGubun = "11";
 				}
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType;
+				
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "mht";
+		        
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
 				}
@@ -1414,8 +1442,15 @@
 			                if (ret[21].substring(0,1) == "N") {
 			                	tempPublic = "N";
 			                }
-// 			                setPublicFlag();
-			                setPublicFlag2();
+ 			                setPublicFlag();
+			                // setPublicFlag2();
+			                
+			                if (nonElecRec == "Y") {
+			                	nonElecRecInfoXml = ret[23];
+			                	nonSepAttachLVXml = ret[24];
+			                	
+			                	setNonElecRecInfo(nonElecRecInfoXml);
+			                }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

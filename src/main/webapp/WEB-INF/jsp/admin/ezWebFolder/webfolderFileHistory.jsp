@@ -44,7 +44,8 @@
 				closeAllPopup();
 				document.onselectstart = function() {return false;}
 				
-				tableView.setTableId("tblFileHistory");
+				tableView.setTableId("tblFileList");
+				tableView.setTabledHeader("tblFileList1");
 				tableView.setTableType("filelog");
 				tableView.setSelectedClass("bnkWebFolder2");
 				tableView.setUnselectClass("bnkWebFolder");
@@ -134,13 +135,15 @@
 					pagination.setListSize(this.value);
 					refreshView();
 				});
+				scroll();
 				
 			});
 			
 			function preProcessing() {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 185;
+				var divList          = document.getElementById("dragDropArea");
+				var reheight         = document.documentElement.clientHeight - 215;
 				divList.style.height = reheight + "px";
+				scroll();
 			}
 			
 			function keyPressPanel(e) {
@@ -239,6 +242,7 @@
 			function renderData(result) {
 				tableView.setDataSource(result);
 				tableView.renderTable();
+				scroll();
 			}
 			
 			function startSearch() {
@@ -386,6 +390,33 @@
 		   	        optionHidden();
 		   	    }
 		   	}
+		   	
+			function scroll() {
+				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+				
+				 if (BoardList_BODYHeight > BoardListDivHeight) {
+					if ($("#tblFileList1 tr th#forScroll").length > 0) {
+						$("#tblFileList1 tr th#forScroll").remove();
+					}
+				} else {
+					if ($("#tblFileList1 tr th#forScroll").length < 1) {
+						$("#tblFileList1 tr th#forScroll").remove();
+						$("#tblFileList1 tr").append("<th></th>");
+						
+							var lastTh = $("#tblFileList1 tr th").last();
+							lastTh.attr("id", "forScroll");
+							lastTh.css("width", "15px");
+							
+					}
+				}
+				 
+				/*var lastTh = $("#BoardList_TH th").last();
+				if (lastTh.attr("id") == null) {
+					lastTh.css("display", "none");
+				}*/
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -485,17 +516,26 @@
 			</div>
 		</div>
 		
-		<div id="mainSetting" style="margin: 10px 0px 10px 5px; height:500px; overflow: auto;">
-				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
-				<tr>
-					<th headers="ft" style="text-align: center; width: 40px;"><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" style="width: 50%;"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" style="width: 8%;"><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" style="width: 10%;"><spring:message code='ezWebFolder.t154'/></th>
-					<th headers="at" style="width: 8%;"><spring:message code='ezWebFolder.t158'/></th>
-					<th headers="ad" style="text-align: center; width: 24%;"><spring:message code='ezWebFolder.t159'/></th>
-				</tr>
-			</table>
+		<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th headers="ft" class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileLogName"><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileFavoriteSize"><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t154'/></th>
+							<th headers="at" class="wfActive" ><spring:message code='ezWebFolder.t158'/></th>
+							<th headers="ad" class="wfFileLogDate" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+						</tr>
+					</thead>
+				</table>
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+				
+					</table>
+				</div>
+			</div>
 		</div>
 		
 		<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">

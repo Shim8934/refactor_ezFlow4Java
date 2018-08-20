@@ -5,7 +5,9 @@ function openOpinionViewUI() {
     parameter[1] = pOpinionType;    
     parameter[2] = "";
     parameter[3] = "";
-
+    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+    parameter[99] = ext;
+    
     apropinion_cross_dialogArguments[0] = parameter;
     apropinion_cross_dialogArguments[1] = openOpinionViewUI_Complete;
 
@@ -126,7 +128,7 @@ function getHistory() {
 	if (pDocState == strDocState15) {
 		pDocID = pOrgDocID;
 	}
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "mht";
 
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;

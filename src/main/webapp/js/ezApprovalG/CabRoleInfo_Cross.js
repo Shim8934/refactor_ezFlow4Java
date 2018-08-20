@@ -5,16 +5,8 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
 
     if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined) {
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-            var OpenWin = window.open(url, "ezAPRALERT", GetOpenWindowfeature(325, 200));
-            try { OpenWin.focus(); } catch (e) { }
-        }
-        else {
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-            var OpenWin = window.open(url, "ezAPRALERT", GetOpenWindowfeature(325, 200));
-            try { OpenWin.focus(); } catch (e) { }
-        }
+        var OpenWin = window.open(url, "ezAPRALERT", GetOpenWindowfeature(325, 200));
+        try { OpenWin.focus(); } catch (e) { }
     }
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
