@@ -157,22 +157,31 @@
 </head>
 <body class="mainbody">
 	<h1><spring:message code="ezPMS.t235"/></h1>
-	<select id="searchCondition" onchange="setSearchInput(this.value)">
-		<option value="searchByProjectName"><spring:message code="ezPMS.t31"/></option>
-		<option value="searchByOverview"><spring:message code="ezPMS.t236"/></option>
-		<option value="listProjectStatus"><spring:message code="ezPMS.t38"/></option>
-	</select>
-	<input id="searchKeyword" type="text" onkeypress="if(event.keyCode==13) {searchProject(); return false;}"/>
-	<a class="imgbtn" id="searchBtn" onclick="searchProject()" style="margin-left:3px;"><span><spring:message code="ezPMS.t1"/></span></a>
-	<select id="listByStatus" onchange="viewListByStatus(this.value)" style="display: none;">
-		<option value="A"><spring:message code="ezPMS.t271"/></option>
-		<option value="P"><spring:message code="ezPMS.t258"/></option>
-		<option value="W"><spring:message code="ezPMS.t260"/></option>
-		<option value="C"><spring:message code="ezPMS.t261"/></option>
-		<option value="L"><spring:message code="ezPMS.t262"/></option>
-		<option value="S"><spring:message code="ezPMS.t259"/></option>
-		<option value="D"><spring:message code="ezPMS.t263"/></option>
-	</select>
+	<table class="content" >
+			<form name="page">
+				<tr>
+					<th><spring:message code = 'ezCommunity.t28' /></th>
+					<td>
+						<select id="searchCondition" onchange="setSearchInput(this.value)" style="height:22px;">
+							<option value="searchByProjectName"><spring:message code="ezPMS.t31"/></option>
+							<option value="searchByOverview"><spring:message code="ezPMS.t236"/></option>
+							<option value="listProjectStatus"><spring:message code="ezPMS.t38"/></option>
+						</select>
+						<input id="searchKeyword" type="text" style="height:22px; width:200px; margin-bottom:1px;" onkeypress="if(event.keyCode==13) {searchProject(); return false;}"/>
+						<a class="imgbtn imgbck" id="searchBtn" onclick="searchProject()" style="margin-left:3px;"><span><spring:message code="ezPMS.t1"/></span></a>
+						<select id="listByStatus" onchange="viewListByStatus(this.value)" style="display: none; height:22px;">
+							<option value="A"><spring:message code="ezPMS.t271"/></option>
+							<option value="P"><spring:message code="ezPMS.t258"/></option>
+							<option value="W"><spring:message code="ezPMS.t260"/></option>
+							<option value="C"><spring:message code="ezPMS.t261"/></option>
+							<option value="L"><spring:message code="ezPMS.t262"/></option>
+							<option value="S"><spring:message code="ezPMS.t259"/></option>
+							<option value="D"><spring:message code="ezPMS.t263"/></option>
+						</select>
+					</td>
+				</tr>
+			</form>
+		</table>
 	
 	<div id="contentList" style="overflow: auto; margin-top: 10px;">
 		<span id="MailListRayer"
