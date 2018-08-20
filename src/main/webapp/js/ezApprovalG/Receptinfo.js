@@ -539,7 +539,7 @@ function AprLineAddDept(nodeIdx, tr) {
     setNodeText(GetChildNodes(objNodes[0])[12], "");
     setNodeText(GetChildNodes(objNodes[0])[13], "");
 //    setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
-  //2018-08-20 이효진
+    //2018-08-20 이효진
     if (useReceiveInfoName == '1') {
     	//현재부서명 + 장
     	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + "장");

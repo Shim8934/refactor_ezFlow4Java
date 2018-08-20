@@ -3751,6 +3751,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getListXML(String groupID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getListXML started");
 
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		if (approvalFlag.equals("G")) {
@@ -3818,7 +3819,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<CELL>");
 			
 			if (primaryData.equals("1")) {
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
+				if (useReceiveInfoName.equals("1")) {
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
+				} else if (useReceiveInfoName.equals("2")) {
+					//추가 개발시 변경
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
+				} else {
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");					
+				}
 			} else {
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
 			}
