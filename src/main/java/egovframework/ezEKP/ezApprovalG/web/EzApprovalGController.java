@@ -316,9 +316,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	                    }
 	                }
 	                deptListFlag += 1;
-	                if (deptListFlag > 0) {
+	                if ((deptListFlag > 0 && companyID.equals(userInfo.getCompanyID())) || deptListFlag > 1) {
 	                	isSubTitle = true;
-					}
+					} 
                 } 
         	}
         }
