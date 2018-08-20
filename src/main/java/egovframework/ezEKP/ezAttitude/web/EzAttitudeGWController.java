@@ -1098,11 +1098,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			String userId = request.getParameter("userId");
+			//isRest = all(휴일모두), rest(휴무일만)
+			String isRest = request.getParameter("isRest");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("rest", companyId, tenantId);
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList(isRest, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

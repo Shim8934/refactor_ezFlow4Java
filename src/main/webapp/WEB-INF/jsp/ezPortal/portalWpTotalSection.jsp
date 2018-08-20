@@ -19,9 +19,9 @@
 				<div class="info">
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
-        				<dt>${companyNm }<br></dt>
+        				<dt>${companyNm}<br></dt>
 			 			<dd>${department} ${title}</dd>
-						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
+						<dd class="gray" title="${loginIP}"><spring:message code="main.t00016" />  ${lastLogin}</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>
@@ -1036,7 +1036,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우

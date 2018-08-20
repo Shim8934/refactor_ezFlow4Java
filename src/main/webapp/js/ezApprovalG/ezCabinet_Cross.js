@@ -812,9 +812,13 @@ function InsertToRecListView(Resultxml) {
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
-
-        makePageSelPage(NodeListLen);
-
+        
+        if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
+        	orgmakePageSelPage(NodeListLen);
+        } else {
+        	makePageSelPage(NodeListLen);
+        }
+        
         DisplayLineCnt_ezCab(NodeListLen);
         selFirstRow(Resultxml);
     } catch (e) { }
@@ -1582,12 +1586,6 @@ function td_Create1(strtext) {
 function makePageSelPage(pTotalCnt) {
     var strtext;
     var PagingHTML = "";
-//    if ($("tblPageRayer").length == 0) {
-//    	totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
-//    	document.getElementById("td_pTotalCount").innerHTML = totalPage;
-//    	document.getElementById("txt_PageInputNum").value = 1; 
-//    	return;
-//    }
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
         if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {

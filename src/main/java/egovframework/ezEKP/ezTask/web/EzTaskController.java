@@ -1572,6 +1572,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");		
 		String date = request.getParameter("date");
 		String selectedDate = request.getParameter("date");
+		String calDate = request.getParameter("calDate");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
 		String completeRateList = "";
@@ -1611,14 +1612,12 @@ public class EzTaskController extends EgovFileMngUtil {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String endDate = "";	
 			
-			//Get user today time
 			String[] offsetArr = offset.split("\\|");				
 			nsdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
-		    String utcTime = nsdf.format(new Date());	    		    
-			String todayText = utcTime + " 00:00:00";
-			Date today = sdf.parse(todayText); 
+			String dayText = calDate + " 00:00:00";
+			Date day = sdf.parse(dayText); 
 	        Calendar calendar1 = Calendar.getInstance();  
-	        calendar1.setTime(today); 
+	        calendar1.setTime(day); 
 	        
 			if (taskInfoVO.getTotalRep() != -1) {
 				endDate = taskInfoVO.getEndDate();
@@ -1631,7 +1630,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		        	date = endDate.substring(0, 10);
 		        }
 		        else {		        	
-		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+		        	result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO);
 		        	
 		        	for (String d: result.keySet()) {	        			        		
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -1646,7 +1645,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		        }		        		        
 			}
 			else {				
-				result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+				result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO);
 				
 	        	for (String d: result.keySet()) {
 	        		Date dDate = sdf.parse(d + " 00:00:00"); 

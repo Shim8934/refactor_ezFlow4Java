@@ -3653,10 +3653,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
-        if (!nonElecRec.equals("")) {
-        	model.addAttribute("nonElecRec", nonElecRec);
-        }
+		if (approvalFlag.equals("G")) {
+			String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (!nonElecRec.equals("")) {
+				model.addAttribute("nonElecRec", nonElecRec);
+			}
+		}
 		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);

@@ -462,8 +462,6 @@
 	            else if (pIniGubun == "6") { //결재선, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
@@ -473,8 +471,6 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
@@ -483,8 +479,6 @@
 	            }
 	            else if (pIniGubun == "8") { //결재선, 수신자, 결재정보
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -494,8 +488,6 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -506,8 +498,6 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -517,8 +507,6 @@
 	            }
 	            else if (pIniGubun == "11") { //결재선, 기록물철, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -526,8 +514,6 @@
 	            else if (pIniGubun == "12") { //기록물철, 결재정보
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab3").onclick();
@@ -537,8 +523,6 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showDocinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -608,8 +592,10 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
-	                    
+
+	                    if (approvalFlag == "G") {
+	                    	document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -624,7 +610,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -639,7 +628,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -663,7 +655,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -708,6 +703,10 @@
 	                    	nonElecRecInit();
 	                    }
 	                    setCabInfoInit();
+	                    
+	                    if (pIniGubun == "1") {
+		                    bool3 = true;
+	                    }
 	                    
 	                    bool6 = true;
 	                    break;
@@ -985,6 +984,13 @@
 		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 			                if (approvalFlag == "G") {
 			                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                    var cabinetXml = loadXMLString(ret[4]);
+			                    var cabIdNode = SelectNodes(cabinetXml, "CABINETINFO/CABINET/CABINETID");
+			                    var cabIdValue = getNodeText((cabIdNode)[0]);
+			                    if (cabIdValue == "null" || cabIdValue == "") {
+			                    	OpenAlertUI("<spring:message code='ezApprovalG.t1117'/>");
+			                    	return;
+			                    }
 			                } else {
 			                	ret[4] = setCabInfoXML();
 			                }
