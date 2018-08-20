@@ -494,7 +494,7 @@ function setCabInfoInit() {
 		g_CabID = rtnValue;
 	}
 	
-	if (g_CabID != "" && g_CabID != "nonElecRecTempCabinet") {
+	if (g_CabID != "" && g_CabID != "nonElecRecTempCabinet" && g_CabID != "null") {
 		var CabXml = GetCabinetClassInfo(g_CabID);
 		
 		if (pIniGubun == "6") {

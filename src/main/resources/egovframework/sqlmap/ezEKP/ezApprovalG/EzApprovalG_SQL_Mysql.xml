@@ -20911,7 +20911,7 @@
 	   			VALUES 
 	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
 					#v_REGYEAR#, #v_SYSDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
-					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, #v_EXECUTEDATE#, #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
+					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, IF(#v_EXECUTEDATE# = '', NULL, #v_EXECUTEDATE#), #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
 	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
 	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
 	   				#v_DELFLAG#, #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, 
@@ -23095,7 +23095,7 @@
    	<insert id="EzApprovalG.insertRecRoleInfo" parameterClass="Map">
 	   	<isEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
-	   				TBL_RECROLEINFO 
+	   				TBL_RECROLEINFO_TEMP
 	   		(DocID, RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID, COMPANYID) 
 	   		 VALUES 
 	   		(#v_DOCID#, #v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, #v_UserName2#, 'All User', #v_TENANTID#, #companyID#)
