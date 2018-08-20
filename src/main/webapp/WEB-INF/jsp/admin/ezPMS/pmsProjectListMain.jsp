@@ -153,10 +153,18 @@
 		window.open("/admin/ezPMS/getProjectGeneralInfo.do?projectId=" + projectId, "", 
 					"width=650, height=470, resizable=no, scrollbars=no, status=no" + feature);
 	}
+	
+	function setTotalCount(totalCount) {
+		if (!totalCount) {
+			totalCount = 0;
+		}
+		
+		$("#totalCount").text(totalCount);
+	}
 </script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code="ezPMS.t235"/></h1>
+	<h1><spring:message code="ezPMS.t235"/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<table class="content" >
 			<form name="page">
 				<tr>

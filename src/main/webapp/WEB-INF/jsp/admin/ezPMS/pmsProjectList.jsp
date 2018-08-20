@@ -13,7 +13,7 @@
 	}
 </style>
 <script>
-console.log("${paging.currentPage}");
+setTotalCount("${projectListCount}");
 </script>
 <div id="divList" style="width: 100%;">
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
