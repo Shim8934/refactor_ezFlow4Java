@@ -5053,6 +5053,7 @@ public class EzPMSController {
 						*  (Float.parseFloat(lateContent.get("weight").toString()) / 100.00);
 			}
 		}
+		
 		row.createCell(11).setCellValue((Math.round(pLatePercent * 10) / 10.0) + "%");// 지연율
 		row.getCell(11).setCellStyle(projectStyle);
 		row.createCell(12).setCellValue(project.get("planStartDate").toString());// 계획
@@ -5073,7 +5074,12 @@ public class EzPMSController {
 		JSONArray pProjectMemberList = (JSONArray) project.get("projectMember");
 		int pCount = pProjectMemberList.size() - 1;
 		
-		row.createCell(16).setCellValue(egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {pName, pCount}, userInfo.getLocale()) );// 담당자
+		if (pCount == 0) {
+			row.createCell(16).setCellValue(pName);// 담당자
+		} else {
+			row.createCell(16).setCellValue(egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {pName, pCount}, userInfo.getLocale()) );// 담당자
+		}
+		
 		row.getCell(16).setCellStyle(projectStyle);
 		row.createCell(17).setCellValue("");// 산출물
 		row.getCell(17).setCellStyle(projectStyle);
