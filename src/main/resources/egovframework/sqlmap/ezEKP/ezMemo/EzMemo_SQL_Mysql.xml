@@ -151,4 +151,19 @@
 				COMPANY_ID = #company_id# 
 		</selectKey>
 	</insert>
+	
+	<update id="EzMemoDAO.modifyMemoFolder" parameterClass="map">
+		UPDATE
+			TBL_MEMO_FOLDER 
+		SET
+			FOLDER_NAME = #folder_name#
+		WHERE
+			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
 </sqlMap>

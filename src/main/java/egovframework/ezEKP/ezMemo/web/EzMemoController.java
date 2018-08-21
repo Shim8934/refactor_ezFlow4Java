@@ -219,8 +219,7 @@ public class EzMemoController {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
-			String folderNameList = resultBody.get("data").toString();
-			model.addAttribute("folderNameList", folderNameList);
+			model.addAttribute("status", status);
 		}
 		logger.debug("memoFolderAction ended.");
 		return "json";

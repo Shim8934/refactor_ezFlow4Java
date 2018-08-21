@@ -79,9 +79,6 @@
 	            	url = "/ezMemo/memoFolderAction.do"; 
 	            	method = "post";
 	            } else {
-	            	/**
-	            	구현해야됨
-	            	*/
 	            	url = "/ezMemo/memoFolderAction.do?folder_id=" + FolderId;
 	            	method = "put";
 	            }

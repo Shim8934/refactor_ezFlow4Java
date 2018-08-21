@@ -226,4 +226,30 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/] ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoFolderModify(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/folders/users/]" +userId + " started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			memoFolderVO.setTenant_id(info.getTenantId());
+			
+			ezMemoService.modifyMemoFolder(memoFolderVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch(Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/folders/users/] ended.");
+		return result;
+	}
 }
