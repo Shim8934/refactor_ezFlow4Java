@@ -804,10 +804,9 @@
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
 						}); 
 						$('.memoFolders').append(html);
-					
 					}     			
 				});
 		    }

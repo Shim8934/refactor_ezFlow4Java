@@ -93,6 +93,15 @@ public class EzMemoController {
 		return "ezMemo/memoMain";
 	}
 	
+	/**
+	 * 메모함 정보 호출 method
+	 * @param loginCookie
+	 * @param modelMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ezMemo/getMemoFoldersInfo.do")
 	public String memoFoldersInfo(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoFoldersInfo started");
@@ -117,6 +126,15 @@ public class EzMemoController {
 		return "json";
 	}
 	
+	/**
+	 * 메모함관리 화면 이동 method
+	 * @param loginCookie
+	 * @param modelMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ezMemo/memoFolderManage.do")
 	public String memoFolderManage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoFolderManage started");
@@ -128,6 +146,28 @@ public class EzMemoController {
 		return "ezMemo/memoFolderManage";
 
 	}
+	
+	/**
+	 * 메모함 추가/수정 화면 호출 method
+	 * @param loginCookie
+	 * @param modelMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/memoInputName.do")
+	public String memoInputName(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoFolderManage started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+	
+		logger.debug("memoFolderManage ended");
+		return "ezMemo/memoInputName";
+
+	}
+
 	
 	@RequestMapping(value = "/ezMemo/memoRead.do")
 	public String memoDetailView(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {

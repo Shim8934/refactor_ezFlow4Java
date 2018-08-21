@@ -25,7 +25,6 @@
 			    CurrentHeight = document.body.clientHeight;
 			    CurrenWidth = document.body.clientWidth;
 			    memoFoldersInfo();
-			    
             }
 			
             var inputNameDlg_cross_dialogArguments = new Array();
@@ -36,7 +35,7 @@
 			    inputNameDlg_cross_dialogArguments[2] = "";
 			    inputNameDlg_cross_dialogArguments[3] = "";
 			    
-			    DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
+			    DivPopUpShow(330, 200, "/ezMemo/memoInputName.do");
 			}
             
 		    function modify_onclick() {
@@ -109,7 +108,7 @@
 							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;'>" + list.folder_name + "<span id='folderCount" + index +"'></span></span></div>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node'>" + list.folder_name + "<span id='folderCount" + index +"'></span></span></div>";
 						});
 						$('.memoFolders').append(html);
 					}     			
