@@ -31,27 +31,21 @@
 				<c:choose>
 					<c:when test="${cabinet.permission == '2'}">
 						<li id="addBttn"><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li><img src="/images/i_bar.gif"></li>
 						<li id="delBttn"><a><span><spring:message code='ezCabinet.t46'/></span></a></li>
 						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li><img src="/images/i_bar.gif"></li>
 						<li id="refBttn"><a><span><spring:message code='ezCabinet.t48'/></span></a></li>
 						<li id="schBttn"><a><span><spring:message code='ezCabinet.t49'/></span></a></li>
-						<li><img src="/images/i_bar.gif"></li>
 						<li id="shaBttn"><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
 					</c:when>
 					<c:when test="${cabinet.permission == '1'}">
 						<li id="addBttn"><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li><img src="/images/i_bar.gif"></li>
 						<li id="delBttn"><a><span><spring:message code='ezCabinet.t46'/></span></a></li>
 						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li><img src="/images/i_bar.gif"></li>
 						<li id="refBttn"><a><span><spring:message code='ezCabinet.t48'/></span></a></li>
 						<li id="schBttn"><a><span><spring:message code='ezCabinet.t49'/></span></a></li>
 					</c:when>
 					<c:otherwise>
 						<li id="refBttn"><a><span><spring:message code='ezCabinet.t48'/></span></a></li>
-						<li><img src="/images/i_bar.gif"></li>
 						<li id="schBttn"><a><span><spring:message code='ezCabinet.t49'/></span></a></li>
 					</c:otherwise>
 				</c:choose>

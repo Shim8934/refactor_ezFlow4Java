@@ -211,7 +211,8 @@ function CabinetTree() {
 		imgElmt2.src       = _userIcon;
 		
 		var spanDeptName         = document.createElement("span");
-		spanDeptName.textContent = list["userName"] + "[" + list["deptName"] + "]";
+		spanDeptName.textContent = list["userName"];
+		spanDeptName.setAttribute("title", list["userName"] + "[" + list["deptName"] + "]");
 		spanDeptName.className   = "spanName";
 		spanDeptName.setAttribute("role", list["userId"]);
 		spanDeptName.addEventListener("click", function(e) {getUserSelected(this);}, false);
