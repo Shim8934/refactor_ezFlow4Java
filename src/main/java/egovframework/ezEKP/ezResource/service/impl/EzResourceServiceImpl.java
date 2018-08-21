@@ -1272,7 +1272,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		long diff = tmpEndDate.getTime() - tmpStartDate.getTime();
 		
-		logger.debug("sDate=" + sDate);
+		/*logger.debug("sDate=" + sDate);
 		logger.debug("eDate=" + eDate);
 		logger.debug("selType=" + selType);
 		logger.debug("interval=" + interval);
@@ -1283,7 +1283,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("resStartDate=" + sdf.format(resStartDate));
 		logger.debug("resEndDate=" + sdf.format(resEndDate));
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
-		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));
+		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
@@ -1445,7 +1445,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		long diff = tmpEndDate.getTime() - tmpStartDate.getTime();
 		
-		logger.debug("sDate=" + sDate);
+		/*logger.debug("sDate=" + sDate);
 		logger.debug("eDate=" + eDate);
 		logger.debug("interval=" + interval);
 		logger.debug("endRecurType=" + endRecurType);
@@ -1455,7 +1455,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("resStartDate=" + sdf.format(resStartDate));
 		logger.debug("resEndDate=" + sdf.format(resEndDate));
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
-		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));
+		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
@@ -1580,7 +1580,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		long diff = tmpEndDate.getTime() - tmpStartDate.getTime();
 		
-		logger.debug("sDate=" + sDate);
+		/*logger.debug("sDate=" + sDate);
 		logger.debug("eDate=" + eDate);
 		logger.debug("interval=" + interval);
 		logger.debug("endRecurType=" + endRecurType);
@@ -1590,7 +1590,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("resStartDate=" + sdf.format(resStartDate));
 		logger.debug("resEndDate=" + sdf.format(resEndDate));
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
-		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));
+		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
@@ -2518,15 +2518,21 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
 			logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
 			
+//			for (String date : deletedDateStrList) {
+//				date = commonUtil.getDateStringInUTC(date, offset, false);
+//			}
+			
+			List<String> deletedDateStrListConvertedInUTC  = new ArrayList<String>();
 			for (String date : deletedDateStrList) {
 				date = commonUtil.getDateStringInUTC(date, offset, false);
+				deletedDateStrListConvertedInUTC.add(date);
 			}
 			
 			if (dateList2.size() == 0) {
 				continue;
 			}
 
-			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrList, offset);
+			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrListConvertedInUTC, offset);
 			
 			if (isDup) {
 				break;
@@ -2545,7 +2551,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
 		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
-
+		
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -2579,15 +2585,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
 		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, strPnum, companyID, tenantID);
-		logger.debug("repScheduledList.size=" + repScheduledList.size());
 		
 		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
 			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
 			schedule.setEndDateTime(commonUtil.getDateStringInUTC(schedule.getEndDateTime(), offset, false));
 			
+			
 			ResScheduleRepetitionVO vo2 = resStruct(schedule);
-
-			dateList2 = getRepDateTimes(vo2, strStartDateTime, strEndDateTime, offset);
+			
+			dateList2 = getchkRepDateTimes(vo2, strStartDateTime, strEndDateTime, offset);
 			
 			// 반복예약 중에 삭제된 예약 가져옴
 			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
@@ -2604,7 +2610,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 
 			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrListConvertedInUTC, offset);
-			
 			if (isDup) {
 				break;
 			}
@@ -2617,15 +2622,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public boolean chkTableRepeat(List<Date[]> dateList, List<Date[]> dateList2, List<String> deletedList, String offset) throws Exception {
 		logger.debug("============ chkTableRepeat started ============");
 		
-		logger.debug("dateList.size=" + dateList.size());
-		logger.debug("dateList2.size=" + dateList2.size());
+		logger.debug("dateList.size = " + dateList.size());
+		logger.debug("dateList2.size = " + dateList2.size());
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (deletedList == null || deletedList.size() == 0) {
 			for (Date[] dateVO : dateList) {
 				for (Date[] dateVO2 : dateList2) {
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
-						logger.debug("chkTableRepeat ended.");
 						return true;
 					}
 				}
@@ -2635,7 +2639,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				for (Date[] dateVO2 : dateList2) {
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
 						if (!deletedList.contains(format.format(dateVO2[0]))) {
-							logger.debug("chkTableRepeat ended.");
 							return true;
 						}
 					}
@@ -2777,9 +2780,596 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			result.setAllDay(true);
 		}
 		
+		logger.debug("result : " + result.getDaysOfMonth());
+		
 		logger.debug("resStruct ended");
 		return result;
 	}
 	
+	public List<Date[]> getchkRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
+		logger.debug("getchkRepDateTimes started");
+		
+		int maxTemp = 100;
+		
+		List<Date[]> returnList = new ArrayList<Date[]>();
+			
+		int freq = vo.getFreq();
+		
+		if (sDate.length() == 10) {
+			sDate += " 00:00:00";
+		}
+		if (eDate.length() == 10) {
+			eDate += " 23:59:59";
+		}
+		
+		if (freq == 4) {
+			returnList = getchkDailyRepDateTimes(vo, sDate, eDate, maxTemp); 
+		} else if (freq == 5) {
+			returnList = getchkWeeklyRepDateTime(vo, sDate, eDate, maxTemp);
+		} else if (freq == 6 || freq == 7) {
+			returnList = getchkMonthlyRepDateTimes(vo, sDate, eDate, maxTemp);
+		}
+		
+		logger.debug("returnList.size()=" + returnList.size());
+		logger.debug("getRepDeteTimes ended");
+		
+		return returnList;
+	}
+	
+	public List<Date[]> getchkDailyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
+		int selType = vo.getSelType();
+		int interval = vo.getInterval();
+		int endRecurType = vo.getEndRecurType();
+		int instances = vo.getInstances();
+		int tempYoil = 0;
+		
+		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
+		Date resEndDate = vo.getEndDate();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat osdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		// 요청 기간
+		Date startDate = sdf.parse(sDate);
+		Date endDate = sdf.parse(eDate);
+
+		String tmpStartDateStr = sdf.format(vo.getStartDate());
+		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
+		
+		Date tmpStartDate = vo.getStartDate();
+		Date tmpEndDate = sdf.parse(tmpEndDateStr);
+		
+		Calendar tempStartCal = Calendar.getInstance();
+		tempStartCal.setTime(tmpStartDate);
+		
+		Calendar tempEndCal = Calendar.getInstance();
+		tempEndCal.setTime(tmpEndDate);
+		
+		Calendar oEndCal = Calendar.getInstance();
+		oEndCal.setTime(resEndDate);
+		
+		// timezone으로 인해 tmpStartDate가 tmpEndDate보다 늦은 경우 tmpEndDate를 하루 늘려준다.
+		if (tmpStartDate.after(tmpEndDate)) {
+			tempEndCal.add(Calendar.DATE, 1);
+			tmpEndDate = tempEndCal.getTime();
+		}
+		
+		long diff = tmpEndDate.getTime() - tmpStartDate.getTime();
+		
+	/*	logger.debug("sDate=" + sDate);
+		logger.debug("eDate=" + eDate);
+		logger.debug("selType=" + selType);
+		logger.debug("interval=" + interval);
+		logger.debug("endRecurType=" + endRecurType);
+		logger.debug("instances=" + instances);
+		logger.debug("startDate=" + sdf.format(startDate));
+		logger.debug("endDate=" + sdf.format(endDate));
+		logger.debug("resStartDate=" + sdf.format(resStartDate));
+		logger.debug("resEndDate=" + sdf.format(resEndDate));
+		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
+		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
+		
+		List<Date[]> returnList = new ArrayList<Date[]>();
+		
+		int temp = maxTemp; // 최대 maxTemp번 반복
+		
+		String oSDate;
+		String oStartDate;
+		String oEDate;
+		String oEndDate;
+		
+		while (true) {
+			
+			oSDate = osdf.format(tmpStartDate);
+			oStartDate = osdf.format(startDate);
+			oEDate = osdf.format(resEndDate);
+			oEndDate = osdf.format(endDate);
+			
+			
+			// 40일 때(매 n일)
+			if (selType == 0) {
+				// 종료일 지정 안했을 경우
+				if (endRecurType == 0) {
+					if (tmpStartDate.after(endDate)) {
+						break;
+					} else if (oSDate.equals(oStartDate) && oEDate.equals(oEndDate)) {
+						tempEndCal.setTime(tmpStartDate);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 종료일 지정했을 경우
+				else if (endRecurType == 2) {
+					logger.debug("oSDate : " + oSDate + " == " + "oStartDate : " + oStartDate);
+					logger.debug("oEDate : " + oEDate + " == oEndDate : " + oEndDate);
+					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
+						break;
+					} else if (oSDate.equals(oStartDate)) {
+						tempEndCal.setTime(tmpStartDate);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 반복 횟수 지정했을 경우
+				else if (endRecurType == 1) {
+					if (tmpStartDate.after(endDate) || instances <= 0) {
+						break;
+					} else {
+						if (oSDate.equals(oStartDate) && oEDate.equals(oEndDate)) {
+							tempEndCal.setTime(tmpStartDate);
+							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+							
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
+							});
+						}
+						
+						instances--;
+					}
+				}
+			}
+			// 41일 때(평일 매일)
+			else {
+				tempYoil = tempStartCal.get(Calendar.DAY_OF_WEEK);
+				
+				// 종료일 지정 안했을 경우
+				if (endRecurType == 0) {
+					if (tmpStartDate.after(endDate)) {
+						break;
+					} else if (oSDate.equals(oStartDate) && oEDate.equals(oEndDate) && tempYoil > 1 && tempYoil < 7) {
+						tempEndCal.setTime(tmpStartDate);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 종료일 지정했을 경우
+				else if (endRecurType == 2) {
+					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
+						break;
+					} else if (oSDate.equals(oStartDate) && tempYoil > 1 && tempYoil < 7) {
+						tempEndCal.setTime(tmpStartDate);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 반복 횟수 지정했을 경우
+				else if (endRecurType == 1) {
+					if (tmpStartDate.after(endDate) || instances <= 0) {
+						break;
+					} else if (tempYoil > 1 && tempYoil < 7) {
+						if (oSDate.equals(oStartDate) && oEDate.equals(oEndDate)) {
+							tempEndCal.setTime(tmpStartDate);
+							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+							
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
+							});
+						}
+						
+						instances--;
+					}
+				}
+			}
+			
+			tempStartCal.add(Calendar.DATE, interval);
+			tmpStartDate = tempStartCal.getTime();
+			oEndCal.add(Calendar.DATE, interval);
+			resEndDate = oEndCal.getTime();
+			
+			temp--;
+			
+			if (temp < 0) {
+				logger.debug("Repeat time over 1000.");
+				break;
+			}
+		}
+		
+		return returnList;
+	}
+	
+	public List<Date[]> getchkWeeklyRepDateTime (ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception  {
+		int interval = vo.getInterval();
+		int endRecurType = vo.getEndRecurType();
+		int instances = vo.getInstances();
+		List<Integer> wDay = vo.getDaysOfWeek();
+		
+		if (wDay != null && wDay.size() > 0) {
+			instances = instances * wDay.size();
+		}
+		
+		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
+		Date resEndDate = vo.getEndDate();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat osdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		// 요청 기간
+		Date startDate = sdf.parse(sDate);
+		Date endDate = sdf.parse(eDate);
+
+		String tmpStartDateStr = sdf.format(vo.getStartDate());
+		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
+				
+		Date tmpStartDate = vo.getStartDate();
+		Date tmpEndDate = sdf.parse(tmpEndDateStr);
+		
+		
+		Calendar tempStartCal = Calendar.getInstance();
+		tempStartCal.setTime(tmpStartDate);
+		
+		Calendar tempEndCal = Calendar.getInstance();
+		tempEndCal.setTime(tmpEndDate);
+		
+		Calendar oEndCal = Calendar.getInstance();
+		oEndCal.setTime(resEndDate);
+		
+		// timezone으로 인해 tmpStartDate가 tmpEndDate보다 늦은 경우 tmpEndDate를 하루 늘려준다.
+		if (tmpStartDate.after(tmpEndDate)) {
+			tempEndCal.add(Calendar.DATE, 1);
+			tmpEndDate = tempEndCal.getTime();
+		}
+		
+		long diff = tmpEndDate.getTime() - tmpStartDate.getTime();
+		
+		
+		
+		/*logger.debug("sDate=" + sDate);
+		logger.debug("eDate=" + eDate);
+		logger.debug("interval=" + interval);
+		logger.debug("endRecurType=" + endRecurType);
+		logger.debug("instances=" + instances);
+		logger.debug("startDate=" + sdf.format(startDate));
+		logger.debug("endDate=" + sdf.format(endDate));
+		logger.debug("resStartDate=" + sdf.format(resStartDate));
+		logger.debug("resEndDate=" + sdf.format(resEndDate));
+		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
+		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
+		
+		List<Date[]> returnList = new ArrayList<Date[]>();
+		
+		int temp = maxTemp; // 최대 maxTemp번 반복
+		
+		boolean loopFlag = true;
+		String oSDate;
+		String oStartDate;
+		String oEDate;
+		String oEndDate;
+		
+		while (loopFlag) {
+			
+			for (int i=0; i<wDay.size(); i++) {
+				tempStartCal.set(Calendar.DAY_OF_WEEK, wDay.get(i) + 1);
+				tmpStartDate = tempStartCal.getTime();
+				oEndCal.set(Calendar.DAY_OF_WEEK, wDay.get(i) + 1);
+				resEndDate = oEndCal.getTime();
+				
+				oSDate = osdf.format(tmpStartDate);
+				oStartDate = osdf.format(startDate);
+				oEDate = osdf.format(resEndDate);
+				oEndDate = osdf.format(endDate);
+				
+				// 종료일 지정 안했을 경우
+				if (endRecurType == 0) {
+					if (tmpStartDate.after(endDate)) {
+						loopFlag = false;
+						break;
+					} else if (oSDate.equals(oStartDate) && oEDate.equals(oEndDate)) {
+						tempEndCal.setTime(tmpStartDate);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 종료일 지정했을 경우
+				else if (endRecurType == 2) {
+					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
+						loopFlag = false;
+						break;
+					} else if (oSDate.equals(oStartDate)) {
+						tempEndCal.setTime(tmpStartDate);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 반복 횟수 지정했을 경우
+				else if (endRecurType == 1) {
+					if (tmpStartDate.after(endDate) || instances <= 0) {
+						loopFlag = false;
+						break;
+					} else if (!tmpStartDate.before(resStartDate)) {
+						instances--;
+						if(oSDate.equals(oStartDate) && oEDate.equals(oEndDate)){
+							tempEndCal.setTime(tmpStartDate);
+							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+							
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
+							});
+						}
+					}
+				}
+				
+			}
+			
+			tempStartCal.add(Calendar.DATE, interval * 7);
+			oEndCal.add(Calendar.DATE, interval * 7);
+			
+			temp--;
+			
+			if (temp < 0) {
+				logger.debug("Repeat time over 1000.");
+				break;
+			}
+			
+		}
+		
+		return returnList;
+	}
+	
+	public List<Date[]> getchkMonthlyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
+		logger.debug("getMonthlyRepDateTimes started.");
+		int freq = vo.getFreq();
+		int selType = vo.getSelType();
+		int interval = vo.getInterval();
+		int daysOfMonth = vo.getDaysOfMonth();
+		int monthsOfYear = vo.getMonthsOfYear();
+		int byPosition = vo.getByPosition();
+		int endRecurType = vo.getEndRecurType();
+		int instances = vo.getInstances();
+		List<Integer> wDay = vo.getDaysOfWeek();
+		
+		if (wDay != null && wDay.size() > 0) {
+			instances = instances * wDay.size();
+		}
+		
+		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
+		Date resEndDate = vo.getEndDate();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat osdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		// 요청 기간
+		Date startDate = sdf.parse(sDate);
+		Date endDate = sdf.parse(eDate);
+
+		String tmpStartDateStr = sdf.format(vo.getStartDate());
+		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
+		
+		Date tmpStartDate = vo.getStartDate();
+		Date tmpEndDate = sdf.parse(tmpEndDateStr);
+		
+		Calendar tempStartCal = Calendar.getInstance();
+		tempStartCal.setTime(tmpStartDate);
+		
+		Calendar tempEndCal = Calendar.getInstance();
+		tempEndCal.setTime(tmpEndDate);
+		
+		Calendar oEndCal = Calendar.getInstance();
+		oEndCal.setTime(resEndDate);
+		
+		// timezone으로 인해 tmpStartDate가 tmpEndDate보다 늦은 경우 tmpEndDate를 하루 늘려준다.
+		if (tmpStartDate.after(tmpEndDate)) {
+			tempEndCal.add(Calendar.DATE, 1);
+			tmpEndDate = tempEndCal.getTime();
+		}
+		
+		long diff = tmpEndDate.getTime() - tmpStartDate.getTime();
+		
+		/*logger.debug("sDate=" + sDate);
+		logger.debug("eDate=" + eDate);
+		logger.debug("interval=" + interval);
+		logger.debug("endRecurType=" + endRecurType);
+		logger.debug("instances=" + instances);
+		logger.debug("startDate=" + sdf.format(startDate));
+		logger.debug("endDate=" + sdf.format(endDate));
+		logger.debug("resStartDate=" + sdf.format(resStartDate));
+		logger.debug("resEndDate=" + sdf.format(resEndDate));
+		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
+		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
+		
+		List<Date[]> returnList = new ArrayList<Date[]>();
+		
+		int temp = maxTemp; // 최대 maxTemp번 반복
+		
+		List<Date> tsdList = new ArrayList<Date>();
+		
+		boolean loopFlag = true;
+		
+		String oSDate;
+		String oStartDate;
+		String oEDate;
+		String oEndDate;
+		
+		while (loopFlag) {
+			
+			oSDate = osdf.format(tmpStartDate);
+			oStartDate = osdf.format(startDate);
+			oEDate = osdf.format(resEndDate);
+			oEndDate = osdf.format(endDate);
+			
+			tsdList.clear();
+			
+			if (freq == 7) {
+				tempStartCal.set(Calendar.MONTH, monthsOfYear - 1);
+			}
+			
+			// 날짜
+			if (selType == 0) {
+				// daysOfMonth가 해당 달의 마지막날보다 크지 않으면 list에 추가
+				int lastDate = tempStartCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				if (daysOfMonth <= lastDate) {
+					tempStartCal.set(Calendar.DAY_OF_MONTH, daysOfMonth);
+					tsdList.add(tempStartCal.getTime());
+				}
+			}
+			// 요일
+			else {
+				// 마지막 요일일 때
+				if (byPosition == -1) {
+					// 해당 달의 뒤에서 부터 원하는 요일의 날짜를 찾아감.
+					int lastDate = tempStartCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+					tempStartCal.set(Calendar.DATE, lastDate);
+					int lastYoil = tempStartCal.get(Calendar.DAY_OF_WEEK) - 1;
+					
+					// 발견할 때까지 날짜 줄여나감
+					while (!wDay.contains(lastYoil)) {
+						tempStartCal.add(Calendar.DATE, -1);
+						lastYoil = tempStartCal.get(Calendar.DAY_OF_WEEK) - 1;
+					}
+					
+					// 발견하면 그때부터 list에 추가
+					while (wDay.contains(lastYoil)) {
+						tsdList.add(tempStartCal.getTime());
+						
+						tempStartCal.add(Calendar.DATE, -1);
+						lastYoil = tempStartCal.get(Calendar.DAY_OF_WEEK) - 1;
+					}
+					
+					//뒤에서부터 찾았기 때문에 횟수제한이 있을 때에는 문제가 있으므로 reverse해줌.
+					Collections.reverse(tsdList);
+				}
+				// 마지막 요일 아닐 때
+				else {
+					// 해당 달의 앞에서 부터 n번째 요일의 날짜를 찾아감.
+					tempStartCal.set(Calendar.DATE, 1);
+					int firstYoil = tempStartCal.get(Calendar.DAY_OF_WEEK) - 1;
+					
+					//발견할 때까지 날짜 늘려나감
+					while (!wDay.contains(firstYoil)) {
+						tempStartCal.add(Calendar.DATE, 1);
+						firstYoil = tempStartCal.get(Calendar.DAY_OF_WEEK) - 1;
+					}
+					
+					tempStartCal.add(Calendar.DATE, (byPosition - 1) * 7);
+					
+					// 발견하면 그때부터 list에 추가
+					while (wDay.contains(firstYoil)) {
+						tsdList.add(tempStartCal.getTime());
+						
+						tempStartCal.add(Calendar.DATE, 1);
+						firstYoil = tempStartCal.get(Calendar.DAY_OF_WEEK) - 1;
+					}
+				}
+			}
+			
+			for (Date tsd : tsdList) {
+				// 종료일 지정 안했을 경우
+				
+				if (endRecurType == 0) {
+					String tsdDate = osdf.format(tsd);
+					if (tsd.after(endDate)) {
+						loopFlag = false;
+						break;
+					} else if (tsdDate.equals(oStartDate)) {
+						tempEndCal.setTime(tsd);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tsd, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 종료일 지정했을 경우
+				else if (endRecurType == 2) {
+					String tsdDate = osdf.format(tsd);
+					if (tsd.after(endDate) || tsd.after(resEndDate)) {
+						loopFlag = false;
+						break;
+					} else if (tsdDate.equals(oStartDate)) {
+						tempEndCal.setTime(tsd);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tsd, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+				// 반복 횟수 지정했을 경우
+				else if (endRecurType == 1) {
+					String tsdDate = osdf.format(tsd);
+					if (tsd.after(endDate) || instances <= 0) {
+						loopFlag = false;
+						break;
+					} else if (tsdDate.equals(oStartDate)) {
+						instances--;
+						tempEndCal.setTime(tsd);
+						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
+						
+						returnList.add(new Date[] {
+								tsd, 
+								tempEndCal.getTime()
+						});
+					}
+				}
+			}
+			
+			if (freq == 6) {
+				tempStartCal.add(Calendar.MONTH, interval);
+			} else {
+				tempStartCal.add(Calendar.YEAR, 1);
+			}
+			
+			temp--;
+			
+			if (temp < 0) {
+				logger.debug("Repeat time over 1000.");
+				break;
+			}
+			
+		}
+		
+		logger.debug("getMonthlyRepDateTimes End");
+		return returnList;
+	}
 }
 
