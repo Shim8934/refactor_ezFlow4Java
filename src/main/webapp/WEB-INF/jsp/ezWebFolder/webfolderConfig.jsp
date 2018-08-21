@@ -6,9 +6,8 @@
 <head>
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
-<!-- 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
+	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 	<script type="text/javascript">
 		window.onload = window_onload;
 		document.onselectstart = function () { return false; };

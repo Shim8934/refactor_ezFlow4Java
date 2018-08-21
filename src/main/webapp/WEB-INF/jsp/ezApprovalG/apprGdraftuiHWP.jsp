@@ -7,26 +7,26 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t30'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/draft_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/draftG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/showModalDialog.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draftG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
 	        var FormHref = "${formURL}";
 	        var DraftFlag = "${draftFlag}";
@@ -149,7 +149,8 @@
 	        var isUsed = "";
 	        var ext = "hwp";
 	        var nonElecRec = "${nonElecRec}";
-	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
+	        var useReceiveDocNo = "${useReceiveDocNo}";
 	        
 	        window.onload = function () {
 	            try {
@@ -876,7 +877,7 @@
 	
 	        function btnSave_onclick() {
 	            HwpCtrl.SetDocumentInfo(pFormID);
-	            HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
+	            HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle").replace(/\r\n/g, " "));
 // 	            HwpCtrl.SaveFile("");
 	        }
 	
@@ -1064,7 +1065,7 @@
 					para[3] = ext;
 					
 				    var url = "/ezApprovalG/insSepAttach.do";
-				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+				    var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			        var rtn = window.showModalDialog(url, para, feature);
 
 				    if (rtn[0] == "TRUE") {
@@ -1147,6 +1148,7 @@
 				        parameter[47] = "nonElecRecTempCabinet";
 				        parameter[48] = nonElecRecInfoXml;
 				        parameter[49] = nonSepAttachLVXml;
+				        parameter[51] = sepAttachCheckYN;
 			        }
 			        
 			        if (tempItemCode != "")
@@ -1155,7 +1157,7 @@
 			        if (pGubun == undefined)
 			            pGubun = CheckGubun;
 			
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "hwp";
+			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp";
 			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        var ret = window.showModalDialog(url, parameter, feature);
 
@@ -1223,7 +1225,7 @@
 			            if (nonElecRec == "Y") {
 			            	nonElecRecInfoXml = ret[23];
 			            	nonSepAttachLVXml = ret[24];
-			            	
+			            	sepAttachCheckYN = ret[26];
 			            	setNonElecRecInfo(nonElecRecInfoXml);
 			            }
 			        }

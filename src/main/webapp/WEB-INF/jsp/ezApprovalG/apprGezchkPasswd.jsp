@@ -5,16 +5,16 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1744'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var gUserID = "";
 		    var rsa = new RSAKey();
@@ -73,7 +73,7 @@
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            DivPopUpShow(330, 205, url);
+		            DivPopUpShow(325, 200, url);
 		        }
 		        else {
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
@@ -214,7 +214,7 @@
                 <li><span id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;margin-top:10px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
+		<h2 style="font-weight: normal;margin-top:20px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition btnpositionNew">

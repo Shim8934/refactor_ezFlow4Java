@@ -2,25 +2,22 @@
 <%@ page session="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%
-	out.clear();
-%>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>mail_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>		
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "${url}";

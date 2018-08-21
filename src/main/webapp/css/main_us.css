@@ -270,7 +270,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ community ------------*/
-.communitybox { width:328px; float:right; background:#FFF;}
+.communitybox { width:328px; height:228px; float:right; background:#FFF;}
 .communitycont{ height:169px; padding:10px 15px 10px;}
 
 
@@ -290,7 +290,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ list_type_txt ------------*/
 .listtype_txt {margin:0px; padding:0px; list-style:none; font-size:12px;}
-.listtype_txt li { font-size:12px; color:#333; height:24px;clear:both; white-space:nowrap; cursor:pointer; vertical-align:middle; line-height:24px;}
+.listtype_txt li { font-size:12px; color:#333; height:24px;clear:both; white-space:nowrap; cursor:pointer; vertical-align:middle; line-height:24px; overflow: hidden}
 .listtype_txt li .txt { float:left;background:url(../images/kr/main/point-black.gif) no-repeat 0px 8px; padding:0px 0px 0px 10px; width:55%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .listtype_txt li .name {float:right; width:80px; text-align:center;overflow:hidden;}
 .listtype_txt li .date {float:right; width:110px; text-align:right;overflow:hidden;}

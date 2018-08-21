@@ -5,21 +5,21 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Recev_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Recvdocnumber_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Recev_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pDocID = "${docID}";
 			var DraftFlag = "${draftFlag}";
@@ -895,10 +895,10 @@
 		            tempdocnumcode = tempItemCode;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
-		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht", "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

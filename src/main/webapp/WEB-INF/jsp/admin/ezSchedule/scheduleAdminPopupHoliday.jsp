@@ -6,19 +6,19 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<style type="text/css">
 			.ui-datepicker-month {
 				padding-top: 1px; <%-- 2018-07-24 천성준 - (#13167) 월 표시 상단이 잘려보임 --%>
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>		
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>		
 	    <title>
 	    	<c:if test="${id == null}"><spring:message code='ezSchedule.t4004' /></c:if>
 		    <c:if test="${id != null}"><spring:message code='ezSchedule.t4005' /></c:if>

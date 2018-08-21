@@ -6,40 +6,40 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1742'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
-	    <script src="/js/ezApprovalG/MiscFunc_Cross.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TabMenu.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TreeView.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TreeViewCtrl_Cross.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/ListView_list.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/AprlineG.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/AprlineV.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TempLineinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/LineinfoIni.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Lineinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/SelectSubTitles.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Receptinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TempReceptinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TempCirculationInfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Cabinetinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/CabCategoryInfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/CabRoleInfo_Cross.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Docinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Draftinfo.js" type="text/javascript"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	    <script src="/js/Common.js" type="text/javascript"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TabMenu.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TreeView.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/ListView_list.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/AprlineG.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/AprlineV.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempLineinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/LineinfoIni.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/SelectSubTitles.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Receptinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempReceptinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempCirculationInfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Cabinetinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/CabCategoryInfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Docinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Draftinfo.js')}" type="text/javascript"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	    <script src="${util.addVer('/js/Common.js')}" type="text/javascript"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <style type="text/css">
 	    	.h2_dot {
 	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
@@ -179,7 +179,6 @@
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
-	        var hideCabinet = "${hideCabinet}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
 			var startDateTime = '${startDateTime}';
@@ -191,11 +190,13 @@
 			var chamjoAfterYN = "${chamjoAfterYN}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var receptGubunYN = "${receptGubunYN}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        var ext = "${ext}";
 	        var nonElecRec = "";
 	        var nonElecRecInfoXml = "";
 	        var g_CabID = "";
+	        var useReceiveInfoName = "${useReceiveInfoName}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -462,8 +463,6 @@
 	            else if (pIniGubun == "6") { //결재선, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
@@ -473,8 +472,6 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
@@ -483,8 +480,6 @@
 	            }
 	            else if (pIniGubun == "8") { //결재선, 수신자, 결재정보
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -494,8 +489,6 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -506,8 +499,6 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -517,8 +508,6 @@
 	            }
 	            else if (pIniGubun == "11") { //결재선, 기록물철, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -526,8 +515,6 @@
 	            else if (pIniGubun == "12") { //기록물철, 결재정보
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab3").onclick();
@@ -537,8 +524,6 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showDocinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -608,8 +593,10 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
-	                    
+
+	                    if (approvalFlag == "G") {
+	                    	document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -624,7 +611,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -639,7 +629,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -663,7 +656,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -708,6 +704,10 @@
 	                    	nonElecRecInit();
 	                    }
 	                    setCabInfoInit();
+	                    
+	                    if (pIniGubun == "1") {
+		                    bool3 = true;
+	                    }
 	                    
 	                    bool6 = true;
 	                    break;
@@ -896,39 +896,37 @@
 			                }
 			                
 			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
-			                    if (hideCabinet == "0") {
-			                    	if (nonElecRec != "Y" || pIniGubun == "11") {
-					                    var List = new ListView();
-					                    List.LoadFromID("DivTaskSCateList");
-					
-					                    var MyList = new ListView();
-					                    MyList.LoadFromID("DivMyTaskSCateList");
-					
-					                    var totalRows = List.GetSelectedRows();
-					                    var MyRows = MyList.GetSelectedRows();
-					                    if (totalRows.length == 0 && MyRows.length == 0) {
-					                        OpenAlertUI(Cabinet4);
-					                        document.getElementById("1tab3").onclick();
-					                        return;
-					                    } else {
-					                        if (MyRows.length > 0) {
-					                            if (GetAttribute(MyRows[0], "DATA1") == "") {
-					                                OpenAlertUI(Cabinet4);
-					                                document.getElementById("1tab3").onclick();
-					                                return;
-					                            }
-					                            else
-					                                totalRows = MyRows;
-					                        } else if (totalRows.length > 0) {
-					                            if (GetAttribute(totalRows[0], "DATA1") == "") {
-					                                OpenAlertUI(Cabinet4);
-					                                document.getElementById("1tab3").onclick();
-					                                return;
-					                            }
-					                        }
-					                    }
-			                    	}
-			                    }
+		                    	if (nonElecRec != "Y" || pIniGubun == "11") {
+				                    var List = new ListView();
+				                    List.LoadFromID("DivTaskSCateList");
+				
+				                    var MyList = new ListView();
+				                    MyList.LoadFromID("DivMyTaskSCateList");
+				
+				                    var totalRows = List.GetSelectedRows();
+				                    var MyRows = MyList.GetSelectedRows();
+				                    if (totalRows.length == 0 && MyRows.length == 0) {
+				                        OpenAlertUI(Cabinet4);
+				                        document.getElementById("1tab3").onclick();
+				                        return;
+				                    } else {
+				                        if (MyRows.length > 0) {
+				                            if (GetAttribute(MyRows[0], "DATA1") == "") {
+				                                OpenAlertUI(Cabinet4);
+				                                document.getElementById("1tab3").onclick();
+				                                return;
+				                            }
+				                            else
+				                                totalRows = MyRows;
+				                        } else if (totalRows.length > 0) {
+				                            if (GetAttribute(totalRows[0], "DATA1") == "") {
+				                                OpenAlertUI(Cabinet4);
+				                                document.getElementById("1tab3").onclick();
+				                                return;
+				                            }
+				                        }
+				                    }
+		                    	}
 			                }
 
 			                if (SummaryFlag) {
@@ -986,11 +984,14 @@
 		
 		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 			                if (approvalFlag == "G") {
-			                	if (hideCabinet == "0") {
-				                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
-			                	} else {
-				                    ret[4] = GetSelCabInfoXml2(); //기록물철 XML
-			                	}
+			                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                    var cabinetXml = loadXMLString(ret[4]);
+			                    var cabIdNode = SelectNodes(cabinetXml, "CABINETINFO/CABINET/CABINETID");
+			                    var cabIdValue = getNodeText((cabIdNode)[0]);
+			                    if (cabIdValue == "null" || cabIdValue == "") {
+			                    	OpenAlertUI("<spring:message code='ezApprovalG.t1117'/>");
+			                    	return;
+			                    }
 			                } else {
 			                	ret[4] = setCabInfoXML();
 			                }
@@ -1303,7 +1304,7 @@
 		                }
 		            }
 		        } else {
-		            alert("<spring:message code='ezApprovalG.t478'/>");
+		            alert("<spring:message code='ezApprovalG.t784'/>");
 		        }
 		    }
 		
@@ -1682,7 +1683,7 @@
 		    	if (pIniGubun != "1") {
 		    		setCabInfoInit();
 		    	}
-		        if (g_CabID != "") {
+		        if (g_CabID != "" && g_CabID != "null") {
 		            var para = new Array();
 		            para[0] = g_SepAttachLVXml;
 		            para[1] = g_CabID;
@@ -1719,6 +1720,16 @@
 			        sepAttachCheckYN = rtn[0];
 		            g_SepAttachLVXml = rtn[1];
 		        }
+		    }
+		    
+		    function btn_AprDeptTempletModify_onclick() {
+		    	/* var listview = new ListView();
+		        listview.LoadFromID("lvRECEPTLIST");
+		        var CurSelRow = listview.GetSelectedRows();
+		        var DeleteState;
+		        if (CurSelRow.length != 0) {
+	                listview.DeleteRow(GetAttribute(CurSelRow[0], "id"));
+		        } */
 		    }
 	    </script>
 	    <style>
@@ -1758,17 +1769,12 @@
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1"><spring:message code='ezApprovalG.t1769'/></span></p>
 	            <p id="showReceptinfo"><span divname="Receptinfo" id="1tab2"><c:if test="${approvalFlag eq 'G'}" ><spring:message code='ezApprovalG.t448'/></c:if><c:if test="${approvalFlag  eq 'S'}"><spring:message code='ezApprovalG.t999932'/></c:if></span></p>
-	            <c:if test="${hideCabinet eq '1'}" >
-	            	<p id="showCabinetinfo" style="display: none;"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
-	            </c:if>
-	            <c:if test="${hideCabinet eq '0'}" >
-		            <c:if test="${approvalFlag eq 'G'}" >
-		            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
-		           	</c:if>
-		           	<c:if test="${approvalFlag eq 'S'}" >
-		            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
-		           	</c:if>
-	            </c:if>
+	            <c:if test="${approvalFlag eq 'G'}" >
+	            	<p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
+	           	</c:if>
+	           	<c:if test="${approvalFlag eq 'S'}" >
+	            	<p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
+	           	</c:if>
 	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4">
 	            <c:if test="${approvalFlag eq 'G' }">
 	            	<spring:message code='ezApprovalG.t1204'/>
@@ -1906,13 +1912,13 @@
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
 		                                        <div class="border_gray" style="margin-top:7px">
-		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 		                                        </div>
 		                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
 		                                        <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        	</div>
 	                                        	</div>
                                         	</c:if>
@@ -1980,12 +1986,34 @@
 	                </c:if>
 	                    <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
 	                        <div class="portlet_tabpart01_top" id="tab3">
-	                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
-	                            <c:if test= "${hideCabinet == '0'}">
-	                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
-	                            </c:if>
-	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
-	                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
+	                        	<c:if test="${approvalFlag eq 'G'}">
+		                        	<c:choose>
+		                        		<c:when test="${receptGubunYN eq 'Y'}">
+		                        			<c:if test="${docType eq '001'}">
+					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		                        			</c:if>
+		                        			<c:if test="${docType ne '001'}">
+					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+					                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+           		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+           		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
+		                        			</c:if>
+		                        		</c:when>
+		                        		<c:otherwise>
+				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		          			                <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
+		                        		</c:otherwise>
+		                        	</c:choose>
+	                        	</c:if>
+	                        	<c:if test="${approvalFlag ne 'G'}">
+		                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+		                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
+	                        	</c:if>
 	                        </div>
 	                    </div>
 	                    <div id="ReceptOrgan" style="display: none;">
@@ -2145,22 +2173,38 @@
 	                            </td>
 	                        </tr>
 	                        <!-- 2015-06-30 표준모듈:추가(외부수신자요약) - KSK -->
-	                        <tr style="display:none;" id="trSummaryOuterReceiverList">
+	                        <!-- <tr style="display:none;" id="trSummaryOuterReceiverList">
 	                            <td style="width: 120px;">
 	                                <h2 class="h2_dot">외부수신자 요약:</h2>
 	                            </td>
 	                            <td>
 	                                <input id="inputSummaryOuterReceiverList" style="width: 97%; margin-top: 5px;" value="" />
 	                            </td>
-	                        </tr>
+	                        </tr> -->
 	                        <tr>
 	                            <td class="approvalG" style="text-align:left">
-	                            	<c:if test= "${hideCabinet == '0'}">
-	                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
-	                                </c:if>
+	                            	<c:choose>
+		                        		<c:when test="${receptGubunYN eq 'Y'}">
+		                        			<c:if test="${docType eq '001'}">
+				                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+		                        			</c:if>
+		                        			<c:if test="${docType ne '001'}">
+<!-- 		                        				btnaddress 아이디 참조 스크립트때문에 살려줌 -->
+				                                <a style="display: none;" id="btnaddress"></a>
+		                        			</c:if>
+		                        		</c:when>
+		                        		<c:otherwise>
+			                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+		                        		</c:otherwise>
+		                        	</c:choose>
 	                                <a style="margin-top: 10px; display: none;" class="imgbtn imgbck" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
+	                            	<!-- 2018-08-08 천성준 - 외부수신자요약 UI때문에 이동 -->
+	                            	<span style="display: inline-block; margin-top: 8px;">
+	                            		<a class="h2_dot" style="display: none;" id="trSummaryOuterReceiverList">외부수신자 요약:&nbsp;<input id="inputSummaryOuterReceiverList" value="" style="width: 470px; height: 22px;"/></a>
+	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">
+	                            	<c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btn_AprDeptTempletModify_onclick()"><c:if test="${approvalFlag == 'G'}">수신자명 수정</c:if><c:if test="${approvalFlag == 'S'}">수신부서명 수정</c:if></span></a></c:if>
 	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
@@ -2591,7 +2635,7 @@
 			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
 			                </h2>
 			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                               	</div>
                             </div>
 			                <div style="text-align: right;">

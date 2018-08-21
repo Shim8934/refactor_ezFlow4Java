@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -7,11 +6,11 @@
 <head>
 <title><spring:message code='ezStatistics.t1050'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 <script type="text/javascript">
 
 	var strLang1 = "<spring:message code='ezStatistics.t1063'/>";
@@ -31,6 +30,7 @@
 		getTime();
 		getMailLogList(1, searchStartTime, searchEndTime);
 		makePageSelPage();
+		windowResize();
 	}
 
 	//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -409,6 +409,18 @@
     	getMailLogList(pageNo, searchStartTime, searchEndTime);
     }
 
+    $(window).on("resize", function(){
+        windowResize();
+    });
+    
+    function windowResize() {
+    	var height = document.documentElement.clientHeight - 175 - document.getElementById("mainmenu").clientHeight;
+    	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+    		height = height - 30;
+    	}
+    	document.getElementById("contentlist").style.height = height + "px";
+    	document.getElementById("contentlist").style.overflow = "auto";
+    }
 </script>
 </head>
 <body class="mainbody">
@@ -422,7 +434,7 @@
 				</span> 
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
-					<select id="searchField"> 
+					<select id="searchField" style="height:24px"> 
 						<option value="recipientName"><spring:message code='ezStatistics.kyj6'/></option>
 						<option value="recipientDeptName"><spring:message code='ezStatistics.t83'/></option>
 						<option value="recipientEmail"><spring:message code='ezStatistics.kyj7'/></option>
@@ -432,13 +444,13 @@
 						<option value="attachedFileName"><spring:message code='ezStatistics.t1057'/></option>
 					</select>
 					<input type="text" id="searchValue" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:search();"><spring:message code='ezStatistics.t36'/></span>
 					</a>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reset();"><spring:message code='ezStatistics.t1059'/></span>
 					</a>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reload();"><spring:message code='ezStatistics.t1060'/></span>
 					</a>
 				</span> 
@@ -446,7 +458,7 @@
 			<td width="5%">
 				<div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-						<li><span style="width: 110px;text-align:center" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+						<li><span style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
 					</ul>
 				</div>	
 			</td>
@@ -454,23 +466,26 @@
 	</table>
 	<table style="margin: 10px 0px;">
 		<tr>
-			<td width="98%" style="font-weight: bold; color: gray;"> ※ ${mailLogKeepPeriodMessage} ※  </td>
+			<td width="98%" style="font-weight: bold; color: gray;">▒ ${mailLogKeepPeriodMessage}</td>
 		</tr>
 	</table>
-	<table class="mainlist" style="width:100%;">
-		<thead>
-			<tr>
-				<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
-				<th width='8%'><spring:message code='ezStatistics.t83'/></th>
-				<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
-				<th width='15%'><spring:message code='ezStatistics.t1057'/></th>
-				<th width='5%'><spring:message code='ezStatistics.t1058'/></th>
-			</tr>
-		</thead>
-		<tbody id="mailLogListBody"></tbody>
-	</table>
+	
+	<div id="contentlist" style="width: 100%; overflow: auto;">
+		<table class="mainlist" style="width:100%;">
+			<thead>
+				<tr>
+					<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
+					<th width='8%'><spring:message code='ezStatistics.t83'/></th>
+					<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
+					<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
+					<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
+					<th width='15%'><spring:message code='ezStatistics.t1057'/></th>
+					<th width='5%'><spring:message code='ezStatistics.t1058'/></th>
+				</tr>
+			</thead>
+			<tbody id="mailLogListBody"></tbody>
+		</table>
+	</div>
 	<div id="tblPageRayer" style="padding-top: 20px;"></div>
 	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 </body>

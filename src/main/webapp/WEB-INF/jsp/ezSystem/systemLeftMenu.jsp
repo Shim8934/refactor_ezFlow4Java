@@ -6,9 +6,9 @@
     <head>
     <title><spring:message code='ezStatistics.t2' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
 	
 	document.onselectstart = function () {

@@ -6,22 +6,22 @@
     <head>
     <title><spring:message code='ezStatistics.t1001' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
-    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
     <style type="text/css">
         .jqplot-table-legend {
         white-space:nowrap
         }
     </style>    
-    <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/excanvas.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.jqplot.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.barRenderer.min.js"></script>    
+    <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/excanvas.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.barRenderer.min.js')}"></script>    
     <script type="text/javascript">
         var Tab1_flag = true;
         var xmlHttp = createXMLHttpRequest();
@@ -345,20 +345,20 @@
     <table style="width:100%;background-color: #f8f8f8;border:1px solid #d3d2d2;margin-bottom:5px">
         <tr>
             <td style="width: 99%">
-                <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195' /> :
-        		<select id="SCompID" name="SCompID" onchange="return getmailstatistics()">
+                <span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t195' /> :
+        		<select style="height:24px" id="SCompID" name="SCompID" onchange="return getmailstatistics()">
 			    	<c:forEach var="item" items="${list}">
 			         		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 			       	</c:forEach>
         		</select>
-                    &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002' /> : 
-            <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+                    &nbsp;<spring:message code='ezStatistics.t1002' /> : 
+            <select style="height:24px" id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' /></span>
             </td>
             <td>
                 <div id="mainmenu" style="height: 28px;margin:3px 0px !important"> 
                     <ul>
-                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
             </td>

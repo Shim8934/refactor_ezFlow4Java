@@ -7,9 +7,9 @@
 	<head>
 		<title><spring:message code = 'ezPersonal.t157' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style> 
 			p { margin-top: 0mm; margin-bottom: 0mm } 
 		</style>

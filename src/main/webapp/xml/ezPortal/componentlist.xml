@@ -21,4 +21,11 @@
 		<compressed>dll</compressed>
 		<type>inproc</type> 
 	</activex>
+	<activex>
+		<url os="all" size="90">DOWNLOADSERVER/files/component/libeay32.ent</url> 
+  		<clsid>none</clsid> 
+  		<version>1,0,1,8</version> 
+		<compressed>dll</compressed>
+  		<type>generalexe</type> 
+  	</activex>
 </components>

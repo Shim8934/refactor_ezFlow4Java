@@ -6,11 +6,11 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var Strmessage = "<spring:message code = 'ezPersonal.t1022' />";
@@ -61,6 +61,12 @@
 	                listview.RowDataBind();
 	                xmldomNode = null;
 	                xmldom = null;
+	                
+	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
+	                if (headerData.getElementsByTagName("ROW").length == 0) {
+	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='8'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
+	                }
 	            } catch (e) {
 	
 	            }
@@ -71,10 +77,12 @@
 	                addquicklink_dialogArguments[0] = "";
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
 	                
-	              //크롬일때 alert창 크기때문에 크롬일때 구별
+	                //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
+		            	//2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
+		            	//var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(460, 682));	
 		            } else {
 		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
 		            }
@@ -103,9 +111,18 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
+	                
+		            //2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
+ 	                //var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(460, 682));	
+		            } else {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 670));
+		            }
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
+	                
 	            } else {
 	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
 	                window.location.reload();

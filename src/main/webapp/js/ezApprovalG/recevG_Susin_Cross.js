@@ -1,4 +1,4 @@
-﻿var selectcabinet_cross_dialogArguments = new Array();
+﻿﻿var selectcabinet_cross_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
@@ -27,29 +27,30 @@ function btnSetTaskCode_onclick_Complete(rtn) {
 }
 
 /*2018-04-05 김은석 수정 건설공사 공개여부*/
-//function setPublicFlag() {
-//  var fields = message.GetFieldsList();
-//  var field = message.GetListItem(fields, "publication");
-//  if (!field) return;
-//
-//  var PublicType = pPublicityCode.substring(0, 1);
-//  var PublicLevel = pPublicityCode.substring(1, 9);
-//  var PublicText = "";
-//
-//  if (pLimitRange != "")
-//      PublicText = " (" + pLimitRange + ")";
-//
-//  if (PublicType == "1")
-//      PublicText = strLang82;
-//  else if (PublicType == "2")
-//      PublicText = strLang83 + getPublicLevel(PublicLevel);
-//  else if (PublicType == "3")
-//      PublicText = strLang84 + getPublicLevel(PublicLevel);
-//  else
-//      PublicText = " ";
-//
-//  field.innerHTML = PublicText;
-//}
+// 마스터 머지후 setpublicflag2 만 타서 다시 살림 2018-08-17 강민수92
+function setPublicFlag() {
+  var fields = message.GetFieldsList();
+  var field = message.GetListItem(fields, "publication");
+  if (!field) return;
+
+  var PublicType = pPublicityCode.substring(0, 1);
+  var PublicLevel = pPublicityCode.substring(1, 9);
+  var PublicText = "";
+
+  if (pLimitRange != "")
+      PublicText = " (" + pLimitRange + ")";
+
+  if (PublicType == "1")
+      PublicText = strLang82;
+  else if (PublicType == "2")
+      PublicText = strLang83 + getPublicLevel(PublicLevel);
+  else if (PublicType == "3")
+      PublicText = strLang84 + getPublicLevel(PublicLevel);
+  else
+      PublicText = " ";
+
+  field.innerHTML = PublicText;
+}
 /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 function setPublicFlag2() {
     if (!HwpCtrl.CheckFieldExist("publication")) return;
@@ -57,9 +58,9 @@ function setPublicFlag2() {
 
     var PublicText = "";
     if (PublicType == "Y")
-        PublicText = "<spring:message code='ezApprovalG.t47'/>";
+        PublicText = strLang82;
     else if (PublicType == "N")
-        PublicText = "<spring:message code='ezApprovalG.t46'/>";
+        PublicText = strLang84;
     else
         PublicText = " ";
     
@@ -2035,7 +2036,7 @@ function btnAddSepAttach_onclick() {
     inssepattach_cross_dialogArguments[0] = para;
     inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
-    DivPopUpShow(730, 630, "/ezApprovalG/insSepAttach.do");
+    DivPopUpShow(920, 630, "/ezApprovalG/insSepAttach.do");
 }
 
 function btnAddSepAttach_onclick_Complete(rtn) {
@@ -2649,7 +2650,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setFirstDrafter() {

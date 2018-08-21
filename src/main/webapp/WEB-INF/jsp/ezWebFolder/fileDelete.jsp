@@ -6,13 +6,13 @@
 	<head>
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script src="/js/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	<script type="text/javascript">
 		var fileList = "<c:out value="${fileList}"/>";
 		
@@ -36,14 +36,22 @@
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var reason = data.reason;
+					var code = data.code;
 					
-					if (reason) {
-						alert(reason);
-						afterDeleteSuccess();
-					} else {
-						alert("<spring:message code='ezWebFolder.t113'/>");
-						afterDeleteSuccess();
+					switch(code) {
+						case 0: 
+							alert("<spring:message code='ezWebFolder.t113'/>");
+							afterDeleteSuccess();
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
 					}
 				},
 				error : function(error) {
@@ -58,7 +66,7 @@
 	<h1 id ="topMenu" style="margin:0px;margin-top:2px"><spring:message code='ezWebFolder.t117'/></h1>
 	<div id="close">
         <ul>
-            <li><span id="btnCancel"class="webfolderBttn" onclick="wClose();"></span></li>
+            <li><span id="btnCancel" onclick="wClose();"></span></li>
         </ul>
     </div>
 	<div style="margin: 0px 0px 12px;height:110px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t109'/></div>	

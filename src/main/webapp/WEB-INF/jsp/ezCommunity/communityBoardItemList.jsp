@@ -7,8 +7,8 @@
 	<head>
 		<title>BoardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<link rel="stylesheet" type="text/css" href="/css/community.css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
 		<style type="text/css">
         	#tblList td, #tblList td div {
         		white-space: nowrap;
@@ -19,11 +19,11 @@
         		font-weight: bold;
         	}
         </style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ErrorHandler.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     	<script type="text/javascript">
     		var pBoardID = '<c:out value="${boardInfo.boardID}" />';
     		var pBoardName = "<c:out value='${pBoardName}' />";
@@ -572,8 +572,8 @@
     			
     			arrList = null;		
     			
-    			var wWeight = "340";
-    			var wHeight = "656";
+    			var wWeight = "355";
+    			var wHeight = "600";
 
     			var heigth = window.screen.availHeight;
     			var width = window.screen.availWidth;
@@ -581,8 +581,8 @@
     			var left = (width - wWeight) / 2;
     			var top = (heigth - wHeight) / 2;
     			//2018-07-13 김보미 - 파라메터 추가    			
-//     			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
-    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code) + "&treeCtrl=" + treeCtrl, "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+//     			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=600,width=355, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code) + "&treeCtrl=" + treeCtrl, "", "height=600,width=355, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
     		}
     		
     		function SetRead_onclick() {

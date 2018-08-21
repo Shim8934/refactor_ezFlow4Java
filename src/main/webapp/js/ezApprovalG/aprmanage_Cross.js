@@ -1001,6 +1001,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&isOpinion=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
+        openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -1088,8 +1089,9 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         var pURL = GetAttribute(pCurSelRow, "DATA3");
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            alert(strLang1103);
-            return;
+        	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
+
+            openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
             openLocation = "/ezApprovalG/recevGSusin.do";
@@ -1314,8 +1316,12 @@ function getAprDocAproveInfo(tr) {
         } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
         } else if (pListTypeValue == "10" || pListTypeValue == "99") {
-    		pDocID = GetAttribute(tr, "DATA2");
-    		pFlag = "END";
+        	if (approvalFlag == "S") {
+        		pDocID = GetAttribute(tr, "DATA2");
+        		pFlag = "END";
+        	} else {
+        		pFlag = "APR";
+        	}
     	} else {
     		pFlag = "APR";
     	}
@@ -1488,7 +1494,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN() && (ext != 'hwp' || CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1828,7 +1834,7 @@ function setbuttonenable() {
             }
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
-            document.getElementById("tbtnNonElecRec").style.display = "";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
         }
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";

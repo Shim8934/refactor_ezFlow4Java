@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,9 +6,9 @@
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
-		<link rel="stylesheet" href="/css/jquery.ui.all.css" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
@@ -41,7 +40,7 @@
 				padding-right: 5px;
 			}
 			.viewtxt > span > span {
-				font-size: 14px;
+				font-size: 12px;
 			}	
 			
 			#menu > ul:nth-child(2) > li {
@@ -51,19 +50,19 @@
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.9.1.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
         <c:if test="${isCrossBrowser != true}">
-        	<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+        	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
@@ -963,7 +962,7 @@
 	        }
 	        Rebody();
 	        
-	        document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+	        document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
@@ -1092,18 +1091,8 @@
 		
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
-	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, ""));
-	  	        	
-                    if (pUse_Editor == "NAMO") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    } else if (pUse_Editor == "CK") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    } else {
-                    	document.getElementById("plainTextArea").value =  message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    }	
-                    
+	        	if (confirm("<spring:message code='ezEmail.lhm28' />")) {
+	  	        	document.getElementById("plainTextArea").value =  message.GetEditorTextContent();
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -1113,19 +1102,7 @@
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
 	    	} else {
-	    		var texts = document.getElementById("plainTextArea").value.split("\n");
-	            var textData = "";
-	            for (var i=0; i<texts.length; i++) {
-	            	if (i == 0 && $.trim(texts[i]) == ""  && (pUse_Editor == "NAMO" || pUse_Editor == "CK")) {
-	            		textData = "<br/>";
-	            	}
-	            	if (texts[i] != "" && texts[i] != " ") {
-	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/gi, "\n");
-	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + " " + "</p>";
-	            	} 
-	            }
-	            
-	    		message.SetEditorContent(textData);
+	    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);
 	    		
 	    		document.getElementById("tbContentElement").style.display = "";
 				document.getElementById("plainTextArea").style.display = "none";

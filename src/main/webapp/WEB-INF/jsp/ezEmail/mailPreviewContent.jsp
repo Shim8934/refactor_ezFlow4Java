@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,12 +6,12 @@
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-	    <script language="javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
+	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+	    <script language="javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";

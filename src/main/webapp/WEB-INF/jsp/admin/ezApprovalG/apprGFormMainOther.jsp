@@ -6,21 +6,21 @@
 	<head>
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrlS_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezForm_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/ListView_list.js')}" ></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/TreeView.js')}" ></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrlS_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/FormMain_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js')}"></script>
 				
 		<script type="text/javascript">
 			var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
@@ -53,6 +53,7 @@
 		    var realPath = "<c:out value = '${realPath}' />";
 		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
 		    var ext = "${ext}";
+		    var locale = "<c:out value = '${locale}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -196,6 +197,11 @@
 	            }
 		        
 		        add_doc_maker();
+		        
+		        if (locale != "ko") {
+		        	document.getElementById("ApvForm_sub3").style.display = "none";
+		        	document.getElementById("ApvForm_sub4").style.display = "none";
+		        }
 		    }
 		
 		    function Attribute_Write(value) {
@@ -573,7 +579,7 @@
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 440, 470, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 480, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -825,10 +831,8 @@
 	        <div class="portlet_tabpart01_top" id="tab1">
                 <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
-                <c:if test="${locale eq 'ko'}">
-	                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
-	                <p id = "ApvForm_sub4" <c:if test="${useEditor == 'HWP'}"> style="display:none;"</c:if>><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
-                </c:if>
+                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
+                <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApprovalG.t1629'/></span></p>
                 <p id = "ApvForm_sub6" style = 'display:none;'><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
 	        </div>

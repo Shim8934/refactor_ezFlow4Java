@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
@@ -7,12 +6,12 @@
 	<head>
 		<title><spring:message code='ezSystem.x0021'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
+		<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"> </script>
 		
 		<style type="text/css">
 		<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
@@ -454,6 +453,24 @@
 				var pageNum = "-1";
 				getLoginHist(pageNum, searchStartTime, searchEndTime);
 			}
+			
+	        //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 191;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });
 		</script>
 	</head>
 	<body class="mainbody">
@@ -497,21 +514,23 @@
 			<tr>
 				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>
 			</tr>
-		</table>	
-		<table class="mainlist" style="width:100%;">
-			<thead style="">
-				<tr>
-					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1068"></spring:message></th>
-					<th><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th><spring:message code="ezSystem.x0024"></spring:message></th>
-					<th><spring:message code="ezSystem.x0025"></spring:message></th>
-					<th><spring:message code="ezSystem.x0026"></spring:message></th>
-					<th><spring:message code="ezSystem.x0027"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
 		</table>
+		<div id="contentlist" style="width:100%; overflow: auto;">	
+			<table class="mainlist" style="width:100%;">
+				<thead style="">
+					<tr>
+						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
+						<th><spring:message code="ezStatistics.t113"></spring:message></th>
+						<th><spring:message code="ezSystem.x0024"></spring:message></th>
+						<th><spring:message code="ezSystem.x0025"></spring:message></th>
+						<th><spring:message code="ezSystem.x0026"></spring:message></th>
+						<th><spring:message code="ezSystem.x0027"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
+			</table>
+		</div>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	</body>

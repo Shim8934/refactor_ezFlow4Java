@@ -5,13 +5,13 @@
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">	
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">	
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/FormCont.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
 	    	var companyID = "";
@@ -172,6 +172,6 @@
 			    <p><span id="tagsub2"><spring:message code='ezEmail.t824'/></span></p>
 	        </div>
 	    </div>
-	    <iframe id="Letter_ifrm" style="width: 1200px; height:650px;" frameborder="0"></iframe> 
+	    <iframe id="Letter_ifrm" style="width: 1200px; height:535px;" frameborder="0"></iframe> 
 	</body>
 </html>

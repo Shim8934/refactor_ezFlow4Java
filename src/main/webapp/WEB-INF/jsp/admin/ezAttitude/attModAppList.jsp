@@ -10,18 +10,18 @@
 <head>
 		<title><spring:message code='ezAttitude.t165' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
-		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<!-- modal -->
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style>
 		#contentlist table.mainlist td {
 	    		overflow : hidden;
@@ -216,8 +216,11 @@
         });
 		
 	    function windowResize() {
-        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-        	document.getElementById("contentlist").style.height = (height - 100) + "px";
+        	var height = document.documentElement.clientHeight - 215 - document.getElementById("mainmenu").clientHeight;
+        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+        		height = height - 30;
+        	}
+        	document.getElementById("contentlist").style.height = height + "px";
         	document.getElementById("contentlist").style.overflow = "auto";
         }
 		
@@ -668,7 +671,7 @@
 	    function selbeforeBlock(){
 	        var pageNum = parseInt(currentPage);
 	        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
-	        get_att_list(pageNum);
+	        goToPageByNum(pageNum);
 	    }
 	    
 	    function selbeforeBlock_one(){

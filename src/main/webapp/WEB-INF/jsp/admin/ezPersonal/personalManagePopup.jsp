@@ -6,11 +6,11 @@
 	<head>
 		<title>ManagePopUp</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
@@ -74,6 +74,12 @@
 		            //listview.DataSource(xmldom);
 		            listview.RowDataBind();
 		            xmldomNode = null;
+		            
+	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
+	                if (headerData.getElementsByTagName("ROW").length == 0) {
+	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='6'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
+	                }
 		        } catch (e) {
 	
 		        }
@@ -164,7 +170,12 @@
 		    }
 	
 		    function del_popup(popup_number) {
-		        if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		    	//2018-08-08  김보미 - rownumber추가
+		        /*if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		            return;
+		        }*/
+		        var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
+		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
 		            return;
 		        }
 		        

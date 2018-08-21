@@ -7,25 +7,25 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t30'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/draft_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/draftG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draftG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -132,12 +132,9 @@
 		    var Saveflag = false;//임시저장Flag
 		    var pPageType = "DRAFTUI";
 		    var pUse_Editor = "${useEditor}";
-		    var hideCabinet = "${hideCabinet}";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
-		    var hideCabinet = "${hideCabinet}";
 		    var checkdocinfo = false;
-		    //var DocType = ""; // 이미 위에 선언되어있음
 		    var junGyulFlag = "${junGyulFlag}";
 		    var draftJunGyulFlag = "${draftJunGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
@@ -535,39 +532,31 @@
 			                return;
 			            }
 			            
-			            if (hideCabinet == "0") {
-				            if (approvalFlag == "G") {
-				            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
-				            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+			            if (approvalFlag == "G") {
+			            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+			            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+				                OpenAlertUI(pAlertContent);
+				                return;
+			            	}
+			            	
+				            if (cabinetID == "") {
+				                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
+				                OpenAlertUI(pAlertContent, check_btnSendDraft);
+				                return;
+				            }
+				            
+				            if (nonElecRec != "Y") {
+					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+					                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
 					                OpenAlertUI(pAlertContent);
-					                return;
-				            	}
-				            	
-					            if (cabinetID == "") {
-					                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
-					                OpenAlertUI(pAlertContent, check_btnSendDraft);
-					                return;
-					            }
-					            
-					            if (nonElecRec != "Y") {
-						            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
-						                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
-						                OpenAlertUI(pAlertContent);
-						                return;
-						            }
-					            }
-				            } else {
-					            if (cabinetID == "") {
-					                var pAlertContent = "<spring:message code='ezApprovalG.t137'/>";
-					                OpenAlertUI(pAlertContent, check_btnSendDraft);
 					                return;
 					            }
 				            }
 			            } else {
 				            if (cabinetID == "") {
-				            	//하드코딩 방산끝나면 삭제 ㄱㄱ
-				            	cabinetID = "devteamZZ3782312017000002001";
-				            	TaskCode = "ZZ378231";
+				                var pAlertContent = "<spring:message code='ezApprovalG.t137'/>";
+				                OpenAlertUI(pAlertContent, check_btnSendDraft);
+				                return;
 				            }
 			            }
 			            
@@ -1361,7 +1350,8 @@
 				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
 					pGubun = "11";
 				}
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht";
+				
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "mht";
 		        
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;

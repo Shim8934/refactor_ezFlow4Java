@@ -6,16 +6,16 @@
 	<head>
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
 	    <style>
 	    .mainlist tr th {
 	    	border-top : 0px;
 	    }
 	    </style>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" language="javascript">
 			$(document).ready(function(){			
 				$.ajax({
@@ -279,10 +279,10 @@
 		<div id="mainmenu">
 	    	<ul>
 	        	<li><span id ="NEW" onclick="btn_Select(this)"><spring:message code="ezBoard.t321"/></span></li>
-	        	<li><span onclick="sliderdelete();"><img src="/images/ImgIcon/delete.gif"   style="margin-top:-2px;"  /><spring:message code="ezBoard.t89"/></span></li>
-	        	<li><span onclick="Reload();"><img src="/images/ImgIcon/recur.gif"    style="margin-top:-2px;"  /><spring:message code="ezBoard.t205"/></span></li>
-	        	<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t493'/>"/></span></li>
-	        	<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t494'/>" /></span></li>
+	        	<li><span onclick="sliderdelete();"><spring:message code="ezBoard.t89"/></span></li>
+	        	<li><span onclick="Reload();"><spring:message code="ezBoard.t205"/></span></li>
+	        	<li><span onclick="Priority_UP();" style="padding-top:5px"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t493'/>"/></span></li>
+	        	<li><span onclick="Priority_DOWN();" style="padding-top:5px"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t494'/>" /></span></li>
 	    	</ul>
 	    </div>
 	    <table style="width:750px;height:385px;" border="0">
@@ -310,9 +310,12 @@
             	<td style="vertical-align:top;width:100%;height:100%">
               		<div id="imagediv" style="border:1px solid #dbdbda;margin:0px 5px 5px 5px;display:none">
                 		<div id="ContentDescription" style="margin-top:1px;margin:5px 5px 5px 5px;"></div>
-	              </div>
+	            	</div>
             	</td>
         	</tr>
       	</table>
+      	<script>
+	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	    </script>
 	</body>
 </html>

@@ -5,9 +5,9 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<link href="/css/jquery.theme01scrollbar.css" rel="stylesheet" type="text/css">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<link href="${util.addVer('/css/jquery.theme01scrollbar.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
 		
 		<!-- custom scrollbars plugin -->
 		<script type="text/javascript">
@@ -22,7 +22,7 @@
 			    var pTop = (pheight - 780) / 3;
 			    var pLeft = (pwidth - 765) / 2;
 
-			    window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + GetAttribute(obj,"DATA2") + "&boardID=" + GetAttribute(obj,"DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+			    window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + GetAttribute(obj,"DATA2") + "&boardID=" + GetAttribute(obj,"DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
 			}
 		</script>
 	</head>	
@@ -31,9 +31,9 @@
      		<p class="title"><spring:message code='main.t00030' /></p>
 			${strHTML}	
 		</div>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.theme01Scrollbar.concat.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.theme01Scrollbar.concat.min.js')}"></script>
 		<script type="text/javascript">
 			(function ($) {
 	        	$(window).load(function () {

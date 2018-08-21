@@ -7,23 +7,24 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1'/></title>
 		<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ApprovUI_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprovUI_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -134,7 +135,6 @@
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
-		    var hideCabinet = "${hideCabinet}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
 		  	//회람
 			var type = "ING";
@@ -156,6 +156,10 @@
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 			
 			var docState = "${docState}";
+			
+			//최종결재시 채번
+			var useReceiveDocNo = "${useReceiveDocNo}";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -696,7 +700,31 @@
 			                }
 			            }
 		        	}
+		        } else {
+		        	//useReceiveDocNo 처리
+		        	if (useReceiveDocNo == 'NO') {
+			        	if (approvalFlag == "S") {
+			        		//일반 미처리
+			        	} else {
+			        		// 일단 복사해봄
+			        		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+				            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+				                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+				                    var rtnval;
+				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+				                    
+				                    if (!rtnval) {
+				                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+				                        OpenAlertUI(pAlertContent);
+				                        setMenuDisable("btnApprove", false);
+				                        return;
+				                    }
+				                }
+				            }
+			        	}
+		        	}
 		        }
+		        
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                var rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
@@ -1239,8 +1267,8 @@
 		        
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
-		
-		        DivPopUpShow(730, 630, "/ezApprovalG/insSepAttach.do");
+
+		        DivPopUpShow(920, 630, "/ezApprovalG/insSepAttach.do");
 		    }
 		
 		    function btnAddSepAttach_onclick_Complete(rtn) {
@@ -1344,7 +1372,8 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht", "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

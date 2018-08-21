@@ -6,20 +6,20 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t607' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist_free tr th {
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/FormCont.js')}"></script>
 		<script type="text/javascript">
 			var OrderCell = "";
 			var companyID = "";
@@ -332,7 +332,7 @@
 							}
 						}
 						
-						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
+						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 960, "no");
 						Tree_setconfig();
 		            } else {
 		            	alert("<spring:message code = 'ezApproval.t722' />");
@@ -375,6 +375,8 @@
 		                if (isIE) {
 							url = "/admin/ezApprovalG/formMainOther.do";
 		                } else {
+	                		var pAlertContent = "한글양식은 IE에서만 수정할 수 있습니다.";
+	                        alert(pAlertContent);
 							return;
 		                }
 		                parameter = parameter + HWP;
@@ -396,7 +398,7 @@
 						}
 		            }
 		            
-		            GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
+		            GetOpenWindow(url + parameter, "FormMain", 1050, 960, "no");
 
 		            Tree_setconfig();
 		        } else {
@@ -667,7 +669,7 @@
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
 				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>
 		        <!-- <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li> -->                     
-		        <li id="btnFormListView"><span onclick="return btnFormListView_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></li>
+		        <li id="btnFormListView" style="display: none;"><span onclick="return btnFormListView_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></li>
 			</ul>
 		</div>
 		<table class="content" style="width:1000px">
@@ -684,7 +686,7 @@
 						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
 						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>
 					</select>
-					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:22px; margin-top: 1px; vertical-align:unset;" />
+					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:22px;vertical-align: auto" />
 					<a class="imgbtn imgbck" onclick="searchform()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t111' /></span></a>
 					<a class="imgbtn imgbck" onclick="reset()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t1301' /></span></a>
 				</td>
@@ -722,5 +724,8 @@
 		    	</td>
 		  	</tr>  
 		</table>
+		<script>
+	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	    </script>
 	</body>
 </html>

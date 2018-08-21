@@ -4,10 +4,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 	</head>
-	<link href="/css/help.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
+	<link href="${util.addVer('/css/help.css')}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<body  id="left">
 		<c:choose>
 			<c:when test="${userInfo.lang != '3'}">

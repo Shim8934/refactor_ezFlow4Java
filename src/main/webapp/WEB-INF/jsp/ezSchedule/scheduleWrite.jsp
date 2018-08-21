@@ -7,23 +7,23 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezSchedule.t357' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-        <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
-        <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Tab.css')}" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/TabMenu.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<!-- data picker-->		
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- time picker-->		
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
         <script type="text/javascript">
 	        var userid = "<c:out value='${userId}'/>";
 	        var username = "<c:out value='${userName}'/>";
@@ -37,7 +37,10 @@
 	        var contentpath = "${contentPath}";
 	        var ispublic = "<c:out value='${isPublic}'/>";
 	        var importance = "<c:out value='${importance}'/>";
-	        var repetition = "<c:out value='${repetition}'/>";	        
+	        var repetition = "<c:out value='${repetition}'/>";
+	        if(repetition==" "){
+	        	repetition = "";
+	        }
 	        var scheduletype = "<c:out value='${scheduleType}'/>";
 	        var changekey = "<c:out value='${changeKey}'/>";
 	        var pattern = "<c:out value='${pattern}'/>";
@@ -513,7 +516,7 @@
 	                                    <tr id="repeateTR">
 	                                        <th><a href="#" class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
 	                                        <td class="pos1">
-	                                            <div id="repeatinfo" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%">&nbsp;</div>
+	                                            <div id="repeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
 	                                        </td>
 	                                        <td class="pos2"></td>
 	                                    </tr>
@@ -557,14 +560,14 @@
                                         <tr ID="HolderWriteTr1">
                                             <th><a href="#" id="resourcebutton" class="imgbtn"><span id="resourcebtn" onclick="manage_resource()"><spring:message code='ezSchedule.t1101'/></span></a></th>
                                             <td class="pos1">
-                                                <div id="resourcelist" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%"></div>
+                                                <div id="resourcelist" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;"></div>
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>
                                         <tr ID="HolderWriteTr2">
                                             <th><a href="#" class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
                                             <td class="pos1">
-                                                <div id="resourcerepeatinfo" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%">&nbsp;</div>
+                                                <div id="resourcerepeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>

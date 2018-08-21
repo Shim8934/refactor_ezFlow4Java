@@ -5,15 +5,15 @@
 <html>
 	<head>
 		<title>task_main</title>
-		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
-		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" />
+		<link rel="stylesheet" href="${util.addVer('ezTask.e1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Tab.css')}" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
 		<STYLE type="text/css"> 
 			.pagetd{padding-top:6px; }
 			.pcol{padding-top:6px; }
@@ -147,11 +147,11 @@
 		    	var feature = "";
 		    	
 		    	if (useTodoMemo == 'YES') {
-		    		feature = GetOpenPosition(790, 810);
-	                window.open("/ezTask/taskWrite.do", "", "height=810px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    		feature = GetOpenPosition(790, 830);
+	                window.open("/ezTask/taskWrite.do", "", "height=830px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
-		    		feature = GetOpenPosition(790, 755);
-	                window.open("/ezTask/taskWrite.do", "", "height=755px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    		feature = GetOpenPosition(790, 775);
+	                window.open("/ezTask/taskWrite.do", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
 		    }
 	

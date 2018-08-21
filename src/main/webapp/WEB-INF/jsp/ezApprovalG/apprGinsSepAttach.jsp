@@ -5,14 +5,14 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1027'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js" ></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}" ></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent))
 		    {
@@ -158,7 +158,7 @@
 		            DivPopUpShow(880, 615, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:700px;dialogHeight:615px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            var feature = "dialogWidth:830px;dialogHeight:615px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
 		            //한글기안에서 분리첨부>추가창이 잘리는현상때문에 주석처리 2018-07-27 강민수92
 // 		            feature = feature + GetShowModalPosition(410, 555);
 					
@@ -329,8 +329,8 @@
 		                DivPopUpShow(880, 615, url);
 		            }
 		            else {
-		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
-		                feature = feature + GetShowModalPosition(410, 555);
+		                var feature = "dialogWidth:840px;dialogHeight:580px;scroll:no;resizable:no;status:no; help:no ";
+// 		                feature = feature + GetShowModalPosition(410, 555);
 		
 		                if (url != "")
 		                    var rtn = window.showModalDialog(url, para, feature);
@@ -368,14 +368,17 @@
 		            para[2] = RetValue[3];
 
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
-		            var feature = "dialogWidth:700px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-        			feature = feature + GetShowModalPosition(480, 430);
-		            if (CrossYN() && RetValue[3] == 'mht') {
+		            var feature = "dialogWidth:800px;dialogHeight:550px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
+        			feature = feature + GetShowModalPosition(800, 550);
+		            if (CrossYN()) {
+
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
-		                 DivPopUpShow(675, 475, url);
-		            } else {
+		                 DivPopUpShow(800, 550, url);
+		            }
+		            else {
+
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
 

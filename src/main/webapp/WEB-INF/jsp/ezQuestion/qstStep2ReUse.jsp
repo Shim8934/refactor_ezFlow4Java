@@ -7,11 +7,11 @@
 		<title>Step2</title>
 		<meta name="vs_defaultClientScript" content="JavaScript" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezQuestion.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezQuestion/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var index = -1;
 			var flgClose= true;
@@ -188,10 +188,13 @@
             		var tmpText=frmCreate.selQues[index-1].text.substring(vsublen1);
             		var vsubdata=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen=vsubdata[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index-1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index-1].text = index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
+            		frmCreate.selQues[index-1].text = answerType + index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType1 + (index + 1) + "." + tmpText;
             		frmCreate.selQues.selectedIndex = index-1;
             		index--;
         		}	
@@ -204,10 +207,13 @@
             		var tmpText = trim_Cross(frmCreate.selQues[index+1].text).substring(vsublen);
             		var vsubdata1=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen1=vsubdata1[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index+1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index+1].text = index+2 + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
+            		frmCreate.selQues[index+1].text = answerType1 + (index + 2) + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType + (index + 1) + "." + tmpText;
             		frmCreate.selQues.selectedIndex = index+1;
             		index ++;
         		}
@@ -554,9 +560,11 @@
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
                			<td>
-                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
-                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
-                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+               				<div style="vertical-align: middle;height: 74%;width: 100%;">
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+	                   		</div>
                 		</td>
                 		<th style="text-align: center; width: 100px"><spring:message code="ezQuestion.t481" /></th>
                 		<td style="width: 250px; white-space: nowrap">

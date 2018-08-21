@@ -6,27 +6,27 @@
 	<head>
 		<title>BoardItemListPhoto</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<!-- data picker-->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<!-- layer popup -->
-		<link rel="stylesheet"  href="/js/jquery/jquery.modal.css" type="text/css" />
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<link rel="stylesheet"  href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style>
 		#layer_Viewpopup { 
 			z-index:1000; 
@@ -127,6 +127,32 @@
 		            document.getElementById("right").style.display = "none";
 		        }
 		    };
+		    
+		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+	        window.onunload = function () {
+	        	if (parent.frames["left"]) {
+	        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+	        			$(parent.frames["left"].document.body).css("overflow", "");
+	        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	} else if (parent.frames["attitude_menu"]) {
+	        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+	        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	}
+	        	      
+	        	if (parent.parent.frames["left"]) {
+	        		if (parent.parent.frames["board_menu"]) {  		  
+	        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+	        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+	        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+	        		}
+	        	}
+		    }
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
 		    /* $(window).on("resize", function(){
@@ -799,7 +825,7 @@
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
 		
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 		
 		    }
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -830,7 +856,7 @@
 		        arrList = null;
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(340, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -840,7 +866,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {

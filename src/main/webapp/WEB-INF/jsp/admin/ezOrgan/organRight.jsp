@@ -6,19 +6,19 @@
 	<head>
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href='<spring:message code='ezOrgan.e3'/>' type="text/css" />
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <style>
 	    	.mainlist_free tr th {
 	    		border-top: 0px;
 	    	}
 	    </style>		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">		
 			var topid = "<c:out value='${topid}'/>";
 		    var useOCS = "<c:out value='${useOCS}'/>";
@@ -210,10 +210,10 @@
 			    if (CrossYN()){
 			        companyinfo_dialogArguments[0] = args;
 			        companyinfo_dialogArguments[1] = add_company_Complete;
-			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 230));
+			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 260));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }else{
-			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:328px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(328, 230));
+			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:328px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(328, 260));
 
 			        if (typeof (rtnValue) != "undefined"){
 			            getDeptFullTree(rtnValue);
@@ -253,7 +253,7 @@
 				    companyinfo_dialogArguments[0] = args;
 				    companyinfo_dialogArguments[1] = info_company_Complete;
 				    
-                    var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 230));
+                    var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 260));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				} else {

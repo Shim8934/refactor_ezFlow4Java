@@ -5,12 +5,12 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/adminTree.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTree.js')}"></script>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
@@ -20,6 +20,9 @@
 			var strMessage        = "<spring:message code='ezWebFolder.t134'/>";
 			var strMessage2       = "<spring:message code='ezWebFolder.t230'/>";
 			var strMessage3       = "<spring:message code='ezWebFolder.t231'/>";
+			var resultErr1        = "<spring:message code='ezWebFolder.t306'/>";
+			var resultErr2        = "<spring:message code='ezWebFolder.t305'/>";
+			var resultErr3        = "<spring:message code='ezWebFolder.t300'/>";
 			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {

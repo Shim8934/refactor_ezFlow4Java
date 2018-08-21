@@ -18,6 +18,7 @@
 package egovframework.let.utl.fcc.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -33,13 +34,16 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,9 +71,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -117,6 +123,9 @@ public class CommonUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+    @Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;    
+	
 	@Resource(name = "jspw")
     private String jspw;
 	
@@ -126,6 +135,16 @@ public class CommonUtil {
 	public final String CRLF = "\r\n";
 	
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+	private static CommonUtil commonUtilInstance;
+	
+    @PostConstruct
+	public void init() throws Exception {
+    	logger.debug("init started.");
+
+    	commonUtilInstance = this;
+    	
+    	logger.debug("init ended.");
+    }
 	
 	public LoginVO userInfo(String loginCookie){
 		try{

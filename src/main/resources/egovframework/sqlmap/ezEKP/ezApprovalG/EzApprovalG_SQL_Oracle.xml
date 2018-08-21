@@ -2320,7 +2320,16 @@
 	             WHERE  
 	             		DOCID = #v_PDOCID#
 	             AND 
-	             		RECEIVEDDEPTID = #v_PDEPTID#
+	             		(RECEIVEDDEPTID = #v_PDEPTID#
+	             			OR
+	             		RECEIVEDDEPTID = (SELECT
+	             							EXTENSIONATTRIBUTE4
+	             						  FROM
+	             						  	TBL_DEPTMASTER
+	             						  WHERE
+	             						  	CN = #v_PDEPTID#
+	             						  AND
+	             						  	TENANT_ID = #v_TENANTID#))
 	             AND
 						TENANT_ID = #v_TENANTID#
 				 AND
@@ -3435,7 +3444,7 @@
 		             APRMEMBERDEPTID ,
 		             MEMBERDEPTNAME APRMEMBERDEPTNAME  ,
 		             MEMBERDEPTNAME2 APRMEMBERDEPTNAME2  ,
-		             #v_COMPANYID# APRMEMBERLDAPPATH  ,
+		             #companyID# APRMEMBERLDAPPATH  ,
 		             NULL RECEIVEDDATE  ,
 		             NULL PROCESSDATE  ,
 		             NULL REASONDONOTAPPROV  ,
@@ -3782,6 +3791,178 @@
             ORDER BY 
            		NAME ASC
 		</isNotEmpty>		
+	</select>
+	
+	<select id="EzApprovalG.getTaskSubCategoryAll" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		SELECT 
+		    VTASKCLASS.TASKCODE,
+		    TBL_CABINET.CABINETID,
+		    TBL_CABINET.REGSERIALNO,
+		    TBL_CABINET.PRODUCTIONYEAR,
+		    TBL_CABINET.VOLUMENO,
+		    TBL_CABINET.MODIFYFLAG,
+		    TBL_CABINET.CABINETTRANSFERFLAG,
+		    TBL_CABINET.CONFIRMFLAG,
+		    VTASKCLASS.TASKNAME,
+		    VTASKCLASS.TASKNAME2,
+		    TBL_CABINET.PROCESSDEPTCODE,
+		    TBL_CABINET.PROCESSDEPTNAME,
+		    TBL_CABINET.PROCESSDEPTNAME2,
+		    TBL_CABINET.CABINETCLASSNO,
+		    TBL_CABINET.RECTYPECODE,
+		    TBL_CABINET.CLASSCREATEDATE,
+		    TBL_CABINET.OWNERID,
+		    NVL(TBL_CABINET.SPECIALCATALOGFLAG, VTASKCLASS.SPECIALCATALOGFLAG) SPECIALCATALOGFLAG,
+		    TBL_CABINET.TERMINATEFLAG,
+		    TBL_CABINET.OWNERDEPTID,
+		    TBL_CABINET.OWNERTASK,
+		    TBL_CABINET.TRANSDELAYFLAG,
+		    TBL_CABINET.TITLE,
+		    TBL_CABINET.TITLE2,
+		    VTASKCLASS.KEEPINGPERIOD,
+		    VTASKCLASS.DISPLAYRECFLAG,
+		    VTASKCLASS.DISPLAYRECTRASTIME,
+		    VTASKCLASS.SC1,
+		    VTASKCLASS.SC2,
+		    VTASKCLASS.SC3,
+		    VTASKCLASS.TEMPFLAG,
+		    VTASKCLASS.KEEPINGMETHOD,
+		    VTASKCLASS.KEEPINGPLACE,
+		    VTASKCLASS.SCNAME,
+		    VTASKCLASS.SUBCATEGORYCODE
+		FROM
+		    (SELECT 
+		    	DISTINCT TASKCODE,
+		            TASKNAME,
+		            NVL(TASKNAME2, TASKNAME) TASKNAME2,
+		            KEEPINGPERIOD,
+		            DISPLAYRECFLAG,
+		            DISPLAYRECTRASTIME,
+		            SPECIALCATALOGFLAG,
+		            SC1,
+		            SC2,
+		            SC3,
+		            TEMPFLAG,
+		            KEEPINGMETHOD,
+		            KEEPINGPLACE,
+		            SCNAME,
+		            SUBCATEGORYCODE,
+		            TENANT_ID,
+		            COMPANYID
+		    FROM
+		        VTASKCLASS
+		    WHERE
+	            MCATEGORYCODE = #cateCode#
+            AND 
+            	(TRIM(PROCESSDEPTCODE) = #deptCode#
+            OR 
+            	TASKCODE LIKE 'ZZ%'
+            OR 
+            	TASKCODE = '99999999')
+            AND 
+            	TENANT_ID = #tenantID#
+            AND 
+            	COMPANYID = #companyID#) VTASKCLASS
+		        LEFT JOIN
+		    ( SELECT
+		    	TBL_CABINETCLASS.TASKCODE,
+			    TBL_CABINET.CABINETID,
+			    TBL_CABINETCLASS.REGSERIALNO,
+			    TBL_CABINETCLASS.PRODUCTIONYEAR,
+			    TBL_CABINET.VOLUMENO,
+			    TBL_CABINETCLASS.MODIFYFLAG,
+			    TBL_CABINET.CABINETTRANSFERFLAG,
+			    TBL_CABINETCLASS.CONFIRMFLAG,
+			    TBL_CABINETCLASS.TASKNAME,
+			    TBL_CABINETCLASS.TASKNAME2,
+			    TBL_CABINETCLASS.PROCESSDEPTCODE,
+			    TBL_CABINETCLASS.PROCESSDEPTNAME,
+			    TBL_CABINETCLASS.PROCESSDEPTNAME2,
+			    TBL_CABINET.CABINETCLASSNO,
+			    TBL_CABINETCLASS.RECTYPECODE AS RECTYPECODE,
+			    TBL_CABINETCLASS.CREATEDATE AS CLASSCREATEDATE,
+			    TBL_CABINETCLASS.OWNERID,
+			    TBL_CABINETCLASS.SPECIALCATALOGFLAG,
+			    TBL_CABINETCLASS.TERMINATEFLAG,
+			    TBL_CABINETCLASS.OWNERDEPTID,
+			    TBL_CABINETCLASS.OWNERTASK,
+			    TBL_CABINETCLASS.TRANSDELAYFLAG,
+			    TBL_CABINETCLASS.TITLE,
+			    TBL_CABINETCLASS.TITLE2,
+			    TBL_CABINETCLASS.COMPANYID,
+			    TBL_CABINETCLASS.TENANT_ID
+		      FROM
+		      	TBL_CABINETCLASS 
+			  INNER JOIN
+			    TBL_CABINET ON TBL_CABINETCLASS.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
+			        AND TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+			        AND TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+			WHERE
+			    TBL_CABINET.DELFLAG = '0'
+	        AND 
+	        	TBL_CABINETCLASS.DELFLAG = '0'
+	        AND 
+	        	NOT (TBL_CABINET.CABINETTRANSFERFLAG = '2'
+	        		AND 
+	        		CONFIRMFLAG = '0')
+	        AND 
+	        	TRIM(TBL_CABINETCLASS.OWNERDEPTID) = #deptCode#
+	        AND 
+	        	TBL_CABINETCLASS.EXPIRATIONYEAR >= #accountYear#
+	   		<isEqual property="initFlag" compareValue="1">
+	   			<![CDATA[
+			        AND 
+			        	TBL_CABINET.CABINETTRANSFERFLAG <> '2'
+			        AND 
+			        	TERMINATEFLAG = '0'
+			        AND 
+			        	CONFIRMFLAG = '0'
+			        AND 
+			        	TBL_CABINET.CABINETID IN (
+			        SELECT 
+			            CABINETID
+			        FROM
+			            (SELECT 
+			                CABINETCLASSNO,
+			                    MAX(VOLUMENO) AS VOLUMENO,
+			                    TENANT_ID,
+			                    COMPANYID
+			            FROM
+			                TBL_CABINET
+			            WHERE
+			                TENANT_ID = #tenantID# 
+			            AND 
+			            	COMPANYID = #companyID#
+			            GROUP BY 
+			            	CABINETCLASSNO,TENANT_ID,COMPANYID) TBMAXVOL
+			                INNER JOIN
+			            TBL_CABINET ON TBMAXVOL.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
+			                AND TBMAXVOL.VOLUMENO = TBL_CABINET.VOLUMENO
+			                AND TBMAXVOL.TENANT_ID = TBL_CABINET.TENANT_ID
+			                AND TBMAXVOL.COMPANYID = TBL_CABINET.COMPANYID)
+			        AND 
+			        	TBL_CABINETCLASS.TENANT_ID = #tenantID#
+			        AND 
+			        	TBL_CABINETCLASS.COMPANYID = #companyID#
+	     		]]>
+		   	</isEqual>
+		   	<isEqual property="initFlag" compareValue="2">
+		   		<![CDATA[
+		   			AND 
+		   				TBL_CABINET.CABINETTRANSFERFLAG <> '2'
+		   		]]>
+		   	</isEqual>
+		    ) TBL_CABINET
+		ON
+			VTASKCLASS.TASKCODE = TBL_CABINET.TASKCODE
+		AND 
+			VTASKCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+		AND 
+			VTASKCLASS.COMPANYID = TBL_CABINET.COMPANYID
+		ORDER BY 
+			TBL_CABINET.TASKNAME,
+			TBL_CABINET.TITLE,
+			TBL_CABINET.CLASSCREATEDATE DESC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskInSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -4323,14 +4504,6 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID				   		
 			  </isEqual> 
-				  LEFT JOIN 
-				   			TBL_ENDAPRLINEINFO 
-				   ON 
-				   			TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
-	               AND 
-	               			TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
-	               AND 
-	               			TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -14914,7 +15087,7 @@
                                                  AND 
                                                  	TBL_CABINETCLASS.ConfirmFlag = '0'
                                                  AND 
-                                                 	OWNERDEPTID = 'GJS'
+                                                 	OWNERDEPTID = #v_DEPTCODE#
                                                  AND
                                                  	TBL_CABINET.TENANT_ID = #v_TENANTID#
                                                  AND
@@ -16507,10 +16680,11 @@
 				   		AND
 	        				COMPANYID = #companyID#
 				   		$v_SUBQUERY$
-				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
-				   			AND 
-				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
-				   		</isEqual>
+<!-- 				   		2018-08-08 강민수 기록물배부대장 목록출력 모든 리스트 안나와서 주석처리 강민수92 -->
+<!-- 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE"> -->
+<!-- 				   			AND  -->
+<!-- 				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE# -->
+<!-- 				   		</isEqual> -->
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
 				   		 		MANAGEDEPTID = #v_MANAGEDEPTID#
@@ -16711,7 +16885,7 @@
 		  		  	  											 AND
 		  		  	  											 	A.COMPANYID = #companyID#
 		  		  	  											 AND 
-		  		  	  											 	A.User_ID IN ( #charger# ) )
+		  		  	  											 	A.User_ID IN ( $charger$ ) )
 		  		  </isNotEmpty>
 		  		  <isNotEmpty property="transExpire">
 		  		  	<![CDATA[
@@ -21865,7 +22039,7 @@
    			TBL_APRLINEINFO 
    		(DocID, 	       AprMemberSN,      AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,      AprMemberName,    AprMemberName2,     AprMemberJobTitle,   AprMemberJobTitle2,      AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,    AprMemberLDAPPath,   ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
    		VALUES 
-   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_ReceivedDate$, $v_ProcessDate$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
+   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, TO_DATE($v_ReceivedDate$,'YYYY-MM-DD HH24:MI:SS'), TO_DATE($v_ProcessDate$,'YYYY-MM-DD HH24:MI:SS'), #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
    	</insert>
    	 	
    	<insert id="EzApprovalG.insertGongRamSaveExpAprLine" parameterClass="Map">
@@ -22866,6 +23040,17 @@
         AND
         	COMPANYID = #companyID#
    	</select>
+   	
+   	<select id="EzApprovalG.getDeptSymbol" parameterClass="Map" resultClass="String">
+   		SELECT
+   			EXTENSIONATTRIBUTE6
+   		FROM
+   			TBL_DEPTMASTER
+   		WHERE
+   			CN = #deptID#
+   		AND
+   			TENANT_ID = #tenantID#
+   	</select>
    	  	
    	<insert id="EzApprovalG.insertRejectEndAprDocInfoS" parameterClass="Map"> 
    		 INSERT INTO 
@@ -23762,9 +23947,9 @@
 								AND 
 									XTOCODE = #xToCode#	
 								AND 
-									B.HREF IS NULL
+									(B.HREF IS NULL
 								OR 
-									B.HREF = '') A)
+									B.HREF = '')) A)
 	  </delete>
 	  	  
 	  <delete id="EzApprovalG.deleteRelayAprDocInfo" parameterClass="Map" >
@@ -23792,9 +23977,9 @@
 							AND 
 								XTOCODE = #xToCode#	
 							AND 
-								B.HREF IS NULL
+								(B.HREF IS NULL
 							OR 
-								B.HREF = '')
+								B.HREF = ''))
 	  </delete>
 	  	  
       <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
@@ -23953,7 +24138,7 @@
 	  	INSERT INTO TBL_APRDOCINFO 
 	  		(DOCID,   FORMID, ORGDOCID, DOCTYPE, DOCSTATE, FUNCTIONTYPE, HREF, DOCTITLE, DOCNO, HASATTACHYN, HASOPINIONYN, STARTDATE, ENDDATE, WRITERID, WRITERNAME, WRITERNAME2, WRITERJOBTITLE, WRITERJOBTITLE2, WRITERDEPTID, WRITERDEPTNAME, WRITERDEPTNAME2, ISPUBLIC, COMPANYID, TENANT_ID)
 		VALUES 
-			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',        '',         '',            '',            '',               '',            '',             '',           'Y', #companyID#, #v_TENANTID#)
+			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',   #strWriterName#, #strWriterName#, '',    '',              '',            #strWriterDept#, #strWriterDept#, 'Y',    #companyID#, #v_TENANTID#)
 	  </insert>
 		  
 	  <insert id="EzApprovalG.insertRelayExpAprDocInfo" parameterClass="Map">
@@ -23994,9 +24179,9 @@
 		  AND 
 		  	XTOCODE = #XTOCODE#
 		  AND 
-			DOCID = ''
+			(DOCID = ''
 		  OR 
-		  	DOCID IS NULL
+		  	DOCID IS NULL)
 	  </update>
 	  	  
 	  <update id="EzApprovalG.updateRecExchInfo" parameterClass="Map">
@@ -24011,9 +24196,9 @@
 		  AND
 		  	PACKDOCID = #XDOCID#
 		  AND 
-		  	DOCID = ''
+		  	(DOCID = ''
 		  OR 
-		  	DOCID IS NULL
+		  	DOCID IS NULL)
 	  </update>
 	 	  
 	  <update  id="EzApprovalG.updateRecRelayInfoRollback" parameterClass="Map">

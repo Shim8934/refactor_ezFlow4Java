@@ -5,17 +5,17 @@
 <HTML>
 	<HEAD>
 		<title><spring:message code='ezApprovalG.t1569'/></title>
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/DocDelete_Cross.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Tab.css')}" />
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/DocDelete_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"> </script>
 		<style type="text/css">
 			<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
 			select {
@@ -37,6 +37,7 @@
 			td {
 				padding: 8px 5px;
 			}
+			.mainlist tr th {border-top:0px}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -74,7 +75,7 @@
 		   	
 		    	P_CompanyID = $('#ListCompany').val();
 		    	getDocDeleteHist(1);
-		    	makePageSelPage();
+// 		    	makePageSelPage();
 		    	getTime();
 		    	
 		    	if (changeTab == "completedoclist") {
@@ -92,6 +93,9 @@
 		        $(document).bind("selectstart", function(event){event.preventDefault();});
 		        //드래그 방지
 		        $(document).bind("dragstart", function(event){event.preventDefault();});
+		        
+		        //페이징 위치 조정
+		        windowResize();
 		    }
 		    
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -419,28 +423,28 @@
 					searchEndTime = $('#endDatepicker').datepicker({dateFormat : 'yyyymmdd'}).val();
 				}
 				
-					var pURL = "/admin/ezApprovalG/getDocListjson.do";
+				var pURL = "/admin/ezApprovalG/getDocListjson.do";
 
-					$.ajax({
-							url : pURL,
-							type : "POST",
-							async : false,
-							dataType : 'json',
-							data : {
-								contID     : ScontID,
-								pageNum    : pageNum,
-								companyID  : P_CompanyID,
-								docNO  	   : docnumber,//문서번호
-								docTitle   : doctitle,//문서제목
-								drafter    : drafter,//기안자
-								aprFrom    : searchStartTime,//완료일자
-								aprTo      : searchEndTime,//완료일자
-								deptName   : drafterdept,//기안부서
-								pSelectTab : pSelectTab//탭구분	
-							},
-							success : function(res) {
-								if (res.pSelectTab == "completedoclist") {
-									$("#doclist").empty().append(
+				$.ajax({
+						url : pURL,
+						type : "POST",
+						async : false,
+						dataType : 'json',
+						data : {
+							contID     : ScontID,
+							pageNum    : pageNum,
+							companyID  : P_CompanyID,
+							docNO  	   : docnumber,//문서번호
+							docTitle   : doctitle,//문서제목
+							drafter    : drafter,//기안자
+							aprFrom    : searchStartTime,//완료일자
+							aprTo      : searchEndTime,//완료일자
+							deptName   : drafterdept,//기안부서
+							pSelectTab : pSelectTab//탭구분	
+						},
+						success : function(res) {
+							if (res.pSelectTab == "completedoclist") {
+								$("#doclist").empty().append(
 											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
 //												  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
 //												+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
@@ -453,18 +457,18 @@
 //												+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
 //												+ '<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>'
 //												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-											+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
-											+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
-											+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t448"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											)
+										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
+										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
+										+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t448"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+										)
 								} else {
 									$("#doclist").empty().append(
 											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
@@ -480,19 +484,19 @@
 //												+ '<th style="width:10%;"><spring:message code="ezApproval.t368"></spring:message></th>'
 //												+ '<th style="width:5%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
 //												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-											+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
-											+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
-											+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t368"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											)
+										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
+										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
+										+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t368"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+										)
 								}
 								
 								var html = "";
@@ -563,7 +567,10 @@
 								alert(err);
 							}
 						});
-					makePageSelPage();
+				
+					if (totalCount > 0) {
+						makePageSelPage();
+					}
 			}
 			
 			function chk_onselect(obj) {
@@ -800,7 +807,7 @@
 				$("#drafterdept").val("");
 				
 				getDocDeleteHist(1);
-		    	makePageSelPage();
+// 		    	makePageSelPage();
 			}
 			
 			function openDoc(obj) {
@@ -929,6 +936,18 @@
 		            }
 		        }
 			    
+			    $(window).on("resize", function(){
+		            windowResize();
+		        });
+			    
+			    function windowResize() {
+		        	var height = document.documentElement.clientHeight - 243 - document.getElementById("mainmenu").clientHeight;
+		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+		        		height = height - 30;
+		        	}
+		        	document.getElementById("contentlist").style.height = height + "px";
+		        	document.getElementById("contentlist").style.overflow = "auto";
+		        }
 		</script>
 	</head>
 	
@@ -1008,26 +1027,26 @@
 				</table>
 			</tr>
 		</table>  -->
-		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
+		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
 			<tr>
-				<td style="width:3%;">
+				<td style="width:6%;">
 					<spring:message code='ezApproval.t434'/> 
 				</td>
-				<td style="width:12%;">
+				<td style="width:25%;">
 					<input type="text" id="DocNumber" name="DocNumber" style="width:82%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 				</td>
-				<td style="width:3%;">
+				<td style="width:6%;">
 					<spring:message code='ezApproval.t435'/> 
 				</td>
-				<td style="width:11%;">
+				<td style="width:25%;">
 					<input type="text" id="DocTitle" name="DocTitle" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 				</td>
-				<td style="width:4%; margin-bottom: 10px;">
+				<td style="width:7%; margin-bottom: 10px;">
 					<span id="topmenu" style="width: 500px">
 						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
 					</span>
 				</td>
-				<td style="width:18%; margin-bottom: 10px;">
+				<td style="width:31%; margin-bottom: 10px;">
 					<span id="topmenu" style="width: 500px">
 						<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
 						<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
@@ -1051,35 +1070,38 @@
 				<td style="width:*; margin-bottom: 10px;" colspan="2">
 					<a class="imgbtn" >
 						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
-					</a>&nbsp; 
+					</a> 
 					<a class="imgbtn">
 						<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
-					</a>&nbsp;
+					</a>
 					<a class="imgbtn" id ="delbtn">
 						<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
-					</a>&nbsp;
+					</a>
 				</td>
 			</tr>
 		</table>
 		
-		<table class="mainlist" style="width:100%; height: 100%;">
-			<thead>
-				<tr id ="doclist">
-					<th style="width:1%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
-					<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
-					<th style="width:3%;"><spring:message code="ezApprovalG.t56"></spring:message></th>
-					<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="DocCompleteListBody" style="overflow: auto;"></tbody> 
-		</table>
+		<div id="contentlist" style="width: 100%; overflow: auto;">
+			<table class="mainlist" style="width:100%;">
+				<thead>
+					<tr id ="doclist">
+						<th style="width:1%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
+						<th style="width:3%;"><spring:message code="ezApprovalG.t56"></spring:message></th>
+						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="DocCompleteListBody" style="overflow: auto;"></tbody> 
+			</table>
+		</div>
+		
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 	</body>
 	<script type="text/javascript">

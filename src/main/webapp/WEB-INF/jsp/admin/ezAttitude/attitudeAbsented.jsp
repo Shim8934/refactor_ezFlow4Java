@@ -6,16 +6,16 @@
 	<head>
 		<title><spring:message code = 'ezAttitude.t6' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+	    <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAttitude/ListView_list.js')}"></script>
 	    <!-- data picker-->		
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	    <style>
 	    	#contentlist table.mainlist td {
 	    		overflow : hidden;
@@ -148,8 +148,11 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
+	        	var height = document.documentElement.clientHeight - 212 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 			
@@ -379,10 +382,10 @@
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
 					<td style="width: 15%;" colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.t136' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.t121' /></span></a>
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
+						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.t136' /></span></a>
 					</td>
 				</tr>
 			</tbody>

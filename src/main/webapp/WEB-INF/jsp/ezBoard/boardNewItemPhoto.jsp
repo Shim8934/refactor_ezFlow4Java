@@ -17,20 +17,20 @@
 	         	resize:none;
 	         }
 	     </style>
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
    	    <c:if test="${!isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
-		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    </c:if>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 	    <script type="text/javascript">
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
@@ -63,6 +63,7 @@
 	        var pNoneActiveX = "YES";
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
+	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -75,6 +76,13 @@
 	            }
 	            catch (e) {
 	            }
+	            
+	            document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	        }
+	        
+	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
+	        window.onresize = function () {
+	        	 document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
 	        }
 	
 		    function MakeXMLString(str)
@@ -686,18 +694,18 @@
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(458, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var wWeight = "458";
-		            var wHeight = "660";
+		            var wWeight = "355";
+		            var wHeight = "600";
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
 		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-		                "DialogHeight:660px;DialogWidth:458px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		                "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		            if (typeof (ret) != "undefined" && typeof (ret) == "object") {
 		                GetBoardInfo();

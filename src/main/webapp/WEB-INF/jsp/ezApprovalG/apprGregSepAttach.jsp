@@ -5,14 +5,14 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1076'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/RegRecord_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/RegRecord_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var rtnVal = new Array();
 		    var g_RecordID;
@@ -126,7 +126,7 @@
 		    		}
 		    	});
 		        
-		        g_CodeInfoXml = result;
+		        g_CodeInfoXml = getXmlString(result);
 		
 		        
 		    }
@@ -194,7 +194,7 @@
 		        var Root, objNode;
 		
 		        var objCodeInfo = createXmlDom();
-		        objCodeInfo = g_CodeInfoXml;
+		        objCodeInfo = loadXMLString(g_CodeInfoXml);
 		
 		        if (navigator.userAgent.indexOf('Trident') == -1) {
 		            Root = "<REGISTERTYPE>";
@@ -256,7 +256,6 @@
 		                    break; 
 		            }
 		        }
-
 		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType); // 분리첨부 정보입력->등록구분 입력
 		        SelectOption(selRegisterType, g_RegType); 
 		
@@ -459,7 +458,6 @@
 		        para[0] = g_TaskCode;
 		        para[1] = g_CabinetID;
 		        var url = "/ezApprovalG/selectCabinetInTask.do";
-		
 		        if (CrossYN()) {
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;

@@ -968,6 +968,7 @@ function SaveDraftDocInfo_susin() {
 	createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
 	createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
 	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", tempPublic);
 	createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
 	createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
 	createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
@@ -1105,7 +1106,7 @@ function btnAddSepAttach_onclick() {
 	para[3] = ext;
 	    
 	var url = "/ezApprovalG/insSepAttach.do";
-	var feature = "dialogWidth:730px;dialogHeight:380px;scroll:no;resizable:yes;status:no; help:no ";
+	var feature = "dialogWidth:920px;dialogHeight:630px;scroll:no;resizable:yes;status:no; help:no ";
   
 	if(url != "") {
 		var rtn = window.showModalDialog(url,para,feature);
@@ -1516,17 +1517,57 @@ function chkBtnConfirm(para)
 	}
 }
 
+// 대민공개여부로 publication 필드 설정, 일반버전용이 아님
 function setPublicFlag2() {
-    if (!HwpCtrl.CheckFieldExist("publication")) return;
-    var PublicType = pPublicityYN.substring(0, 1);
+//    if (!HwpCtrl.CheckFieldExist("publication")) return;
+//    var PublicType = pPublicityYN.substring(0, 1);
+//
+//    var PublicText = "";
+//    if (PublicType == "Y")
+//        PublicText = strLang82;
+//    else if (PublicType == "N")
+//        PublicText = strLang84;
+//    else
+//        PublicText = " ";
+//    
+//    HwpCtrl.SetFieldText("publication", PublicText);
+	if (!HwpCtrl.CheckFieldExist("publication"))
+		return;
+					
+	var PublicType = pPublicityCode.substring(0,1);
+	var PublicLevel = pPublicityCode.substring(1,9);
+	var PublicText = "";
 
-    var PublicText = "";
-    if (PublicType == "Y")
-        PublicText = "<spring:message code='ezApprovalG.t47'/>";
-    else if (PublicType == "N")
-        PublicText = "<spring:message code='ezApprovalG.t46'/>";
-    else
-        PublicText = " ";
-    
-    HwpCtrl.SetFieldText("publication", PublicText);
+	if (pLimitRange != "")
+		PublicText = " (" + pLimitRange + ")";
+	
+	if (PublicType == "1")
+		PublicText = strLang82;
+	else if (PublicType == "2")
+		PublicText = strLang83 + getPublicLevel(PublicLevel);
+	else if (PublicType == "3")
+		PublicText = strLang84 + getPublicLevel(PublicLevel);
+	else
+		PublicText = " ";
+
+	HwpCtrl.SetFieldText("publication", PublicText);
+}
+
+function getPublicLevel(PublicLevel) {
+    var strRtn = "";
+    var firstFlag = true;
+    for (i = 0; i < 8; i++) {
+        if (PublicLevel.substring(i, i + 1) == "Y") {
+            if (firstFlag) {
+                strRtn = "(" + (i + 1);
+                firstFlag = false;
+            }
+            else {
+                strRtn = strRtn + "," + (i + 1);
+            }
+        }
+    }
+    if (!firstFlag)
+        strRtn = strRtn + ")";
+    return strRtn;
 }

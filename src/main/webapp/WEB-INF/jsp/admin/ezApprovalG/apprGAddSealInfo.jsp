@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1255' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var pSealName = "";
@@ -269,8 +269,8 @@
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1263' /></th>
 	    		<td id="SealSize"> 
-	      			<input type="text" id="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
-	      			<input type="text" id="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
+	      			<input type="text" value="30" id="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
+	      			<input type="text" value="30" id="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
 	      		</td>
 	  		</tr>
 	  		<tr> 

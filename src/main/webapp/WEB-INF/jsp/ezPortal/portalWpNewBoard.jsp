@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<section  class="body_bg1">
       		<article class="portlet_notice">
         		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
@@ -19,8 +19,8 @@
       		</article>
 		</section>
 
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
     		var pBoardType_NewBoard = "";
@@ -100,7 +100,7 @@
                         /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목 특수문자 처리 */
                         var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
-                        listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.gif' width='83' height='54' alt=''></dd>";
+                        listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.jpg' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
                         listHTML += "</dl>";
 
@@ -200,7 +200,7 @@
                     	DocContentObject.innerHTML = DocContentObject_Div.innerText.replace(/(\r\n)/g, "");
             	    }
             	    /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목+내용 특수문자 처리 */
-            	    DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
+            	    //DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
                 	document.getElementById("content").appendChild(DocContentObject);
 	            }
     	        catch (e) {

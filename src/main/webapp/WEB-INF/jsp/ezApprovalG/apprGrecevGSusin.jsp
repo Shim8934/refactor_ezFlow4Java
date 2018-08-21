@@ -10,23 +10,23 @@
 		<style>
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 		</style>
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/recevG_Susin_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Recvdocnumber_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/recevG_Susin_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = '${docID}';
@@ -123,6 +123,8 @@
 		    var ext = "mht";
 		    var nonElecRec = "${isNonElecRec}";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+		    var useReceiveDocNo = "${useReceiveDocNo}";
+
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -442,7 +444,8 @@
 		
 		    function TaskCode_Check() {
 		        if (cabinetID == "") {
-		        	if (!nonElecRec == "Y") {
+// 		        	if (!nonElecRec == "Y") {
+		        	if (nonElecRec != "Y") {
 			            btnSetTaskCode_onclick();
 		        	} else {
 			            TaskCode_Save();
@@ -451,7 +454,8 @@
 		            TaskCode_Save();
 		        }
 		    }
-		
+		    
+		    //편철시 철지정
 		    function TaskCode_Save() {
 		        if (cabinetID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
@@ -1326,7 +1330,8 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht", "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 
@@ -1404,7 +1409,11 @@
 			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 // 			                setPublicFlag();
 			                if (isIE()){
-				                setPublicFlag2();
+			                	try {
+					                setPublicFlag2();
+			                	} catch (e) {
+			                		setPublicFlag();
+			                	}
 			                }
 			                
 			                if (nonElecRec == "Y") {
@@ -1458,9 +1467,7 @@
 			<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 			<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
 			<c:if test="${approvalFlag == 'G'}">
-<%-- 		    <c:if test="${hideCabinet == '0'}"> --%>
-			<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
-<%-- 			</c:if> --%>
+				<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
 			</c:if>
 			<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
 			<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>

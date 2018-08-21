@@ -1051,6 +1051,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String title = "";
 		String companyNm = "";
 		String lastLogin = "";
+		String loginIP = "";
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
@@ -1075,8 +1076,15 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+		
+		if (lastLogin != null) {
+			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+			lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+			loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+		} else {
+			lastLogin = "";
+			loginIP = "";
+		}
 		
 		//전자설문
 		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
@@ -1153,6 +1161,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("loginIP", loginIP);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
@@ -2895,7 +2904,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div class='onimg'></div>";
-				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='170' height='140'>";
 				resultHTML+= "</dt>";
 				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";
@@ -2903,7 +2912,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div>";
-				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='170' height='140'>";
 				resultHTML+= "</dt>";
 				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";

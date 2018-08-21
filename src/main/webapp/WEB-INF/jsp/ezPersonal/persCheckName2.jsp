@@ -5,11 +5,11 @@
 	<head>
 		<title><spring:message code='ezPersonal.t100002'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezPersonal/ListView_list.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script language="javascript" type="text/javascript">
 		    var ReturnFunction;
 		    window.onload = function () {
@@ -116,7 +116,7 @@
 		    	<li><span onClick="cancel_onClick()"></span></li>
 		  	</ul>
 		</div>
-		<h2><spring:message code='ezPersonal.t100003'/></h2>
+		<span>▒ <spring:message code='ezPersonal.t100003'/></span>
 		<div class="listview" style="overflow-x:hidden;overflow-y:auto;">
 			<div id="ListViewItem" style="Width:587px; Height:185px; border:0px;overflow:auto;" ></div>
 		</div>

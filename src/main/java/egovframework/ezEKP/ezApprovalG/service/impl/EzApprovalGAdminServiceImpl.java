@@ -3349,6 +3349,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
@@ -3383,6 +3384,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
@@ -3402,14 +3404,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getEtcName(String code1, String selected, String primary, String companyID, int tenantID) throws Exception {
+	public String getEtcName(String code1, String selected, String primary, String lang, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code1", code1);
 		map.put("primary", primary);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("lang", lang);
 		
-		logger.debug("getEtcName started. code1=" + code1 + " primary=" + primary + "companyID=" + companyID + "tenantID=" + tenantID);
+		logger.debug("getEtcName started. code1=" + code1 + " primary=" + primary + " lang=" + lang + "companyID=" + companyID + "tenantID=" + tenantID);
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
@@ -3928,4 +3931,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return list;
 	}
 
+
+	@Override
+	public String getExAttribute(String buJaeId, int tenantID) throws Exception {
+		logger.debug("getExAttribute");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", buJaeId);
+		map.put("v_TENANTID", tenantID);
+		
+		String auth = ezApprovalGDAO.getExtAttr1(map);
+		
+		return auth;
+	}
 }

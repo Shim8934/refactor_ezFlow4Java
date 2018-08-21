@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,8 +6,8 @@
 	<head>
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
@@ -33,19 +32,19 @@
 				color:#017BEC;
 			}			
 	    </style>
-	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
-		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
-	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezPersonal/controls/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	    <script type="text/javascript" src="/js/jquery-ui/jquery.multipleSortable.js"></script>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview_namespace.htc.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };

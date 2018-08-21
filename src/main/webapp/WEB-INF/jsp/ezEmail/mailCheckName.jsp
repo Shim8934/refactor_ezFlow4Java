@@ -1,22 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title><spring:message code='ezEmail.t331' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top : 0px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ListView_list.js')}"></script>
 		<script>
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")

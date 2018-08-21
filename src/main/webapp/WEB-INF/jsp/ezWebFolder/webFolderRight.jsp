@@ -6,28 +6,28 @@
 	<head>
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
-	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 	<!-- datepicker -->
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	<!-- module -->
-	<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/context/buttons.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
     <script type="text/javascript">
 		var file 		 = new Array();
 		var strShared1	= messages.strLang2;
@@ -40,14 +40,20 @@
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
+		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
+		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
+		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
+		var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
+		var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
-			var reheight = document.documentElement.clientHeight - 210;
+			var reheight = document.documentElement.clientHeight - 240;
 			document.getElementById("dragDropArea").style.height = reheight + "px";
 			
-			reheight = document.documentElement.clientHeight - 100;
+			reheight = document.documentElement.clientHeight -90;
 			document.getElementById("pageArea").style.height = reheight + "px";
+			scroll();
 		};
 		
 		document.onselectstart = function() {return false;};
@@ -230,7 +236,7 @@
 				+ fileCnt +" </span>"  + messages.strLang11 + "]";
 			$("#listcount").val(result.listCount).prop("selected", true);
 			parent.frames["left"].drawVolume();
-			
+			scroll();
 		} 
 		
 		// originalPath 는 한글 path
@@ -267,7 +273,7 @@
 				divName.textContent = path[i] ;
 				divName.setAttribute("title", path[i]);
 				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-				divName.setAttribute("style", "font-size:15px; ");
+				divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
 				
@@ -386,6 +392,8 @@
 						faImgElmt.src = "/images/ImgIcon/icon-flag.gif";
 						trElmt.setAttribute("favorite", "");
 					}
+					faImgElmt.style.height  = "14px";
+					faImgElmt.style.width  	= "14px";
 					
 					tdElmt2.appendChild(faImgElmt);
 					
@@ -412,6 +420,17 @@
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
 					tdElmt9.textContent = result[i]["filePosition"];
 					tdElmt9.setAttribute("title", result[i]["filePosition"]);
+					
+					tdElmt1.setAttribute("class", "wfFilecheck");
+					tdElmt2.setAttribute("class", "wfFileFavorite");
+					tdElmt3.setAttribute("class", "wfFileType");
+					tdElmt4.setAttribute("class", "wfFileName");
+					tdElmt5.setAttribute("class", "wfFileSize");
+					tdElmt6.setAttribute("class", "wfFileCreator");
+					tdElmt7.setAttribute("class", "wfFileUploadDate");
+					tdElmt8.setAttribute("class", "wfFileUpdateDate");
+					tdElmt9.setAttribute("class", "wfFilePath");
+					tdElmt10.setAttribute("class", "wfFileShare");
 					
 					if (result[i]["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
@@ -674,22 +693,30 @@
 	 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
 	    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
-		
-		<div id="dragDropArea">
-			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
-				<tr>
-					<th style="width: 20px;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
-					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-					<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-					<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-					<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-					<th style="width: 9%;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
-					<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-					<th style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
-				</tr>
-			</table>
+		<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th class="wfFilecheck" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFileFavorite" style="text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+							<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+							<th class="wfFileName"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+							<th class="wfFileSize" style="text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+							<th class="wfFileCreator"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+							<th class="wfFileUploadDate"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+							<th class="wfFileUpdateDate"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+							<th class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+							<th class="wfFileShare"style="text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+						</tr>
+					</thead>
+				</table>
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;">
+					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+				
+					</table>
+				</div>
+			</div>
 		</div>
 		<input id="file" type="file" onchange="onDrop()" onclick="this.value = null;" multiple="multiple" style="width: 1px; height: 1px; display:none" /> 
 		<input type="hidden" onclick="fileupload()"/>

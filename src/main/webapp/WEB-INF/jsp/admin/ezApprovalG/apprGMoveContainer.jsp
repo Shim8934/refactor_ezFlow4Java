@@ -5,8 +5,8 @@
 <html>
 	<head>
 	    <title><spring:message code='ezApprovalG.t1674'/></title>
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	    <style>
 	    
 		/* 2018-08-02 김보미 - 검색 테이블 ui수정 */
@@ -39,15 +39,16 @@
 			 border-top: 1px dotted #eee;
 			 background-color: #fcfcfc;
 		}
+		.mainlist tr th {border-top:0px}
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/MoveContainer_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/Pagenation_Cross.js"></script>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/MoveContainer_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/Pagenation_Cross.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	    var Check = false, PeriodDocList;
 	    var ScontID = "";
@@ -86,6 +87,9 @@
 	        $(document).bind("selectstart", function(event){event.preventDefault();});
 	        //드래그 방지
 	        $(document).bind("dragstart", function(event){event.preventDefault();});
+	        
+	        //페이징 위치 조정
+	        windowResize();
 	    }
 	    
 		// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -775,6 +779,18 @@
 		        }
 		    }
 			
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 213 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	    </script>
 	</head>
 	
@@ -871,31 +887,31 @@
 		</table> -->
 		<table style="width:100%;">		
 			<tr>
-				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">
+				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8">
 					<tr>
-						<td style="width:4%;">
+						<td style="width:6%;">
 							<spring:message code='ezApprovalG.kes04'/>  
 						</td>
-						<td style="width:20%;">
+						<td style="width:17%;">
 							<input type="text" id="SDeptName" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
 			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
-						<td style="width:4%;">
+						<td style="width:6%;">
 							<spring:message code='ezApproval.t611'/>
 						</td>
-						<td style="width:17%;">
+						<td style="width:12%;">
 							<select name="selSContName" style="width:84%; height: 23px;" onchange="return bt_selSContName_onclick()"></select>
 						</td>
-						<td style="width:5%;">
+						<td style="width:7%;">
 							<spring:message code='ezApproval.t434'/> 
 						</td>
-						<td style="width:18%;">
+						<td style="width:22%;">
 							<input type="text" id="DocNumber" name="DocNumber" style="width: 80%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 						</td>
-						<td style="width:4%;">
+						<td style="width:6%;">
 							<spring:message code='ezApproval.t435'/> 
 						</td>
-						<td style="width:27%;">
+						<td style="width:24%;">
 							<input type="text" id="DocTitle" name="DocTitle" style="width: 51%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
 					</tr>
@@ -925,15 +941,15 @@
 						<td colspan="2">
 							<a class="imgbtn" >
 								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
-							</a>&nbsp;
+							</a>
 							<a class="imgbtn">
 								<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
-							</a>&nbsp;
+							</a>
 							<a class="imgbtn">
 								<span onClick="bt_OK_onclick()"><spring:message code='ezApproval.t25005' /></span>
-							</a>&nbsp;
+							</a>
 							<a class="imgbtn">
-									<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
+								<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
 							</a>
 						</td>
 					</tr>
@@ -941,24 +957,27 @@
 			</tr>
 		</table>
 		
-		<table class="mainlist" style="width:100%; height:100%;">
-			<thead>
-				<tr id = "doclist">
-					<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
-					<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
-					<th style="width:3%;"><img src="/images/newAttach.gif"></th>
-					<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="DocCompleteListBody" style="overflow: auto;">
-			<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
-		</table>
+		<div id="contentlist" style="width: 100%; height: 610px; overflow: auto;">
+			<table class="mainlist" style="width:100%;">
+				<thead>
+					<tr id = "doclist">
+						<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
+						<th style="width:3%;"><img src="/images/newAttach.gif"></th>
+						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="DocCompleteListBody" style="overflow: auto;">
+				<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
+			</table>
+		</div>
+		
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 </html>

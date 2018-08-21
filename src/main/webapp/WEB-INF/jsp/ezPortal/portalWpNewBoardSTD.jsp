@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<section  class="body_bg1">
       		<article class="portletbox boardbox ">
@@ -16,8 +16,8 @@
    		 	</article>
 		</section>
 
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		 	var pBoardID_NewBoardSTD = "${pBoardID}";
 		    var pBoardType_NewBoardSTD = "${pBoardGubun}";
@@ -158,7 +158,7 @@
 		                        }
 		                        
 		                        listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
-		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''></dd>";
+		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.jpg' width='86' height='61' alt=''></dd>";
 		                        listHTML += "<dd id='content' class='txt'></dd>";
 		                        listHTML += "</dl>";
 		                        listHTML += "<ul class=\"listtype_txt \">";
@@ -307,7 +307,7 @@
 	                }
 	                
 	                /* 2018-07-16 홍승비 - 포틀릿 게시판 특수문자 처리 */
-	                DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
+	                //DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
 	                document.getElementById("content").appendChild(DocContentObject);
 		        }
 

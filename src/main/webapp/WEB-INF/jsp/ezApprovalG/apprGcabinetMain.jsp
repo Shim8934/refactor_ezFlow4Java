@@ -25,24 +25,24 @@
 	        }
 	    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js?ver=0.1"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js?ver=0.2"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> -->   
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfoCB_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
+		<!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> -->   
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
@@ -469,7 +469,7 @@
 		
 		                }
 		
-		                if (ListTypeFlag == "8" && (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE")) {
+		                if (ListTypeFlag == "8" && (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && g_sFlag != "m09") {
 		                    document.getElementById("tdbtnEndProduce").style.display = "";
 		                    document.getElementById("tdbtnCancelEndProd").style.display = "";
 		                }
@@ -867,6 +867,7 @@
 		            InitGlobals("RECORD", "0", "1");
 		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + tr.getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
 		            GetRecordList();
+		            $("#tdViewCabList").show();
 		        }
 		        else {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t513'/>");
@@ -1581,6 +1582,28 @@
 			            }
 			        }
 			    }
+		     
+			    function GetEndYConfirmList() {
+			    	switch (g_sFlag) {
+				    	case "m02":
+				    		isPeriodYear = false;
+		                    CabinetList_onclick();
+		                    break;
+		                    
+			    		case "m07" :
+			    			isPeriodYear = false;
+			    			DelayEndYRequest_onclick();
+			    			break;
+			    		
+			    		case "m08" :
+			    			isPeriodYear = false;
+			    			ArrTargetList_onclick();
+			    			break;
+			    		
+			    		default :
+							return;				    			
+			    	}
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1639,6 +1662,7 @@
 	            <li id="tdbtnSetRecRole" style="Display: None"><span id="btnSetRecRole" onclick="return btnSetRecUserRole_onclick()"><spring:message code='ezApprovalG.t944'/></span></li>
 	            <li id="tdbtnViewRecReadHist" style="Display: None"><span id="btnViewRecReadHist" onclick="return btnViewRecReadHist_onclick()"><spring:message code='ezApprovalG.t945'/></span></li>
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
+	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 	            <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdVeiwRecHist" style="Display: None"><span id="VeiwRecHist" onclick="return btnViewRecHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">

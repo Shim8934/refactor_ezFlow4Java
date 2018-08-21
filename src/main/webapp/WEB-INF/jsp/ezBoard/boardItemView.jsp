@@ -6,20 +6,20 @@
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script  type="text/javascript">
 		    window.onbeforeunload = function () {
 		        try {
@@ -514,8 +514,8 @@
 		        pwidth = parseInt(pwidth) / 2;
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
-		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
-		        feature = feature + GetOpenPosition(340,656);
+		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
+		        feature = feature + GetOpenPosition(355,600);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
 		    }
 		
@@ -539,7 +539,7 @@
 		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = btn_Move_Onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(340, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -549,7 +549,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
 		                    window.opener.location.reload();

@@ -7,12 +7,13 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezSchedule.t170" /></title>
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />			    
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />			    
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
 		    var groupid = "<c:out value='${groupID}' />";
+		    var g_Member; //그룹 멤버 정보
 		    
 		    function show_personinfo(userid) {
 		        var feature = GetOpenPosition(420, 450);
@@ -23,9 +24,13 @@
 		    var schedule_select_attendant_dialogArguments = new Array();
 		    function add_member() {
 		        if (CrossYN()) {
-		            schedule_select_attendant_dialogArguments[0] = "";
+		        	//2018-08-10 김보미 - 그룹멤버 담은 변수 추가 및 url에 파라메타 추가
+					//schedule_select_attendant_dialogArguments[0] = "";
+					//schedule_select_attendant_dialogArguments[1] = add_member_Complete;
+					//OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "schedule_group_write", GetOpenWindowfeature(980, 670));
+		            schedule_select_attendant_dialogArguments[0] = g_Member;
 		            schedule_select_attendant_dialogArguments[1] = add_member_Complete;
-		            OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "schedule_group_write", GetOpenWindowfeature(980, 670));
+		            OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group&groupID=" + groupid,  "schedule_group_write", GetOpenWindowfeature(980, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -33,8 +38,12 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 535) / 2;
 		            var pLeft = (pwidth - 737) / 2;
-		            var rtn = window.showModalDialog("scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "", "dialogHeight:670px; dialogWidth:980px; dialogLeft:" + pLeft + "; dialogTop:" + pTop + "; status:no; scroll:no; help:no; edge:sunken");
+		            //2018-08-10 김보미 - url에 파라메타 추가
+					//var rtn = window.showModalDialog("scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "", "dialogHeight:670px; dialogWidth:980px; dialogLeft:" + pLeft + "; dialogTop:" + pTop + "; status:no; scroll:no; help:no; edge:sunken");
+		            var rtn = window.showModalDialog("scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group&groupID=" + groupid, "", "dialogHeight:670px; dialogWidth:980px; dialogLeft:" + pLeft + "; dialogTop:" + pTop + "; status:no; scroll:no; help:no; edge:sunken");
 		            
+		            //2018-08-10 김보미 - 변경
+		            /*
 		            if (typeof (rtn) != "undefined") {
 		                if (rtn["id"].length == 0)
 		                    return;	
@@ -87,10 +96,96 @@
 				    		}
 				        });	
 		            }
+		            */
+		            if (typeof (rtn) != "undefined") {
+			            if (rtn["id"].length == 0) {
+			            	alert("<spring:message code='ezSchedule.csj01' />");
+			                return;
+			            }
+			            
+			            var memberList = new Array();
+		                
+		                OpenWin.focus();	
+		
+			            for (var i = 0; i < rtn["id"].length; i++) {
+			                var isExist = false;
+			                var checks = document.getElementsByTagName("input");
+			                for (var j = 0; j < checks.length; j++) {
+			                    if (GetAttribute(checks.item(j), "memberid") == rtn["id"][i]) {
+		                            isExist = true;
+		                        }
+			                }
+		
+			                if (isExist) continue;
+			                
+			                var data = new Object();
+		                    data.memberID = rtn["id"][i];
+		                    data.memberName = rtn["name"][i];
+		                    data.memberName1 = rtn["name1"][i];
+		                    data.memberName2 = rtn["name2"][i]; 
+		                    
+		                    memberList.push(data);
+			            }
+
+		                if (memberList.length > 0) {
+			                $.ajax({
+					    		type : "POST",
+					    		dataType : "html",				    		
+					    		async : false,
+					    		data : {
+					    			groupID : groupid,
+					    			memberList : JSON.stringify(memberList)
+					    		},
+					    		url : "/ezSchedule/scheduleAddMember.do",
+					    		success: function(text){
+					    			OpenWin.alert("<spring:message code='ezSchedule.t174' />");
+									OpenWin.close();
+					    			
+		 		                    window.location.reload(false);		    				    			
+					    		},
+					    		error: function(err){
+					    			OpenWin.alert("<spring:message code='ezSchedule.t173' />");
+									OpenWin.close();			    			
+					    		}
+					        });
+		                }
+		                
+		                var delMemberList = [];
+		                for (var k = 0; k < checks.length; k++) {
+			                var tempCnt = 0;
+			                
+				            for (var l = 0; l < rtn["id"].length; l++) {
+			                    if (GetAttribute(checks.item(k), "memberid") != rtn["id"][l]) {
+		                        	tempCnt++;
+		                        }
+		                	}
+				            
+				            if (tempCnt == rtn["id"].length) {
+				            	delMemberList.push(GetAttribute(checks.item(k), "memberid"));
+				            }
+			            }
+				        $.ajax({
+				    		type : "POST",
+				    		dataType : "html",
+				    		async : false,
+				    		data : {
+				    			groupID : groupid,
+				    			memberID : delMemberList
+				    		},
+				    		url : "/ezSchedule/scheduleDelMember.do",
+				    		success: function(text){
+						         window.location.reload(false);   			
+				    		},
+				    		error: function(err){
+				    		}
+				        });
+			        }
 		        }
 		    }
 	
 		    function add_member_Complete(rtn) {
+		    	//2018-08-10 김보미 - 변경
+		    	/*
 		        if (typeof (rtn) != "undefined") {
 		            if (rtn["id"].length == 0)
 		                return;
@@ -145,6 +240,90 @@
 			    		error: function(err){
 			    			OpenWin.alert("<spring:message code='ezSchedule.t173' />");
 							OpenWin.close();			    			
+			    		}
+			        });
+		        }
+		    	*/
+		    	if (typeof (rtn) != "undefined") {
+		            if (rtn["id"].length == 0) {
+		            	alert("<spring:message code='ezSchedule.csj01' />");
+		                return;
+		            }
+		            
+		            var memberList = new Array();
+	                
+	                OpenWin.focus();	
+	
+		            for (var i = 0; i < rtn["id"].length; i++) {
+		                var isExist = false;
+		                var checks = document.getElementsByTagName("input");
+		                for (var j = 0; j < checks.length; j++) {
+		                    if (GetAttribute(checks.item(j), "memberid") == rtn["id"][i]) {
+	                            isExist = true;
+	                        }
+		                }
+	
+		                if (isExist) continue;
+		                
+		                var data = new Object();
+	                    data.memberID = rtn["id"][i];
+	                    data.memberName = rtn["name"][i];
+	                    data.memberName1 = rtn["name1"][i];
+	                    data.memberName2 = rtn["name2"][i]; 
+	                    
+	                    memberList.push(data);
+		            }
+	
+	                if (memberList.length > 0) {
+		                $.ajax({
+				    		type : "POST",
+				    		dataType : "html",				    		
+				    		async : false,
+				    		data : {
+				    			groupID : groupid,
+				    			memberList : JSON.stringify(memberList)
+				    		},
+				    		url : "/ezSchedule/scheduleAddMember.do",
+				    		success: function(text){
+				    			OpenWin.alert("<spring:message code='ezSchedule.t174' />");
+								OpenWin.close();
+				    			
+	 		                    window.location.reload(false);
+				    		},
+				    		error: function(err){
+				    			OpenWin.alert("<spring:message code='ezSchedule.t173' />");
+								OpenWin.close();			    			
+				    		}
+				        });
+	                }
+	                
+	                var delMemberList = [];
+	                for (var k = 0; k < checks.length; k++) {
+		                var tempCnt = 0;
+		                
+			            for (var l = 0; l < rtn["id"].length; l++) {
+		                    if (GetAttribute(checks.item(k), "memberid") != rtn["id"][l]) {
+	                        	tempCnt++;
+	                        }
+	                	}
+			            
+			            if (tempCnt == rtn["id"].length) {
+			            	delMemberList.push(GetAttribute(checks.item(k), "memberid"));
+			            }
+		            }
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "html",
+			    		async : false,
+			    		data : {
+			    			groupID : groupid,
+			    			memberID : delMemberList
+			    		},
+			    		url : "/ezSchedule/scheduleDelMember.do",
+			    		success: function(text){
+					         window.location.reload(false);   			
+			    		},
+			    		error: function(err){
 			    		}
 			        });
 		        }
@@ -235,6 +414,18 @@
 		    			alert("<spring:message code='ezSchedule.t183' />");
 		    		}
 		        });		
+		    }
+		    
+		    //2018-08-10 김보미 - 추가
+		    window.onload = function () {
+		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+		    	
+		    	<c:forEach var="item" items="${memberList}">
+		    		g_Member.id.push( "${item.memberId}");
+		    		g_Member.name.push("${item.memberName}");
+		    		g_Member.name1.push("${item.memberName}");
+		    		g_Member.name2.push("${item.memberName2}");
+		    	</c:forEach>
 		    }
 		</script>
 	</head>

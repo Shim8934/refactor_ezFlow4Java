@@ -6,8 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t245' /></title>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
 		<script type="text/javascript">
 			var currentpage = "${currentPage}";
 		    var totalpage = "${pageCount}";
@@ -91,6 +91,13 @@
 				        PagingHTML += strtext;
 				    }
 				}
+				
+		        //2018-08-07 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
 				if (totalPage > BlockSize) {
 				    if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 				        strtext = "";
@@ -175,11 +182,16 @@
               						</tr> 	
             					</c:forEach>
             				</c:if>
+            				<!-- 2018-08-07 김보미 - 데이터가 없을 때 -->
+            				<c:if test="${isPollEmpty == true}">
+            					<tr> 
+                					<td style='text-align: center;' colspan='4'><spring:message code = 'ezQuestion.t312' /></td>
+                				</tr>
+            				</c:if>
         				</table>
         			</td> 
     			</tr> 
   			</table> 
-			<br />
 			<div id="tblPageRayer"></div>
 		</form> 
 	</body>

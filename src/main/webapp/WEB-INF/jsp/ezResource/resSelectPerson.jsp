@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t128"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css" />
 		<style>
 	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
 	    	#spn_deptName {
@@ -24,13 +24,13 @@
 	    		color:#017BEC;
 	    	}
 	    </style>		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/TreeViewCtrl.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="<spring:message code="ezResource.e1"/>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/TreeViewCtrl.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript">
 			var pListType = "TXT";
 		    var UserAgentState = navigator.userAgent.toLowerCase();
@@ -225,7 +225,7 @@
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						//page : CurPage ,
+						page : CurPage ,
 						type : "user"
 					} ,
    				success : function(data, textStatus, jqXHR) {
@@ -287,7 +287,7 @@
 						xmlDOM = null;
 					}
 				}); 
-		        
+		       
 		        if (adCount == 0) {
 		            alert("<spring:message code="ezResource.t130"/>");
 		            return;
@@ -305,15 +305,18 @@
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
 		            
-
+		            /* 2018-08-08 김민성 - 자원등록 > 관리자 선택시 부서검색 수정  */
+		            checkdeptname_cross_dialogArguments[0] = rgParams;
+	            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
+		            
 		            if (CrossYN()) {
-		            	checkdeptname_cross_dialogArguments[0] = rgParams;
-		            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
+		                //DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
+		            	 var OpenWin = window.open("/ezResource/checkDeptName.do", "", GetOpenWindowfeature(600, 320));
+		             	 OpenWin.focus(); 
 		            } else {
 		                var feature =  GetShowModalPosition(600, 320);
 		                var result = window.showModalDialog("/ezResource/checkDeptName.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken;"+feature);
-
+						
 		                if (rgParams["deptid"] != "") {
 		                    g_xmlHTTP = createXMLHttpRequest();
 		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";

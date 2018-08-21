@@ -5,21 +5,21 @@
 <html>
 	<head>
 		<title><spring:message code='ezBoard.t293'/></title>
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style title="ezform_style_1">
 			P {
 					MARGIN-TOP: 0mm;
@@ -354,7 +354,7 @@
 					pheigth = pheigth - 200;
 					pwidth = pwidth - 127;
 					
-					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
+					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
 				}
 		        window.onunload = function () {
 		        	//리프레쉬 할 이유가 없는거 같음
@@ -1447,7 +1447,7 @@
 		</script>
 	</head>
 	<body class="popup">
-		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%">
+		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
 		      <div id="menu">
@@ -1542,10 +1542,10 @@
 		            <td style="width:100px; padding-left:50px; text-align:center">
 		                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 		            </td>
-		            <td style="padding-left:20px">
+		            <td style="display:inline-block;">
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
-		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
+		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center;">
 		                            <img id="mainimages" class="thumbnail" style="background-color:#ffffff;cursor:pointer;" src=""/>            
 		                        </td>
 		                    </tr>

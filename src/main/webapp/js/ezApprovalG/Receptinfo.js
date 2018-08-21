@@ -4,14 +4,30 @@ function Receptinfo_ini() {
         Recinfoini = true;
         Tree_setconfig();
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
-        if(approvalFlag == "S") {
+        
+        if (approvalFlag == "G") {
+        	if (receptGubunYN == "Y") {
+        		if (pDocType == "001") { //시행문
+        			ChangeReceptTab(document.getElementById("3tab4"));
+        			initReceptListView();
+        			document.getElementById("3tab4").onclick();
+        		} else { //수신문
+        			ChangeReceptTab(document.getElementById("3tab1"));
+        			initReceptListView();
+        			document.getElementById("3tab1").onclick();
+        		}
+        	} else {
+        		ChangeReceptTab(document.getElementById("3tab1"));
+        		initReceptListView();
+        		document.getElementById("3tab1").onclick();
+        	}
+        } else {
         	RdisplayUserList(arr_userinfo[4]);
+        	
+        	ChangeReceptTab(document.getElementById("3tab1"));
+        	initReceptListView();
+        	document.getElementById("3tab1").onclick();
         }
-        ChangeReceptTab(document.getElementById("3tab1"));
-        initReceptListView();
-        document.getElementById("3tab1").onclick();
-        //2015-06-23 표준모듈:추가 - KSK
-        SelDivName = "Organ";
     }
 }
 //#############################################################################################################################################수신처 내부 버튼 클릭 이벤트
@@ -522,7 +538,19 @@ function AprLineAddDept(nodeIdx, tr) {
     setNodeText(GetChildNodes(objNodes[0])[11], treeNode.GetNodeData("DISPLAYNAME2"));
     setNodeText(GetChildNodes(objNodes[0])[12], "");
     setNodeText(GetChildNodes(objNodes[0])[13], "");
-    setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+//    setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+    //2018-08-20 이효진
+    if (useReceiveInfoName == '1') {
+    	//현재부서명 + 장
+    	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + "장");
+    } else if (useReceiveInfoName == '2') {
+    	//추가 개발 시 상위부서명 + 장
+    } else {
+    	//default
+    	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+    }
+    
+    
     //setNodeText(GetChildNodes(objNodes[2])[0], "-");
 
 

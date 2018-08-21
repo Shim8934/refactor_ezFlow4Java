@@ -7,10 +7,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>        
+	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
 		<title>
 			<spring:message code='ezSchedule.t298'/>
 			<c:if test="${scheduleInfo.scheduleType == 1}"><spring:message code='ezSchedule.t321' /></c:if>
@@ -439,8 +439,11 @@
 	                                <div style="overflow-y: auto; height: 30px; padding-top: 2px" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
-	                                	 		<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
-	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
+	                                	 		<!-- 2018-08-08 김보미 -->
+	                                	 		<!--<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>-->
+	                                	 		<c:if test="${primary == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${primary != '1'}"><c:out value="${item.attendantName2}" /></c:if>
                                     			<c:if test="${item.status == '1'}">(<spring:message code='ezSchedule.t251' />)</c:if>
 	                                			<c:if test="${item.status == '2'}">(<spring:message code='ezSchedule.t168' />)</c:if>
 	                                			<c:if test="${item.status == '3'}">(<spring:message code='ezSchedule.t169' />)</c:if>

@@ -7,18 +7,18 @@
 	<head>
 		<title><spring:message code='ezCircular.t8' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />		
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-		<%-- <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>	     --%>
-		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
+		<%-- <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>	     --%>
+		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		
 	    <script type="text/javascript">
 	    	var CurPage = "1";
@@ -497,13 +497,19 @@
 
 		    function ItemRead_onclick(obj) {
 		    	var circularID = obj.getAttribute("CIRCULARID");
+		    	var type = "";
+		    	
+		    	/* 2018-08-08 김민성 - 회람판 검색 > 신규회람판 검색시 삭제 버튼 안뜨도록 수정  */
+		    	if(filter == "circularNew") {	
+		    		type = "&type=new";
+		    	}
 		    	
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID + type, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID + type, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 		    }
 			

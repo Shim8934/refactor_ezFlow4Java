@@ -6,16 +6,16 @@
 	<head>
 		<title><spring:message code = 'ezCircular.t6' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
-		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-<%-- 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script> --%>
-		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
+		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+<%-- 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script> --%>
+		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/PreviewItem.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		
 		<style>
 			#layer_Viewpopup { 

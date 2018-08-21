@@ -5,15 +5,15 @@
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
-	    <link rel="stylesheet" href="/css/ezEmail/style.css" />
-	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script src="/js/dist/jstree.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />
+	    <link rel="stylesheet" href="${util.addVer('/js/dist/themes/default/style.min.css')}" />
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script src="${util.addVer('/js/dist/jstree.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterBoxTree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterList.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    
 	</head>
 	
@@ -76,6 +76,7 @@
 		    var selectNode;
 		    var addCheck = 0;
 		    
+		    var letterStr20 = "<spring:message code='ezEmail.letter20'/>"; 
 		    var letterStr22 = "<spring:message code='ezEmail.letter22'/>"; 
 		    var letterStr23 = "<spring:message code='ezEmail.letter23'/>";
 		    var letterStr24 = "<spring:message code='ezEmail.letter24'/>";
@@ -88,6 +89,7 @@
 			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter11'/>"; // 이름을 입력해주세요.
 			var letterBoxNameMsg = "<spring:message code='ezEmail.letter31'/>"; // 이름은
+			var letterBoxDelMsg = "<spring:message code='ezBoard.t54'/>"; // 삭제되었습니다.
 		    
 		    window.onload = window_onload;
 		    

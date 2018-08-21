@@ -6,12 +6,25 @@
 	<head>
 		<title><spring:message code="ezBoard.t135" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
-	    <link rel="stylesheet" href='/css/email_tree.css' type="text/css" />
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	        
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css" />
+	    <style>
+			.groupBoard {
+				width:266px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+				display: inline-block;
+			}
+			.node_div span {
+				width:266px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+		</style>
+	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>	        
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 		<script type="text/javascript" language="javascript">
 			var xmlhttp = createXMLHttpRequest();
 			var selectedBoard = "";
@@ -72,17 +85,22 @@
 	        	return ret;
 	        }
 			
+			 /* 2018-08-06 홍승비 - 대상게시판선택 레이어팝업 추가, 게시물 이동+복사 팝업창과 같도록 UI 통일 */
+			var board_alertArguments = new Array();
 			function Select(){
 				var objGList = document.all("GChkBox");
+				board_alertArguments[1] = DivPopUpHidden;
 				
-				if( SelectedBoardID == "" && tmpSelectedBoardGroupID == "" ){
-				    alert("<spring:message code='ezBoard.t138'/>");
+				if( SelectedBoardID == "" && tmpSelectedBoardGroupID == "" ) {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t138' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t138'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
 					return;
 				}
 				
 				if( SelectedBoardID == BoardID )
 				{
-				    alert("<spring:message code='ezBoard.t139'/>");
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
 					return;
 				}
 				
@@ -128,7 +146,12 @@
 			    for (i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
-			        strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+			        
+			        if (i == 0) {
+			        	strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+			        } else {
+			        	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+			        }
 			        strHTML += "<tr id='TreeArea' ><td><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow-x:hidden;'></div></td></tr>";
 			    }
 			    strHTML += "</table>";
@@ -216,19 +239,38 @@
 			    var treeView = new TreeView();
 			    treeView.LoadFromID(pTreeID);
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+			    
+			    /* 2018-08-06 홍승비 - boardLeft.jsp에서 하위게시판 ellipsis 부분 가져옴 */
+		        var node = document.getElementById(TreeIdx);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        if(nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for(var i=0; i<title2.length; i++) {
+		        	title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
+		        	title3[0].style.width = 266 - 18*nodeLevel +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }
 			}			
 	    </script>
 	</head>
-	<body class="popup" style ="overflow:hidden">
+	<body class="popup">
 		<h1><spring:message code="ezBoard.t135" /></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<div class="box" style="width:320px;height:550px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id=TopBoardsList></div>
+		<div class="box" style="height:485px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id=TopBoardsList></div>
 		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" onClick="Select()" ><span><spring:message code="ezBoard.t47" /></span></a>
 		</div>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

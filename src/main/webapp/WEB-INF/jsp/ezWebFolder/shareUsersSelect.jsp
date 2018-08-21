@@ -6,17 +6,17 @@
 	<head>
 		<c:if test="${type eq 'NEW'}"><title><spring:message code='ezWebFolder.t323' /></title></c:if>
 		<c:if test="${type ne 'NEW'}"><title><spring:message code='ezWebFolder.t217' /></title></c:if>
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/TreeView.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/organJson.js')}"></script>
 		<script type="text/javascript">
 			var type = "<c:out value='${type}'/>";
 			var pDeptID = "<c:out value='${userInfo.deptID}'/>";

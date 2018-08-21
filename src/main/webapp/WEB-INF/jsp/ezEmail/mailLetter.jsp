@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,14 +7,14 @@
 	
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezEmail.t824'/></title>
-	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
-	    <link rel="stylesheet" href="/css/ezEmail/style.css" />	
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script src="/js/dist/jstree.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('/js/dist/themes/default/style.min.css')}" />
+	    <link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />	
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script src="${util.addVer('/js/dist/jstree.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterBoxTree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterList.js')}"></script>
 	    <style>
 			.imgbtn {
 			    vertical-align: middle;

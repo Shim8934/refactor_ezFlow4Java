@@ -7,10 +7,10 @@
 	<head>
 		<title><spring:message code='ezSchedule.t133' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />			    
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />			    
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">
 		    var defaultview = "<c:out value='${scheduleConfigVO.defaultView}'/>";
 			var startday = "<c:out value='${scheduleConfigVO.startDay}'/>";
@@ -133,6 +133,13 @@
 		                var newoption = new Option(rtn["name"][i], rtn["id"][i]);
 		                document.getElementById("ListSecretary").options[lastindex] = newoption;
 		            }
+		            
+		            //2018-08-10 김보미 - 비서가 없을 경우 dropbox가 내려오지 않도록 변경
+		            if (rtn["id"].length > 0) {
+		            	document.getElementById("ListSecretary").disabled = false;
+		            } else {
+		            	document.getElementById("ListSecretary").disabled = true;
+		            }
 		        }
 		    }
 		</script>
@@ -221,15 +228,28 @@
 				</tr>
 			    <tr>
 			    	<th><spring:message code='ezSchedule.t152' /></th>
-			      	<td>			      		
-			      		<select name="ListSecretary" id="ListSecretary" style="width:85px">
-			      			<c:forEach var="item" items="${selectList}">
-			      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
-			      					${item.displayName}
-			      				</option>
-			      			</c:forEach>
-			      		</select>			      		
-			        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
+			      	<td>
+			      	<!-- 2018-08-06 김보미 - 셀렉트박스, 버튼 가운데로 위치 조정 -->		
+<!-- 			      		<select name="ListSecretary" id="ListSecretary" style="width:85px"> -->
+<%-- 			      			<c:forEach var="item" items="${selectList}"> --%>
+<%-- 			      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}"> --%>
+<%-- 			      					${item.displayName} --%>
+<!-- 			      				</option> -->
+<%-- 			      			</c:forEach> --%>
+<!-- 			      		</select>			      		 -->
+<%-- 			        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a> --%>
+						<div style='height: 75%;'>
+						<!-- 2018-08-10 김보미 - 비서가 없을 경우 dropbox가 내려오지 않도록 변경 -->
+ 				      	<%--<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" > --%>
+				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
+				      			<c:forEach var="item" items="${selectList}">
+				      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
+				      					${item.displayName}
+				      				</option>
+				      			</c:forEach>
+				      		</select>			      		
+				        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
+			        	</div>
 			        </td>
 			    </tr>
 		    	<tr style="display:none">

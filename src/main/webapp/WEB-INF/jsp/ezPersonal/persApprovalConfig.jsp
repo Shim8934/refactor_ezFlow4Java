@@ -6,17 +6,17 @@
 	<head>
 		<title><spring:message code='ezPersonal.t120'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS" type="text/javascript">
 		    var AprPass ="${pwd}";
 		    var rsa = new RSAKey();
@@ -59,7 +59,9 @@
 		    }
 		    function Change_Click() {
 		        var pFlag = "";
-		        if (Form1.ApprovPwdN.checked)
+			    //2018-08-20 김보미 - ie에서는 작동되지 않던 버그 수정
+ 		        //if (Form1.ApprovPwdN.checked)
+		        if (document.getElementById("ApprovPwdN").checked)
 		            pFlag = "N";
 		        else
 		            pFlag = "Y";
@@ -180,7 +182,9 @@
 		    }
 		
 		    function PassTypeView() {
-		        if (Form1.ApprovPwdN.checked) {
+		    	//2018-08-20 김보미 - ie에서는 작동되지 않던 버그 수정
+ 		        //if (Form1.ApprovPwdN.checked) {
+		        if (document.getElementById("ApprovPwdN").checked) {
 		            document.getElementById("DivPassType").style.display = "none";
 		        }
 		        else {

@@ -6,8 +6,8 @@
 	<head>
 		<title>main_page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
 		<style>
 			.category_select span {
@@ -25,11 +25,11 @@
    				padding-right:5px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
@@ -1390,8 +1390,8 @@
 			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">
 			                        <ul class="left_tabpartTitle">
-			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>
-			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t81' /></span></li>
+			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span style="text-align: center"><spring:message code = 'ezCommunity.t80' /></span></li>
+			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span style="text-align: center"><spring:message code = 'ezCommunity.t81' /></span></li>
 			                        </ul>			                        
 			                        <div class="left_tabpartList_layout" id ="categorytab"></div>
 			                    </div>

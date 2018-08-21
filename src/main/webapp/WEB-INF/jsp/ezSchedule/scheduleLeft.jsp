@@ -7,9 +7,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_community</title>
-		<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
-	    <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+	    <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />
 	    <style>
 	    	#iYear {
 	    		width:60px;
@@ -65,19 +65,29 @@
 			    -ms-transform: rotate(45deg);
 			    transform: rotate(45deg);
 			}
-			
+			/* 2018-08-03 김보미 - 그룹명이 길 경우 처리 */
+			.IDcontainer {
+			    white-space: nowrap;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    height: 17px;
+			}
+			/* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
+			.IDcontainer .checkSelect {
+				display: none;
+			}
 	    </style>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
-	    <!-- <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js"></script> -->
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>  
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Controls/treeview.htc.js')}"></script>
+	    <!-- <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_Cross.js')}"></script> -->
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>  
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 
 	    <script type="text/javascript">
 	    	var UserOffset = "${userOffset}";

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -170,9 +172,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             //MHT 헤더 생성.
         	m_strBoundary = makeHeader(m_strMHT);
         	//이미지 경로 추출 및 가상경로 매칭.
-        	m_ImageList = extractImageSource(strHtml);
+        	m_ImageList = extractImageSource(strHtml, realPath);
             //백그라운드 경로 추출 및 가상경로 매칭
-        	m_BackImageList = extractBackgroundSource(strHtml);
+        	m_BackImageList = extractBackgroundSource(strHtml, realPath);
             //본문 인코딩
         	doHtmlEncoding(strHtml[0], m_strMHT, m_strBoundary);
             //이미지 인코딩
@@ -313,7 +315,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 이미지추출 표출 Method
 	 */
-	private String[] extractImageSource(String[] strHtml) throws Exception{
+	private String[] extractImageSource(String[] strHtml, String realPath) throws Exception{
 		int npos = 0, nposStart = 0, nposEnd = 0, nImgCount = 0;
         String strTempHtml = strHtml[0].toLowerCase();
         String strImgsrc = "";
@@ -412,9 +414,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     }
                 }
 
+                /* 2018-08-14 홍승비 - html->mht 변환 시 이미지 인코딩(content-type) 수정 */
                 int index = 1;
                 for (String strResource : m_ImageList) {
-                	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/IMAGE" + index + ".gif");
+                	String contentType = null;
+        			String extension = null;
+        	        BufferedInputStream bis = null;
+        	        
+        	        File f = new File(realPath + strResource);
+        	        
+        	        try {
+        		        bis = new BufferedInputStream(new FileInputStream(f));
+        		        contentType = URLConnection.guessContentTypeFromStream(bis);
+        	        } catch(Exception e) {
+        	        } finally {
+        	        	if (bis != null) {
+        	        		bis.close();
+        	        	}
+        	        }
+        	        
+        	        if (contentType == null) {
+        	        	contentType = "application/octet-stream";
+        	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
+        	        } else {
+        	        	contentType = contentType.replace("image", "Image");
+        	        	extension = "." + contentType.split("/")[1];
+        	        }
+        	        
+                	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/IMAGE" + index + extension);
                     index++;
                 }
             }
@@ -426,7 +453,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 배경화면추출 표출 Method
 	 */
-	private String[] extractBackgroundSource(String[] strHtml) throws Exception {
+	private String[] extractBackgroundSource(String[] strHtml, String realPath) throws Exception {
 		logger.debug("extractBackgroundSource started.");
 		
         String strTempHtml = strHtml[0].toLowerCase();
@@ -618,10 +645,35 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             }
         
+            /* 2018-08-14 홍승비 - html->mht 변환 시 배경이미지 인코딩(content-type) 수정 */
             L_BackImage = null;
             int index = 1;
             for (String strResource : m_BackImageList) {
-            	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + ".gif");
+            	String contentType = null;
+    			String extension = null;
+    	        BufferedInputStream bis = null;
+    	        
+    	        File f = new File(realPath + commonUtil.separator + strResource);
+    	        
+    	        try {
+    		        bis = new BufferedInputStream(new FileInputStream(f));
+    		        contentType = URLConnection.guessContentTypeFromStream(bis);
+    	        } catch(Exception e) {
+    	        } finally {
+    	        	if (bis != null) {
+    	        		bis.close();
+    	        	}
+    	        }
+    	        
+    	        if (contentType == null) {
+    	        	contentType = "application/octet-stream";
+    	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
+    	        } else {
+    	        	contentType = contentType.replace("image", "Image");
+    	        	extension = "." + contentType.split("/")[1];
+    	        }
+    	        
+            	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + extension);
                 index++;
             }
         }
@@ -653,10 +705,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * @param realPath 
 	 */
 	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
-        for (int i = 0; i < m_ImageList.length; i++) {
-            m_strMHT.append(commonUtil.CRLF + "Content-Type: Image/gif" + commonUtil.CRLF);
+		/* 2018-08-13 홍승비 - html->mht 변환 시 이미지 인코딩(content-type) 수정 */
+		for (int i = 0; i < m_ImageList.length; i++) {
+			String contentType = null;
+			String extension = null;
+	        BufferedInputStream bis = null;
+	        File f = new File(realPath + m_ImageList[i]);
+	        
+	        try {
+		        bis = new BufferedInputStream(new FileInputStream(f));
+		        contentType = URLConnection.guessContentTypeFromStream(bis);
+	        } catch(Exception e) {
+	        } finally {
+	        	if (bis != null) {
+	        		bis.close();
+	        	}
+	        }
+	        
+	        if (contentType == null) {
+	        	contentType = "application/octet-stream";
+	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
+	        } else {
+	        	contentType = contentType.replace("image", "Image");
+	        	extension = "." + contentType.split("/")[1];
+	        }
+	        
+            m_strMHT.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
             m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
-            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + ".gif" + commonUtil.CRLF);
+            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + extension + commonUtil.CRLF);
             m_strMHT.append(commonUtil.CRLF);
             //이미지 본문 영역
 
@@ -723,10 +799,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 배경화면인코딩 실행 Method
 	 */
 	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
-        for (int i = 0; i < m_BackImageList.length; i++) {
-            m_strMHT.append(commonUtil.CRLF + "Content-Type: Image/gif" + commonUtil.CRLF);
+		/* 2018-08-13 홍승비 - html->mht 변환 시 배경이미지 인코딩(content-type) 수정 */
+		for (int i = 0; i < m_BackImageList.length; i++) {
+			String contentType = null;
+			String extension = null;
+	        BufferedInputStream bis = null;
+	        File f = new File(realPath + commonUtil.separator + m_BackImageList[i]);
+	        
+	        try {
+		        bis = new BufferedInputStream(new FileInputStream(f));
+		        contentType = URLConnection.guessContentTypeFromStream(bis);
+	        } catch(Exception e) {
+	        } finally {
+	        	if (bis != null) {
+	        		bis.close();
+	        	}
+	        }
+	        
+	        if (contentType == null) {
+	        	contentType = "application/octet-stream";
+	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
+	        } else {
+	        	contentType = contentType.replace("image", "Image");
+	        	extension = "." + contentType.split("/")[1];
+	        }
+	        
+            m_strMHT.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
             m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
-            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + ".gif" + commonUtil.CRLF);
+            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + extension + commonUtil.CRLF);
             m_strMHT.append(commonUtil.CRLF);
             //이미지 본문 영역
             
@@ -837,6 +937,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		String[] m_Mimechunk = null;
 		List<String> m_ListImageLocation = new ArrayList<String>();
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
+		String extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
 		
 		strBoundary = getBoundaryText(m_strMHT);
 		logger.debug("strBoundary="+strBoundary);
@@ -856,13 +957,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					if (strMime_info_tupe[0].equals("Content-Type")) {
 						if (strMime_info_tupe[1].equals("Text/HTML")) {
 							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
-						} else if (strMime_info_tupe[1].equals("Image/gif")) {
+						}
+						/* 2018-08-14 홍승비 - mht->html 변환 시 이미지 디코딩(content-type) 수정 */
+						else if (strMime_info_tupe[1].contains("Image/") || strMime_info_tupe[1].contains("application/octet-stream")) {
 							String[] strMime_info_location = strMime_info_p[2].split(": ");
 							
 							if (strMime_info_location[0].equals("Content-Location")) {
 								m_ListImageLocation.add(strMime_info_location[1]);
+								extension = "." + strMime_info_location[1].split("\\.")[1];
 							}
-							m_ListImageLocalLocation.add(doImageDecoding(strMimeChunk[1].trim(), m_strSPath, m_strLPath));
+							m_ListImageLocalLocation.add(doImageDecoding(strMimeChunk[1].trim(), m_strSPath, m_strLPath, extension));
 						}
 					}
 				}
@@ -897,10 +1001,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */
-	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath) throws Exception{
+	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath, String extension) throws Exception{
 		byte[] imageBytes = Base64.getMimeDecoder().decode(strImageMht);
 		
-		String strImageName = UUID.randomUUID() + ".tmp";
+		/* 2018-08-16 홍승비 - mht파일 내의 이미지 이름을 .tmp -> 원래 확장자로 변경 */
+		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
         File file = new File(m_strLPath);
@@ -1121,4 +1226,82 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertUserConfigInfo(map);
 	}
 	
+	@Override
+	public void createTblCompanyConfig() throws Exception {
+		ezCommonDAO.createTblCompanyConfig();
+	}
+	
+	@Override
+	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+        map.put("property", property.toUpperCase());
+        map.put("companyID", companyID);
+        map.put("tenantID", tenantID);
+        
+        String propertyValue = ezCommonDAO.getCompanyConfig(map);
+		
+		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID + "||" + "COMPANYID : " + companyID);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+        
+        if (propertyValue == null) {
+            propertyValue = "";
+        }
+        
+        return propertyValue;
+    }
+	
+	@Override
+	public void insertCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception {
+		logger.debug("insertCompanyConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		map.put("propertyName", propertyName);
+		map.put("propertyValue", propertyValue);
+		
+		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		ezCommonDAO.insertCompanyConfig(map);
+		
+		logger.debug("insertCompanyConfig ended");
+	}
+	
+	@Override
+	public void updateCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception {
+		logger.debug("updateCompanyConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		map.put("propertyName", propertyName);
+		map.put("propertyValue", propertyValue);
+		
+		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		ezCommonDAO.updateCompanyConfig(map);
+		
+		logger.debug("updateCompanyConfig ended");
+	}
+	
+	@Override
+	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception {
+		logger.debug("deleteCompanyConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		map.put("propertyName", propertyName);
+		
+		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
+		
+		ezCommonDAO.deleteCompanyConfig(map);
+		
+		logger.debug("deleteCompanyConfig ended");
+	}
 }

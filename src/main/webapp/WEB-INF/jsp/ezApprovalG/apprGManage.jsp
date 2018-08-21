@@ -6,9 +6,9 @@
 	<head>
 		<title><spring:message code='ezApprovalG.hyj02'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<!-- <link rel="stylesheet" href="/js/jquery/jquery-ui.css"> -->
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 			.pagetd{padding-top:6px; }
@@ -21,18 +21,18 @@
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>	
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/setLogData.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script> -->
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/setLogData.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
+		<!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script> -->
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    window.onload = window_onload;
@@ -57,6 +57,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var proxyInfo = "${proxyInfo}";
+		    var proxyStartDate = "${proxyInfo.startDate}"
+		    var proxyEndDate = "${proxyInfo.endDate}"
 		    var formURL = "";
 		    var formDocType = "";
 		    var pDocInfoValue = "1";
@@ -136,6 +138,20 @@
 		            else {
 		                checkBujaeInfo_Complete(false);
 		            }
+		        } else if(GetBujaeFlag()){
+		        	
+		        		tmpStartDate = proxyStartDate;
+		        		tmpEndDate = proxyEndDate;
+		        		
+		        		var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+			            if (Rtnval) {
+			                checkBujaeInfo_Complete(true);
+			            }
+			            else {
+			                checkBujaeInfo_Complete(false);
+			            }		            	
 		        } else {
 		            checkBujaeInfo_Complete("ING");
 		        }
@@ -275,6 +291,8 @@
 		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 				
 		        var cell = document.getElementById("sel_year");
+
+		        var selectedCell = $("#sel_year option:selected").val();
 		        
 		        while(cell.hasChildNodes()) {
 		        	cell.removeChild(cell.firstChild);	
@@ -287,7 +305,10 @@
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 		            AddOption(sel_year, i, i);
 		        }
-		            checkBujaeInfo();
+		        if(selectedCell !== undefined) {
+		        	document.getElementById("sel_year").value = selectedCell;
+		        }
+		        checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
 		        }
@@ -1118,6 +1139,9 @@
 		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
+		            } else if (!isIE()) {
+						alert("한글양식은 IE에서만 발송할 수 있습니다.");
+						return;
 		            } else {
 		                openLocation = "/ezApprovalG/ezSimsaG_HWP.do";
 		            }
@@ -1236,8 +1260,10 @@
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
-		
-		            if (BDim[3] <= "${nowDate}" && BDim[4] >= "${nowDate}") {
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+					
+		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
 		                return true;
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
@@ -1247,7 +1273,7 @@
 		                return true;
 		            }
 		        }
-		        
+		        setBujaeOff();
 		        return false;
 		    }
 		    function setpause(numberMillis) {

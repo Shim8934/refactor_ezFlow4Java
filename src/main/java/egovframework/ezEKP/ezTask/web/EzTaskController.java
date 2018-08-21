@@ -131,7 +131,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
 		String taskID = request.getParameter("taskID");		
-		String date = request.getParameter("date");
+		String date = request.getParameter("date"); //클릭한 날짜
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		String dateList = "";
 		String completeRateList = "";
@@ -1363,11 +1363,15 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
 		taskInfoVO.setRepeatCount(result.get(date));		
+		
+		if (taskInfoVO.getPersonContentPath() == null) {
+			taskInfoVO.setPersonContentPath("");
+		}
     	
     	StringBuffer resultXML = new StringBuffer();
     	
     	resultXML.append("<DATA>"); 
-    		
+    	
 		resultXML.append("<ROW>");
 		
 		resultXML.append("<TASKID>" + taskInfoVO.getTaskID() + "</TASKID>");
@@ -1546,5 +1550,166 @@ public class EzTaskController extends EgovFileMngUtil {
 		ezTaskService.insertTaskRepeDel(taskID, repeatCount, taskStatus, completeRate, realDate, loginSimpleVO.getTenantId());
 		
 		logger.debug("taskOnceDelete ended.");
+	}
+	
+	/**
+	 * 2018-08-13 김보미
+	 * 업무관리 업무보기 인쇄 화면
+	 */
+	@RequestMapping(value = "/ezTask/taskReadPrint.do")
+	public String taskReadPrint(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskRead started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();	
+		
+		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
+		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
+		
+		String taskID = request.getParameter("taskID");		
+		String date = request.getParameter("date");
+		String selectedDate = request.getParameter("date");
+		String calDate = request.getParameter("calDate");
+		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
+		String dateList = "";
+		String completeRateList = "";
+		String statusList = "";	
+		String repeatCntList = "";
+		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+
+		//업무정보 조회
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+
+		//의견목록 조회
+		List<TaskCommentVO> taskCommentList = null;
+		if (taskInfoVO.getHasComment().equals("Y")) {			
+			taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
+		}
+		
+		//업무공유자목록조회
+		List<TaskShareVO> taskShareList = null;
+		if (taskInfoVO.getHasShare().equals("Y")) {
+			taskShareList = ezTaskService.getShareList(taskID, primary, tenantID);
+		}
+		
+		//task첨부파일목록조회
+		String taskAttachList = null;
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+			taskAttachList = ezTaskService.getAttachListStr(taskID, folderPath, "1", tenantID);
+		}
+		
+		//taskWork첨부파일목록조회
+		String taskWorkAttachList = null;
+		if (taskInfoVO.getPersonAttach().equals("Y")) {
+			taskWorkAttachList  = ezTaskService.getAttachListStr(taskID, folderPath, "2", tenantID);
+		}
+		
+		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {
+			SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String endDate = "";	
+			
+			String[] offsetArr = offset.split("\\|");				
+			nsdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+			String dayText = calDate + " 00:00:00";
+			Date day = sdf.parse(dayText); 
+	        Calendar calendar1 = Calendar.getInstance();  
+	        calendar1.setTime(day); 
+	        
+			if (taskInfoVO.getTotalRep() != -1) {
+				endDate = taskInfoVO.getEndDate();
+				Date taskEndDate = sdf.parse(endDate); 
+		        Calendar calendar2 = Calendar.getInstance();  
+		        calendar2.setTime(taskEndDate);         
+		        
+		        if (calendar1.compareTo(calendar2) >= 0) {
+		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+		        	date = endDate.substring(0, 10);
+		        }
+		        else {		        	
+		        	result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO);
+		        	
+		        	for (String d: result.keySet()) {	        			        		
+		        		Date dDate = sdf.parse(d + " 00:00:00"); 
+		    	        Calendar calendar3 = Calendar.getInstance();  
+		    	        calendar3.setTime(dDate); 
+		    	        
+		    	        if (calendar3.compareTo(calendar1) >= 0) {		    	        	
+		    	        	date = d;
+		    	        	break;
+		    	        }
+		        	}
+		        }		        		        
+			}
+			else {				
+				result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO);
+				
+	        	for (String d: result.keySet()) {
+	        		Date dDate = sdf.parse(d + " 00:00:00"); 
+	    	        Calendar calendar3 = Calendar.getInstance();  
+	    	        calendar3.setTime(dDate); 
+	    	        
+	    	        if (calendar3.compareTo(calendar1) >= 0) {
+	    	        	date = d;
+	    	        	break;
+	    	        }
+	        	}
+			}					        
+			
+			for (Map.Entry<String, Integer> entry : result.entrySet()) {
+	            String key = entry.getKey();
+	            Integer value = entry.getValue();	
+	            
+				dateList += key + ",";
+				String convertDate = key + " 00:00:00";
+				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, convertDate, tenantID);
+				completeRateList += Integer.toString(comRate) + ",";
+				
+				int status = ezTaskService.getStatusOfRepTask(taskID, convertDate, tenantID);
+				statusList += Integer.toString(status) + ",";
+				repeatCntList += value + ",";
+	        }
+			
+			dateList = dateList.substring(0, dateList.length() - 1);
+			completeRateList = completeRateList.substring(0, completeRateList.length() - 1);
+			statusList = statusList.substring(0, statusList.length() - 1);
+			repeatCntList = repeatCntList.substring(0, repeatCntList.length() - 1);
+			
+			String realStartDate = date + " 00:00:00";
+			String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+			int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
+			taskInfoVO.setTaskStatus(status);
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
+			taskInfoVO.setCompleteRate(completionPercentage);			
+			taskInfoVO.setRepeatCount(result.get(date));	        			
+		}	
+		//end
+
+		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
+
+		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskShareList", taskShareList);
+		model.addAttribute("taskAttachList", taskAttachList);
+		model.addAttribute("taskWorkAttachList", taskWorkAttachList);
+		model.addAttribute("taskCommentList", taskCommentList);
+		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
+		model.addAttribute("type", type);
+		model.addAttribute("delayColor", configVO.getDelayColor());
+		model.addAttribute("completeColor", configVO.getCompleteColor());
+		model.addAttribute("useTodoMemo", useTodoMemo);
+		model.addAttribute("repeatCount", taskInfoVO.getRepeatCount());
+		model.addAttribute("date", date);
+		model.addAttribute("selectedDate", selectedDate);
+		model.addAttribute("repetition", taskInfoVO.getRepetition());
+		model.addAttribute("dateList", dateList);	
+		model.addAttribute("completeRateList", completeRateList);
+		model.addAttribute("statusList", statusList);	
+		model.addAttribute("repeatCntList", repeatCntList);
+		
+		return "/ezTask/taskReadPrint";
 	}
 }

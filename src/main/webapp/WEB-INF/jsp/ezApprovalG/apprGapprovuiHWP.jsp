@@ -7,22 +7,22 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ApprovUI_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezAprove_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprovUI_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezAprove_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "${orgAprUserID}";
 	        var OrgAprUserName = "${orgAprUserName}";
@@ -106,6 +106,7 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	        var pCompanyID = "${userInfo.companyID}";
+	        var companyID = "${userInfo.companyID}";
 	        var KuyjeType = "002";
 	        var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optisSplit}";
@@ -134,6 +135,7 @@
 	        var docState = "${docState}";
 	        var nonElecRec = "${nonElecRec}";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+	        var useReceiveDocNo = "${useReceiveDocNo}";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -632,6 +634,26 @@
 								    }
 			                    }
 			                }
+			            } else {
+			            	
+			            }//useReceiveDocNo 처리
+			            if (useReceiveDocNo == 'NO') {
+			            	if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+				            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+				                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+				                    var rtnval;
+				                    //hwp는 왜 docNumZeroCnt안쓰는지 일단 시간없어서 다음에봄
+// 				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+				                    rtnval = getDocNumber(drafterDeptid, "");
+				                    
+				                    if (!rtnval) {
+				                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+				                        OpenAlertUI(pAlertContent);
+				                        setMenuDisable("btnApprove", false);
+				                        return;
+				                    }
+				                }
+				            }
 			            }
 			
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -1154,7 +1176,7 @@
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "hwp";
+			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
 			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        var ret = window.showModalDialog(url, parameter, feature);
 			

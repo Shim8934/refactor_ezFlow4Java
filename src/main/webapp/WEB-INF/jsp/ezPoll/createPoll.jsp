@@ -7,24 +7,21 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Create Poll</title>	
 		
-	<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">	
-	<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
-	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-	
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --> 
-	<script src="/js/jquery/jquery.min.js"></script> 
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<!-- <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script> -->
-	<script type="text/javascript" src="/js/ezPoll/dropzone.js"></script>
-  	<!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  -->
-  	<script src="/js/jquery-ui/jquery-ui.js"></script>
-  	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
+	<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">	
+	<link rel="stylesheet" href="${util.addVer('/css/ezPoll/sort.css')}" type="text/css">	
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+	 
+	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPoll/dropzone.js')}"></script>
+  	<script src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
+  	<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	  
 	<script type="text/javascript">	
 		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';
 		var messageCode2	  = '<spring:message code="ezPoll.t165"/>';
@@ -332,6 +329,32 @@
 				//$('#isSorting').removeAttr('checked');
 				//$('#receiverBttn').hide();										
 			}
+			
+			/* 2018-08-13 홍승비 - 투표모듈 DatePicker 다국어 설정 추가 */
+			var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+			 $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+	        	closeText: "<spring:message code='main.t3' />",
+	            prevText: "<spring:message code='main.t0604' />",
+	            nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+	            monthNames: monthStr,
+	            monthNamesShort: monthStr,
+	            dayNames: dayStr,
+	            dayNamesShort: dayStr,
+	            dayNamesMin: dayStr,
+	            weekHeader: 'Wk',
+	            dateFormat: 'yy-mm-dd',
+	            firstDay: 0,
+	            isRTL: false,
+	            duration: 200,
+	            showAnim: 'show',
+	            showMonthAfterYear: true
+	        };
+	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 			
 			$('#multipleCheck').click(function() {
 				if (this.checked) {

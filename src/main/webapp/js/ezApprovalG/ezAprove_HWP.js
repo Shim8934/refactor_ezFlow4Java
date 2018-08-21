@@ -128,7 +128,7 @@ function AprrovMappingSign(ret)
 			if(ret != "NAME" && ret != "")
 			{
 				HwpCtrl.SetFieldText(habyui, "");
-				HwpCtrl.SetFieldImage(habyui, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+				HwpCtrl.SetFieldImage(habyui, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 
 				if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 					HwpCtrl.AppendFieldText(habyui, strLang17, true);
@@ -240,7 +240,7 @@ function AprrovMappingSign(ret)
 	  			if(ret != "NAME")
 	  			{
 					HwpCtrl.SetFieldText(signID, "");
-					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
                     var content ="";
 					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 					{
@@ -321,7 +321,7 @@ function AprrovMappingSign(ret)
 	  			{
 	  				var strimg;
 					HwpCtrl.SetFieldText(signID, "");
-					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 
 					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 					{
@@ -531,14 +531,28 @@ function SaveApproveInfo(pApproveFlag)
 	pDocTitle = HwpCtrl.GetFieldText("doctitle");
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
 
-	if (HwpCtrl.CheckFieldExist("docnumber"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("docnumber"));
-	else if (HwpCtrl.CheckFieldExist("be_docnumber"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("be_docnumber"));
-	else if (HwpCtrl.CheckFieldExist("deptshortedname"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("deptshortedname"));
-	else
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+		if (HwpCtrl.CheckFieldExist("receiptnumber")) {
+			createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("receiptnumber"));
+		} else if (HwpCtrl.CheckFieldExist("docnumber")) {
+			createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("docnumber"));
+		} else if (HwpCtrl.CheckFieldExist("be_docnumber")) {
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("be_docnumber"));
+		} else if (HwpCtrl.CheckFieldExist("deptshortedname")) {
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("deptshortedname"));
+		} else {
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+		}
+	} else {
+		if (HwpCtrl.CheckFieldExist("docnumber"))
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("docnumber"));
+		else if (HwpCtrl.CheckFieldExist("be_docnumber"))
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("be_docnumber"));
+		else if (HwpCtrl.CheckFieldExist("deptshortedname"))
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("deptshortedname"));
+		else
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+	}
 
 	if (pHasAttachYN == "")
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[9]));
@@ -1304,7 +1318,7 @@ function putSignXML(SignXML)
 				else if (SignType == "PROXY")
 				{
 					HwpCtrl.SetFieldText(SignName, " ");
-					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SignCont), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(SignCont), 3, 0, 0, true, 2);
 					HwpCtrl.AppendFieldText(SignName, strLang17, true);
 				}
 				else if (SignType == "IMAGE")
@@ -1312,7 +1326,7 @@ function putSignXML(SignXML)
 				    var img = SignCont.split("::");
 					HwpCtrl.SetFieldText(SignName, "");
 					if(img.length >= 1)
-					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(img[0]), 3, 0, 0, true, 2);
+					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(img[0]), 3, 0, 0, true, 2);
 					    
 				    if(img.length >= 2)
 				        HwpCtrl.AppendFieldText(SignName, img[1], true);
@@ -1416,7 +1430,7 @@ function setRecevInfo(ret) {
                 }
             }
         } else {
-        	 precipent = strLangS68;
+        	 precipent = strLang92;
 
              if (getNodeText(dataNodes[3]) == "Y") {
                  precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -1449,6 +1463,7 @@ function setRecevInfo(ret) {
         }
     }
 }
+
 function UpdateDocHistory(pHtml) {
 	var xmlhttp2 = createXMLHttpRequest();
 	var xmlpara = createXmlDom();

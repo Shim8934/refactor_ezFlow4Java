@@ -50,4 +50,14 @@ public interface EzCommonService {
 	
 	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
 	
+	public void createTblCompanyConfig() throws Exception;
+	
+	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception;
+
+	public void insertCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
+
+	public void updateCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
+
+	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+
 }

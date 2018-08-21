@@ -6,19 +6,22 @@
 	<head>
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
 			</c:when>
 			<c:otherwise>
-				<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
 		</c:choose>	
-        <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+
+        <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+
 		<script type="text/javascript">
 			var skinnum = "${skinNum}";
 			var selectedCell = "";
@@ -1539,7 +1542,9 @@
 			</c:otherwise>
 		</c:choose>
 		<c:if test="${isCrossBrowser != true}">
-			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,19" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
 		</c:if>  
 		<div id="objectDiv"></div>
 		<c:choose>
@@ -1605,7 +1610,7 @@
 									</span>
 								</a>
 			  				</td>
-                			<td style="width:56px;"><spring:message code='ezPortal.t990022' />:</td>
+                			<td style="width:60px;"><spring:message code='ezPortal.t990022' />:</td>
                 			<td style="width:135px;">
                     			<select id="Themeinfo" style="width:130px; height: 23px;">
 			                        ${pThemeSelectObject}

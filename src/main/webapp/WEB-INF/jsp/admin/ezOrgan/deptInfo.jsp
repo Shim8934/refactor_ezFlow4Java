@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code="ezOrgan.t208" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">		
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var OldDeptName = "";
 			var OldDeptName2 = "";
@@ -254,7 +254,7 @@
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
 		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 
-		  	<tr class="onlyUseG"> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
 		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
 		  	</tr> 

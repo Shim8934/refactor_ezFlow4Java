@@ -40,7 +40,7 @@ function OpenAlertUI_SUB(pAlertContent) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || pNoneActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArgument[0] = parameter;
         ezapralert_cross_dialogArgument[1] = OpenAlertUI_SUB_Complete;
         ezapralert_cross_dialogArgument[2] = "";
@@ -111,7 +111,9 @@ function OpenInformationUI(pInformationContent, FunctionName, Type) {
             DivPopUpShow(330, 205, url);
         }
         else {
-            GetOpenWindow(url + "?type=open", "ezAPROPINION_Cross", 325, 200, "NO");
+        	//2018-08-21 배현상, type에 대한 처리를 controller에서 하지않고 opener의 변수를 가지고 사용하기에 로직 수정
+        	ezapropinion_cross_dialogArguments[2] = true;
+            GetOpenWindow(url, "ezAPROPINION_Cross", 325, 200, "NO");
         }
     }
     else {

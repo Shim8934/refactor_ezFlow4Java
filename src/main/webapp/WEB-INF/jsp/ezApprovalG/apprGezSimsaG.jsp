@@ -5,17 +5,17 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t257'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>	
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezSimsaG_Cross.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></SCRIPT>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezSimsaG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></SCRIPT>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pDocID = "${docID}";
 		    var pDocHref = "${docHref}";
@@ -221,7 +221,7 @@
 		        ezchkpasswd_cross_dialogArguments[0] = parameter;
 		        ezchkpasswd_cross_dialogArguments[1] = Complete_Function;
 		
-		        DivPopUpShow(330, 205, "/ezApprovalG/ezchkPasswd.do");
+		        DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 		    }
 		    function setArrAttachInfo() {
 		        // lstAttachLink.getElementsByTagName("a").length
@@ -394,7 +394,7 @@
 // 		        SaveFile();
 		
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(458, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {

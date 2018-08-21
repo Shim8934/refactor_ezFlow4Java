@@ -6,17 +6,17 @@
 	<head>
 	    <title><spring:message code='ezAddress.t144' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <style>
 	    	.tree div div{
 	    		margin-bottom:0px;
 	    	}
 	    </style>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Controls/treeview.htc.js')}"></script>
 	    <script>
 	        var companyadmin = "${companyAdmin}";
 	        var deptadmin = "${deptAdmin}";

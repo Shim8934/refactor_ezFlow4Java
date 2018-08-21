@@ -6,14 +6,16 @@
 	<head>
 		<title><spring:message code="ezResource.t13"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		 	var ReturnFunction;
 		    var retVal = new Array();
+		    var dialogArguments;
+		    var openerFlag = false;
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -25,10 +27,16 @@
 		    	 try {
 			            dialogArguments = parent.checkdeptname_cross_dialogArguments[0];
 			            ReturnFunction = parent.checkdeptname_cross_dialogArguments[1];
-
-			            retVal["deptid"] = "";
 			        }
 			        catch (e) {
+			        	/* 2018-08-08 김민성 - 자원관리 부서검색 수정 */
+			        	try {
+			        		dialogArguments = opener.checkdeptname_cross_dialogArguments[0];
+	    	           		ReturnFunction = opener.checkdeptname_cross_dialogArguments[1];
+	    	           		openerFlag = true;
+			            } catch (e) {
+			                openerFlag = false;
+			            }
 			        }
 	    		initializeReceiverList();	    		
 	    	});
@@ -62,6 +70,9 @@
 		        if (ReturnFunction != null) {
 		            retVal["deptid"] = GetListRow[0].getAttribute("DATA2");
 		            ReturnFunction(retVal);
+		            if (openerFlag){
+			            window.close();
+			        }
 		        } else {
 		            dialogArguments["deptid"] = GetListRow[0].getAttribute("DATA2");
 		            window.close();
@@ -80,8 +91,9 @@
 
 		    function cancel_onClick() {
 		        if (ReturnFunction != null) {
-		            retVal["recipientTDData"] = "dontprocess";
-		            ReturnFunction(retVal);
+		        	window.close();
+		        	//retVal["recipientTDData"] = "dontprocess";
+		            //ReturnFunction(retVal);
 		        } else {
 		            dialogArguments["recipientTDData"] = "dontprocess";
 		            window.close();

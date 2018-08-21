@@ -5,8 +5,9 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='main.e4' />" type="text/css" />
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script>
 			var useHWP = "${useHWP}";
 			function window_onload(){
@@ -134,7 +135,9 @@
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
 		<c:if test="${useHWP == 'YES'}">
-			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,19" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
         </c:if>
 		<form method="post">
 			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>

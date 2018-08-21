@@ -31,7 +31,7 @@
     		</article>
 		</section>
 		
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<style>
 			.photocont ul li {
 				margin-left: 16.5px;
@@ -48,8 +48,8 @@
 				left:9px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var pBoardType_NewPhoto = "4";
 	    	var pBoardID_NewPhoto = "${pPhotoGalleryID}";
@@ -197,7 +197,7 @@
 	    	    	var height = 785;
 	    	    }
 
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    	
 	    	function Boardmore_btnClick() {

@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code = 'ezCommunity.t340' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
@@ -69,7 +69,7 @@
 				url = "/ezCommunity/boardMoveSelect.do";
 				boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open(url, "boardMoveSelect", GetOpenWindowfeature(340, 656));
+		        var BoardMoveSelect_Cross = window.open(url, "boardMoveSelect", GetOpenWindowfeature(355, 600));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}

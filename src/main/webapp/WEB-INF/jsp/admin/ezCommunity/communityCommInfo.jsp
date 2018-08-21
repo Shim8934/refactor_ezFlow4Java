@@ -6,10 +6,10 @@
 	<head>
 		<title>Community <c:out value = '${title}' /> <spring:message code = 'ezCommunity.t46' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		
 		<script type="text/javascript">
 			window.onload = function () {	        	
@@ -148,13 +148,13 @@
 					<c:choose>
 						<c:when test="${type == 'Del' }">
 							<th>Community<br><spring:message code = 'ezCommunity.t71' /></th>
-							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff; Width:98%; Height:120px; margin-bottom: -3px; cursor:default;
+							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff; Width:98%; Height:120px; cursor:default;
 								 border:none; resize:none;" readonly><c:out value = '${delReason}' /></textarea></td>
 						</c:when>
 						
 						<c:otherwise>
 							<th>Community<spring:message code = 'ezCommunity.t18' /></th>
-							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff;Width:98%; Height:120px; margin-bottom: -3px; cursor:default;
+							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff;Width:98%; Height:120px; cursor:default;
 								 border:none; resize:none;" readonly><c:out value = '${newInfo}' /></textarea></td>
 						</c:otherwise>
 					</c:choose>

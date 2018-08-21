@@ -6,16 +6,16 @@
 <html>
 <head>
 <title><spring:message code='ezApprovalG.t1155'/></title>
-<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OrganTree_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
     var g_InitFlag = "0";
     var OrderCell = "";
@@ -52,6 +52,7 @@
 
         DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass);
         InitRecViewerInfo();
+        SwapRoleList();
 
         MM_preloadimages('./images/arrow_add1.gif', './images/arrow_delete1.gif');
     }
@@ -98,16 +99,25 @@
         alert("<spring:message code='ezApprovalG.t1156'/>");
             return "";
         }
-
-   
-        if (AllAllowed == "0") {
+        
+   		/* 2018-08-07 천성준 - 디폴트 체크 변경으로 인한 주석처리 */
+        /* if (AllAllowed == "0") {
             document.getElementsByName("rdoRecRole")[0].checked = false;
             document.getElementsByName("rdoRecRole")[1].checked = true;
         }
         else {
             document.getElementsByName("rdoRecRole")[0].checked = true;
             document.getElementsByName("rdoRecRole")[1].checked = false;
+        } */
+        
+        if (AllAllowed == "0") {
+        	document.getElementById("roleCheck1").innerHTML = "";
+        	document.getElementById("roleCheck2").innerHTML = "(○)";
+        } else {
+        	document.getElementById("roleCheck1").innerHTML = "(○)";
+        	document.getElementById("roleCheck2").innerHTML = "";
         }
+        
         var LVXml = createXmlDom();
         LVXml = SelectSingleNode(SelectSingleNode(rtnXml,"ROLEINFO"),"LISTVIEWDATA");
         var listview = new ListView();
@@ -295,9 +305,9 @@
 
         var totalRows = userlist.GetDataRows();
         if (document.getElementsByName("rdoRecRole")[1].checked) {
-            if (totalRows.length < 1) {
+            if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {
                 alert("<spring:message code='ezApprovalG.t1158'/>");
-                return;
+   	            return;
             }
         }
         if (SaveRecUserRole()) {
@@ -515,8 +525,8 @@
 <table class="content">
 	<tr>
 	<th><spring:message code='ezApprovalG.t1163'/></th>
-		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp<spring:message code='ezApprovalG.t1164'/><br />
-			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp<spring:message code='ezApprovalG.t1165'/></td>
+		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp;<spring:message code='ezApprovalG.t1164'/><span id="roleCheck1"></span><br />
+			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp;<spring:message code='ezApprovalG.t1165'/><span id="roleCheck2"></span></td>
 	</tr>
 </table>
 <table id="DataLayout" style="margin-top:5px; display: none;">

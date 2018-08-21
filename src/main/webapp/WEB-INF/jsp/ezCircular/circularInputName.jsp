@@ -7,11 +7,11 @@
 	<head>
 	    <title><spring:message code='ezCircular.t105'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/ecmascript">
 	        var ReturnFunction;
 	        var CancelFunction;

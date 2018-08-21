@@ -5,30 +5,32 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />"   type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" />
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css" />
-		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}"   type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 		<!-- module -->
-		<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript">
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
-				var reheight = document.documentElement.clientHeight - 210;
+				var reheight = document.documentElement.clientHeight - 240;
 				document.getElementById("dragDropArea").style.height = reheight + "px";
 				
-				reheight = document.documentElement.clientHeight - 100;
+				reheight = document.documentElement.clientHeight - 90;
 				document.getElementById("pageArea").style.height = reheight + "px";
+				
+				scroll();
 			};
 			
 			document.onselectstart = function() {
@@ -135,7 +137,7 @@
 			
 			function renderList(result) {
 				checkedArr = [];
-				$('#tblFileList tr').not(":first").remove();
+				$('#tblFileList tr').remove();
 				
 				dom.allCheckBox.checked = false;
 				
@@ -191,6 +193,19 @@
 					absolutePathColumn = document.createElement("td");
 					shareStatusColumn = document.createElement("td");
 					
+					checkboxColumn.setAttribute("class", "wfFilecheck");
+					favoriteIconColumn.setAttribute("class", "wfFileFavorite");
+					fileIconColumn.setAttribute("class", "wfFileType");
+					nameColumn.setAttribute("class", "wfFileName");
+					sizeColumn.setAttribute("class", "wfFileSize");
+					creatorColumn.setAttribute("class", "wfFileShareMember");
+					createDateColumn.setAttribute("class", "wfFileShareDate");
+					updateDateColumn.setAttribute("class", "wfFileShareDate");
+					sharerColumn.setAttribute("class", "wfFileShareMember");
+					shareDateColumn.setAttribute("class", "wfFileShareDate");
+					absolutePathColumn.setAttribute("class", "wfFilePath");
+					shareStatusColumn.setAttribute("class", "wfFileShare");
+
 					setStyles([nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, absolutePathColumn], function(style) {
 						style.overflow = "hidden";
 						style.textOverflow = "ellipsis";
@@ -288,6 +303,7 @@
 					
 					dom.listTable.appendChild(row);
 				}
+				scroll();
 			}
 			
 			function setStyles(elements, excutor) {
@@ -424,25 +440,33 @@
 	    	<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	    	<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 			
-			<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
-				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
-					<tr>
-						<th style="width: 20px; text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
-						<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-						<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-						<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-						<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-						<th id="updateDateHeader" style="display:none;width: 9%;">갱신일</th><!-- 갱신일 -->
-						<th id="sharerHeader" style="width: 7%;">공유자</th><!-- 공유자 -->
-						<th id="shareDateHeader" style="width: 9%;">공유받은날짜</th><!-- 공유받은날짜 -->
-						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th style="width: 35px; text-align: center;">공유</th><!-- 공유 -->
-					</tr>
-				</table>
+			<div style="width:100%;"id ="tblFileList1_div">
+				<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+					<table class="mainlist" style="width:100%"  id="tblFileList1">
+						<thead id ="BoardList_THEAD">
+							<tr>
+								<th class="wfFilecheck" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
+								<th class="wfFileFavorite" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+								<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+								<th class="wfFileName" style=""><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+								<th class="wfFileSize" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+								<th class="wfFileShareMember" style=""><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+								<th class="wfFileShareDate" style=""><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;">갱신일</th><!-- 갱신일 -->
+								<th class="wfFileShareMember" id="sharerHeader" style="">공유자</th><!-- 공유자 -->
+								<th class="wfFileShareDate" id="shareDateHeader" style="">공유받은날짜</th><!-- 공유받은날짜 -->
+								<th class="wfFilePath" style=""><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+								<th class="wfFileShare" style="margin:0px 0px 0px !important; text-align: center;">공유</th><!-- 공유 -->
+							</tr>
+						</thead>
+					</table>
+					<div id="dragDropArea"  ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow-y:auto;white-space:nowrap;">
+						<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+					
+						</table>
+					</div>
+				</div>
 			</div>
-			
 			<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width:1px; height:1px; display:none;"/>
 			<input type="hidden" onclick="fileupload()"/>
 			<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
