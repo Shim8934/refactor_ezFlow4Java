@@ -1574,7 +1574,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String groupID = request.getParameter("groupID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String xmlList = ezApprovalGService.getListXML(groupID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), approvalFlag);
+		String xmlList = ezApprovalGService.getListXML(groupID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLocale(), approvalFlag);
 		
 		logger.debug("getReceptGroupADDTo ended.");
 		
@@ -1615,7 +1615,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String aprDeptSN = request.getParameter("aprSN");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.addToAprDept(userID, formID, aprDeptSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.addToAprDept(userID, formID, aprDeptSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale(), approvalFlag);
 		
 		logger.debug("addToAprDept ended.");
 		
