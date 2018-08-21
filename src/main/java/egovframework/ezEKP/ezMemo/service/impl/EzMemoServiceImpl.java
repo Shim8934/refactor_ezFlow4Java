@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezMemo.dao.EzMemoDAO;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
+import egovframework.ezEKP.ezMemo.vo.MemoVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -87,6 +88,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("company_id", memoConfigVO.getCompany_id());
 		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
+	}
+	
+	public List<MemoVO> getMemoList(MemoVO vo, String order, String searchInput, String startDate, String endDate) throws Exception {
+		logger.debug("getMemoList started.");
+
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", vo.getTenant_id());
+		map.put("company_id", vo.getCompany_id());
+		map.put("user_id", vo.getUser_id());
+		
+		List<MemoVO> memoList = ezMemoDAO.getMemoList(map);
+
+		logger.debug("getMemoList ended.");
+		return memoList;
 	}
 
 }

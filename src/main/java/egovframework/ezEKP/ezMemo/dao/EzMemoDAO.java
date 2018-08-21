@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
+import egovframework.ezEKP.ezMemo.vo.MemoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 
@@ -21,8 +22,14 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public List<MemoFolderVO> getMemoFolderInfo(Map<String, Object> map) throws Exception {
 		return (List<MemoFolderVO>) list("EzMemoDAO.getMemoFolderInfo", map);
 	}
+	
 	public MemoConfigVO getMemoConfig(Map<String, Object> map) throws Exception {
 		return (MemoConfigVO) select("EzMemoDAO.getMemoConfig", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MemoVO> getMemoList(Map<String, Object> map) throws Exception {
+		return (List<MemoVO>) list("EzMemoDAO.getMemoList", map);
 	}
 	
 	public void setMemoConfig(Map<String, Object> map) throws Exception {
