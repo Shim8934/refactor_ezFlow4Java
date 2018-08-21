@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')      }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabRelatedFile">
@@ -65,11 +65,11 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetNavi.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')         }"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')                   }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')            }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetNavi.js')            }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')           }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetRelateFileSelect.js')}"></script>
 		<script type="text/javascript">CabinetRlFileSelect.init("<c:out value='${itemId}'/>", "<c:out value='${module}'/>")</script>
 	</body>

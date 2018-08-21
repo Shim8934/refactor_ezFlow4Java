@@ -7,7 +7,7 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')      }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="cabGeneral">
@@ -59,8 +59,8 @@
 				<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 			</div>
 			<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-			<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
-			<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetModule.js')}"></script>
+			<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetModule.js') }"></script>
 		</c:if>
 	</body>
 </html>

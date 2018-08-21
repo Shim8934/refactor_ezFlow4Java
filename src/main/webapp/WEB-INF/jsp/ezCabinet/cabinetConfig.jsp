@@ -6,8 +6,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/Tab.css')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/Tab.css')        }">
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezCabinet.t22"/></h1>

@@ -1932,8 +1932,14 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		for (BoardAttachVO boardPhoto : photoViewList) {
 			JSONObject photo = new JSONObject();
+			String photoPath = boardPhoto.getFilePath();
+			int position     = photoPath.lastIndexOf("/");
+			String realName  = photoPath.substring(position + 1);
+			realName         = realName.substring(2);
+			String firstPath = photoPath.substring(0, position + 1);
+			
 			photo.put("fileName", boardPhoto.getImageName());
-			photo.put("filePath", boardPhoto.getFilePath());
+			photo.put("filePath", firstPath + realName);
 			photo.put("fileDesc", boardPhoto.getFileContent());
 			attachList.add(photo);
 		}

@@ -6,14 +6,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')      }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="cabphotfull">
 		<div class="cabphotowrap">
 			<div class="cabphotomain">
 				<div class="cabphotobttn2"><img id="mainprevious" class="cabphotooff" src="/images/previous.png"></div>
-				<div class="cabphotslide" ><img id="mainPhoto"    class="cabmainphoto"      ></div>
+				<div class="cabphotslide" ><img id="mainPhoto"    class="cabmainphoto"                          ></div>
 				<div class="cabphotobttn2"><img id="mainnext"     class="cabphotooff" src="/images/next.png"    ></div>
 			</div>
 			<div class="cabphotodes" id="photoDescription"></div>
@@ -64,10 +64,16 @@
 					var ulElmt = document.querySelector("ul[class='cabphotoul']");
 					var liList = ulElmt.children;
 					liList[0].firstElementChild.className = "selectedImg";
+					
 					for (var i = 0, len = liList.length; i < len; i++) {
 						var imgElmt     = liList[i].firstElementChild;
-						imgElmt.src     = imageList[i]["filePath"];
-						imgElmt.onclick = function(e) {selectPhoto(this);};
+						if (i < totalImg) {
+							imgElmt.src     = imageList[i]["filePath"];
+							imgElmt.onclick = function(e) {selectPhoto(this);};
+						}
+						else {
+							imgElmt.style.display = "none";
+						}
 					}
 					
 					mainnxtbttn.onclick  = function(e) {displayNextPhoto();};

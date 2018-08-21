@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')      }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabMag">
@@ -27,9 +27,9 @@
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t46"/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>
 		<script type="text/javascript">
 			(function() {
 				var myCabinetTree = new CabinetTree();

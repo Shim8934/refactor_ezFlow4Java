@@ -6,8 +6,8 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
 	
 	<body class="leftbody" style="overflow: auto; height: 100%;">
@@ -36,10 +36,10 @@
 				<p class="volume_graph" id="myProgress">
 					<c:choose>
 						<c:when test="${percent > 90}"                 ><span id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></span></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><span id="myBar" class="myBar_orange" style="width: ${percent}%;"></span></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><span id="myBar" class="myBar_yellow" style="width: ${percent}%;"></span></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><span id="myBar" class="myBar_green"  style="width: ${percent}%;"></span></c:when>
-						<c:when test="${percent == 0}"                 ><span id="myBar" class="myBar_white"  style="width: 0%;"></span></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><span id="myBar" class="myBar_orange" style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><span id="myBar" class="myBar_yellow" style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><span id="myBar" class="myBar_green"  style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent == 0}"                 ><span id="myBar" class="myBar_white"  style="width: 0%;"                               ></span></c:when>
 					</c:choose>
 				</p>
 				<dl class="volumeDL">
@@ -61,14 +61,14 @@
 			
 			<!-- 캐비닛 관리자 -->
 			<c:if test="${isCabinetAdmin == '1'}">
-				<h3><span id="cabinetAdmin"><spring:message code="ezCabinet.t07" /></span></h3>
+				<h3><span id="cabinetAdmin"><spring:message code="ezCabinet.t07"/></span></h3>
 			</c:if>
 		</div>
 		
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>
 		<script type="text/javascript">
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
@@ -176,7 +176,6 @@
 				}
 				
 				function drawVolume() {
-					console.log("Run here!");
 					$.ajax({
 						url: "/ezCabinet/getUserCapicity.do",
 						type: "POST",
@@ -224,8 +223,8 @@
 					
 					switch(true) {
 						case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
-						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
-						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
+						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2)    + "MB"; break;
+						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2)       + "KB"; break;
 					}
 					
 					return result;

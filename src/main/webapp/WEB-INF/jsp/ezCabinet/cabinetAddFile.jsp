@@ -7,8 +7,8 @@
 	<head>
 		<title><spring:message code="ezCabinet.t67"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
 	<body class="popup cabAddMain">
 		<h1><spring:message code="ezCabinet.t67"/></h1>
@@ -46,9 +46,9 @@
 		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetFile.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetFile.js')   }"></script>
 		<script type="text/javascript">
 			var CabinetAddFile = function() {
 				var rlWindow    = null;
