@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 
 
 
+
+
+
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -30,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -189,5 +194,59 @@ public class EzMemoController {
 		logger.debug("memoRead ended.");
 		return "ezMemo/memoRead";
 
+	}
+	
+	@RequestMapping(value = "/ezMemo/setLayerArea.do")
+	public String setLayerArea(@CookieValue("loginCookie") String loginCookie,  String layerWidth, String layerHeight, HttpServletRequest request) throws Exception {
+		logger.debug("setLayerArea start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+
+		double width = Double.parseDouble(layerWidth);
+		double height = Double.parseDouble(layerHeight);
+		
+		param.put("layer_width", width);
+		param.put("layer_height", height);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerArea/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("상태: " + status);
+		logger.debug("setLayerArea end");
+		return status;
+	}
+	
+	@RequestMapping(value = "ezMemo/setLayerPosition.do")
+	public String setLayerPosition(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request) throws Exception {
+		logger.debug("setLayerPosition start");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		
+		int topPIndex = layerTop.indexOf('p');
+		int leftPIndex = layerLeft.indexOf('p');
+		String top = layerTop.substring(0, topPIndex);
+		String left = layerLeft.substring(0, leftPIndex);
+		int topPositon = Integer.parseInt(top);
+		int leftPosition = Integer.parseInt(left);
+
+		param.put("layer_top", topPositon);
+		param.put("layer_left", leftPosition);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerPosition/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("상태: " + status);
+		logger.debug("setLayerPosition end");
+		return status;
 	}
 }

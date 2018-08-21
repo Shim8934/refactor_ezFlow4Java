@@ -77,18 +77,40 @@
 		]]>
 	</select>
 	
-	<update id="EzMemoDAO.setMemoConfig" parameterClass="MemoConfigVO">
+	<update id="EzMemoDAO.setMemoConfig" parameterClass="hashmap">
+
 		<![CDATA[
+		]]>
 			UPDATE
 				TBL_MEMO_CONFIG
 			SET
-				USE_DATE = #use_date#, USE_GADGET = #use_gadget#, FONT_SIZE = #font_size#
+			<dynamic>
+				USE_DATE = #use_date#
+				, USE_GADGET = #use_gadget#
+				<isNotNull property="font_size">
+				, FONT_SIZE = #font_size#
+				</isNotNull>
+				<isNotNull property="layer_width">
+				, layer_width = #layer_width#
+				</isNotNull>
+				<isNotNull property="layer_height">
+				, layer_height = #layer_height#
+				</isNotNull>
+				<isNotNull property="layer_top">
+				, layer_top = #layer_top#
+				</isNotNull>
+				<isNotNull property="layer_left">
+				, layer_left = #layer_left#
+				</isNotNull>
+				
+			</dynamic>
 			WHERE 
 				TENANT_ID = #tenant_id# 
 			AND 
 				COMPANY_ID = #company_id# 
 			AND 
 				USER_ID = #user_id#
-		]]>
+		
 	</update>
+	
 </sqlMap>

@@ -86,6 +86,18 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoConfigVO.getUser_id());
 		map.put("tenant_id", memoConfigVO.getTenant_id());
 		map.put("company_id", memoConfigVO.getCompany_id());
+
+		if (memoConfigVO.getLayer_width() > 0 && memoConfigVO.getLayer_height() > 0) {
+
+			map.put("layer_width", memoConfigVO.getLayer_width());
+			map.put("layer_height", memoConfigVO.getLayer_height());
+
+		} else if (memoConfigVO.getLayer_top() > 0 && memoConfigVO.getLayer_left() > 0) {
+			
+			map.put("layer_top", memoConfigVO.getLayer_top());
+			map.put("layer_left", memoConfigVO.getLayer_left());
+		}
+		
 		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
 	}
