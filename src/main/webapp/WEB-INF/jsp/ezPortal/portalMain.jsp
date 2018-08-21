@@ -29,24 +29,15 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
- 			/* .individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
 			.individual-memo { width:200px; height:200px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; }
-			/* #selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;} */
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
-			/* #maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);} */
-			/* .selected-memoWrapper {display:table-cell;vertical-align:middle;} */
-			/* #memo-btn{text-align:right;margin:0 auto; } */
 			#memo-btn{text-align:right; height:40px; }
-			/* #font-btn{text-align:right;margin:0 auto; } */
 			#font-btn{text-align:right; height: 23px; }
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			/* #textarea{padding-left:10px; padding-right:10px; width:100%; height:85%; margin-left:-3px; overflow-y:scroll; padding-bottom: 10px;} */
 			#textarea{padding-left:10px; padding-right:10px; width:100%; height:332px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
-			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
-			/* .detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; } */
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
@@ -93,19 +84,12 @@
 		    	var winHeight = window.innerHeight;
 				var winWidth = window.innerWidth;
 				var memoBtn = $("#open-memo");
-				/* var opendMemo = $("#selected-memo"); */
 				
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
 		    }
 		    
 		    function setSizeOfLayer() {
 		    	var winHeight = window.innerHeight;
-				/* var winWidth = window.innerWidth;
-				var layerHalf = $(".layer-half");
-				var layerWhole = $(".layer-whole");
-		    	var maskDiv = $("#maskDiv");
-				var className = $("#layer-popup").attr("class");
-	        	var opendMemo = $("#selected-memo"); */
 	        	var layerWidth =$("#layer-popup").css("width");
 	        		        
 	        	$(".memoListBox").css("width", layerWidth);
@@ -124,12 +108,6 @@
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
 		        })
-		        
-		        /* $("#maskDiv").click(function() {
-		        	$("#maskDiv").css("display", "none");
-		        	$("#selected-memo").css("display", "none");
-		        }); */
-
 		        
 		        $("#memoList").sortable({
 		        	 containment: '.memoListBox'
@@ -189,7 +167,25 @@
 		        
 		        $("#layer-popup").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
-		        	containment:".noteBlock"
+		        	containment:".noteBlock",
+		        	stop : function () {
+		        		
+		        		var layerWidth = $("#layer-popup").width();
+		        		var layerHeight = $("#layer-popup").height();
+		        		
+		        		$.ajax({
+		        			type:"POST",
+		        			data : {
+		        				"layerWidth" : layerWidth,
+		        				"layerHeight" : layerHeight
+		        			},
+		        			dataType: "JSON",
+		        			url :  "/ezMemo/setLayerArea.do", 
+		        			success : function (result) {
+		        				console.log(result);
+		        			}
+		        		});
+		        	}
 		        });
 		        
 		        $(".detailMemo").resizable({
@@ -218,6 +214,7 @@
 		        	var memoListHeight = $("#memoList").css("height", layerHeight-btnBundle-10);
 		        	
 		        });
+		        
 		        
 		     });
 		    
@@ -277,7 +274,23 @@
 	        		stop:function(){
 	        			$(".noteBlock").css("pointer-events", "none");
 			        	$("#open-memo").css("pointer-events", "auto");
-			        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");		
+			        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");
+			        	
+			        	var layerTop = $("#layer-popup").css("top");
+		        		var layerLeft = $("#layer-popup").css("left");
+			        	
+			        	$.ajax({
+			        		type : "POST",
+			        		data : {
+			        			layerTop : layerTop,
+			        			layerLeft : layerLeft
+			        		},
+			        		dataType : "JSON",
+			        		url : "/ezMemo/setLayerPosition.do",
+			        		success : function(result) {
+			        			console.log(result);
+			        		}
+			        	})
 	        		} 
 		       	});
 			}
@@ -444,6 +457,12 @@
 					<div style="text-align: right; margin:8px;" id="btn-bundle">
 						<!-- <button id="change-mode" style="float: left">모드</button> -->
 						<div id="slider-range"></div>
+						
+						<select id="memoFolderList">
+							<option value="all" selected="selected">전체</option>
+							<option >할 일</option>
+						</select>
+						<button id="memoMove">이동</button>
 						<button id="new-memo" onclick="save()">추가</button>
 						<button id="close-button">닫기</button>
 					</div>

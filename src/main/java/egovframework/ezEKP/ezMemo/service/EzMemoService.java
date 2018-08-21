@@ -12,4 +12,5 @@ public interface EzMemoService {
 	public MemoConfigVO getMemoConfig(MemoConfigVO memoConfigVO) throws Exception;
 	public void setMemoConfig(MemoConfigVO memoConfigVO) throws Exception;
 	public void addMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
+	public List<MemoVO> getMemoList(MemoVO vo, String order, String searchInput, String startDate, String endDate) throws Exception;
 }

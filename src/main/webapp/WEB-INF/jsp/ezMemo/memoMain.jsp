@@ -65,6 +65,7 @@
 			
 	</style>
 	<script type="text/javascript">
+		var memoList = ${memoList};
 		var headerColor = "rgb(52, 152, 219)";
 		var bodyColor = "rgb(159, 212, 246)";
 		var topHeight = "100";
@@ -102,12 +103,33 @@
 	        	$(this).children("img").css("visibility", "hidden");
 	        });
 
-			$("#memoList").draggable({
+			/* $("#memoList").draggable({
 	        	 containment: "#bodyFrame",
 	        	 stop:function(){
 	        			defaultPointer();		
 	        	}
-	        });
+	        }); */
+			
+			for(var i=0; i<memoList.length; i++) {
+				var html = "";
+		    	html += "<div class='individual-memo' style='background-color:"+ memoBColor[memoList[i].color_id-1] +"'>";
+		    	html += "<input type='checkbox' name='memo'>";
+		    	html += "<div class='memo-color'>";
+		    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
+		    	html += "<span class='write-date'></span>";
+		    	/* html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; */
+		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
+		    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
+		    	html += memoList[i].contents;
+		    	html += "</textarea>";
+		    	html += "</div>"
+		    	$("#memoList").prepend(html);
+		    	$("#textarea").val('');
+		    	
+		    	addDate(memoList[i].write_date.substring(0,10));
+		    	
+		    	addremove();
+			}
 			/* // 체크 박스 모두 해제
 			$("#uncheckAll").click(function() {
 				$("input[name=box]:checkbox").each(function() {
@@ -149,8 +171,16 @@
 	    	addremove();
 		}
 		
-	    function addDate() {
-	    	var nowDate = new Date();
+	    function addDate(date) {
+	    	var nowDate 
+	    	
+	    	if(date == null) {
+	    		nowDate = new Date();
+	    	}
+	    	else {
+	    		nowDate = new Date(date);
+	    	}
+	    	
 	    	var year = nowDate.getFullYear();
 	    	var month = nowDate.getMonth() + 1;
 	    	var date = nowDate.getDate();
@@ -163,7 +193,9 @@
 	    	if(date < 10) {
 	    		date = "0"+date;
 	    	}
-	    	$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
+
+			$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
+	    	
 	    }
 	    
 	    function addremove() {

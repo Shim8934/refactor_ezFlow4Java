@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezJournal.web.EzJournalGWController;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
+import egovframework.ezEKP.ezMemo.vo.MemoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -57,31 +57,40 @@ public class EzMemoGWController {
 	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value = "/rest/ezMemo/memo-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoList(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/]" +userId + " started.");
-		
-		
+	public JSONObject gwMemoList(@PathVariable String userId, MemoVO vo, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] started.");
+
 		JSONObject result = new JSONObject();
+		String order = request.getParameter("order");
+		String searchInput = request.getParameter("searchInput");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		
+		vo.setUser_id(userId);
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
+			List<MemoVO> memoList = ezMemoService.getMemoList(vo, order, searchInput, startDate, endDate);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
+			result.put("memoList", memoList);
 		} catch(Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/] ended.");
+		
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] ended.");
 		return result;
 	}
 	
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersInfo(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/]" +userId + " started.");
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/" +userId + "] started.");
 		
 		
 		JSONObject result = new JSONObject();
@@ -103,7 +112,61 @@ public class EzMemoGWController {
 			result.put("status", "error");
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/] ended.");
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/" +userId + "] ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezMemo/setLayerArea/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject setLayerArea(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerArea/users/" +userId + "] started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			ezMemoService.setMemoConfig(memoConfig);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerArea/users/" +userId + "] ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezMemo/setLayerPosition/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject setLayerPosition(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerPosition/users/" +userId + "] started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			ezMemoService.setMemoConfig(memoConfig);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerPosition/users/" +userId + "] ended.");
 		return result;
 	}
 	

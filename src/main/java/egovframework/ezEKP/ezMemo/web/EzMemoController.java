@@ -7,16 +7,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-
-
-
-
-
-
-
-
-
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -33,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -71,26 +62,40 @@ public class EzMemoController {
 	 * 메모 호출
 	 * */
 	@RequestMapping(value = "/ezMemo/memoMain.do")
-	public String memoMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String memoMain(String order, String searchInput, String startDate, String endDate, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMain started.");
 		
 		String brdID = "8";
+		order = order != null ? order : "0";		// 메모함 선택
+		searchInput = searchInput != null ? searchInput : "";		// 검색 사용 시 검색 단어
+		startDate = startDate != null ? startDate : "";				// 검색 사용 시 시작일
+		endDate = endDate != null ? endDate : "";					// 검색 사용 시 종료일
 		
 		if (request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
 		}
 		
+		logger.debug("order : " + order + ", searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_Id",userInfo.getId());
+		param.put("order", order);
+		param.put("searchInput", searchInput);
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
+		
 		String status = resultBody.get("status").toString();
 		
-		if (status.equals("ok")) {			
-		
-		/*	JSONArray list = (JSONArray) resultBody.get("data");
-			model.addAttribute("list", list);*/
-			
+		if (status.equals("ok")) {		
+				JSONArray memoList = (JSONArray) resultBody.get("memoList");
+				
+				model.addAttribute("memoList", memoList);
 		}
 		
 		
@@ -115,16 +120,15 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
+		param.put("user_Id",userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		String memoCount = resultBody.get("memoCount").toString();
-		
-		if (status.equals("ok")) {			
-			JSONArray folders = (JSONArray) resultBody.get("data");
-			model.addAttribute("folders", folders);
-			model.addAttribute("memoCount", memoCount);
+		if (status.equals("ok")) {		
+				JSONArray folders = (JSONArray) resultBody.get("data");
+				model.addAttribute("folders", folders);
+				model.addAttribute("memoCount", memoCount);
 		}
 			
 		logger.debug("memoFoldersInfo ended");
@@ -188,7 +192,6 @@ public class EzMemoController {
 
 	}
 	
-	
 	/**
 	 * 메모함 생성, 수정, 삭제
 	 * @param loginCookie
@@ -223,4 +226,57 @@ public class EzMemoController {
 		return "json";
 	}
 
+	@RequestMapping(value = "/ezMemo/setLayerArea.do")
+	public String setLayerArea(@CookieValue("loginCookie") String loginCookie,  String layerWidth, String layerHeight, HttpServletRequest request) throws Exception {
+		logger.debug("setLayerArea start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+
+		double width = Double.parseDouble(layerWidth);
+		double height = Double.parseDouble(layerHeight);
+		
+		param.put("layer_width", width);
+		param.put("layer_height", height);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerArea/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("상태: " + status);
+		logger.debug("setLayerArea end");
+		return status;
+	}
+	
+	@RequestMapping(value = "ezMemo/setLayerPosition.do")
+	public String setLayerPosition(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request) throws Exception {
+		logger.debug("setLayerPosition start");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		
+		int topPIndex = layerTop.indexOf('p');
+		int leftPIndex = layerLeft.indexOf('p');
+		String top = layerTop.substring(0, topPIndex);
+		String left = layerLeft.substring(0, leftPIndex);
+		int topPositon = Integer.parseInt(top);
+		int leftPosition = Integer.parseInt(left);
+
+		param.put("layer_top", topPositon);
+		param.put("layer_left", leftPosition);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerPosition/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("상태: " + status);
+		logger.debug("setLayerPosition end");
+		return status;
+	}
 }

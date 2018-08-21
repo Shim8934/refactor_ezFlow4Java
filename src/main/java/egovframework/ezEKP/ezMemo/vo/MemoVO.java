@@ -23,7 +23,7 @@ public class MemoVO {
 	/** 메모지 색상 아이디*/
 	private int color_id;
 	/** UTC offset*/
-	private String offset;
+	//private String offset;
 	/** 컴퍼니 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -42,10 +42,10 @@ public class MemoVO {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public String getUserId() {
+	public String getUser_id() {
 		return user_id;
 	}
-	public void setUserId(String user_id) {
+	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
 	public int getDisplay_flag() {
@@ -90,12 +90,6 @@ public class MemoVO {
 	public void setColor_id(int color_id) {
 		this.color_id = color_id;
 	}
-	public String getOffset() {
-		return offset;
-	}
-	public void setOffset(String offset) {
-		this.offset = offset;
-	}
 	public String getCompany_id() {
 		return company_id;
 	}
@@ -108,5 +102,14 @@ public class MemoVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
+/*	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
+	}*/
+	
+	
+	
 	
 }
