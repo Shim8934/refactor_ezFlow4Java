@@ -2314,7 +2314,16 @@
 	             WHERE  
 	             		DOCID = #v_PDOCID#
 	             AND 
-	             		RECEIVEDDEPTID = #v_PDEPTID#
+         				(RECEIVEDDEPTID = #v_PDEPTID#
+	             			OR
+	             		RECEIVEDDEPTID = (SELECT
+	             							EXTENSIONATTRIBUTE4
+	             						  FROM
+	             						  	TBL_DEPTMASTER
+	             						  WHERE
+	             						  	CN = #v_PDEPTID#
+	             						  AND
+	             						  	TENANT_ID = #v_TENANTID#))
 	             AND
 						TENANT_ID = #v_TENANTID#
 				 AND
@@ -23746,9 +23755,9 @@
 								AND 
 									XTOCODE = #xToCode#	
 								AND 
-									B.HREF IS NULL
+									(B.HREF IS NULL
 								OR 
-									B.HREF = '') A)
+									B.HREF = '')) A)
 	  </delete>
 	  
 	  <delete id="EzApprovalG.deleteRelayAprDocInfo" parameterClass="Map" >
@@ -23780,9 +23789,9 @@
 								AND 
 									XTOCODE = #xToCode#	
 								AND 
-									B.HREF IS NULL
+									(B.HREF IS NULL
 								OR 
-									B.HREF = '') A)
+									B.HREF = '')) A)
 	  </delete>
 	  
 	  <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
@@ -23941,7 +23950,7 @@
 	  	INSERT INTO TBL_APRDOCINFO 
 	  		(DOCID,   FORMID, ORGDOCID, DOCTYPE, DOCSTATE, FUNCTIONTYPE, HREF, DOCTITLE, DOCNO, HASATTACHYN, HASOPINIONYN, STARTDATE, ENDDATE, WRITERID, WRITERNAME, WRITERNAME2, WRITERJOBTITLE, WRITERJOBTITLE2, WRITERDEPTID, WRITERDEPTNAME, WRITERDEPTNAME2, ISPUBLIC, COMPANYID, TENANT_ID)
 		VALUES 
-			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',        '',         '',            '',            '',               '',            '',             '',           'Y', #companyID#, #v_TENANTID#)
+			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',   #strWriterName#, #strWriterName#, '',    '',              '',            #strWriterDept#, #strWriterDept#, 'Y',    #companyID#, #v_TENANTID#)
 	  </insert>
 	  
 	  <insert id="EzApprovalG.insertRelayExpAprDocInfo" parameterClass="Map">
@@ -23982,9 +23991,9 @@
 		  AND 
 		  	XTOCODE = #XTOCODE#
 		  AND 
-			DOCID = ''
+			(DOCID = ''
 		  OR 
-		  	DOCID IS NULL
+		  	DOCID IS NULL)
 	  </update>
 	  
 	  <update id="EzApprovalG.updateRecExchInfo" parameterClass="Map">
@@ -23999,9 +24008,9 @@
 		  AND
 		  	PACKDOCID = #XDOCID#
 		  AND 
-		  	DOCID = ''
+		  	(DOCID = ''
 		  OR 
-		  	DOCID IS NULL
+		  	DOCID IS NULL)
 	  </update>
 	  
 	  <update  id="EzApprovalG.updateRecRelayInfoRollback" parameterClass="Map">
