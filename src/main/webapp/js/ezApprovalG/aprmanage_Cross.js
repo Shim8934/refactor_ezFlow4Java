@@ -1831,7 +1831,7 @@ function setbuttonenable() {
             }
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
-            document.getElementById("tbtnNonElecRec").style.display = "";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
         }
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
