@@ -624,7 +624,8 @@
 	</insert>
 	
 	<insert id="EzOrganAdminDAO.insertCompanyInfo_I1" parameterClass="Map">
-      <![CDATA[
+	  <isEqual property="PrimaryLang" compareValue="1" >
+	    <![CDATA[
         INSERT ALL
 			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
 			VALUES ( 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6','top',1,'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
@@ -642,7 +643,29 @@
 			VALUES ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
 		SELECT *
 		FROM   DUAL
-      ]]>
+        ]]>
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+        <![CDATA[
+        INSERT ALL
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6','top',1,'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3','top',1,'標準ポータルページテーマ A','標準ポータルページテーマ A',#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# )
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( 'd6e9c786-3af3-4c46-809d-267c2fd96976','top',1,'d6e9c786-3af3-4c46-809d-267c2fd96976',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( 'd8dc7da6-7572-4853-801a-14072d823c65','top',1,'d8dc7da6-7572-4853-801a-14072d823c65',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( 'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c','top',1,'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( '054a5b35-d8d5-4b07-9e47-d7820bf59435','top',1,'054a5b35-d8d5-4b07-9e47-d7820bf59435',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+			INTO TBL_PORTALPAGE_GENERAL ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+			VALUES ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
+		SELECT *
+		FROM   DUAL
+        ]]>
+      </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I2" parameterClass="Map">
@@ -656,6 +679,7 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I3" parameterClass="Map">
+      <isEqual property="PrimaryLang" compareValue="1" >
       <![CDATA[
         INSERT ALL
 		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
@@ -689,16 +713,63 @@
 	    SELECT * 
 	    FROM DUAL
       ]]>
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+      	<![CDATA[
+        INSERT ALL
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( 'c06b1862-ce83-4472-91d7-fd92cee3a7ac','PhotoBoard_Portlet','en_포토게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac',null,'0         ','1         ',225,'0',#companyID#,null,null,548,'iFrame    ',#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( 'c08c6efa-7494-4185-b1dc-09ecc908f683','Notice_portlet','en_공지게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683',' ','0         ','1         ',225,'0',#companyID#,null,null,280,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( 'c1479aa0-824d-43ff-a7f6-999ad660378a','Banner_TopUser_Portlet','en_배너_우수사원_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c1479aa0-824d-43ff-a7f6-999ad660378a',' ','0         ','1         ',225,'0',#companyID#,null,null,330,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( 'f90b6413-c94c-4c6f-abe5-39480da308f1','Community_Portlet','en_우수커뮤니티_포틀릿',1,'/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1',' ','0         ','1         ',235,'0',#companyID#,null,null,330,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3','SlideImage_Portlet','en_슬라이드이미지_포틀릿',1,'/ezPortal/urlPortlet.do?uID=0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3',' ','0         ','1         ',225,'0',#companyID#,null,null,517,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '69f68282-5617-45ca-9118-27b6170df5c3','Photo_Birthday_Total_Portlet','포토_생일 통합 포틀릿_en',1,'/ezPortal/urlPortlet.do?uID=69f68282-5617-45ca-9118-27b6170df5c3',' ','0         ','1         ',240,'0',#companyID#,null,null,1150,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '73c0940e-5d44-4edc-bfa3-822fd6fd17b5','Notice_Slide_Total_Portlet','공지_슬라이드_이모저모 통합 포틀릿_en',1,'/ezPortal/urlPortlet.do?uID=73c0940e-5d44-4edc-bfa3-822fd6fd17b5',' ','0         ','1         ',240,'0',#companyID#,null,null,1150,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '7851b606-aa1c-4f96-ba9b-562432b922a6','ApprovalUse_Portlet','en_결재사용현황_포틀릿',1,'/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6',' ','0         ','1         ',225,'0',#companyID#,null,null,348,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '8af6e9a5-0970-45a9-9495-ba0c7a9163fd','Approval_Mail_Total_Portlet','en_결재_메일 통합 포틀릿',1,'/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd',' ','0         ','1         ',235,'0',#companyID#,null,null,797,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '8fd70c9a-83b2-4294-a57b-9a59abe3850d','QuestionStatistic_Portlet','en_설문통계_포틀릿',1,'/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d',' ','0         ','1         ',225,'0',#companyID#,null,null,265,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '94dfe6d0-043a-4284-bde5-8275aba64d6e','MyBoard_Portlet','en_마이게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e',' ','0         ','1         ',225,'0',#companyID#,null,null,512,null,#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( '9b157fdc-057d-4c5c-b036-f2107adf7f0b','Using_Portlet','en_활용하기_포틀릿',1,'/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b','2345235','0         ','1         ',225,'0',#companyID#,null,null,240,'DIV       ',#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( 'a37406b2-7a0a-48b0-a2a9-aacf811e9bd4','Birthday_Portlet','en_직원생일_포틀릿',1,'/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4',null,'0         ','1         ',225,'0',#companyID#,null,null,338,'DIV       ',#tenantID# )
+		    INTO TBL_PORTLET_GENERAL ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+		    VALUES ( 'a2149765-4c0b-466c-9e61-310925139d3c','UserInfo_Portlet','en_사용자정보통합_포틀릿',1,'/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c',' ','0         ','1         ',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+	    SELECT * 
+	    FROM DUAL
+        ]]>
+      </isNotEqual>
     </insert>
     
    <insert id="EzOrganAdminDAO.insertCompanyInfo_I4" parameterClass="Map">
-      <![CDATA[
+      <isEqual property="PrimaryLang" compareValue="1" >
+      	<![CDATA[
         INSERT INTO
           TBL_THEME_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
           VALUES
             ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),100,#tenantID# )
-      ]]>
+      	]]>
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+      	<![CDATA[
+        INSERT INTO
+          TBL_THEME_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
+          VALUES
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),100,#tenantID# )
+      	]]>
+      </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I5" parameterClass="Map">
@@ -766,6 +837,7 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I9" parameterClass="Map">
+    <isEqual property="PrimaryLang" compareValue="1" >
       <![CDATA[
           INSERT ALL
 		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
@@ -787,6 +859,30 @@
 	    SELECT *
 	    FROM DUAL
       ]]>
+    </isEqual>
+    <isNotEqual property="PrimaryLang" compareValue="1" >
+      <![CDATA[
+          INSERT ALL
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'100', N'稟議', N'Draft',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'200', N'協力', N'Support',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'300', N'監査', N'Audit',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'500', N'受信', N'Receive',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'600', N'合意', N'Agree',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'610', N'発信', N'Send',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'700', N'差し戻し', N'Reject',#tenantID#, #companyID#)
+		    INTO TBL_ContainerType (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+		    VALUES (N'999', N'廃棄', N'Obsolete',#tenantID#, #companyID#)
+	    SELECT *
+	    FROM DUAL
+      ]]>
+    </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I10" parameterClass="Map">

@@ -613,14 +613,25 @@
           TBL_PORTALPAGE_GENERAL
             ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
           VALUES
-            ( #portalItemUID9#,'top',1,#portalItemUID9#,null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( #portalUUID#,'top',1,'標準ポータルページテーマA','標準ポータルページテーマA',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
+      ]]>
+      <isEqual property="PrimaryLang" compareValue="1" >
+   	        ( #portalItemUID9#,'top',1,#portalItemUID9#,null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalUUID#,'top',1,'표준포탈페이지 A 테마','표준포탈페이지 A 테마',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
             ( #portalItemUID0#,'top',1,#portalItemUID0#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
             ( #portalItemUID1#,'top',1,#portalItemUID1#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
             ( #portalItemUID2#,'top',1,#portalItemUID2#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
             ( #portalItemUID3#,'top',1,#portalItemUID3#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
             ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
-      ]]>
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+	        ( #portalItemUID9#,'top',1,#portalItemUID9#,null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalUUID#,'top',1,'標準ポータルページテーマ A','標準ポータルページテーマ A',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
+            ( #portalItemUID0#,'top',1,#portalItemUID0#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID1#,'top',1,#portalItemUID1#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID2#,'top',1,#portalItemUID2#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID3#,'top',1,#portalItemUID3#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
+      </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I2" parameterClass="Map">
@@ -817,6 +828,24 @@
           TBL_PORTLET_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
           VALUES
+      ]]>
+      <isEqual property="PrimaryLang" compareValue="1" >
+      		(#portalItemUID10#,'포토게시판_포틀릿','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
+            (#portalItemUID11#,'공지게시판_포틀릿','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
+            (#portalItemUID12#,'배너_우수사원_포틀릿','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID14#,'우수커뮤니티_포틀릿','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID4#,'슬라이드이미지_포틀릿','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
+            (#portalItemUID17#,'포토_생일 통합 포틀릿','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID15#,'결재사용현황_포틀릿','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
+            (#portalItemUID5#,'결재_메일 통합 포틀릿','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
+            (#portalItemUID6#,'설문통계_포틀릿','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
+            (#portalItemUID16#,'마이게시판_포틀릿','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
+            (#portalItemUID7#,'활용하기_포틀릿','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
+            (#portalItemUID13#,'직원생일_포틀릿','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
+            (#portalItemUID8#,'사용자정보통합_포틀릿','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
             (#portalItemUID10#,'PhotoBoard_Portlet','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
             (#portalItemUID11#,'Notice_portlet','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
             (#portalItemUID12#,'Banner_TopUser_Portlet','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
@@ -831,17 +860,28 @@
             (#portalItemUID7#,'Using_Portlet','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
             (#portalItemUID13#,'Birthday_Portlet','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
             (#portalItemUID8#,'UserInfo_Portlet','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
-      ]]>
+	   </isNotEqual>
     </insert>
     
    <insert id="EzOrganAdminDAO.insertCompanyInfo_I4" parameterClass="Map">
+   	<isEqual property="PrimaryLang" compareValue="1" >
       <![CDATA[
         INSERT INTO
           TBL_THEME_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
           VALUES
-            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','標準ポータルページテーマA ','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
       ]]>
+    </isEqual>
+    <isNotEqual property="PrimaryLang" compareValue="1" >
+   	  <![CDATA[
+        INSERT INTO
+          TBL_THEME_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
+          VALUES
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
+      ]]>
+    </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I5" parameterClass="Map">
@@ -1090,10 +1130,14 @@
     	INSERT INTO 
     		TBL_BOARD_MYBOARDS 
     			(UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID, COMPANYID)
-    		VALUES 
+    		VALUES
+      ]]>
+	  <isEqual property="PrimaryLang" compareValue="1" >    		 
     			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, #tenantID# ,#companyID#)
-	  ]]>
-<!-- 	  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, #tenantID# ,#companyID#) -->
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+      		  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, #tenantID# ,#companyID#)
+      </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
@@ -1135,6 +1179,8 @@
           INSERT INTO
             TBL_ContainerType
               (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+	  ]]>              
+	  <isEqual property="PrimaryLang" compareValue="1" >              
           VALUES
               (N'100', N'품의함', N'Draft',#tenantID#, #companyID#),
               (N'200', N'협조함', N'Support',#tenantID#, #companyID#),
@@ -1144,7 +1190,18 @@
               (N'610', N'발신함', N'Send',#tenantID#, #companyID#),
               (N'700', N'반송함', N'Reject',#tenantID#, #companyID#),
               (N'999', N'폐기함', N'Obsolete',#tenantID#, #companyID#)
-      ]]>
+	  </isEqual>
+	  <isNotEqual property="PrimaryLang" compareValue="1" >
+		    VALUES
+              (N'100', N'稟議', N'Draft',#tenantID#, #companyID#),
+              (N'200', N'協力', N'Support',#tenantID#, #companyID#),
+              (N'300', N'監査', N'Audit',#tenantID#, #companyID#),
+              (N'500', N'受信', N'Receive',#tenantID#, #companyID#),
+              (N'600', N'合意', N'Agree',#tenantID#, #companyID#),
+              (N'610', N'発信', N'Send',#tenantID#, #companyID#),
+              (N'700', N'差し戻し', N'Reject',#tenantID#, #companyID#),
+              (N'999', N'廃棄', N'Obsolete',#tenantID#, #companyID#)
+	  </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I10" parameterClass="Map">
