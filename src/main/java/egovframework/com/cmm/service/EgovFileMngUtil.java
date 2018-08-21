@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.tools.ant.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
+
 
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -575,14 +577,27 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
      */
     public void downImage(String filePath, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String realPath = commonUtil.getRealPath(request);
+        
+        filePath = realPath + filePath;
+        File file = new File(filePath);
+        
+	    // klib 확장자로 끝난다면 downFileForKlib 메소드로 리턴
+        // ezCommon/downloadAttach.do 에서 이 메소드를 호출하기 때문에 전자결재에서 결재완료된 한글 문서를 로드할 때도 사용됨
+	    if (filePath.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+	    	String fileName = file.getName();
+	    	// .ezd 확장자가 제거된 이름으로 다운로드
+	    	fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+	    	
+	    	downFileForKlib(request, response, filePath, fileName);
+	    	return;
+	    }
+        
         BufferedInputStream bis = null;
         OutputStream os = null;
         String contentType = null;
         int fileSize = 0;
         
         try {
-	        filePath = realPath + filePath;
-	        File file = new File(filePath);
 	        fileSize = (int) file.length();
 	        bis = new BufferedInputStream(new FileInputStream(file));
 	        contentType = URLConnection.guessContentTypeFromStream(bis);
