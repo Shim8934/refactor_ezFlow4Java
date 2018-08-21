@@ -557,6 +557,11 @@ function selectedTR(elem){
 	$("#" + selectElem).addClass("selectTR");
 }
 
+function menuQst_DetailUserInfo(pUserID) {
+	var feature = GetOpenPosition(420, 438);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+}
+
 function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 	$("#" + targetPosition).find(".moreBtn").remove();
 	
@@ -784,7 +789,7 @@ function getTaskDetails(elem) {
 			</div>
 			<div class="overview_textbox"><c:out value='${project.overview }'/></div>
 			<ul class="overview_infomationBox">
-				<li style="cursor:default;"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }" />${project.headManagerName }</li>
+				<li onclick="menuQst_DetailUserInfo('${project.headManagerId }')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }"/>${project.headManagerName }</li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>
 				<li onclick="getProjectMember('2')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' /></li>
 				<li onclick="getProjectMember('3')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' /></li>
