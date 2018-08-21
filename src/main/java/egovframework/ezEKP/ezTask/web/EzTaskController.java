@@ -77,9 +77,6 @@ public class EzTaskController extends EgovFileMngUtil {
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
-	@Resource(name="EzCabinetAdminService")
-	private EzCabinetAdminService cabinetAdminService;
-	
 	/**
 	 * 업무관리 메인화면
 	 */
@@ -133,12 +130,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
-		
-		//baonk 추가 2018-08-08
-		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
-		if (use_cabinet.equals("YES")) {
-			use_cabinet = cabinetAdminService.checkModuleActive("todo", userInfo);
-		}
 		
 		String taskID = request.getParameter("taskID");		
 		String date = request.getParameter("date"); //클릭한 날짜
@@ -293,7 +284,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeRateList", completeRateList);
 		model.addAttribute("statusList", statusList);	
 		model.addAttribute("repeatCntList", repeatCntList);
-		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		return "/ezTask/taskRead";
 	}

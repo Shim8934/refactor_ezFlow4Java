@@ -80,7 +80,7 @@
 					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
 					var fogPanel                         = document.getElementById("fogPanel");
 					fogPanel.style.display               = "block";
-					cabinetMainDiv.style.backgroundColor = "#f1f1f1";
+					cabinetMainDiv.style.backgroundColor = "#8c8c8c";
 				}
 				
 				function manualSelect(){
