@@ -268,6 +268,10 @@
 		if (nowStatus != "C" && status === "C") {
 			realEndDate = TimeToStr(new Date());			
 			realProgress = 100;
+			
+			if (!realStartDate) {
+				realStartDate = TimeToStr(new Date());
+			}
 		}
 		
 		//진행률을 100%로 변경했을 경우 status는 C로 변경하여 자동 완료처리
@@ -278,19 +282,20 @@
 			if (!realEndDate) {
 				realEndDate = TimeToStr(new Date());
 			}
+			
+			if (!realStartDate) {
+				realStartDate = TimeToStr(new Date());
+			}
 		} else if (nowStatus != "L" && (realProgress > 0 && realProgress < 100)) {
 			if (nowStatus == status) {
 				//업무 상태가 보류, 진행, 대기, 완료인 경우 진행률을 수정하면 업무가 진행상태로 변경됨
 				status = "P";
-				realEndDate = "";
-				console.log("here!!");
-				console.log(realEndDate);
-				console.log(status);
-				
+				realEndDate = "";				
 				
 				if (!realStartDate) {
 					realStartDate = TimeToStr(new Date());
 				}
+				
 			}
 			
 		}
