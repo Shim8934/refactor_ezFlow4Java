@@ -110,8 +110,7 @@ var buttons = (function() {
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var result = data.resultValue;
-					
+					var result = data.status;
 					if (result != "ok") {
 						alert(messages.strLang13);
 					} else {
