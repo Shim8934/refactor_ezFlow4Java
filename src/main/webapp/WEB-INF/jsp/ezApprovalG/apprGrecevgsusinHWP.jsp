@@ -239,8 +239,6 @@
 		            SetAutoPropertyValue();
 		
 		            var rtnVal = ExcuteInfo("INIT", "");
-		            if (!rtnVal) {
-		            }
 		        }
 		        catch (e) {
 		            alert("setAutoProperty : " + e.description);
