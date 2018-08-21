@@ -28,4 +28,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public void setMemoConfig(Map<String, Object> map) throws Exception {
 		update("EzMemoDAO.setMemoConfig", map);
 	}
+	
+	public void addMemoFolder(Map<String, Object> map) throws Exception {
+		insert("EzMemoDAO.addMemoFolder", map);
+	}
 }

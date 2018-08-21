@@ -25,23 +25,43 @@
 	
 	<select id="EzMemoDAO.getMemoFolderInfo" resultClass="MemoFolderVO">
 		<![CDATA[
-			SELECT 
-				A.FOLDER_ID, B.FOLDER_NAME, COUNT(A.FOLDER_ID) AS COUNT 
-			FROM 
-				TBL_MEMO A 
-			JOIN 
-				TBL_MEMO_FOLDER B 
-			ON A.FOLDER_ID = B.FOLDER_ID 
-			WHERE 
-				A.TENANT_ID = #tenant_id# 
-			AND 
-				A.USER_ID = #user_id#
-			AND 
-				A.COMPANY_ID = #company_id# 
-			AND 
-				A.DELETE_FLAG=0
-			GROUP BY
-				A.FOLDER_ID;
+			SELECT
+				C.FOLDER_ID, C.FOLDER_NAME, IFNULL(D.COUNT, 0) AS COUNT 
+			FROM (
+				SELECT 
+					A.FOLDER_ID, A.FOLDER_NAME
+				FROM
+					TBL_MEMO_FOLDER A
+				LEFT OUTER JOIN
+					TBL_MEMO B
+				ON
+					A.FOLDER_ID = B.FOLDER_ID
+				WHERE 
+					A.TENANT_ID = #tenant_id#
+				AND 
+					A.USER_ID = #user_id#
+				AND 
+					A.COMPANY_ID = #company_id# 
+				GROUP BY
+					A.FOLDER_ID	) C
+			LEFT OUTER JOIN   
+			(
+				SELECT 
+					D.FOLDER_ID, COUNT(*) AS COUNT
+				FROM 
+					TBL_MEMO D
+				WHERE 	
+					TENANT_ID = #tenant_id#
+				AND 
+					USER_ID = #user_id#
+				AND 
+					COMPANY_ID = #company_id#
+				AND
+					DELETE_FLAG = 0
+				GROUP BY
+					FOLDER_ID) D
+ 			ON      
+				C.FOLDER_ID = D.FOLDER_ID
 		]]>
 	</select>
 	
@@ -74,4 +94,23 @@
 				USER_ID = #user_id#
 		]]>
 	</update>
+	
+	<insert id="EzMemoDAO.addMemoFolder" parameterClass="map">
+		INSERT INTO 
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID)
+		VALUES
+			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#)
+		<selectKey keyProperty="folder_id" resultClass="Integer" type="pre">
+			SELECT 
+				MAX(FOLDER_ID)+1 
+			FROM 
+				TBL_MEMO_FOLDER
+			WHERE 
+				USER_ID = #user_id#
+			AND
+				TENANT_ID = #tenant_id#
+			AND 
+				COMPANY_ID = #company_id# 
+		</selectKey>
+	</insert>
 </sqlMap>

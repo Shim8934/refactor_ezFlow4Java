@@ -45,39 +45,45 @@
                 }
 	        }
 	        
-	        function btn_ok_onclick() {
-	            /* var folderName = txt_FolderName.value;
-	            var specialChar = /[&\<>\'\"]/gi;
-	            var folderNameArr = folderNameList.split(";");
-
-	            if (folderName == "") {
-	            	alert("<spring:message code='ezCircular.t58'/>")
+			function btn_ok_onclick() {	
+	        	var folderName = txt_FolderName.value;
+	        	var specialChar = /[&\<>\'\"]/gi;
+	        	var folderNameArr = folderNameList.split(";");
+	        	
+				if (folderName == "") {
+	            	alert("<spring:message code='ezMemo.t0033'/>")
 	            	return;
 	            }
-	            
-	            if (specialChar.test(folderName)) {
-	            	alert("<spring:message code='ezCircular.t187'/>");
+	        	
+				if (specialChar.test(folderName)) {
+	            	alert("<spring:message code='ezMemo.t0034'/>");
 	            	return ;
 	            }
-
-	            if ($.trim($("#txt_FolderName").val()) == "") {
-		        	alert("<spring:message code='ezCircular.t191' />");
+				
+				if ($.trim($("#txt_FolderName").val()) == "") {
+		        	alert("<spring:message code='ezMemo.t0035' />");
 		        	doubleSubmitFlag = false;
-
 		        	return;
 		        }
-
-	            for (var i=0; i<folderNameArr.length; i++) {
-	            	if (folderNameArr[i] == folderName) {
-	            		alert("<spring:message code='ezCircular.t186'/>");
-		            	return;	
-	            	}
-	            }
-
+				
+				for (var i=0; i<folderNameArr.length; i++) {
+		        	if (folderNameArr[i] == folderName) {
+		            	alert("<spring:message code='ezMemo.t0036'/>");
+			            return;	
+		            }
+				}
+				
+				var url = "";
+				var method = "";
 	            if (FolderId == "") {
-	            	url = "/ezCircular/circularFolderAdd.do"; 
+	            	url = "/ezMemo/memoFolderAction.do"; 
+	            	method = "post";
 	            } else {
-	            	url = "/ezCircular/circularFolderModify.do?FolderId=" + FolderId;
+	            	/**
+	            	구현해야됨
+	            	*/
+	            	url = "/ezMemo/memoFolderAction.do?folder_id=" + FolderId;
+	            	method = "put";
 	            }
 	            
 				$.ajax({
@@ -86,15 +92,17 @@
 					async : false,
 					url : url,
 					data : {
-						folderName : folderName
+						"folder_name" : folderName,
+						"methodType" : method
 					},
 					success : function() {
+						parent.memoFoldersInfo();
 						ReturnFunction();
 					},
 					error : function() {
-						alert("<spring:message code='ezCircular.t102' />");	
+						alert("<spring:message code='ezMemo.t0037' />");	
 					}
-				}) */
+				}) 
 	        }
 	        
 	        function btn_cancel_onclick() {

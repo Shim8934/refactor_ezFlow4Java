@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.web.EzJournalGWController;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
@@ -97,6 +98,63 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", memoFolders);
 			result.put("memoCount", memoCount);
+		} catch(Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezMemo/folders/names/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoFolderNames(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/names/users/]" +userId + " started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			memoFolderVO.setTenant_id(info.getTenantId());
+			
+			List<MemoFolderVO> memoFolders  = ezMemoService.getMemoFolderInfo(memoFolderVO);
+			String folderNameList = "";
+
+			for (int i=0; i<memoFolders.size(); i++) {
+				folderNameList += memoFolders.get(i).getFolder_name() + ";";
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", folderNameList);
+		} catch(Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/names/users/] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoFoldersAdd(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/]" +userId + " started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			memoFolderVO.setTenant_id(info.getTenantId());
+			
+			ezMemoService.addMemoFolder(memoFolderVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
 		} catch(Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

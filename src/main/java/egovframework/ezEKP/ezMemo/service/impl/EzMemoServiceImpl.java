@@ -89,4 +89,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoConfig ended.");
 	}
 
+	@Override
+	public void addMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("addMemoFolder started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("folder_name", memoFolderVO.getFolder_name());
+		map.put("reg_date", commonUtil.getTodayUTCTime(""));
+		ezMemoDAO.addMemoFolder(map);
+		logger.debug("addMemoFolder ended.");
+	}
 }

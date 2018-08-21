@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezMemo.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+
 
 
 
@@ -34,8 +37,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.web.EzLadderController;
+import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -138,13 +143,8 @@ public class EzMemoController {
 	@RequestMapping(value = "/ezMemo/memoFolderManage.do")
 	public String memoFolderManage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoFolderManage started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-	
 		logger.debug("memoFolderManage ended");
 		return "ezMemo/memoFolderManage";
-
 	}
 	
 	/**
@@ -158,12 +158,22 @@ public class EzMemoController {
 	 */
 	@RequestMapping(value = "/ezMemo/memoInputName.do")
 	public String memoInputName(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("memoFolderManage started");
+		logger.debug("memoInputName started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("user_id",userInfo.getId());
 		
-	
-		logger.debug("memoFolderManage ended");
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/names/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			String folderNameList = resultBody.get("data").toString();
+			model.addAttribute("folderNameList", folderNameList);
+		}
+		logger.debug("memoInputName ended");
 		return "ezMemo/memoInputName";
 
 	}
@@ -177,4 +187,40 @@ public class EzMemoController {
 		return "ezMemo/memoRead";
 
 	}
+	
+	
+	/**
+	 * 메모함 생성, 수정, 삭제
+	 * @param loginCookie
+	 * @param modelMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/memoFolderAction.do")
+	public String memoFolderAdd(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id, String folder_name) throws Exception {
+		logger.debug("memoFolderAction started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("user_id",userInfo.getId());
+		param.put("folder_name",folder_name);
+		if(!methodType.equals("post")) {
+			param.put("folder_id", folder_id);
+		}
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, methodType, null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			String folderNameList = resultBody.get("data").toString();
+			model.addAttribute("folderNameList", folderNameList);
+		}
+		logger.debug("memoFolderAction ended.");
+		return "json";
+	}
+
 }

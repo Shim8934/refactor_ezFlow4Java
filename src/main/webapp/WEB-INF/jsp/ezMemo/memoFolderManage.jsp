@@ -40,13 +40,12 @@
             
 		    function modify_onclick() {
 		     
-		        
 		        inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
 		        inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
-		        inputNameDlg_cross_dialogArguments[2] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-		        inputNameDlg_cross_dialogArguments[3] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        inputNameDlg_cross_dialogArguments[2] = "";//PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
+		        inputNameDlg_cross_dialogArguments[3] = "";// PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
     
-		        DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
+		        DivPopUpShow(330, 200, "/ezMemo/memoInputName.do");
 		    }
 		    
 		    function onclick_Complete(szName) {
@@ -113,6 +112,7 @@
 						$('.memoFolders').append(html);
 					}     			
 				});
+		    	opener.memoFoldersInfo();
 		    }
         </script>
 	</head>
