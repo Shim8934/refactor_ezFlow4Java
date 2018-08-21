@@ -25952,11 +25952,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
              Document objXML = commonUtil.xmlLod(strSamplePath);
 
-             strFileName = strReceiveID + strSendID + strTimeStamp;
+             strFileName = strSendOrgCode + strSendID + strTimeStamp;
              strFileName = getFileName(realPath, strFileName, "send", tenantID);
 
              objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strSendOrgCode);
-             objXML.getElementsByTagName("send-id").item(0).setTextContent(strReceiveID);
+             objXML.getElementsByTagName("send-id").item(0).setTextContent(strSendOrgCode);
              objXML.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(strSendName.getBytes("euc-kr")));
              objXML.getElementsByTagName("receive-id").item(0).setTextContent(strSendID);
              objXML.getElementsByTagName("date").item(0).setTextContent(strTime);
