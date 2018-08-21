@@ -273,7 +273,7 @@
 				divName.textContent = path[i] ;
 				divName.setAttribute("title", path[i]);
 				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-				divName.setAttribute("style", "font-size:15px; ");
+				divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
 				
