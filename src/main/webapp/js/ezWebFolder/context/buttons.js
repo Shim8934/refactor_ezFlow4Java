@@ -111,8 +111,9 @@ var buttons = (function() {
 				async: true,
 				success : function(data) {
 					var result = data.status;
+					
 					if (result != "ok") {
-						alert(messages.strLang13);
+						alert(messages.strLang30);
 					} else {
 						openLeftPanel();
 						DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
