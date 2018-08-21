@@ -2250,6 +2250,7 @@
 		<isNotEqual property="status" compareValue="P">
 		<isEqual property="status" compareValue="C">
 			<![CDATA[
+				REAL_START_DATE = IFNULL(REAL_START_DATE, #changeDate#),
 				REAL_END_DATE = #changeDate#,
 				PROGRESS = #progress#,
 				REST_DUEDAY = #restDueday#
