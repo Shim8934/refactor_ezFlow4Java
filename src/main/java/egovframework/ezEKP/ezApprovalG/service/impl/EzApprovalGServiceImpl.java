@@ -3748,7 +3748,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getListXML(String groupID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
+	public String getListXML(String groupID, String lang, String companyID, int tenantID, Locale locale, String approvalFlag) throws Exception {
 		logger.debug("getListXML started");
 
 		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
@@ -3820,7 +3820,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (primaryData.equals("1")) {
 				if (useReceiveInfoName.equals("1")) {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent() + messageSource.getMessage("ezApprovalG.lhj18",  locale))) + "</VALUE>");
 				} else if (useReceiveInfoName.equals("2")) {
 					//추가 개발시 변경
 					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
@@ -3940,8 +3940,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception {
+	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, Locale locale, String approvalFlag) throws Exception {
 		logger.debug("addToAprDept started");
+		
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
 
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
@@ -3995,7 +3997,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String langData = commonUtil.getMultiData(lang, tenantID);
 		resultXML.append("<ROWS>");
 		
-		for (int k = 0; k < dlength; k++) {
+		/*for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 			
 			for (int p = 0; p < hlength; p++) {
@@ -4023,6 +4025,57 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME2").item(k).getTextContent()) + "]]></DATA11>");
 					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA12>");
 					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA13>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}*/
+		
+		//2018-08-21 수신자명 옵선화 처리를 위해 수정
+		for (ApprGReceiptVO vo : apprGReceiptVOList) {
+			resultXML.append("<ROW>");
+			
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("RECEIPTPOINTNAME") || fieldName.equals("RECEIPTMEMBERNAME") || fieldName.equals("RECEIPTMEMBERJOBTITLE")) {
+					fieldName = fieldName + langData;
+				}
+				
+				for(Field field : vo.getClass().getDeclaredFields()) {
+		            if (field.getName().equalsIgnoreCase(fieldName) ) {
+				    	field.setAccessible(true);
+				    	fieldValue = (field.get(vo) != null ? commonUtil.cleanValue(String.valueOf(field.get(vo))) : "");
+		            }
+		        }
+				
+				if (useReceiveInfoName.equals("1")) {
+					if (vo.getReceiptMemberName().equals("") && !vo.getReceiptPointName().equals("") && fieldName.equals("RECEIPTPOINTNAME")) {
+						fieldValue += messageSource.getMessage("ezApprovalG.lhj18", locale);
+					}
+				} else if (useReceiveInfoName.equals("2")) {
+				} else {
+				}
+				
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + makeListField(vo.getReceiptPointID()) + "</DATA1>");
+					resultXML.append("<DATA2>" + "" + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(vo.getExtReceptYN()) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(vo.getProcessYN()) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(vo.getCanEditYN()) + "</DATA5>");
+					resultXML.append("<DATA6>" + makeListField(vo.getExtRecepteMail()) + "</DATA6>");
+					resultXML.append("<DATA7>" + makeListField(vo.getReceiptMemberID()) + "</DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + makeListField(vo.getReceiptMemberName()) + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle()) + "]]></DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + makeListField(vo.getReceiptPointName()) + "]]></DATA10>");
+					resultXML.append("<DATA11><![CDATA[" + makeListField(vo.getReceiptPointName2()) + "]]></DATA11>");
+					resultXML.append("<DATA12><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle()) + "]]></DATA12>");
+					resultXML.append("<DATA13><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle()) + "]]></DATA13>");
 				}
 				
 				resultXML.append("</CELL>");
