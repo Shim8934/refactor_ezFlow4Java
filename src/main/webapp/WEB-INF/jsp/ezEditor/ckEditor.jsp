@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -68,16 +67,52 @@
 	            } catch (e) { return ""; }
 			}
 			
-			function SetEditorTextContent(Data) {
+			function SetEditorTextContent(data) {
 	            try {
-	                return CKEDITOR.instances.editor1.editable().$.innerText = Data;
-	            } catch (e) { return ""; }
+	            	data = data.replace(/&/gi, "&amp;");
+	            	data = data.replace(/</gi, "&lt;");
+	            	data = data.replace(/>/gi, "&gt;");
+	 	            
+	 	    		var line = data.split("\n");
+	 	            var textData = "";
+	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
+	 	            
+	 	            for (var i = 0; i < line.length; i++) {
+	 	            	if (line[i].trim() === "") {
+	 	            		line[i] = "&nbsp;";
+	 	            	}
+	 	            	
+ 	            		textData += "<p " + defaultFontAndSize + ">" + line[i] + " " + "</p>";
+	 	            }
+	            	
+	            	CKEDITOR.instances.editor1.setData(textData);
+	            } catch (e) { }
 	        }
 			
 			function GetEditorTextContent() {
 	            try {
-	                //return CKEDITOR.instances.editor1.editable().$.outerText;
-	            	return CKEDITOR.instances.editor1.document.getBody().getText();
+            	    var resultStr = CKEDITOR.instances.editor1.getData();
+            	    
+            	    resultStr = resultStr.replace(/\r\n/gi, "");
+            	    resultStr = resultStr.replace(/\n/gi, "");
+            	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+            	    resultStr = resultStr.replace(/<p>/gi, "\n");
+            	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
+            	    resultStr = resultStr.replace(/<br>/gi, "\n");
+            	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+            	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
+            	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
+            	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
+            	    resultStr = resultStr.replace(/<.*?>/gi, "");
+            	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
+            	    resultStr = resultStr.replace(/&lt;/gi, "<");
+            	    resultStr = resultStr.replace(/&gt;/gi, ">");
+            	    resultStr = resultStr.replace(/&quot;/gi, "\"");
+            	    resultStr = resultStr.replace(/&#39;/gi, "'");
+            	    resultStr = resultStr.replace(/&amp;/gi, "&");
+            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
+					
+            	    return  resultStr;
 	            } catch (e) { return ""; }
 	        }
 			

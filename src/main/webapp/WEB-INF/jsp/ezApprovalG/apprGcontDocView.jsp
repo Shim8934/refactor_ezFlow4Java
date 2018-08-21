@@ -64,6 +64,7 @@
 		    var docState = "${docState}";
 		    var WhoKyulCNT = "${whoKyulCount}";
 		    var checkPwdFlag = "${checkPwdFlag}";
+		    var ext = "${ext}";
 		    var opinionFlag;
 		    var includeOpinion = false;
 		    var signImageType = "${signImageType}";
@@ -212,7 +213,7 @@
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != 'hwp') {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -352,7 +353,7 @@
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
+		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "mht" );
 		    }
 		      
 		    function btnhistory_onclick_Complete() {

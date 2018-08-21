@@ -31,8 +31,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js?ver=0.1')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js?ver=0.2')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfoCB_Cross.js')}"></script>
@@ -92,6 +92,7 @@
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
 			    var pOpenYaer = "${openYear}";
 		        var vWriterID;
+		        var ext= "";
 		        document.onselectstart = function () { return false; };
 		
 		        $(function () {
@@ -866,6 +867,7 @@
 		            InitGlobals("RECORD", "0", "1");
 		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + tr.getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
 		            GetRecordList();
+		            $("#tdViewCabList").show();
 		        }
 		        else {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t513'/>");
@@ -1068,14 +1070,15 @@
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
-		
-		        if (CrossYN()) {
+
+		        if (CrossYN() && ext != 'hwp') {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
 		            
+		            ezapropinion_cross_dialogArguments[2] = true;
 		            var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -1579,6 +1582,28 @@
 			            }
 			        }
 			    }
+		     
+			    function GetEndYConfirmList() {
+			    	switch (g_sFlag) {
+				    	case "m02":
+				    		isPeriodYear = false;
+		                    CabinetList_onclick();
+		                    break;
+		                    
+			    		case "m07" :
+			    			isPeriodYear = false;
+			    			DelayEndYRequest_onclick();
+			    			break;
+			    		
+			    		case "m08" :
+			    			isPeriodYear = false;
+			    			ArrTargetList_onclick();
+			    			break;
+			    		
+			    		default :
+							return;				    			
+			    	}
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1637,6 +1662,7 @@
 	            <li id="tdbtnSetRecRole" style="Display: None"><span id="btnSetRecRole" onclick="return btnSetRecUserRole_onclick()"><spring:message code='ezApprovalG.t944'/></span></li>
 	            <li id="tdbtnViewRecReadHist" style="Display: None"><span id="btnViewRecReadHist" onclick="return btnViewRecReadHist_onclick()"><spring:message code='ezApprovalG.t945'/></span></li>
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
+	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 	            <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdVeiwRecHist" style="Display: None"><span id="VeiwRecHist" onclick="return btnViewRecHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">

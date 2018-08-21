@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -32,7 +31,8 @@
 			
 			window.onload = function() {
 				closeAllPopup();
-				tableView.setTableId("tblFileStorage");
+				tableView.setTableId("tblFileList");
+				tableView.setTabledHeader("tblFileList1");
 				tableView.setTableType("configTable");
 				tableView.setSelectedClass("bnkWebFolder2");
 				tableView.setUnselectClass("bnkWebFolder");
@@ -46,9 +46,10 @@
 			}
 			
 			function preProcessing() {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 190;
+				var divList          = document.getElementById("dragDropArea");
+				var reheight         = document.documentElement.clientHeight - 220;
 				divList.style.height = reheight + "px";
+				scroll();
 			}
 			
 			function keyPressPanel(e) {
@@ -133,6 +134,7 @@
 			function renderData(result) {
 				tableView.setDataSource(result);
 				tableView.renderTable();
+				scroll();
 			}
 			
 			function initProgressBar(barID, color, completerate) {
@@ -361,7 +363,31 @@
 				returnValue[1] = pleftpos / 2;
 				return returnValue;
 			}
-			
+			function scroll() {
+				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+				
+				 if (BoardList_BODYHeight > BoardListDivHeight) {
+					if ($("#tblFileList1 tr th#forScroll").length > 0) {
+						$("#tblFileList1 tr th#forScroll").remove();
+					}
+				} else {
+					if ($("#tblFileList1 tr th#forScroll").length < 1) {
+						$("#tblFileList1 tr th#forScroll").remove();
+						$("#tblFileList1 tr").append("<th></th>");
+						
+							var lastTh = $("#tblFileList1 tr th").last();
+							lastTh.attr("id", "forScroll");
+							lastTh.css("width", "15px");
+							
+					}
+				}
+				 
+				/*var lastTh = $("#BoardList_TH th").last();
+				if (lastTh.attr("id") == null) {
+					lastTh.css("display", "none");
+				}*/
+			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -387,36 +413,29 @@
 							<li><a id="btnRefresh" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 						</ul>
 					</div>
-					<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: white; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
-						<div style="margin: 20px;">
-							<table style="border-collapse: collapse; width: 458px;">
+					<div id="searchPanel" class="popup wfpersonal" style="display: none;">
+						<h1><spring:message code='ezWebFolder.t23'/></h1> 
+						<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
+						<div style="margin: 10px 0px 15px;">
+							<table class="content wftable">
 								<tr>
-									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
-								</tr>
-								<tr>
-									<td class="wfSearchTh2" colspan="2"></td>
-								</tr>
-								<tr>
-									<th style="height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
+									<th><spring:message code='ezWebFolder.t141'/></th>
 									<td style="border: 1px solid #d2d2d2; background-color: #fff;">
-										<select id="searchOption" style="margin-left: 10px;">
-											<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
-											<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
-										</select>
-										<input id="inputSearch" type="text" style="width: 275px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<div style="margin-top: 10px; text-align: center;">
-											<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-											<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+										<div style="width: 100%; display : flex; align-items: center;">
+											<select id="searchOption" style="margin-left: 5px; height: 23px;">
+												<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
+												<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
+											</select>
+											<input id="inputSearch" type="text" style="flex: 1; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 										</div>
 									</td>
 								</tr>
 							</table>
 						</div>
-						<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
+						<div class="wfdivBttn">
+							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
+							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+						</div>
 					</div>
 				</div>
 				<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
@@ -427,19 +446,28 @@
 				</div>
 			</div>
 			
-			<div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
-				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
-					<tr>
-						<th width="20px"><input type="checkbox"></th>
-						<th headers="cn" style="width: 20%;"><spring:message code='ezWebFolder.t146'/></th>
-						<th headers="dn" style="width: 20%;"><spring:message code='ezWebFolder.t142'/></th>
-						<th headers="un" style="width: 20%;"><spring:message code='ezWebFolder.t143'/></th>
-						<th headers="ut" style="width: 5%;" ><spring:message code='ezWebFolder.t147'/></th>
-						<th              style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t148'/></th>
-						<th headers="tc" style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t149'/></th>
-						<th              style="text-align: center; width: 15%;"><spring:message code='ezWebFolder.t150'/></th>
-					</tr>
-				</table>
+			<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th class="wfFilecheck" ><input type="checkbox"></th>
+							<th headers="cn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146'/></th>
+							<th headers="dn" class="wfConfigCompany"><spring:message code='ezWebFolder.t142'/></th>
+							<th headers="un" class="wfActive"><spring:message code='ezWebFolder.t143'/></th>
+							<th headers="ut" class="wfActive" ><spring:message code='ezWebFolder.t147'/></th>
+							<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
+							<th headers="tc" class="wfConfigCapacity" style="text-align: center; "><spring:message code='ezWebFolder.t149'/></th>
+							<th              class="wfConfigCompany" style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
+						</tr>
+						</thead>
+					</table>
+					<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+						<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+					
+						</table>
+					</div>
+				</div>
 			</div>
 			
 			<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">

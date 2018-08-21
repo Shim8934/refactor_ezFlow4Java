@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -10,7 +9,7 @@
 				<title><spring:message code='ezPersonal.t299'/></title>
 			</c:when>
 			<c:otherwise>
-				<title><spring:message code='ezPersonal.t59'/></title>
+				<title><spring:message code='ezPersonal.t401'/></title>
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -271,7 +270,7 @@
 		            if (CrossYN()) {
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 320));
+		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 350));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {

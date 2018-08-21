@@ -29,7 +29,8 @@
 			   .ui-datepicker { font-size:9.5pt !important}
 			   
 			   .css-class-to-highlight a{
-			   		color: #3498db !important;
+			   		color: black !important;
+			   		font-weight: bold !important;
 			   }
 			   
 			   u {
@@ -1064,7 +1065,8 @@
 			            document.getElementById("taskstatus2").checked = true;
 			}
 			 
-			function beforeprint() {
+			//2018-08-16 김보미 - 인쇄시 미리보기 화면으로 이동하게 변경
+			function beforeprint2() {
 				$(".popup").css('background-image', 'none');
 				
 			    document.getElementById("printScreen").style.display = "block";
@@ -1378,6 +1380,16 @@
 			    
 			    //clean the place
 		    	$("#repTable").html("");
+			}
+			//2018-08-16 김보미 - 인쇄시 미리보기 화면으로 이동하게 변경
+			function beforeprint() {
+	            var url = "/ezTask/taskReadPrint.do";
+		        var feature = "";
+		        var calDate = $(".ui-datepicker-year").val() + "-" + (parseInt($(".ui-datepicker-month").val()) + 1) + "-01";
+		        
+	        	feature = GetOpenPosition(790, 810);
+                window.open("/ezTask/taskReadPrint.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&calDate=" + calDate, "", "height = 820px, width = 790px, scrollbars=1, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                
 			}
 
 			window.onunload = function (e) {
@@ -1698,24 +1710,6 @@
 					dayOnMouseClick(dateText);
 				}				
 			}
-			
-			function addRelatedCabinet() {
-				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=todo", "addRelated", getOpenWindowfeature(480, 370));
-			}
-			
-			function getOpenWindowfeature(popUpW, popUpH) {
-				var heigth   = window.screen.availHeight;
-				var width    = window.screen.availWidth;
-				var left     = 0;
-				var top      = 0;
-				var pleftpos = parseInt(width) - popUpW;
-				heigth       = parseInt(heigth) - popUpH;
-				left         = pleftpos / 2;
-				top          = heigth / 2;
-				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
-				return feature;
-			}
 		</script>
 	</head>
 	
@@ -1726,9 +1720,6 @@
 					<li id="delete"><SPAN onClick="check_delete()"><spring:message code='ezTask.t115' /></SPAN></li>
 				</c:if>
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
-				<c:if test="${useCabinet == 'YES'}">
-					<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-				</c:if>
 			</ul>
 		</div>
 		<div id="close">
@@ -1965,7 +1956,7 @@
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 			</ul>
 		</div>
-		
+	<!-- 보미 - 인쇄미리보기 화면으로 이동.주석처리	
 		<div id="printScreen" style="display: none;">
 			<table id="printTable" class="layout" >
 				<tr>
@@ -2049,7 +2040,7 @@
 						</table>
 					</td>
 				</tr>				
-				<!-- 주석 -->
+				-- 주석 --
 				<tr>
 					<td>
 						<div style="padding-bottom: 10px;">
@@ -2092,7 +2083,7 @@
 					</td>
 				</tr>
 				
-				<!-- 진행사항 -->
+				-- 진행사항 --
 				<tr id="printTaskWork" style="display:none; height:20px;">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.t2011' />
@@ -2111,7 +2102,7 @@
 						</table>
 					</td>
 				</tr>
-				<!-- 의견 -->
+				-- 의견 --
 				<tr id ="optiontr" style="height:20px">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.t2013' />
@@ -2119,15 +2110,15 @@
 				</tr>
 				
 				<tr id="printCommentView" style="display:none">
-<!-- 					<td style="height:20px">
+-- 					<td style="height:20px">
 						<table class="file">
 							<tr>
 								<td colspan='2' style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>
-					</td> -->
+					</td> --
 				</tr>				
-				<!-- 반복업무현황 -->
+				-- 반복업무현황 --
 				<tr id ="reptr" style="height:20px;padding-bottom:20px;display:none;">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.t200904' />
@@ -2138,6 +2129,7 @@
 				</tr>			
 			</table>
 		</div>
+		-->
 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 			

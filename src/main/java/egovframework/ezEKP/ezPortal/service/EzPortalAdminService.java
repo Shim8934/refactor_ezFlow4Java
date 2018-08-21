@@ -58,7 +58,7 @@ public interface EzPortalAdminService {
 	
 	public String searchPortlet (String pDisplayName, String pGubunFlag, String pPageGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
-	public String createNewPortlet (String pCompanyID, int tenantID) throws Exception;
+	public String createNewPortlet (String pCompanyID, int tenantID, String primaryLang) throws Exception;
 	
 	public String savePortletProperties (String pXML, int tenantID, String companyID) throws Exception;
 	

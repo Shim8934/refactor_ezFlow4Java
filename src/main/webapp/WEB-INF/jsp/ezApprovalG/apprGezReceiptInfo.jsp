@@ -16,6 +16,7 @@
 		    var listview = new ListView();
 		    var OrderCell = "";
 		    var RtnVal = "";
+		    var ext = "${ext}";
 		    window.onload = function () {
 		        try {
 		            $.ajax({
@@ -47,10 +48,11 @@
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		    }
 		    function window_close() {
-		        if (CrossYN())
+		        if (CrossYN() && ext != "hwp") {
 		            parent.DivPopUpHidden();
-		        else
+		        } else {
 		            window.close();
+		        }
 		    }
 		</script>
 	</head>

@@ -235,7 +235,7 @@ public interface EzApprovalGService {
 	
 	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID, int tenantID) throws Exception;
 	
-	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getNextDocInfo(String docID, String userID, String userDeptID, String isIEFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String registerCabinet(Document xmlDom, String strLang, int tenantID) throws Exception;
 	
@@ -296,6 +296,8 @@ public interface EzApprovalGService {
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+	
+	public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 	
@@ -393,8 +395,6 @@ public interface EzApprovalGService {
 
 	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
 
-	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception;
-
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
 	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception;
@@ -468,7 +468,7 @@ public interface EzApprovalGService {
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
@@ -531,6 +531,16 @@ public interface EzApprovalGService {
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
 	
+	public String getDocExt(String docID, String companyID, int tenantID) throws Exception;
+	
+	public void setNonElecRecSusinInit(String docID, String deptID, String deptName, String deptName2, String companyID, int tenantID) throws Exception;
+	
+	public String checkNonElecRec(String orgDocID, String companyID, int tenantID) throws Exception;
+	
+	public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
+	
+	public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception;
+	
 	/**
 	 * 결재완료문서에서 첨부파일로 쓰이는지 여부를 반환
 	 * 
@@ -547,5 +557,12 @@ public interface EzApprovalGService {
 	 *            TBL_ENDATTACHINFO 테이블의 ATTACHFILEHREF 컬럼의 값
 	 * */
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
+	
+/*	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
 
+	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
+*/	
+	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
+	
+	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
 }

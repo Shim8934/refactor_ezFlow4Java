@@ -51,7 +51,9 @@
 	        var ReturnFunction;
 	        var pDraftFlag = "${draftFlag}";
 	        var approvalFlag = "${approvalFlag}";
-
+			//페이징이 달라 구분값 추가
+			var diffPaging = "attachDoc";
+	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {

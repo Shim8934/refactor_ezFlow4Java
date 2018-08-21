@@ -1,6 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -862,13 +860,17 @@
 			      	//지운편지함의 메일 영구삭제
 			        if (folderPath == trashBoxURL) {
 			            if (confirm("<spring:message code='ezEmail.t470' />")) {
-			                delete_mail(folderPath, true, "");
+				            if (confirm("<spring:message code='ezEmail.ksa03' />")) {
+				                delete_mail(folderPath, true, "");
+				            }
 			            }
 			        }
-			      	//편지함의 메일 지운편지함으로 이동
+			      	//편지함의 메일 지운편지함으로 이동  
 			        else {
 			            if (confirm("<spring:message code='ezEmail.t475' />")) {
-			                delete_mail(folderPath, false, trashBoxURL);
+			            	if (confirm("<spring:message code='ezEmail.ksa04' />")) {
+				                delete_mail(folderPath, false, trashBoxURL);	
+			            	}
 			            }
 			        }
 			      	

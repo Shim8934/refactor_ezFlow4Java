@@ -1669,6 +1669,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("tenantID", tenantID);
 		return ezOrganDAO.getLastLogin(map);
 	}
+	
+	@Override
+	public String getLoginIP(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getLoginIP(map);
+	}
 
 	@Override
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception {
@@ -2058,6 +2066,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
         map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("strGyumjikForOracle", strSQL.replace("department", "deptID"));
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);

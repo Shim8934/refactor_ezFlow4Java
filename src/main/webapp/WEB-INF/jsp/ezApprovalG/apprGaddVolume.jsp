@@ -19,14 +19,17 @@
 		    var rtnVal = new Array();
 		    var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		        try {
 		            RetValue = opener.addvolume_cross_dialogArguments[0];
 		            ReturnFunction = opener.addvolume_cross_dialogArguments[1];
+		            winFlag = opener.addvolume_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = parent.addvolume_cross_dialogArguments[0];
 		                ReturnFunction = parent.addvolume_cross_dialogArguments[1];
+		                winFlag = parent.addvolume_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
@@ -91,7 +94,10 @@
 		        rtnVal[0] = "FALSE";
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		            window.close();
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
 		        }
 		        else {
 		            window.returnValue = rtnVal;
@@ -103,7 +109,10 @@
 		        rtnVal[1] = g_NewVolNo;
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		            window.close();
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
 		        }
 		        else {
 		            window.returnValue = rtnVal;

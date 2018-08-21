@@ -114,6 +114,7 @@ function NewVolume(pCabID, pCabClassNo, opentype, CompleteFunction) {
         temppCabClassNo = pCabClassNo;
 
         if (opentype == "OPEN") {
+        	addvolume_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "AddVolume_Cross", GetOpenWindowfeature(360, 310));
             try { OpenWin.focus(); } catch (e) { }
         }

@@ -40,17 +40,19 @@
 		    var CompanyID = "${userInfo.companyID}";
 		    var CurMthd = "OrganTree";
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectdept_cross_dialogArguments[1];
+		            winFlag = parent.selectdept_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                ReturnFunction = opener.selectdept_cross_dialogArguments[1];
+		                winFlag = opener.selectdept_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		
 		
 		        var ua = navigator.userAgent;
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -94,17 +96,22 @@
 		        arrDeptInfo[0] = GetAttribute(tr, "DATA2");
 		        arrDeptInfo[1] = tr.cells[0].innerText;
 		        if(CrossYN())
-		            tdSelDept.textContent = ReplaceText(arrDeptInfo[1], "&", "&amp;");
+		            tdSelDept.textContent = arrDeptInfo[1];
 		        else
-		            tdSelDept.innerText = ReplaceText(arrDeptInfo[1], "&", "&amp;");
+		            tdSelDept.innerText = arrDeptInfo[1];
 		    }
 		    function cmdCancel_onclick() {
 		        rtnVal[0] = "FALSE";
-		        if (ReturnFunction != null)
+		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		        else
+		            
+		            if (winFlag) {
+				        window.close();
+		            }
+		        } else {
 		            window.returnValue = rtnVal;
-		        window.close();
+			        window.close();
+		        }
 		    }
 		    function cmdConfirm_onclick() {
 		        if (typeof (arrDeptInfo[0]) == "undefined") {
@@ -117,11 +124,16 @@
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = arrDeptInfo[0];
 		            rtnVal[2] = arrDeptInfo[1];
-		            if (ReturnFunction != null)
+		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		            else
-		                window.returnValue = rtnVal;
-		            window.close();
+		            	
+		                if (winFlag) {
+					        window.close();
+			            }
+		            } else {
+		            	window.returnValue = rtnVal;
+			            window.close();
+		            }
 		        }
 		    }
 		    function FindDeptRdo_onclick(strValue) {

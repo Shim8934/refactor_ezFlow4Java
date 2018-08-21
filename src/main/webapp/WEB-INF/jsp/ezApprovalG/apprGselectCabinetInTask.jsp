@@ -368,12 +368,13 @@
 		        pLvList.LoadFromID("pSCLvList");
 		        var totalRows = pLvList.GetDataRows();
 		
-		        if (totalRows.length > 0) {
+		        if (totalRows.length > 0 && totalRows[0].id.indexOf("noItems") == -1) {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = GetSelCabInfoXml();
-		
+		            
 		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
+
 		            }
 		            else {
 		            	window.returnValue = rtnVal;
@@ -535,7 +536,13 @@
 		</script>
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px">
-		<h1><spring:message code='ezApprovalG.t711'/></h1>
+		<%-- <h1><spring:message code='ezApprovalG.t711'/></h1> --%> <!-- 기록물철 선택 -->
+		<div id="menu">
+			<ul id="trCreateCab" style="display: none">
+	          <li id="btnCreateCab"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></li> <!-- 철생성 -->
+	          <li id="btnNewVolume" style="display: none"><span onClick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li> <!-- 권호수 추가 -->
+	        </ul>
+		</div>
 		<div id="close">
             <ul>
                 <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
@@ -546,10 +553,10 @@
         		<td>
         			<h2 class="h2_dot" style="font-weight: normal">
         				<spring:message code='ezApprovalG.t711'/>
-        				<span id="trCreateCab">
-	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 228px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
-        				</span>
+<!--         				<span id="trCreateCab"> -->
+<%-- 	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 228px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a> --%>
+<%-- 					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a> --%>
+<!--         				</span> -->
         			</h2>
         		</td>
         		<td></td>
