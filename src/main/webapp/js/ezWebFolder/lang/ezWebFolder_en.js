@@ -27,5 +27,6 @@ var messages = {
 	strLang26 : "Others",
 	strLang27 : "people (teams),",
 	strLang28 : "het was added to the shares.",
-	strLang29 : "het modify the shares."
+	strLang29 : "het modify the shares.",
+	strLang30 : "Not owner of the file"
 }

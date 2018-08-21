@@ -59,7 +59,9 @@
 		    }
 		    function Change_Click() {
 		        var pFlag = "";
-		        if (Form1.ApprovPwdN.checked)
+			    //2018-08-20 김보미 - ie에서는 작동되지 않던 버그 수정
+ 		        //if (Form1.ApprovPwdN.checked)
+		        if (document.getElementById("ApprovPwdN").checked)
 		            pFlag = "N";
 		        else
 		            pFlag = "Y";
@@ -180,7 +182,9 @@
 		    }
 		
 		    function PassTypeView() {
-		        if (Form1.ApprovPwdN.checked) {
+		    	//2018-08-20 김보미 - ie에서는 작동되지 않던 버그 수정
+ 		        //if (Form1.ApprovPwdN.checked) {
+		        if (document.getElementById("ApprovPwdN").checked) {
 		            document.getElementById("DivPassType").style.display = "none";
 		        }
 		        else {

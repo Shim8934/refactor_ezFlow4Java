@@ -359,7 +359,7 @@
 					
 					var divName = document.createElement("div");
 					divName.textContent = "<spring:message code='ezWebFolder.t214'/>";
-					divName.setAttribute("style", "font-size:15px;");
+					divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 					
 					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);

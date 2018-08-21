@@ -2767,7 +2767,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			JSONObject obj = (JSONObject) parser.parse(resultCode);
 			logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
 			
-			if (obj.get("resultCode") != null || !obj.get("resultCode").equals("ERROR")) {
+			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
 				returnValue = "OK";
 			}
 			

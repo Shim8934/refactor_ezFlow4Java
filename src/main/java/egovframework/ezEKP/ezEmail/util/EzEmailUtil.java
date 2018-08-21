@@ -2119,22 +2119,23 @@ public class EzEmailUtil {
 		return newMessage;
 	}
 	
-	public boolean isThereHtmlPartInRelatedPart(Multipart relatedPart) throws MessagingException {
-		boolean isThereHtmlPart = false;
-		
-		int count = relatedPart.getCount();
-		
-		for (int i = 0; i < count; i++) {
-			BodyPart p = relatedPart.getBodyPart(i);
-			
-			if (p.isMimeType("text/html")) {
-				isThereHtmlPart = true;
-				
-				break;
+	public boolean hasHtmlPart(Part part) throws Exception {
+		if (part != null) {
+			if (part.isMimeType("multipart/*")) {
+	            Multipart mp = (Multipart)part.getContent();
+	            int count = mp.getCount();
+	            
+	            for (int i = 0; i < count; i++) {
+	                if (hasHtmlPart(mp.getBodyPart(i))) {
+	                	return true;
+	                }
+	            }
+			} else if (part.isMimeType("text/html")) {
+				return true;
 			}
 		}
 		
-		return isThereHtmlPart;
+		return false;
 	}
 	
 	public BodyPart getConvertedBodyPartFromInlineToAttachment(BodyPart p) throws MessagingException, IOException {
@@ -2630,7 +2631,6 @@ public class EzEmailUtil {
 		message.setFlags(secureMailFlag, isSet);
 	}
 	
-	// 회신, 전달 테스트
 	public void setSentDateFlag(Message message, boolean isSet) throws MessagingException {
 		logger.debug("setSentDateFlag");
 		
@@ -2652,7 +2652,6 @@ public class EzEmailUtil {
 		message.setFlags(sentDateFlag, isSet);
 	}
 	
-	// 회신, 전달 테스트
 	public boolean hasSentDateFlag(Message message) throws MessagingException {
 		logger.debug("hasSentDateFlag");
 		
@@ -2670,7 +2669,6 @@ public class EzEmailUtil {
 		return isSentDate;
 	}
 	
-	// 회신, 전달 테스트
 	public String getSentDateFlag(Message message) throws MessagingException {
 		logger.debug("getSentDateFlag");
 		

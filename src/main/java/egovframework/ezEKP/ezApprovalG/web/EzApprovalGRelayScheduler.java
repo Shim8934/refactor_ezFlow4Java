@@ -106,6 +106,8 @@ public class EzApprovalGRelayScheduler {
          String strCont_Role = "";
          String strCont = "";
          String strCont_Name = "";
+         String strWriterName = "";
+         String strWriterDept = "";
          boolean bRet;
          boolean bGPKI;
 
@@ -266,6 +268,10 @@ public class EzApprovalGRelayScheduler {
         				 logger.debug("#문서고유번호=" + strXDocID);
         				 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
         				 logger.debug("#문서종류=" + strDocType);
+        				 strWriterName = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent();
+        				 logger.debug("#문서작성자이름=" + strWriterName);
+        				 strWriterDept = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent();
+        				 logger.debug("#문서작성자부서=" + strWriterDept);
         				 strSendName = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
         				 logger.debug("#송신기관명=" + strSendName);
         				 strXGW = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-gw").item(0).getTextContent()), "euc-kr");
@@ -404,7 +410,6 @@ public class EzApprovalGRelayScheduler {
         						 }
         					 }
         					 
-        					 String rtn = ezApprovalGService.getCode2Name("A36", "003", strCompanyID, "1", tenantID);
         					 //혹시 몰라 주석 일단
 //                                      System.Xml.XmlDocument extXml = new System.Xml.XmlDocument();
 //                                      extXml.LoadXml(strReXml);
@@ -412,7 +417,7 @@ public class EzApprovalGRelayScheduler {
 //                                      extXml = null;
         					 
         					 //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        					 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(config.getProperty("relay_root"), strXDocID, strReceiveID, strCompanyID, tenantID);
+        					 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(strWriterName, strWriterDept, config.getProperty("relay_root"), strXDocID, strReceiveID, strCompanyID, tenantID);
         					 logger.debug("#수신문서정보입력=" + inputReceiveInfo);
         					 
         					 //수신된 유통문서에 대해 수신(Receive) ACK 발송
