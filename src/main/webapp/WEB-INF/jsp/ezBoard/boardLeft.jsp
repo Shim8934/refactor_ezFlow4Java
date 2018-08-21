@@ -793,19 +793,21 @@
 					success: function(result){
 						if(result["memoCount"]*1 >0){
 							$('#countTotal').html("(" + result["memoCount"] + ")");
-							var html="";
-							var folderList = result["folders"];
-							$('.memoNode').remove();
-							
-							folderList.forEach(function(list, index){
-								html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
-								html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-								html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-								html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
-							}); 
-							$('.memoFolders').append(html);
 						}
+						
+						var html="";
+						var folderList = result["folders"];
+						$('.memoNode').remove();
+							
+						folderList.forEach(function(list, index){
+							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
+							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
+							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
+							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
+						}); 
+						$('.memoFolders').append(html);
+					
 					}     			
 				});
 		    }
@@ -925,8 +927,7 @@
 						<div class="memoFolders"></div>
 					</div>
 				</div>
-				<!-- 이쪽에 리스트 뿌려주기-->
-				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;">메모함관리</span></h3>
+				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="folder_Manage()" style="width: 100%; display: inline-block;">메모함관리</span></h3>
 			</ul>
 			
 		    

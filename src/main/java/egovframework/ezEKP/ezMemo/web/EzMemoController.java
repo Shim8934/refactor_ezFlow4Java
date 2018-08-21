@@ -119,6 +119,12 @@ public class EzMemoController {
 	
 	@RequestMapping(value = "/ezMemo/memoFolderManage.do")
 	public String memoFolderManage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoFolderManage started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+	
+		logger.debug("memoFolderManage ended");
 		return "ezMemo/memoFolderManage";
 
 	}
