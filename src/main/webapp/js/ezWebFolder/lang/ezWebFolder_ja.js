@@ -26,6 +26,6 @@ var messages = {
 	strLang25 : "접근 권한이 없습니다.",
 	strLang26 : "외",
 	strLang27 : "명(팀)",
-	strLang28 : "공유를 추가헸습니다.",
-	strLang29 : "공유를 수정헸습니다."
+	strLang28 : "공유를 추가했습니다.",
+	strLang29 : "공유를 수정했습니다."
 }

@@ -534,8 +534,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String errorMessage = e.getMessage();
 				
 				//유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
-				if (errorMessage.contains("Invalid Addresses")) {
-					
+				if (errorMessage.contains("Invalid Addresses")
+						|| errorMessage.contains("No recipient addresses")) {					
 					//파일시스템의 eml파일 삭제
 					if (f != null && f.delete()) {
 						logger.debug("Succeed in deleting EML file.");

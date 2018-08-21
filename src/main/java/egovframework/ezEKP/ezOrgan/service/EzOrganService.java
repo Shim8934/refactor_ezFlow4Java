@@ -50,6 +50,8 @@ public interface EzOrganService {
 	
 	public String getLastLogin(String userID, int tenantID) throws Exception;
 	
+	public String getLoginIP(String userID, int tenantID) throws Exception;
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;

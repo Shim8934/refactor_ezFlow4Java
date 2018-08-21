@@ -23031,6 +23031,17 @@
         AND
         	COMPANYID = #companyID#
    	</select>
+   	
+   	<select id="EzApprovalG.getDeptSymbol" parameterClass="Map" resultClass="String">
+   		SELECT
+   			EXTENSIONATTRIBUTE6
+   		FROM
+   			TBL_DEPTMASTER
+   		WHERE
+   			CN = #deptID#
+   		AND
+   			TENANT_ID = #tenantID#
+   	</select>
    	  	
    	<insert id="EzApprovalG.insertRejectEndAprDocInfoS" parameterClass="Map"> 
    		 INSERT INTO 

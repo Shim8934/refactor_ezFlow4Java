@@ -137,11 +137,12 @@
 	
 	// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 	window.onresize = function() {
-		var reheight = document.documentElement.clientHeight - 210;
+		var reheight = document.documentElement.clientHeight - 240;
 		dom.dragDropArea.style.height = reheight + "px";
 		
-		reheight = document.documentElement.clientHeight - 100;
+		reheight = document.documentElement.clientHeight - 90;
 		dom.pageArea.style.height = reheight + "px";
+		scroll();
 	};
 	
 	document.onselectstart = function() {
@@ -434,7 +435,7 @@
 			divName.textContent = pathes[i] ;
 			divName.setAttribute("title", pathes[i]);
 			/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-			divName.setAttribute("style", "font-size:15px; ");
+			divName.setAttribute("style", "font-size:15px; padding-right:3px; ");
 			detailName.appendChild(divName);
 			nameTag.appendChild(detailName);
 			
@@ -471,9 +472,9 @@
 		var columnMap = isFromFolder ? resultColumn.folder : resultColumn.favorite;
 		
 		checkedArr = [];
-		$('#tblFileList tr').not(":first").remove();
+		$('#tblFileList tr').remove();
 		
-		dom.allCheckBox.checked = false;
+// 		dom.allCheckBox.checked = false;
 		
 		if (result == null || result.length == 0) {
 			var row = document.createElement("tr");
@@ -524,6 +525,15 @@
 			createDateColumn = document.createElement("td");
 			absolutePathColumn = document.createElement("td");
 			
+			checkboxColumn.setAttribute("class", "wfFilecheck");
+			favoriteIconColumn.setAttribute("class", "wfFileFavorite");
+			fileIconColumn.setAttribute("class", "wfFileType");
+			nameColumn.setAttribute("class", "wfFileName");
+			sizeColumn.setAttribute("class", "wfFileFavoriteSize");
+			creatorColumn.setAttribute("class", "wfFileFavoriteDate");
+			createDateColumn.setAttribute("class", "wfFileFavoriteDate");
+			absolutePathColumn.setAttribute("class", "wfFilePath");
+
 			setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn ], function(style) {
 				style.overflow = "hidden";
 				style.textOverflow = "ellipsis";
@@ -622,6 +632,7 @@
 			
 			dom.listTable.appendChild(row);
 		}
+		scroll();
 	}
 
 	function setStyles(elements, excutor) {
@@ -921,19 +932,28 @@
 		<div id="ResizeBarH" style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;"></div>
 		<div id="ResizeBarW" style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;"></div>
 
-		<div id="dragDropArea">
-			<table id="tblFileList" class="mainlist" style="width: 100%; text-algin: center;">
-				<tr>
-					<th style="width: 20px; text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
-					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th>
-					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
-					<th style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
-					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
-					<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
-					<th style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
-					<th style="width: 25%; overflow: hidden;"><spring:message code='ezWebFolder.t199'/></th>
-				</tr>
-			</table>
+		<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th class="wfFilecheck" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFileFavorite" style="text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+							<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+							<th class="wfFileName"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+							<th class="wfFileFavoriteSize" style="text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+							<th class="wfFileFavoriteDate"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+							<th class="wfFileFavoriteDate"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+							<th class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+						</tr>
+					</thead>
+				</table>
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;">
+					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+				
+					</table>
+				</div>
+			</div>
 		</div>
 		<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display: none"/>
 		<input type="hidden" onclick="fileupload()"/>

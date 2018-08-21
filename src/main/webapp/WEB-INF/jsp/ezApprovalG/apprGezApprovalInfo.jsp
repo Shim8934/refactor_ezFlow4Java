@@ -196,6 +196,7 @@
 	        var nonElecRec = "";
 	        var nonElecRecInfoXml = "";
 	        var g_CabID = "";
+	        var useReceiveInfoName = "${useReceiveInfoName}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -462,8 +463,6 @@
 	            else if (pIniGubun == "6") { //결재선, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
@@ -473,8 +472,6 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
@@ -483,8 +480,6 @@
 	            }
 	            else if (pIniGubun == "8") { //결재선, 수신자, 결재정보
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -494,8 +489,6 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -506,8 +499,6 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -517,8 +508,6 @@
 	            }
 	            else if (pIniGubun == "11") { //결재선, 기록물철, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -526,8 +515,6 @@
 	            else if (pIniGubun == "12") { //기록물철, 결재정보
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab3").onclick();
@@ -537,8 +524,6 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showDocinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -608,8 +593,10 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
-	                    
+
+	                    if (approvalFlag == "G") {
+	                    	document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -624,7 +611,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -639,7 +629,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -663,7 +656,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
-	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "G") {
+		                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    }
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -1687,7 +1683,7 @@
 		    	if (pIniGubun != "1") {
 		    		setCabInfoInit();
 		    	}
-		        if (g_CabID != "") {
+		        if (g_CabID != "" && g_CabID != "null") {
 		            var para = new Array();
 		            para[0] = g_SepAttachLVXml;
 		            para[1] = g_CabID;
@@ -1985,23 +1981,29 @@
 		                        		<c:when test="${receptGubunYN eq 'Y'}">
 		                        			<c:if test="${docType eq '001'}">
 					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		                        			</c:if>
 		                        			<c:if test="${docType ne '001'}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+					                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+           		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+           		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        			</c:if>
 		                        		</c:when>
 		                        		<c:otherwise>
 				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		          			                <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        		</c:otherwise>
 		                        	</c:choose>
 	                        	</c:if>
 	                        	<c:if test="${approvalFlag ne 'G'}">
 		                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 		                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+		                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        	</c:if>
-	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
-	                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        </div>
 	                    </div>
 	                    <div id="ReceptOrgan" style="display: none;">

@@ -14,8 +14,8 @@
 
 .webFolderImg {height: 16px; width: 16px;}
 
-#progress-wrp {border: 1px solid rgb(195, 245, 235); padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff;}
-#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: rgb(235, 255, 255); width: 0;}
+#progress-wrp {border: 1px solid rgb(160,230,243); padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff;}
+#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: rgb(160,230,243); width: 0;}
 #progress-wrp .status {top:4px; left:48%; position:absolute; display:inline-block; color: #333; font-weight: bold; font-family: monospace;}
 
 .webfolderBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
@@ -46,7 +46,7 @@
 .list_element, .list_element th, .list_element td {border:0;}
 .list_element {width:100%; font-size:12px; table-layout:fixed;}
 .list_element caption {display:none}
-.list_element th {padding:5px 0 5px 8px; background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; color:#666; text-align:left; vertical-align:top; line-height:20px; font-weight:normal;}
+.list_element th {padding:5px 0px 5px 5px; background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; color:#666; text-align:left; vertical-align:top; line-height:20px; font-weight:normal;}
 .list_element td {padding:5px 0px 5px 5px; line-height:16px; vertical-align:top; color:#666; text-align:left;}
 
 .btnSearch {border:1px solid #ccc; height:18px; line-height:16px;}
@@ -113,7 +113,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #companySelect {margin: 10px 0px;}
 #companySelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 #companySelect >select {font-size:12px; height:20px; display:inline-block;}
-#dragDropArea {margin:10px 0px 0px !important; overflow-y:auto;}
+#dragDropArea {margin:0px 0px 0px !important; }
 #fileTypeVal {height: 25px; padding: 0px; width: 85px;}
 #file {width:1px; height:1px; display:none;}
 #AttachDownFrame {width:0px; height:0px; display:none;}
@@ -145,3 +145,29 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 
 .wfSearchPanel h1, .wfpersonal h1 {margin-top: 0px !important;}
 .wfcompstdiv {width: 400px; text-align: center;}
+#forScroll			{width: 6px; padding:0px;}
+.wfFilecheck 		{width: 2%; min-width:35px; text-align: center;}
+.wfFileFavorite		{width: 3%; text-align: center; min-width:35px;}
+.wfFileType 		{width: 3%; text-align: center;}
+.wfFileName			{width: 30%;}
+.wfFileSize 		{width: 7%; text-align: center;}
+.wfFileCreator 		{width: 6.5%;}
+.wfFileUploadDate 	{width: 9%;}
+.wfFileUpdateDate 	{width: 9%;}
+.wfFilePath 		{width: 25%}
+.wfFileShare 		{width: 5.5%; text-align: center;}
+.wfFileShareDate	{width: 7%;}
+.wfFileShareDate2	{width: 7%;}
+.wfFileShareMember	{min-width:10px; width:6.5%;}
+.wfFileShareMember2	{min-width:10px; width:6.5%;}
+.wfFileSharedDate	{min-width:10px; width:7%;}
+.wfFileFavoriteSize		{min-width:10px; width:11%;}
+.wfFileFavoriteDate		{min-width:10px; width:13%;}
+.wfFileAdminDate		{min-width:10px; width:9%;}
+.wfFileDownload		{min-width:10px; width:10%;}
+.wfActive			{min-width:10px; width:10%;}
+.wfFileLogDate		{min-width:10px; width:24%;}
+.wfFileLogName		{min-width:10px; width:35%;}
+.wfFileLogMember	{min-width:10px; width:17%;}
+.wfConfigCompany	{min-width:10px; width:18%;}
+.wfConfigCapacity	{min-width:10px; width:12%;}

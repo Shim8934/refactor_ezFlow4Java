@@ -6,10 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -27,7 +24,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2266,6 +2262,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 
 			saveFlag = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			saveFlag = false;
 		} 
 		
@@ -2345,6 +2342,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			fop.close();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 		} 
 		
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
@@ -2434,7 +2432,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			 xmlDoc.getElementsByTagName("content").item(0).setTextContent(strContent);
 			
 			 result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + commonUtil.convertDocumentToString(xmlDoc).substring(commonUtil.convertDocumentToString(xmlDoc).indexOf("<pubdoc>"), commonUtil.convertDocumentToString(xmlDoc).length());
-		} catch (Exception e){
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		logger.debug("loadDocXML ended");
