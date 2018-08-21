@@ -1723,6 +1723,16 @@
 		            g_SepAttachLVXml = rtn[1];
 		        }
 		    }
+		    
+		    function btn_AprDeptTempletModify_onclick() {
+		    	/* var listview = new ListView();
+		        listview.LoadFromID("lvRECEPTLIST");
+		        var CurSelRow = listview.GetSelectedRows();
+		        var DeleteState;
+		        if (CurSelRow.length != 0) {
+	                listview.DeleteRow(GetAttribute(CurSelRow[0], "id"));
+		        } */
+		    }
 	    </script>
 	    <style>
 	    	.mainlist_free tr th {text-align:center}
@@ -2196,6 +2206,7 @@
 	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">
+	                            	<c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btn_AprDeptTempletModify_onclick()"><c:if test="${approvalFlag == 'G'}">수신자명 수정</c:if><c:if test="${approvalFlag == 'S'}">수신부서명 수정</c:if></span></a></c:if>
 	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>

@@ -109,9 +109,9 @@ public interface EzApprovalGService {
 	
 	public String getTempList3(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getListXML(String groupID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception;
+	public String getListXML(String groupID, String lang, String companyID, int tenantID, Locale locale, String approvalFlag) throws Exception;
 	
-	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
+	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, Locale locale, String approvalFlag) throws Exception;
 	
 	public String deleteReceiptTempletDetailInfo(String formID, String userID, String aprDeptSN, String companyID, int tenantID) throws Exception;
 	
@@ -496,7 +496,7 @@ public interface EzApprovalGService {
 
 	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, int tenantID) throws Exception;
 
-	public boolean createRelayDocInfo(String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
+	public boolean createRelayDocInfo(String strWriterName, String strWriterDept, String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
 
 	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
 

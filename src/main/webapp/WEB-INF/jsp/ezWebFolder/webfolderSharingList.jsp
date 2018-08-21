@@ -344,7 +344,7 @@
 					
 					var divName = document.createElement("div");
 					divName.textContent = "<spring:message code='ezWebFolder.t267'/>";
-					divName.setAttribute("style", "font-size:15px;");
+					divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 					
 					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
@@ -932,6 +932,8 @@
 			
 			function getUserSimpleListStr(userListStr) {
 				var result = "";
+				
+				userListStr = userListStr.replace(/\,$/, "");
 				var userArr = userListStr.split(",");
 				var userArrSize = userArr.length;
 				
