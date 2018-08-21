@@ -15,7 +15,7 @@
 		<table class="cabTable2">
 			<tr>
 				<th><spring:message code="ezCabinet.t32"/></th>
-				<th><spring:message code="ezCabinet.t33"/></th>
+				<th><spring:message code="ezCabinet.t152"/></th>
 			</tr>
 			
 			<c:choose>
