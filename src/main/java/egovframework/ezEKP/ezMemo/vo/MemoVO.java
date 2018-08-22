@@ -17,7 +17,7 @@ public class MemoVO {
 	/** 메모 삭제일*/
 	private String delete_date;
 	/** 메모 정렬 순서*/
-	private int order;
+	private int orders;
 	/** 메모함 아이디*/
 	private int folder_id;
 	/** 메모지 색상 아이디*/
@@ -72,11 +72,11 @@ public class MemoVO {
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
-	public int getOrder() {
-		return order;
+	public int getOrders() {
+		return orders;
 	}
-	public void setOrder(int order) {
-		this.order = order;
+	public void setOrders(int orders) {
+		this.orders = orders;
 	}
 	public int getFolder_id() {
 		return folder_id;
