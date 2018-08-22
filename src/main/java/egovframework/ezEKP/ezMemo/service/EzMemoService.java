@@ -16,4 +16,5 @@ public interface EzMemoService {
 	public void deleteMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public List<MemoVO> getMemoList(MemoVO vo, String order, String searchInput, String startDate, String endDate) throws Exception;
 	public void memoWrite(MemoVO memo) throws Exception;
+	public void setFoldStatus(MemoConfigVO memoConfigVO) throws Exception;
 }

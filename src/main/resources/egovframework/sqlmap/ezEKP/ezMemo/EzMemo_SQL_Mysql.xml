@@ -209,4 +209,17 @@
 		AND
 			TENANT_ID = #tenant_id#
 	</update>
+	
+	<update id="EzMemoDAO.setFoldStatus" parameterClass="map">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			FOLD_STATUS = #fold_status#
+		WHERE
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
 </sqlMap>
