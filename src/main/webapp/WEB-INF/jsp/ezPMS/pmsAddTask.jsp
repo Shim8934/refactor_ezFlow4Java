@@ -347,6 +347,7 @@ function addTask() {
 				opener.location.reload();
 			} else {
 				opener.getTaskTree();
+				opener.setContentList();
 			}
 			
 			$("#projectProgress", opener.parent.document).text(data.projectProgress.toFixed(1) + '%');

@@ -145,11 +145,11 @@
 					taskName = revertString(taskName);
 					taskData[i].text = taskName;
 				}
-				
+			
 				var clickedData = $(".jstree-clicked");
 				var idx = $(".jstree-anchor").index(clickedData);
 				
-				getProjectTaskTree("taskTree", taskData.data, "taskList", idx);
+				getProjectTaskTree("taskTree", taskData, "taskList", idx);
 			}
 		});
 	}
