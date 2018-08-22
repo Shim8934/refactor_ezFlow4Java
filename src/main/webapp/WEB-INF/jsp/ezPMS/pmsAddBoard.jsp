@@ -141,10 +141,11 @@
 		} else if(mode == 'reply') {
 			writeContent = ReplaceText(writeContent, "class=&quot;FIELD&quot;", "");
 			writeContent = ReplaceText(writeContent, "class=FIELD", "");
-			writeContent = ReplaceText(writeContent, "&amp;", "&");
+			/* writeContent = ReplaceText(writeContent, "&amp;", "&");
 			writeContent = ReplaceText(writeContent, "&lt;", "<");
-			writeContent = ReplaceText(writeContent, "&gt;", ">");
-			
+			writeContent = ReplaceText(writeContent, "&gt;", ">"); */
+			writeContent = revertString(writeContent);
+			writeContent = replaceString(writeContent);
 			writeContent = "<body free>" + writeContent + "</body>";
 			
 			writeContent = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----"
