@@ -1401,7 +1401,7 @@ public class EzCabinetGWController {
 			}
 			
 			CabinetVO cabinet = cabinetService.getCabinetById(cabinetId, userInfo.getTenantId());
-			cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
+			cabinet.setCabinetName(cabinet.getCabinetName1());
 			cabinet.setPermission(2);
 			
 			result.put("cabinet", cabinet);

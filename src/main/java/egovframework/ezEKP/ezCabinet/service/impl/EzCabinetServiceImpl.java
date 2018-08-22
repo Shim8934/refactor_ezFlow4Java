@@ -1230,7 +1230,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			}
 		}
 		
-		cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
+		cabinet.setCabinetName(cabinet.getCabinetName1());
 		cabinet.setPermission(writePermission);
 		
 		result.put("cabinet", cabinet);
