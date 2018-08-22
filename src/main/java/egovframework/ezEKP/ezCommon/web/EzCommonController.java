@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -28,7 +29,9 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -440,8 +443,30 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
 			}
 		} else {
-			literalEmail = email;
-			literalDisplayName = email;
+			String searchId = email.substring(0, email.indexOf("@"));
+			OrganDeptVO deptVO = ezOrganService.getDeptInfo(searchId, loginVO.getPrimary(), loginVO.getTenantId());
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
+			
+			if (deptVO != null) {
+				literalCompany = deptVO.getExtensionAttribute3();
+				literalEmail = deptVO.getMail();
+				literalDisplayName = deptVO.getDisplayName();
+			} 
+			
+			else if (distributionList != null && distributionList.size() > 0) {
+				
+				for (MailDistributionVO distribution : distributionList) {
+					if (distribution.getId().equals(searchId)) {
+						literalEmail = distribution.getMail();
+						literalDisplayName = distribution.getName();
+					}
+				}
+				
+			} else {
+				literalEmail = email;
+				literalDisplayName = email;
+			}
+			
 			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 		}
 		
