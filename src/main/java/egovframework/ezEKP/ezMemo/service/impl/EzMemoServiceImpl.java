@@ -129,7 +129,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memo.getUser_id());
 		map.put("folder_id", memo.getFolder_id());
 		map.put("write_date", memo.getWrite_date());
-		map.put("order", 3);
+
+		int orders = ezMemoDAO.getMaxOrder(map);
+		
+		map.put("orders", orders);
 		
 		ezMemoDAO.insertMemo(map);
 		

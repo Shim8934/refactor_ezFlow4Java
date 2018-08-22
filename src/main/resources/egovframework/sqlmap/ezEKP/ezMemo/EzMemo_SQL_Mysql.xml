@@ -70,7 +70,7 @@
 	<select id="EzMemoDAO.getMemoConfig" resultClass="MemoConfigVO">
 		<![CDATA[
 			SELECT
-				USE_DATE, USE_GADGET, FONT_SIZE, FOLD_STATUS
+				USE_DATE, USE_GADGET, FONT_SIZE, FOLD_STATUS, COLOR_NAME, DEFAULT_COLOR
 			FROM
 				TBL_MEMO_CONFIG
 			WHERE 
@@ -85,7 +85,7 @@
 	<select id="EzMemoDAO.getMemoList" resultClass="MemoVO">
 		<![CDATA[
 			SELECT
-				*
+				IFNULL(CONTENTS, '') AS CONTENTS, DISPLAY_FLAG, WRITE_DATE, ORDERS, COLOR_ID
 			FROM
 				TBL_MEMO
 			WHERE 
@@ -96,15 +96,32 @@
 				USER_ID = #user_id#
 			AND
 				DELETE_FLAG = 0
+			ORDER BY 
+				ORDERS
+		]]>
+	</select>
+	
+	<select id="EzMemoDAO.getMaxOrder" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				MAX(ORDERS)+1 
+			FROM 
+				TBL_MEMO 
+			WHERE 
+				USER_ID = #user_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				TENANT_ID=#tenant_id#
 		]]>
 	</select>
 					
 	<insert id="EzMemoDAO.insertMemo" parameterClass="Map">
 		<![CDATA[
 		 	INSERT INTO TBL_MEMO
-                (user_id, write_date, folder_id, order, company_id, tenant_id)
+                (user_id, write_date, folder_id, orders, company_id, tenant_id)
             VALUES
-                (#user_id#, #write_date#, #folder_id#, #order#,  #company_id#, #tenant_id#)
+                (#user_id#, #write_date#, #folder_id#, #orders#,  #company_id#, #tenant_id#)
          ]]>
 	</insert>
 	

@@ -67,15 +67,11 @@
 	<script type="text/javascript">
 		var memoList = ${memoList};
 		var folderId = "4";//"${folderId}";
-		var headerColor = "rgb(52, 152, 219)";
-		var bodyColor = "rgb(159, 212, 246)";
 		var topHeight = "100";
-		var memoBColor = [
-			"rgb(52, 152, 219)", "rgb(243, 202, 38)", "rgb(230, 126, 34)", "rgb(39, 174, 96)", "rgb(155, 89, 182)", "rgb(149, 165, 166)"
-		];
-		var memoColor = [
-			"rgb(159, 212, 246)", "rgb(244, 232, 182)",  "rgb(246, 201, 159)", "rgb(165, 241, 197)", "rgb(233, 193, 250)", "rgb(255, 255, 255)"              
-		];
+		var memoColor = ${colorList};
+		var defaultColor = ${defaultColor};
+		var headerColor = memoColor[defaultColor];
+		var bodyColor = memoColor[defaultColor+6];
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 
@@ -110,17 +106,17 @@
 	        			defaultPointer();		
 	        	}
 	        }); */
-			
+	        
 			for(var i=0; i<memoList.length; i++) {
 				var html = "";
-		    	html += "<div class='individual-memo' style='background-color:"+ memoBColor[memoList[i].color_id-1] +"'>";
+		    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
 		    	html += "<input type='checkbox' name='memo'>";
 		    	html += "<div class='memo-color'>";
 		    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
 		    	html += "<span class='write-date'></span>";
 		    	/* html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; */
 		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-		    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
+		    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
 		    	html += memoList[i].contents;
 		    	html += "</textarea>";
 		    	html += "</div>"
@@ -217,7 +213,7 @@
 		    	$(this).children("img").click(function(){
 		    		$(this).prevAll("div").css("visibility", "visible");
 		    		$(this).prevAll("div").children().each(function(index, element){
-		    			$(element).css("background-color", memoBColor[index]);
+		    			$(element).css("background-color", memoColor[index]);
 		    		})
 		    	})
 	        });

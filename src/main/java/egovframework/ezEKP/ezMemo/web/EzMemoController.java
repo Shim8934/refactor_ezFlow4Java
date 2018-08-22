@@ -86,10 +86,13 @@ public class EzMemoController {
 		
 		if (status.equals("ok")) {		
 				JSONArray memoList = (JSONArray) resultBody.get("memoList");
+				JSONArray colorList = (JSONArray) resultBody.get("colorList");
+				int defaultColor = Integer.parseInt(resultBody.get("defaultColor").toString());
 				
 				model.addAttribute("memoList", memoList);
+				model.addAttribute("colorList", colorList);
+				model.addAttribute("defaultColor", defaultColor);
 		}
-		
 		
 		logger.debug("memoMain ended");
 		return "ezMemo/memoMain";
