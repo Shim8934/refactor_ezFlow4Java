@@ -108,11 +108,17 @@ public class EzMemoGWController {
 			
 			int memoCount = ezMemoService.getMemoCount(memoFolderVO);
 			List<MemoFolderVO> memoFolders  = ezMemoService.getMemoFolderInfo(memoFolderVO);
+			MemoConfigVO memoConfigVO = new  MemoConfigVO();
+			memoConfigVO.setUser_id(info.getUserId());
+			memoConfigVO.setTenant_id(info.getTenantId());
+			memoConfigVO.setCompany_id(info.getCompanyId());
+			memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", memoFolders);
 			result.put("memoCount", memoCount);
+			result.put("foldStatus", memoConfigVO.getFold_status());
 		} catch(Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
