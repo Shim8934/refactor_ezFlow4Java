@@ -65,7 +65,6 @@ function deleteFolder() {
 		}
 		
 		folderId = $(".jstree-clicked").parent().attr("id");
-		console.log($(".jstree-clicked").parent().attr("id"));
 		
 		$.ajax({
 			type : "post",

@@ -94,8 +94,8 @@
 	}
 	
 	function boardListScroll() {
-		var thWidth = document.getElementById("tableHeader").clientWidth
-				- document.getElementById("tableBody").clientWidth;
+		var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
+		
 		if (thWidth > 0) {
 			$("#BoardList_TH").append('<th style=width:2px;></th>');
 		}
@@ -122,7 +122,7 @@
 		projectName = taskDetails.projectName;
 		taskName = taskDetails.taskName;
 		
-		if(!taskName) {
+		if (!taskName) {
 			taskName = taskDetails.groupName;
 		}
 	}

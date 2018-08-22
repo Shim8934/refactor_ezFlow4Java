@@ -395,7 +395,7 @@
 	
 	function delGroup(){
 
-		data = {
+		var data = {
 				projectId : projectId,
 				groupId : groupId
 		}

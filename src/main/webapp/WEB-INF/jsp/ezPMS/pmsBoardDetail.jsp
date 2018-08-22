@@ -50,7 +50,9 @@
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
 			var checkboxes = document.getElementById('lstAttachLink').getElementsByTagName("input");
-			for(var i = 0; i < checkboxes.length; i++) {
+			var checkboxesCount = checkboxes.length;
+			
+			for(var i = 0; i < checkboxesCount; i++) {
 				checkboxes.item(i).checked = true;
 			}
 		}
@@ -58,12 +60,14 @@
 		function attach_Download() {
 			var checkboxes = $("input:checked");
 			var i = 0;
+			var checkboxesCount = checkboxes.length;
 			
-			if(!checkboxes.length) {
+			if(!checkboxesCount) {
 				alert("<spring:message code='ezPMS.t106' />");
 			}
 			
 			var link = document.createElement('a');
+			
 			$(link).attr("display", "none");
 			$(link).attr("href", "/ezPMS/downloadFile.do?filePath=" + checkboxes.eq(i).attr("data-filepath") 
 													 + "&fileName=" + checkboxes.eq(i).attr("data-filename"));
@@ -72,7 +76,7 @@
 			var process = setInterval(function() {
 				i++;
 				
-				if(i < checkboxes.length) {
+				if(i < checkboxesCount) {
 					$(link).attr("href", "/ezPMS/downloadFile.do?filePath=" + checkboxes.eq(i).attr("data-filepath") 
 							 + "&fileName=" + checkboxes.eq(i).attr("data-filename"));
 					link.click();
@@ -97,7 +101,7 @@
 		}
 		
 		function deleteBoardAction(itemIds) {
-			data = {
+			var data = {
 				itemIds : itemIds,
 				projectId : projectId
 			}
@@ -146,7 +150,7 @@
 			
 			var check;
 			
-			data = {
+			var data = {
 				itemIds : itemIds
 			}
 			
@@ -175,7 +179,7 @@
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 300) / 2;
-	        console.log(projectId);
+	        
 	        DivPopUpShow(600, 437, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage + "&projectId=" + projectId);
 		}
 		

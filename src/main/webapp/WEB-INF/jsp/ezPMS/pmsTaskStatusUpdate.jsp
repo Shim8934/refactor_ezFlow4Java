@@ -49,7 +49,7 @@
 		setProgress();
 		setStatus();
 		btnEvent();
-		console.log(taskDetails);
+		
 		var realStartDate = taskDetails.realStartDate;
 		var realEndDate = taskDetails.realEndDate;
 		
@@ -245,6 +245,7 @@
 		 
 		// 진행률 검사
 		realProgress = realProgress.replace(/%/,"");
+		
 		if (realProgress != taskDetails.realProgress) {
 			if (realProgress == "") {
 				alert("<spring:message code='ezPMS.t189' />");

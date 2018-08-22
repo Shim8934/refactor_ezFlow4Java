@@ -90,9 +90,9 @@ function openGroupTree() {
 		 	"height = 335px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
 
-function open() {
+/* function open() {
 	alert("아직 미구현.");
-}
+} */
 
  function popupClose() {
 	if(window.opener){
@@ -104,8 +104,9 @@ function open() {
  
  function applyList() {
 	 var managerNameList = "";
+	 var managerListCount = managerList.length;
 	 
-	 for (var i = 0; i < managerList.length; i++) {
+	 for (var i = 0; i < managerListCount; i++) {
 		managerNameList += managerList[i].userName;
 		managerNameList += "(" + managerList[i].userDeptname + "), ";
 	 }
@@ -117,8 +118,9 @@ function open() {
  
  function applyParticipantList() {
 	 var participantNameList = "";
+	 var participantListCount = participantList.length;
 	 
-	 for (var i = 0; i < participantList.length; i++) {
+	 for (var i = 0; i < participantListCount; i++) {
 			participantNameList += participantList[i].userName;
 			participantNameList += "(" + participantList[i].userDeptname + "), ";
 	 }
@@ -162,6 +164,7 @@ function addGroup() {
 		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
+	
 	var data = {
 		groupName : newGroupName,
 		projectId : projectId,
@@ -222,7 +225,7 @@ function addGroup() {
 			</tr>
 			<tr>
 				<th><span><spring:message code='ezPMS.t57' /></span></th>
-				<td title="${userId}">${userName}</td>
+				<td title="${userId}"><c:out value='${userName}'/></td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span><spring:message code='ezPMS.t42' /></span></a></th>

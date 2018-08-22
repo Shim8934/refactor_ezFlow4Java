@@ -25,6 +25,8 @@ var CurrentHeight = document.documentElement.clientHeight - 110;
 setTotalCount("${projectListCount}");
 
 $(function(){
+	$("#listcount").val(initListNumber).prop("selected", true);
+	
 	var projectList = new Array();
 		
 	<c:forEach items="${projectList}" var="project">
@@ -81,10 +83,12 @@ $(function(){
 	
 	i = i++;
 	
-	var progressBar = setInterval(setProgressBar, 300);
+	var progressBar = setInterval(setProgressBar, 0);
 	
 	function setProgressBar() {
-		for(var j = 0; j < 10 && i < projectList.length; j++, i++) {
+		var projectCount = projectList.length;
+		
+		for(var j = 0; j < 10 && i < projectCount; j++, i++) {
 			var htmlStr = "";
 			
 			if (projectList[i].status == "P") {
@@ -146,7 +150,7 @@ $(function(){
 			});
 		}
 		
-		if(i >= projectList.length) {
+		if(i >= projectCount) {
 			clearInterval(progressBar);
 		}
 	}

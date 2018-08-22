@@ -72,11 +72,12 @@ var headManagerObj = {};
 		
 		//참여 멤버 넣기
 		var memberList = JSON.parse('${project.projectMember}');
+		var memberListCount = memberList.length;
 		managerList = [];
 		participantList = [];
 		viewerList = [];		
 		
-		for (var i = 0; i < memberList.length; i++) {
+		for (var i = 0; i < memberListCount; i++) {
 			var member = memberList[i];
 			
 			if (member.memberRoleId == 1) {
@@ -96,6 +97,7 @@ var headManagerObj = {};
 		
 		
 		var calcType = "";
+		
 		if (weightInput == 0) {
 			calcType = "autoCalc";
 		} else {
@@ -125,6 +127,7 @@ var headManagerObj = {};
 			}
 				
 		}
+		
 		applyList();
 	} else {
 		headManagerObj.userId = parent.opener.userId;
@@ -134,6 +137,7 @@ var headManagerObj = {};
    		headManagerDept = writerDeptname;
    		headManagerName = writerName;
 	}
+	
 	applyHeadManager();
 	document.getElementById("projectName").focus();
  
@@ -382,19 +386,23 @@ var headManagerObj = {};
 		 viewerList = JSON.parse(viewerList);
 	 }
 	 
-	 for (var i = 0; i < managerList.length; i++) {
+	 var manangerListCount = managerList.length;
+	 var participantListCount = participantList.length;
+	 var viewerListCount = viewerList.length;
+	 
+	 for (var i = 0; i < manangerListCount; i++) {
 		if(managerList[i].userId !== headManagerId){
 			managerNameList += managerList[i].userName;
 			managerNameList += "(" + managerList[i].userDeptname + "), ";
 		}
 	 }
 	 
-	 for (var i = 0; i < participantList.length; i++) {
+	 for (var i = 0; i < participantListCount; i++) {
 		participantNameList += participantList[i].userName;
 		participantNameList += "(" + participantList[i].userDeptname + "), ";
 	}
 	 
-	 for (var i = 0; i < viewerList.length; i++) {
+	 for (var i = 0; i < viewerListCount; i++) {
 		viewerNameList += viewerList[i].userName;
 		viewerNameList += "(" + viewerList[i].userDeptname + "), ";
 	}
@@ -410,6 +418,7 @@ var headManagerObj = {};
  
  function applyHeadManager(){
 	 var headManagerStr = headManagerObj.userName + "(" + headManagerObj.userDept + ")";
+	 
 	 if(!headManagerObj.userName){
 		 headManagerStr = headManagerName + "(" + headManagerDept + ")";
 	 }

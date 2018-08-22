@@ -27,8 +27,9 @@ $(function(){
 	var strHTML = "";
 	strHTML += "<table class='.kanbanStatus'><tbody id='kanbanOrder'>";
 	selStatus = kanbanOrderArr;
+	var kanbanOrderArrCount = kanbanOrderArr.length;
 	
-	for (var i = 0; i < kanbanOrderArr.length; i++) {
+	for (var i = 0; i < kanbanOrderArrCount; i++) {
 		$("#" + kanbanOrderArr[i].slice(-1)).prop("checked", true);	
 			
 		strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "'>";
@@ -40,7 +41,7 @@ $(function(){
 	strHTML += "</tbody></table>";
 	$("#kanbanList").html(strHTML);
 	
-	for (var i = 0; i < kanbanOrderArr.length; i++) {
+	for (var i = 0; i < kanbanOrderArrCount; i++) {
 		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("onclick", "selectOneStatus('" + kanbanOrderArr[i].slice(-1) + "')");
 		$("#sel" + kanbanOrderArr[i].slice(-1)).attr("ondblclick", "selectStatus('" + kanbanOrderArr[i].slice(-1) + "', 'tr')");
 	}
@@ -93,8 +94,9 @@ function popupClose() {
 function updateKanbanStatus() {
 	kanbanOrder = "";
 	var statusOrder = $(".statusOrder");
+	var statusOrderCount = statusOrder.length;
 	
-	for (var i = 0; i < statusOrder.length; i++) {
+	for (var i = 0; i < statusOrderCount; i++) {
 		kanbanOrder += statusOrder.eq(i).attr("id").substring(3) + ",";
 	}
 	
@@ -134,13 +136,15 @@ function selectOneStatus(status) {
 }
 
 function addStatus() {
-	for (var i = 0; i < selStatus.length; i++) {
+	var selStatusCount = selStatus.length;
+	
+	for (var i = 0; i < selStatusCount; i++) {
 		if (selStatus[i] == selOne) {
 			return;
 		}
 	}
 	
-	if (selStatus.length >= 4) {
+	if (selStatusCount >= 4) {
 		alert("<spring:message code='ezPMS.t135' />");
 		return;
 	} else {

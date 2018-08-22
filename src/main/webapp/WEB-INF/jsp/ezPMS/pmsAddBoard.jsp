@@ -53,7 +53,7 @@
     
 	$(function() {
 		taskName = $("#taskName").text();
-	})
+	});
 	
 	window.onload = function() {
 		
@@ -107,6 +107,7 @@
 				return;
 			}
 		}
+		
 		DivPopUpShow(320, 320, "/ezPMS/getTaskSelectionTree.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 	
@@ -197,8 +198,9 @@
 		var listtable = dadiframe.document.getElementById("filelist");
 		var filelist = GetChildNodes(listtable);
 		var fileList = "";
+		var filelistCount = filelist.length;
 		
-		for (var i = 0; i < filelist.length - 1; i++) {	
+		for (var i = 0; i < filelistCount - 1; i++) {	
 			
 			if (i == 0) {
 				fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -250,7 +252,7 @@
 						opener.searchByContent = "";	
 					} 
 					
-					if(typeof opener.getBoardList == 'function') {
+					if (typeof opener.getBoardList == 'function') {
 						opener.getFolderTree();
 						opener.getBoardList();
 					}

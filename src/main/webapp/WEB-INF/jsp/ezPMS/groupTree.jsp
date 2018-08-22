@@ -34,14 +34,15 @@
 			},
 			success : function(data) {
 				var treeData = JSON.parse(JSON.stringify(data.data));
+				var treeDataCount = treeData.length;
 				
-				for (var i = 0; i < treeData.length; i++) {
+				for (var i = 0; i < treeDataCount; i++) {
 					var taskName = treeData[i].text;
 					taskName = revertString(taskName);
 					treeData[i].text = taskName;
 				}
 				
-				$("#"+containerId).on('changed.jstree', function (e, data) {
+				$("#" + containerId).on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var name = data.instance.get_node(data.selected).text;
 			     	parent.groupId = id;
@@ -81,6 +82,7 @@
 			if(getTreeDepth(e.target) === false) {
 				return;
 			};
+			
 			ok_Click();
 		})
 	});

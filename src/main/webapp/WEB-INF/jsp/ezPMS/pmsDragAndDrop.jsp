@@ -32,6 +32,7 @@
 	        evt.stopPropagation();
 	        evt.preventDefault();
 	    }
+	    
 	    function onDragOver(evt) {
 	        evt.dataTransfer.dropEffect = "copy";
 	        evt.stopPropagation();
@@ -69,8 +70,9 @@
 	
 	        var tempfilesize = 0;
 	        var filecnt = file.length;
+	        var filelistCount = filelist.length;
 	        
-	        for (var i = 0; i < filelist.length; i++) {
+	        for (var i = 0; i < filelistCount; i++) {
 	            if (filelist[i].size / 1024 / 1024 > window.parent.AttachLimit) {
 	                alert("<spring:message code='ezPMS.t229' arguments='" + window.parent.AttachLimit + "'/>");
 	                return;
@@ -87,8 +89,9 @@
 	    function fileupload() {
 	        var fd = new FormData();
 	        var url = "";
-
-	        for (var i = 0; i < file.length; i++) {
+			var fileCount = file.length;
+			
+	        for (var i = 0; i < fileCount; i++) {
 				var fnl = file[i].name.length;
 	        	
 	        	if (fnl > attachFileNameMaxLength) {
@@ -99,6 +102,7 @@
 	        		fd.append("fileToUpload", file[i]);
 	        	}		            
 	        }
+	        
 	        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
 
 	        isfileup = true;
@@ -163,8 +167,8 @@
 	        var filecnt = document.getElementById("filelist").childNodes.length;
 	        var strRet = "";
 	        var fileList = "";
-
 	        var isFileDelete = false;
+	        
 	        for (var i = 1; i < filecnt; i++) {
 	            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
 	                var pAttachDelSN;
@@ -245,11 +249,12 @@
 	        try {
 	            var listtable;
 	            var extCheck = false; 
-
+				var filelistCount = filelist.length;
+				
 	            listtable = document.getElementById("filelist");
 	            document.getElementById("lstAttachLink").appendChild(listtable);
 
-	            for (i = 0; i < filelist.length; i++) {
+	            for (i = 0; i < filelistCount; i++) {
 	                var newFileName = filelist[i].pUploadSN;
 	                var pFileName = filelist[i].pFileName;
 	                var fileSize = filelist[i].fileSize;

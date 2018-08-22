@@ -132,12 +132,15 @@ var userRoleId = parent.userRoleId;
 	 headManagerId = "<c:out value='${taskDetails.headManagerId}'/>";
 	 
 	 initMemberList = JSON.parse(initMemberList);
+	 var initMemberListCount = initMemberList.length;
 	 
-	 for (var i = 0; i < initMemberList.length; i++) {
-		 if (initMemberList[i].memberRoleId == 2) {
-			 participantList.push(initMemberList[i]);
+	 for (var i = 0; i < initMemberListCount; i++) {
+		 var initMember = initMemberList[i];
+		 
+		 if (initMember.memberRoleId == 2) {
+			 participantList.push(initMember);
 		 } else {
-			 managerList.push(initMemberList[i]);
+			 managerList.push(initMember);
 		 }
 	 }
 	 
@@ -198,9 +201,13 @@ function openPreTaskTree() {
  
  function applyList() {
 	 var managerNameList = "";
-	 for (var i = 0; i < managerList.length; i++) {
-		managerNameList += managerList[i].userName;
-		managerNameList += "(" + managerList[i].userDeptname + "), ";
+	 var managerListCount = managerList.length;
+	 
+	 for (var i = 0; i < managerList; i++) {
+		var manager = managerList[i];
+		
+		managerNameList += manager.userName;
+		managerNameList += "(" + manager.userDeptname + "), ";
 	 }
 	 
 	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
@@ -211,10 +218,13 @@ function openPreTaskTree() {
  //참여자를 추가하기
  function applyParticipantList() {
 	 var participantNameList = "";
+	 var participantListCount = participantList.length;
 	 
-	 for (var i = 0; i < participantList.length; i++) {
-			participantNameList += participantList[i].userName;
-			participantNameList += "(" + participantList[i].userDeptname + "), ";
+	 for (var i = 0; i < participantListCount; i++) {
+		var participant = participantList[i];
+		
+		participantNameList += participant.userName;
+		participantNameList += "(" + participant.userDeptname + "), ";
 	 }
 	 
 	 participantNameList = participantNameList.substr(0, participantNameList.length - 2);
@@ -235,14 +245,14 @@ function updateTaskInfo() {
 	 }
 	 
 	// 담당자 검사
-	if(managerList.length < 1) {
+	if (managerList.length < 1) {
 		// 1명 이상의 담당자가 등록되어야 함
 		alert("<spring:message code='ezPMS.t169' />");
 		return;
 	}
 	
 	//상위그룹 미지정
-	if(groupId == "") {
+	if (groupId == "") {
 		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
@@ -270,19 +280,22 @@ function updateTaskInfo() {
 		 }
 		
 		// 가중치 검사
-		if(weightInput == 1) {
+		if (weightInput == 1) {
 			if(weight == ""){
 				alert("<spring:message code='ezPMS.t96' />");
 				return;
 			}
+			
 			if(isNaN(weight)) {
 				alert("<spring:message code='ezPMS.t248' />");
 				return;
 			}
+			
 			if(Number(weight) > remainingWeight) {
 				alert("<spring:message code='ezPMS.t97' />");
 				return;
 			}
+			
 			if(weight < 0){
 				alert("<spring:message code='ezPMS.t310' />");
 				return;
@@ -303,7 +316,7 @@ function updateTaskInfo() {
 		}
 		
 		
-		data = {
+		var data = {
 				taskName : taskName,
 				taskId : taskId,
 				projectId : projectId,
@@ -371,8 +384,8 @@ function updateTaskInfo() {
 		}
 		
 		// 선행작업 지정 타입을 판단
-		if(pretaskId != "") {
-			if(pretaskId.indexOf("t") != -1) {
+		if (pretaskId != "") {
+			if (pretaskId.indexOf("t") != -1) {
 				pretaskId = pretaskId.substring(pretaskId.indexOf("t") + 1);
 				pretaskSetType = "task2group";
 			} else {
@@ -435,6 +448,7 @@ function updateTaskInfo() {
 			success : function() {}
 		});
 	}
+	
 	function checkDelGroupMember(managers, participants){
 		//하위 업무들의 담당자가 있는지 확인
 		var delMemberList = [];
@@ -448,7 +462,9 @@ function updateTaskInfo() {
 		}
 		
 		//삭제, 유지, 추가를 분류
-		for(var i = 0; i < groupTaskMember.length; i++){
+		var groupTaskMemberCount = groupTaskMember.length;
+		
+		for(var i = 0; i < groupTaskMemberCount; i++){
 			newList.forEach(function(member, idx){
 				if(groupTaskMember[i].userId === member.userId){
 					flags = false;

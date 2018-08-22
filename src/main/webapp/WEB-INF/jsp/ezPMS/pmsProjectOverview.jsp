@@ -132,11 +132,12 @@ function ableToChangeStatus() {
 				strHTML += "</span></a>";
 				break;
 			case "C" :
-				strHTML += "<spring:message code='ezPMS.t99' /> : ";
+				$(".btnStyle_center").css("margin-top", "6px");
+				strHTML += "<li class='date'><p><span class='startBox' style='width:65px;'><spring:message code='ezPMS.t99' /></span>";
 				strHTML += "${project.realStartDate}";
-				strHTML += "<br>";
-				strHTML += "<spring:message code='ezPMS.t100' /> : ";
-				strHTML += "${project.realEndDate}";
+				strHTML += "</p>";
+				strHTML += "<p><span class='endBox' style='width:65px;'><spring:message code='ezPMS.t100' /></span>";
+				strHTML += "${project.realEndDate}</p></li>";
 				break;
 		}
 		
@@ -159,8 +160,9 @@ function kanbanSetting() {
 function initKanbanList() {
 	var kanbanOrderArr = kanbanOrder.split(",");
 	var strHTML = "";
+	var kanbanOrderArrCount = kanbanOrderArr.length;
 	
-	for (var i = 0; i < kanbanOrderArr.length; i++) {
+	for (var i = 0; i < kanbanOrderArrCount; i++) {
 		strHTML += "<li id='kanban"+ (i + 1) +"' class='kanban' style='cursor : pointer'>";
 		strHTML += "<div class='overview_section_list' style='height:740px;'>";
 		strHTML += "<dl class='overview_section_listDL'>";
@@ -170,15 +172,17 @@ function initKanbanList() {
 	
 	$(".project_overview_section").html(strHTML);
 	
-	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		$("#kanban" + (i + 1)).attr("name", kanbanOrderArr[i]);
+	for (var i = 0; i < kanbanOrderArrCount; i++) {
+		var kanban = kanbanOrderArr[i];
+		
+		$("#kanban" + (i + 1)).attr("name", kanban);
 		var title = "";
 		
-		if (kanbanOrderArr[i].indexOf("M") != -1) {
+		if (kanban.indexOf("M") != -1) {
 			title += "<spring:message code='ezPMS.t143' /> ";
 		}
 		
-		switch (kanbanOrderArr[i].slice(-1)) {
+		switch (kanban.slice(-1)) {
 		case "A" : 
 			title += "<spring:message code='ezPMS.t269' />";
 			break;
@@ -202,10 +206,10 @@ function initKanbanList() {
 			break;
 		}
 		
-		if (kanbanOrderArr[i].indexOf("M") == -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
-			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_allwork.png' alt='"+ title +"' onclick='moreTaskList(\"M" + kanbanOrderArr[i] + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");	
-		} else if (kanbanOrderArr[i].indexOf("M") != -1 && kanbanOrderArr[i].indexOf("B") == -1 && userRole != 3) {
-			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_mywork.png' alt='"+ title +"' onclick='moreTaskList(\"" + kanbanOrderArr[i].slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+		if (kanban.indexOf("M") == -1 && kanban.indexOf("B") == -1 && userRole != 3) {
+			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_allwork.png' alt='"+ title +"' onclick='moreTaskList(\"M" + kanban + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");	
+		} else if (kanban.indexOf("M") != -1 && kanban.indexOf("B") == -1 && userRole != 3) {
+			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_mywork.png' alt='"+ title +"' onclick='moreTaskList(\"" + kanban.slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
 		} else {
 			$("#kanban" + (i + 1)).find(".overview_section_listDL").html("<dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
 		}
@@ -264,75 +268,11 @@ function initKanbanList() {
 				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", true);
 				$("#kanban4").find(".point_blue").append(result.kanbanTaskCount4);
 			}
-			
-/* 			for (var i = 0; i < kanbanOrderArr.length; i++) {
-				if (kanbanOrderArr[i].includes("P") || kanbanOrderArr[i].includes("W") || kanbanOrderArr[i].includes("C")) {
-					$("#kanban" + (i + 1)).find(".cardArea").addClass("cardSortable");
-					$("#kanban" + (i + 1)).find(".cardArea").addClass("connectedSortable");
-				}
-			}
-			
-			$(".cardSortable").sortable({
-				connectWith : ".connectedSortable",
-				start : function(event, ui) {
-					beforePosition = $("#" + ui.item.context.id).parent().parent().attr("id");
-				},
-				stop : function (event, ui) {
-					afterPosition = $("#" + ui.item.context.id).parent().parent().attr("id");
-					
-					var beforeStatus = $("#" + beforePosition).attr("name");
-					var afterStatus = $("#" + afterPosition).attr("name");
-					var targetTaskId = ui.item.context.id;
-					
-					if (beforePosition == afterPosition || beforeStatus.includes("C") || afterStatus.includes("W")) {
-						$(".cardSortable").sortable("cancel");
-					} else {
-						var response = confirm("업무의 상태를 변경하시겠습니까?");
-						
-						if (response == false) {
-							$(".cardSortable").sortable("cancel");
-						} else {
-							updateTaskStatus(targetTaskId, afterStatus);
-						}
-					}
-				}
-			}).disableSelection(); */
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 		}
 	});
 }
-
-
-/* function updateTaskStatus(targetTaskId, afterStatus) {
-	var targetId = targetTaskId.subString(targetTaskId.lastIndexOf("n") + 1);
-	console.log(targetId);
-	
-	$.ajax({
-		type : "POST",
-		dataType: "text",
-		contentType: "application/json; charset=UTF-8",
-		url : "/ezPMS/updateTaskStatus.do",
-		data : {
-			projectId : projectId,
-			taskId : targetTaskId,
-			status : afterStatus
-		},
-		success : function(result) {
-			if (result == "permitted") {
-				alert("상태가 변경되었습니다.");
-				initKanbanList();
-			} else {
-				alert("업무 담당자나 프로젝트 담당자만 상태를 변경할 수 있습니다.");
-				return;
-			}
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-		}
-	
-		
-	});
-} */
 
 function moveToPage(target) {
 	if (target == "comment") {
@@ -366,41 +306,41 @@ function changeStatus(status) {
 	
 	if (response == true) {
 		var data = {
-				nowStatus : nowStatus,
-				status : changeStatus,
-				projectList : projectId
-			}
+			nowStatus : nowStatus,
+			status : changeStatus,
+			projectList : projectId
+		}
 			
-			$.ajax({
-				type : "POST",
-				dataType: "text",
-				contentType: "application/json; charset=UTF-8",
-				url : "/ezPMS/updateProjectStatus.do",
-				data :JSON.stringify(data),
-				success : function(result) {
-					if (result == "permitted") {
-						if (changeStatus == "P") {
-							alert("<spring:message code='ezPMS.t161' />");
-						} else {
-							alert("<spring:message code='ezPMS.t10' />");
-						}
-						
-						var projectName = $("#pjName", parent.document).text().trim();
-						var nowStatusStr = getStatusStr(nowStatus);
-						var statusStr 	 = getStatusStr(changeStatus);
-						
-						var logContent = "<spring:message code='ezPMS.t314' arguments='" + projectName + "," + nowStatusStr + "," + statusStr + "'/>"; 
-						addTaskLog(projectId, 2, groupId, null, logContent);
-						
-						window.location.reload();
+		$.ajax({
+			type : "POST",
+			dataType: "text",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/updateProjectStatus.do",
+			data :JSON.stringify(data),
+			success : function(result) {
+				if (result == "permitted") {
+					if (changeStatus == "P") {
+						alert("<spring:message code='ezPMS.t161' />");
 					} else {
-						alert("<spring:message code='ezPMS.t9' />");
-						return;
+						alert("<spring:message code='ezPMS.t10' />");
 					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
+					
+					var projectName = $("#pjName", parent.document).text().trim();
+					var nowStatusStr = getStatusStr(nowStatus);
+					var statusStr 	 = getStatusStr(changeStatus);
+					
+					var logContent = "<spring:message code='ezPMS.t314' arguments='" + projectName + "," + nowStatusStr + "," + statusStr + "'/>"; 
+					addTaskLog(projectId, 2, groupId, null, logContent);
+					
+					window.location.reload();
+				} else {
+					alert("<spring:message code='ezPMS.t9' />");
+					return;
 				}
-			});
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
 	}
 }
 
@@ -444,13 +384,17 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 			return;
 		}
 		
-		for (var i = 0; i < taskList.length; i++) {
+		var taskListCount = taskList.length;
+		
+		for (var i = 0; i < taskListCount; i++) {
+			var task = taskList[i];
+			
 			if (!isBoard) {
 				var taskStatus = "";
 				var statusColor = "";
 				var className = "";
 				
-				switch (taskList[i].status) {
+				switch (task.status) {
 				case "P" :
 					taskStatus = "<spring:message code='ezPMS.t15' />";
 					statusColor = progressColor;
@@ -478,20 +422,20 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 					break;
 				}
 				
-				kanbanHTML += "<div id='" + targetPosition + taskList[i].taskId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getTaskDetails(this)'>";
-				kanbanHTML += "<p class='overview_list_title'><span class='situation_" + className + "' style='background-color:" + statusColor + "'>" + taskStatus + "</span>" + revertString(taskList[i].taskName) + "</p>";
-				kanbanHTML += "<div class='progressArea" + taskList[i].taskId + " progressArea_new'></div>";
-				kanbanHTML += "<div class='date'><p><span class='startBox'>START</span>" + taskList[i].planStartDate + "</p>";
-				kanbanHTML += "<p><span class='endBox'>END</span>" + taskList[i].planEndDate + "</p></div>";
+				kanbanHTML += "<div id='" + targetPosition + task.taskId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getTaskDetails(this)'>";
+				kanbanHTML += "<p class='overview_list_title'><span class='situation_" + className + "' style='background-color:" + statusColor + "'>" + taskStatus + "</span>" + revertString(task.taskName) + "</p>";
+				kanbanHTML += "<div class='progressArea" + task.taskId + " progressArea_new'></div>";
+				kanbanHTML += "<div class='date'><p><span class='startBox'>START</span>" + task.planStartDate + "</p>";
+				kanbanHTML += "<p><span class='endBox'>END</span>" + task.planEndDate + "</p></div>";
 				kanbanHTML += "</div>";
 			} else {
-				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
-				kanbanHTML += "<p class='overview_list_title'>" + revertString(taskList[i].title) + "</p>";
+				kanbanHTML += "<div id='B" + task.itemId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
+				kanbanHTML += "<p class='overview_list_title'>" + revertString(task.title) + "</p>";
 
-				if (taskList[i].imageFilePath == null) {
-					kanbanHTML += "<div class='boardArea_new'>" + taskList[i].writeContent + "</div>";
+				if (task.imageFilePath == null) {
+					kanbanHTML += "<div class='boardArea_new'>" + task.writeContent + "</div>";
 				} else {
-					kanbanHTML += "<div class='boardArea_new'><img style='width:100%; height:100%;' src='" + taskList[i].imageFilePath + "'></div>";
+					kanbanHTML += "<div class='boardArea_new'><img style='width:100%; height:100%;' src='" + task.imageFilePath + "'></div>";
 				}
 				
 				kanbanHTML += "</div>"
@@ -504,10 +448,11 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 			$("#" + targetPosition).find(".cardArea").html(kanbanHTML);
 		}
 		
-		for (var i = 0; i < taskList.length; i++) {
+		for (var i = 0; i < taskListCount; i++) {
+			var task = taskList[i];
 			var statusColor = "";
 			
-			switch (taskList[i].status) {
+			switch (task.status) {
 			case "P" :
 				statusColor = progressColor;
 				break;
@@ -525,9 +470,9 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				break;
 			}
 			
-			if (!(taskList[i].status == "B")) {
-				$("#" + targetPosition).find(".progressArea" + taskList[i].taskId).LineProgressbar({
-					percentage : Number(taskList[i].realProgress).toFixed(1),
+			if (!(task.status == "B")) {
+				$("#" + targetPosition).find(".progressArea" + task.taskId).LineProgressbar({
+					percentage : Number(task.realProgress).toFixed(1),
 					fillBackgroundColor : statusColor,
 					height : '15px',
 					radius : '15px',
@@ -539,7 +484,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		var targetStatus = $("#" + targetPosition).attr("name");
 		var startRow = $("#" + targetPosition).find(".overview_list").length;
 		
-		if (taskList.length >= 10) {
+		if (taskListCount >= 10) {
 			if (!isBoard) {
 				$("#" + targetPosition).find(".overview_section_list").append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")'><span><spring:message code='ezPMS.t276' /></span></div>");
 			} else {
@@ -645,8 +590,9 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 function updateOrderStatus() {
 	var kanban = $(".kanban");
 	var orderStatus = "";
+	var kanbanCount = kanban.length;
 	
-	for (var i = 0; i < kanban.length; i++) {
+	for (var i = 0; i < kanbanCount; i++) {
 		orderStatus += kanban.eq(i).attr("name") + ",";
 	}
 	
@@ -696,9 +642,12 @@ function setOverviewContent() {
 				 logHTML += "<li>" + "<span><spring:message code='ezPMS.t30' /><span>" + "</li>";
 				 
 			 } else {
-				 for (var i = 0; i < logList.length; i++) {
+				 var logListCount = logList.length;
+				 
+				 for (var i = 0; i < logListCount; i++) {
+					 var logDetail = logList[i];
 					 
-					 switch (logList[i].logStatus) {
+					 switch (logDetail.logStatus) {
 					 case 1 : 
 						 logHTML += "<li><span class='situation_registration'><spring:message code='ezPMS.t40' /></span>";
 						 break;
@@ -712,7 +661,7 @@ function setOverviewContent() {
 						 break;
 					 }
 					 
-					 logHTML += "<span class='text'>" + revertString(logList[i].logContent) + "</span>";
+					 logHTML += "<span class='text'>" + revertString(logDetail.logContent) + "</span>";
 					 logHTML += "</li>";
 				 }
 			 }
@@ -725,10 +674,14 @@ function setOverviewContent() {
 			 if (commentList == null || commentList.length == 0) {
 				 commentHTML += "<li><span class='text'>" + "<spring:message code='ezPMS.t30' />" + "</span></li>";
 			 } else {
-				 for (var i = 0; i < commentList.length; i++) {					 
+				 var commentListCount = commentList.length;
+				 
+				 for (var i = 0; i < commentListCount; i++) {	
+					 var comment = commentList[i];
+					 
 					 commentHTML += "<li>";
-					 commentHTML += "<span class='name'>" + commentList[i].writerName + "</span>";
-					 commentHTML += "<span class='text'>" + revertString(commentList[i].commentContent) + "</span>";
+					 commentHTML += "<span class='name'>" + comment.writerName + "</span>";
+					 commentHTML += "<span class='text'>" + revertString(comment.commentContent) + "</span>";
 					 commentHTML += "</li>";
 				 }
 			 }
@@ -781,15 +734,15 @@ function getTaskDetails(elem) {
 					<li class="contentlayout_none date">
 						<p class="project_Dday">D <span class="point_red"><c:out value="${project.restDueday - 1 < 0 ? '+ '.concat(-(project.restDueday - 1)) : '- '.concat(project.restDueday - 1) }"/></span>
 						</p>
-						<p><span class="startBox">START</span>${project.planStartDate }</p>
-						<p><span class="endBox">END</span>${project.planEndDate }</p>
+						<p><span class="startBox">START</span><c:out value="${project.planStartDate }"/></p>
+						<p><span class="endBox">END</span><c:out value="${project.planEndDate }"/></p>
 					</li>
 				</ul>
 				<div class="btnStyle_center"></div>
 			</div>
-			<div class="overview_textbox"><c:out value='${project.overview }'/></div>
+			<div class="overview_textbox">${project.overview }</div>
 			<ul class="overview_infomationBox">
-				<li onclick="menuQst_DetailUserInfo('${project.headManagerId }')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }"/>${project.headManagerName }</li>
+				<li onclick="menuQst_DetailUserInfo('${project.headManagerId }')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }"/><c:out value="${project.headManagerName }"/></li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>
 				<li onclick="getProjectMember('2')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' /></li>
 				<li onclick="getProjectMember('3')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' /></li>

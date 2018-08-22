@@ -44,7 +44,7 @@ function setMemberScheduleList() {
 	var sDateParsed = Date.parse(sDate);
 	var eDateParsed = Date.parse(eDate);
 	
-	if(sDateParsed > eDateParsed) {
+	if (sDateParsed > eDateParsed) {
 		alert("<spring:message code='ezPMS.t49'/>");
 		return;
 	}
@@ -56,14 +56,16 @@ function setMemberScheduleList() {
 	
 	
 	// 사용자가 설정한 기간으로 dateList를 필터링
-	for(var i = 0; i < dateList.length; i++) {
+	var dateListCount = dateList.length;
+	
+	for (var i = 0; i < dateListCount; i++) {
 		
 		if(Date.parse(dateList[i].date) >= sDateParsed && Date.parse(dateList[i].date) <= eDateParsed) {
 			filteredDateList.push(dateList[i]);
 		}
 	}
 	
-	if(filteredDateList.length == 0) {
+	if (filteredDateList.length == 0) {
 		return;
 	}
 	
@@ -71,8 +73,9 @@ function setMemberScheduleList() {
 	
 	var tmp = filteredDateList[0].date.substring(0, 7);
 	var monthCount = 0;
+	var filteredDateListCount = filteredDateList.length;
 	
-	for(var i = 0; i < filteredDateList.length; i++) {
+	for (var i = 0; i < filteredDateListCount; i++) {
 		var yearMonth  = filteredDateList[i].date.substring(0, 7);
 		var dayOfMonth = filteredDateList[i].date.charAt(8) == '0' ? filteredDateList[i].date.substring(9) : filteredDateList[i].date.substring(8);
 		
@@ -91,7 +94,7 @@ function setMemberScheduleList() {
 			monthCount = 1;
 		}
 		
-		if(filteredDateList[i].holidayOrNot == true) {
+		if (filteredDateList[i].holidayOrNot == true) {
 			$("#dateListHeader2").append('<th class="holyday" date="' + filteredDateList[i].date + '">' + dayOfMonth + '</th>');
 			$(".dateList").append('<td class="holyday" date="' + filteredDateList[i].date + '">&nbsp;</td>');
 		} else {
@@ -105,7 +108,7 @@ function setMemberScheduleList() {
 	var month = tmp.charAt(5) == '0' ? tmp.substring(6) : tmp.substring(5);
 	var year  = tmp.substring(0, 4);
 	
-	if(monthCount == 1) {
+	if (monthCount == 1) {
 		$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/></th>');
 	} else {
 		$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
@@ -115,7 +118,7 @@ function setMemberScheduleList() {
 	setMemberSchedule();
 		
 	// 일자별 업무 할당 인원 수 반영
-	for(var i = 0; i < filteredDateList.length; i++) {
+	for(var i = 0; i < filteredDateListCount; i++) {
 		var memberCNT = $(".dateList").find("td[date='" + filteredDateList[i].date + "']").find(".circle").length;
 		memberCNT = memberCNT == 0 ? "" : memberCNT;
 		
@@ -128,7 +131,9 @@ function setMemberScheduleList() {
 }
 
 function setMemberSchedule() {
-	for (var i = 0; i < memberScheduleList.length; i++) {
+	var memberScheduleListCount = memberScheduleList.length;
+	
+	for (var i = 0; i < memberScheduleListCount; i++) {
 		var memberId = memberScheduleList[i].userId;
 		var assignedDate = memberScheduleList[i].assignedDate;
 		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").html("<div class='circle' onclick='getTaskNameList(this)'></div>");	
@@ -152,8 +157,9 @@ function getTaskNameList(elem) {
 			if (result.length != 0) {
 				var infoHTML = "<div class='tooltipTitle'>" + clickedDate + " <spring:message code='ezPMS.t137' /></div>";
 				infoHTML += "<div class='tooltipText'>";
+				var resultCount = result.length;
 				
-				for (var i = 0; i < result.length; i++) {
+				for (var i = 0; i < resultCount; i++) {
 					infoHTML += "&gt; " + result[i] + "<br>";
 				}
 				
@@ -360,8 +366,8 @@ window.onload = function() {
 	</tr>
 	<c:forEach items="${memberList }" var="member">
 	<tr id="${member.userId }">
-		<td style="width:50%">${member.userName }</td>
-		<td>${member.userDeptname }</td>
+		<td style="width:50%"><c:out value="${member.userName }"/></td>
+		<td><c:out value="${member.userDeptname }"/></td>
 	</tr>
 	</c:forEach>
 	<tr>

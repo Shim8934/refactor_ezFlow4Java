@@ -121,8 +121,9 @@ function changeStatus() {
 					
 					var nowStatusStr = getStatusStr(nowStatus);
 					var statusStr 	 = getStatusStr(status);
-										
-					for(var i = 0; i < checkedPrjInfo.length; i++) {
+					var checkedPrjInfoCount = checkedPrjInfo.length;
+					
+					for(var i = 0; i < checkedPrjInfoCount; i++) {
 						var projectName = checkedPrjInfo[i].projectName;
 						var projectId 	= checkedPrjInfo[i].projectId;
 						var groupId 	= checkedPrjInfo[i].groupId;

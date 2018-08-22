@@ -43,10 +43,13 @@ $(function(){
 		projectList.push(json);
 	</c:forEach>
 	
-	for (var i = 0; i < projectList.length; i++) {
+	var projectListCount = projectList.length;
+	
+	for (var i = 0; i < projectListCount; i++) {
 		var htmlStr = "";
+		var project = projectList[i];
 		
-		if (projectList[i].status == "P") {
+		if (project.status == "P") {
 			htmlStr = "<span class='situation_progress' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span>";
 		} else if (projectList[i].status == "C") {
 //			if (projectList[i].restDueday >= 0) {
@@ -54,19 +57,19 @@ $(function(){
 /* 			} else if (projectList[i].restDueday < 0) {
 				htmlStr = "<span class='situation_complete' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span><span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
 			} */
-		} else if (projectList[i].status == "S") {
+		} else if (project.status == "S") {
 			htmlStr = "<span class='situation_hold' style='background-color:" + holdColor + ";'><spring:message code='ezPMS.t19' /></span>";
-		} else if (projectList[i].status == "L") {
+		} else if (project.status == "L") {
 			htmlStr = "<span class='situation_progress' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span><span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
-		} else if (projectList[i].status == "W") {
+		} else if (project.status == "W") {
 			htmlStr = "<span class='situation_standby' style='background-color:" + waitColor + ";'><spring:message code='ezPMS.t16' /></span>";
-		} else if (projectList[i].status == "D") {
+		} else if (project.status == "D") {
 			htmlStr = "<span class='situation_delet' style='background-color:" + deleteColor + ";'><spring:message code='ezPMS.t11' /></span>";
 		}
 		
-		$("li[id='" + projectList[i].projectId + "']").find(".projectNameArea").find("span").prepend(htmlStr);
-		var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
-		var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
+		$("li[id='" + project.projectId + "']").find(".projectNameArea").find("span").prepend(htmlStr);
+		var completeTaskPercent = (project.completeTaskCount / project.totalTaskCount) * 100;
+		var lateTaskPercent = (project.lateTaskCount / project.totalTaskCount) * 100;
 		
 		if (isNaN(completeTaskPercent)) {
 			completeTaskPercent = 0;
@@ -76,8 +79,8 @@ $(function(){
 			lateTaskPercent = 0;
 		}
 		
-		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
+		$("div[name=" + project.projectId+"]").LineProgressbar({
+			percentage : project.progress,
 			fillBackgroundColor : progressColor,
 			duration : 0,
 			height : '15px',
@@ -85,7 +88,7 @@ $(function(){
 			width : '74%'
 		});
 		
-		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
+		$("div[complete=" + project.projectId+"]").LineProgressbar({
 			percentage : completeTaskPercent,
 			fillBackgroundColor : completeColor,
 			duration : 0,
@@ -94,7 +97,7 @@ $(function(){
 			width : '74%'
 		});
 		
-		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
+		$("div[overdue=" + project.projectId+"]").LineProgressbar({
 			percentage : lateTaskPercent,
 			fillBackgroundColor : overdueColor,
 			duration : 0,
@@ -116,8 +119,8 @@ $(function(){
 		document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
 	}
 	
-	if (projectList.length >= 20) {
-		if ($("#totalCount").text() != projectList.length) {
+	if (projectListCount >= 20) {
+		if ($("#totalCount").text() != projectListCount) {
 			$(".project_mainlist").last().append("<div class='moreBtn' onclick='moreProjectList()'><span><spring:message code='ezPMS.t276' /></span></div>");
 		}
 	}

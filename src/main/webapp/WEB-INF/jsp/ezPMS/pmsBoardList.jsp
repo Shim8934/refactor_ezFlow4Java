@@ -93,12 +93,14 @@
 	
 	function deleteBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
+		
 		if(!checkBoxes.length) {
 			alert("<spring:message code='ezPMS.t217' />");
 			return;
 		}
 		
-		itemIds = new Array();
+		var itemIds = new Array();
+		
 		checkBoxes.each(function() {
 			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
 			itemIds.push(itemId);		
@@ -116,18 +118,20 @@
 	
 	function goMoveBoards() {
 		var checkBoxes = $('input:checked[name="boardCheckbox"]');
+		
 		if(!checkBoxes.length) {
 			alert("<spring:message code='ezPMS.t218' />");
 			return;
 		}
 	
-		itemIds = new Array();
+		var itemIds = new Array();
+		
 		checkBoxes.each(function() {
 			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
 			itemIds.push(itemId);	
 		});
 		
-		if(checkIfHasReplies(itemIds) == true) {
+		if (checkIfHasReplies(itemIds) == true) {
 			alert("<spring:message code='ezPMS.t292' />");	
 			return;
 		}
@@ -141,7 +145,7 @@
 		
 		var check;
 		
-		data = {
+		var data = {
 			itemIds : itemIds
 		}
 		

@@ -40,8 +40,9 @@ var logData = "";
 $(function(){
 	logData = ${data};
 	logData = JSON.parse(JSON.stringify(logData));
+	var logDataCount = logData.length;
 	
-	for (var i = 0; i < logData.length; i++) {
+	for (var i = 0; i < logDataCount; i++) {
 		var taskName = logData[i].text;
 		taskName = revertString(taskName);
 		logData[i].text = taskName;

@@ -24,15 +24,20 @@
 		taskDetails = ${taskDetails};
 		
 		var target = "${target}";
+		
 		if(target !== "task"){
 			var managersNameList = "";
 			var participantsNameList = "";
 			var members = taskDetails.groupMember;
-			for(var i = 0; i < members.length; i++){
-				if(members[i].memberRoleId === 1){
-					managersNameList += members[i].userName + ", "
+			var membersCount = members.length;
+			
+			for(var i = 0; i < membersCount; i++){
+				var member = members[i];
+				
+				if(member.memberRoleId === 1){
+					managersNameList += member.userName + ", "
 				} else {
-					participantsNameList += members[i].userName + ", "
+					participantsNameList += member.userName + ", "
 				}
 			}
 			
@@ -110,11 +115,11 @@
 	<c:when test="${target eq 'task' }">
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t57' /></th>
-	    <td class="" colspan="2">${taskDetails.writerName}</td>
+	    <td class="" colspan="2"><c:out value="${taskDetails.writerName}"/></td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t131' /></th>
-	    <td class="" colspan="2">${taskDetails.writeDate}</td>
+	    <td class="" colspan="2"><c:out value="${taskDetails.writeDate}"/></td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t63' /></th>
@@ -137,11 +142,11 @@
 	<c:otherwise>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t57' /></th>
-	    <td class="" colspan="2">${taskDetails.creatorName}</td>
+	    <td class="" colspan="2"><c:out value="${taskDetails.creatorName}"/></td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t131' /></th>
-	    <td class="" colspan="2">${taskDetails.createDate}</td>
+	    <td class="" colspan="2"><c:out value="${taskDetails.createDate}"/></td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t63' /></th>
@@ -197,7 +202,7 @@
 	  </tr>
 	  <tr>
 	    <th class="overviewTh"><spring:message code='ezPMS.t104' /></th>
-	    <td class="overviewTd" colspan="2"><div class="overviewDiv"><c:out value='${taskDetails.overview == null ? "-" : taskDetails.overview}'/></div></td>
+	    <td class="overviewTd" colspan="2"><div class="overviewDiv">${taskDetails.overview == null ? "-" : taskDetails.overview}</div></td>
 	  </tr>
 	</table>
 </body>

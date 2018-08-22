@@ -88,7 +88,7 @@
 	}
 	
 	function deleteComment(elem) {
-		if(confirm("<spring:message code='ezPMS.t107' />") == true) {
+		if (confirm("<spring:message code='ezPMS.t107' />") == true) {
 			var selectedTR = $(elem).parent().parent();
 			var commentId = selectedTR.attr("data-commentId");
 			var writerId = selectedTR.attr("data-writerId");
@@ -265,7 +265,7 @@
 									</div>
 								</div>
 							</td>
-							<td class="col4" style="text-align:left;">${fn:substring(commentVO.writeDate, 0, 16)}</td>
+							<td class="col4" style="text-align:left;"><c:out value="${fn:substring(commentVO.writeDate, 0, 16)}"/></td>
 							<td class="col5" style="text-align:left;">
 								<span onclick="modifyComment(this)" class="modifyBtn" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_modify.png"/></span>&nbsp;&nbsp;&nbsp;
 								<span onclick="deleteComment(this)" style="cursor: pointer;"><img src="/images/ezPMS/icon_project_eliminate.png"/></span>

@@ -20,8 +20,9 @@
 	$(document).ready(function() {
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
+		var treeDataCount = treeData.length;
 		
-		for (var i = 0; i < treeData.length; i++) {
+		for (var i = 0; i < treeDataCount; i++) {
 			var taskName = treeData[i].text;
 			taskName = revertString(taskName);
 			treeData[i].text = taskName;

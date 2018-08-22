@@ -22,14 +22,18 @@ var roleId = "${roleId}";
 	 var memberList = JSON.parse('${memberList}');
 	 var roleName = "";
 	 var memberCount = "${memberCount}";
+	 var memberListCount = memberList.length;
 	 
 	 if (roleId == "1") {
 		roleName = "<spring:message code='ezPMS.t63' />";
+		
 		// 담당자에서 관리자를 뺀다
 		memberList = memberList.filter(function(member) {
 			return member.userId != parent.headManagerId;
 		});
+		
 		memberCount--;
+		memberListCount = memberListCount - 1;
 	 } else if (roleId == "2") {
 		 roleName = "<spring:message code='ezPMS.t64' />";
 	 } else {
@@ -41,7 +45,7 @@ var roleId = "${roleId}";
 	 
 	 var strHTML = "<table border='1' style='width:100%; border-color:grey;'>";
 	 
-	 if (memberList.length == null || memberList.length == 0) {
+	 if (memberListCount == null || memberListCount == 0) {
 		 strHTML += "<tr id='noone' class='white' style='border:1px solid #ddd; height:35px;'>";
 		 strHTML += "<td style='border-right:none; width:100%; text-align:center;'>";
 		 strHTML += "<spring:message code='ezPMS.t157' arguments='" + roleName + "'/>";
@@ -49,17 +53,19 @@ var roleId = "${roleId}";
 	 } else {
 		 $("#menu1").append("<img style='cursor: pointer; float: right; margin-top: 3px;;' src='/images/poll/sendMail01.png' onclick='sendMailAll()'>");
 		 
-		 for (var i = 0; i < memberList.length; i++) {
-			strHTML += "<tr id='" + memberList[i].userId + "' class='white' style='border:1px solid #ddd; width: 100%'>";
+		 for (var i = 0; i < memberListCount; i++) {
+			var member = memberList[i];
+			
+			strHTML += "<tr id='" + member.userId + "' class='white' style='border:1px solid #ddd; width: 100%'>";
 			strHTML += "<td style='border-right:none;'>";
-			strHTML += "<img src='" + memberList[i].userImage + "' style='display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId + ")'>";
+			strHTML += "<img src='" + member.userImage + "' style='display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;' onclick='menuQst_DetailUserInfo(" + member.userId + ")'>";
 			strHTML += "<a style='cursor:pointer; display:inline-block; padding:0px 10px; float:left; line-height:41px; overflow:hidden;";
-			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(\"" + memberList[i].userId + "\")'>";
-			strHTML += memberList[i].userName;
-			strHTML += "(" + memberList[i].userDeptname + ")";
+			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(\"" + member.userId + "\")'>";
+			strHTML += member.userName;
+			strHTML += "(" + member.userDeptname + ")";
 			strHTML += "</a>";
 			strHTML += "</td><td style='border: none; width: 60px;'>";
-			strHTML += "<img class='voteUserMailImg' style='padding-left: 10px; cursor: pointer;' src='/images/poll/sendMail.png' onclick='sendMail(\"" + memberList[i].userId + "\", \"" + memberList[i].userIdType + "\")'>";
+			strHTML += "<img class='voteUserMailImg' style='padding-left: 10px; cursor: pointer;' src='/images/poll/sendMail.png' onclick='sendMail(\"" + member.userId + "\", \"" + member.userIdType + "\")'>";
 			strHTML += "</td></tr>";
 		 } 
 	 }

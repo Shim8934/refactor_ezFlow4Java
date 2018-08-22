@@ -403,7 +403,7 @@ function changeProjectSort(sortType) {
 	orderHow = "";
 	orderWhat = "";
 	startRow = 0;
-	listNumber = $(".project_list").length;
+	listNumber = initListNumber;
 
 	setProjectList("new");
 	changeMainSetting();
@@ -495,6 +495,7 @@ function setProjectList(mode) {
 				
 				$("#MailListRayer").css("display", "none");
 				$("#memoStyleDiv").css("display", "");
+				$("#memoStyleDiv").scrollTop(0);
 			}
 			
 			setInitOrder();
@@ -701,7 +702,9 @@ function deleteProject() {
 							listNumber = $(".project_list").length;
 						}
 						
-						for(var i = 0; i < checkedPrjInfo.length; i++) {
+						var checkedPrjInfoCount = checkedPrjInfo.length;
+						
+						for (var i = 0; i < checkedPrjInfoCount; i++) {
 							var projectName = checkedPrjInfo[i].projectName;
 							var projectId 	= checkedPrjInfo[i].projectId;
 							var groupId 	= checkedPrjInfo[i].groupId;
@@ -781,8 +784,8 @@ function addFavoriteMemo(projectId) {
 			data :JSON.stringify(data),
 			success : function(result) {
 				if (result == "0") {
-					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
-					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
+					$("#" + projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
+					$("#" + projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
 					
 					if (viewType == 0) {
 						startRow = 0;
@@ -817,8 +820,8 @@ function deleteFavoriteMemo(projectId) {
 			url : "/ezPMS/deleteFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function(result) {
-				$("#"+projectId).find("img").attr("src", "/images/ImgIcon/view-flag.gif");
-				$("#"+projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
+				$("#" + projectId).find("img").attr("src", "/images/ImgIcon/view-flag.gif");
+				$("#" + projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
 
 				if (viewType == 0) {
 					startRow = 0;

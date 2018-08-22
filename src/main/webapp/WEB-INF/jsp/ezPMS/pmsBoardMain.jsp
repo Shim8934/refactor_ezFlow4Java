@@ -67,8 +67,9 @@
 		
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
+		var treeDataCount = treeData.length;
 		
-		for (var i = 0; i < treeData.length; i++) {
+		for (var i = 0; i < treeDataCount; i++) {
 			var taskName = treeData[i].text;
 			taskName = revertString(taskName);
 			treeData[i].text = taskName;
@@ -119,8 +120,9 @@
 			url : "/ezPMS/getFolderList.do",
 			success : function(data) {
 				treeData = JSON.parse(JSON.stringify(data));
+				var treeDataCount = treeData.length;
 				
-				for (var i = 0; i < treeData.length; i++) {
+				for (var i = 0; i < treeDataCount; i++) {
 					var taskName = treeData[i].text;
 					taskName = revertString(taskName);
 					treeData[i].text = taskName;
@@ -228,7 +230,7 @@
 	
 	// 메인에서 체크박스로 선택 후 삭제할 때
 	function deleteBoardsAction(itemIds) {
-		data = {
+		var data = {
 			itemIds : itemIds,
 			projectId : projectId
 		}
@@ -242,13 +244,13 @@
 			success : function(result) {
 				if(result.data == 'success') {
 					
-					for(i in itemIds) {
+					/* for(i in itemIds) { //로그 추가하기 위한 로직
 						var deletedTR = $("tr[data-itemid = " + itemIds[i] + "]");
 						var title = deletedTR.children("td.boardTitle").text();
 						var taskName = deletedTR.children("td.taskName").text();
 						var groupId = deletedTR.attr("data-groupId");
 						var taskId = deletedTR.attr("data-taskId");
-					}
+					} */
 					
 					getFolderTree();
 					getBoardList();

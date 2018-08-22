@@ -90,6 +90,7 @@ function changeTab(clickTabId, nowTabAttr) {
 
 function addFavorite(projectId) {
 	var response = confirm("<spring:message code='ezPMS.t24' />");
+	
 	if (response == true) {
 		var data = {
 				status : "F",
@@ -120,6 +121,7 @@ function addFavorite(projectId) {
 
 function deleteFavorite(projectId) {
 	var response = confirm("<spring:message code='ezPMS.t27' />");
+	
 	if (response == true) {
 		var data = {
 				status : "F",

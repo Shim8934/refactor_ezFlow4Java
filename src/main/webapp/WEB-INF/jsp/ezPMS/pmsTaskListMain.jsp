@@ -60,8 +60,9 @@
 	$(function() {
 		taskData = ${data};
 		taskData = JSON.parse(JSON.stringify(taskData));
+		var taskDataCount = taskData.length;
 		
-		for (var i = 0; i < taskData.length; i++) {
+		for (var i = 0; i < taskDataCount; i++) {
 			var taskName = taskData[i].text;
 			taskName = revertString(taskName);
 			taskData[i].text = taskName;
@@ -137,8 +138,9 @@
 			url : "/ezPMS/projectTaskTree.do",
 			success : function(data) {
 				taskData = JSON.parse(JSON.stringify(data.data));
+				var taskDataCount = taskData.length;
 				
-				for (var i = 0; i < taskData.length; i++) {
+				for (var i = 0; i < taskDataCount; i++) {
 					var taskName = taskData[i].text;
 					taskName = revertString(taskName);
 					taskData[i].text = taskName;
@@ -431,12 +433,14 @@
 							alert("<spring:message code='ezPMS.t242' />");
 							
 							var checkedTaskInfo = getCheckedTaskInfo();
+							var checkedTaskInfoCount = checkedTaskInfo.length;
 							
-							
-							for(var i = 0; i < checkedTaskInfo.length; i++) {
-								var logContent = "<spring:message code='ezPMS.t313' arguments='" + checkedTaskInfo[i].groupName + "," + checkedTaskInfo[i].taskName + "'/>";
-								addTaskLog(projectId, 3, checkedTaskInfo[i].groupId, null, logContent);
-								updateGroupRealStartEndDate(checkedTaskInfo[i].groupId);
+							for(var i = 0; i < checkedTaskInfoCount; i++) {
+								var taskInfo = checkedTaskInfo[i];
+								
+								var logContent = "<spring:message code='ezPMS.t313' arguments='" + taskInfo.groupName + "," + taskInfo.taskName + "'/>";
+								addTaskLog(projectId, 3, taskInfo.groupId, null, logContent);
+								updateGroupRealStartEndDate(taskInfo.groupId);
 							}
 							
 							checkedVal = "";

@@ -65,8 +65,9 @@
 		
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
+		var treeDataCount = treeData.length;
 		
-		for (var i = 0; i < treeData.length; i++) {
+		for (var i = 0; i < treeDataCount; i++) {
 			var taskName = treeData[i].text;
 			taskName = revertString(taskName);
 			treeData[i].text = taskName;
@@ -82,6 +83,7 @@
 				groupId = $(this).parent().attr("id");
 				taskId = "";
 			}
+			
 			currentPage = 1;
 			
 			// 트리 클릭 시, 검색 조건 초기 화
@@ -189,8 +191,9 @@
 				var data = JSON.parse(JSON.stringify(data));
 				
 				var treeData = data.data;
+				var treeDataCount = treeData.length;
 				
-				for (var i = 0; i < treeData.length; i++) {
+				for (var i = 0; i < treeDataCount; i++) {
 					var taskName = treeData[i].text;
 					taskName = revertString(taskName);
 					treeData[i].text = taskName;
@@ -306,7 +309,7 @@
 		var searchCondition = $("#searchArea option:selected").val();
 		var searchKeyword = $("#searchKeyword").val();
 		
-		if(searchCondition == 'searchByUser') {
+		if (searchCondition == 'searchByUser') {
 			searchByUser = searchKeyword;
 		} else if (searchCondition == 'searchByContent') {
 			searchByContent = searchKeyword;
@@ -319,7 +322,7 @@
 	}
 	
 	function setSearchInput(elem) {
-		if(elem == 'searchByWriteDate') {
+		if (elem == 'searchByWriteDate') {
 			$("#searchKeyword").css("display", "none");
 			$("#searchDate").css("display", "");
 		} else {
@@ -329,7 +332,7 @@
 	}
 	
 	function searchKeyEvent() {
-		if(event.keyCode == 13) {
+		if (event.keyCode == 13) {
 			searchComment();
 		}
 	}

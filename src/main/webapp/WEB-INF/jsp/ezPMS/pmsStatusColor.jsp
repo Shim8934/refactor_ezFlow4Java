@@ -20,7 +20,6 @@
 		    var statusName = window.opener.statusName;
 		    
 		    $(function() {
-			    console.log(currentColor);
 				$("#color-picker").hexColorPicker();
 				$("#color-picker").click();
 				$("div[color='" + currentColor + "']").click();

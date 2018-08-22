@@ -45,8 +45,6 @@ function save_info() {
 	holdColor = $("#holdColor").text();
 	listCount = $("#listcount").val();
 	
-	console.log("defaultStatus : " + defaultStatus);
-	
 	var data = {
 		projectSort : projectSort,
 		viewType : viewType,
@@ -176,7 +174,7 @@ function restoreColor(statusId) {
 						<table style="table-layout:fixed;">
 							<tr>
 								<td><div id="progressColorDisplay" style="background-color:${setting.progressColor}; height:21px; border:1px inset gray"></div></td>
-								<td id="progressColor" style="display:none;">${setting.progressColor}</td>
+								<td id="progressColor" style="display:none;"><c:out value="${setting.progressColor}"/></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('progressColor')"><spring:message code='ezTask.t91' /></span></a></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('progressColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
@@ -189,7 +187,7 @@ function restoreColor(statusId) {
 						<table style="table-layout:fixed">
 							<tr>
 								<td><div id="completeColorDisplay" style="background-color:${setting.completeColor}; height:21px; border:1px inset gray"></div></td>
-								<td id="completeColor" style="display:none;">${setting.completeColor}</td>
+								<td id="completeColor" style="display:none;"><c:out value="${setting.completeColor}"/></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('completeColor')"><spring:message code='ezTask.t91' /></span></a></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('completeColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
@@ -202,7 +200,7 @@ function restoreColor(statusId) {
 						<table style="table-layout:fixed">
 							<tr>
 								<td><div id="overdueColorDisplay" style="background-color:${setting.overdueColor}; height:21px; border:1px inset gray"></div></td>
-								<td id="overdueColor" style="display:none;">${setting.overdueColor}</td>
+								<td id="overdueColor" style="display:none;"><c:out value="${setting.overdueColor}"/></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('overdueColor')"><spring:message code='ezTask.t91' /></span></a></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('overdueColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
@@ -215,7 +213,7 @@ function restoreColor(statusId) {
 						<table style="table-layout:fixed">
 							<tr>
 								<td><div id="holdColorDisplay" style="background-color:${setting.holdColor}; height:21px; border:1px inset gray"></div></td>
-								<td id="holdColor" style="display:none;">${setting.holdColor}</td>
+								<td id="holdColor" style="display:none;"><c:out value="${setting.holdColor}"/></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('holdColor')"><spring:message code='ezTask.t91' /></span></a></td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('holdColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>

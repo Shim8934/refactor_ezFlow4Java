@@ -139,7 +139,7 @@ var projectStatus = "${projectStatus}";
 function openMemberList() {
 	var win;
 		 
-	if(groupId == "") {
+	if (groupId == "") {
 		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
@@ -147,7 +147,7 @@ function openMemberList() {
 	var feature = GetOpenPosition(760, 700);
 	
 	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
-	if(treeDepth == '0') {
+	if (treeDepth == '0') {
 		DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.95, 
 				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + 'managers', "",
 				 "height = 720px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
@@ -176,8 +176,9 @@ function popupClose() {
  
 function applyList() {
 	var managerNameList = "";
- 
-	for (var i = 0; i < managerList.length; i++) {
+ 	var managerListCount = managerList.length;
+ 	
+	for (var i = 0; i < managerListCount; i++) {
 		managerNameList += managerList[i].userName;
 		managerNameList += "(" + managerList[i].userDeptname + "), ";
 	}
@@ -247,6 +248,7 @@ function addTask() {
 	//프로젝트 상태가 완료인 경우 업무를 추가할 때 
 	if (projectStatus == "C") {
 		var result = confirm("<spring:message code='ezPMS.t320' />");
+		
 		if (result) {
 			if (endDateComp.getTime() > projectEndDateComp.getTime()) {
 				if (today.getTime() <= endDateComp.getTime()) {
@@ -268,6 +270,7 @@ function addTask() {
 		} else {
 			return;
 		}
+		
 	} else {
 		if (endDateComp.getTime() > projectEndDateComp.getTime()) {
 			alert("<spring:message code='ezPMS.t95' />");
@@ -294,10 +297,12 @@ function addTask() {
 			alert("<spring:message code='ezPMS.t96' />");
 			return;
 		}
+		
 		if(isNaN(weight)) {
 			alert("<spring:message code='ezPMS.t248' />");
 			return;
 		}
+		
 		if(Number(weight) > remainingWeight) {
 			alert("<spring:message code='ezPMS.t97' />");
 			return;
@@ -433,7 +438,7 @@ function setDefaultGroup(){
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t57' /></th>
-				<td colspan="3">${writerName}(${writerDeptName})</td>
+				<td colspan="3"><c:out value='${writerName}(${writerDeptName})'/></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t61' /></th>
