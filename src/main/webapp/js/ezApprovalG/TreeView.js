@@ -1,4 +1,5 @@
-﻿﻿/*트리의 설정값을 가지고 있는 변수*/
+﻿
+/*트리의 설정값을 가지고 있는 변수*/
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
 var TreeClasses     = new Array();
@@ -66,7 +67,7 @@ function TreeNode() {
     }
 
     //트리 노드 만들기
-    function CreateTreeNode(pNodeData, pEndNode, pParentNode, pUseAgency, pNodeClick, pNodeDblClick, pRequestHandler) {
+    function CreateTreeNode(pNodeData, pEndNode, pParentNode, pUseAgency, pUseSusinColor, pNodeClick, pNodeDblClick, pRequestHandler) {
         //한 노드의 전체적인 DIV를 만든다.
         var treeDiv = document.createElement("DIV");
         treeDiv.className = "node_div";
@@ -201,7 +202,9 @@ function TreeNode() {
         spnNode.className = TreeClasses["normal"];
 
         if (SelectSingleNode(pNodeData, "SETTEXTCOLORBYNAME") != null && ($("#1tab1").attr("class") != "tabon" || pRequestHandler == "RequestDataG")) {
-            spnNode.style.color = "#bbbbbb";
+        	if (pUseSusinColor) {
+        		spnNode.style.color = "#bbbbbb";
+        	}
         }
 
         if (typeof (document.body.onselectstart) != "undefined") //IE route
@@ -317,6 +320,7 @@ function TreeView() {
     this.SetNodeDblClick = SetNodeDblClick;
     this.SetRequestData = SetRequestData;
     this.SetUseAgency = SetUseAgency;
+    this.SetUseSusinColor4AprG = SetUseSusinColor4AprG;
 
     this.GetSelectNode = GetSelectNode;
     this.GetSelectNodeID = GetSelectNodeID;
@@ -342,6 +346,7 @@ function TreeView() {
     var _selectedNodeID = "";
     var _selectedNodeNM = "";
     var _useAgency = true;     // 하위노드 추가시 따로 셋팅하지 않은 페이지들이 많아 true로 변경 처리함. 2010.05.07
+    var _useSusinColor4AprG = false; //2018-08-22 천성준 - 전자결재G 부서 트리뷰 결재문서(수신[흑색]/미수신[회색]) 색 표시여부 (default : false)
 
     /* Private Member 선언 끝 */
 
@@ -380,6 +385,11 @@ function TreeView() {
     //기관 표시유무 설정
     function SetUseAgency(pUseAgency) {
         _useAgency = pUseAgency;
+    }
+    
+    //전자결재G 결재문서 수신/미수신 표시유무
+    function SetUseSusinColor4AprG(pUseSusinColor) {
+    	_useSusinColor4AprG = pUseSusinColor;
     }
 
     //이미 만들어진 트리뷰 ID를 이용하여 트리뷰 객체 생성	
@@ -482,7 +492,7 @@ function TreeView() {
                 }
 
                 //트리노드 생성
-                var treeNode = organNode.CreateTreeNode(arrNodes[i], bEndNode, pNode, _useAgency, _nodeClick, _nodeDblClick, _requestDataHandler);
+                var treeNode = organNode.CreateTreeNode(arrNodes[i], bEndNode, pNode, _useAgency, _useSusinColor4AprG, _nodeClick, _nodeDblClick, _requestDataHandler);
 
                 if (pLevel == 0)
                 //Level이 0인 노드(회사)는 트리 DIV에 append
