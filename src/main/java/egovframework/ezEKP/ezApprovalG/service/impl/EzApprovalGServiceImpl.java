@@ -15442,7 +15442,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 				
 			default:
-				if (sendFlag) {
+				if (sendFlag && !docState.equals("001")) { //2018-08-22 강민수92 내부기안일시 docstate가 바뀌지 않게 하기위해 조건 추가
 					docState = staDSBalsin;
 				}
 				
