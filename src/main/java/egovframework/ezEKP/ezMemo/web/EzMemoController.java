@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezMemo.web;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -12,11 +13,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezLadder.web.EzLadderController;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -81,8 +74,7 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_Id",userInfo.getId());
+		param.put("user_id",userInfo.getId());
 		param.put("order", order);
 		param.put("searchInput", searchInput);
 		param.put("startDate", startDate);
@@ -124,7 +116,7 @@ public class EzMemoController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
-		String memoCount = resultBody.get("memoCount").toString();
+		String memoCount = "2";//resultBody.get("memoCount").toString();
 		if (status.equals("ok")) {		
 				JSONArray folders = (JSONArray) resultBody.get("data");
 				model.addAttribute("folders", folders);
@@ -181,15 +173,43 @@ public class EzMemoController {
 		return "ezMemo/memoInputName";
 
 	}
+	
+	@RequestMapping(value = "/ezMemo/memoWrite.do")
+	public String memoWrite(String folderId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoWrite started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String regDate = commonUtil.getTodayUTCTime("");
+		
+		folderId = request.getParameter("folderId");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("user_id",userInfo.getId());
+		param.put("folder_id", folderId);
+		param.put("write_date", regDate);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/" + folderId + "/memo/" + userInfo.getId(), param, request, "post", null);		
+		
+		String status = resultBody.get("status").toString();
+
+		logger.debug("memoWrite ended");	
+		
+		if (status.equals("ok")) {		
+			return "json";
+		}
+		else {
+			return "error";
+		}
+	}
 
 	
 	@RequestMapping(value = "/ezMemo/memoRead.do")
-	public String memoDetailView(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String memoRead(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoRead started.");
 		
 		logger.debug("memoRead ended.");
 		return "ezMemo/memoRead";
-
 	}
 	
 	/**
