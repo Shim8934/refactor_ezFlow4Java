@@ -1740,6 +1740,7 @@
 	   			ganttRedesign();
 	   			//기존 키다운 이벤트를 없앰.
 	   			$("body").off("keydown.body");
+	   			ge.splitter.resize(50);
 // 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 
 	   		};
