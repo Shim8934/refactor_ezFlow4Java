@@ -17,22 +17,20 @@
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="cursor overfl"></td>
-				</tr>
-				<tr>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td id="createdDate"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id ="title" class="overfl"></td>
+					<td colspan="3" id ="title" class="overfl"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t52'/></th>
-					<td id="summary" class="overfl"></td>
+					<td colspan="3" id="summary" class="overfl"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
-					<td>
+					<td colspan="3">
 						<div id="rlWrapDiv" class="rlFileDiv">
 							<div id="fileListDiv" class="rlDocDiv"></div>
 						</div>
