@@ -121,8 +121,18 @@
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
-				function reloadTree(currentNode) {cabinetTree.makeTree({cabinetNode : currentNode});}
 				function reloadRelatedTree(currentNode) {relatedTree.makeTree({cabinetNode : currentNode});}
+				
+				function reloadTree(currentNode, mode) {
+					var cabinetNodeId   = "root";
+					var myCabinetDiv    = document.getElementById("cabinetTree");
+					var currentSelected = myCabinetDiv.querySelector("span[class='selectedNode']");
+					
+					if (currentSelected && currentSelected.getAttribute("role")) {cabinetNodeId = currentSelected.getAttribute("role");}
+					if (mode && currentNode == cabinetNodeId) {cabinetNodeId = "root";}
+					
+					cabinetTree.makeTree({cabinetNode : cabinetNodeId});
+				}
 				
 				function getManagement() {
 					var mycabinetElmt  = document.getElementById("cabinetTree");

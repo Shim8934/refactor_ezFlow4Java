@@ -474,6 +474,15 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			return result;
 		}
 		
+		//Check if this cabinet has children
+		int totalChildren = ezCabinetDAO.getTotalChildren(map);
+		
+		if (totalChildren > 0) {
+			result.put("status", "error");
+			result.put("code", 8);
+			return result;
+		}
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);

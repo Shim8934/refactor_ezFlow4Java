@@ -262,4 +262,8 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<SimpleUserInfoVO> getUsersInfoFromIdList(Map<String, Object> map) {
 		return (List<SimpleUserInfoVO>)list("EzCabinetDAO.getUsersInfoFromIdList", map);
 	}
+
+	public int getTotalChildren(Map<String, Object> map) {
+		return (int)select("EzCabinetDAO.getTotalChildren", map);
+	}
 }

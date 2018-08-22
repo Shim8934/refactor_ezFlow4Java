@@ -118,6 +118,7 @@
 						case 5 : alert(CabinetMessages.strMovErr2)  ; break;
 						case 6 : alert(CabinetMessages.strMovErr3)  ; break;
 						case 7 : alert(CabinetMessages.strCapacity) ; break;
+						case 8 : alert(CabinetMessages.strDelete3)  ; break;
 						default: alert(CabinetMessages.strError)    ; return;
 					}
 				}
@@ -153,12 +154,13 @@
 					var selectedNode = document.querySelector("span[class='selectedNode']");
 					var currentNode  = "";
 					
+					if (selectedNode) {currentNode = selectedNode.getAttribute("role");}
 					if (!mode || mode != "del") {if (selectedNode) {currentNode = selectedNode.getAttribute("role");}}
 					
-					myCabinetTree.makeTree({cabinetNode : currentNode});
+					myCabinetTree.makeTree({cabinetNode : (!mode || mode != "del" ? currentNode : "")});
 					var leftPanel   = window.opener;
 					
-					if (leftPanel) {leftPanel.CabUserLeft.reloadTree(currentNode);}
+					if (leftPanel) {leftPanel.CabUserLeft.reloadTree(currentNode, mode);}
 				}
 				
 				function moveCabinetHandler() {
@@ -276,7 +278,7 @@
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
 					addFogPanel();
-					showCabinetPopup("delCab", 350, 160);
+					showCabinetPopup("delCab", 350, 180);
 				}
 				
 				function moveCabinetDialog(mode) {

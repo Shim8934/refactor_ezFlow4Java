@@ -448,19 +448,19 @@
 	************************************************************************************-->
 	
 	<select id="EzCabinetDAO.getMaxCabinetId" resultClass="Integer">
-		<![CDATA[select nvl(max(cabinet_id), 0) from tbl_cb_cabinet where tenant_id = #tenantId#]]>
+		<![CDATA[select nvl(max(cabinet_id), 0) from tbl_cb_cabinet where tenant_id = #tenantId#  and use_status = 1]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getMaxCabinetStep" resultClass="Integer">
-		<![CDATA[select nvl(max(cabinet_order), 0) from tbl_cb_cabinet where parent_id = #cabinetId# and tenant_id = #tenantId#]]>
+		<![CDATA[select nvl(max(cabinet_order), 0) from tbl_cb_cabinet where parent_id = #cabinetId# and tenant_id = #tenantId#  and use_status = 1]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getCabinetById" resultMap="cabinetVO">
-		<![CDATA[ select * from tbl_cb_cabinet where cabinet_id = #cabinetId# and tenant_id = #tenantId#]]>
+		<![CDATA[ select * from tbl_cb_cabinet where cabinet_id = #cabinetId# and tenant_id = #tenantId#  and use_status = 1]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getRootCabinetByType" resultMap="cabinetVO">
-		<![CDATA[ select * from tbl_cb_cabinet where cabinet_type = #type# and parent_id = -1 and creator_id = #userId# and tenant_id = #tenantId#]]>
+		<![CDATA[ select * from tbl_cb_cabinet where cabinet_type = #type# and parent_id = -1 and creator_id = #userId# and tenant_id = #tenantId#  and use_status = 1]]>
 	</select>
 	
 	<insert id="EzCabinetDAO.insertCabinet" parameterClass="CabinetVO">
@@ -570,6 +570,10 @@
 					) i1 on f.item_id = i1.item_id and f.tenant_id = i1.tenant_id
 			where f.tenant_id = #tenantId#
 		]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getTotalChildren" resultClass="Integer">
+		<![CDATA[ select count(*) from tbl_cb_cabinet where parent_id = #cabinetId# and tenant_id = #tenantId#  and use_status = 1]]>
 	</select>
 	
 	<!--***********************************************************************************
