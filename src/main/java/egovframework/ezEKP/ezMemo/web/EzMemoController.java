@@ -308,7 +308,6 @@ public class EzMemoController {
 	@RequestMapping(value = "/ezMemo/getMemoConfig.do")
 	public String getMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoConfig start");
-		logger.debug("메모 컨피그 진입");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -318,9 +317,14 @@ public class EzMemoController {
 		param.put("user_id",userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/getMemoConfig/users/" + userInfo.getId(), param, request, "get", null);
-		JSONObject memoConfigVO = (JSONObject) resultBody.get("data");
+		String status = resultBody.get("status").toString();
 		
-		model.addAttribute("memoConfigVO", memoConfigVO);
+		if ("ok".equals(status)) {
+			
+			JSONObject memoConfigVO = (JSONObject) resultBody.get("data");
+			model.addAttribute("memoConfigVO", memoConfigVO);
+			
+		} 
 		
 		logger.debug("getMemoConfig end");
 		return "json";
@@ -342,6 +346,37 @@ public class EzMemoController {
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("setFoldStatus end");
+		return "json";
+	}
+	
+	@RequestMapping(value = "/ezMemo/insertMemoConfig.do")
+	public String insertMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("insertMemoConfig start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		
+		param.put("font_size", 13);
+		param.put("use_date", 0);
+		param.put("use_gadget", 0);
+		param.put("default_color", 1);
+		param.put("color_name", "#3498DB;#F3CA26;#E67E22;#27AE60;#9B59B6;#95A5A6;#9FD4F6;#F4E8B6;#F6C99F;#A5F1C5;#E9C1FA;#FFFFFF;");
+		param.put("gadget_right", 0);
+		param.put("gadget_bottom", 0);
+		param.put("layer_left", 0);
+		param.put("layer_top", 0);
+		param.put("layer_width", 270);
+		param.put("layer_height", 270);
+		param.put("fold_status", 1);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/createMemoConfig/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("insertMemoConfig end");
 		return "json";
 	}
 }

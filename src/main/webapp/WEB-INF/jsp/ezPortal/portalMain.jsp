@@ -76,6 +76,8 @@
 
 		    window.onload = function() {
 		    	$("#open-memo").css("display", "");
+		    	
+		    	
 		    }
 		    
 		
@@ -223,12 +225,26 @@
 		        	dataType : "JSON",
 		        	url : "/ezMemo/getMemoConfig.do",
 		        	success : function(result) {
-		        		console.log(result);
-		        		$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
+						
+		        		if (result.memoConfigVO != null) {
+
+		        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
+		        		} else {
+		        			
+		        			$.ajax({
+		        				type : "POST",
+		        				dataType : "JSON",
+		        				url : "/ezMemo/insertMemoConfig.do",
+		        				success : function(result) {
+		        					console.log("insert 성공");
+		        				}
+		        			});
+		        		}
 		        	}
 		        });
 		        
 		     });
+
 		    
 		    function setDetailMemoPosition () {
 		    	var winWidth = $(window).width();

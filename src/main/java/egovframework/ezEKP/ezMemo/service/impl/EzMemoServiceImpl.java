@@ -194,4 +194,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("deleteMemoFolder ended.");
 	}
 
+	@Override
+	public void insertMemoConfig(MemoConfigVO memoConfigVO) {
+		logger.debug("insertMemoConfig start");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+		map.put("fold_status", memoConfigVO.getFold_status());
+		map.put("font_size", memoConfigVO.getFont_size());
+		map.put("use_date", memoConfigVO.getUse_date());
+		map.put("use_gadget", memoConfigVO.getUse_gadget());
+		map.put("default_color", memoConfigVO.getDefault_color());
+		map.put("color_name", memoConfigVO.getColor_name());
+		map.put("gadget_right", memoConfigVO.getGadget_right());
+		map.put("gadget_bottom", memoConfigVO.getGadget_bottom());
+		map.put("layer_height", memoConfigVO.getLayer_height());
+		map.put("layer_left", memoConfigVO.getLayer_left());
+		map.put("layer_top", memoConfigVO.getLayer_top());
+		map.put("layer_width", memoConfigVO.getLayer_width());
+		
+		ezMemoDAO.insertMemoConfig(map);
+		logger.debug("insertMemoConfig end");
+	}
+
 }

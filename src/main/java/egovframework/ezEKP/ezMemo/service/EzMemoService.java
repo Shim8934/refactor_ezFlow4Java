@@ -17,4 +17,5 @@ public interface EzMemoService {
 	public List<MemoVO> getMemoList(MemoVO vo, String order, String searchInput, String startDate, String endDate) throws Exception;
 	public void memoWrite(MemoVO memo) throws Exception;
 	public void setFoldStatus(MemoConfigVO memoConfigVO) throws Exception;
+	public void insertMemoConfig(MemoConfigVO memoConfigVO);
 }

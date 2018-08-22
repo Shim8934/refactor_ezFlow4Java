@@ -64,4 +64,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 		return (int) select("EzMemoDAO.getMaxOrder", map);
 	}
 
+	public void insertMemoConfig(Map<String, Object> map) {
+		insert("EzMemoDAO.insertMemoConfig", map);
+	}
+
 }
