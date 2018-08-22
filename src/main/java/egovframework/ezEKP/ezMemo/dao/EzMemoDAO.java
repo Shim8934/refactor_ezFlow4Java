@@ -55,4 +55,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public void insertMemo(Map<String, Object> map) throws Exception {
 		insert("EzMemoDAO.insertMemo", map);
 	}
+	
+	public int getMaxOrder(Map<String, Object> map) throws Exception {
+		return (int) select("EzMemoDAO.getMaxOrder", map);
+	}
 }

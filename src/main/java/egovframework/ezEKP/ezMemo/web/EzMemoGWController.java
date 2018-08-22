@@ -57,7 +57,7 @@ public class EzMemoGWController {
 	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value = "/rest/ezMemo/memo-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoList(@PathVariable String userId, MemoVO vo, HttpServletRequest request) throws Exception {
+	public JSONObject gwMemoList(@PathVariable String userId, MemoVO vo, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -73,11 +73,16 @@ public class EzMemoGWController {
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			List<MemoVO> memoList = ezMemoService.getMemoList(vo, order, searchInput, startDate, endDate);
+			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
+			
+			String[] colorList = config.getColor_name().split(";");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
 			result.put("memoList", memoList);
+			result.put("colorList", colorList);
+			result.put("defaultColor", config.getDefault_color()-1);
 			//result.put("folderId", );
 		} catch(Exception e) {
 			result.put("code", 1);
