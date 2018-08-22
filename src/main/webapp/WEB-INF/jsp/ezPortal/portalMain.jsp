@@ -11,6 +11,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -243,7 +244,40 @@
 		        	}
 		        });
 		        
+		        $("#memoMove").click(function() {
+
+		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+		            try { OpenWin.focus(); } catch (e) { }
+		        });
+		        
+		        memoFoldersInfo();
 		     });
+		    
+	        function memoFoldersInfo() {
+		    	selFolderId="";
+				selFolderName="";
+		    	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezMemo/getMemoFoldersInfo.do",
+					success: function(result){
+						console.log("메모함 정보");
+						console.log(result.folders);
+						
+						var html="";
+						var folderList = result["folders"];
+						
+						var html = "";
+						html += "<option>전체</option>";
+						folderList.forEach(function(list, index){
+							html+= "<option>"+list.folder_name+"</option>";
+						});
+						
+						$("#memoFolderList").html(html);
+					}	
+				});
+		    }
 
 		    
 		    function setDetailMemoPosition () {
@@ -486,7 +520,6 @@
 						
 						<select id="memoFolderList">
 							<option value="all" selected="selected">전체</option>
-							<option >할 일</option>
 						</select>
 						<button id="memoMove">이동</button>
 						<button id="new-memo" onclick="save()">추가</button>
