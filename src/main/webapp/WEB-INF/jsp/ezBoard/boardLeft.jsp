@@ -123,6 +123,7 @@
 		            }
 		        }
 		        setFoldStatus();
+		        memoFolderClickE();
 
 		    };
 		    function BoardRedirect() {
@@ -786,6 +787,9 @@
 	        }
 		    
 		    var foldStatus = "";
+		    var selId="";
+			var selFolderId="";
+			var selFolderName="";
 		    function memoFoldersInfo() {
 		    	$.ajax({
 					type : "GET",
@@ -805,7 +809,11 @@
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node' data1='" + list.folder_name + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name;
+							if(list.count!=0) {
+								html+="(" + list.count + ")";	
+							}
+							html+="</span></div>";
 						}); 
 						$('.memoFolders').append(html);
 						
@@ -821,6 +829,9 @@
 							srcImg+="<img border='0' src='/images/OrganTree_cross/plus.gif' style='width:18px;height:18px;'>";
 						}
 						$('.memoFoldImage').append(srcImg);
+						$('#memoTot').css("font-weight", "bold");
+						$('#countTotal').css("font-weight", "bold");
+						memoFolderClickE();
 					}     			
 				});
 		    }
@@ -847,6 +858,21 @@
 					});
 				});
 		    } 
+		    
+		    function memoFolderClickE() {
+		  		$(".node").click(function(){
+					if(selId!==""){
+						$("#"+selId).css("font-weight", "normal");
+					}
+					$('#memoTot').css("font-weight", "normal");
+					$('#countTotal').css("font-weight", "normal");
+					    	
+					selId = $(this).attr('id');
+					/* selFolderName = $(this).attr('data1');
+					selFolderId = $(this).attr('data2'); */
+					$(this).css("font-weight", "bold");
+				});
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -959,7 +985,7 @@
 					<div>
 						<src class="memoFoldImage"></src>
 						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
-						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="countTotal"></span></span>
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)" id="memoTot">전체메모<span id="countTotal"></span></span>
 						<div class="memoFolders"></div>
 					</div>
 				</div>
