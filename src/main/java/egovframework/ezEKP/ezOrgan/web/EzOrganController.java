@@ -78,9 +78,7 @@ public class EzOrganController {
         if (adminDist.equals("true")) {
         	topID = adminOrganChk[0];
         } else if (adminOrganChk.length>1 && adminOrganChk[1].equals("organ")){
-        } else  if (!topID.equals(userCompanyID)) {
-        	topID = userCompanyID;
-        } 
+        }
         
         logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID);
         
