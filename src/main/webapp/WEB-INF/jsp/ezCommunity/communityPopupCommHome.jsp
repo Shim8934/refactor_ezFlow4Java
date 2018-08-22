@@ -26,7 +26,11 @@
 	    		text-overflow:ellipsis;
 	    		display:inline-block;
 	    		width:135px;
-	    	}	    			
+	    	}
+	    	#treediv div.tree {
+	    		overflow-x:hidden;
+	    		overflow-y:auto;
+	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -93,7 +97,6 @@
 		                div.className = "tree";
 		                div.id = "TreeCtrl" + i + "obj";
 		                div.style.display = "none";
-		                div.style.overflow = "auto";
 		                document.getElementById("treediv").appendChild(h2);
 		                document.getElementById("treediv").appendChild(div);
 		            }
