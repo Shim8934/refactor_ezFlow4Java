@@ -1602,11 +1602,12 @@
 		     */
 		    function CheckInputField() {
 		        var pRegType = selRegisterType.value;
-				if (txtTitle.value == "") {
-		            alert("<spring:message code='ezApprovalG.t955'/>");
+				if (txtTitle.value.trim() == "") {
+		            alert("기록물 제목을 입력해 주세요.");
+		            txtTitle.focus();
 		            return false;
 		        }
-				if (txtRegY.value == "" || txtRegD.value == "" || txtRegM.value == "") {
+				if (txtRegY.value.trim() == "" || txtRegD.value.trim() == "" || txtRegM.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1045'/>");
 		            return false;
 		        } else {
@@ -1643,23 +1644,25 @@
 			            return false;
 			        }
 		        }
-				if (txtDrafter.value == "") {
+				if (txtDrafter.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1055'/>");
+		            txtDrafter.focus();
 		            return false;
 		        }
-				if (txtReceiptMember.value == "") {
-	                alert("<spring:message code='ezApprovalG.t1056'/>");
+				if (txtReceiptMember.value.trim() == "") {
+	                alert("발신기관명을 입력해 주세요.");
+	                txtReceiptMember.focus();
 	                return false;
 	            }
 				
 				if (pRegType == "1" || pRegType == "3") {
-					if (txtAprMemberTitle.value == "") {
+					if (txtAprMemberTitle.value.trim() == "") {
 		                alert("<spring:message code='ezApprovalG.t1054'/>");
 		                return false;
 		            }
 				}
 				if (pRegType == "5" || pRegType == "6") {
-					if (txtSummary.value == "") {
+					if (txtSummary.value.trim() == "") {
 		                alert("<spring:message code='ezApprovalG.t1058'/>");
 		                return false;
 		            }
@@ -1669,8 +1672,9 @@
 		            }
 				}
 				if (pRegType == "2" || pRegType == "4" || pRegType == "7" || pRegType == "8") {
-					if (txtOriginSN.value == "") {
-		                alert("<spring:message code='ezApprovalG.t1057'/>");
+					if (txtOriginSN.value.trim() == "") {
+		                alert("문서번호를 입력해 주세요.");
+		                txtOriginSN.focus();
 		                return false;
 		            }
 				}
@@ -2204,7 +2208,7 @@
 	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">
-	                            	<c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btn_AprDeptTempletModify_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code = 'ezApprovalG.lhj20' /></c:if></span></a></c:if>
+	                            	<%-- <c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btn_AprDeptTempletModify_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code = 'ezApprovalG.lhj20' /></c:if></span></a></c:if> --%>
 	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
