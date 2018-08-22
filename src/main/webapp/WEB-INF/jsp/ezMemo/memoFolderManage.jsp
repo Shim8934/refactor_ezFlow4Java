@@ -57,9 +57,31 @@
 		    }
 		    
 		    function delete_onclick() {
-		    	/**
-		    	구현해야됨
-		    	*/
+		    	if(selFolderName === "") {
+		     		alert("<spring:message code='ezMemo.t0038' />");
+		     		return;
+		     	} 
+		    	if (confirm("<spring:message code='ezMemo.t0039' />")) {
+		    		url = "/ezMemo/memoFolderAction.do?folder_id=" + selFolderId;
+            		method = "delete";
+		    	} else {
+		    	    return;
+		    	}
+		    
+		    	
+		    	$.ajax({
+		    		method : "POST",
+					dataType : "text",
+					async : false,
+					url : url,
+					data : {
+						"folder_name" : selFolderName,
+						"methodType" : method
+					},
+					success: function(){
+						memoFoldersInfo();
+					}     			
+				});
 		    }
 		    
 		    function close_onclick() {

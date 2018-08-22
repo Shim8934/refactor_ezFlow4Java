@@ -42,6 +42,8 @@
 					A.USER_ID = #user_id#
 				AND 
 					A.COMPANY_ID = #company_id# 
+				AND
+					A.DELETE_FLAG = 0
 				GROUP BY
 					A.FOLDER_ID	) C
 			LEFT OUTER JOIN   
@@ -158,6 +160,38 @@
 		SET
 			FOLDER_NAME = #folder_name#
 		WHERE
+			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.deleteMemos" parameterClass="map">
+		UPDATE
+			TBL_MEMO
+		SET
+			DELETE_FLAG = 1
+		WHERE
+			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.deleteMemoFolder" parameterClass="map">
+		UPDATE
+			TBL_MEMO_FOLDER 
+		SET
+			DELETE_FLAG = 1
+		WHERE
+			FOLDER_NAME = #folder_name#
+		AND
 			FOLDER_ID = #folder_id#
 		AND
 			USER_ID = #user_id#
