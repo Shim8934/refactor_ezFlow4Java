@@ -347,8 +347,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 	
 	@Override
-	public void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception {
-		CabinetVO cabinet = generateCabinetVO(cabName1, cabName2, -1, 0, parentId, userInfo);
+	public void addCabinet(int parentId, String cabName1, LoginVO userInfo) throws Exception {
+		CabinetVO cabinet = generateCabinetVO(cabName1, "", -1, 0, parentId, userInfo);
 		insertCabinet(cabinet);
 	}
 	
@@ -429,7 +429,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception {
+	public JSONObject renameCabinet(int cabinetId, String cabName1, LoginVO userInfo) throws Exception {
 		JSONObject result = new JSONObject();
 		int tenantId      = userInfo.getTenantId();
 		String companyId  = userInfo.getCompanyID();
@@ -448,7 +448,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		cabinet.setCabinetName1(cabName1);
-		cabinet.setCabinetName2(cabName2);
 		
 		updateCabinet(cabinet);
 		

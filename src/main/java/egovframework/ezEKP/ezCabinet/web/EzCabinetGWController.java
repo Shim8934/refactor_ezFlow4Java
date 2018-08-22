@@ -873,14 +873,13 @@ public class EzCabinetGWController {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
 		String cabName1   = request.getParameter("cabName1") != null ? request.getParameter("cabName1")                   : "";
-		String cabName2   = request.getParameter("cabName2") != null ? request.getParameter("cabName2")                   : "";
 		int parentId      = request.getParameter("parentId") != null ? Integer.parseInt(request.getParameter("parentId")) : -1;
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Parent Id: " + parentId + " || Cabinet name1: " + cabName1 + " || Cabinet name2: " + cabName2);
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Parent Id: " + parentId + " || Cabinet name1: " + cabName1);
 		
-		if (serverName.equals("") || userId.equals("") || parentId == -1 || cabName1.equals("") || cabName2.equals("")) {
+		if (serverName.equals("") || userId.equals("") || parentId == -1 || cabName1.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -900,7 +899,7 @@ public class EzCabinetGWController {
 				return result;
 			}
 			
-			cabinetService.addCabinet(parentId, cabName1, cabName2, userInfo);
+			cabinetService.addCabinet(parentId, cabName1, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -919,14 +918,13 @@ public class EzCabinetGWController {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
 		String cabName1   = request.getParameter("cabName1")  != null ? request.getParameter("cabName1")                    : "";
-		String cabName2   = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")                    : "";
 		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId + " || Cabinet name1: " + cabName1 + " || Cabinet name2: " + cabName2);
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId + " || Cabinet name1: " + cabName1);
 		
-		if (serverName.equals("") || userId.equals("") || cabinetId == -1 || cabName1.equals("") || cabName2.equals("")) {
+		if (serverName.equals("") || userId.equals("") || cabinetId == -1 || cabName1.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -946,7 +944,7 @@ public class EzCabinetGWController {
 				return result;
 			}
 			
-			result = cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
+			result = cabinetService.renameCabinet(cabinetId, cabName1, userInfo);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

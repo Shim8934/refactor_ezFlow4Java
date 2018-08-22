@@ -47,8 +47,8 @@ public interface EzCabinetRestService {
 	public JSONObject getUserSharedCabinet(HttpServletRequest request, String id, String shareId) throws Exception;
 	
 	//User cabinet management
-	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception;
-	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1, String cabinetName2) throws Exception;
+	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1) throws Exception;
+	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1) throws Exception;
 	public JSONObject deleteCabinet(HttpServletRequest request, String userId, String cabinetId) throws Exception;
 	public JSONObject moveCabinet(HttpServletRequest request, String userId, String cabinetId, String parentId, String mode) throws Exception;
 	

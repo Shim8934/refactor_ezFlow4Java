@@ -50,8 +50,8 @@ public interface EzCabinetService {
 	List<SimpleUserVO> getSharedUserList(LoginVO userInfo) throws Exception;
 	
 	//User cabinet management functions
-	void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
-	JSONObject renameCabinet(int cabinetId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
+	void addCabinet(int parentId, String cabName1, LoginVO userInfo) throws Exception;
+	JSONObject renameCabinet(int cabinetId, String cabName1, LoginVO userInfo) throws Exception;
 	JSONObject deleteCabinet(int cabinetId, LoginVO userInfo) throws Exception;
 	JSONObject moveCabinet(int cabinetId, int parentId, String mode, String realPath, LoginVO userInfo) throws Exception;
 	

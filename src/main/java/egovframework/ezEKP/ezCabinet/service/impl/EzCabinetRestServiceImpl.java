@@ -286,25 +286,23 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
-	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception {
+	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1) throws Exception {
 		String url                = "/rest/ezcabinet/cabinet/add";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",   userId);
 		param.put("parentId", parentId);
 		param.put("cabName1", cabinetName1);
-		param.put("cabName2", cabinetName2);
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 	
 	@Override
-	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1, String cabinetName2) throws Exception {
+	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1) throws Exception {
 		String url                = "/rest/ezcabinet/cabinet/rename";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",    userId);
 		param.put("cabinetId", cabinetId);
 		param.put("cabName1",  cabinetName1);
-		param.put("cabName2",  cabinetName2);
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}

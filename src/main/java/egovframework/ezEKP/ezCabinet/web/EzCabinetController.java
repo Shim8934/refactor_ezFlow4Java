@@ -504,16 +504,16 @@ public class EzCabinetController {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String parentId      = request.getParameter("parentId")  != null ? request.getParameter("parentId") : "";
 		String cabinetName1  = request.getParameter("cabName1")  != null ? request.getParameter("cabName1") : "";
-		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2") : "";
+		
 		JSONObject resultObj = new JSONObject();
 		
-		if (cabinetName1.equals("") || cabinetName2.equals("") || parentId.equals("")) {
+		if (cabinetName1.equals("") || parentId.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj            = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1, cabinetName2);
+		resultObj            = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1);
 		
 		logger.debug("jsonAddCabinet end");
 		return resultObj.toString();
@@ -526,16 +526,15 @@ public class EzCabinetController {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
 		String cabinetName1  = request.getParameter("cabName1")  != null ? request.getParameter("cabName1")  : "";
-		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")  : "";
 		JSONObject resultObj = new JSONObject();
 		
-		if (cabinetName1.equals("") || cabinetName2.equals("") || cabinetId.equals("")) {
+		if (cabinetName1.equals("") || cabinetId.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj            = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1, cabinetName2);
+		resultObj            = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1);
 		
 		logger.debug("jsonRenameCabinet end");
 		return resultObj.toString();
