@@ -1813,7 +1813,8 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
 							var addressType = "email";
 							var href = ""
@@ -1885,7 +1886,8 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
 							var addressType = "email";
 							var href = ""
