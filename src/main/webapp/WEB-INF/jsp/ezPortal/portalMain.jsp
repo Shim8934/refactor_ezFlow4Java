@@ -183,6 +183,9 @@
 		        			url :  "/ezMemo/setLayerArea.do", 
 		        			success : function (result) {
 		        				console.log(result);
+		        			},
+		        			error : function() {
+		        				console.log("에러");
 		        			}
 		        		});
 		        	}
@@ -215,10 +218,17 @@
 		        	
 		        });
 		        
+		        $.ajax({
+		        	type : "GET",
+		        	dataType : "JSON",
+		        	url : "/ezMemo/getMemoConfig.do",
+		        	success : function(result) {
+		        		console.log(result);
+		        		$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
+		        	}
+		        });
 		        
 		     });
-		    
-		    
 		    
 		    function setDetailMemoPosition () {
 		    	var winWidth = $(window).width();
@@ -288,7 +298,7 @@
 			        		dataType : "JSON",
 			        		url : "/ezMemo/setLayerPosition.do",
 			        		success : function(result) {
-			        			console.log(result);
+			        			
 			        		}
 			        	})
 	        		} 

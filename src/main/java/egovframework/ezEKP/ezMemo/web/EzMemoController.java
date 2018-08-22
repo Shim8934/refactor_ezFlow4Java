@@ -24,6 +24,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezLadder.web.EzLadderController;
+import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -271,12 +273,11 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerArea/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("상태: " + status);
 		logger.debug("setLayerArea end");
-		return status;
+		return "json";
 	}
 	
-	@RequestMapping(value = "ezMemo/setLayerPosition.do")
+	@RequestMapping(value = "/ezMemo/setLayerPosition.do")
 	public String setLayerPosition(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request) throws Exception {
 		logger.debug("setLayerPosition start");
 
@@ -300,9 +301,29 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerPosition/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("상태: " + status);
 		logger.debug("setLayerPosition end");
-		return status;
+		return "json";
+	}
+	
+	@RequestMapping(value = "/ezMemo/getMemoConfig.do")
+	public String getMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getMemoConfig start");
+		logger.debug("메모 컨피그 진입");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/getMemoConfig/users/" + userInfo.getId(), param, request, "get", null);
+		JSONObject memoConfigVO = (JSONObject) resultBody.get("data");
+		
+		model.addAttribute("memoConfigVO", memoConfigVO);
+		
+		logger.debug("getMemoConfig end");
+		return "json";
 	}
 	
 	@RequestMapping(value = "/ezMemo/setFoldStatus.do")

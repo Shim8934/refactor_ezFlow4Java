@@ -87,6 +87,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("tenant_id", memoConfigVO.getTenant_id());
 		map.put("company_id", memoConfigVO.getCompany_id());
 
+		map.put("use_date", memoConfigVO.getUse_date());
+		map.put("use_gadget", memoConfigVO.getUse_gadget());
+		
 		if (memoConfigVO.getLayer_width() > 0 && memoConfigVO.getLayer_height() > 0) {
 
 			map.put("layer_width", memoConfigVO.getLayer_width());
@@ -191,5 +194,4 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("deleteMemoFolder ended.");
 	}
 
-	
 }
