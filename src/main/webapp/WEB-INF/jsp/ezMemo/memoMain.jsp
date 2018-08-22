@@ -66,6 +66,7 @@
 	</style>
 	<script type="text/javascript">
 		var memoList = ${memoList};
+		var folderId = "4";//"${folderId}";
 		var headerColor = "rgb(52, 152, 219)";
 		var bodyColor = "rgb(159, 212, 246)";
 		var topHeight = "100";
@@ -153,22 +154,34 @@
 		}
 		
 		function newMemo() {
-			var html = "";
-	    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
-	    	html += "<input type='checkbox' name='memo'>";
-	    	html += "<div class='memo-color'>";
-	    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-	    	html += "<span class='write-date'></span>";
-	    	/* html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; */
-	    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-	    	html += "<textarea class='memo-text' style='background-color:"+ bodyColor +"'>";
-	    	html += "</textarea>";
-	    	html += "</div>"
-	    	$("#memoList").prepend(html);
-	    	$("#textarea").val('');
-	    	
-	    	addDate();
-	    	addremove();
+			$.ajax ({
+ 			   	url : '/ezMemo/memoWrite.do',
+ 			   	type : 'POST',
+                dataType : 'text',
+                data : { folderId : folderId },  
+                cache: false,
+                success: function(result) {
+                	var html = "";
+        	    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
+        	    	html += "<input type='checkbox' name='memo'>";
+        	    	html += "<div class='memo-color'>";
+        	    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
+        	    	html += "<span class='write-date'></span>";
+        	    	/* html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; */
+        	    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
+        	    	html += "<textarea class='memo-text' style='background-color:"+ bodyColor +"'>";
+        	    	html += "</textarea>";
+        	    	html += "</div>"
+        	    	$("#memoList").prepend(html);
+        	    	$("#textarea").val('');
+        	    	
+        	    	addDate();
+        	    	addremove();
+                },
+                error : function() {
+                	
+                }
+			});
 		}
 		
 	    function addDate(date) {
@@ -317,7 +330,7 @@
 	    }
 		
 		function onSelect_Option() {
-			alert($("#memoType").val());
+			
 		}
 	</script>
 	<body class="mainbody" style="overflow: hidden;" marginwidth="0" marginheight="0">

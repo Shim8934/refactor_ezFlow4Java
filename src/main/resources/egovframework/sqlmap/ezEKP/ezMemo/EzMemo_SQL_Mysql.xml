@@ -98,6 +98,15 @@
 				DELETE_FLAG = 0
 		]]>
 	</select>
+					
+	<insert id="EzMemoDAO.insertMemo" parameterClass="Map">
+		<![CDATA[
+		 	INSERT INTO TBL_MEMO
+                (user_id, write_date, folder_id, order, company_id, tenant_id)
+            VALUES
+                (#user_id#, #write_date#, #folder_id#, #order#,  #company_id#, #tenant_id#)
+         ]]>
+	</insert>
 	
 	<update id="EzMemoDAO.setMemoConfig" parameterClass="hashmap">
 

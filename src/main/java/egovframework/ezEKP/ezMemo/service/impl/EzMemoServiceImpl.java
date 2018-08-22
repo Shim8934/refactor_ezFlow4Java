@@ -115,6 +115,22 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("getMemoList ended.");
 		return memoList;
 	}
+	
+	public void memoWrite(MemoVO memo) throws Exception {
+		logger.debug("memoWrite started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", memo.getTenant_id());
+		map.put("company_id", memo.getCompany_id());
+		map.put("user_id", memo.getUser_id());
+		map.put("folder_id", memo.getFolder_id());
+		map.put("write_date", memo.getWrite_date());
+		map.put("order", 3);
+		
+		ezMemoDAO.insertMemo(map);
+		
+		logger.debug("memoWrite ended.");
+	}
 
 	@Override
 	public void addMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
