@@ -24,7 +24,7 @@
 		var writerId = '${board.writerId}';
 		var authority = '${authority}'
 		var projectId = '${board.projectId}';	
-		var title = '${board.title}';
+		var title = '<c:out value = "${board.title}"/>';
 		var folderId = '${board.folderId}';
 		var folderName = "";
 		var projectName = '<c:out value = "${board.projectName}"/>';

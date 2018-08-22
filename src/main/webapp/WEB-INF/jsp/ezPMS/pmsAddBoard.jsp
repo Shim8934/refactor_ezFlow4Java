@@ -29,7 +29,7 @@
 	var writerName = "${writerName}";
 	var writerDeptName = "${writerDeptName}";
 	
-	var title = '${board.title}';
+	var title = '<c:out value = "${board.title}"/>';
 	
 	var writeOverview = '${board.writeOverview}';
 	var writeType = "${board.writeType}";
@@ -79,12 +79,12 @@
 				break;
 			}
 			
-			$('#title').val(title);
+			$('#title').val(replaceString(title));
 			$('#writeOverview').val(writeOverview);
 			
 		} else if (mode == 'reply') {
 			
-			$('#title').val(title);
+			$('#title').val(replaceString(title));
 		}
 				
 		var fileList = '${fileList}';
@@ -153,7 +153,7 @@
 						 + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" 
 						 + "&nbsp;${board.writerName}" + "(" + "${board.writerPosition}" + "," + "${board.writerDeptName}" + ")"
 						 + "<br><B><spring:message code='ezBoard.t413' />"+"</B>" 
-						 + '&nbsp;${board.title}' + "<br><br>" + writeContent;
+						 + '&nbsp;<c:out value = "${board.title}"/>' + "<br><br>" + writeContent;
 			
 			message.SetEditorContent(writeContent);
 		}
