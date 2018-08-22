@@ -414,6 +414,8 @@
 	  	  function init() {
 	  	    rightMouseListener();
 	  	    leftMouseListener();
+	  	  /* var selObj = window.getSelection();
+			alert(selObj.toString); */
 	  	  }
 
 	  	  /* 마우스 왼클릭 감지 */
@@ -444,9 +446,23 @@
 	  	    test.style.left = x + "px";
 
 	  	  }
-
-	  	  init();
-	  	})();
+			
+	  	  	$(".menus").click(function(){
+	  		  	var rightId = $(this).attr('id');
+	  		  	toggleOnOff(0);
+	  		  
+	  		  	switch(rightId) {
+				case "menu1":
+					break;
+				case "menu2":
+					btnPrint_onClick();
+					break;
+				case "menu3":
+					break;
+				}
+			});
+	  	  	init();
+	  		})();
 	  	</script>  
 	</body>
 </html>
