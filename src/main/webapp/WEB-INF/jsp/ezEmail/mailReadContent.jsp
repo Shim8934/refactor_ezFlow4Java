@@ -10,6 +10,30 @@
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 	        <script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    	<style>
+	    		
+.context-menus {
+  position: absolute;
+  display: none;
+  border: 1px solid black;
+  width: 100px;
+  text-align: center;
+}
+
+.context-menus.active {
+  display: block;
+  background-color: white;
+}
+
+.context-menus.active>.rightBox>li {
+  list-style: none;
+  padding: 10px;
+}
+
+.context-menus.active>.rightBox>li:hover {
+  background-color: lightgreen;
+}
+	    	</style>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";
@@ -371,6 +395,58 @@
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
 		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}<!--  --></div>
-		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
+		<!-- 마우스 오른쪽 메뉴 -->
+	  	<div id="context-menus" class="context-menus">
+	   		<ul class="rightBox">
+	      		<li class="menus" id="menu1">복사</li>
+	      		<li class="menus" id="menu2">인쇄</li>
+	      		<li class="menus" id="menu3">메모 추가</li>
+	    	</ul>	
+	  	</div>
+	  	<script type="text/javascript">
+	  	(function() {
+
+	  	  /* 마우스 오른쪽 메뉴 변수 */
+	  	  var test = document.getElementById("context-menus");
+
+	  	  /* 마우스 클릭 리스너를 초기 실행시킨다. */
+	  	  function init() {
+	  	    rightMouseListener();
+	  	    leftMouseListener();
+	  	  }
+
+	  	  /* 마우스 왼클릭 감지 */
+	  	  function leftMouseListener() {
+	  	    document.addEventListener("click", function(e) {
+	  	      toggleOnOff(0);
+	  	    })
+	  	  }
+
+	  	  /* 마우스 우클릭 감지 */
+	  	  function rightMouseListener() {
+	  	    document.addEventListener("contextmenu", function(e) {
+	  	      event.preventDefault();
+	  	      toggleOnOff(1);
+	  	      showMenu(e.x, e.y);
+	  	    });
+	  	  }
+
+	  	  /* 마우스 메뉴 on & off */
+	  	  function toggleOnOff(num) {
+	  	    num === 1 ? test.classList.add("active") : test.classList.remove("active");
+	  	  }
+
+	  	  /* 마우스 클릭한 지점에서 메뉴 보여줌 */
+	  	  function showMenu(x, y) {
+	  	    console.log(test);
+	  	    test.style.top = y + "px";
+	  	    test.style.left = x + "px";
+
+	  	  }
+
+	  	  init();
+	  	})();
+	  	</script>  
 	</body>
 </html>

@@ -174,8 +174,6 @@
 			FROM 
 				TBL_MEMO_FOLDER
 			WHERE 
-				USER_ID = #user_id#
-			AND
 				TENANT_ID = #tenant_id#
 			AND 
 				COMPANY_ID = #company_id# 
