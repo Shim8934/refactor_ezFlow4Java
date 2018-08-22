@@ -70,7 +70,7 @@
 	<select id="EzMemoDAO.getMemoConfig" resultClass="MemoConfigVO">
 		<![CDATA[
 			SELECT
-				USE_DATE, USE_GADGET, FONT_SIZE
+				USE_DATE, USE_GADGET, FONT_SIZE, FOLD_STATUS
 			FROM
 				TBL_MEMO_CONFIG
 			WHERE 

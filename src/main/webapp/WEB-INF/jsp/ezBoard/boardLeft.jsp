@@ -784,6 +784,7 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
+		    var foldStatus = "";
 		    function memoFoldersInfo() {
 		    	$.ajax({
 					type : "GET",
@@ -794,7 +795,6 @@
 						if(result["memoCount"]*1 >0){
 							$('#countTotal').html("(" + result["memoCount"] + ")");
 						}
-						
 						var html="";
 						var folderList = result["folders"];
 						$('.memoNode').remove();
@@ -807,6 +807,28 @@
 							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node'>" + list.folder_name + "<span id='folderCount" + index +"'></span>(" + list.count + ")</span></div>";
 						}); 
 						$('.memoFolders').append(html);
+						
+						var srcImg="";
+						$('.memoFoldImage').empty();
+						
+						foldStatus = result["foldStatus"]; 
+						if(foldStatus == 1) {
+							$('.memoFolders').hide();
+							srcImg+="<img border='0' src='/images/OrganTree_cross/minus.gif' style='width:18px;height:18px;'>";
+						} else {
+							$('.memoFolders').show();
+							srcImg+="<img border='0' src='/images/OrganTree_cross/plus.gif' style='width:18px;height:18px;'>";
+						}
+						$('.memoFoldImage').append(srcImg);
+						$('.memoFoldImage').click(function(){
+							if(foldStatus == 0) {
+								$('.memoFolders').hide();
+								foldStatus = 1;
+							} else {
+								$('.memoFolders').show();
+								foldStatus = 0;
+							}
+						});
 					}     			
 				});
 		    }
@@ -920,7 +942,7 @@
 			<ul>
 				<div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
 					<div>
-						<img border="0" src="/images/OrganTree_cross/plus.gif" style="width:18px;height:18px;">
+						<src class="memoFoldImage"></src>
 						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
 						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="countTotal"></span></span>
 						<div class="memoFolders"></div>

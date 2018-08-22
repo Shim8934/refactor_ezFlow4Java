@@ -116,11 +116,14 @@ public class EzMemoController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
-		String memoCount = "2";//resultBody.get("memoCount").toString();
+		String memoCount = resultBody.get("memoCount").toString();
+		String foldStatus = resultBody.get("foldStatus").toString();
+		
 		if (status.equals("ok")) {		
 				JSONArray folders = (JSONArray) resultBody.get("data");
 				model.addAttribute("folders", folders);
 				model.addAttribute("memoCount", memoCount);
+				model.addAttribute("foldStatus", foldStatus);
 		}
 			
 		logger.debug("memoFoldersInfo ended");
