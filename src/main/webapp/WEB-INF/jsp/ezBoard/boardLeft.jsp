@@ -122,6 +122,7 @@
 		                favoriteList();
 		            }
 		        }
+		        setFoldStatus();
 
 		    };
 		    function BoardRedirect() {
@@ -812,26 +813,40 @@
 						$('.memoFoldImage').empty();
 						
 						foldStatus = result["foldStatus"]; 
-						if(foldStatus == 1) {
-							$('.memoFolders').hide();
+						if(foldStatus == 2) {
+							$('.memoFolders').show();
 							srcImg+="<img border='0' src='/images/OrganTree_cross/minus.gif' style='width:18px;height:18px;'>";
 						} else {
-							$('.memoFolders').show();
+							$('.memoFolders').hide();
 							srcImg+="<img border='0' src='/images/OrganTree_cross/plus.gif' style='width:18px;height:18px;'>";
 						}
 						$('.memoFoldImage').append(srcImg);
-						$('.memoFoldImage').click(function(){
-							if(foldStatus == 0) {
-								$('.memoFolders').hide();
-								foldStatus = 1;
-							} else {
-								$('.memoFolders').show();
-								foldStatus = 0;
-							}
-						});
 					}     			
 				});
 		    }
+		    
+		    function setFoldStatus() {
+		    	$('.memoFoldImage').click(function(){
+					if(foldStatus == 1) {
+						foldStatus = 2;
+					} else {
+						foldStatus = 1;
+					}
+					
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezMemo/setFoldStatus.do",
+						data: {
+							"fold_status": foldStatus
+						},
+						success: function(){
+							memoFoldersInfo();
+						} 
+					});
+				});
+		    } 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">

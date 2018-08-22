@@ -70,7 +70,8 @@
 	<select id="EzMemoDAO.getMemoConfig" resultClass="MemoConfigVO">
 		<![CDATA[
 			SELECT
-				USE_DATE, USE_GADGET, FONT_SIZE, FOLD_STATUS, COLOR_NAME, DEFAULT_COLOR
+				USER_ID, FONT_SIZE, USE_DATE, USE_GADGET, DEFAULT_COLOR, COLOR_NAME, GADGET_RIGHT, 
+				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, FOLD_STATUS, COMPANY_ID, TENANT_ID
 			FROM
 				TBL_MEMO_CONFIG
 			WHERE 
@@ -135,6 +136,7 @@
 			<dynamic>
 				USE_DATE = #use_date#
 				, USE_GADGET = #use_gadget#
+				
 				<isNotNull property="font_size">
 				, FONT_SIZE = #font_size#
 				</isNotNull>
@@ -220,6 +222,19 @@
 		AND
 			FOLDER_ID = #folder_id#
 		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.setFoldStatus" parameterClass="map">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			FOLD_STATUS = #fold_status#
+		WHERE
 			USER_ID = #user_id#
 		AND
 			COMPANY_ID = #company_id# 
