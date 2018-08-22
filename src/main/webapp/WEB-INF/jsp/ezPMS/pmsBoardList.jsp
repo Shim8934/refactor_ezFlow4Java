@@ -124,7 +124,7 @@
 			return;
 		}
 	
-		var itemIds = new Array();
+		itemIds = new Array();
 		
 		checkBoxes.each(function() {
 			var itemId = $(this).parents("tr").eq(0).attr("data-itemid");
