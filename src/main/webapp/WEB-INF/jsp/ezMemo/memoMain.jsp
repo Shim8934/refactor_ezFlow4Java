@@ -68,8 +68,9 @@
 		var memoList = ${memoList};
 		var folderId = "4";//"${folderId}";
 		var topHeight = "100";
-		var memoColor = ${colorList};
-		var defaultColor = ${defaultColor};
+		var colorList = "${colorList}";
+		var memoColor = colorList.split(";");
+		var defaultColor = "${defaultColor}";
 		var headerColor = memoColor[defaultColor];
 		var bodyColor = memoColor[defaultColor+6];
 		var listType = 0;		// 정렬 보기 방식 선택
@@ -107,7 +108,7 @@
 	        	}
 	        }); */
 	        
-			for(var i=0; i<memoList.length; i++) {
+	        for(var i=0; i<memoList.length; i++) {
 				var html = "";
 		    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
 		    	html += "<input type='checkbox' name='memo'>";
@@ -126,7 +127,7 @@
 		    	addDate(memoList[i].write_date.substring(0,10));
 		    	
 		    	addremove();
-			}
+	        }
 			/* // 체크 박스 모두 해제
 			$("#uncheckAll").click(function() {
 				$("input[name=box]:checkbox").each(function() {

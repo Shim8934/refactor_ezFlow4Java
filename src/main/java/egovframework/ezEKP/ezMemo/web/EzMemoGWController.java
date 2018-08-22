@@ -75,13 +75,11 @@ public class EzMemoGWController {
 			List<MemoVO> memoList = ezMemoService.getMemoList(vo, order, searchInput, startDate, endDate);
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
 			
-			String[] colorList = config.getColor_name().split(";");
-			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
 			result.put("memoList", memoList);
-			result.put("colorList", colorList);
+			result.put("colorList", config.getColor_name());
 			result.put("defaultColor", config.getDefault_color()-1);
 			//result.put("folderId", );
 		} catch(Exception e) {
