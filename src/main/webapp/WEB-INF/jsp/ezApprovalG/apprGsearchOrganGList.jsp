@@ -234,7 +234,8 @@
             <li><span onclick="return btnCalcel_onClick()"></span></li>
         </ul>
     </div>
-    <div style="width: 100%; overflow: AUTO; height: 480px;" id="divList">
+    <span>▒ <spring:message code='ezApprovalG.bhs02'/></span>
+    <div style="width: 100%; overflow: AUTO; height: 474px; margin-top:5px;" id="divList">
         <div id="lvOuterOrganList" style="height: 480px;"></div>
     </div>
     <div class="btnpositionNew">

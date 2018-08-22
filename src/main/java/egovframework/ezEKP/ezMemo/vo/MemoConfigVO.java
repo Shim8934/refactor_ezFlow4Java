@@ -24,16 +24,15 @@ public class MemoConfigVO {
 	/** 레이어 팝업 y 좌표*/
 	private int layer_top;
 	/** 레이어 팝업 너비*/
-	private int layer_width;
+	private double layer_width;
 	/** 레이어 팝업 높이*/
-	private int layer_height;
+	private double layer_height;
 	/** 메모함 펼침 상태*/
 	private int fold_status;
 	/** 컴퍼니 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
 	private int tenant_id;
-
 	public String getUser_id() {
 		return user_id;
 	}
@@ -94,16 +93,16 @@ public class MemoConfigVO {
 	public void setLayer_top(int layer_top) {
 		this.layer_top = layer_top;
 	}
-	public int getLayer_width() {
+	public double getLayer_width() {
 		return layer_width;
 	}
-	public void setLayer_width(int layer_width) {
+	public void setLayer_width(double layer_width) {
 		this.layer_width = layer_width;
 	}
-	public int getLayer_height() {
+	public double getLayer_height() {
 		return layer_height;
 	}
-	public void setLayer_height(int layer_height) {
+	public void setLayer_height(double layer_height) {
 		this.layer_height = layer_height;
 	}
 	public int getFold_status() {
@@ -124,4 +123,17 @@ public class MemoConfigVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
+	@Override
+	public String toString() {
+		return "MemoConfigVO [user_id=" + user_id + ", font_size=" + font_size
+				+ ", use_date=" + use_date + ", use_gadget=" + use_gadget
+				+ ", default_color=" + default_color + ", color_name="
+				+ color_name + ", gadget_right=" + gadget_right
+				+ ", gadget_bottom=" + gadget_bottom + ", layer_left="
+				+ layer_left + ", layer_top=" + layer_top + ", layer_width="
+				+ layer_width + ", layer_height=" + layer_height
+				+ ", fold_status=" + fold_status + ", company_id=" + company_id
+				+ ", tenant_id=" + tenant_id + "]";
+	}
+
 }

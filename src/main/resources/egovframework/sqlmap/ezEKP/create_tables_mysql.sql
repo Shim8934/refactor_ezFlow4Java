@@ -2745,6 +2745,25 @@ CREATE TABLE `tbl_audio_visualrecexinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_audio_visualrecexinfo_temp`
+--
+
+DROP TABLE IF EXISTS `tbl_audio_visualrecexinfo_temp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_audio_visualrecexinfo_temp` (
+  `DOCID` varchar(80) NOT NULL,
+  `RECORDID` varchar(68) DEFAULT NULL,
+  `SEPERATEATTACHNO` varchar(8) NOT NULL,
+  `SUMMARY` varchar(1020) DEFAULT NULL,
+  `RECORDTYPE` varchar(200) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`,`SEPERATEATTACHNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_autodocnum_item`
 --
 
@@ -8040,6 +8059,52 @@ CREATE TABLE `tbl_record` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_record_temp`
+--
+
+DROP TABLE IF EXISTS `tbl_record_temp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_record_temp` (
+  `RECORDID` varchar(68) DEFAULT NULL,
+  `DOCID` varchar(80) NOT NULL,
+  `PROCESSDEPTNAME` varchar(200) DEFAULT NULL,
+  `PROCESSDEPTCODE` varchar(28) DEFAULT NULL,
+  `REGISTERYEAR` varchar(16) DEFAULT NULL,
+  `REGISTERDATE` datetime DEFAULT NULL,
+  `REGISTERNO` varchar(52) DEFAULT NULL,
+  `APRMEMBERTITLE` varchar(200) DEFAULT NULL,
+  `DRAFTERNAME` varchar(200) DEFAULT NULL,
+  `EXECUTEDATE` datetime DEFAULT NULL,
+  `RECEIPTMEMBERNAME` varchar(200) DEFAULT NULL,
+  `SENDINGMEMBERNAME` varchar(200) DEFAULT NULL,
+  `DELIVERYNO` varchar(68) DEFAULT NULL,
+  `PRODUCEDEPTREGNO` varchar(120) DEFAULT NULL,
+  `ELECTRONICRECFLAG` varchar(4) DEFAULT NULL,
+  `SPECIALRECORDCODE` varchar(20) DEFAULT NULL,
+  `PUBLICITYCODE` varchar(36) DEFAULT NULL,
+  `LIMITRANGE` varchar(400) DEFAULT NULL,
+  `OLDRECORDFLAG` varchar(4) DEFAULT NULL,
+  `DELETEDATE` datetime DEFAULT NULL,
+  `DELFLAG` varchar(4) DEFAULT NULL,
+  `SPECIALCATALOGFLAG` varchar(4) DEFAULT NULL,
+  `ATTACHFLAG` varchar(4) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `REJECTFLAG` varchar(4) DEFAULT NULL,
+  `MANUALREGFLAG` varchar(4) DEFAULT NULL,
+  `DOCTYPE` varchar(4) DEFAULT NULL,
+  `PROCESSDEPTNAME2` varchar(200) DEFAULT NULL,
+  `APRMEMBERTITLE2` varchar(200) DEFAULT NULL,
+  `DRAFTERNAME2` varchar(200) DEFAULT NULL,
+  `RECEIPTMEMBERNAME2` varchar(200) DEFAULT NULL,
+  `SENDINGMEMBERNAME2` varchar(200) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_recordhistory`
 --
 
@@ -8190,6 +8255,32 @@ CREATE TABLE `tbl_recroleinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`RECORDID`,`SEPERATEATTACHNO`,`USERID`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_recroleinfo_temp`
+--
+
+DROP TABLE IF EXISTS `tbl_recroleinfo_temp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_recroleinfo_temp` (
+  `DOCID` varchar(80) NOT NULL,
+  `RECORDID` varchar(68) DEFAULT NULL,
+  `SEPERATEATTACHNO` varchar(8) NOT NULL,
+  `USERID` varchar(100) NOT NULL,
+  `USERRIGHT` bigint(10) DEFAULT NULL,
+  `USERNAME` varchar(200) DEFAULT NULL,
+  `USERTITLE` varchar(200) DEFAULT NULL,
+  `DEPTCODE` varchar(28) DEFAULT NULL,
+  `DEPTNAME` varchar(200) DEFAULT NULL,
+  `USERNAME2` varchar(200) DEFAULT NULL,
+  `USERTITLE2` varchar(200) DEFAULT NULL,
+  `DEPTNAME2` varchar(200) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`,`SEPERATEATTACHNO`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -8779,6 +8870,36 @@ CREATE TABLE `tbl_seperateattach` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_seperateattach_temp`
+--
+
+DROP TABLE IF EXISTS `tbl_seperateattach_temp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_seperateattach_temp` (
+  `DOCID` varchar(80) NOT NULL,
+  `RECORDID` varchar(68) DEFAULT NULL,
+  `SEPERATEATTACHNO` varchar(8) NOT NULL,
+  `TITLE` varchar(1020) DEFAULT NULL,
+  `REGISTERTYPE` varchar(4) DEFAULT NULL,
+  `NUMOFPAGE` varchar(12) DEFAULT NULL,
+  `DELFLAG` varchar(72) DEFAULT NULL,
+  `MODIFYFLAG` varchar(4) DEFAULT NULL,
+  `DELETEDATE` datetime DEFAULT NULL,
+  `CABINETID` varchar(112) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `CATALOGTRANSFERYEAR` bigint(10) DEFAULT NULL,
+  `DOCTRANSFERYEAR` bigint(10) DEFAULT NULL,
+  `CONFIRMFLAG` varchar(4) DEFAULT NULL,
+  `CATALOGTRANSFERFLAG` varchar(4) DEFAULT NULL,
+  `DOCTRANSFERFLAG` varchar(4) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`,`SEPERATEATTACHNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_serialnumgen`
 --
 
@@ -8899,6 +9020,26 @@ CREATE TABLE `tbl_specialcataloginfo_rec` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`RECORDID`,`SERIALNO`),
   CONSTRAINT `FK_TBL_SPECIALCATALOGINFO_REC` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `RECORDID`) REFERENCES `tbl_record` (`TENANT_ID`, `COMPANYID`, `RECORDID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_specialcataloginfo_tmp`
+--
+
+DROP TABLE IF EXISTS `tbl_specialcataloginfo_tmp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_specialcataloginfo_tmp` (
+  `DOCID` varchar(80) NOT NULL,
+  `RECORDID` varchar(68) NOT NULL,
+  `SERIALNO` varchar(12) NOT NULL,
+  `SC1` varchar(200) DEFAULT NULL,
+  `SC2` varchar(200) DEFAULT NULL,
+  `SC3` varchar(200) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`RECORDID`,`SERIALNO`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

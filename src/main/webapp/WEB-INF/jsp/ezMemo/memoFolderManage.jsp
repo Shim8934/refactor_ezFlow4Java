@@ -18,8 +18,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			
-	
-
+			var selId="";
+			var selFolderId="";
+			var selFolderName="";
 			var ReturnFunction;
 			window.onload = function () {
 			    CurrentHeight = document.body.clientHeight;
@@ -39,61 +40,57 @@
 			}
             
 		    function modify_onclick() {
-		     
-		        
+		     	if(selFolderName === "") {
+		     		alert("<spring:message code='ezMemo.t0038' />");
+		     		return;
+		     	}
 		        inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
 		        inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
-		        inputNameDlg_cross_dialogArguments[2] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-		        inputNameDlg_cross_dialogArguments[3] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        inputNameDlg_cross_dialogArguments[2] = selFolderName
+		        inputNameDlg_cross_dialogArguments[3] = selFolderId;
     
-		        DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
+		        DivPopUpShow(330, 200, "/ezMemo/memoInputName.do");
 		    }
 		    
 		    function onclick_Complete(szName) {
 		    	DivPopUpHidden();
-		    	opener.LoadEmailTree();
-		    	
-		    	$.ajax({
-            		type : "POST",
-            		url : "/ezCircular/getCircularFolderList.do",
-            		async : false,
-            		dataType : "json",
-            		data : {},
-            		success : function(result) {
-            			$("#PostTreeView").html("");
-	            		
-            			PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
-                        
-                        var xmlHTTP = createXMLHttpRequest();
-                        xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
-                        xmlHTTP.send();
-                        
-                        var treeconfig;
-                        
-                        if (CrossYN()) {
-                            treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-                        }
-                        else
-                            treeconfig = xmlHTTP.responseXML;
-
-                        PostTreeView.config(treeconfig);
-                        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
-                        PostTreeView.update();
-            		}
-	        	});
 		    }
 		    
 		    function delete_onclick() {
+		    	if(selFolderName === "") {
+		     		alert("<spring:message code='ezMemo.t0038' />");
+		     		return;
+		     	} 
+		    	if (confirm("<spring:message code='ezMemo.t0039' />")) {
+		    		url = "/ezMemo/memoFolderAction.do?folder_id=" + selFolderId;
+            		method = "delete";
+		    	} else {
+		    	    return;
+		    	}
+		    
 		    	
+		    	$.ajax({
+		    		method : "POST",
+					dataType : "text",
+					async : false,
+					url : url,
+					data : {
+						"folder_name" : selFolderName,
+						"methodType" : method
+					},
+					success: function(){
+						memoFoldersInfo();
+					}     			
+				});
 		    }
 		    
-		   
-
 		    function close_onclick() {
 		    	window.close();
 		    }
 		    
 		    function memoFoldersInfo() {
+		    	selFolderId="";
+				selFolderName="";
 		    	$.ajax({
 					type : "GET",
 					dataType : "json",
@@ -103,15 +100,31 @@
 						var html="";
 						var folderList = result["folders"];
 						$('.memoNode').remove();
+						$('.node').remove();
 							
 						folderList.forEach(function(list, index){
 							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node'>" + list.folder_name + "<span id='folderCount" + index +"'></span></span></div>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer;' class='node' data1='" + list.folder_name+ "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
 						});
 						$('.memoFolders').append(html);
 					}     			
+				});
+		    	opener.memoFoldersInfo();
+		    	memoFolderClickE();
+		    }
+		    
+		    function memoFolderClickE() {
+		  		$(".node").click(function(){
+					if(selId!==""){
+						$("#"+selId).css("font-weight", "normal");
+					}
+					    	
+					selId = $(this).attr('id');
+					selFolderName = $(this).attr('data1');
+					selFolderId = $(this).attr('data2');
+					$(this).css("font-weight", "bold");
 				});
 		    }
         </script>

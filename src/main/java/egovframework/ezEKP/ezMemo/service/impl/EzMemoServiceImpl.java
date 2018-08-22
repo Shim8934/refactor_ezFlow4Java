@@ -86,6 +86,18 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoConfigVO.getUser_id());
 		map.put("tenant_id", memoConfigVO.getTenant_id());
 		map.put("company_id", memoConfigVO.getCompany_id());
+
+		if (memoConfigVO.getLayer_width() > 0 && memoConfigVO.getLayer_height() > 0) {
+
+			map.put("layer_width", memoConfigVO.getLayer_width());
+			map.put("layer_height", memoConfigVO.getLayer_height());
+
+		} else if (memoConfigVO.getLayer_top() > 0 && memoConfigVO.getLayer_left() > 0) {
+			
+			map.put("layer_top", memoConfigVO.getLayer_top());
+			map.put("layer_left", memoConfigVO.getLayer_left());
+		}
+		
 		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
 	}
@@ -104,4 +116,45 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		return memoList;
 	}
 
+	@Override
+	public void addMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("addMemoFolder started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("folder_name", memoFolderVO.getFolder_name());
+		map.put("reg_date", commonUtil.getTodayUTCTime(""));
+		ezMemoDAO.addMemoFolder(map);
+		logger.debug("addMemoFolder ended.");
+	}
+
+	@Override
+	public void modifyMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("modifyMemoFolder started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("folder_name", memoFolderVO.getFolder_name());
+		map.put("folder_id", memoFolderVO.getFolder_id());
+		ezMemoDAO.modifyMemoFolder(map);
+		logger.debug("modifyMemoFolder ended.");
+	}
+
+	@Override
+	public void deleteMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("deleteMemoFolder started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("folder_name", memoFolderVO.getFolder_name());
+		map.put("folder_id", memoFolderVO.getFolder_id());
+		ezMemoDAO.deleteMemos(map);
+		ezMemoDAO.deleteMemoFolder(map);
+		logger.debug("deleteMemoFolder ended.");
+	}
+
+	
 }

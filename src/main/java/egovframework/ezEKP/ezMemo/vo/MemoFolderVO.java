@@ -18,6 +18,8 @@ public class MemoFolderVO {
 	private String icon_id;
 	/** 메모 갯수*/
 	private int count;
+	/** 메모 삭제 플래그*/
+	private int delete_flag;
 	/** 컴퍼너 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -66,12 +68,17 @@ public class MemoFolderVO {
 	public void setIcon_id(String icon_id) {
 		this.icon_id = icon_id;
 	}
-	
 	public int getCount() {
 		return count;
 	}
 	public void setCount(int count) {
 		this.count = count;
+	}
+	public int getDelete_flag() {
+		return delete_flag;
+	}
+	public void setDelete_flag(int delete_flag) {
+		this.delete_flag = delete_flag;
 	}
 	public String getCompany_id() {
 		return company_id;
