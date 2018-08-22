@@ -812,6 +812,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 				for (int i = 0; i < ancGroupArr.length; i++) {
 					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId, lang);
+					
+					//조상 그룹의 하위 그룹 중에서 하위 업무가 없는 그룹들을 찾아서 일정을 업데이트 해줌
+					List<Long> groupTaskNoneList = getGroupTaskNoneList(Long.parseLong(ancGroupArr[i]), companyId, taskVO.getTenantId(), Long.parseLong(projectId));
+					int groupTaskNoneListCount = groupTaskNoneList.size();
+					
+					for (int j = 0; j < groupTaskNoneListCount; j++) {
+						updateGroupDate(groupTaskNoneList.get(j), taskVO.getTenantId(), companyId, lang);
+					}
 				}
 			}
 
@@ -859,6 +867,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] addTask ended.");
 
 		return taskId.intValue();
+	}
+
+	private List<Long> getGroupTaskNoneList(long groupId, String companyId, int tenantId, long projectId) {
+		LOGGER.debug("[SERVICE] getGroupTaskNoneList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		
+		LOGGER.debug("[SERVICE] getGroupTaskNoneList ended.");
+		return ezPMSDAO.getGroupTaskNoneList(map);
 	}
 
 	@Override

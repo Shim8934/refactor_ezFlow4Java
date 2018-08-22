@@ -5257,4 +5257,39 @@
 			TENANT_ID = #tenantId#
 	]]>
 	</select>
+	
+	<select id="EzPMSDAO.getGroupTaskNoneList" parameterClass="map" resultClass="Long">
+	<![CDATA[
+		SELECT
+           A.GROUP_ID
+		FROM
+			TBL_PMS_GROUP A
+		LEFT JOIN
+			TBL_PMS_TASK B
+		ON
+			A.GROUP_ID = B.GROUP_ID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		AND	
+			B.DEL_STATUS = 0
+        JOIN
+			tbl_pms_group D
+		ON
+			A.GROUP_ID = D.GROUP_ID
+		WHERE
+			A.PROJECT_ID = #projectId#
+		AND
+			(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				))
+		AND
+			A.TENANT_ID = #tenantId#
+		GROUP BY
+			A.GROUP_ID
+		HAVING
+			COUNT(B.TASK_ID) = 0;
+	]]>
+	</select>
 </sqlMap>

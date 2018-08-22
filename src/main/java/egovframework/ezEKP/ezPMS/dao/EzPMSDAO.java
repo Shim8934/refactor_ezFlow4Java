@@ -707,4 +707,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public String getuserCompanyId(Map<String, Object> map) {
 		return (String) select("EzPMSDAO.getUserCompanyId", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Long> getGroupTaskNoneList(Map<String, Object> map) {
+		return (List<Long>) list("EzPMSDAO.getGroupTaskNoneList", map);
+	}
 } 
