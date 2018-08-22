@@ -1822,7 +1822,6 @@
 	    	ul.outerWidth(this.element.outerWidth());
 	    }
 	    
-	    var IsInsert_MsgTo = false;
 		$(function() {
 			var widgetInst = $("#MsgTo").autocomplete({}).data('ui-autocomplete');
 			widgetInst._renderMenu = function(ul, items) {
@@ -1863,6 +1862,7 @@
 					self._renderItem( ul, item );
 				});
 			};
+			var IsInsert_MsgTo = false;
 			$("#MsgTo").autocomplete(
 					{
 						source : function(request, response) {
@@ -1884,24 +1884,26 @@
 											email : ul.mail,
 											dept : ul.description,
 											title : ul.title,
-											type : ul.type
+											type : ul.type,
+											href : ul.href
 										};
 									}));
-
 								}
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
-						autoFocus : false,
-						select : function(event, ui) {
+						selectFirst : true,
+						autoFocus : true,
+						select : function(event, index, ui) {
 							var addressType = "email";
+							var href = ""
 							if(ui.item.type == "G") {
 								addressType = "mailgroup";
+								href = ui.item.href;
 							}
 							
 							newElem = PrepareMailTag("0", addressType, ui.item.value,
-									ui.item.email, "");
+									ui.item.email, href);
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
 								MsgToGot.appendChild(newElem);
@@ -1953,7 +1955,9 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type,
+											href : ul.href
 										};
 									}));
 
@@ -1961,10 +1965,18 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("1", "email", ui.item.value,
-									ui.item.email, "");
+							var addressType = "email";
+							var href = ""
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+								href = ui.item.href;
+							}
+							
+							newElem = PrepareMailTag("1", addressType, ui.item.value,
+									ui.item.email, href);
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
 								MsgCCGot.appendChild(newElem);
@@ -2016,7 +2028,9 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type,
+											href : ul.href
 										};
 									}));
 
@@ -2024,10 +2038,18 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("2", "email", ui.item.value,
-									ui.item.email, "");
+							var addressType = "email";
+							var href = ""
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+								href = ui.item.href;
+							}
+							
+							newElem = PrepareMailTag("2", addressType, ui.item.value,
+									ui.item.email, href);
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
 								MsgBCCGot.appendChild(newElem);

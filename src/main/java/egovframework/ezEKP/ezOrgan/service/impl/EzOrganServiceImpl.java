@@ -1432,7 +1432,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Override
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception {
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter, intScope);
+		ou = ldapSearch(strFilter, "", intScope);
             
         StringBuilder nodeInfo = new StringBuilder("");
 
@@ -1511,7 +1511,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private List<String[]> ldapSearch(String strFilter, int intScope) throws Exception {
+	private List<String[]> ldapSearch(String strFilter, String strBaseDN, int intScope) throws Exception {
 		List<String[]> ou = new ArrayList<String[]>();
 		Hashtable<String, String> env = new Hashtable<String, String>(5, 0.75f); 
         NamingEnumeration m_ne = null;
@@ -1536,7 +1536,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             constraints.setReturningAttributes(attrIDs);
         }
         
-        m_ne = dirCtx.search(config.getProperty("R_LBaseDN"), strFilter, constraints); 
+        m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
         
         dirCtx.close(); 
         
@@ -1734,7 +1734,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getOrganSubTreeInfo started");
 		
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter, intScope);
+		ou = ldapSearch(strFilter, strBaseDN, intScope);
 		
 		StringBuilder str = new StringBuilder();
 		
@@ -1775,7 +1775,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	public String getOrgInfo(String strFilter, int intScope) throws Exception {
 		logger.debug("getOrgInfo started");
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter, intScope);
+		ou = ldapSearch(strFilter, "", intScope);
 	
 		StringBuffer str = new StringBuffer();
 		str.append("<ORGAN>");
@@ -1825,7 +1825,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		List<String[]> ou = new ArrayList<String[]>();
 		
-		ou = ldapSearch(strFilter, intScope);
+		ou = ldapSearch(strFilter, "", intScope);
 		
 		str.append("<ROWS>");
 		for (int i=0; i<ou.size(); i++) {
