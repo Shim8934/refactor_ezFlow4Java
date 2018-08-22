@@ -14024,7 +14024,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		case "014": // 검사부 감사
 			if (!flag.equals("G")) {
-				if (!realDocType.equals("001")) {
+				if (!realDocType.equals("002")) {
 					subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
@@ -15442,7 +15442,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 				
 			default:
-				if (sendFlag && !docState.equals("001")) { //2018-08-22 강민수92 내부기안일시 docstate가 바뀌지 않게 하기위해 조건 추가
+				if (sendFlag) {
 					docState = staDSBalsin;
 				}
 				
