@@ -13834,7 +13834,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		switch (docType) { //변수는 docType 이지만 내용은 docState임
 		case "001": // 품의
 			if (approvalFlag.equals("G")) { 
-				if (!realDocType.equals("001")) { // docType 001 : 기안문
+				if (!realDocType.equals("002")) { // docType 001 : 기안문
 					subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
