@@ -61,10 +61,10 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		String order = request.getParameter("order");
 		String searchInput = request.getParameter("searchInput");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
+		String folderId = request.getParameter("folder_id");
 		
 		vo.setUser_id(userId);
 		
@@ -72,7 +72,7 @@ public class EzMemoGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<MemoVO> memoList = ezMemoService.getMemoList(vo, order, searchInput, startDate, endDate);
+			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId);
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
 			
 			result.put("status", "ok");
@@ -317,7 +317,7 @@ public class EzMemoGWController {
 	}
 	
 	@RequestMapping(value = "/rest/ezMemo/memo-list/{folderId}/memo/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoWrite(@PathVariable String folderId, @PathVariable String userId, MemoVO memo, HttpServletRequest request) throws Exception {
+	public JSONObject gwMemoWrite(@PathVariable String folderId, @PathVariable String userId, MemoVO memo, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-list/" + folderId + "/memo/" +userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -326,6 +326,9 @@ public class EzMemoGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
 			memo.setTenant_id(info.getTenantId());
+			
+			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
+			memo.setColor_id(configVO.getDefault_color());
 			
 			ezMemoService.memoWrite(memo);
 			

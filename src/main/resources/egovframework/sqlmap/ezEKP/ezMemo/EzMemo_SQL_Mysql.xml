@@ -97,6 +97,28 @@
 				USER_ID = #user_id#
 			AND
 				DELETE_FLAG = 0
+		]]>
+			<isNotEmpty property="searchInput" >
+				<![CDATA[
+	              AND
+						CONTENTS LIKE CONCAT(CONCAT('%', #searchInput#), '%')
+	             ]]> 
+            </isNotEmpty>
+			<isNotEmpty property="startDate" >
+				<![CDATA[
+	              AND 
+	              		WRITE_DATE <= #endDate#
+	              AND
+	              		WRITE_DATE >= #startDate#
+	             ]]> 
+            </isNotEmpty>
+			<isNotEqual property="folder_id" compareValue="0">
+			  	<![CDATA[
+			  		AND
+					  	FOLDER_ID = #folder_id#
+				]]>
+			 </isNotEqual>
+		<![CDATA[
 			ORDER BY 
 				ORDERS
 		]]>
@@ -120,9 +142,9 @@
 	<insert id="EzMemoDAO.insertMemo" parameterClass="Map">
 		<![CDATA[
 		 	INSERT INTO TBL_MEMO
-                (user_id, write_date, folder_id, orders, company_id, tenant_id)
+                (user_id, write_date, folder_id, orders, company_id, tenant_id, color_id)
             VALUES
-                (#user_id#, #write_date#, #folder_id#, #orders#,  #company_id#, #tenant_id#)
+                (#user_id#, #write_date#, #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#)
          ]]>
 	</insert>
 	
