@@ -16,8 +16,16 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezForm_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/ListView_list.js')}" ></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/TreeView.js')}" ></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrlS_Cross.js')}"></script>
+	    <c:choose>
+	    	<c:when test="${approvalFlag eq 'G'}">
+		    	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}" ></script>
+	    	</c:when>
+	    	<c:otherwise>
+			    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/TreeView.js')}" ></script>
+			    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrlS_Cross.js')}"></script>
+	    	</c:otherwise>
+	    </c:choose>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/FormMain_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js')}"></script>
@@ -97,7 +105,12 @@
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
 		        MakeListXML(pDocType);
-		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        
+		        if (approvalFlag == "G") {
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG");
+		        } else {
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
@@ -338,6 +351,26 @@
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
 		    }
+		    
+		    function RequestDataG(pNodeID, pTreeID) {
+		        TreeIdx = pNodeID;
+		        treeNode = new TreeNode();
+		        treeNode.LoadFromID(TreeIdx);
+		
+		        var xmlHTTP = createXMLHttpRequest();
+		        var xmlpara = createXmlDom();
+		        var objNode;
+		        createNodeInsert(xmlpara, objNode, "DATA");
+		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", treeNode.GetNodeData("CN"));
+		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
+		
+		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+		        xmlHTTP.send(xmlpara);
+		
+		        var treeView = new TreeView();
+		        treeView.LoadFromID(pTreeID);
+		        treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+		    }
 		
 		    function TreeView2NodeClick(pNodeID, pNodeNM) {
 		        TreeIdx = pNodeID;
@@ -384,6 +417,13 @@
 		
 		    function insertCont_onclick() {
 		        var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
+		        
+		        if (GetEntryInfo(treeNode.GetNodeData("CN")) == "N") {
+                    var pAlertContent = strLang1105;
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+		        
 		        if (DuplicateFlag) {
 		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"), "D");
 		        } else {
@@ -393,9 +433,16 @@
 		    }
 		
 		    function insertAllCont_onclick() {
+		    	var deptid = $("#"+TreeIdx).attr("cn");
+		    	if (GetEntryInfo(deptid) == "N") {
+		    		var pAlertContent = strLang1105;
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+		    	}		    	
+		    	
 		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><br><spring:message code='ezApprovalG.t1362'/>";
 		        var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
-		
+		        
 		        if (!Ans) {
 		            return;
 		        }
@@ -809,6 +856,32 @@
 		        }
 		        
 		        OpenInformationUI_Complete();
+		    }
+		    
+		    function GetEntryInfo(_DEPTID) {
+		        var ReceiveDocument = "";
+
+		        try {
+		        	var result = "";
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/admin/ezOrgan/getEntryInfo.do",
+		        		data : {
+		        			cn 	  : _DEPTID,
+		        			prop  : "extensionAttribute11"
+		        		},
+		        		success: function(xml){
+		        			result = xml;
+		        		}        			
+		        	});
+		        	
+		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/EXTENSIONATTRIBUTE11");
+		        } catch (e) {
+		        } 
+		        
+		        return ReceiveDocument;
 		    }
 		</script>
 		<style>

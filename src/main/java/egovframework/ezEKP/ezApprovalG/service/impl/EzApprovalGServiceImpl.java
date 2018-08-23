@@ -13834,14 +13834,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		switch (docType) { //변수는 docType 이지만 내용은 docState임
 		case "001": // 품의
 			if (approvalFlag.equals("G")) { 
-				if (!realDocType.equals("002")) { // docType 001 : 기안문
+				if (realDocType.equals("003")) { // docType 003 : 수신문
 					subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
 					}
 					sendFlag = true;
-				} else {
+				} else { //기안문, 시행문
 					String autoDeptID = getCode2Name("A55", "001", companyID, lang,userInfo.getTenantId()).trim();
 					
 					if (!autoDeptID.equals("")) {
@@ -13852,6 +13852,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_TENANTID", userInfo.getTenantId());
 							// ProcessYN(진행여부)를 0으로 변경
 							ezApprovalGDAO.updateReceiptPointInfo(map);
+							
+							sendFlag = true;
 						}
 					}
 				}
@@ -14024,7 +14026,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		case "014": // 검사부 감사
 			if (!flag.equals("G")) {
-				if (!realDocType.equals("001")) {
+				if (!realDocType.equals("002")) {
 					subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
@@ -15442,7 +15444,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 				
 			default:
-				if (sendFlag && !docState.equals("001")) { //2018-08-22 강민수92 내부기안일시 docstate가 바뀌지 않게 하기위해 조건 추가
+				if (sendFlag) {
 					docState = staDSBalsin;
 				}
 				

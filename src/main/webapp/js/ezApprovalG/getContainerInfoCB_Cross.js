@@ -218,7 +218,7 @@ function OpenReceiptHistory() {
 
         var Url, OpenWin;
         if (isExtYN.toUpperCase() == "Y") {
-            Url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo.aspx?pDocID=" + pDocID + "&pDeptID=" + pDeptID;
+            Url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + pDocID + "&deptID=" + pDeptID;
         }
         else {
             Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
