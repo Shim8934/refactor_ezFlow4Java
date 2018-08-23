@@ -57,7 +57,7 @@
 		    var pPreviewWContent = "${mailGeneral.previewWContent}";
 		    var pPreviewHList = "${mailGeneral.previewHList}";
 		    var pPreviewHContent = "${mailGeneral.previewHContent}";
-		    var pRefreshinterval = 30;
+		    var pRefreshinterval = "${mailGeneral.refreshInterval}";
 		    var previewSubTree = "${mailGeneral.previewSubTree}";
 		    var CurrentHeight = 0;
 		    var CurrenWidth = 0;
@@ -94,7 +94,6 @@
 		    var useReceivingChk = false;
 		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
-		    var importExportMode = false;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -322,8 +321,10 @@
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
+
 		                MailListRefresh();
 		                recordNextMailListRefreshTime();
+
 		            }, pSaveInterval);
 		        }
 		    }
@@ -354,6 +355,7 @@
  		                setMailListRefreshTimer();
  		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
  		            } else {
+
  		            	console.log('refresh time not yet passed. Registering Timer...');
  		            	
  		            	refreshTimeoutTimerId = setTimeout(function() {
@@ -366,6 +368,7 @@
  		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
  		            		setMailListRefreshTimer();
  		            	}, remainingTime);
+
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
@@ -522,7 +525,6 @@
 		    	
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
- 					importExportMode = true;
 		        	var obj = JSON.parse(message.data);
 		        	
 		        	if (obj.status == "transferStart") {
@@ -577,12 +579,10 @@
 		        // 웹소켓 연결 해제시 실행 되는 함수
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
-		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 			        webSocket = null;
-		        	importExportMode = false;
 		        };
 		    }
 			
@@ -629,7 +629,6 @@
 			
 		        webSocket.onmessage = function(message){
 		        	
-		        	importExportMode = true;
 		            var curr = "";
 		        	var obj = JSON.parse(message.data);
 		            ShowMailProgressNew();
@@ -660,12 +659,10 @@
 		        
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
-		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 		        	webSocket = null;
-		        	importExportMode = false;
 		        };
 		        				
 			}
