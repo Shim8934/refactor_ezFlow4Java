@@ -433,7 +433,7 @@ function openOpinionUI(ret)
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
 	var ret = window.showModalDialog(url,parameter,feature);
 		
-	if (ret != "cancel")	{
+	if (ret != "cancel" && ret != undefined)	{
 		var Rtnxml = new ActiveXObject("Microsoft.XMLDOM");
 		Rtnxml.async = "false";
 		Rtnxml.loadXML(ret);
