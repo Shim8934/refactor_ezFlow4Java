@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -828,8 +829,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String formText = request.getParameter("html");
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		InputStream stream = null;
-		OutputStream bos = null;
 		
 		try {
 			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
@@ -839,39 +838,21 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 			
 			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
-		
-			stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
-
-			bos = new FileOutputStream(saveFileName);
+			byte[] documentBytes = Base64.decodeBase64(formText);
 			
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-			
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
+			// 2018.08.23 KLIB 암호화
+			if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", userInfo.getTenantId()))) {
+				documentBytes = klibUtil.encrypt(documentBytes);
+				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
+			Files.write(Paths.get(saveFileName), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
+
 			result = "SUCCESS";
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result = "FAIL";
-		} finally {
-			if (bos != null) {
-				try {
-					bos.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-			
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
 		}
 		
 		LOGGER.debug("saveEndFileHwp ended");
