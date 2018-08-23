@@ -27,7 +27,7 @@
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
 				
-				<c:if test="${useHWP == 'YES'}">
+				<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
 					var userAgent = window.navigator.userAgent;
 					
 					if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
@@ -139,7 +139,7 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
-		<c:if test="${useHWP == 'YES'}">
+		<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
 			<script type="text/javascript">
 				ezIcd_ActiveX("i_icd2");
 			</script>

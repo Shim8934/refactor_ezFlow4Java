@@ -294,7 +294,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String primary, String offset, int tenantId) throws Exception {
+	public List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String compId, String primary, String offset, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sharerId", sharerId);
 		map.put("folderFileId", folderFileId);
@@ -310,6 +310,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			map2.put("shareId", shareInfo.getShareId());
 			map2.put("primary", primary);
 			map2.put("tenantId", shareInfo.getTenantId());
+			map2.put("compId", compId);
 			
 			shareInfo.setUserList(ezWebFolderDAO_m.getShareSubInfo(map2));
 		}
