@@ -94,7 +94,6 @@
 		    var useReceivingChk = false;
 		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
-		    var importExportMode = false;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -123,10 +122,15 @@
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";
+		    		document.getElementById("MailHeader").style.minWidth = "600px";
+		    		document.getElementById("contentlist").style.minWidth = "600px";
 		    		useReceivingChk = true;
 		    		g_foldertype = g_moveUrl;
 		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
 		    		select.selectedIndex = 3;
+		    	} else {
+		    		document.getElementById("MailHeader").style.minWidth = "400px";
+		    		document.getElementById("contentlist").style.minWidth = "400px";
 		    	}
 		    	
 		        CurrentHeight = document.body.clientHeight;
@@ -213,6 +217,15 @@
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
 		                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
 		                
+		                if (CurrenWidth <= 470) {
+		                    if (!useReceivingChk) {
+		                	//if (g_foldertype != "sent") {
+		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+		                        SmallSizeList = true;
+		                        OldSmallSizeList = true;
+		                    }
+		                }
+		                
 		            } else {
 		            	
 		                if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -241,7 +254,8 @@
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
 		                
 		                if (pMailListWidthH <= 470) {
-		                    if (g_foldertype != "sent") {
+		                    if (!useReceivingChk) {
+		                	//if (g_foldertype != "sent") {
 		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
 		                        SmallSizeList = true;
 		                        OldSmallSizeList = true;
@@ -255,8 +269,19 @@
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
 		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+		            
+		            CurrenWidth = document.documentElement.clientWidth - 20;
+	                
+		            if (CurrenWidth <= 470) {
+	                    if (!useReceivingChk) {
+	                	//if (g_foldertype != "sent") {
+	                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+	                        SmallSizeList = true;
+	                        OldSmallSizeList = true;
+	                    }
+	                }
 		        }
-		
+		     
 		        var HeaderObject = document.getElementById("MailHeader");
 		        var ContentObject = document.getElementById("MailList");	        
 		        HeaderIni(HeaderObject);       
@@ -322,15 +347,10 @@
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
-		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
-		            	if (!searchMode) {
-		            		/* 예연 (메일 가져오기 내보내기시 새로고침 X)*/
-			            	if (!importExportMode) {
-				                MailListRefresh();
-			            	} 
-			                // 다음 자동 갱신 시간을 기록한다.
-			                recordNextMailListRefreshTime();
-		            	}
+
+		                MailListRefresh();
+		                recordNextMailListRefreshTime();
+
 		            }, pSaveInterval);
 		        }
 		    }
@@ -351,15 +371,9 @@
  		           
  		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
  		            if (remainingTime <= 0) {
- 		                console.log('refresh time already passed. Refresing...')
+ 		                console.log('refresh time already passed. Refresing...');
  		                
- 		                // 수정 재은 
- 		                if (!searchMode) {
- 		                	// 예연
-	 		                if (!importExportMode) {
-	 		                	MailListRefresh();
-	 		                }
- 		                }
+	                	MailListRefresh();
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -367,16 +381,12 @@
  		                setMailListRefreshTimer();
  		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
  		            } else {
+
  		            	console.log('refresh time not yet passed. Registering Timer...');
  		            	
  		            	refreshTimeoutTimerId = setTimeout(function() {
- 		            		// 수정 재은
- 		            		if (!searchMode) {
- 		            			// 예연
-	 		            		if (!importExportMode) {
-	 		            			MailListRefresh();
-	 		            		}
- 		            		}
+ 		            		
+ 		            		MailListRefresh();
  		            		
  		            		// 다음 자동 갱신 시간을 기록한다.
  		            		recordNextMailListRefreshTime();
@@ -384,6 +394,7 @@
  		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
  		            		setMailListRefreshTimer();
  		            	}, remainingTime);
+
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
@@ -540,7 +551,6 @@
 		    	
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
- 					importExportMode = true;
 		        	var obj = JSON.parse(message.data);
 		        	
 		        	if (obj.status == "transferStart") {
@@ -595,12 +605,10 @@
 		        // 웹소켓 연결 해제시 실행 되는 함수
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
-		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 			        webSocket = null;
-		        	importExportMode = false;
 		        };
 		    }
 			
@@ -647,7 +655,6 @@
 			
 		        webSocket.onmessage = function(message){
 		        	
-		        	importExportMode = true;
 		            var curr = "";
 		        	var obj = JSON.parse(message.data);
 		            ShowMailProgressNew();
@@ -678,12 +685,10 @@
 		        
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
-		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 		        	webSocket = null;
-		        	importExportMode = false;
 		        };
 		        				
 			}
@@ -812,6 +817,10 @@
 	        	webSocket.close();
 	        	location.reload();
 			}
+			
+			function mailListScroll(di) {
+				$(di).parent("div").find("#MailHeaderDiv").scrollLeft(di.scrollLeft);	
+			}
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -917,12 +926,18 @@
            
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <table style="width:100%;border:1px solid #ddd;" id="MailHeader" class="mainlist" >               
-            </table>
-            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur  onscroll="ContextMenuHidden()">
-                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
-                </table>
-            </div>
+		    <div>
+		        <div id="MailHeaderDiv" style="overflow-x: hidden; ">
+	    	        <table style="width:100%;border:1px solid #ddd; min-width:400px;" id="MailHeader" class="mainlist" >               
+	        	    </table>
+	        	</div>
+	        	<div id="contentlistDiv" style="overflow-y: auto;" onscroll="mailListScroll(this)">
+		            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;min-width:400px;" onblur  onscroll="ContextMenuHidden()">
+		                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
+		                </table>
+		            </div>
+		        </div>
+		    </div>
             <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
         </span>
         <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;">

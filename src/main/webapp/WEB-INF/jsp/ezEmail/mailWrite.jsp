@@ -1742,7 +1742,7 @@
 						minLength : 2,
 						selectFirst : true,
 						autoFocus : true,
-						select : function(event, index, ui) {
+						select : function(event, ui) {
 							var addressType = "email";
 							var href = ""
 							if(ui.item.type == "G") {
@@ -1813,7 +1813,8 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
 							var addressType = "email";
 							var href = ""
@@ -1885,7 +1886,8 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
 							var addressType = "email";
 							var href = ""
