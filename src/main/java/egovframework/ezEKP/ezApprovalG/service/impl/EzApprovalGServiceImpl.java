@@ -2166,7 +2166,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		rollbackCabinetNum(deptID, "", sn, companyID, "", lang, tenantID);
         	}
         	
-        	return "<RESULT>FALSE</RESULT>";
+        	if (hesongFlag.trim().equals("")) {
+        		return "<RESULT>RESETLINE</RESULT>";
+        	} else {
+        		return "<RESULT>FALSE</RESULT>";
+        	}
         }
         
 		
