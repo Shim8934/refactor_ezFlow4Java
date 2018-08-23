@@ -740,7 +740,7 @@ function getTaskDetails(elem) {
 				</ul>
 				<div class="btnStyle_center"></div>
 			</div>
-			<div class="overview_textbox">${project.overview }</div>
+			<div class="overview_textbox"><c:out value="${project.overview }"/></div>
 			<ul class="overview_infomationBox">
 				<li onclick="menuQst_DetailUserInfo('${project.headManagerId }')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }"/><c:out value="${project.headManagerName }"/></li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>

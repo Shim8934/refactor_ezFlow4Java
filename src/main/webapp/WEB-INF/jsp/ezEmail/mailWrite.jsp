@@ -1092,15 +1092,16 @@
 					itemId : ezPMSBoardId
 				},
 				success : function(result) {
-					$("#eSubject").val("<spring:message code='ezBoard.t342' /><spring:message code='ezEmail.t674' /> : "+result.title);
+					$("#eSubject").val("<spring:message code='ezBoard.t342' /><spring:message code='ezEmail.t674' /> : " + result.title);
 					var boardContent = "<p></p><p></p><hr>";
 					boardContent += "<p><b>" + "<spring:message code='ezPMS.t210' /> " + "</b>" + result.writeDate.substring(0, result.writeDate.length - 2) + "<br/>";
 					boardContent += "<b>" + "<spring:message code='ezPMS.t211' /> " + "</b>" + result.writerName + "<br/>";
-					boardContent += "<b>" + "<spring:message code='ezPMS.t212' /> " + "</b>" + result.title + "</p>";
+					boardContent += "<b>" + "<spring:message code='ezPMS.t212' /> " + "</b>" + MakeXMLString(result.title) + "</p>";
 					boardContent += "<p></p>";
 					boardContent += (result.boardContent).replace(/&#39;/gi, "\'");
 					
 					message.SetEditorContent(boardContent);
+					
 					var fileList = result.fileList;
 					
 					var pstrXML = "";
