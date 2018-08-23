@@ -1358,7 +1358,7 @@ function GetMailAddresses(name) {
             m_addrBook["type"][count + adCount] = "mailgroup";
             m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
             m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
-            m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FLODERTYPE");
+            m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
         }
         m_addrBook["company"][count + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
         m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
