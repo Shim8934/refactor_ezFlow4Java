@@ -448,15 +448,15 @@
 	************************************************************************************-->
 	
 	<select id="EzCabinetDAO.getMaxCabinetId" resultClass="Integer">
-		<![CDATA[select ifnull(max(cabinet_id), 0) from tbl_cb_cabinet where tenant_id = #tenantId# and use_status = 1]]>
+		<![CDATA[select ifnull(max(cabinet_id), 0) from tbl_cb_cabinet where tenant_id = #tenantId#]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getMaxCabinetStep" resultClass="Integer">
-		<![CDATA[select ifnull(max(cabinet_order), 0) from tbl_cb_cabinet where parent_id = #cabinetId# and tenant_id = #tenantId#  and use_status = 1]]>
+		<![CDATA[select ifnull(max(cabinet_order), 0) from tbl_cb_cabinet where parent_id = #cabinetId# and tenant_id = #tenantId#]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getCabinetById" resultMap="cabinetVO">
-		<![CDATA[ select * from tbl_cb_cabinet where cabinet_id = #cabinetId# and tenant_id = #tenantId#  and use_status = 1]]>
+		<![CDATA[ select * from tbl_cb_cabinet where cabinet_id = #cabinetId# and tenant_id = #tenantId#]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getRootCabinetByType" resultMap="cabinetVO">
