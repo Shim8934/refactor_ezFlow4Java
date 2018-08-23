@@ -139,7 +139,7 @@
 		<table class="popuplist" style="width:100%;margin-top:5px">
 			<tr>
 		    	<td>
-		        	<div style="height:390px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
+		        	<div style="height:348px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
 		        		<div class="memoFolders"></div>
 					</div>
 		    	</td>
