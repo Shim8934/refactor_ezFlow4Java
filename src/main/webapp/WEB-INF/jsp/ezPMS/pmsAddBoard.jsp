@@ -31,7 +31,7 @@
 	
 	var title = '<c:out value = "${board.title}"/>';
 	
-	var writeOverview = '${board.writeOverview}';
+	var writeOverview = '<c:out value = "${board.writeOverview}"/>';
 	var writeType = "${board.writeType}";
 	var folderId = "${folderId}";
 	var writeContent = '${writeContent.trim()}';
