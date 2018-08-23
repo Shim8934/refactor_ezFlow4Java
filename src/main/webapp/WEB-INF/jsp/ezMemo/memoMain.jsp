@@ -65,14 +65,13 @@
 			
 	</style>
 	<script type="text/javascript">
-		var memoList = ${memoList};
-		var folderId = "4";//"${folderId}";
+		var memoList;
+		var folderId =  "<c:out value='${folderId}' />";
 		var topHeight = "100";
-		var colorList = "${colorList}";
-		var memoColor = colorList.split(";");
-		var defaultColor = "${defaultColor}";
-		var headerColor = memoColor[defaultColor];
-		var bodyColor = memoColor[defaultColor+6];
+		var memoColor;
+		var defaultColor;
+		var headerColor;
+		var bodyColor;
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 
@@ -108,26 +107,6 @@
 	        	}
 	        }); */
 	        
-	        for(var i=0; i<memoList.length; i++) {
-				var html = "";
-		    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
-		    	html += "<input type='checkbox' name='memo'>";
-		    	html += "<div class='memo-color'>";
-		    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-		    	html += "<span class='write-date'></span>";
-		    	/* html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; */
-		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-		    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
-		    	html += memoList[i].contents;
-		    	html += "</textarea>";
-		    	html += "</div>"
-		    	$("#memoList").prepend(html);
-		    	$("#textarea").val('');
-		    	
-		    	addDate(memoList[i].write_date.substring(0,10));
-		    	
-		    	addremove();
-	        }
 			/* // 체크 박스 모두 해제
 			$("#uncheckAll").click(function() {
 				$("input[name=box]:checkbox").each(function() {
@@ -141,8 +120,58 @@
 				});
 			});  */
 
+			getMemoList();
 		}
 		
+		function getMemoList() {
+			var searchInput = $("#searchTitle").val();
+			var startDate = $("#Sdatepicker").val();
+			var endDate = $("#Edatepicker").val();
+			
+			$.ajax ({
+ 			   	url : '/ezMemo/getMemoList.do',
+ 			   	type : 'POST',
+                dataType : 'json',
+                data : { 
+                	searchInput : searchInput,
+                	startDate : startDate,
+                	endDate : endDate,
+                	folderId : folderId   
+                },
+                cache: false,
+                success: function(result) {
+                	memoColor = result["colorList"].split(";");
+                	defaultColor = result["defaultColor"];
+                	memoList = result["memoList"];
+                	headerColor = memoColor[defaultColor];
+                	bodyColor = memoColor[defaultColor+6]; 
+                	
+					for(var i=0; i<memoList.length; i++) {
+						var html = "";
+				    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
+				    	html += "<input type='checkbox' name='memo'>";
+				    	html += "<div class='memo-color'>";
+				    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
+				    	html += "<span class='write-date'></span>";
+				    //	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
+				    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
+				    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
+				    	html += memoList[i].contents;
+				    	html += "</textarea>";
+				    	html += "</div>"
+				    	$("#memoList").prepend(html);
+				    	$("#textarea").val('');
+				    	
+				    	addDate(memoList[i].write_date.substring(0,10));
+				    	
+				    	addremove();
+					} 
+			     },
+	             error : function() {
+	                	
+	             }
+			});
+		}
 		function allClick() {
 			// 체크 박스 모두 체크
 			$("input[name=memo]:checkbox").each(function() {
@@ -154,8 +183,10 @@
 			$.ajax ({
  			   	url : '/ezMemo/memoWrite.do',
  			   	type : 'POST',
-                dataType : 'text',
-                data : { folderId : folderId },  
+                dataType : 'json',
+                data : { 
+                	folderId : folderId
+                },  
                 cache: false,
                 success: function(result) {
                 	var html = "";
@@ -393,7 +424,7 @@
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
 								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList()"><spring:message code='ezBoard.t188' /></span></a>
 							</div>	
 						</td>
 					</tr>

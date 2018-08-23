@@ -109,13 +109,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoConfig ended.");
 	}
 	
-	public List<MemoVO> getMemoList(MemoVO vo, String order, String searchInput, String startDate, String endDate) throws Exception {
+	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId) throws Exception {
 		logger.debug("getMemoList started.");
 
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("tenant_id", vo.getTenant_id());
 		map.put("company_id", vo.getCompany_id());
 		map.put("user_id", vo.getUser_id());
+		map.put("searchInput", searchInput);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("folder_id", folderId);
 		
 		List<MemoVO> memoList = ezMemoDAO.getMemoList(map);
 
@@ -132,6 +136,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memo.getUser_id());
 		map.put("folder_id", memo.getFolder_id());
 		map.put("write_date", memo.getWrite_date());
+		map.put("color_id", memo.getColor_id());
 
 		int orders = ezMemoDAO.getMaxOrder(map);
 		
