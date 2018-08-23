@@ -57,7 +57,7 @@
 		    var pPreviewWContent = "${mailGeneral.previewWContent}";
 		    var pPreviewHList = "${mailGeneral.previewHList}";
 		    var pPreviewHContent = "${mailGeneral.previewHContent}";
-		    var pRefreshinterval = "${mailGeneral.refreshInterval}";
+		    var pRefreshinterval = 30;
 		    var previewSubTree = "${mailGeneral.previewSubTree}";
 		    var CurrentHeight = 0;
 		    var CurrenWidth = 0;
@@ -322,15 +322,8 @@
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
-		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
-		            	if (!searchMode) {
-		            		/* 예연 (메일 가져오기 내보내기시 새로고침 X)*/
-			            	if (!importExportMode) {
-				                MailListRefresh();
-			            	} 
-			                // 다음 자동 갱신 시간을 기록한다.
-			                recordNextMailListRefreshTime();
-		            	}
+		                MailListRefresh();
+		                recordNextMailListRefreshTime();
 		            }, pSaveInterval);
 		        }
 		    }
@@ -351,15 +344,9 @@
  		           
  		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
  		            if (remainingTime <= 0) {
- 		                console.log('refresh time already passed. Refresing...')
+ 		                console.log('refresh time already passed. Refresing...');
  		                
- 		                // 수정 재은 
- 		                if (!searchMode) {
- 		                	// 예연
-	 		                if (!importExportMode) {
-	 		                	MailListRefresh();
-	 		                }
- 		                }
+	                	MailListRefresh();
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -370,13 +357,8 @@
  		            	console.log('refresh time not yet passed. Registering Timer...');
  		            	
  		            	refreshTimeoutTimerId = setTimeout(function() {
- 		            		// 수정 재은
- 		            		if (!searchMode) {
- 		            			// 예연
-	 		            		if (!importExportMode) {
-	 		            			MailListRefresh();
-	 		            		}
- 		            		}
+ 		            		
+ 		            		MailListRefresh();
  		            		
  		            		// 다음 자동 갱신 시간을 기록한다.
  		            		recordNextMailListRefreshTime();
