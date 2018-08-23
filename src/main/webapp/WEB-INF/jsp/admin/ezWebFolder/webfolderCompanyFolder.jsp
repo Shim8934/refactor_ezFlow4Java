@@ -342,13 +342,13 @@
 				}
 				
 				document.getElementById("usersSelect").style.display  = (compFolderId == selectedFolder) ? ""             : "none";
-				document.getElementById("displayUsers").style.display = (compFolderId == selectedFolder) ? "inline-block" : "none";
+// 				document.getElementById("displayUsers").style.display = (compFolderId == selectedFolder) ? "inline-block" : "none";
 				document.getElementById("listBttn1").style.display    = "none";
 				document.getElementById("listBttn2").style.display    = "";
 				document.getElementById("fldName").value              = "";
 				document.getElementById("fldName2").value             = "";
 				document.getElementById("rangeStr").value             = "";
-				updateTarget("");
+// 				updateTarget("");
 			}
 			
 			function cancelAdd() {

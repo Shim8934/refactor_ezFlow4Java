@@ -230,7 +230,7 @@ function GetTaskListInSubCategory(pCode, pTaskCode) {
         DocList.SetID("DivTaskList");                               
         DocList.SetMulSelectable(false);                        
         DocList.SetRowOnClick("TaskList_rowclick");
-        DocList.SetRowOnDblClick("Add_onclick");
+        //DocList.SetRowOnDblClick("Add_onclick");
 
         DocList.DataSource(rtnXml);                             
         DocList.DataBind("TaskList");                          
