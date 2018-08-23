@@ -1845,7 +1845,7 @@ function setbuttonenable() {
             }
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
-            document.getElementById("tbtnNonElecRec").style.display = "";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
         }
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -2014,7 +2014,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
-                document.getElementById("tbtnNonElecRec").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
                 if (tr.getAttribute("DATA9") == "003" || tr.getAttribute("DATA9") == "014")
                     document.getElementById("tbtnReturn").style.display = "none";
