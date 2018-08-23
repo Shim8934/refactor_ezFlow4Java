@@ -243,7 +243,7 @@
 		        		}
 		        	}
 		        });
-		        
+		        checkDefaultFolder();
 		        $("#memoMove").click(function() {
 
 		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
@@ -493,6 +493,14 @@
 		    	memoIndex = -1;
 		    }
 		    
+		    function checkDefaultFolder() {
+		    	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezMemo/hasMemoFolder.do"
+				});
+		    }
 		    
 		</script>
 	</head>

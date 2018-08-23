@@ -218,4 +218,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("insertMemoConfig end");
 	}
 
+	@Override
+	public int hasMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("hasMemoFolder start");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		int hasMemoFolder = ezMemoDAO.hasMemoFolder(map);
+		logger.debug("hasMemoFolder end");
+		return hasMemoFolder;
+	}
+
+	@Override
+	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+		logger.debug("setDefaultMemoFolder start");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("folder_name", "기본메모함");
+		map.put("reg_date", commonUtil.getTodayUTCTime(""));
+		map.put("orders", 0);
+		map.put("icon_id", 1);
+		map.put("delete_flag", 0);
+		ezMemoDAO.setDefaultMemoFolder(map);
+		logger.debug("setDefaultMemoFolder end");
+	}
+	
 }

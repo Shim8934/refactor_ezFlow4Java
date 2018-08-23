@@ -68,4 +68,11 @@ public class EzMemoDAO extends EgovAbstractDAO {
 		insert("EzMemoDAO.insertMemoConfig", map);
 	}
 
+	public int hasMemoFolder(Map<String, Object> map) {
+		return (int) select("EzMemoDAO.hasMemoFolder", map);
+	}
+	
+	public void setDefaultMemoFolder(Map<String, Object> map) {
+		insert("EzMemoDAO.setDefaultMemoFolder", map);
+	}
 }

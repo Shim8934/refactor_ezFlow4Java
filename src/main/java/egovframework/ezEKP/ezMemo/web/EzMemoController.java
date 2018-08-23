@@ -330,6 +330,16 @@ public class EzMemoController {
 		return "json";
 	}
 	
+	/**
+	 * fold_status set함수
+	 * @param loginCookie
+	 * @param layerTop
+	 * @param layerLeft
+	 * @param request
+	 * @param fold_status
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ezMemo/setFoldStatus.do")
 	public String setFoldStatus(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request, String fold_status) throws Exception {
 		logger.debug("setFoldStatus start");
@@ -374,6 +384,32 @@ public class EzMemoController {
 		param.put("fold_status", 1);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/createMemoConfig/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("insertMemoConfig end");
+		return "json";
+	}
+	
+	/**
+	 * 폴더함 존재 유무 확인
+	 * @param loginCookie
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/hasMemoFolder.do")
+	public String hasMemoFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("insertMemoConfig start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("insertMemoConfig end");

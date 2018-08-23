@@ -410,4 +410,31 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/createMemoConfig/users/" +userId + "] ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/rest/ezMemo/folders/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject hasMemoFolder(MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/check started.");
+		
+		JSONObject result = new JSONObject();
+
+		try {
+
+			int hasMemoFolder = ezMemoService.hasMemoFolder(memoFolderVO);
+			if(hasMemoFolder==0) {
+				ezMemoService.setDefualtMemoFolder(memoFolderVO);
+			}
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/check started.");
+		return result;
+	}
 }
