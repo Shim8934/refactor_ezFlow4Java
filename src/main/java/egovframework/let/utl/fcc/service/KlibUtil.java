@@ -69,9 +69,10 @@ public class KlibUtil {
 
 			byte[] decryptBytes = CIPHER.decrypt(encryptBytes);
 			LOGGER.debug("decrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(decryptBytes), new String(decryptBytes));
-			LOGGER.debug("=== KLIB Test ===");
 		} catch (Throwable throwable) {
 			LOGGER.debug("Failed to test for KLIB - {}", throwable.toString());
+		} finally {
+			LOGGER.debug("=== KLIB Test ===");
 		}
 	}
 
@@ -151,14 +152,14 @@ public class KlibUtil {
 
 		try {
 			result = tryTransformationPolicy(encryptedBytes, CIPHER::decrypt);
+			
+			debugBytes("encrypted bytes", encryptedBytes);
+			debugBytes("decrypted bytes", result);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			LOGGER.debug("Failed to decrypt, returns the source bytes.");
 			result = encryptedBytes;
 		}
-
-		debugBytes("encrypted bytes", encryptedBytes);
-		debugBytes("decrypted bytes", result);
 
 		LOGGER.debug("decrypt ended.");
 
@@ -170,7 +171,7 @@ public class KlibUtil {
 	 * <br>
 	 * 한 번 시도한 후에 예외가 난다면 재시도한다.<br>
 	 * 재시도 시에 예외가 난다면 그 예외를 던진다.<br>
-	 * 예외 없이 성공한다면 결과 값의 사이즈를 체크하여 0 이 아니면 결과 값 반환,<br>
+	 * 결과적으로 성공한다면 결과 값의 사이즈를 체크하여 0 이 아니면 결과 값 반환,<br>
 	 * 사이즈가 0 이라면 재시도하여 성공시 사이즈 관계 없이 반환, 예외가 난다면 그 예외를 던진다.
 	 */
 	private byte[] tryTransformationPolicy(byte[] source, Function<byte[], byte[]> transformationFunction) throws Exception, UnsatisfiedLinkError {
