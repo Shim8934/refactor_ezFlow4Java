@@ -321,13 +321,10 @@
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
-		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
-		            	if (!searchMode) {
-			                MailListRefresh();
-			                
-			                // 다음 자동 갱신 시간을 기록한다.
-			                recordNextMailListRefreshTime();
-		            	}
+
+		                MailListRefresh();
+		                recordNextMailListRefreshTime();
+
 		            }, pSaveInterval);
 		        }
 		    }
@@ -348,12 +345,9 @@
  		           
  		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
  		            if (remainingTime <= 0) {
- 		                console.log('refresh time already passed. Refresing...')
+ 		                console.log('refresh time already passed. Refresing...');
  		                
- 		                // 수정 재은 
- 		                if (!searchMode) {
- 		                	MailListRefresh();
- 		                }
+	                	MailListRefresh();
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -361,21 +355,20 @@
  		                setMailListRefreshTimer();
  		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
  		            } else {
- 		               console.log('refresh time not yet passed. Registering Timer...')
- 		               
- 		               refreshTimeoutTimerId = setTimeout(function() {
- 		            	   
- 		            	   // 수정 재은
- 		            	   if (!searchMode) {
- 		            		   MailListRefresh();
- 		            	   }
- 		                   
- 	                       // 다음 자동 갱신 시간을 기록한다.
- 	                       recordNextMailListRefreshTime();
- 		                   
- 		                   // 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
- 		                   setMailListRefreshTimer();
- 		               }, remainingTime);
+
+ 		            	console.log('refresh time not yet passed. Registering Timer...');
+ 		            	
+ 		            	refreshTimeoutTimerId = setTimeout(function() {
+ 		            		
+ 		            		MailListRefresh();
+ 		            		
+ 		            		// 다음 자동 갱신 시간을 기록한다.
+ 		            		recordNextMailListRefreshTime();
+ 		            		
+ 		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
+ 		            		setMailListRefreshTimer();
+ 		            	}, remainingTime);
+
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
