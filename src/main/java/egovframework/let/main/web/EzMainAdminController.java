@@ -47,6 +47,7 @@ public class EzMainAdminController {
 		
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
