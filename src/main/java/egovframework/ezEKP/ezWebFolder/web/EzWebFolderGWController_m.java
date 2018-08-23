@@ -174,7 +174,7 @@ public class EzWebFolderGWController_m {
 				return result;
 			}
 			
-			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo("", folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
+			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo("", folderFileId, folderFileType, userInfo.getCompanyID(), userInfo.getPrimary(), offset, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -231,7 +231,7 @@ public class EzWebFolderGWController_m {
 				return result;
 			}
 			
-			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo(userId, folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
+			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo(userId, folderFileId, folderFileType,  userInfo.getCompanyID(), userInfo.getPrimary(),offset, tenantId);
 			
 			SimpleShareVO shareInfo = null;
 			
