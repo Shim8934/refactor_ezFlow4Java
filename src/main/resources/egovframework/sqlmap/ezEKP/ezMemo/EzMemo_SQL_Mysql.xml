@@ -127,9 +127,24 @@
 	<select id="EzMemoDAO.getMaxOrder" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				MAX(ORDERS)+1 
+				IFNULL(MAX(ORDERS), '0') +1 
 			FROM 
 				TBL_MEMO 
+			WHERE 
+				USER_ID = #user_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				TENANT_ID=#tenant_id#
+		]]>
+	</select>
+	
+	<select id="EzMemoDAO.getMemoDefaultFolder" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				MIN(FOLDER_ID)
+			FROM 
+				TBL_MEMO_FOLDER 
 			WHERE 
 				USER_ID = #user_id# 
 			AND 

@@ -57,7 +57,7 @@ public class EzMemoController {
 	 * 메모 호출
 	 * */
 	@RequestMapping(value = "/ezMemo/memoMain.do")
-	public String memoMain(String order, String searchInput, String startDate, String endDate, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String memoMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMain started.");
 		
 		String brdID = "8";
@@ -66,24 +66,27 @@ public class EzMemoController {
 			brdID = request.getParameter("brdID");
 		}
 		
-		model.addAttribute("folderId", "4");
+		model.addAttribute("folderId", "0");
 		
 		logger.debug("memoMain ended");
 		return "ezMemo/memoMain";
 	}
 	
 	@RequestMapping(value = "/ezMemo/getMemoList.do")
-	public String getMemoList(String searchInput, String startDate, String endDate, String folderId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String getMemoList(String searchInput, String startDate, String endDate, String folderId, String searchType, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoList started.");
 		
 		searchInput = searchInput != null ? searchInput : "";		// 검색 사용 시 검색 단어
 		startDate = startDate != null ? startDate : "";				// 검색 사용 시 시작일
 		endDate = endDate != null ? endDate : "";					// 검색 사용 시 종료일
-		folderId = folderId != null ? folderId : "0";		// 메모함 선택
-		
-		logger.debug("searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate + ", folderId :" + folderId);
+		folderId = folderId != null ? folderId : "0";					// 메모함 선택
+		searchType = searchType != null ? searchType : "";		// 정렬 방식
+
+		logger.debug("searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate + ", folderId : " + folderId + ", searchType : " + searchType);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		logger.debug("userId : " + userInfo.getId() + ", CompanyId : " + userInfo.getCompanyID() + ", tenantId : " + userInfo.getTenantId());
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
@@ -92,6 +95,8 @@ public class EzMemoController {
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
 		param.put("folder_id", folderId);
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("searchType", searchType);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		
@@ -101,10 +106,12 @@ public class EzMemoController {
 				JSONArray memoList = (JSONArray) resultBody.get("memoList");
 				String colorList = resultBody.get("colorList").toString();
 				int defaultColor = Integer.parseInt(resultBody.get("defaultColor").toString());
+				folderId = resultBody.get("folderId").toString();
 				
 				model.addAttribute("memoList", memoList);
 				model.addAttribute("colorList", colorList);
 				model.addAttribute("defaultColor", defaultColor);
+				model.addAttribute("folderId", folderId);
 		}
 		
 		logger.debug("getMemoList ended");

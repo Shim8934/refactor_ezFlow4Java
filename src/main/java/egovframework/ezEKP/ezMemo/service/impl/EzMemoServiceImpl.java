@@ -106,7 +106,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoConfig ended.");
 	}
 	
-	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId) throws Exception {
+	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType) throws Exception {
 		logger.debug("getMemoList started.");
 
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -117,6 +117,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("folder_id", folderId);
+		map.put("searchType", searchType);
 		
 		List<MemoVO> memoList = ezMemoDAO.getMemoList(map);
 
@@ -233,6 +234,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("delete_flag", 0);
 		ezMemoDAO.setDefaultMemoFolder(map);
 		logger.debug("setDefaultMemoFolder end");
+	}
+	
+	@Override
+	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO) {
+		logger.debug("getMemoDefaultFolder start");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		
+		int folderId = ezMemoDAO.getMemoDefaultFolder(map);
+		
+		logger.debug("getMemoDefaultFolder end");
+		return folderId;
 	}
 	
 }

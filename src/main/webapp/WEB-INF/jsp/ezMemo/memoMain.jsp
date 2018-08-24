@@ -12,6 +12,8 @@
 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -74,6 +76,7 @@
 		var bodyColor;
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
+		var pAdminType  = "n";
 
 	 	window.onresize = function () {
 	 		/* 메모리스트 size 변경 */
@@ -145,7 +148,8 @@
                 	memoList = result["memoList"];
                 	headerColor = memoColor[defaultColor];
                 	bodyColor = memoColor[defaultColor+6]; 
-                	
+                	folderId = result["folderId"];
+                	console.log(result);
 					for(var i=0; i<memoList.length; i++) {
 						var html = "";
 				    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
@@ -380,6 +384,9 @@
                            <option value="2"><spring:message code='ezMemo.t0021'/></option>
                     </select>    
 		        </li>
+		        <li id="right" class="off">
+		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
+		        </li>
 		  </ul>
 		</div>
 		<div style="width:100%; border-bottom: 1px solid #e8e8e8;"></div>
@@ -432,6 +439,32 @@
 			</div>	
 		</div>
 	</div>
+	
+	<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+		<div class="popupwrap1">
+			<div class="popupwrap2">
+				<table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
+					<caption></caption>
+					<colgroup>
+						<col style="width: 80px;">
+						<col>
+					</colgroup>
+					<tr>
+						<th><spring:message code='ezEmail.t99000035' /></th>
+						<td>
+							<select id="listcount" style="WIDTH: 80px; height: 20px;" onchange="onSelect_Option(this);">
+								<option value="0"><spring:message code='ezMemo.t0019'/></option>
+                       		    <option value="1"><spring:message code='ezMemo.t0020'/></option>
+                           		<option value="2"><spring:message code='ezMemo.t0021'/></option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="shadow"></div>
+	</div>
+	
 	</body>
 	<script type="text/javascript">
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

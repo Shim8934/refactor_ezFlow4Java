@@ -57,7 +57,7 @@ public class EzMemoGWController {
 	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value = "/rest/ezMemo/memo-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoList(@PathVariable String userId, MemoVO vo, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
+	public JSONObject gwMemoList(@PathVariable String userId, MemoVO vo, MemoConfigVO memoConfigVO, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -65,14 +65,24 @@ public class EzMemoGWController {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String folderId = request.getParameter("folder_id");
+		String searchType = request.getParameter("searchType");
+		String companyId = request.getParameter("company_id");
+		int tenantId = Integer.parseInt(request.getParameter("tenant_id"));
 		
 		vo.setUser_id(userId);
+		memoFolderVO.setUser_id(userId);
+		memoFolderVO.setCompany_id(companyId);
+		memoFolderVO.setTenant_id(tenantId);
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId);
+			if(folderId.equals("0")) {
+				folderId = Integer.toString(ezMemoService.getMemoDefaultFolder(memoFolderVO));
+			}
+			
+			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId, searchType);
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
 			
 			result.put("status", "ok");
@@ -81,7 +91,7 @@ public class EzMemoGWController {
 			result.put("memoList", memoList);
 			result.put("colorList", config.getColor_name());
 			result.put("defaultColor", config.getDefault_color()-1);
-			//result.put("folderId", );
+			result.put("folderId", folderId);
 		} catch(Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
