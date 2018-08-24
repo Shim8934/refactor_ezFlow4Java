@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -7333,50 +7337,45 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		String realPath = commonUtil.getRealPath(request);
 		
-		InputStream stream = null;
-		OutputStream bos = null;
+		String originFileExt = ezApprovalGService.getDocExt(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		boolean useKlibEncryption = false;
+		
+		// KLIB 암호화 처리 (마지막 결재자가 편집모드를 사용했을 때의 히스토리 파일은 결재 완료 프로세스가 끝낸 후에 저장되기 때문에 암호화가 안 되는 상태로 저장됨, 때문에 암호화하여 히스토리 파일을 저장해야함)
+		// .ezd 확장자가 붙어있으면 결재완료된 문서로 판단함
+		if (EzApprovalGKlibService.ENCRYPTED_FILE_EXT.equalsIgnoreCase(originFileExt)) {
+			if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", userInfo.getTenantId()))) {
+				useKlibEncryption = true;
+				fileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+			}
+		}
 		
 		try {
-			File file = new File (realPath + dirPath2);
-			if(!file.exists()) {
+			File file = new File(realPath + dirPath2);
+			if (!file.exists()) {
 				file.mkdirs();
 			}
-			
-			File file2 = new File (realPath + dirPath);
-			if(!file2.exists()) {
+
+			File file2 = new File(realPath + dirPath);
+			if (!file2.exists()) {
 				file2.mkdirs();
 			}
+			
+			byte[] fileBytes;
 		
 			if (mode.equals("hwp")) {
-				stream = new ByteArrayInputStream(Base64.decodeBase64(pHTML));
+				fileBytes = Base64.decodeBase64(pHTML);
+				
+				if (useKlibEncryption) {
+					fileBytes = klibUtil.encrypt(fileBytes);
+				}
 			} else {
-				stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
+				fileBytes = pHTML.getBytes("UTF-8");
 			}
 			
-			bos = new FileOutputStream(realPath + dirPath + commonUtil.separator  + fileName);
-			
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-			
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
-			}
+			Path outputFile = Paths.get(realPath + dirPath + commonUtil.separator + fileName);
+			Files.write(outputFile, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception e) {
-		} finally {
-		   if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		   if (stream != null) {
-				try {
-					stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
+			e.printStackTrace();
 		}
 		
 		logger.debug("uploadDocHistory ended");
