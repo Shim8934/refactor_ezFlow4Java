@@ -2145,7 +2145,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
-		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", user.getTenantId()); //baonk added (2018-06-07)
 		
 		//2018-07-31 김보미 - 근태 추가
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
@@ -2171,7 +2170,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
-		model.addAttribute("cabinetFlag", use_cabinet); //baonk added (2018-06-07)
 		//2018-07-31 김보미 - 근태 추가
 		model.addAttribute("use_attitude", use_attitude);
 		
@@ -2282,7 +2280,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
-		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", user.getTenantId()); //baonk added (2018-06-07)
 		//2018-07-31 김보미 - 근태 추가
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
 		if (use_attitude == null || use_attitude.equals("")) {
@@ -2296,7 +2293,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
-		model.addAttribute("cabinetFlag", use_cabinet); //baonk added (2018-06-07)
 		model.addAttribute("use_attitude", use_attitude);
 		
 		logger.debug("permissionsCheck ended.");

@@ -11,7 +11,9 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: auto">
-			<div class="left_cabinet"><span><spring:message code='ezCabinet.t01'/></span></div>
+			<div class="left_admin">
+				<img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='ezCabinet.t154'/>
+			</div>
 			
 			<!-- 기본설정 -->
 			<h2><span><spring:message code='ezCabinet.t09'/></span></h2>

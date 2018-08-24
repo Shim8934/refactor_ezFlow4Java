@@ -102,6 +102,9 @@
 				    case "menu30":
 				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
 				    	break;
+				    case "menu31":
+				    	parent.frames["bottom"].location.href = "/admin/ezCabinet/cabinetAdminMain.do";
+				    	break;
 				}
 			}
 			
@@ -186,7 +189,10 @@
 		      					<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
 		      				</c:if>
 		      			</c:if>
-                    	
+						<%-- 캐비넷 --%>
+						<c:if test="${useCabinet == 'YES'}">
+							<li><span id="menu31" onClick="menu_change(690, event)"><spring:message code="ezCabinet.t154" /></span></li>
+						</c:if>
 		      			<%-- 시스템 --%>          
 		      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      			<%-- 통계 --%>

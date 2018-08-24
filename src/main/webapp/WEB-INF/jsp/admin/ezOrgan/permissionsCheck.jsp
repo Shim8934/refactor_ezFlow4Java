@@ -1114,14 +1114,6 @@
 			                <DATA1>wf</DATA1>
 			            </CELL>
 			        </ROW>
-					<c:if test="${cabinetFlag == 'YES'}">
-						<ROW>
-							<CELL>
-							<VALUE><spring:message code='ezOrgan.t305'/></VALUE>
-								<DATA1>cb</DATA1>
-							</CELL>
-						</ROW>
-					</c:if>
 			        <c:if test="${use_attitude == 'YES'}">
 	                    <ROW>
 				            <CELL>            

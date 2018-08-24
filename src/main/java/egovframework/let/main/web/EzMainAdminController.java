@@ -47,7 +47,8 @@ public class EzMainAdminController {
 		
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
-
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
@@ -67,18 +68,13 @@ public class EzMainAdminController {
 			model.addAttribute("use_journal", "YES");
 		}
 		
-		//baonk added
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1 && userInfo.getRollInfo().indexOf("wf=1") != -1) {
-			model.addAttribute("isWFAdmin", "1");
-		}
-		//end
-		
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		model.addAttribute("useHWP", useHWP);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
+        model.addAttribute("useCabinet", use_cabinet);
 		
 		return "admin/adminTop";
 	}	

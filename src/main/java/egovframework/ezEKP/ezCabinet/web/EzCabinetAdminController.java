@@ -44,13 +44,6 @@ public class EzCabinetAdminController {
 		return "admin/ezCabinet/adminMain";
 	}
 	
-	@RequestMapping(value="/admin/ezcabinet/adminTop.do")
-	public String jspAdminTop() throws Exception {
-		logger.debug("jspAdminTop start");
-		logger.debug("jspAdminTop end");
-		return "admin/ezCabinet/cabinetAdminTop";
-	}
-	
 	@RequestMapping(value="/admin/ezcabinet/cabinetAdminLeft.do")
 	public String jspAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jspAdminLeft start");
