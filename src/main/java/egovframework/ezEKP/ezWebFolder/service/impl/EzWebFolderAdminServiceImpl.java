@@ -608,6 +608,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setCreateName2(userInfo.getDisplayName2());
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
+		folder.setCreateDate(timeUTC);
 		folder.setFolderUpper(parentFolder.getFolderId());
 		folder.setFolderLevel(folder.getFolderLevel() + levelDistance);
 		folder.setFolderStep(getMaxFolderStep(parentFolder.getFolderId(), tenantId));
