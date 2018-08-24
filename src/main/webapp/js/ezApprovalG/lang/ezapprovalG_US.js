@@ -1014,3 +1014,7 @@ var strLang129 = "수신자"
 
 //2018-06-27 강민수92
 var strLanggarm01 = "Please add a department."
+	
+//2018-08-23 배현상
+var strLangBae1 = "결재선을 재지정한 반송문서는 대장등록이 불가능합니다."
+
