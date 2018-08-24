@@ -88,7 +88,7 @@
 .jstree-anchor { height: 21px !important; }
 .jstree-default li > ins { vertical-align:top; }
 .jstree-leaf { height: auto; }
-.jstree-leaf a { height: auto !important; }
+.jstree-leaf a { height: 21px !important; }
 /* 2018-08-24 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
 .jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden;}
 
