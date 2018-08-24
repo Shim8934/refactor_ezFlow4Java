@@ -863,6 +863,9 @@
 	        		
 	        		if (nodelevel > 0) {
 	        			var customWidth = 135 - (18 * nodelevel);
+	        			if (customWidth < 0) {
+	        				customWidth = 0;
+	        			}
 	        			$("#spn_"+nodeId).css("width", customWidth+"px");
 	        		}
 	        	});
