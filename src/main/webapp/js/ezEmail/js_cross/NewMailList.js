@@ -1133,18 +1133,18 @@ function MailListRefresh() {
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
-function BasicViewHeaderChange(pGubun) {
-    if (pGubun) {
-        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml")
+function BasicViewHeaderChange(pGubun, pFolderType) {
+	var viewXmlFile = pGubun ? "viewXMLFile1_1.xml" : "viewXMLFile1.xml";
+	
+	if (pFolderType == "draft" ||  pFolderType == "sent") {
+		viewXmlFile = pGubun ? "viewXMLFile2_1.xml" : "viewXMLFile2.xml";
+	}
+	
+    if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile)
             return;
 
-        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-    } else {
-        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml")
-            return;
+    p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile;
 
-        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
-    }
     listContentArry = new Array();
     listSubContentArry = new Array();
     var HeaderObject = document.getElementById("MailHeader");

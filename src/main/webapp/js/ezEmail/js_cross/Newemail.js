@@ -105,21 +105,21 @@ function MailPreviewEnd(e) {
         if (g_foldertype != "sent") {
             if (SmallSizeList) {
                 if (p_ListorderValue == "" || p_ListorderValue == "UNREAD") {
-                    BasicViewHeaderChange(SmallSizeList);
+                    BasicViewHeaderChange(SmallSizeList, g_foldertype);
                     OldSmallSizeList = SmallSizeList;
                 }
             }
             else {
                 if (p_ListorderValue == "" && OldSmallSizeList) {
-                    BasicViewHeaderChange(SmallSizeList);
+                    BasicViewHeaderChange(SmallSizeList, g_foldertype);
                 }
                 else if (p_ListorderValue == "UNREAD" && OldSmallSizeList) {
-                    BasicViewHeaderChange(SmallSizeList);
+                    BasicViewHeaderChange(SmallSizeList, g_foldertype);
                 }
             }
         } else {
         	if (pPreviewShow_HOW == "H" && !useReceivingChk) {
-                BasicViewHeaderChange(SmallSizeList);
+                BasicViewHeaderChange(SmallSizeList, g_foldertype);
             }
         }
     }
@@ -1038,9 +1038,9 @@ function PreviewRayerChange(pGubun) {
             CurrenWidth = document.documentElement.clientWidth - 20;
             if (!useReceivingChk) {
 	            if (CurrenWidth < 470) {
-	                BasicViewHeaderChange(true);
+	                BasicViewHeaderChange(true, g_foldertype);
 	            } else {
-	                BasicViewHeaderChange(false);
+	                BasicViewHeaderChange(false, g_foldertype);
 	            }
             }
         }
@@ -1080,9 +1080,9 @@ function PreviewRayerChange(pGubun) {
                         CurrenWidth = document.documentElement.clientWidth - 20;
                         
                         if (CurrenWidth < 470) {
-                            BasicViewHeaderChange(true);
+                            BasicViewHeaderChange(true, g_foldertype);
                         } else {
-                            BasicViewHeaderChange(false);
+                            BasicViewHeaderChange(false, g_foldertype);
                         }
                         /*if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
                             p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
@@ -1146,9 +1146,9 @@ function PreviewRayerChange(pGubun) {
                         }
             			
                         if (pMailListWidthH < 470) {
-                            BasicViewHeaderChange(true);
+                            BasicViewHeaderChange(true, g_foldertype);
                         } else {
-                            BasicViewHeaderChange(false);
+                            BasicViewHeaderChange(false, g_foldertype);
                         }
                 		
                 		/*if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
@@ -1231,9 +1231,9 @@ function Window_resize() {
                 CurrenWidth = document.documentElement.clientWidth - 20;
                 if (!useReceivingChk) {
 	                if (CurrenWidth < 470) {
-	                    BasicViewHeaderChange(true);
+	                    BasicViewHeaderChange(true, g_foldertype);
 	                } else {
-	                    BasicViewHeaderChange(false);
+	                    BasicViewHeaderChange(false, g_foldertype);
 	                }
                 }
             }
@@ -1283,9 +1283,9 @@ function Window_resize() {
                 // 중요도, 책갈피, 첨부파일, 크기 컬럼을 제거한다.
                 if (!useReceivingChk) {
 	                if (pMailListWidthH < 470) {
-	                    BasicViewHeaderChange(true);
+	                    BasicViewHeaderChange(true, g_foldertype);
 	                } else {
-	                    BasicViewHeaderChange(false);
+	                    BasicViewHeaderChange(false, g_foldertype);
 	                }
                 }
 	                
@@ -1311,9 +1311,9 @@ function Window_resize() {
 
                 if (!useReceivingChk) {
 	                if (CurrenWidth < 470) {
-	                    BasicViewHeaderChange(true);
+	                    BasicViewHeaderChange(true, g_foldertype);
 	                } else {
-	                    BasicViewHeaderChange(false);
+	                    BasicViewHeaderChange(false, g_foldertype);
 	                }
                 }
             }
