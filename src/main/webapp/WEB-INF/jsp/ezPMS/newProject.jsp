@@ -37,7 +37,7 @@ var planEndDate = "${project.planEndDate}";
 var managerList = [];
 var participantList = [];
 var viewerList = [];
-var overview = "<c:out value='${project.overview}'/>";
+var projectOverview = "<c:out value='${project.overview}'/>";
 var endAlamStatus = "${project.alamMailStatus}";
 var headManagerId = "${project.headManagerId}";
 var headManagerName = "${project.headManagerName}";
@@ -70,6 +70,7 @@ var headManagerObj = {};
 		$(".nameList").css("height", "58px");
 		$("#overview").css("height", "60px");
 		
+		var projectDetail = ${project};
 		//참여 멤버 넣기
 		var memberList = JSON.parse('${project.projectMember}');
 		var memberListCount = memberList.length;
@@ -110,8 +111,9 @@ var headManagerObj = {};
 		$("#mailRepeat").val(mailRepeat).attr("seleced", "selected");
 		$("#Sdatepicker").val(planStartDate);
 		$("#Edatepicker").val(planEndDate);
-		console.log(overview);
-		$("#overview").val(replaceTextAreaString(overview));
+		console.log(projectOverview);
+		console.log(projectDetail.overview);
+		$("#overview").val(replaceTextAreaString(projectDetail.overview));
 		
 		if (endAlamStatus == -1) {
 			$("#endAlam").prop("checked", false);
