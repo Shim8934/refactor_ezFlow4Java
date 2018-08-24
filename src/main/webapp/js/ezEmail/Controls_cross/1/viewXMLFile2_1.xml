@@ -4,49 +4,10 @@
   <megabyteabbreviation>MB</megabyteabbreviation>
   <column>
     <heading>IMG</heading>
-    <imgpath>/images/ImgIcon/view-importance.gif</imgpath>
-    <type>i4</type>
-    <propname>importance</propname>
-    <prop>http://schemas.microsoft.com/exchange/x-priority-long</prop>
-    <sortable>1</sortable>
-    <bitmap>1</bitmap>
-    <multivalued>0</multivalued>
-    <visible>1</visible>
-    <width>18px</width>
-    <align>center</align>
-  </column>
-  <column>
-    <heading>IMG</heading>
     <imgpath>/images/ImgIcon/view-document.gif </imgpath>
     <type>string</type>
     <propname>status</propname>
     <prop>http://schemas.microsoft.com/exchange/smallicon</prop>
-    <sortable>1</sortable>
-    <bitmap>1</bitmap>
-    <multivalued>0</multivalued>
-    <visible>1</visible>
-    <width>18px</width>
-    <align>center</align>
-  </column>
-  <column>
-    <heading>IMG</heading>
-    <imgpath>/images/ImgIcon/icon-flag.gif</imgpath>
-    <type>i4</type>
-    <propname>flag</propname>
-    <prop>http://schemas.microsoft.com/mapi/proptag/x10900003</prop>
-    <sortable>1</sortable>
-    <bitmap>1</bitmap>
-    <multivalued>0</multivalued>
-    <visible>1</visible>
-    <width>18px</width>
-    <align>center</align>
-  </column>
-  <column>
-    <heading>IMG</heading>
-    <imgpath>/images/newAttach.gif</imgpath>
-    <type>boolean</type>
-    <propname>attach</propname>
-    <prop>urn:schemas:httpmail:hasattachment</prop>
     <sortable>1</sortable>
     <bitmap>1</bitmap>
     <multivalued>0</multivalued>
@@ -88,18 +49,6 @@
     <multivalued>0</multivalued>
     <visible>1</visible>
     <width>20%</width>
-    <align>center</align>
-  </column>
-  <column>
-    <heading>크기</heading>
-    <type>i4</type>
-    <propname>size</propname>
-    <prop>http://schemas.microsoft.com/mapi/proptag/x0e080003</prop>
-    <sortable>1</sortable>
-    <bitmap>0</bitmap>
-    <multivalued>0</multivalued>
-    <visible>1</visible>
-    <width>53px</width>
     <align>center</align>
   </column>
 </view>
