@@ -192,6 +192,7 @@ function TreeViewinitialize_tree2(targetDeptID, TopDeptID, tProperty, ServerName
         var treeView = new TreeView();
         treeView.SetID("tvTreeView2");
         treeView.SetUseAgency(true);
+        treeView.SetUseSusinColor4AprG(true);
         treeView.SetRequestData("RequestData2");
         treeView.SetNodeClick("TreeViewNodeClick2");
         treeView.DataSource(xmlDomRet);
@@ -1630,6 +1631,7 @@ function event_getDeptFullTree() {
             treeView.SetID("tvTreeView2");
             treeView.SetUseAgency(true);
             treeView.SetRequestData("RequestData");
+            treeView.SetUseSusinColor4AprG(true);
             treeView.SetNodeClick("TreeViewNodeClick2");
             treeView.SetNodeDblClick("TreeViewNodeDbClick");
             treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
@@ -1660,6 +1662,7 @@ function event_GetReceptOuterTempletList() {
         var treeView = new TreeView();
         treeView.SetID("tvTreeView3");
         treeView.SetUseAgency(true);
+        treeView.SetUseSusinColor4AprG(true);
         treeView.SetRequestData("RequestDataG");
         treeView.SetNodeClick("TreeViewNodeClick");
         treeView.DataSource(xmlhttp2.responseXML);

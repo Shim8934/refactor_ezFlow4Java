@@ -117,6 +117,10 @@ function MailPreviewEnd(e) {
                     BasicViewHeaderChange(SmallSizeList);
                 }
             }
+        } else {
+        	if (pPreviewShow_HOW == "H" && !useReceivingChk) {
+                BasicViewHeaderChange(SmallSizeList);
+            }
         }
     }
     
@@ -1030,6 +1034,15 @@ function PreviewRayerChange(pGubun) {
             else
                 document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             g_bPrevShow = false;
+            
+            CurrenWidth = document.documentElement.clientWidth - 20;
+            if (!useReceivingChk) {
+	            if (CurrenWidth < 470) {
+	                BasicViewHeaderChange(true);
+	            } else {
+	                BasicViewHeaderChange(false);
+	            }
+            }
         }
         else if (pGubun == "W") {
             if (pMailListDiv == 0 || pMailPreVDiv == 0) {
@@ -1061,17 +1074,25 @@ function PreviewRayerChange(pGubun) {
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
             g_bPrevShow = true;
             if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
-                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
-                    if (g_foldertype != "sent") {
-                        if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
+                //if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+                    if (!useReceivingChk) {
+                    //if (g_foldertype != "sent") {
+                        CurrenWidth = document.documentElement.clientWidth - 20;
+                        
+                        if (CurrenWidth < 470) {
+                            BasicViewHeaderChange(true);
+                        } else {
+                            BasicViewHeaderChange(false);
+                        }
+                        /*if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
                             p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
                             GetListInfo(HeaderObject, ContentObject);
-                        }
+                        }*/
                     }
-                }
+                //}
             }
         }
         else if (pGubun == "H") {
@@ -1114,17 +1135,31 @@ function PreviewRayerChange(pGubun) {
             pPreviewShow_HOW = "H";
             g_bPrevShow = true;
             if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
-                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
-                    if (g_foldertype != "sent") {
-                        if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
+                //if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+                	// if (g_foldertype != "sent") {
+                        
+            		if (!useReceivingChk) {
+                        pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
+
+                        if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+                            pMailListWidthH = parseInt(CurrenWidth * 0.40);
+                        }
+            			
+                        if (pMailListWidthH < 470) {
+                            BasicViewHeaderChange(true);
+                        } else {
+                            BasicViewHeaderChange(false);
+                        }
+                		
+                		/*if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
                             p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
                             GetListInfo(HeaderObject, ContentObject);
-                        }
+                        }*/
                     }
-                }
+                //}
             }
         }
     	isScrollMailList();
@@ -1191,6 +1226,16 @@ function Window_resize() {
                 }
                 
                 mailPrevIframeSize();
+                
+
+                CurrenWidth = document.documentElement.clientWidth - 20;
+                if (!useReceivingChk) {
+	                if (CurrenWidth < 470) {
+	                    BasicViewHeaderChange(true);
+	                } else {
+	                    BasicViewHeaderChange(false);
+	                }
+                }
             }
             else if (pPreviewShow_HOW == "H") {
             	if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -1236,12 +1281,14 @@ function Window_resize() {
                 
                 // 화면 폭이 일정 크기보다 작아지면 헤더 구성을 변경한다.
                 // 중요도, 책갈피, 첨부파일, 크기 컬럼을 제거한다.
-                if (pMailListWidthH < 470) {
-                    BasicViewHeaderChange(true);
-                } else {
-                    BasicViewHeaderChange(false);
+                if (!useReceivingChk) {
+	                if (pMailListWidthH < 470) {
+	                    BasicViewHeaderChange(true);
+	                } else {
+	                    BasicViewHeaderChange(false);
+	                }
                 }
-                
+	                
                 if($("#PreH_CCMain").css("display") != "none") {
                 	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
                 }
@@ -1259,6 +1306,16 @@ function Window_resize() {
                     document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
                 else
                     document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                
+                CurrenWidth = document.documentElement.clientWidth - 20;
+
+                if (!useReceivingChk) {
+	                if (CurrenWidth < 470) {
+	                    BasicViewHeaderChange(true);
+	                } else {
+	                    BasicViewHeaderChange(false);
+	                }
+                }
             }
         }            
     } catch (e) { }

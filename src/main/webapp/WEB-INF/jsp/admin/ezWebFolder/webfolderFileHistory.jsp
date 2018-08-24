@@ -524,7 +524,7 @@
 							<th headers="ft" class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
 							<th headers="fn" class="wfFileLogName"><spring:message code='ezWebFolder.t156'/></th>
 							<th headers="fs" class="wfFileFavoriteSize"><spring:message code='ezWebFolder.t157'/></th>
-							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t154'/></th>
+							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t339'/></th>
 							<th headers="at" class="wfActive" ><spring:message code='ezWebFolder.t158'/></th>
 							<th headers="ad" class="wfFileLogDate" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 						</tr>

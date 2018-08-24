@@ -309,7 +309,7 @@ function SendDraftMappingSign(ret)
 			{
 				HwpCtrl.SetFieldText(psigncell, "");	
 				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
+				HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
 
 			  	
 			  	signInfo[signCnt] = psigncell;
@@ -326,7 +326,7 @@ function SendDraftMappingSign(ret)
 			{
 				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);	
 				
-				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
+				HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
 		  		
 		  		signInfo[signCnt] = psigncell;
 		  		
@@ -384,11 +384,12 @@ function SendDraftMappingSign(ret)
 				if (HwpCtrl.CheckFieldExist(pseumyungdatecell))
 				    OpinionText = "";
 
-				if (CurAprType == strAprType4 )	
+				if (CurAprType == strAprType4) {
 					OpinionText = strLang6 + OpinionText;
-	
-				HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
-	
+					HwpCtrl.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
+				} else {
+					HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
+				}
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -404,14 +405,15 @@ function SendDraftMappingSign(ret)
 			{
 			    if (HwpCtrl.CheckFieldExist(pseumyungdatecell))
 			        OpinionText = "";
-
-				if (CurAprType == strAprType4 )	
-					OpinionText = strLang6 + OpinionText;
 			  	
-				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);	
+				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);
 				
-				HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
-
+				if (CurAprType == strAprType4 )	{
+					OpinionText = strLang6 + OpinionText;
+					HwpCtrl.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
+				} else {
+					HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
+				}
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	

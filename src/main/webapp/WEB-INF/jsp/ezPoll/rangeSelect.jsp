@@ -764,18 +764,18 @@
         </div>
 		<table> 
     		<tr> 
-        		<td width="195" valign="top">
+        		<td valign="top">
             		<h2><spring:message code='ezPoll.t223' /></h2>
-            		<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:280px;HEIGHT:270px;BACKGROUND-COLOR:#ffffff;" id="TreeView" class="box"></div>
+            		<div id="TreeView" class="listview"></div>
         		</td>
-        		<td width="30" align="center" valign="middle"> 
-            		<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept()" style="cursor:pointer"></div>
-            		<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_admin()" style="cursor:pointer"></div>
+        		<td class="middleTd">
+            		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_dept()"></div>
+            		<div><img class="midArrowImg" src="/images/arr_left.gif" onclick="delete_admin()"></div>
         		</td>
         		<td valign="top">
             		<h2><spring:message code='ezPoll.t224' /></h2>
-             		<div class="listview" style="margin-bottom:5px">
-		                    <div id="DeptListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:270px;border:0"></div>
+             		<div class="listview">
+		                    <div id="DeptListView"></div>
                 	</div>
             		<%--<div>
                 		<select id="deptlist" style="WIDTH:220px; HEIGHT:270px" ondblclick='delete_admin()' NAME="select" multiple>
@@ -786,25 +786,25 @@
 			</tr>
 			<tr>
         		<td valign="top">
-        			<h2 style="float:left;margin-top:4px"><spring:message code='ezPoll.t225' /></h2>
-        			<div style="float:right;margin-top:1px">
+        			<h2 class="botTrTdH2" style="float:left;"><spring:message code='ezPoll.t225' /></h2>
+					<div style="float:right;margin-top:6px">
 	        			<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="height:22px"/>
 	            		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
 	            		<a class="imgbtn imgbck" onclick="cnsearch_click()" style="margin-top:1px"><span><spring:message code='ezPoll.t227' /></span></a>
 	            	</div>
 	            	<div style="clear:both"></div>
-            		<div class="listview" style="margin-top:5px;margin-bottom:5px">
-                		<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0"></div>
+            		<div class="listview">
+                		<div id="OrganListView"></div>
             		</div>
         		</td> 
-        		<td width="30" align="center" valign="middle"> 
-            		<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_member()" style="cursor:pointer"></div>
-            		<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_member()" style="cursor:pointer"></div>
+        		<td class="middleTd">
+            		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_member()"></div>
+            		<div><img class="midArrowImg" src="/images/arr_left.gif" onclick="delete_member()"></div>
         		</td> 
         		<td valign="top">
-            		<h2><spring:message code='ezPoll.t226' /></h2>
-            		<div class="listview" style="margin-top:5px;margin-bottom:5px">
-                    	<div id="MemberListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:240px;border:0"></div>
+            		<h2 class="botTrTdH2"><spring:message code='ezPoll.t226' /></h2>
+            		<div class="listview">
+                    	<div id="MemberListView"></div>
                 	</div>
             		<%--<div>
                 		<select id="memberlist" name="memberlist" id="select2" style="WIDTH:220px; HEIGHT:240px" ondblclick='delete_member()' multiple>

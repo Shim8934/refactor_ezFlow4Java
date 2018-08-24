@@ -2003,7 +2003,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
-                document.getElementById("tbtnNonElecRec").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
                 if (tr.getAttribute("DATA9") == "003" || tr.getAttribute("DATA9") == "014")
                     document.getElementById("tbtnReturn").style.display = "none";
@@ -2519,7 +2518,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 			flag : FLAG,
 			deptName2 : arr_userinfo[16]
 		},
-	success: function(xml){
+		success: function(xml){
 			result = xml;
 		}
 	});
@@ -2535,10 +2534,17 @@ function RemoveDocCabinet(tempDocID, FLAG) {
         return;
     }
     else {
-        if (FLAG == "")
-            var pAlertContent = strLang901;
-        else
-            var pAlertContent = strLang902;
+        if (FLAG == "") {
+        	if (RtnVal == "RESETLINE") {
+        		var pAlertContent = strLangBae1;
+        	} else {
+        		var pAlertContent = strLang901;
+        	}
+        	
+        }
+        else {
+        	var pAlertContent = strLang902;
+        }
         OpenAlertUI(pAlertContent, "", "OPEN");
         return;
     }
