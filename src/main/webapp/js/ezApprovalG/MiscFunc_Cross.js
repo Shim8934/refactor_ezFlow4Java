@@ -112,10 +112,16 @@ function ValidateYearValue(strYear) {
 function ValidateNumber(strValue) {
     if (strValue.length > 0) {
         var strMatch = strValue.match(/^[0-9]+$/);
-        if (!strMatch)
+        if (!strMatch) {
             return false;
-        else
-            return true;
+        } else {
+        	strMatch = strValue.match(/^[0]+$/);
+        	if (!strMatch) {
+        		return true;
+        	} else {
+        		return false;
+        	}
+        }
     }
     else {
         return true;

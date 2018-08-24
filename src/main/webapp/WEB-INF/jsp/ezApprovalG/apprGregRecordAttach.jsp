@@ -65,6 +65,7 @@
     var approvalFlag = "${approvalFlag}";
     var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
     var orgCompanyID = "";
+    var ext = "";
     
     function getDocInfo() {
         try {

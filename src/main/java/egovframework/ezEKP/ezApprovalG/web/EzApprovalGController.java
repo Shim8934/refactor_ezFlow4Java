@@ -614,7 +614,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //		                    if (!checkPer) {
 //		                        return "NOTPERMISSION";
 //		                    }
-							return "NOTPERMISSION";
+							
+							//2018-08-23 천성준 - Document doc = ezApprovalGService.checkPermission 에서 결재선에 올라와 있지만 부서가 다르단 이유로 권한이 없다고 걸러버려서 부서가 다르면 결재선에 있는지 체크로직 추가
+							if (docID != null && mode != null) {
+								String checkLine = ezApprovalGService.checkAprLine(docID.trim(), mode, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+								if (!checkLine.equals("<RESULT>TRUE</RESULT>")) {
+									return "NOTPERMISSION";
+								}
+							} else {
+								return "NOTPERMISSION";
+							}
+							//return "NOTPERMISSION";
 		                }
 					}
 				}

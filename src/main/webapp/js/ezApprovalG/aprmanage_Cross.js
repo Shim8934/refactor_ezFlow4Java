@@ -2532,7 +2532,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 			flag : FLAG,
 			deptName2 : arr_userinfo[16]
 		},
-	success: function(xml){
+		success: function(xml){
 			result = xml;
 		}
 	});
@@ -2548,10 +2548,17 @@ function RemoveDocCabinet(tempDocID, FLAG) {
         return;
     }
     else {
-        if (FLAG == "")
-            var pAlertContent = strLang901;
-        else
-            var pAlertContent = strLang902;
+        if (FLAG == "") {
+        	if (RtnVal == "RESETLINE") {
+        		var pAlertContent = strLangBae1;
+        	} else {
+        		var pAlertContent = strLang901;
+        	}
+        	
+        }
+        else {
+        	var pAlertContent = strLang902;
+        }
         OpenAlertUI(pAlertContent, "", "OPEN");
         return;
     }
