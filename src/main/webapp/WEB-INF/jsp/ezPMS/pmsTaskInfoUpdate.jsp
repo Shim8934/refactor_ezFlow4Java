@@ -83,7 +83,7 @@
 	    opacity: 1;
 	}
 	
-	#managers, #participants{max-height: 100%;overflow-y: auto;}
+	#managers, #participants{overflow-y: auto; height:70px;}
 </style>
 <script>
 var projectId = "<c:out value='${taskDetails.projectId}'/>";
@@ -203,7 +203,7 @@ function openPreTaskTree() {
 	 var managerNameList = "";
 	 var managerListCount = managerList.length;
 	 
-	 for (var i = 0; i < managerList; i++) {
+	 for (var i = 0; i < managerListCount; i++) {
 		var manager = managerList[i];
 		
 		managerNameList += manager.userName;
@@ -535,7 +535,7 @@ function initPreTask() {
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
-						<td id="managers"></td>
+						<td><div id="managers"></div></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t181' /></th>
