@@ -17225,6 +17225,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		if (title != null && title != "") {
+			title = commonUtil.htmlUnescape(title);
+		}
+		
+		if (summary != null && summary != "") {
+			summary = commonUtil.htmlUnescape(summary);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_RecordID", recID);
 		map.put("v_SepAttachNo", sepAttSN);
