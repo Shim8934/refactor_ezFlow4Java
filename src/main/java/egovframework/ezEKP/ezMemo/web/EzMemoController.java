@@ -61,26 +61,37 @@ public class EzMemoController {
 		logger.debug("memoMain started.");
 		
 		String brdID = "8";
-		order = order != null ? order : "0";		// 메모함 선택
-		searchInput = searchInput != null ? searchInput : "";		// 검색 사용 시 검색 단어
-		startDate = startDate != null ? startDate : "";				// 검색 사용 시 시작일
-		endDate = endDate != null ? endDate : "";					// 검색 사용 시 종료일
 		
 		if (request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
 		}
 		
-		logger.debug("order : " + order + ", searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate);
+		model.addAttribute("folderId", "4");
+		
+		logger.debug("memoMain ended");
+		return "ezMemo/memoMain";
+	}
+	
+	@RequestMapping(value = "/ezMemo/getMemoList.do")
+	public String getMemoList(String searchInput, String startDate, String endDate, String folderId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getMemoList started.");
+		
+		searchInput = searchInput != null ? searchInput : "";		// 검색 사용 시 검색 단어
+		startDate = startDate != null ? startDate : "";				// 검색 사용 시 시작일
+		endDate = endDate != null ? endDate : "";					// 검색 사용 시 종료일
+		folderId = folderId != null ? folderId : "0";		// 메모함 선택
+		
+		logger.debug("searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate + ", folderId :" + folderId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
 		param.put("user_id",userInfo.getId());
-		param.put("order", order);
 		param.put("searchInput", searchInput);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
+		param.put("folder_id", folderId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		
@@ -96,8 +107,8 @@ public class EzMemoController {
 				model.addAttribute("defaultColor", defaultColor);
 		}
 		
-		logger.debug("memoMain ended");
-		return "ezMemo/memoMain";
+		logger.debug("getMemoList ended");
+		return "json";
 	}
 	
 	/**
@@ -330,6 +341,16 @@ public class EzMemoController {
 		return "json";
 	}
 	
+	/**
+	 * fold_status set함수
+	 * @param loginCookie
+	 * @param layerTop
+	 * @param layerLeft
+	 * @param request
+	 * @param fold_status
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ezMemo/setFoldStatus.do")
 	public String setFoldStatus(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request, String fold_status) throws Exception {
 		logger.debug("setFoldStatus start");
@@ -374,6 +395,32 @@ public class EzMemoController {
 		param.put("fold_status", 1);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/createMemoConfig/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("insertMemoConfig end");
+		return "json";
+	}
+	
+	/**
+	 * 폴더함 존재 유무 확인
+	 * @param loginCookie
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/hasMemoFolder.do")
+	public String hasMemoFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("insertMemoConfig start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("insertMemoConfig end");

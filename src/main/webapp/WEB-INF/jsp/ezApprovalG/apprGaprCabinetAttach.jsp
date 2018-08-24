@@ -138,6 +138,21 @@
 	            return;
 	        }
 	        function btnIns_onclick() {
+	            //2018-08-23 강민수92 전자결재G일 경우 문서첨부시 PUBLICITYYN이 N이면 문서첨부 할 수 없도록 변경
+	            if (approvalFlag == "G") {
+		        	var DocList = new ListView();
+		            DocList.LoadFromID("DocList");
+		            var pCurSel = DocList.GetSelectedRows();
+		            var curArray = new Array;
+		            
+		            for (var count1 = 0; count1 < pCurSel.length; count1++) {
+			            if (GetAttribute(pCurSel[count1], "DATA16") == "N") {
+			            	OpenAlertUI("<spring:message code='ezApprovalG.garm04'/>");
+			            	return;
+			            }
+		            }
+	            }
+	           
 	            DocMove();
 	        }
 	        function btndel_onclick() {

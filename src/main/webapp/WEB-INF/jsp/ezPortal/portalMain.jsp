@@ -504,6 +504,14 @@
 		    	memoIndex = -1;
 		    }
 		    
+		    function checkDefaultFolder() {
+		    	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezMemo/hasMemoFolder.do"
+				});
+		    }
 		    
 		</script>
 	</head>

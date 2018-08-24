@@ -97,6 +97,28 @@
 				USER_ID = #user_id#
 			AND
 				DELETE_FLAG = 0
+		]]>
+			<isNotEmpty property="searchInput" >
+				<![CDATA[
+	              AND
+						CONTENTS LIKE CONCAT(CONCAT('%', #searchInput#), '%')
+	             ]]> 
+            </isNotEmpty>
+			<isNotEmpty property="startDate" >
+				<![CDATA[
+	              AND 
+	              		WRITE_DATE <= #endDate#
+	              AND
+	              		WRITE_DATE >= #startDate#
+	             ]]> 
+            </isNotEmpty>
+			<isNotEqual property="folder_id" compareValue="0">
+			  	<![CDATA[
+			  		AND
+					  	FOLDER_ID = #folder_id#
+				]]>
+			 </isNotEqual>
+		<![CDATA[
 			ORDER BY 
 				ORDERS
 		]]>
@@ -120,9 +142,9 @@
 	<insert id="EzMemoDAO.insertMemo" parameterClass="Map">
 		<![CDATA[
 		 	INSERT INTO TBL_MEMO
-                (user_id, write_date, folder_id, orders, company_id, tenant_id)
+                (user_id, write_date, folder_id, orders, company_id, tenant_id, color_id)
             VALUES
-                (#user_id#, #write_date#, #folder_id#, #orders#,  #company_id#, #tenant_id#)
+                (#user_id#, #write_date#, #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#)
          ]]>
 	</insert>
 	
@@ -245,5 +267,39 @@
 			(user_id, font_size, use_date, use_gadget, default_color, color_name, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, fold_status, company_id, tenant_id)
 		values
 			(#user_id#, #font_size#, #use_date#, #use_gadget#, #default_color#, #color_name#, #gadget_right#, #gadget_bottom#, #layer_left#, #layer_top#, #layer_width#, #layer_height#, #fold_status#, #company_id#, #tenant_id#)
+	</insert>
+	
+	<select id="EzMemoDAO.hasMemoFolder" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_MEMO_FOLDER
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0
+		]]>
+	</select>
+	
+	<insert id="EzMemoDAO.setDefaultMemoFolder" parameterClass="map">
+		INSERT INTO 
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ORDERS, ICON_ID, DELETE_FLAG)
+		VALUES
+			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#, #orders#, #icon_id#, #delete_flag#)
+		<selectKey keyProperty="folder_id" resultClass="Integer" type="pre">
+			SELECT 
+				MAX(FOLDER_ID)+1 
+			FROM 
+				TBL_MEMO_FOLDER
+			WHERE 
+				TENANT_ID = #tenant_id#
+			AND 
+				COMPANY_ID = #company_id# 
+		</selectKey>
 	</insert>
 </sqlMap>
