@@ -73,7 +73,7 @@
 					}
 					
 				} else {
-					alert("<spring:message code='ezPMS.t128' />");
+					alert("<spring:message code='ezPMS.t158' />");
 				}	
 			},
 			error : function() {
