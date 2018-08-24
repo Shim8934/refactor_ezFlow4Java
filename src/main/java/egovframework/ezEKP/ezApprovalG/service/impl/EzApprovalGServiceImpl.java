@@ -27169,4 +27169,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return result;
 	}
+	
+	@Override
+	public String getHWPdownload(String docID, int tenantID, String companyID) throws Exception{
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PDOCID",  docID);
+		map.put("v_TENANTID",  tenantID);
+		map.put("companyID",  companyID);
+		
+		String filepath = ezApprovalGDAO.getHWPdownload(map);
+		
+		return filepath;
+	};
 }
