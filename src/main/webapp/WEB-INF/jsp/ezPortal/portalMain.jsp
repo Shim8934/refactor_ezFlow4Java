@@ -106,6 +106,7 @@
 		    	setPanelPointer();
 		    	layerPopupOpacity();
 		    	setDetailMemoPosition();
+		    	checkDefaultFolder() 
 		     
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
