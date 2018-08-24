@@ -949,14 +949,26 @@
 		            var nowmonth = nowDate.substring(5,7);
 		            var nowday = nowDate.substring(8,10); 
 		            
-	            	if (condition[5] != null && condition[5] != "") {
+	            	/* if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
 			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
-	            	} else if (condition[3] != null && condition[3] != "") {
+	            	} else if (condition[3] != null && condition[3] != "" && condition[3].length >= 10) {
 			            period = condition[3].substring(0, 4) + strLang1028 + " " + condition[3].substring(5, 7) + strLang1029 + " " + condition[3].substring(8,10) + strLang1030 + " ~ " + condition[4].substring(0, 4) + strLang1028 + " " + condition[4].substring(5, 7) + strLang1029 + " " + condition[4].substring(8, 10) + strLang1030;
-	            	} else if (condition[7] != null && condition[7] != "") {
+	            	} else if (condition[7] != null && condition[7] != "" && condition[7].length >= 10) {
 			            period = condition[7].substring(0, 4) + strLang1028 + " " + condition[7].substring(5, 7) + strLang1029 + " " + condition[7].substring(8,10) + strLang1030 + " ~ " + condition[8].substring(0, 4) + strLang1028 + " " + condition[8].substring(5, 7) + strLang1029 + " " + condition[8].substring(8, 10) + strLang1030;
 	            	}else {
 		            	period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+	            	} */
+	            	
+	            	if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
+	            		period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
+	            	} else if (condition[3] != null && condition[3] != "" && condition[6] != null && condition[6] != "" && condition[3].length <= 4 && condition[6].length <= 4) {
+	            		period = condition[3]+strLang1028+" "+condition[4]+strLang1029+" "+condition[5]+strLang1030+" ~ "+condition[6]+strLang1028+" "+condition[7]+strLang1029+" "+condition[8]+strLang1030;
+	            	} else if (condition[9] != null && condition[9] != "" && condition[12] != null && condition[12] != "" && condition[9].length <= 4 && condition[12].length <= 4) {
+	            		period = condition[9]+strLang1028+" "+condition[10]+strLang1029+" "+condition[11]+strLang1030+" ~ "+condition[12]+strLang1028+" "+condition[13]+strLang1029+" "+condition[14]+strLang1030;
+	            	} else if (condition[15] != null && condition[15] != "" && condition[18] != null && condition[18] != "" && condition[15].length <= 4 && condition[18].length <= 4) {
+	            		period = condition[15]+strLang1028+" "+condition[16]+strLang1029+" "+condition[17]+strLang1030+" ~ "+condition[18]+strLang1028+" "+condition[19]+strLang1029+" "+condition[20]+strLang1030;
+	            	} else {
+	            		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
 	            	}
 		        }
 		        else {
