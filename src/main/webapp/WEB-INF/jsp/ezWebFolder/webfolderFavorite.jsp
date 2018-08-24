@@ -601,7 +601,7 @@
 			creatorColumn.textContent = resultJson[columnMap.creatorName];
 			createDateColumn.textContent = resultJson[columnMap.createDate].substring(0, 10);
 			absolutePathColumn.textContent = resultJson[columnMap.path];
-			nameColumn.setAttribute("title", resultJson[columnMap.path]);
+			absolutePathColumn.setAttribute("title", resultJson[columnMap.path]);
 			sizeColumn.style.textAlign = "center;"
 
 			var targetType = resultJson[columnMap.type];

@@ -273,6 +273,8 @@ function TableView() {
 					case "R" : tdElmt5.textContent = strActType4; break;
 					case "P" : tdElmt5.textContent = strActType5; break;
 					case "RE": tdElmt5.textContent = strActType6; break;
+					case "MV": tdElmt5.textContent = strActType7; break;
+					case "CP": tdElmt5.textContent = strActType8; break;
 				}
 				
 				tdElmt6.setAttribute("style", "text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");

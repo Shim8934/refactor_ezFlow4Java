@@ -293,7 +293,6 @@
 			
 			if (parent == '#' && folderType != "S") {
 				alert("<spring:message code='ezWebFolder.t336'/>");
-				alert("<spring:message code='ezWebFolder.t336'/>");
 				return;
 			}
 			
@@ -343,6 +342,7 @@
 		}
 
 		function returnFunction(type) {
+			window.opener.drawVolume();
 			folderType = type;
 			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
         	add_onclick_Complete('');
