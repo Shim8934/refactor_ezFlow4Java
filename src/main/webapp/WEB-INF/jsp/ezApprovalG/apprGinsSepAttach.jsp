@@ -90,8 +90,9 @@
 		        	lvXml = lvXml.replace(/nonElecRecTempCabinetName/gi, SelectSingleNodeValue(CabInfo.documentElement, "TITLE"));
 		        }  */
 		        oList = createXmlDom();
-		        oList = loadXMLString(lvXml);
-		
+		        //oList = loadXMLString(lvXml);
+		        oList = loadXMLString(ReplaceText(ReplaceText(ReplaceText(ReplaceText(lvXml, "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&"));
+		        
 		        var pLvList = new ListView();      
 		        pLvList.SetID("pLvList");
 		        pLvList.SetMulSelectable(false);    
