@@ -161,12 +161,17 @@
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		        if(nodeLevel > 9)
-		        	nodeLevel = 9;
+		        
 		        for(var i=0; i<title2.length; i++) {
+		        	var spanW = 152 - (18 * nodeLevel);	
 		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+		        	
+		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+		        	if (spanW < 0) {
+						 spanW = 0;
+					 }
+		        	title3[0].style.width = spanW + 'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -332,7 +337,7 @@
 							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
-	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px;'>";
+	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow-x: hidden; overflow-y: auto; padding-left: 10px; padding-bottom: 20px;'>";
 	                        strHTML += "</div></ul>";
 						});
 						cnt = item.length;
