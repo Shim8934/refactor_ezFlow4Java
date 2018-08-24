@@ -10,7 +10,7 @@
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
 		<h1 id="cabMagHeader"><spring:message code="ezCabinet.t125"/></h1>
-		
+		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="addRlWrapper">
 			<c:if test="${activeFlag == '1'}">
 				<div class="addRelatedConfig" id="addRelated">
@@ -74,6 +74,8 @@
 					
 					listMgBttns[0].onclick   = function(e) {documentSavehandler();};
 					listMgBttns[1].onclick   = function(e) {closeWindow();};
+					
+					document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
 				}
 				
 				function autoSelect(){

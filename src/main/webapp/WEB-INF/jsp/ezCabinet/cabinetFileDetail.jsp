@@ -11,7 +11,7 @@
 	</head>
 	<body class="popup cabDetail">
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
-		
+		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
 			<table class="tblFileInf">
 				<tr>
@@ -91,6 +91,7 @@
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {saveItem();};
 					listBttns[1].onclick    = function(e) {cancelChanges()};
+					document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
 					
 					getFileDetail();
 				}

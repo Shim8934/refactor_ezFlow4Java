@@ -101,7 +101,6 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		if (result == null || result.size() == 0) {
 			//Auto insert data
-			result.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
@@ -167,7 +166,6 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		if (result == null || result.size() == 0) {
 			//Auto insert data
-			result.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));

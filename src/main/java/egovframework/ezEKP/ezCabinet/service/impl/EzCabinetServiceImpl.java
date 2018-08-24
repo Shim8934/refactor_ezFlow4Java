@@ -172,7 +172,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		if (listAllModule == null  || listAllModule.size() == 0) {
 			//Auto insert data
-			listAllModule.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
 			listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
 			listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
 			listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));

@@ -64,6 +64,7 @@ var CabinetFileHelper = function() {
 			var listBttns           = cabBttnElmt.children;
 			listBttns[0].onclick    = function(e) {saveItem();};
 			listBttns[1].onclick    = function(e) {cancelChanges()};
+			document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
 			
 			getFileDetail();
 		}
