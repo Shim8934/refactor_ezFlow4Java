@@ -270,7 +270,7 @@
 		<![CDATA[
 			select
 				c1.cabinet_id                                                                                as cabinet_id,
-				case when #primary# = '1' then c1.cabinet_name1 else c1.cabinet_name2 end                    as cabinet_name,
+				c1.cabinet_name1                                                                             as cabinet_name,
 				c1.cabinet_name1                                                                             as cabinet_name1,
 				c1.cabinet_name2                                                                             as cabinet_name2,
 				c1.cabinet_level                                                                             as cabinet_level,
@@ -665,7 +665,7 @@
 	<select id="EzCabinetDAO.getUserSharedCabinet" resultMap="cabinetSimpleVO2">
 		select
 			c1.cabinet_id                                                                                as cabinet_id,
-			case when #primary# = '1' then c1.cabinet_name1 else c1.cabinet_name2 end                    as cabinet_name,
+			c1.cabinet_name1                                                                             as cabinet_name,
 			c1.cabinet_name1                                                                             as cabinet_name1,
 			c1.cabinet_name2                                                                             as cabinet_name2,
 			c1.cabinet_level                                                                             as cabinet_level,
