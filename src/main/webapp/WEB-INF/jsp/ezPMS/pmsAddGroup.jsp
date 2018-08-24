@@ -233,11 +233,11 @@ function addGroup() {
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
-				<td id="managers"></td>
+				<td class="nameList" colspan="3" style="height:70px"><div style="overflow-y:auto; max-height:100%; width:100%" id="managers"></div></td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList('participants')"><span><spring:message code='ezPMS.t64' /></span></a></th>
-				<td id="participants"></td>
+				<td class="nameList" colspan="3" style="height:70px"><div style="overflow-y:auto; max-height:100%; width:100%" id="participants"></div></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t88' /></th>

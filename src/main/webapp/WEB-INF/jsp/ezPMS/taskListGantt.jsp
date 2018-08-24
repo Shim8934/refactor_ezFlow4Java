@@ -501,8 +501,8 @@
 	   		
 	   		//그룹 추가
 	   		function goAddGroup() {
-				var feature = GetOpenPosition(700, 467);
-   				window.open("/ezPMS/goAddGroup.do?projectId=" + projectId, "", "width=700, height=467, resizable=no, scrollbars=no, status=no" + feature);
+				var feature = GetOpenPosition(700, 600);
+   				window.open("/ezPMS/goAddGroup.do?projectId=" + projectId, "", "width=700, height=600, resizable=no, scrollbars=no, status=no" + feature);
    			 
 //    				DivPopUpShow(700, 447, "/ezPMS/goAddGroup.do?projectId=" + projectId);
 	   		}
