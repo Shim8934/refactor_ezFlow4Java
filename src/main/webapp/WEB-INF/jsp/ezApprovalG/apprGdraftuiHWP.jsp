@@ -202,6 +202,14 @@
 	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
 	                	HwpCtrl.SetFieldText("docnumber","");
 	                }
+	                
+	                /**
+	                	기안인 경우에는 hwp파일이 실존하지 않아 로컬로 저장하는 것이 불가능하므로 저장버튼 display:none처리
+	                	또한, 일반 mht쪽에서도 기안을 올릴 때 저장 기능이 없음.
+	                */
+	                if(DraftFlag === 'DRAFT') {
+	                	$("#btnSave").css('display', 'none');
+	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e.description);
 	                hideProgress();
@@ -1069,8 +1077,7 @@
 			        var rtn = window.showModalDialog(url, para, feature);
 
 				    if (rtn[0] == "TRUE") {
-				        //g_SepAttachLVXml = rtn[1];
-				        g_SepAttachLVXml = ReplaceText(ReplaceText(ReplaceText(ReplaceText(rtn[1], "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
+				        g_SepAttachLVXml = rtn[1];
 				        SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml);
 				    }
 				} catch (e) {

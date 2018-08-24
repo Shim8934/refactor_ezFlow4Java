@@ -24,6 +24,7 @@
 	    	var useBottomFrameOnly = "${useBottomFrameOnly}";
 		    var firFolderId = "";
 		    var flag = "";
+		    var treeData;
 		    
 			document.onselectstart = function() {
 				return false;
@@ -70,6 +71,8 @@
 							var childE = document.getElementById(firFolderId + "_anchor");
 							childE.setAttribute("class", "jstree-anchor jstree-clicked");
 							elmentTest.setAttribute("aria-selected", "true");
+							treeData = data.data;
+							addTitle();
 							folderId = firFolderId;
 							getFileList(folderId);
 						}).on('changed.jstree', function (e, data) {
@@ -107,6 +110,20 @@
 				});
 		    }
 		    
+		    function addTitle() {
+		    	var data = this.treeData;
+		    	for ( var i = 0; i < data.length ; i++  ) {
+		    		var dataId = data[i]["id"] + "_anchor";
+		    		var folderName = data[i]["folderName1"];
+		    		var childE = document.getElementById(dataId);
+		    		if (childE != null){
+// 		    			dataId = data[i]["id"];
+// 			    		folderName = data[i]["folderName1"];
+// 			    		childE = document.getElementById(dataId);
+						childE.setAttribute("title", folderName);
+		    		}
+		    	}
+		    }
 			function drawVolume() {
 				$.ajax({
 					url: "/ezWebFolder/getUserCapicity.do",
