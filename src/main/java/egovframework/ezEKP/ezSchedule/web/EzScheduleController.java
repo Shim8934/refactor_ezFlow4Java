@@ -768,8 +768,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		logger.debug("============ scheduleSelectAttendant started ============");
 		
         String title = request.getParameter("title");
-        String startTime = request.getParameter("startTime");
-        String endTime = request.getParameter("endTime");
+        String startTime = request.getParameter("StartTime");
+        String endTime = request.getParameter("EndTime");
         String gubun = request.getParameter("gubun");
         String type = request.getParameter("type");
         String pSearchString = request.getParameter("searchString");
@@ -1793,7 +1793,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");		
-		String pidList = "'" + idList + "'";
+		String pidList = "'" + idList + "',";
 		
 		String DeptID = ezScheduleService.getCumDeptId(idList,loginSimpleVO.getTenantId(), userInfo.getCompanyID());
 		String CompanyID = userInfo.getCompanyID();

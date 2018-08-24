@@ -190,11 +190,13 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	var strSize;
     	if (temppFileSize > 1024 * 1024) {
     		temppFileSize = temppFileSize / 1024 / 1024;
-    		strSize = parseInt(temppFileSize) + "MB";
+    		//strSize = parseInt(temppFileSize) + "MB";
+    		strSize = temppFileSize.toFixed(1) + " MB";
     	}
     	else if (temppFileSize > 1024) {
     		temppFileSize = temppFileSize / 1024;
-    		strSize = parseInt(temppFileSize) + "KB";
+    		//strSize = parseInt(temppFileSize) + "KB";
+    		strSize = temppFileSize.toFixed(1) + " KB";
     	}
     	else
     		strSize = parseInt(temppFileSize) + "B";

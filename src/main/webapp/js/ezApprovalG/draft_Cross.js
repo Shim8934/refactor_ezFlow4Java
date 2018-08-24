@@ -3046,7 +3046,6 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
- 
     if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
@@ -3057,11 +3056,11 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-
         if (url != "")
             var rtn = window.showModalDialog(url, parameter, feature);
         if (rtn) {
-        	 window.close();
+        	 window.returnValue = true; // 한글기안기 반송의견 삭제 안되는 버그로 인해 변경.
+        	 //window.close();
         }
     }
 }
