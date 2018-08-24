@@ -244,6 +244,9 @@
 			}
 		</script>
 	</head>
+	<style>
+		.jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden;}
+	</style>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
 		<div id="left" style="overflow: none">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span><spring:message code='ezWebFolder.t10' /></span>
