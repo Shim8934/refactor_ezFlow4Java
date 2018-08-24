@@ -113,6 +113,7 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
+		    	var listWidth = 0;
 		    	
 		    	if (useReSend == "YES" && g_szRootFolderName == compareFolderName) {
 		    		$('#liReSend').css('display', 'block');
@@ -217,15 +218,7 @@
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
 		                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
 		                
-		                if (CurrenWidth <= 470) {
-		                    if (!useReceivingChk) {
-		                	//if (g_foldertype != "sent") {
-		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-		                        SmallSizeList = true;
-		                        OldSmallSizeList = true;
-		                    }
-		                }
-		                
+		                listWidth = CurrenWidth;
 		            } else {
 		            	
 		                if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -253,15 +246,7 @@
 		                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
 		                
-		                if (pMailListWidthH <= 470) {
-		                    if (!useReceivingChk) {
-		                	//if (g_foldertype != "sent") {
-		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-		                        SmallSizeList = true;
-		                        OldSmallSizeList = true;
-		                    }
-		                }
-		                
+		                listWidth = pMailListWidthH;
 		            }
 		            
 		        } else {
@@ -269,19 +254,23 @@
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
 		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
-		            
-		            CurrenWidth = document.documentElement.clientWidth - 20;
-	                
-		            if (CurrenWidth <= 470) {
-	                    if (!useReceivingChk) {
-	                	//if (g_foldertype != "sent") {
-	                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-	                        SmallSizeList = true;
-	                        OldSmallSizeList = true;
-	                    }
-	                }
+
+	                listWidth = document.documentElement.clientWidth - 20;
 		        }
-		     
+		     	
+		        if (listWidth <= 470) {
+                    if (!useReceivingChk) {
+                    	if (g_foldertype == "sent" || g_foldertype == "draft") {
+                			p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2_1.xml";
+                		} else {
+                        	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+                		}
+                    	
+                        SmallSizeList = true;
+                        OldSmallSizeList = true;
+                    }
+                }
+		        
 		        var HeaderObject = document.getElementById("MailHeader");
 		        var ContentObject = document.getElementById("MailList");	        
 		        HeaderIni(HeaderObject);       
