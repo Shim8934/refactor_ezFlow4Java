@@ -1069,8 +1069,7 @@
 			        var rtn = window.showModalDialog(url, para, feature);
 
 				    if (rtn[0] == "TRUE") {
-				        //g_SepAttachLVXml = rtn[1];
-				        g_SepAttachLVXml = ReplaceText(ReplaceText(ReplaceText(ReplaceText(rtn[1], "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
+				        g_SepAttachLVXml = rtn[1];
 				        SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml);
 				    }
 				} catch (e) {
