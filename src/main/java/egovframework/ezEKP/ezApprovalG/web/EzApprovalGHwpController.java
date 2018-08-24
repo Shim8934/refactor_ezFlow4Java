@@ -496,7 +496,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 		
 		if (xmlDom.getElementsByTagName("LIMITRANGE").getLength() > 0) {
-			limitRange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
+			limitRange = commonUtil.cleanValue(xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent());
 		}
 		
 		if (xmlDom.getElementsByTagName("PUBLICITYCODE").getLength() > 0) {

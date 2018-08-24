@@ -1492,7 +1492,7 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
-    var parameter = pInformationContent;
+	var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
     if (CrossYN() && (ext != 'hwp' || CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
         ezapropinion_cross_dialogArguments[0] = parameter;
