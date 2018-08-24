@@ -180,10 +180,12 @@
 		   	}
 		    
 		    function getSharedList() {
+		    	folderType = "S";
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharedList.do";
 			}
 			
 			function getSharingList() {
+				folderType = "S";
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharingList.do";
 			}
 			
