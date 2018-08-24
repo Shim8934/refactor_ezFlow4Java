@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css"/>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezCabinet.t31'/></h1>
+		<h1><spring:message code='ezCabinet.t155'/></h1>
 		<div class="cabiMain">
 			<div class="compSelect" id="companySelect">
 				<span><b><spring:message code='ezCabinet.t13'/></b></span>

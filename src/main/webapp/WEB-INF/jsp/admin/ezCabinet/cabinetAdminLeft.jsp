@@ -23,8 +23,8 @@
 			<h2><span><spring:message code='ezCabinet.t10'/></span></h2>
 			<ul></ul>
 			
-			<!-- 연동설정 -->
-			<h2><span><spring:message code='ezCabinet.t31'/></span></h2>
+			<!-- 모듈설정-->
+			<h2><span><spring:message code='ezCabinet.t155'/></span></h2>
 			<ul></ul>
 		</div>
 		
