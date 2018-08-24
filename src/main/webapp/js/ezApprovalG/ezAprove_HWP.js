@@ -95,6 +95,7 @@ function AprrovMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
+	var dataText = "";
 	
 	if( LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16)   
 	{
@@ -369,8 +370,11 @@ function AprrovMappingSign(ret)
 					}
 
 					if (!HwpCtrl.CheckFieldExist(seumyungdateID)) {
-					    HwpCtrl.AppendFieldText(signID, OpinionText, true);
-					    contents = contents + OpinionText;
+					    /*HwpCtrl.AppendFieldText(signID, OpinionText, true);
+					    contents = contents + OpinionText;*/
+						dateText = "<P CLASS=HStyle0 STYLE='text-align:center;'><SPAN STYLE='font-size:9.0pt;font-family:\"돋움\";font-weight:\"normal\";line-height:160%'>" + getSignDate() + " </SPAN></P>";
+						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);	
+						HwpCtrl.AppendFieldText(signID, dateText, true, true);
 					}
 
 					if(pAprLineType == strAprType4)
