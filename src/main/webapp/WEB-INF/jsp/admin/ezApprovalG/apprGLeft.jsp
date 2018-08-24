@@ -127,7 +127,9 @@
 						<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t49'/></span><ul></ul></h2>
 					</c:otherwise>
 				</c:choose>
+				<c:if test="${useAdminBujae == 'YES'}">
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span><ul></ul></h2>				
+				</c:if>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span><ul></ul></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span><ul></ul></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span><ul></ul></h2>	
