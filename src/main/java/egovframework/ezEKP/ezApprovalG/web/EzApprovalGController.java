@@ -5279,6 +5279,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
 		String orderOption = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
 		String searchQuery = "";
+		String approvalFlag = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
 		String userLang = userInfo.getLang();
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
@@ -5428,6 +5429,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("sbStr", sbStr.toString());
 		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("approvalFlag", approvalFlag);
 		logger.debug("doApprovAllselect ended");
 		
 		return "ezApprovalG/apprGdoApprovAllselect";
