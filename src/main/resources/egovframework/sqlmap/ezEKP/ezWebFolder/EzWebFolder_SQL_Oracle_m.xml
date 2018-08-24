@@ -796,7 +796,10 @@
 				THEN USER_NAME1
 				ELSE USER_NAME2
 			END AS USER_NAME,
-			USER_TYPE
+			CASE WHEN USER_ID = #compId#
+                then 'C'
+            ELSE USER_TYPE
+            END AS USER_TYPE
 		FROM TBL_WEBFOLDER_SHARE_SUB
 		WHERE SHARE_ID = #shareId#
 		AND TENANT_ID = #tenantId#

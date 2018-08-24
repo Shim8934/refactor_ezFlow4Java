@@ -24,7 +24,7 @@ public interface EzWebFolderService_m {
 	
 	Map<String, Long> getSharedCount(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
-	List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String primary, String offset, int tenantId) throws Exception;
+	List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String compId, String primary, String offset, int tenantId) throws Exception;
 	
 	List<Map<String, String>> getPermissionIdMapList(String userId, String deptId, String compId, int tenantId) throws Exception;
 	

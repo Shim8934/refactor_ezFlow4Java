@@ -2166,7 +2166,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		rollbackCabinetNum(deptID, "", sn, companyID, "", lang, tenantID);
         	}
         	
-        	return "<RESULT>FALSE</RESULT>";
+        	if (hesongFlag.trim().equals("")) {
+        		return "<RESULT>RESETLINE</RESULT>";
+        	} else {
+        		return "<RESULT>FALSE</RESULT>";
+        	}
         }
         
 		
@@ -8961,6 +8965,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "]]></DATA14>");
 					}
 					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "]]></DATA15>");
+					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
 					
 					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals("011") ) {
 						docID = makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent());

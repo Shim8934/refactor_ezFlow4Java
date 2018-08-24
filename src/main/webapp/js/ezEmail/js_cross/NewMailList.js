@@ -809,10 +809,7 @@ function GetListInfo(HeaderObject, ContentObject) {
     var MaxPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
     var pStart;
     var pEnd;
-    if (searchMode) {
-        if (pOldSearchKeyword != SearchKeyword)
-            curPage = 1; MaxCount = 0; MaxPage = 0;
-    }
+    
     pStart = (pageCount * (curPage - 1));
     pEnd = ((curPage) * pageCount) - 1;
     if (pEnd > MaxCount && MaxCount != 0)
@@ -832,13 +829,8 @@ function GetListInfo(HeaderObject, ContentObject) {
     createNodeInsert(xmlpara, objNode, "DATA");
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
-    if (searchMode) {
-        pOldSearchKeyword = SearchKeyword;
-        createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
-    }
-    else {
-        createNodeAndInsertText(xmlpara, objNode, "SEARCH", "");
-    }
+    pOldSearchKeyword = SearchKeyword;
+    createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
     if(p_ListorderValue == "GROUPSUBLIST")
         createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
@@ -894,12 +886,7 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     createNodeInsert(xmlpara, objNode, "DATA");
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
-    if (searchMode) {
-        createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
-    }
-    else {
-        createNodeAndInsertText(xmlpara, objNode, "SEARCH", "");
-    }
+    createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
     createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
     
@@ -943,6 +930,9 @@ function GetListIevent_ongetxmlcomplete() {
             isScrollMailList();
             
             HiddenMailProgress();
+            if (typeof (searchMode) != "undefined") {
+            	searchMode = false;
+            }
             GetList_HTTP = null;
             
             /* 수아 재은 수정 (선택된 input href) */
@@ -1041,7 +1031,6 @@ function on_changeView(listtypeValue) {
             }
         }
     }
-    searchMode = false;
     _RowObject = null;
     _SubRowObject = null;
     pGroupListClickObject = null;
@@ -1089,6 +1078,12 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
+	
+	if (typeof (searchMode) != "undefined" && typeof (importExportMode) != "undefined") {
+		if (searchMode || importExportMode) {
+			return;
+		}
+	}
 	
 	parent.frames["left"].detailView();
     
@@ -1138,18 +1133,18 @@ function MailListRefresh() {
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
-function BasicViewHeaderChange(pGubun) {
-    if (pGubun) {
-        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml")
+function BasicViewHeaderChange(pGubun, pFolderType) {
+	var viewXmlFile = pGubun ? "viewXMLFile1_1.xml" : "viewXMLFile1.xml";
+	
+	if (pFolderType == "draft" ||  pFolderType == "sent") {
+		viewXmlFile = pGubun ? "viewXMLFile2_1.xml" : "viewXMLFile2.xml";
+	}
+	
+    if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile)
             return;
 
-        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-    } else {
-        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml")
-            return;
+    p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile;
 
-        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
-    }
     listContentArry = new Array();
     listSubContentArry = new Array();
     var HeaderObject = document.getElementById("MailHeader");

@@ -704,7 +704,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		int cnt                    = multiFileLists.size();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String[] pFileName         = new String[cnt];
-		Long[] fileSize            = new Long[cnt];
+		double[] fileSize            = new double[cnt];
 		String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
@@ -765,7 +765,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setFileName(pFileName[i]);
 				fileVO.setDownloadCnt(0);
 				fileVO.setFilePath(getWebFolderDirPath(tenantId) + newName);
-				fileVO.setFileSize(Long.toString(fileSize[i]));
+				fileVO.setFileSize(Double.toString(fileSize[i]));
 				fileVO.setFolderId(folder.getFolderId());
 				fileVO.setTenantId(tenantId);
 				fileVO.setCreateId(userId);
@@ -1128,11 +1128,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 						moveFile(fileId, folderId, tenantId);
 						saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 					}
-				}
-				else {
+				} else {
 					logger.debug("Privileges!");
 					result.put("status", "error");
-					result.put("code", 3);
+					result.put("code", 4);
 					return result;
 				}
 			}
@@ -1143,8 +1142,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
 			
-			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 			
 			if (totalUploadSize > (totalCapa - totalUsed)) {
 				logger.debug("Not enough storage to move/copy these files!");
