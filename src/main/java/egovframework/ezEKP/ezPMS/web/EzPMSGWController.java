@@ -4138,8 +4138,12 @@ public class EzPMSGWController {
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			String uploadPathName = "uploadFile";
-
-			Long folderId = Long.parseLong(request.getParameter("folderId"));
+			Long folderId = 0L;
+			
+			if (request.getParameter("folderId") != null) {
+				folderId = Long.parseLong(request.getParameter("folderId"));
+			}
+			
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int listCnt = Integer.parseInt(request.getParameter("limit"));
 			String position = request.getParameter("position");
@@ -4325,9 +4329,12 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
-
-			Long folderId = Long.parseLong(request.getParameter("folderId"));
-
+			Long folderId = 0L;
+			
+			if (request.getParameter("folderId") != null) {
+				folderId = Long.parseLong(request.getParameter("folderId"));
+			}
+			 
 			// String searchByTaskName =
 			// request.getParameter("searchByTaskName");
 			String searchByUser = request.getParameter("searchByUser");
