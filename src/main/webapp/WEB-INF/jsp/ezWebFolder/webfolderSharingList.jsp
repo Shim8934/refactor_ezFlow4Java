@@ -620,6 +620,11 @@
 				$('.wfFileShareDate2').css('display','none');
 				$('.wfFileShareDate').css('display','');
 				
+				document.getElementById("wfFileShareMember2").className = "wfFileCreator";
+				document.getElementById("updateDateHeader").className = "wfFileUploadDate";
+				document.getElementById("updateDateHeader2").className = "wfFileUploadDate";
+
+				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
@@ -674,9 +679,9 @@
 					fileIconColumn.setAttribute("class", "wfFileType");
 					nameColumn.setAttribute("class", "wfFileName");
 					sizeColumn.setAttribute("class", "wfFileSize");
-					creatorColumn.setAttribute("class", "wfFileShareMember");
-					createDateColumn.setAttribute("class", "wfFileShareDate");
-					updateDateColumn.setAttribute("class", "wfFileShareDate");
+					creatorColumn.setAttribute("class", "wfFileCreator");
+					createDateColumn.setAttribute("class", "wfFileUpdateDate");
+					updateDateColumn.setAttribute("class", "wfFileUpdateDate");
 					absolutePathColumn.setAttribute("class", "wfFilePath");
 					shareStatusColumn.setAttribute("class", "wfFileShare");
 					
@@ -1041,8 +1046,8 @@
 								<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 								<th class="wfFileName" style=""><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 								<th class="wfFileSize" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-								<th class="wfFileShareMember2" ><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-								<th class="wfFileSharedDate" ><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+								<th class="wfFileShareMember2" id="wfFileShareMember2"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+								<th class="wfFileSharedDate" id="updateDateHeader2"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 								<th class="wfFileShareMember" id="sharerHeader" style=""><spring:message code='ezWebFolder.t320'/></th><!-- 공유자 -->
 								<th class="wfFileShareDate2" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
