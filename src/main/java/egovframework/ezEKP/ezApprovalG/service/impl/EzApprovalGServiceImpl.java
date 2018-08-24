@@ -3423,8 +3423,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_AprType", getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
 					map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
 				} else {
-					map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
-					map.put("v_AprState", getName2Code("SA04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+					try {
+						map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
+						map.put("v_AprState", getName2Code("SA04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				
 				map.put("v_AprMemberID", rowNode.item(i).getChildNodes().item(9).getTextContent().trim());
