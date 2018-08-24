@@ -101,9 +101,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			map.put("layer_left", memoConfigVO.getLayer_left());
 		}
 		
-		if(memoConfigVO.getFold_status()!=0) {
-			map.put("fold_status", memoConfigVO.getFold_status());
-		}
 		
 		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
@@ -188,25 +185,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void setFoldStatus(MemoConfigVO memoConfigVO) throws Exception {
-		logger.debug("deleteMemoFolder started.");
-		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("user_id", memoConfigVO.getUser_id());
-		map.put("tenant_id", memoConfigVO.getTenant_id());
-		map.put("company_id", memoConfigVO.getCompany_id());
-		map.put("fold_status", memoConfigVO.getFold_status());
-		ezMemoDAO.setFoldStatus(map);
-		logger.debug("deleteMemoFolder ended.");
-	}
-
-	@Override
 	public void insertMemoConfig(MemoConfigVO memoConfigVO) {
 		logger.debug("insertMemoConfig start");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoConfigVO.getUser_id());
 		map.put("tenant_id", memoConfigVO.getTenant_id());
 		map.put("company_id", memoConfigVO.getCompany_id());
-		map.put("fold_status", memoConfigVO.getFold_status());
 		map.put("font_size", memoConfigVO.getFont_size());
 		map.put("use_date", memoConfigVO.getUse_date());
 		map.put("use_gadget", memoConfigVO.getUse_gadget());

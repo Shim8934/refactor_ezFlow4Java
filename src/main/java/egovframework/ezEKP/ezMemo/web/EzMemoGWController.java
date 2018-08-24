@@ -116,7 +116,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", memoFolders);
 			result.put("memoCount", memoCount);
-			result.put("foldStatus", memoConfigVO.getFold_status());
+			
 		} catch(Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
@@ -339,29 +339,7 @@ public class EzMemoGWController {
 		
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-list/" + folderId + "/memo/" +userId + "] ended.");
 		return result;
-	}
-							
-	@RequestMapping(value = "/rest/ezMemo/config/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject gwSetFoldStatus(@PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/config/users/" +userId + "] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try {
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
-			memoConfigVO.setUser_id(userId);
-			
-			ezMemoService.setFoldStatus(memoConfigVO);
-			
-			result.put("status", "ok");
-		} catch(Exception e) {
-			result.put("status", "error");
-		}
-		
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/config/users/" +userId + "] ended.");
-		return result;
-	}
+	}						
 	
 	/*@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezMemo/getMemoConfig/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")

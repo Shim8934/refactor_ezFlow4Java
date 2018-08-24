@@ -122,9 +122,6 @@
 		                favoriteList();
 		            }
 		        }
-		        setFoldStatus();
-		        memoFolderClickE();
-
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");

@@ -27,8 +27,6 @@ public class MemoConfigVO {
 	private double layer_width;
 	/** 레이어 팝업 높이*/
 	private double layer_height;
-	/** 메모함 펼침 상태*/
-	private int fold_status;
 	/** 컴퍼니 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -105,12 +103,6 @@ public class MemoConfigVO {
 	public void setLayer_height(double layer_height) {
 		this.layer_height = layer_height;
 	}
-	public int getFold_status() {
-		return fold_status;
-	}
-	public void setFold_status(int fold_status) {
-		this.fold_status = fold_status;
-	}
 	public String getCompany_id() {
 		return company_id;
 	}
@@ -132,7 +124,7 @@ public class MemoConfigVO {
 				+ ", gadget_bottom=" + gadget_bottom + ", layer_left="
 				+ layer_left + ", layer_top=" + layer_top + ", layer_width="
 				+ layer_width + ", layer_height=" + layer_height
-				+ ", fold_status=" + fold_status + ", company_id=" + company_id
+				+ ", company_id=" + company_id
 				+ ", tenant_id=" + tenant_id + "]";
 	}
 

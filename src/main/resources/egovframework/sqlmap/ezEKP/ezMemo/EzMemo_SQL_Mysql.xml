@@ -71,7 +71,7 @@
 		<![CDATA[
 			SELECT
 				USER_ID, FONT_SIZE, USE_DATE, USE_GADGET, DEFAULT_COLOR, COLOR_NAME, GADGET_RIGHT, 
-				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, FOLD_STATUS, COMPANY_ID, TENANT_ID
+				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, COMPANY_ID, TENANT_ID
 			FROM
 				TBL_MEMO_CONFIG
 			WHERE 
@@ -249,24 +249,11 @@
 			TENANT_ID = #tenant_id#
 	</update>
 	
-	<update id="EzMemoDAO.setFoldStatus" parameterClass="map">
-		UPDATE
-			TBL_MEMO_CONFIG
-		SET
-			FOLD_STATUS = #fold_status#
-		WHERE
-			USER_ID = #user_id#
-		AND
-			COMPANY_ID = #company_id# 
-		AND
-			TENANT_ID = #tenant_id#
-	</update>
-	
 	<insert id="EzMemoDAO.insertMemoConfig" parameterClass="map">
 		insert into tbl_memo_config 
-			(user_id, font_size, use_date, use_gadget, default_color, color_name, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, fold_status, company_id, tenant_id)
+			(user_id, font_size, use_date, use_gadget, default_color, color_name, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, company_id, tenant_id)
 		values
-			(#user_id#, #font_size#, #use_date#, #use_gadget#, #default_color#, #color_name#, #gadget_right#, #gadget_bottom#, #layer_left#, #layer_top#, #layer_width#, #layer_height#, #fold_status#, #company_id#, #tenant_id#)
+			(#user_id#, #font_size#, #use_date#, #use_gadget#, #default_color#, #color_name#, #gadget_right#, #gadget_bottom#, #layer_left#, #layer_top#, #layer_width#, #layer_height#, #company_id#, #tenant_id#)
 	</insert>
 	
 	<select id="EzMemoDAO.hasMemoFolder" resultClass="Integer">
