@@ -936,10 +936,13 @@ GanttMaster.prototype.updateLinks = function (task) {
 
         } else if (isLoop(sup, task, visited)) {
           todoOk = false;
-          this.setErrorOnTransaction(GanttMaster.messages.CIRCULAR_REFERENCE + "\n\"" + task.id +" - "+ task.name + "\" -> \"" + sup.id +" - "+sup.name+"\"");
+          //라이브러리 에러메시지 수정 2018-08-24 홍대표
+          this.setErrorOnTransaction(GanttMaster.messages.CIRCULAR_REFERENCE);
+//          this.setErrorOnTransaction(GanttMaster.messages.CIRCULAR_REFERENCE + "\n\"" + task.id +" - "+ task.name + "\" -> \"" + sup.id +" - "+sup.name+"\"");
 
         } else if(depsEqualCheck.indexOf(sup)>=0) {
-          this.setErrorOnTransaction(GanttMaster.messages.CANNOT_CREATE_SAME_LINK + "\n\"" + sup.name+"\" -> \""+task.name+"\"");
+          this.setErrorOnTransaction(GanttMaster.messages.CANNOT_CREATE_SAME_LINK);
+//          this.setErrorOnTransaction(GanttMaster.messages.CANNOT_CREATE_SAME_LINK + "\n\"" + sup.name+"\" -> \""+task.name+"\"");
           todoOk = false;
 
         } else {
@@ -1315,14 +1318,14 @@ GanttMaster.prototype.endTransaction = function () {
     //console.debug("rolling-back transaction");
 
     //compose error message
-    //에러 메시지를 변경하기 위해 수정. 2018-06-29 홍대표
-    var msg = msgStr01 + " " || "";
+    //에러 메시지를 변경하기 위해 수정. 2018-08-24 홍대표
+//    var msg = msgStr01 + " " || "";
 //    var msg = "ERROR:\n";
     for (var i = 0; i < this.__currentTransaction.errors.length; i++) {
       var err = this.__currentTransaction.errors[i];
-      msg = msg + err.msg + "\n\n";
+//      msg = msg + err.msg + "\n\n";
     }
-    alert(msg);
+    alert(err.msg);
 
 
     //try to restore changed tasks
