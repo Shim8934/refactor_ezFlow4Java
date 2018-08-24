@@ -11,7 +11,7 @@
 	<body  id="left">
 		<c:choose>
 			<c:when test="${userInfo.lang != '3'}">
-				<h1>웹폴더</h1>
+				<h1><spring:message code="ezWebFolder.t10"/></h1>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/webfolder_01" target="right">메인화면</a></span></h2>
 				<ul>
 				</ul>
@@ -35,7 +35,7 @@
 <!-- 				</ul> -->
 			</c:when>
 			<c:otherwise>
-				<h1>スケジュール</h1>
+				<h1><spring:message code="ezWebFolder.t10"/></h1>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/webfolder_jp_01" target="right">メイン画面</a></span></h2>
 				<ul>
 				</ul>
