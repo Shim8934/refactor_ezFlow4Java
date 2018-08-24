@@ -30,17 +30,17 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
-			.individual-memo { width:200px; height:200px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
+			.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; }
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#memo-btn{text-align:right; height:40px; }
-			#font-btn{text-align:right; height: 23px; }
-			#slider-range{width:100px;float:left; margin-left:15px;}
+			/* #font-btn{text-align:right; height: 23px; } */
+			#slider-range{width:70px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			#textarea{padding-left:10px; padding-right:10px; width:100%; height:332px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+			#textarea{padding-left:10px; padding-right:10px; width:100%; height:354px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
+			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:84%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se { background-image: url("");}
@@ -168,13 +168,13 @@
 		        });
 
 		        
-		        $("#layer-popup").resizable({
+		        $(".layer-half").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	stop : function () {
+		        	/* stop : function () {
 		        		
-		        		var layerWidth = $("#layer-popup").width();
-		        		var layerHeight = $("#layer-popup").height();
+		        		var layerWidth = $(".layer-half").width();
+		        		var layerHeight = $(".layer-half").height();
 		        		
 		        		$.ajax({
 		        			type:"POST",
@@ -191,14 +191,14 @@
 		        				console.log("에러");
 		        			}
 		        		});
-		        	}
+		        	} */
 		        });
 		        
 		        $(".detailMemo").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	minWidth: 270,
-		        	minHeight: 270,
+		        	minWidth: 310,
+		        	minHeight: 310,
 		        	ghost : true,
 		        	stop : function() {
 		        	
@@ -211,8 +211,8 @@
 			        $("#textarea").css("height", parseInt(textareaHeight) +"px");
 				    }
 		        });
-		        
-		        $("#layer-popup").resize(function(e) {
+		        /* 변경 */
+		        $(".layer-half").resize(function(e) {
 		        	
 		        	var layerHeight = $(this).height();
 		        	var btnBundle = $("#btn-bundle").height();
@@ -221,6 +221,52 @@
 		        	
 		        });
 		        
+		        
+		        $("#memoMove").click(function() {
+
+		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+		            try { OpenWin.focus(); } catch (e) { }
+		        });
+		        
+		        $("#changeMode").click(function() {
+		        	
+		        	var layerClass = $("#layer-popup").attr("class");
+		        	
+		        	if (layerClass.indexOf("layer-half") != -1) {
+		        		$("#layer-popup").removeClass().addClass("layer-all");
+		        		$(".ui-resizable-handle").css("display", "none");
+		        		
+		        	} else if (layerClass.indexOf("layer-all") != -1) {
+		        		$("#layer-popup").removeClass().addClass("layer-half ui-draggable ui-draggable-handle ui-resizable");
+		        		$(".ui-resizable-handle").css("display", "");
+		        		
+		        	}
+		        	
+		        	setLayerSize();
+		        	
+		        });
+		        
+		        getMemoConfig();
+
+		    });
+		    
+		    function setLayerSize() {
+		    	var layerClass = $("#layer-popup").attr("class");
+		    	
+	    		var winWidth = window.innerWidth;
+	    		var winHeight = window.innerHeight;
+	    		
+		    	if (layerClass.indexOf("layer-all") != -1) {
+		    		
+		    		$(".layer-all").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
+		    		
+		    	} else if (layerClass.indexOf("layer-half") != -1) {
+		    		getMemoConfig();
+		    	}
+		    }
+		    /* 메모 컨피그 디비 확인 후 없으면 insert */
+		    function getMemoConfig() {
+	        	
 		        $.ajax({
 		        	type : "GET",
 		        	dataType : "JSON",
@@ -243,42 +289,7 @@
 		        		}
 		        	}
 		        });
-		        
-		        $("#memoMove").click(function() {
-
-		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
-		            try { OpenWin.focus(); } catch (e) { }
-		        });
-		        
-		        memoFoldersInfo();
-		     });
-		    
-	        function memoFoldersInfo() {
-		    	selFolderId="";
-				selFolderName="";
-		    	$.ajax({
-					type : "GET",
-					dataType : "json",
-					async : false,
-					url : "/ezMemo/getMemoFoldersInfo.do",
-					success: function(result){
-						console.log("메모함 정보");
-						console.log(result.folders);
-						
-						var html="";
-						var folderList = result["folders"];
-						
-						var html = "";
-						html += "<option>전체</option>";
-						folderList.forEach(function(list, index){
-							html+= "<option>"+list.folder_name+"</option>";
-						});
-						
-						$("#memoFolderList").html(html);
-					}	
-				});
-		    }
-
+	        }
 		    
 		    function setDetailMemoPosition () {
 		    	var winWidth = $(window).width();
@@ -323,7 +334,7 @@
 		        	}
 		       	});
 		     
-		        $('#layer-popup, .detailMemo').on("mouseup", function() {
+		        $('.layer-half, .detailMemo').on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
 		        	$("#open-memo").css("pointer-events", "auto");
 		        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");
@@ -433,7 +444,7 @@
 		    	if(date < 10) {
 		    		date = "0"+date;
 		    	}
-		    	$(".write-date:first").html(month+"-"+date+" "+arrayDay[day]);
+		    	$(".write-date:first").html(month+"."+date+" "+arrayDay[day]);
 		    }
 		    
 		    function addremove() {
@@ -521,7 +532,7 @@
 						<select id="memoFolderList">
 							<option value="all" selected="selected">전체</option>
 						</select>
-						<button id="memoMove">이동</button>
+						<button id="changeMode">모드</button>
 						<button id="new-memo" onclick="save()">추가</button>
 						<button id="close-button">닫기</button>
 					</div>
@@ -538,12 +549,12 @@
 				<div class="selected-memoWrapper"> -->
 					<div class="detailMemo" style="display: none">
 						<div id="memo-btn">
-							<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
-						</div>
-			        	<div id="font-btn" style="text-align: left; display: none ">
 							<button id="font-up">폰트+</button> 
 						    <button id="font-down">폰트-</button>
-				        </div>
+							<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
+				        	<!-- <div id="font-btn" style="text-align: left; display: none ">
+					        </div> -->
+						</div>
 						<textarea id="textarea" style="resize:none;"></textarea>
 		        	</div>
 				<!-- </div>
