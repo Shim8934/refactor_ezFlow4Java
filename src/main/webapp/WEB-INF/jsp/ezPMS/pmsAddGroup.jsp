@@ -136,7 +136,7 @@ function setUpperGroup() {
 
 function addGroup() {
 	 var newGroupName = document.getElementById("groupName").value.trim();
-	 overview = convertString(document.getElementById("overview").value.trim());
+	 overview = revertString(document.getElementById("overview").value.trim());
 	 var project = parent.opener.projectDetails;
 	 var planStartDate = project.planStartDate;
 	 var planEndDate = project.planEndDate;

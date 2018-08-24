@@ -22,6 +22,7 @@
 
 	$(function(){
 		taskDetails = ${taskDetails};
+		$(".overviewDiv").html(replaceString(revertString(taskDetails.overview)));
 		
 		var target = "${target}";
 		

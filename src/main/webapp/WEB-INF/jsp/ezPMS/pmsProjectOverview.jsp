@@ -42,6 +42,7 @@ var listNumber = 3;
 var position = "overview";
 var groupId = "${project.groupId}";
 var headManagerId = "${project.headManagerId}";
+var projectOverview = "<c:out value='${project.overview}'/>";
 
 //내가 담당인 업무 완료/보류/진행 시키기 위한 변수
 var beforePosition = "";
@@ -59,7 +60,8 @@ $(function() {
 			updateOrderStatus();
 		}
 	}).disableSelection();
-
+	
+	$(".overview_textbox").html(replaceString(projectOverview));
 });
 
 function initProgressBar() {
@@ -740,7 +742,7 @@ function getTaskDetails(elem) {
 				</ul>
 				<div class="btnStyle_center"></div>
 			</div>
-			<div class="overview_textbox"><c:out value="${project.overview }"/></div>
+			<div class="overview_textbox"></div>
 			<ul class="overview_infomationBox">
 				<li onclick="menuQst_DetailUserInfo('${project.headManagerId }')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }"/><c:out value="${project.headManagerName }"/></li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>

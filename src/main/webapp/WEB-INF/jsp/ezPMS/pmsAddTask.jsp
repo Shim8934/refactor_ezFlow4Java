@@ -197,7 +197,7 @@ function addTask() {
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
 	 weight = $("#weight").val();
-	 overview = convertString($("#overview").val().trim());
+	 overview = revertString($("#overview").val().trim());
 	 
 	 //업무 이름 길이 제한
 	 if (taskName.length == 0) {

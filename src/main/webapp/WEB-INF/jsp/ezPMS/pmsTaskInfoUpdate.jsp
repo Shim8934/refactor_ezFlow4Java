@@ -115,7 +115,7 @@ var userRoleId = parent.userRoleId;
  $(function() {
 	 taskDetails = ${taskDetails};
 	 $("#taskName").val(replaceString(revertString(taskDetails.taskName || taskDetails.groupName)));
-	 $("#overview").val(replaceString(revertString(taskDetails.overview)));
+	 $("#overview").val(replaceTextAreaString(taskDetails.overview));
 	 
 	 if (target == "task") {
 		 initMemberList = '${taskDetails.taskMember}';
@@ -259,7 +259,8 @@ function updateTaskInfo() {
 	
 	if (target == "task") {		
 		 weight = document.getElementById("weight").value.trim();
-		 overview = convertString(document.getElementById("overview").value.trim());
+		 overview = revertString(document.getElementById("overview").value.trim());
+		 
 		 var weightInput = 1; // 수정해야함.
 		 var remainingWeight = '${weightData.remainingWeight}';
 		 var projectStartDate = "${taskDetails.planStartDate}";

@@ -110,8 +110,8 @@ var headManagerObj = {};
 		$("#mailRepeat").val(mailRepeat).attr("seleced", "selected");
 		$("#Sdatepicker").val(planStartDate);
 		$("#Edatepicker").val(planEndDate);
-		
-		$("#overview").val(replaceString(overview));
+		console.log(overview);
+		$("#overview").val(replaceTextAreaString(overview));
 		
 		if (endAlamStatus == -1) {
 			$("#endAlam").prop("checked", false);
@@ -237,7 +237,7 @@ var headManagerObj = {};
 	 var calcType = $("input[name=weightInput]:checked").val();
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
-	 overview = convertString($("#overview").val().trim());
+	 overview = revertString($("#overview").val().trim());
 	 mailRepeat = $("#mailRepeat option:selected").val();
 	 
 	 //parent.userRole은 프로젝트 수정 때 사용.
