@@ -1128,11 +1128,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 						moveFile(fileId, folderId, tenantId);
 						saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 					}
-				}
-				else {
+				} else {
 					logger.debug("Privileges!");
 					result.put("status", "error");
-					result.put("code", 3);
+					result.put("code", 4);
 					return result;
 				}
 			}
