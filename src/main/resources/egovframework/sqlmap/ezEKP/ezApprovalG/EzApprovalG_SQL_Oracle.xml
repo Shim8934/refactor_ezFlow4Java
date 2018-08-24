@@ -16752,7 +16752,7 @@
 				   		</isNotEmpty>
 				   		<isEmpty property="v_ORDEROPTION2">
 				   			ORDER BY 
-				   				RECEIPTDATE DESC, SN 
+				   				RECEIPTDATE, SN 
 				   		</isEmpty>
 				   		<![CDATA[
 				   		) B WHERE ROWNUM_ <= #v_PAGESIZE2# 
