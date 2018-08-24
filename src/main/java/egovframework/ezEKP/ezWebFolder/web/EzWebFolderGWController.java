@@ -1390,7 +1390,7 @@ public class EzWebFolderGWController {
 			int tenantId          = userInfo.getTenantId();
 			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, tenantId);
 			if (mode.equals("1") && folder.getFolderLevel() == 0) {
-				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), tenantId);
+				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), userInfo.getCompanyID(), tenantId);
 				folder.setListSubFolders(listCompSubFolders);
 			}
 			else {
@@ -2033,7 +2033,7 @@ public class EzWebFolderGWController {
 					}
 					else {
 						company                                 = ezWebFolderService.getCompanySimpleFolder(userInfo.getCompanyID(), userInfo);
-						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), tenantId);
+						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), userInfo.getCompanyID(), tenantId);
 						
 						if (listCompSubFolders != null && listCompSubFolders.size() > 0) {
 							company.setHasSubFolder(1);

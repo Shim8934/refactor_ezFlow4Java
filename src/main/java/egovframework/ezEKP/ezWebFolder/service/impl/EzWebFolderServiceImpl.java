@@ -591,12 +591,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, int tenantId) throws Exception {
+	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",    userId);
 		map.put("deptId",    deptId);
 		map.put("compFolderId", compFolderId);
 		map.put("tenantId",  tenantId);
+		map.put("compId",  compId);
 		
 		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
 		
