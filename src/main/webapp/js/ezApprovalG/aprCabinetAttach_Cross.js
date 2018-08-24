@@ -38,7 +38,7 @@ function DocMove() {
                 for (i = 0; i < SelDocList.GetRowCount() ; i++) {
                     countsel = SelDocList.GetDataRows();
 
-                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[4].innerHTML) {
+                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[5].innerHTML) {
                         DuplicateFlag = true;
                     }
                 }
