@@ -660,6 +660,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		cabinet.setCreatorName2(userInfo.getDisplayName2());
 		cabinet.setCabinetPath(newPath);
 		cabinet.setUpdateId(userId);
+		cabinet.setCreatedDate(timeUTC);
 		cabinet.setUpdatedDate(timeUTC);
 		cabinet.setParentId(parent.getCabinetId());
 		cabinet.setCabinetLevel(cabinet.getCabinetLevel() + levelDistance);
