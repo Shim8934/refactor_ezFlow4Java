@@ -1879,7 +1879,7 @@ public class EzCabinetGWController {
 	}
 	
 	private boolean isCabinetAdmin(LoginVO user) {
-		return user.getRollInfo().contains("cb=1");
+		return (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1)? false : true;
 	}
 	
 	private void setUsedRateForUser(UserCapacityVO capacity) {

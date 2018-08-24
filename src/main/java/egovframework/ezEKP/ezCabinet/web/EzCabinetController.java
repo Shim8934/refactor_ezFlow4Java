@@ -47,13 +47,6 @@ public class EzCabinetController {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
-		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
-			model.addAttribute("isCabinetAdmin", "0");
-		}
-		else {
-			model.addAttribute("isCabinetAdmin", "1");
-		}
-		
 		JSONObject resultObj = cabinetRestService.getUserCapacity(request, user.getId());
 		
 		if (resultObj.get("status").toString().equals("ok")) {

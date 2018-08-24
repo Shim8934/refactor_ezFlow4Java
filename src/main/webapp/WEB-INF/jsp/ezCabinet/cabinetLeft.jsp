@@ -58,11 +58,6 @@
 			
 			<!-- 환경설정 -->
 			<h3 id="cabinetConfig"><span><spring:message code="ezCabinet.t06"/></span></h3>
-			
-			<!-- 캐비닛 관리자 -->
-			<c:if test="${isCabinetAdmin == '1'}">
-				<h3><span id="cabinetAdmin"><spring:message code="ezCabinet.t07"/></span></h3>
-			</c:if>
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
