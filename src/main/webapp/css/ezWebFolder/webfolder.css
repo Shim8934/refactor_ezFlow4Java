@@ -71,12 +71,12 @@
 .selectedUser2 {cursor:pointer; background-color:#edf4fd;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
-.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 32px;}
+.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 20px;}
 .aName div:hover {color: #e04343;}
 .aName div{white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
 
 .mainPath {white-space: nowrap; display: flex; flex-wrap: nowrap;}
-.mainPath >div:last-child {flex: 1 1 auto; min-width: initial; width: auto;}
+.mainPath >div:last-child {min-width: initial; width: auto;}
 
 .wfListCnt {height: 20px; width: 40px;}
 
