@@ -786,10 +786,6 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
-		    var foldStatus = "";
-		    var selId="";
-			var selFolderId="";
-			var selFolderName="";
 		    function memoFoldersInfo() {
 		    	$.ajax({
 					type : "GET",
@@ -802,7 +798,6 @@
 						}
 						var html="";
 						var folderList = result["folders"];
-						$('.memoNode').remove();
 							
 						folderList.forEach(function(list, index){
 							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
@@ -815,64 +810,11 @@
 							}
 							html+="</span></div>";
 						}); 
-						$('.memoFolders').append(html);
-						
-						var srcImg="";
-						$('.memoFoldImage').empty();
-						
-						foldStatus = result["foldStatus"]; 
-						if(foldStatus == 2) {
-							$('.memoFolders').show();
-							srcImg+="<img border='0' src='/images/OrganTree_cross/minus.gif' style='width:18px;height:18px;'>";
-						} else {
-							$('.memoFolders').hide();
-							srcImg+="<img border='0' src='/images/OrganTree_cross/plus.gif' style='width:18px;height:18px;'>";
-						}
-						$('.memoFoldImage').append(srcImg);
-						$('#memoTot').css("font-weight", "bold");
-						$('#countTotal').css("font-weight", "bold");
-						memoFolderClickE();
 					}     			
 				});
 		    }
-		    
-		    function setFoldStatus() {
-		    	$('.memoFoldImage').click(function(){
-					if(foldStatus == 1) {
-						foldStatus = 2;
-					} else {
-						foldStatus = 1;
-					}
-					
-					$.ajax({
-						type : "POST",
-						dataType : "json",
-						async : false,
-						url : "/ezMemo/setFoldStatus.do",
-						data: {
-							"fold_status": foldStatus
-						},
-						success: function(){
-							memoFoldersInfo();
-						} 
-					});
-				});
-		    } 
-		    
-		    function memoFolderClickE() {
-		  		$(".node").click(function(){
-					if(selId!==""){
-						$("#"+selId).css("font-weight", "normal");
-					}
-					$('#memoTot').css("font-weight", "normal");
-					$('#countTotal').css("font-weight", "normal");
-					    	
-					selId = $(this).attr('id');
-					/* selFolderName = $(this).attr('data1');
-					selFolderId = $(this).attr('data2'); */
-					$(this).css("font-weight", "bold");
-				});
-		    }
+
+		 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -981,7 +923,7 @@
 			</c:if>
 			
 			<ul>
-				<div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
+				<!-- <div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
 					<div>
 						<src class="memoFoldImage"></src>
 						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
@@ -989,7 +931,7 @@
 						<div class="memoFolders"></div>
 					</div>
 				</div>
-				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="folder_Manage()" style="width: 100%; display: inline-block;">메모함관리</span></h3>
+				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="folder_Manage()" style="width: 100%; display: inline-block;">메모함관리</span></h3> -->
 			</ul>
 			
 		    
