@@ -100,7 +100,6 @@
 		</div>
 		
 		<c:if test="${cabinet.permission == '2' || cabinet.permission == '1'}">
-			<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileDelete.jsp"></jsp:include>
 			<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileMove.jsp"  ></jsp:include>
 		</c:if>
 		

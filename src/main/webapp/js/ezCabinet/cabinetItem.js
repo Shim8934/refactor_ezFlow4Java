@@ -166,14 +166,7 @@ var CabinetItem = function() {
 		var shaBttn = document.getElementById("shaBttn");
 		if (addBttn) {addBttn.firstElementChild.onclick = function(e) {addFile();};}
 		
-		if (delBttn) {
-			var cabDelBttnElmt                              = document.getElementById("delDivBttn");
-			var dellistBttns                                = cabDelBttnElmt.children;
-			dellistBttns[0].onclick                         = function(e) {deleteFile();};
-			dellistBttns[1].onclick                         = function(e) {toggleDeletePopup();};
-			document.getElementById("cabDelClose").onclick  = function(e) {toggleDeletePopup();};
-			delBttn.firstElementChild.onclick               = function(e) {deleteFileConfirm();};
-		}
+		if (delBttn) {delBttn.firstElementChild.onclick = function(e) {deleteFileConfirm();};}
 		
 		if (movBttn) {
 			var cabMoveBttnElmt                             = document.getElementById("moveDivBttn");
@@ -559,34 +552,16 @@ var CabinetItem = function() {
 	
 	function deleteFileConfirm() {
 		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItemErr); return;}
-		toggleDeletePopup();
-	}
-	
-	function toggleDeletePopup() {
-		var rightFrame  = window.parent.frames["right"].document;
-		var deletePanel = rightFrame.getElementById("cabFileDel");
-		if (deletePanel.className == "popup cabFileDeloff") {
-			addFogPanel("del");
-			var position            = getPosition(450, 180);
-			deletePanel.style.top   = position[0] + "px";
-			deletePanel.style.right = position[1] + "px";
-			deletePanel.className   = "popup cabFileDelon";
+		if (confirm(CabinetMessages.strDelete)) {
+			if (!cabinetId) {alert(CabinetMessages.strError); return;}
+			var itemArr = getSelectedItems();
+			if (itemArr.length == 0) {alert(CabinetMessages.strItemErr); return;}
+			
+			var url  = "/ezCabinet/deleteItems.do";
+			var data = {itemList : itemArr.toString()};
+			
+			makeAjaxCall(data, "GET", url, afterDeleteItem, null, true, null);
 		}
-		else {
-			removeFogPanel();
-			deletePanel.className   = "popup cabFileDeloff";
-		}
-	}
-	
-	function deleteFile() {
-		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		var itemArr = getSelectedItems();
-		if (itemArr.length == 0) {alert(CabinetMessages.strItemErr); return;}
-		
-		var url  = "/ezCabinet/deleteItems.do";
-		var data = {itemList : itemArr.toString()};
-		
-		makeAjaxCall(data, "GET", url, afterDeleteItem, null, true, null);
 	}
 	
 	function afterDeleteItem(data) {
