@@ -548,12 +548,10 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
-    } else {
+    } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
         var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
         var endDate = SelectSingleNodeValue(searchParamXml.firstChild, "EREGDATE");
-        
-        g_isSearching = true;
         
     	if (startDate == "") {
     		var date = new Date();
@@ -1466,6 +1464,7 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
 
+        g_isSearching = true;
         g_RecSearchParamXml = rtnVal[1];
         GetRecordList();
     }
