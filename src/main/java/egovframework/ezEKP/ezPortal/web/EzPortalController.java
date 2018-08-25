@@ -3740,6 +3740,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/help/leftSchedule";
 	}
 	
+	@RequestMapping(value = "/ezPortal/help/leftTask.do")
+	public String leftTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftTask started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftTask ended");
+		return "/ezPortal/help/leftTask";
+	}
+	
 	/**
 	 * 포탈 - 도움말 leftCircular 화면 호출 함수
 	 */
