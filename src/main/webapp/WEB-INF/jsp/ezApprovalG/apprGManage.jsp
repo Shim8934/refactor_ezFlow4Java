@@ -1294,6 +1294,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDERCELL", OrderCell);
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
+		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
 
 		        var wWeigth = 630;
 		        var wHeigth = 480;
