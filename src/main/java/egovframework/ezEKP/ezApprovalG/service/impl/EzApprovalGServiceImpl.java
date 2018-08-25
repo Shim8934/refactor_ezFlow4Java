@@ -26180,9 +26180,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateRelaySusinState(map);
 			result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
-			return result;
+		
+		return result;
 	}
 
 	@Override
@@ -26336,6 +26338,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("setHref ended");
 			return "<setHref>" + strHref + "</setHref>"; 
 		} catch (Exception e) {
+			e.printStackTrace();
 			 return "<setHref></setHref>";
 		}
 	}
@@ -26370,6 +26373,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("setRecvDocInfo ended");
 			return  "<RESULT>TRUE</RESULT>";
 		} catch(Exception e) {
+			e.printStackTrace();
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}
