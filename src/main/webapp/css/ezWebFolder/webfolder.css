@@ -1,5 +1,5 @@
-.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 80px;}
-.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 5px;}
+.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:217px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
