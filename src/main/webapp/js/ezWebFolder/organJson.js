@@ -178,6 +178,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	spanDeptName.setAttribute("class", "spanName");
 	spanDeptName.setAttribute("name", list["deptId"]);
 	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.setAttribute("title", list["deptName"]);
 	spanDeptName.onclick    = function() {getSelected(this);};
 	spanDeptName.ondblclick = function() {addDept(this)};
 	
@@ -833,6 +834,7 @@ function displaySubDepts(divTree, divElmt, list) {
 	spanDeptName.setAttribute("class", "spanName");
 	spanDeptName.setAttribute("name", list["deptId"]);
 	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.setAttribute("title", list["deptName"]);
 	spanDeptName.onclick    = function() {getSelectedDept(this);};
 	spanDeptName.ondblclick = function() {addSelectedDept(this)};
 	
