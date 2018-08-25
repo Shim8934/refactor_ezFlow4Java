@@ -1,5 +1,5 @@
 .webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 5px;}
-.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:217px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
+.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:200px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
@@ -29,7 +29,7 @@
 .webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
 
 .webfolderImg {width: 18px; height: 18px;}
-.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:80%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 .webfolderMinus {width: 18px; height: 18px; cursor: pointer;}
 .webfolderPlus {width: 18px; height: 18px; cursor: pointer;}
