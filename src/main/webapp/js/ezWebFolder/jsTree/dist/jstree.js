@@ -2679,6 +2679,7 @@
 									}
 								});
 					}
+					addTitle();
 				}
 				obj.state.opened = true;
 				if(callback) {

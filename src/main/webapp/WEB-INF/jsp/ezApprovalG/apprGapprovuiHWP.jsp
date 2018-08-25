@@ -1024,10 +1024,12 @@
 			    }
 	
 			    function btnSave_onclick() {
-			        HwpCtrl.SetSaveMode(1);
+			       /*  HwpCtrl.SetSaveMode(1);
 			        HwpCtrl.SetDocumentInfo(pFormID);
 			        HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
-			        HwpCtrl.ChangeMode(3);
+			        HwpCtrl.ChangeMode(3); */
+			        
+			    	window.open("/ezApprovalG/downloadHWPdoc.do?DocId=" + pDocID);
 			    }
 			
 			    function btnMail_onclick() {

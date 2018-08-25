@@ -37,6 +37,7 @@
 		var folderName1 = "";
 		var folderName2 = "";
 		var drawVolume = "";
+		var treeData;
 		
 		var inputNameDlg_cross_dialogArguments = new Array();
 		var moveCopyFolderDlg_cross_dialogArguments = [];
@@ -81,7 +82,8 @@
 					//						upperId = data.data[0]["parent"];
 					parentControll = data.data;
 					var firstNode = "#" + folderId;
-					
+					treeData = parentControll;
+					addTitle();
 					$('#folderTree').jstree({
 						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
@@ -120,6 +122,18 @@
 			});
 		}
 
+		 function addTitle() {
+	    	var data = this.treeData;
+	    	for ( var i = 0; i < data.length ; i++  ) {
+	    		var dataId = data[i]["id"] + "_anchor";
+	    		var folderName = data[i]["folderName1"];
+	    		var childE = document.getElementById(dataId);
+	    		if (childE != null){
+					childE.setAttribute("title", folderName);
+	    		}
+	    	}
+	    }
+		 
 		function radioOnclick(obj) {
 			folderId = "";
 			folderList(obj);
