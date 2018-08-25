@@ -774,6 +774,7 @@ function showSelectedDept(mainElmt, deptName, deptId) {
 	imgElmt.setAttribute("class", "webFolderImg2");
 	imgElmt.src = "/images/OrganTree_cross/ic-open.gif";
 	spanElmt.setAttribute("class", "spanName2");
+	spanElmt.setAttribute("title", deptName);
 	spanElmt.textContent = deptName;
 	divElmt.setAttribute("class", "webFolderDiv");
 	divElmt.setAttribute("nodeId", deptId);
