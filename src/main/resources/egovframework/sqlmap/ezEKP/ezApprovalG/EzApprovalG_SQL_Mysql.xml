@@ -23928,9 +23928,9 @@
 			AND 
 				XTOCODE = #XTOCODE#
 			AND 
-				DOCID = ''
+				(DOCID = ''
 			OR 
-				DOCID IS NULL
+				DOCID IS NULL)
 	  </select>
 	  
 	  <select id="EzApprovalG.relayGetAttachInfo" parameterClass="Map" resultClass="ApprGRelayVO">

@@ -268,7 +268,7 @@ public class EzApprovalGRelayScheduler {
         				 logger.debug("#문서고유번호=" + strXDocID);
         				 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
         				 logger.debug("#문서종류=" + strDocType);
-        				 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
+        				 strWriterName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
         				 logger.debug("#문서작성자이름=" + strWriterName);
         				 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr");
         				 logger.debug("#문서작성자부서=" + strWriterDept);

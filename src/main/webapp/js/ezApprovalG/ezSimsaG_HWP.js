@@ -167,6 +167,8 @@ function covBody(pbody) {
     
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
+    
+    BodyStr = BodyStr.replace(/(<img.*?)>/g, "$1/>");
 
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
@@ -259,7 +261,7 @@ function makeXML(newDocID) {
 		var re = /vAlign=center/g;
 		pBody = pBody.replace(re,"vAlign=middle");
 		
-		var rtnNodes = covBody(pBody);
+		var rtnNodes = covBody(strBody);
         Nodes(0).appendChild(rtnNodes);
     } else {
         setNodeText(Nodes(0) , "");

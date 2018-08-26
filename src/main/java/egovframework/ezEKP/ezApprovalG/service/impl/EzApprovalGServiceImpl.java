@@ -25864,7 +25864,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strFromDeptID = docXML.getElementsByTagName("XFROMCODE").item(0).getTextContent();
 				strToDeptID = docXML.getElementsByTagName("XTOCODE").item(0).getTextContent();
 				strDocTitle = docXML.getElementsByTagName("SUBJECT").item(0).getTextContent();
-				strRecDate = docXML.getElementsByTagName("RECDATE").item(0).getTextContent().substring(0,19);
+				strRecDate = commonUtil.getDateStringInUTC(docXML.getElementsByTagName("RECDATE").item(0).getTextContent().substring(0, 19), "235|+09:00", true);
 			} else {
 				throw new Exception();
 			}
