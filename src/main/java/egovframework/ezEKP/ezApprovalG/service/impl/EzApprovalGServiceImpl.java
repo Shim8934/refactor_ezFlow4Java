@@ -25624,14 +25624,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //                        CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
 //                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
-                    		File file = new File(mapPath + strPath);
+						byte[] bytes;
+						File file = new File(mapPath + strPath);
+
+						// 2018.08.26 KLIB 복호화
+						if (strPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							bytes = Files.readAllBytes(file.toPath());
+							bytes = klibUtil.decrypt(bytes);
+						} else {
+                        
                     		InputStream is = new FileInputStream(file);
 
                     	    long length = file.length();
                     	    if (length > Integer.MAX_VALUE) {
                     	        // File is too large
                     	    }
-                    	    byte[] bytes = new byte[(int)length];
+                    	    bytes = new byte[(int)length];
                     	    
                     	    int offset = 0;
                     	    int numRead = 0;
@@ -25644,6 +25652,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     	    }
 
                     	    is.close();
+						}
                     	    
                     		byte[] encoded = Base64.encodeBase64(bytes);
                     		String encodedString = new String(encoded);
