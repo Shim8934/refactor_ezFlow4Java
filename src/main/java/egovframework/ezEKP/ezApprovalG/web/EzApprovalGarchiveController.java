@@ -2374,9 +2374,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			}
 		}
 		
+		xmlData = xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-	    DocumentBuilder builder;  
-        builder = factory.newDocumentBuilder();  
+	    DocumentBuilder builder = factory.newDocumentBuilder();  
         xmlDom = builder.parse( new InputSource( new StringReader(xmlData) ) );  
 		
 		String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
