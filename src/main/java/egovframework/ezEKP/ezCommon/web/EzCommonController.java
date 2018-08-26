@@ -443,26 +443,48 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
 			}
 		} else {
-			String searchId = email.substring(0, email.indexOf("@"));
-			OrganDeptVO deptVO = ezOrganService.getDeptInfo(searchId, loginVO.getPrimary(), loginVO.getTenantId());
-			List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
+			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
 			
-			if (deptVO != null) {
-				literalCompany = deptVO.getExtensionAttribute3();
-				literalEmail = deptVO.getMail();
-				literalDisplayName = deptVO.getDisplayName();
-			} 
+			int atSignIndex = email.indexOf("@");
 			
-			else if (distributionList != null && distributionList.size() > 0) {
+			if (atSignIndex != -1) {
+				String searchId = email.substring(0, atSignIndex);
+				String searchDomain = email.substring(atSignIndex + 1);
 				
-				for (MailDistributionVO distribution : distributionList) {
-					if (distribution.getId().equals(searchId)) {
-						literalEmail = distribution.getMail();
-						literalDisplayName = distribution.getName();
+				// 이메일 주소의 도메인이 시스템의 도메인과 동일하면 부서 혹은 공용배포그룹에
+				// 해당하는 이메일 주소인 지를 검사한다.
+				if (searchDomain.equalsIgnoreCase(domainName)) {
+					OrganDeptVO deptVO = ezOrganService.getDeptInfo(searchId, loginVO.getPrimary(), loginVO.getTenantId());
+					
+					// 이메일 아이디에 match되는 부서가 있는 경우
+					if (deptVO != null) {
+						if (loginVO.getPrimary().equals("1")) {
+							literalCompany = deptVO.getExtensionAttribute3();
+						} else {
+							literalCompany = deptVO.getCompNm2();
+						}
+						
+						literalEmail = deptVO.getMail();
+						literalDisplayName = deptVO.getDisplayName();
+					// 이메일 아이디에 match되는 부서가 있는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
+					} else {
+						List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
+						
+						if (distributionList != null && distributionList.size() > 0) {				
+							for (MailDistributionVO distribution : distributionList) {
+								if (distribution.getId().equalsIgnoreCase(searchId)) {
+									literalEmail = distribution.getMail();
+									literalDisplayName = distribution.getName();
+									break;
+								}
+							}				
+						}				
 					}
 				}
-				
-			} else {
+			}
+			
+			// 부서 혹은 공용배포그룹에 match되는 항목이 없는 경우엔 지정된 이메일 주소를 그대로 사용한다.
+			if (literalEmail.isEmpty()) {
 				literalEmail = email;
 				literalDisplayName = email;
 			}
