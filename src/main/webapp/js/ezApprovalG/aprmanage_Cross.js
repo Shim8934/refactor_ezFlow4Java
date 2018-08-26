@@ -2755,7 +2755,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
         }
     }
 
-    openwindow(openLocation, "", 890, 560);
+    openwindow(openLocation, "openServerDraftUI", 890, 560);
 }
 
 function RemoveTmpDoc(pDocID) {
