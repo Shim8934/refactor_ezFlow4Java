@@ -950,6 +950,13 @@
 				
 				return result;
 			}
+			
+			function deleteShareSuccess() {
+				closeAllPopup();
+				
+				alert(messages.strLang33);
+				refreshView();
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -973,7 +980,7 @@
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li id="addShareBtn" style="display:none"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
 					<li id="modifyShareBtn"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
-					<li id="deleteShareBtn"><a onclick="shareContext.deleteShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
+					<li id="deleteShareBtn"><a onclick="shareContext.deleteShareConfirm()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
