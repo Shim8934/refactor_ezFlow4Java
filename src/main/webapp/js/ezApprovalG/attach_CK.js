@@ -161,7 +161,7 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-    	//pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>0</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
@@ -189,18 +189,20 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	var strSize;
     	if (temppFileSize > 1024 * 1024) {
     		temppFileSize = temppFileSize / 1024 / 1024;
-    		strSize = parseInt(temppFileSize) + "MB";
+    		//strSize = parseInt(temppFileSize) + "MB";
+    		strSize = temppFileSize.toFixed(1) + " MB";
     	}
     	else if (temppFileSize > 1024) {
     		temppFileSize = temppFileSize / 1024;
-    		strSize = parseInt(temppFileSize) + "KB";
+    		//strSize = parseInt(temppFileSize) + "KB";
+    		strSize = temppFileSize.toFixed(1) + " KB";
     	}
     	else
     		strSize = parseInt(temppFileSize) + "B";
     	
     	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-    	//pAttachxml = pAttachxml + "</CELL><CELL>";
-    	//pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>"; 2018-08-08 천성준 - 첨부파일 쪽수 헤더 제거로인한 첨부추가 스크립트 오류때문에 주석처리
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>"; //2018-08-24 쪽수 부분이 disaply:none처리 되어있어서 스크립트 에러 발생-> 주석 제거
     	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     } else {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";

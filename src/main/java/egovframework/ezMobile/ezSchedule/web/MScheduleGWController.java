@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -284,8 +283,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        		avo.setFileTranSize(fileSize);
 	        	}
 	        	
-	        	dataObject.put("attachList", aList);	
-	        } 
+	        	dataObject.put("attachList", aList);
+	        	
+	        	// 20180824 조진호 - 모바일 viewerflag 값 추가
+	        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+		        dataObject.put("useMobileViewer", useMobileViewer);
+	        }
+	        
 
 			result.put("status", "ok");
 			result.put("code", 0);			

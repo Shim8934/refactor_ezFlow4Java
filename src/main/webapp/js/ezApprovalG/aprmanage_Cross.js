@@ -1489,7 +1489,7 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
-    var parameter = pInformationContent;
+	var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
     if (CrossYN() && (ext != 'hwp' || CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
         ezapropinion_cross_dialogArguments[0] = parameter;
@@ -2515,7 +2515,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 			flag : FLAG,
 			deptName2 : arr_userinfo[16]
 		},
-	success: function(xml){
+		success: function(xml){
 			result = xml;
 		}
 	});
@@ -2531,10 +2531,17 @@ function RemoveDocCabinet(tempDocID, FLAG) {
         return;
     }
     else {
-        if (FLAG == "")
-            var pAlertContent = strLang901;
-        else
-            var pAlertContent = strLang902;
+        if (FLAG == "") {
+        	if (RtnVal == "RESETLINE") {
+        		var pAlertContent = strLangBae1;
+        	} else {
+        		var pAlertContent = strLang901;
+        	}
+        	
+        }
+        else {
+        	var pAlertContent = strLang902;
+        }
         OpenAlertUI(pAlertContent, "", "OPEN");
         return;
     }
@@ -2748,7 +2755,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
         }
     }
 
-    openwindow(openLocation, "", 890, 560);
+    openwindow(openLocation, "openServerDraftUI", 890, 560);
 }
 
 function RemoveTmpDoc(pDocID) {

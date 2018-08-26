@@ -635,24 +635,24 @@
 			                    }
 			                }
 			            } else {
-			            	
-			            }//useReceiveDocNo 처리
-			            if (useReceiveDocNo == 'NO') {
-			            	if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-				            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
-				                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-				                    var rtnval;
-				                    //hwp는 왜 docNumZeroCnt안쓰는지 일단 시간없어서 다음에봄
-// 				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
-				                    rtnval = getDocNumber(drafterDeptid, "");
-				                    
-				                    if (!rtnval) {
-				                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
-				                        OpenAlertUI(pAlertContent);
-				                        setMenuDisable("btnApprove", false);
-				                        return;
-				                    }
-				                }
+			            	//useReceiveDocNo 처리
+				            if (useReceiveDocNo == 'NO') {
+				            	if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+					            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+					                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+					                    var rtnval;
+					                    //hwp는 왜 docNumZeroCnt안쓰는지 일단 시간없어서 다음에봄
+	// 				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+					                    rtnval = getDocNumber(drafterDeptid, "");
+					                    
+					                    if (!rtnval) {
+					                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+					                        OpenAlertUI(pAlertContent);
+					                        setMenuDisable("btnApprove", false);
+					                        return;
+					                    }
+					                }
+					            }
 				            }
 			            }
 			
@@ -1024,10 +1024,12 @@
 			    }
 	
 			    function btnSave_onclick() {
-			        HwpCtrl.SetSaveMode(1);
+			       /*  HwpCtrl.SetSaveMode(1);
 			        HwpCtrl.SetDocumentInfo(pFormID);
 			        HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
-			        HwpCtrl.ChangeMode(3);
+			        HwpCtrl.ChangeMode(3); */
+			        
+			    	window.open("/ezApprovalG/downloadHWPdoc.do?DocId=" + pDocID);
 			    }
 			
 			    function btnMail_onclick() {
@@ -1343,12 +1345,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

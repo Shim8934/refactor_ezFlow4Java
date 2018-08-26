@@ -18,6 +18,16 @@
             treeView.SetNodeDblClick("TreeViewNodeDbClickCC");
             treeView.DataSource(xmlDom);
             treeView.DataBind("TreeViewCC");
+        } else if (mode == "aprG") {
+        	document.getElementById('TreeView').innerHTML = "";
+        	var treeView = new TreeView();
+        	treeView.SetID("FromTreeView");
+        	treeView.SetUseAgency(true);
+        	treeView.SetUseSusinColor4AprG(true);
+        	treeView.SetRequestData("RequestDataG");
+        	treeView.SetNodeClick("TreeViewNodeClick");
+        	treeView.DataSource(xmlDom);
+        	treeView.DataBind("TreeView");
         } else {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();

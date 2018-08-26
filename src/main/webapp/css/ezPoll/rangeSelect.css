@@ -11,3 +11,11 @@
 .btnCancel span{background:#d0d0d0; padding:0px; line-height:20px;}
 
 #cnkeyword{width:130px; margin-top:1px;}
+#TreeView{overflow-y:auto;overflow-x:auto;width:280px;height:270px;}
+#DeptListView{overflow:auto;width:280px;height: 270px;}
+#MemberListView{overflow:auto;width:280px;height:270px;}
+#OrganListView{overflow:auto;width:280px;height:270px;}
+.botTrTd{padding-top: 7px;}
+.botTrTdH2{margin: 7px 0px 5px 0px;}
+.middleTd{width: 30px;}
+.midArrowImg{width: 16px; height: 16px; margin: 3px 7px; cursor:pointer;}

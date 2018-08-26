@@ -165,6 +165,10 @@
 		                        setMenuBar("btnAssign", false);
 		                        setMenuBar("btnDistribute", false);
 		                    }
+
+		                    if (pOrg_orgDocID == "") {
+		                        setMenuBar("btnReturn", false);
+		                    }
 		
 		                    if (g_RetFlag == "Y") {
 		                        btnReturn_onclick();
@@ -317,7 +321,8 @@
 			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
-			                    document.getElementById("btnReqReSend").style.display = "";
+			                	/* 재발송기능 display:none처리 2018-08-25 */
+			                    /* document.getElementById("btnReqReSend").style.display = ""; */
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
 			
@@ -389,7 +394,8 @@
 			
 			                var NewIsRelay = GetRelayDocInfo();
 			                if (NewIsRelay) {
-			                    btnReqReSend.style.display = "";
+			                	/* 재발송기능 display:none처리 */
+			                    /* btnReqReSend.style.display = ""; */
 			                } else {
 			                    btnReqReSend.style.display = "none";
 			                }
@@ -1579,12 +1585,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

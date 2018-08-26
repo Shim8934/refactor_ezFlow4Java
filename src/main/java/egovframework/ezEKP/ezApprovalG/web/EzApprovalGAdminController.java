@@ -109,11 +109,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGLeft started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
+		String useAdminBujae = "";
+        if (ezCommonService.getTenantConfig("useAdminBujae", tenantID).equalsIgnoreCase("YES")) {
+        	useAdminBujae = "YES";
+        }
+        else {
+        	useAdminBujae = "NO";
+        }
+		
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useAdminBujae", useAdminBujae);
 		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
+		logger.debug("apprGLeft ended. useAdminBujae = " + useAdminBujae);
 		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
@@ -2875,7 +2887,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "");
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "", userInfo.getLocale());
 		
 		logger.debug("getStatReceiptList ended.");
 

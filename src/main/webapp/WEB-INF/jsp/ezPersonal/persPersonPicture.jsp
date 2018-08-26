@@ -11,19 +11,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 	        var ReturnFunction;
-	        
-	        if (CrossYN()) {
-	            document.write("<link rel='stylesheet' href="${util.addVer('ezPersonal.e3', 'msg')}" type='text/css'>");
-	        } else {
-	            document.write("<link href="${util.addVer('ezPersonal.e3', 'msg')}" rel='stylesheet' type='text/css'>");
-	        }
-	        
+
+	        /* 2018-08-25 홍승비 - 상단 head로 분리된 스타일시트 삽입 스크립트 제거 */
 	        window.onload = function () {
 	            try {
 	                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
 	            } catch (e) {
 	            }
-
 	        }
 	        
 	    	function imgConfirm_onclick() {

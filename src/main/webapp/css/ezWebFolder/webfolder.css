@@ -1,5 +1,5 @@
-.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 80px;}
-.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 5px;}
+.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:200px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
@@ -29,7 +29,7 @@
 .webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
 
 .webfolderImg {width: 18px; height: 18px;}
-.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:80%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 .webfolderMinus {width: 18px; height: 18px; cursor: pointer;}
 .webfolderPlus {width: 18px; height: 18px; cursor: pointer;}
@@ -71,12 +71,12 @@
 .selectedUser2 {cursor:pointer; background-color:#edf4fd;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
-.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 32px;}
+.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 20px;}
 .aName div:hover {color: #e04343;}
 .aName div{white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
 
 .mainPath {white-space: nowrap; display: flex; flex-wrap: nowrap;}
-.mainPath >div:last-child {flex: 1 1 auto; min-width: initial; width: auto;}
+.mainPath >div:last-child {min-width: initial; width: auto;}
 
 .wfListCnt {height: 20px; width: 40px;}
 
@@ -85,10 +85,10 @@
 .myBar_green  {height: 7px; background-color: #4faaff;}
 
 .jstree-default a { white-space:normal ; height: auto; }
-.jstree-anchor { height: auto !important; }
+.jstree-anchor { height: 21px !important; }
 .jstree-default li > ins { vertical-align:top; }
 .jstree-leaf { height: auto; }
-.jstree-leaf a { height: auto !important; }
+.jstree-leaf a { height: 21px !important; }
 
 .mainbody {overflow: hidden;}
 
@@ -131,7 +131,8 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 
 #left ol.on {padding : 0px 0px 0px 5px;}
 #left ol li {padding : 1px 0px 0px 5px;}
-.webfolderTree {width: 210px; min-height:200px; font-size: 20px; overflow-x: auto; padding-bottom:3px;padding-top:5px;}
+/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
+.webfolderTree {min-height:200px; font-size: 20px; overflow-x: hidden; padding-bottom:3px;padding-top:5px;}
 
 .spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 1px solid #aeaeae; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px;}
 .spanDown:before {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
