@@ -165,6 +165,10 @@
 		                        setMenuBar("btnAssign", false);
 		                        setMenuBar("btnDistribute", false);
 		                    }
+
+		                    if (pOrg_orgDocID == "") {
+		                        setMenuBar("btnReturn", false);
+		                    }
 		
 		                    if (g_RetFlag == "Y") {
 		                        btnReturn_onclick();
