@@ -167,6 +167,8 @@ function covBody(pbody) {
     
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
+    
+    BodyStr = BodyStr.replace(/(<img.*?)>/g, "$1/>");
 
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
@@ -249,15 +251,15 @@ function makeXML(newDocID) {
 	var Nodes = eNodes.selectNodes("body");	
     if (HwpCtrl.CheckFieldExist("body")) {
 		var strBody = GetHTMLBody(HwpCtrl.GetCloneData("body", "HTML"));
-//		var pBody = Encode(strBody);
-//		
-//        if (pBody == "</ERROR>") {
-//            alert("본문에 잘못된 내용이 포함되어 있습니다.\n(이미지, 스타일속성 등을 포함할 수 없습니다.)");
-//            return;
-//        }
-//
-//		var re = /vAlign=center/g;
-//		pBody = pBody.replace(re,"vAlign=middle");
+		var pBody = Encode(strBody);
+		
+        if (pBody == "</ERROR>") {
+            alert("본문에 잘못된 내용이 포함되어 있습니다.\n(이미지, 스타일속성 등을 포함할 수 없습니다.)");
+            return;
+        }
+
+		var re = /vAlign=center/g;
+		pBody = pBody.replace(re,"vAlign=middle");
 		
 		var rtnNodes = covBody(strBody);
         Nodes(0).appendChild(rtnNodes);
