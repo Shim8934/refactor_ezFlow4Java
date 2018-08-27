@@ -49,6 +49,7 @@ var CabinetShareItem = function() {
 		var listBttns           = cabShareBttnElmt.children;
 		listBttns[0].onclick    = function(e) {saveShareUsers();};
 		listBttns[1].onclick    = function(e) {closeWindow();};
+		document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
 		document.getElementById("txtSpanView").addEventListener("click", function(e) {changeListView('TXT');}, false);
 		document.getElementById("imgSpanView").addEventListener("click", function(e) {changeListView('IMG');}, false);
 		document.getElementById("addBttn").addEventListener("click", function(e) {addUsers();}, false);

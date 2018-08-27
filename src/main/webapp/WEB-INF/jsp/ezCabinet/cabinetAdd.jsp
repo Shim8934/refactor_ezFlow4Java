@@ -6,7 +6,7 @@
 	<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 	
 	<div class="cbNameInputDiv">
-		<span><spring:message code='ezCabinet.t153'/></span>
+		<span>▒&nbsp;<spring:message code='ezCabinet.t153'/></span>
 		<input id="cabNameTxt1" type="text" maxlength="50">
 		<br>
 		
