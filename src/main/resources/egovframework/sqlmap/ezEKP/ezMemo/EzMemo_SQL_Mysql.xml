@@ -114,16 +114,30 @@
 	             ]]> 
             </isNotEmpty>
         </isEqual>
-			<isNotEqual property="folder_id" compareValue="0">
-			  	<![CDATA[
-			  		AND
-					  	FOLDER_ID = #folder_id#
-				]]>
+		<isNotEqual property="folder_id" compareValue="0">
+			  <![CDATA[
+			  	AND
+					 FOLDER_ID = #folder_id#
+			  ]]>
 			 </isNotEqual>
-		<![CDATA[
-			ORDER BY 
-				ORDERS
-		]]>
+		<isEqual property="searchType" compareValue="order_1">
+        	<![CDATA[
+        		ORDER BY
+        			ORDERS
+        	]]>
+        </isEqual>
+        <isEqual property="searchType" compareValue="order_2">
+        	<![CDATA[
+        		ORDER BY
+        			WRITE_DATE ASC
+        	]]>
+        </isEqual>
+        <isEqual property="searchType" compareValue="order_3">
+        	<![CDATA[
+        		ORDER BY
+        			WRITE_DATE DESC
+        	]]>
+        </isEqual>
 	</select>
 	
 	<select id="EzMemoDAO.getMaxOrder" resultClass="Integer">

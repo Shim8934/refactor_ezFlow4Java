@@ -132,6 +132,10 @@
 			var startDate = $("#Sdatepicker").val();
 			var endDate = $("#Edatepicker").val();
 			
+			if(type=="order") {
+				type = type + "_" + $("#orderOption").val();
+			}
+
 			$.ajax ({
  			   	url : '/ezMemo/getMemoList.do',
  			   	type : 'POST',
@@ -407,10 +411,10 @@
 					<tr>
 						<th><spring:message code='ezEmail.t99000035' /></th>
 						<td>
-							<select id="listcount" style="WIDTH: 80px; height: 20px;" onchange="onSelect_Option(this);">
-								<option value="0"><spring:message code='ezMemo.t0019'/></option>
-                       		    <option value="1"><spring:message code='ezMemo.t0020'/></option>
-                           		<option value="2"><spring:message code='ezMemo.t0021'/></option>
+							<select id="orderOption" style="WIDTH: 80px; height: 20px;" onchange="getMemoList('order');">
+								<option value="1"><spring:message code='ezMemo.t0019'/></option>
+                       		    <option value="2"><spring:message code='ezMemo.t0020'/></option>
+                           		<option value="3"><spring:message code='ezMemo.t0021'/></option>
 							</select>
 						</td>
 					</tr>
