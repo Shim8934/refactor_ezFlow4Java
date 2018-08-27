@@ -96,6 +96,7 @@
 		        g_DeptName = pDeptName;
 		        deptName = pDeptName;
 		        GetTaskFullList();
+		        listcount.innerHTML = "<b>" + g_DeptName + "</b><spring:message code = 'ezApprovalG.t363' /><spring:message code = 'ezApprovalG.t1093' /> : <span style='color:#017BEC;font-weight:bold;'>" + NodeListLen + "</span> <spring:message code = 'ezApprovalG.t1003' />";
 		    }
 		    
 		    function GetDeptTaskList(pDeptID) {
