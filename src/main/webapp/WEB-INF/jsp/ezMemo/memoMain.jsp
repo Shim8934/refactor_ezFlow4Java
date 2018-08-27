@@ -127,7 +127,7 @@
 			getMemoList();
 		}
 		
-		function getMemoList() {
+		function getMemoList(type) {
 			var searchInput = $("#searchTitle").val();
 			var startDate = $("#Sdatepicker").val();
 			var endDate = $("#Edatepicker").val();
@@ -140,7 +140,8 @@
                 	searchInput : searchInput,
                 	startDate : startDate,
                 	endDate : endDate,
-                	folderId : folderId   
+                	folderId : folderId,
+                	type : type
                 },
                 cache: false,
                 success: function(result) {
@@ -151,27 +152,9 @@
                 	bodyColor = memoColor[defaultColor+6]; 
                 	folderId = result["folderId"];
                 	
-					for(var i=0; i<memoList.length; i++) {
-						//loadMemoList();
-						var html = "";
-				    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
-				    	html += "<input type='checkbox' name='memo'>";
-				    	html += "<div class='memo-color'>";
-				    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-				    	html += "<span class='write-date'></span>";
-				    //	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
-				    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-				    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
-				    	html += memoList[i].contents;
-				    	html += "</textarea>";
-				    	html += "</div>"
-				    	$("#boardMemoList").prepend(html);
-				    	$("#textarea").val('');
-				    	
-				    	addDateInfo(memoList[i].write_date.substring(0,10));
-				    	
-				    	addremove();
-					} 
+					loadMemoList();
+						
+				    addremove();
 			     },
 	             error : function() {
 	                	
@@ -197,7 +180,7 @@
                 success: function(result) {
                 	var memoId = result["memoId"];
                 	
-                	createMemo(headerColor, bodyColor, memoId);
+                	insertMemo(headerColor, bodyColor, memoId);
         	    	addremove();
                 },
                 error : function() {
@@ -384,7 +367,7 @@
 							<spring:message code='ezBoard.garm01' />
 						</th>
 						<td>
-							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
+							<input type="text" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
 						</td>
 					</tr>
 					<tr>
@@ -403,7 +386,7 @@
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
 								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList()"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList(search)"><spring:message code='ezBoard.t188' /></span></a>
 							</div>	
 						</td>
 					</tr>

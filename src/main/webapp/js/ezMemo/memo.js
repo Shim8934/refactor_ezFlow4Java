@@ -1,18 +1,4 @@
-function createMemo(hColor, bColor, memoId) {
-	/*var html = "";
-	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
-	html += "<input type='checkbox' name='memo'>";
-	html += "<div class='memo-color'>";
-	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-	html += "<span class='write-date'></span>";
-	 html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
-	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-	html += "<textarea class='memo-text' style='background-color:"+ bodyColor +"'>";
-	html += "</textarea>";
-	html += "</div>"
-	$("#memoList").prepend(html);
-	$("#textarea").val('');*/
-	
+function createMemo(hColor, bColor, memoId, contents) {
 	var div = document.createElement("div");
 	div.setAttribute("class", "individual-memo");
 	div.style.backgroundColor = hColor;
@@ -40,6 +26,10 @@ function createMemo(hColor, bColor, memoId) {
 	textarea.setAttribute("memoId", memoId);
 	textarea.style.backgroundColor = bColor;
 	
+	if(contents != null) {
+		textarea.innerHTML = contents;
+	}
+	
 	for(var i=1; i<=6; i++) {
 		var div3 = document.createElement("div");
 		div3.setAttribute("class", "memo-color-list");
@@ -52,28 +42,23 @@ function createMemo(hColor, bColor, memoId) {
 	div.appendChild(img);
 	div.appendChild(textarea);
 	
+	return div;
+}
+
+function insertMemo(hColor, bColor, memoId) {
+	var div = createMemo(hColor, bColor, memoId);
 	$("#boardMemoList").prepend(div);
-	
 	addDateInfo();
 }
 
 function loadMemoList() {
-	var html = "";
-	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
-	html += "<input type='checkbox' name='memo'>";
-	html += "<div class='memo-color'>";
-	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-	html += "<span class='write-date'></span>";
-//	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
-	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
-	html += memoList[i].contents;
-	html += "</textarea>";
-	html += "</div>"
-	$("#memoList").prepend(html);
-	$("#textarea").val('');
-	
-	addDateInfo(memoList[i].write_date.substring(0,10));
+	for(var i=0; i<memoList.length; i++) {
+		var hColor = memoColor[memoList[i].color_id-1];
+		var bColor = memoColor[memoList[i].color_id+5];
+		var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents);
+		$("#boardMemoList").prepend(div);
+		addDateInfo(memoList[i].write_date.substring(0,10));
+	}
 }
 
 function addDateInfo(date) {
