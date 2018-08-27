@@ -46,6 +46,10 @@
                 case "BoardEnv_div4":
                 	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardMemoSetting.do"; 
                     break;
+                case "BoardEnv_div5":
+                	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardMemoDivision.do"; 
+                    break;
+                   
             }
         }
         var Tab1_SelectID = "";
@@ -93,6 +97,7 @@
             <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t00010" /></span></p>
             <p id="BoardEnv_sub3" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t10011" /></span></p>
             <p id="BoardEnv_sub4" style="display: ${(memoFlag == 'YES') ? 'block' : 'none'};"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezMemo.t001" /></span></p>
+            <p id="BoardEnv_sub5" style="display: ${(memoFlag == 'YES') ? 'block' : 'none'};"><span divname="BoardEnv_div5" id="1tab5"><spring:message code="ezMemo.t0040" /></span></p>
         </div>
     </div>
     <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0" ></iframe>
