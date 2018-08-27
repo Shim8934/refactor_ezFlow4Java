@@ -147,7 +147,7 @@
 				<span style="display:inline-block;width:100%;" onClick="companyFile(this);"><spring:message code='ezWebFolder.t127'/></span>
 			</h2>
 			<ul></ul>
-			<div id="folderTree" style="min-height: 200px; display: none; overflow-x: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
+			<div id="folderTree" style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
 			
 			<h2>
 				<span style="display:inline-block;width:100%;" onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span>
@@ -158,7 +158,7 @@
 				<span style="display:inline-block;width:100%;" onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span>
 			</h2>
 			<ul></ul>
-			<div id="folderTree2" style="min-height: 200px; display: none; overflow-x: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
+			<div id="folderTree2" style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
 			
 			<h2>
 				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span>

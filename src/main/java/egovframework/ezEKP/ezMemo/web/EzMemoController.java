@@ -97,6 +97,7 @@ public class EzMemoController {
 		param.put("folder_id", folderId);
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("searchType", searchType);
+		param.put("offset", userInfo.getOffset());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		
@@ -210,6 +211,8 @@ public class EzMemoController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
 		param.put("user_id",userInfo.getId());
+		param.put("tenant_id", userInfo.getTenantId());
+		
 		param.put("folder_id", folderId);
 		param.put("write_date", regDate);
 		

@@ -249,8 +249,8 @@ public class EzWebFolderGWController_y {
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
-			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "userId : "+userId + "tenantId : "+ tenantId
-					+ "comId : " + comId + "offset" + offset);
+			LOGGER.debug("folderId :" + folderId + ", serverName : "+ serverName + ", userId : " +userId + ", tenantId : " + tenantId
+					+ ", comId : " + comId + ", offset" + offset);
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
@@ -264,7 +264,7 @@ public class EzWebFolderGWController_y {
 			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
 			int checkSbCreater = 0;
-			LOGGER.debug("mode : "+mode +" folderId : " + folderId + "destFolder.getFolderPath() : " + destFolder.getFolderPath());
+			LOGGER.debug("mode : " + mode + ", folderId : " + folderId + ", destFolder.getFolderPath() : " + destFolder.getFolderPath());
 			
 			if (mode.equals("folder-move")) {
 				

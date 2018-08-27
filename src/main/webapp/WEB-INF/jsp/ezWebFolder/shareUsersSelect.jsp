@@ -26,7 +26,7 @@
 			var selectedDept = "";
 			var selectedUser = "";
 			var strErrMsg = messages.strLang7;
-			var strDataNotFound = messages.strLang12;
+			var strDataNotFound = messages.strLang31;
 			var strAlreadyAdd = "<spring:message code='ezWebFolder.t169'/>";
 			var strAlertMsg = "<spring:message code='ezWebFolder.t171'/>";
 			var strSearchError = "<spring:message code='ezWebFolder.t232'/>";
@@ -74,25 +74,38 @@
 				var userList = document.getElementById("MListView");
 				
 				if (deptList.rows.length + userList.rows.length <= 2) {
-					alert(strDataNotFound);
-					return;
-				}
-				
-				var users = [], depts = [];
-				
-				if (deptList.rows.length > 1) {
-					for (var i = 1; i < deptList.rows.length; i++) {
-						depts.push(deptList.rows[i].getAttribute("nodeId"));
+					if (type == "NEW") {
+						alert(strDataNotFound);
+						return;
+					} else {
+						var files = [];
+						var folders = [];
+						
+						if (folderFileType == "F") {
+							files.push(folderFileId);
+						} else {
+							folders.push(folderFileId);
+						}
+						
+						shareContext.deleteShareConfirm(type, files, folders);
 					}
-				}
-				
-				if (userList.rows.length > 1) {
-					for (var i = 1; i < userList.rows.length; i++) {
-						users.push(userList.rows[i].getAttribute("nodeId"));
+				} else {
+					var users = [], depts = [];
+					
+					if (deptList.rows.length > 1) {
+						for (var i = 1; i < deptList.rows.length; i++) {
+							depts.push(deptList.rows[i].getAttribute("nodeId"));
+						}
 					}
+					
+					if (userList.rows.length > 1) {
+						for (var i = 1; i < userList.rows.length; i++) {
+							users.push(userList.rows[i].getAttribute("nodeId"));
+						}
+					}
+					
+					shareContext.addShare(folderFileId, folderFileType, depts, users, false, addShareSuccess);
 				}
-				
-				shareContext.addShare(folderFileId, folderFileType, depts, users, false, addShareSuccess);
 			}
 			
 			function addShareSuccess() {
@@ -107,6 +120,22 @@
 				} catch(e) {}
 				
                 window.close();
+			}
+			
+			function deleteShareSuccess() {
+				DivPopUpHidden();
+				
+				alert(messages.strLang33);
+				
+				try {
+					opener.refreshView();
+				} catch (e) {}
+				
+				window.close();
+			}
+			
+			function closeAllPopup() {
+				DivPopUpHidden();
 			}
 		</script>
 		<style>
@@ -187,6 +216,11 @@
 					</div>
 				</td>
 			</tr>
-		</table> 
+		</table>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

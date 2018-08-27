@@ -31,6 +31,13 @@
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
+			<%-- 2018-08-22 홍승비 - 개인문서함 폴더명 ellipsis 처리 --%>
+			.node_div span {
+				overflow: hidden;
+			    text-overflow: ellipsis;
+			    display: inline-block;
+			}			
+			
 	    </style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
@@ -1106,7 +1113,7 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>

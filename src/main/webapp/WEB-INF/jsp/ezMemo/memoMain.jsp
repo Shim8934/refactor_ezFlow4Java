@@ -127,11 +127,15 @@
 			getMemoList();
 		}
 		
-		function getMemoList() {
+		function getMemoList(type) {
 			var searchInput = $("#searchTitle").val();
 			var startDate = $("#Sdatepicker").val();
 			var endDate = $("#Edatepicker").val();
 			
+			if(type=="order") {
+				type = type + "_" + $("#orderOption").val();
+			}
+
 			$.ajax ({
  			   	url : '/ezMemo/getMemoList.do',
  			   	type : 'POST',
@@ -140,7 +144,8 @@
                 	searchInput : searchInput,
                 	startDate : startDate,
                 	endDate : endDate,
-                	folderId : folderId   
+                	folderId : folderId,
+                	searchType : type
                 },
                 cache: false,
                 success: function(result) {
@@ -151,27 +156,9 @@
                 	bodyColor = memoColor[defaultColor+6]; 
                 	folderId = result["folderId"];
                 	
-					for(var i=0; i<memoList.length; i++) {
-						//loadMemoList();
-						var html = "";
-				    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
-				    	html += "<input type='checkbox' name='memo'>";
-				    	html += "<div class='memo-color'>";
-				    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-				    	html += "<span class='write-date'></span>";
-				    //	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
-				    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-				    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
-				    	html += memoList[i].contents;
-				    	html += "</textarea>";
-				    	html += "</div>"
-				    	$("#boardMemoList").prepend(html);
-				    	$("#textarea").val('');
-				    	
-				    	addDateInfo(memoList[i].write_date.substring(0,10));
-				    	
-				    	addremove();
-					} 
+					loadMemoList();
+						
+				    addremove();
 			     },
 	             error : function() {
 	                	
@@ -197,7 +184,7 @@
                 success: function(result) {
                 	var memoId = result["memoId"];
                 	
-                	createMemo(headerColor, bodyColor, memoId);
+                	insertMemo(headerColor, bodyColor, memoId);
         	    	addremove();
                 },
                 error : function() {
@@ -384,7 +371,7 @@
 							<spring:message code='ezBoard.garm01' />
 						</th>
 						<td>
-							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
+							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList(search); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
 						</td>
 					</tr>
 					<tr>
@@ -403,7 +390,7 @@
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
 								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList()"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList('search')"><spring:message code='ezBoard.t188' /></span></a>
 							</div>	
 						</td>
 					</tr>
@@ -424,10 +411,10 @@
 					<tr>
 						<th><spring:message code='ezEmail.t99000035' /></th>
 						<td>
-							<select id="listcount" style="WIDTH: 80px; height: 20px;" onchange="onSelect_Option(this);">
-								<option value="0"><spring:message code='ezMemo.t0019'/></option>
-                       		    <option value="1"><spring:message code='ezMemo.t0020'/></option>
-                           		<option value="2"><spring:message code='ezMemo.t0021'/></option>
+							<select id="orderOption" style="WIDTH: 80px; height: 20px;" onchange="getMemoList('order');">
+								<option value="1"><spring:message code='ezMemo.t0019'/></option>
+                       		    <option value="2"><spring:message code='ezMemo.t0020'/></option>
+                           		<option value="3"><spring:message code='ezMemo.t0021'/></option>
 							</select>
 						</td>
 					</tr>
