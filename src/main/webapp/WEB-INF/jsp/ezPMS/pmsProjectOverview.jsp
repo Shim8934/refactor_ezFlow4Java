@@ -97,6 +97,7 @@ function initProgressBar() {
 	
 	$("#circleProgress").circleProgress({
 		value: Number(projectProgress * 0.01).toFixed(1),
+		duration : 0,
 		fill : {color : circleColor},
 		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
@@ -476,6 +477,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				$("#" + targetPosition).find(".progressArea" + task.taskId).LineProgressbar({
 					percentage : Number(task.realProgress).toFixed(1),
 					fillBackgroundColor : statusColor,
+					duration : 0,
 					height : '15px',
 					radius : '15px',
 					width : '50%'
