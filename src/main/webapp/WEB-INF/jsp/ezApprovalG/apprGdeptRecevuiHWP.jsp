@@ -190,6 +190,8 @@
 			}
 	
 			function window_onload() {
+				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+				
 			    try {
 			        var ezUtil = new ActiveXObject("ezUtil.MiscFunc.1");
 			        ezUtil.ChangeIME(1);
