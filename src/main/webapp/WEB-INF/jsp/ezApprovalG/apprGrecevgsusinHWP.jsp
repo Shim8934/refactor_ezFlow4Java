@@ -256,7 +256,10 @@
 		
 			function window_onload() {
 			    window.onresize();
+			    
+			    HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 			    HwpCtrl.SetSaveMode(1);
+			    
 			    try {
 			        IsSkipDrafter = "FALSE"
 			        SetBtnStateTrue();
@@ -265,7 +268,7 @@
 			        
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
-	                	document.getElementById("btnAddSepAttach").style.display = "none";
+	                	document.gReetElementById("btnAddSepAttach").style.display = "none";
 			        }
 			        
 			        if (pSusinDocURL != "") {

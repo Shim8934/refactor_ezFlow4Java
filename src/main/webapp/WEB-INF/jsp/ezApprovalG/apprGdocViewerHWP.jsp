@@ -15,6 +15,7 @@
         var pDocHref = "${docHref}";
         window.onload = function () {
         	try {
+        			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
                 	showProgress("<spring:message code='ezApprovalG.t368'/>");
 		            var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURIComponent(pDocHref);
 		            var isTrue = HwpCtrl.LoadFile(URL, false);
