@@ -220,6 +220,9 @@ public class EzMemoController {
 		logger.debug("memoWrite ended");	
 		
 		if (status.equals("ok")) {		
+			int memoId = Integer.parseInt(resultBody.get("memoId").toString());
+			model.addAttribute("memoId", memoId);
+			
 			return "json";
 		}
 		else {

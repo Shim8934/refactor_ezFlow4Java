@@ -52,8 +52,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 		update("EzMemoDAO.deleteMemoFolder", map);
 	}
 
-	public void insertMemo(Map<String, Object> map) throws Exception {
-		insert("EzMemoDAO.insertMemo", map);
+	public int insertMemo(Map<String, Object> map) throws Exception {
+		return (int) insert("EzMemoDAO.insertMemo", map);
 	}
 	
 	public void setFoldStatus(Map<String, Object> map) throws Exception {
