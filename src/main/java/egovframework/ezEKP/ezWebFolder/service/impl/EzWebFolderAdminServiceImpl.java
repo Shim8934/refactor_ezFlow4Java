@@ -346,11 +346,19 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		Date date                  = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
+		// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+		SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+	    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
+	
+	    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
+	    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
+		
 		folder.setFolderName1(folderName);
 		folder.setFolderName2(folderName2);
 		folder.setUpdateId(userId);
 		folder.setTenantId(tenantId);
 		folder.setUpdateDate(timeUTC);
+		folder.setCreateDate(timeUTCCreate);
 		
 		insertFolder(folder);
 		
@@ -528,8 +536,15 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String newPath             = parentFolder.getFolderPath() + folder.getFolderId() + "|";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);		//updateDate위한 현재시간
 		int levelDistance          = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
+		
+		// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+		SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+	    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
+	
+	    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
+	    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
 		
 		if (folder.getFolderLevel() == 1) {
 			//Delete all folder users
@@ -551,6 +566,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setOwnerId(parentFolder.getOwnerId());
 		folder.setFolderType(parentFolder.getFolderType());
 		folder.setUpdateId(userId);
+		folder.setCreateDate(timeUTCCreate);
 		folder.setUpdateDate(timeUTC);
 		folder.setFolderUpper(parentFolder.getFolderId());
 		folder.setFolderLevel(folder.getFolderLevel() + levelDistance);
@@ -608,6 +624,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setCreateName2(userInfo.getDisplayName2());
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
+		folder.setCreateDate(timeUTC);
 		folder.setFolderUpper(parentFolder.getFolderId());
 		folder.setFolderLevel(folder.getFolderLevel() + levelDistance);
 		folder.setFolderStep(getMaxFolderStep(parentFolder.getFolderId(), tenantId));
@@ -635,6 +652,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				subFld.setFolderPath(folderPath);
 				subFld.setFolderType(folderType);
 				subFld.setOwnerId(ownerId);
+				subFld.setCreateDate(timeUTC);
 				subFld.setUpdateDate(timeUTC);
 				subFld.setCreateId(userInfo.getId());
 				subFld.setCreateName1(userInfo.getDisplayName1());
@@ -666,6 +684,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			for (FileVO file : fileList) {
 				file.setDownloadCnt(0);
 				file.setFolderId(newId);
+				file.setCreateDate(timeUTC);
 				file.setUpdateDate(timeUTC);
 				file.setCreateId(userInfo.getId());
 				file.setUpdateId(userInfo.getId());

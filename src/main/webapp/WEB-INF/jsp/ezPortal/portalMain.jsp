@@ -42,9 +42,10 @@
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:84%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
-			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
-			.ui-resizable-se { background-image: url("");}
-			.write-date { font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+			.memo-color-list {display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
+			.ui-resizable-se {background-image: url("");}
+			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+			#btn-bundle {text-align: right; margin:8px; height: 16px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -60,7 +61,7 @@
 			var headerColor;
 	    	var textColor;
 	    	var currText;
-			
+	    	var bodyColor;
 			
 			topHeight = "56";
 
@@ -124,21 +125,38 @@
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	 
 		        	switch(fontNum) {
-			        	case 10 : 
-			        		textarea.css("font-size", "15px");
+			        	case 12 : 
+			        		textarea.css("font-size", "13px");
 			        		break;
 	
-			        	case 15 : 
-			        		textarea.css("font-size", "20px");
+			        	case 13 : 
+			        		textarea.css("font-size", "14px");
 			        		break;
 		        		
-		        		case 20 : 
-			        		textarea.css("font-size", "25px");
+		        		case 14 : 
+			        		textarea.css("font-size", "15px");
 			        		break;
 			        		
-		        		case 25 : 
-			        		textarea.css("font-size", "30px");
+		        		case 15 : 
+			        		textarea.css("font-size", "16px");
 			        		break;
+			        		
+		        		case 16 : 
+			        		textarea.css("font-size", "17px");
+			        		break;
+			        		
+		        		case 17 : 
+			        		textarea.css("font-size", "18px");
+			        		break;
+			        		
+		        		case 18 : 
+			        		textarea.css("font-size", "19px");
+			        		break;
+			        	
+		        		case 19 : 
+			        		textarea.css("font-size", "20px");
+			        		break;
+			        		
 		        	}
 		        	
 		        });
@@ -149,20 +167,36 @@
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	
 		        	switch(fontNum) {
-		        		case 30 : 
-			        		textarea.css("font-size", "25px");
+		        		case 20 : 
+			        		textarea.css("font-size", "19px");
 			        		break;
 		        		
-		        		case 25 : 
-			        		textarea.css("font-size", "20px");
+		        		case 19 : 
+			        		textarea.css("font-size", "18px");
 			        		break;
 			        		
-		        		case 20 : 
+		        		case 18 : 
+			        		textarea.css("font-size", "17px");
+			        		break;
+			        		
+		        		case 17 : 
+			        		textarea.css("font-size", "16px");
+			        		break;
+			        		
+		        		case 16 : 
 			        		textarea.css("font-size", "15px");
 			        		break;
-			        		
+		        		
 		        		case 15 : 
-			        		textarea.css("font-size", "10px");
+			        		textarea.css("font-size", "14px");
+			        		break;
+			        		
+		        		case 14 : 
+			        		textarea.css("font-size", "13px");
+			        		break;
+			        		
+		        		case 13 : 
+			        		textarea.css("font-size", "12px");
 			        		break;
 	        		}
 		        	
@@ -172,7 +206,7 @@
 		        $(".layer-half").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	/* stop : function () {
+		        	stop : function () {
 		        		
 		        		var layerWidth = $(".layer-half").width();
 		        		var layerHeight = $(".layer-half").height();
@@ -192,7 +226,7 @@
 		        				console.log("에러");
 		        			}
 		        		});
-		        	} */
+		        	}
 		        });
 		        
 		        $(".detailMemo").resizable({
@@ -248,7 +282,17 @@
 		        });
 		        
 		        getMemoConfig();
+		        
+		        $("#newMemo").click(function() {
+		        	newMemo();
+		        });
 
+		        getMemoList();
+		        
+		        $("#memoList").on("click", ".hideMemo", function() {
+		        	alert("숨김버튼클릭");
+		        });
+		        
 		    });
 		    
 		    function setLayerSize() {
@@ -407,7 +451,7 @@
 		    
 
 		    
-		    function save() {
+		    /* function save() {
 		    	if(headerColor == null) {			// 지정색 없을 때
 		    		headerColor = memoBColor[0];
 			    	textColor = memoColor[0];
@@ -472,7 +516,7 @@
 		        	var headerColor = $(this).css("background-color");
 			    	var textColor = $(this).children("textarea").css("background-color");
 			    	
-		        	/* $("#maskDiv").css("display", ""); */
+		        	// $("#maskDiv").css("display", "");
 			        $(".detailMemo").css("display", "");
 					$("#textarea").css("font-size", "15px");
 					$("#textarea").css("background-color", textColor);
@@ -489,14 +533,14 @@
 		        	$(this).parent().parent().css("background-color", headerColor);
 		        	$(this).parent().nextAll("textarea").css("background-color", textColor);
 		        	$(this).parent().css("visibility", "hidden");
-		        })
+		        });
 		        
 		        $(".memo-color").mouseleave(function(){
 		        	if($(this).css("visibility") == "visible") {
 		        		$(this).css("visibility", "hidden");
 		        	}
 		        });
-		    }
+		    } */
 		    
 		    function detailMemoSave() {
 		    	$(".individual-memo:nth-child("+memoIndex+") > .memo-text").val($("#textarea").val());
@@ -513,6 +557,172 @@
 					url : "/ezMemo/hasMemoFolder.do"
 				});
 		    }
+		    
+		    function newMemo() {
+		    	
+		    	var folderId = $("select option:selected").val();
+		    	
+				$.ajax ({
+	 			   	url : '/ezMemo/memoWrite.do',
+	 			   	type : 'POST',
+	                dataType : 'json',
+	                data : { 
+	                	folderId : folderId
+	                },  
+	                cache: false,
+	                success: function(result) {
+
+	                	var html = "";
+	        	    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
+	        	    	html += "<input type='checkbox' name='memo'>";
+	        	    	html += "<div class='memo-color'>";
+	        	    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
+	        	    	html += "<span class='write-date'></span>";
+	        	    	html += "<img class='hideMemo' src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>";
+	        	    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
+	        	    	html += "<textarea class='memo-text' style='background-color:"+ bodyColor +"'>";
+	        	    	html += "</textarea>";
+	        	    	html += "</div>"
+	        	    	$("#memoList").prepend(html);
+	        	    	$("#textarea").val('');
+	        	    	
+	        	    	addDate();
+	        	    	addremove();
+	                }
+				});
+			}
+			
+		    function addDate(date) {
+		    	var nowDate 
+		    	
+		    	if(date == null) {
+		    		nowDate = new Date();
+		    	}
+		    	else {
+		    		nowDate = new Date(date);
+		    	}
+		    	
+		    	var year = nowDate.getFullYear();
+		    	var month = nowDate.getMonth() + 1;
+		    	var date = nowDate.getDate();
+		    	var day = nowDate.getDay();
+		    	var arrayDay = ["(일)", "(월)", "(화)", "(수)", "(목)", "(금)", "(토)"];
+		    	
+		    	if(month < 10) {
+		    		month = "0"+month;
+		    	}
+		    	if(date < 10) {
+		    		date = "0"+date;
+		    	}
+
+				$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
+		    	
+		    }
+		    
+		    function addremove() {
+			    $(".individual-memo").mouseenter(function(){
+			    	$(this).children("img").css("visibility", "visible");
+			    	$(this).children("img").click(function(){
+			    		$(this).prevAll("div").css("visibility", "visible");
+			    		$(this).prevAll("div").children().each(function(index, element){
+			    			$(element).css("background-color", memoColor[index]);
+			    		})
+			    	})
+		        });
+			    
+			    $(".individual-memo").dblclick(function(){
+			    	var pheight = window.screen.availHeight;
+			        var pwidth = window.screen.availWidth;
+			        pheight = parseInt(pheight) / 2;
+			        pwidth = parseInt(pwidth) / 2;
+			        pheight = pheight - 200;
+			        pwidth = pwidth - 127;
+			        
+			    	window.open("/ezMemo/memoRead.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
+			    });
+		        
+		        $(".individual-memo").mouseleave(function(){
+		        	$(this).children("img").css("visibility", "hidden");
+		        });
+		        
+		        $(".memo-color-list").click(function(){
+		        	headerColor = $(this).css("background-color");
+		        	bodyColor = memoColor[$(this).index()];
+		        	$(this).parent().parent().css("background-color", headerColor);
+		        	$(this).parent().nextAll("textarea").css("background-color", bodyColor);
+		        	$(this).parent().css("visibility", "hidden");
+		        })
+		        
+		        $(".memo-color").mouseleave(function(){
+		        	if($(this).css("visibility") == "visible") {
+		        		$(this).css("visibility", "hidden");
+		        	}
+		        });
+		    }
+		    
+		    function getMemoList() {
+		    	
+		    	var folderId = $("select option:selected").val();
+				var searchInput = $("#searchTitle").val();
+				var startDate = $("#Sdatepicker").val();
+				var endDate = $("#Edatepicker").val();
+				
+				$.ajax ({
+	 			   	url : '/ezMemo/getMemoList.do',
+	 			   	type : 'POST',
+	                dataType : 'json',
+	                data : { 
+	                	searchInput : searchInput,
+	                	startDate : startDate,
+	                	endDate : endDate,
+	                	folderId : folderId   
+	                },
+	                cache: false,
+	                success: function(result) {
+	                	memoColor = result["colorList"].split(";");
+	                	defaultColor = result["defaultColor"];
+	                	memoList = result["memoList"];
+	                	headerColor = memoColor[defaultColor];
+	                	bodyColor = memoColor[defaultColor+6]; 
+	                	folderId = result["folderId"];
+	                	console.log(result);
+						for(var i=0; i<memoList.length; i++) {
+							var html = "";
+					    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
+					    	html += "<input type='checkbox' name='memo'>";
+					    	html += "<div class='memo-color'>";
+					    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
+					    	html += "<span class='write-date'></span>";
+					    	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
+					    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
+					    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
+					    	html += memoList[i].contents;
+					    	html += "</textarea>";
+					    	html += "</div>"
+					    	$("#textarea").val('');
+					    	
+					    	$("#memoList").prepend(html);
+					    	addDate(memoList[i].write_date.substring(0,10));
+					    	
+					    	
+						} 
+						
+					    var btnBundlHeight = $("#btn-bundle").height();
+					    console.log(btnBundlHeight);
+					    var layerHeight = $("#layer-popup").height();
+					    console.log(layerHeight);
+					    var memoListHeight = layerHeight - btnBundlHeight;
+					    console.log(memoListHeight);
+					    $("#memoList").css("height", memoListHeight);
+					    
+				    	addremove();
+				     },
+		             error : function() {
+		                	
+		             }
+				});
+			}
+		    
 		    
 		</script>
 	</head>
@@ -534,20 +744,22 @@
 				<!-- 메모 리스트 -->
 				<div style="text-align: center">
 					
-					<div style="text-align: right; margin:8px;" id="btn-bundle">
+					<!-- <div style="text-align: right; margin:8px; " id="btn-bundle"> -->
+					<div id="btn-bundle">
 						<!-- <button id="change-mode" style="float: left">모드</button> -->
 						<div id="slider-range"></div>
 						
 						<select id="memoFolderList">
-							<option value="all" selected="selected">전체</option>
+							<option value="35" selected="selected">전체</option>
 						</select>
 						<button id="changeMode">모드</button>
-						<button id="new-memo" onclick="save()">추가</button>
+						<button id="newMemo">추가</button>
 						<button id="close-button">닫기</button>
 					</div>
 										
 					<div class="memoListBox" style="overflow:hidden;">
-						<div id="memoList" style="height: 50%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
+						<!-- <div id="memoList" style="height: 50%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div> -->
+						<div id="memoList" style="height:100%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
 					</div>
 					
 				</div>

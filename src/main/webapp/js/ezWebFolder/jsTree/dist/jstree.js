@@ -2549,11 +2549,16 @@
 			if(this.settings.core.force_text) {
 				node.childNodes[1].appendChild(d.createTextNode(obj.text));
 			}
+			/* 2018-08-24 홍승비 -  웹폴더 폴더명 ellipsis 작업 */
 			else {
-				node.childNodes[1].innerHTML += obj.text;
+				var ariaLevel = node.getAttribute("aria-level");
+				var spanW = 162 - (15 * (ariaLevel - 1)); // aria-level은 1부터 시작
+				 if (spanW < 0) {
+					 spanW = 0;
+				 }
+				node.childNodes[1].innerHTML += "<span class='jstree-span-title' style='width:" + spanW + "px'>" + obj.text + "</span>";
 			}
-
-
+			
 			if(deep && obj.children.length && (obj.state.opened || force_render) && obj.state.loaded) {
 				k = d.createElement('OL');
 				k.setAttribute('role', 'group');
@@ -2674,6 +2679,7 @@
 									}
 								});
 					}
+					addTitle();
 				}
 				obj.state.opened = true;
 				if(callback) {

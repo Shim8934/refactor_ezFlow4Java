@@ -80,9 +80,9 @@
 				    case "menu00":
 				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/portal_" + pUrl + "01", "bottom");
 				        break;
-				    /* case "menu01":
+				    case "menu01":
 				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftTask.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/task_" + pUrl + "01", "bottom");
-				        break; */
+				        break;
 					case "menu02":
 					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftMail.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/mail_" + pUrl + "01", "bottom");
 						break;
@@ -121,7 +121,10 @@
 				        break;
 				    case "menu12":
 				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftCircular.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/circular_" + pUrl + "01", "bottom");
-				        break;    
+				        break;
+				    case "menu13":
+				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftWebfolder.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/webfolder_" + pUrl + "01", "bottom");
+				        break;
 					default:
 						break;
 				}
@@ -167,9 +170,13 @@
 								</c:if>
 				      			<c:if test="${isScheduleUsed == 'Y'}">
 				      				<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
+				      				<td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td>
 			  	  				</c:if>
 			  	  				<c:if test="${isBoardUsed == 'Y'}">
 				      				<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
+				      			</c:if>
+				      			<c:if test="${isWebfolderUsed == 'Y'}">
+				      				<td class="normal" id="menu13" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);"><spring:message code="ezWebFolder.t10"/></td>
 				      			</c:if>
 				      			<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
 					  			<td style="width:100%">&nbsp;</td>
@@ -192,8 +199,8 @@
 						      	</c:if>
 						      	<c:if test="${isScheduleUsed == 'Y'}">
 						      		<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
+						      		<td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td>
 						      	</c:if>
-						      	<!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td> -->
 						      	<c:if test="${isBoardUsed == 'Y'}">
 			  	  					<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
 			  	  					<td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자설문</td>
@@ -215,6 +222,9 @@
 								<c:if test="${isCircularUsed == 'Y'}">
 									<td class="normal" id="menu12" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">회람판</td>
 								</c:if>
+								<c:if test="${isWebfolderUsed == 'Y'}">
+				      				<td class="normal" id="menu13" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);"><spring:message code="ezWebFolder.t10"/></td>
+				      			</c:if>
 						      	<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
 							  	<td style="width:100%">&nbsp;</td>
 			  	  			</c:otherwise>
@@ -245,9 +255,13 @@
 								</c:if>
 				      			<c:if test="${isScheduleUsed == 'Y'}">
 				      				<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>
+				      				<td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td>
 			  	  				</c:if>
 			  	  				<c:if test="${isBoardUsed == 'Y'}">
 				      				<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
+				      			</c:if>
+				      			<c:if test="${isWebfolderUsed == 'Y'}">
+				      				<td class="normal" id="menu13" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);"><spring:message code="ezWebFolder.t10"/></td>
 				      			</c:if>
 				      			<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">マイポータルの設定</td>
 				    			<td style="width:100%">&nbsp;</td>
@@ -260,8 +274,8 @@
 						      	</c:if>
 						      	<c:if test="${isScheduleUsed == 'Y'}">
 						      		<td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">スケジュール</td>
+						      		<td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td>
 						      	</c:if>
-						      	<!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td> -->
 						      	<c:if test="${isBoardUsed == 'Y'}">
 			  	  					<td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
 			  	  					<td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アンケート</td>
@@ -283,6 +297,9 @@
 								<c:if test="${isCircularUsed == 'Y'}">
 									<td class="normal" id="menu12" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">回覧板</td>
 								</c:if>
+								<c:if test="${isWebfolderUsed == 'Y'}">
+				      				<td class="normal" id="menu13" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);"><spring:message code="ezWebFolder.t10"/></td>
+				      			</c:if>
 								<td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">環境設定</td>
 							  	<td style="width:100%">&nbsp;</td>
 		  				</c:otherwise>

@@ -243,12 +243,17 @@
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		        if(nodeLevel > 9)
-		        	nodeLevel = 9;
+		             
 		        for(var i=0; i<title2.length; i++) {
+		        	var spanW = 152 - (18 * nodeLevel);	
 		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+		        	
+		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+		        	if (spanW < 0) {
+						 spanW = 0;
+					 }
+		        	title3[0].style.width = spanW + 'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -654,8 +659,6 @@
 				$(".memo h2").attr("class", "on");
 				$(".memo").next().attr("class", "on");
 				
-				memoFoldersInfo();
-				
 				if (CrossYN()) {
 					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
 		        } else {
@@ -783,35 +786,7 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
-		    function memoFoldersInfo() {
-		    	$.ajax({
-					type : "GET",
-					dataType : "json",
-					async : false,
-					url : "/ezMemo/getMemoFoldersInfo.do",
-					success: function(result){
-						if(result["memoCount"]*1 >0){
-							$('#countTotal').html("(" + result["memoCount"] + ")");
-						}
-						var html="";
-						var folderList = result["folders"];
-							
-						folderList.forEach(function(list, index){
-							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
-							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node' data1='" + list.folder_name + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name;
-							if(list.count!=0) {
-								html+="(" + list.count + ")";	
-							}
-							html+="</span></div>";
-						}); 
-					}     			
-				});
-		    }
-
-		 
+	 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -832,7 +807,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:hidden;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
@@ -850,7 +825,7 @@
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
            				document.write("<ul>\n");
-           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
         			});

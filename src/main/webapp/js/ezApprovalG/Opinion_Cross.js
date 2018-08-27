@@ -511,7 +511,7 @@ function deleteOpinionInfo() {
             if (pOrgDocID == "REDRAFT") {
                 var pInformationContent = strLang406;
                 var Rtnval = OpenInformationUI(pInformationContent, deleteOpinionInfo_Complete);
-                if (!CrossYN() && Rtnval) {
+                //if (!CrossYN() && Rtnval) {
                     var selIdx = GetAttribute(pSelectedRow[0], "id");
 
                     OpinionList.DeleteRow(selIdx);
@@ -519,7 +519,7 @@ function deleteOpinionInfo() {
                     setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
                     setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
                     OpinionAddFlag = 0;
-                }
+                //}
             }
             else {
                 deleteOpinion(pSelectedRow);
@@ -953,7 +953,6 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
     if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)

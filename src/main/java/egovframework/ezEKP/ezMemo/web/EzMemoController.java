@@ -140,13 +140,11 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		String memoCount = resultBody.get("memoCount").toString();
-		String foldStatus = resultBody.get("foldStatus").toString();
 		
 		if (status.equals("ok")) {		
 				JSONArray folders = (JSONArray) resultBody.get("data");
 				model.addAttribute("folders", folders);
 				model.addAttribute("memoCount", memoCount);
-				model.addAttribute("foldStatus", foldStatus);
 		}
 			
 		logger.debug("memoFoldersInfo ended");
@@ -212,6 +210,8 @@ public class EzMemoController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
 		param.put("user_id",userInfo.getId());
+		param.put("tenant_id", userInfo.getTenantId());
+		
 		param.put("folder_id", folderId);
 		param.put("write_date", regDate);
 		
