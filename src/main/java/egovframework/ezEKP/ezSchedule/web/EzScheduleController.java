@@ -793,10 +793,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userID", loginVO.getId());
 		model.addAttribute("deptID", loginVO.getDeptID());
+		model.addAttribute("companyID", loginVO.getCompanyID());
+		
 		
 		//2018-06-22 구해안
 		
-        /*model.addAttribute("companyID", loginVO.getCompanyID());*/
 		
 		return "ezSchedule/scheduleSelectAttendant";
 	}	
