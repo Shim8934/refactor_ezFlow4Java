@@ -16,7 +16,7 @@
 	        var ReturnFunction;
 	        var CancelFunction;
 	        var InputValue;
-            var FolderId;
+            var FolderId="";
             var folderNameList = "${folderNameList}";
 	        
 	        document.onselectstart = function () {
@@ -27,11 +27,7 @@
 	        };
 	        
 	        function window_onload() {
-                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[0];
-                CancelFunction = parent.inputNameDlg_cross_dialogArguments[1];
-                InputValue = parent.inputNameDlg_cross_dialogArguments[2];
-                FolderId = parent.inputNameDlg_cross_dialogArguments[3];
-                
+          
 	            if (InputValue != "") {
 	                txt_FolderName.value = InputValue;
 	            }
@@ -93,13 +89,13 @@
 						"methodType" : method
 					},
 					success : function() {
-						parent.memoFoldersInfo();
-						ReturnFunction();
+						window.close();
 					},
 					error : function() {
 						alert("<spring:message code='ezMemo.t0037' />");	
 					}
-				}) 
+				});
+				opener.location.reload();
 	        }
 	        
 	        function btn_cancel_onclick() {

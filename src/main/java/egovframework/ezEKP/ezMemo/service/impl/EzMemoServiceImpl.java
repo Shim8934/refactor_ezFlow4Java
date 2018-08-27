@@ -153,8 +153,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
+		int orders = ezMemoDAO.maxFolderOrders(map);
+		
 		map.put("folder_name", memoFolderVO.getFolder_name());
 		map.put("reg_date", commonUtil.getTodayUTCTime(""));
+		map.put("orders", orders);
 		ezMemoDAO.addMemoFolder(map);
 		logger.debug("addMemoFolder ended.");
 	}

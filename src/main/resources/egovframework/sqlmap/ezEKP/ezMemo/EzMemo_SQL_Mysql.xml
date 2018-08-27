@@ -205,9 +205,9 @@
 	
 	<insert id="EzMemoDAO.addMemoFolder" parameterClass="map">
 		INSERT INTO 
-			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID)
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ICON_ID, ORDERS)
 		VALUES
-			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#)
+			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#, 1, #orders#)
 		<selectKey keyProperty="folder_id" resultClass="Integer" type="pre">
 			SELECT 
 				MAX(FOLDER_ID)+1 
@@ -307,4 +307,17 @@
 				COMPANY_ID = #company_id# 
 		</selectKey>
 	</insert>
+	
+	<select id="EzMemoDAO.maxFolderOrders" resultClass="Integer">
+		SELECT 
+			MAX(ORDERS)+1
+		FROM 
+			TBL_MEMO_FOLDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			COMPANY_ID = #company_id#
+		AND
+			USER_ID = #user_id#    
+	</select>
 </sqlMap>
