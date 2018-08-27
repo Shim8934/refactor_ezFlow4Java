@@ -50,7 +50,7 @@ public interface EzApprovalGService {
 	
 	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag, String isUsed) throws Exception;
+	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag, String isUsed, Locale locale) throws Exception;
 	
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -565,4 +565,6 @@ public interface EzApprovalGService {
 	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
+	
+	public String getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 }

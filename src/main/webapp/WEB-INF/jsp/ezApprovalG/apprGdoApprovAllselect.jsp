@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -266,7 +267,12 @@
 		            </td>
 		        </tr>
 		        <tr>
-		            <td style="height:20px;vertical-align:middle;"><spring:message code='ezApprovalG.t9998'/></td>
+		        <c:if test="${approvalFlag == 'G'}"> 
+		            <td style="height:20px;vertical-align:middle;">▒ <b><spring:message code='ezApprovalG.t26'/></b>,<spring:message code='ezApprovalG.t9998'/></td>
+		        </c:if>
+		        <c:if test="${approvalFlag == 'S'}">
+		        	<td style="height:20px;vertical-align:middle;">▒ <spring:message code='ezApprovalG.t9998'/></td>
+		        </c:if>
 		        </tr>
 		        <tr>
 		            <td  style="text-align:center;">

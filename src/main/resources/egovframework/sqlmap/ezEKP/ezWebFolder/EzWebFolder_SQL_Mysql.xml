@@ -1182,7 +1182,7 @@
 										WHERE
 											u.TENANT_ID = #tenantId#
 										AND
-											((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept')) 
+											((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept') OR (u.USER_ID = #compId# AND u.USER_TYPE = 'dept')) 
 									) AS s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
 			WHERE
 				f.FOLDER_TYPE  = 'C'
@@ -1263,7 +1263,7 @@
 						WHERE
 							u.TENANT_ID = #tenantId#
 						AND
-							((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept'))
+							((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept') OR (u.USER_ID = #compId# AND u.USER_TYPE = 'dept'))
 					) AS s ON f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_ID = s.FOLDER_ID
 			WHERE
 				f1.FOLDER_TYPE  = 'C'

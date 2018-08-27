@@ -21,6 +21,13 @@ var g_OtherDeptDocViewRight = false;
 var g_CabListXmlhttp = null;
 var totalPage = "";
 var pTotalCnt = "";
+
+var g_isSearching = false;
+var g_searchDate = {
+	startDate: null,
+	endDate: null
+}
+
 function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
@@ -541,6 +548,27 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+    } else if (g_isSearching) {
+    	var searchParamXml = loadXMLString(g_RecSearchParamXml);
+        var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
+        var endDate = SelectSingleNodeValue(searchParamXml.firstChild, "EREGDATE");
+        
+    	if (startDate == "") {
+    		var date = new Date();
+    		date.setFullYear(date.getFullYear() - 1);
+    		
+    		g_searchDate.startDate = date;
+    	} else {
+    		g_searchDate.startDate = new Date(startDate);
+    	}
+    	
+        if (endDate == "") {
+        	g_searchDate.endDate = new Date();
+        } else {
+        	g_searchDate.endDate = new Date(endDate);
+        }
+        
+        
     }
 
     switch (ListTypeFlag) {
@@ -1436,6 +1464,7 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
 
+        g_isSearching = true;
         g_RecSearchParamXml = rtnVal[1];
         GetRecordList();
     }
@@ -1588,7 +1617,15 @@ function makePageSelPage(pTotalCnt) {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
-        if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
+    	if (g_isSearching) {
+    	    g_isSearching = false;
+    	    
+    		var startDate = g_searchDate.startDate;
+    		var endDate = g_searchDate.endDate;
+    		
+    		period = startDate.getFullYear() + strLang1028 + " " + (startDate.getMonth() + 1) + strLang1029 + " " + startDate.getDate() + strLang1030 + " ~ ";
+    		period += endDate.getFullYear() + strLang1028 + " " + (endDate.getMonth() + 1) + strLang1029 + " " + endDate.getDate() + strLang1030;
+    	} else if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
             var nowyear = new Date().getFullYear();
             var nowmonth = new Date().getMonth() + 1;
             var nowday = new Date().getDate();

@@ -28,5 +28,8 @@ var messages = {
 	strLang27 : "명(팀)",
 	strLang28 : "공유를 추가했습니다.",
 	strLang29 : "공유를 수정했습니다.",
-	strLang30 : "파일의 소유자가 아닙니다."
+	strLang30 : "파일의 소유자가 아닙니다.",
+	strLang31 : "공유대상자가 없습니다. ",
+	strLang32 : "공유를 취소하시겠습니까?",
+	strLang33 : "공유를 취소했습니다."
 }

@@ -31,6 +31,8 @@
 			var strActType4  = "<spring:message code='ezWebFolder.t111'/>";
 			var strActType5  = "<spring:message code='ezWebFolder.t19' />";
 			var strActType6  = "<spring:message code='ezWebFolder.t287'/>";
+			var strActType7  = "<spring:message code='ezWebFolder.t121'/>";
+			var strActType8  = "<spring:message code='ezWebFolder.t122'/>";
 			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
