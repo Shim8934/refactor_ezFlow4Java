@@ -174,11 +174,11 @@ function openMemberList(type) {
 	
 	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
 	if(treeDepth == '0') {
-		DivPopUpShow(608, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
-				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		DivPopUpShow(608, 420, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
+				"height = 420px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 	} else {
-		DivPopUpShow(608, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + type, "",
-				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		DivPopUpShow(608, 420, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + type, "",
+				"height = 420px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 	}
 }
 
