@@ -13,6 +13,7 @@
 	</head>
 	<body class="popup cabShareFile">
 		<h1><spring:message code="ezCabinet.t04"/></h1>
+		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<table style="width:100%;">
 			<tr>
