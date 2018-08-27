@@ -8211,7 +8211,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','O')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -12320,7 +12320,7 @@
 	   	</isEqual>
 	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','O')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -17925,7 +17925,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T', 'O' )
+           		 PROCESSYN IN ( 'N','E','T')
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
