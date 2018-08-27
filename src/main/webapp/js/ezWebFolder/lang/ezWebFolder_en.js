@@ -28,5 +28,8 @@ var messages = {
 	strLang27 : "people (teams),",
 	strLang28 : "het was added to the shares.",
 	strLang29 : "het modify the shares.",
-	strLang30 : "Not owner of the file"
+	strLang30 : "Not owner of the file",
+	strLang31 : "You do not have anyone to share with. ",
+	strLang32 : "Are you sure you want to cancel sharing?",
+	strLang33 : "You canceled sharing."
 }

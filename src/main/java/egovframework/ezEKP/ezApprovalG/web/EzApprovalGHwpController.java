@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -28,6 +29,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -481,7 +483,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 		
 		if (xmlDom.getElementsByTagName("LIMITRANGE").getLength() > 0) {
-			limitRange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
+			limitRange = commonUtil.cleanValue(xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent());
 		}
 		
 		if (xmlDom.getElementsByTagName("PUBLICITYCODE").getLength() > 0) {
@@ -882,5 +884,35 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+	
+	/**
+	 * 결재문서 > 저장버튼 다운로드
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		LOGGER.debug("============ downloadHWPdoc started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);		
+		
+		String docID = request.getParameter("DocId");
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		String fileName = docID + ".hwp";
+		String filePath = ezApprovalGService.getHWPdownload(docID, tenantID, companyID);
+		
+		
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath; 
+		}
+		
+		String fullFilePath = realPath + filePath;
+
+		downFile(request, response, fullFilePath, fileName);	
 	}
 }

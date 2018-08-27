@@ -161,7 +161,7 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>0</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
@@ -189,11 +189,13 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	var strSize;
     	if (temppFileSize > 1024 * 1024) {
     		temppFileSize = temppFileSize / 1024 / 1024;
-    		strSize = parseInt(temppFileSize) + "MB";
+    		//strSize = parseInt(temppFileSize) + "MB";
+    		strSize = temppFileSize.toFixed(1) + " MB";
     	}
     	else if (temppFileSize > 1024) {
     		temppFileSize = temppFileSize / 1024;
-    		strSize = parseInt(temppFileSize) + "KB";
+    		//strSize = parseInt(temppFileSize) + "KB";
+    		strSize = temppFileSize.toFixed(1) + " KB";
     	}
     	else
     		strSize = parseInt(temppFileSize) + "B";

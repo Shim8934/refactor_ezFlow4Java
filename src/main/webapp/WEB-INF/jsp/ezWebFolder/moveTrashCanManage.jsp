@@ -23,6 +23,7 @@
 		var folderType = "${folderType}";
 		var checkedfileList = "${fileList}";
 		var checkedfolderList = "${folderList}";
+		var treeData;
 
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
@@ -68,6 +69,8 @@
 							"margin-left" : "10"
 						}
 					}).on('loaded.jstree', function() {
+						treeData = data;
+						addTitle();
 						firFolderId = data.data[0]["id"];
 						var test = "#" + folderId;
 						var elmentTest = document.getElementById(firFolderId);
@@ -131,6 +134,18 @@
             window.close();
             opener.refreshView();
         }
+        
+		function addTitle() {
+		   	var data = this.treeData;
+		   	for ( var i = 0; i < data.length ; i++  ) {
+		   		var dataId = data[i]["id"] + "_anchor";
+		   		var folderName = data[i]["folderName1"];
+		   		var childE = document.getElementById(dataId);
+		   		if (childE != null){
+					childE.setAttribute("title", folderName);
+	    		}
+	    	}
+	    }
     </script>
 </head>
 
