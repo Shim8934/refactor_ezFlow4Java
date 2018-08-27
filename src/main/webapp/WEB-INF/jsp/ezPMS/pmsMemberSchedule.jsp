@@ -160,7 +160,7 @@ function getTaskNameList(elem) {
 				var resultCount = result.length;
 				
 				for (var i = 0; i < resultCount; i++) {
-					infoHTML += "&gt; " + result[i] + "<br>";
+					infoHTML += "&gt; " + revertString(result[i]) + "<br>";
 				}
 				
 				infoHTML += "</div>";
