@@ -3,8 +3,12 @@ package egovframework.ezEKP.ezCabinet.web;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -822,6 +826,31 @@ public class EzCabinetGWController {
 			}
 			
 			List<CabinetSimpleVO> cabinetList = cabinetService.getUserSharedCabinet(sharedList.get(0).getUserId(), userInfo);
+			
+			//Check if duplicate cabinet exist
+			Set<Integer> cabinetIds = cabinetList.stream().map(CabinetSimpleVO::getCabinetId).collect(Collectors.toSet());
+			if (cabinetIds.size() != cabinetList.size()) {
+				List<CabinetSimpleVO> tempList   = new ArrayList<>();
+				Map<Integer, Integer> cabinetMap = new HashMap<>();
+				
+				for (int i = 0; i < cabinetList.size(); i++) {
+					int crrId = cabinetList.get(i).getCabinetId();
+					if (!cabinetMap.containsKey(crrId)) {
+						cabinetMap.put(crrId, i);
+					}
+					else {
+						cabinetList.get(cabinetMap.get(crrId)).setHasSub(1);
+					}
+				}
+				
+				cabinetMap.forEach((key, value) -> {tempList.add(cabinetList.get(value));});
+				
+				//Sort tempList
+				Collections.sort(tempList, (CabinetSimpleVO c1, CabinetSimpleVO c2) -> Integer.compare(c1.getCabinetId(), c2.getCabinetId()));
+				cabinetList.clear();
+				cabinetList.addAll(tempList);
+			}
+			
 			sharedList.get(0).setSharedCabinet(cabinetList);
 			result.put("tree", sharedList);
 			result.put("status", "ok");

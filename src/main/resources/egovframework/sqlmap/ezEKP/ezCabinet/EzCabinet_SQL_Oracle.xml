@@ -663,7 +663,7 @@
 	</select>
 	
 	<select id="EzCabinetDAO.getUserSharedCabinet" resultMap="cabinetSimpleVO2">
-		select
+		select distinct
 			c1.cabinet_id                                                                                as cabinet_id,
 			c1.cabinet_name1                                                                             as cabinet_name,
 			c1.cabinet_name1                                                                             as cabinet_name1,
