@@ -256,11 +256,11 @@
 			taskId = "${taskDetails.taskId}";
 			target = "task";
 			
-			DivPopUpShow(760, 452, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 480, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		} else {
 			taskId = "${taskDetails.groupId}";
 			
-			DivPopUpShow(760, 476, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 490, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		}
 	}
 	
