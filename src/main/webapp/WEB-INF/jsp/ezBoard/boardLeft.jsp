@@ -654,8 +654,6 @@
 				$(".memo h2").attr("class", "on");
 				$(".memo").next().attr("class", "on");
 				
-				memoFoldersInfo();
-				
 				if (CrossYN()) {
 					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
 		        } else {
@@ -783,35 +781,7 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
-		    function memoFoldersInfo() {
-		    	$.ajax({
-					type : "GET",
-					dataType : "json",
-					async : false,
-					url : "/ezMemo/getMemoFoldersInfo.do",
-					success: function(result){
-						if(result["memoCount"]*1 >0){
-							$('#countTotal').html("(" + result["memoCount"] + ")");
-						}
-						var html="";
-						var folderList = result["folders"];
-							
-						folderList.forEach(function(list, index){
-							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
-							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;' class='node' data1='" + list.folder_name + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name;
-							if(list.count!=0) {
-								html+="(" + list.count + ")";	
-							}
-							html+="</span></div>";
-						}); 
-					}     			
-				});
-		    }
-
-		 
+	 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">

@@ -10,6 +10,76 @@
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />	
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+    	<script>
+	    	$(function() {
+	    		memoFoldersInfo();
+			});
+		
+    	
+    		/**
+    		 * memo분류함을 조회
+    		 */
+	    	function memoFoldersInfo() {
+	    		$.ajax({type : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/ezMemo/getMemoFoldersInfo.do",
+	    			success: function(result){
+	    				var html="";
+						var folderList = result["folders"];
+						memoFolderList = "<colgroup><col width='7%' /><col width='55%' /><col width='38%' /></colgroup>";							
+							 
+						folderList.forEach(function(list, index){
+							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);'>";
+							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
+							memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
+							memoFolderList += "<td style='color:gray;'>" + list.reg_date.substring(0,16) + "</td>";  
+							memoFolderList += "</tr>";
+						});
+						
+						$("#memoFolderList").html(memoFolderList);
+							
+					}     			
+				});
+	    	}
+    	
+    	
+	    	var _RowObject = null;
+	    	function event_click(obj) {
+	    		if ($("#checkboxAll").prop("checked") == true) {
+	    			if ($(obj).find("input").prop("checked") == true) {
+	    				$(obj).find("input").prop("checked", false);
+						$(obj).css("backgroundColor", "#FFFFFF");
+					} else {
+						$(obj).find("input").prop("checked", true);
+						$(obj).css("backgroundColor", "#edf4fd");
+					}
+				} else {
+					if (_RowObject != null) {
+						$("input[name=myCheckbox]").prop("checked", false);
+						$("input[name=myCheckbox]").parent().parent().css("backgroundColor", "#FFFFFF");
+					}
+	
+					_RowObject = obj;
+					$(obj).find("input").prop("checked", true);
+					$(obj).css("backgroundColor", "#edf4fd");
+				}
+	    	}
+    	
+	    	function selectRow(obj) {
+				var num = $(obj).attr("value");
+				if ($(obj).prop("checked") != true) {
+					$(obj).prop("checked", false);
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
+				} else {
+					$(obj).prop("checked", true);
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#edf4fd");
+				}
+	
+				event.stopPropagation();
+			}
+
+    	</script>
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
@@ -33,7 +103,7 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 450px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
-		                    	<colgroup><col width='7%' /><col width='55%' /><col width='25%' /><col width='13%' /></colgroup>
+		                    	<colgroup><col width='7%' /><col width='55%' /><col width='38%' /></colgroup>
 		                        <tr>
 									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
 		                            <th><spring:message code='ezMemo.t0041' /></th>
