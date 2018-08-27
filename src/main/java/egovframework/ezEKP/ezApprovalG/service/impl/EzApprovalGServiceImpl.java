@@ -4233,9 +4233,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int k = 0; k < docXML.getElementsByTagName("ROW").getLength(); k++) {
 			resultXML.append("<CATEGORY>");
-			resultXML.append("<CODE>" + makeListField(docXML.getElementsByTagName("CATEGORYCODE").item(k).getTextContent()) + "</CODE>");
-			resultXML.append("<NAME>" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "</NAME>");
-			resultXML.append("<NAME2>" + makeListField(docXML.getElementsByTagName("CNAME2").item(k).getTextContent()) + "</NAME2>");
+			resultXML.append("<CODE><![CDATA[" + makeListField(docXML.getElementsByTagName("CATEGORYCODE").item(k).getTextContent()) + "]]></CODE>");
+			resultXML.append("<NAME><![CDATA[" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "]]></NAME>");
+			resultXML.append("<NAME2><![CDATA[" + makeListField(docXML.getElementsByTagName("CNAME2").item(k).getTextContent()) + "]]></NAME2>");
 			resultXML.append("</CATEGORY>");
 		}
 		resultXML.append("</TASKCATEGORY>");
@@ -4272,9 +4272,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int k = 0; k < docXML.getElementsByTagName("ROW").getLength(); k++) {
 			resultXML.append("<MCATEGORY>");
-			resultXML.append("<CODE>" + makeListField(docXML.getElementsByTagName("MCATEGORYCODE").item(k).getTextContent()) + "</CODE>");
-			resultXML.append("<NAME>" + makeListField(docXML.getElementsByTagName("MCNAME").item(k).getTextContent()) + "</NAME>");
-			resultXML.append("<NAME2>" + makeListField(docXML.getElementsByTagName("MCNAME2").item(k).getTextContent()) + "</NAME2>");
+			resultXML.append("<CODE><![CDATA[" + makeListField(docXML.getElementsByTagName("MCATEGORYCODE").item(k).getTextContent()) + "]]></CODE>");
+			resultXML.append("<NAME><![CDATA[" + makeListField(docXML.getElementsByTagName("MCNAME").item(k).getTextContent()) + "]]></NAME>");
+			resultXML.append("<NAME2><![CDATA[" + makeListField(docXML.getElementsByTagName("MCNAME2").item(k).getTextContent()) + "]]></NAME2>");
 			resultXML.append("</MCATEGORY>");
 		}
 		resultXML.append("</TASKMCATEGORY>");
