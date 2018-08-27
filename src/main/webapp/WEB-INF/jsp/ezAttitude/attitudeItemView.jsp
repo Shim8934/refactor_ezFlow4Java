@@ -43,7 +43,7 @@
 				$("#attiInfoView tr td *").remove();
 				
 				//유형명
-            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
+            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 				
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);

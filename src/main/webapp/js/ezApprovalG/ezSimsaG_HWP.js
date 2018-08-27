@@ -167,6 +167,8 @@ function covBody(pbody) {
     
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
+    
+    BodyStr = BodyStr.replace(/(<img.*?)>/g, "$1/>");
 
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
@@ -259,7 +261,7 @@ function makeXML(newDocID) {
 		var re = /vAlign=center/g;
 		pBody = pBody.replace(re,"vAlign=middle");
 		
-		var rtnNodes = covBody(pBody);
+		var rtnNodes = covBody(strBody);
         Nodes(0).appendChild(rtnNodes);
     } else {
         setNodeText(Nodes(0) , "");
@@ -731,10 +733,7 @@ function makeXML(newDocID) {
     	if (sendCNT[0] > 0) {
     		var rtnXML = makeExtinfo(sihangXML,newDocID, "GPKI");
     		if (encodePath == "NONE_Enc_SEND") {
-    			var rtnFileName = encodeDN(rtnXML);
-                ContentXML = rtnFileName.split('::')[1];
-                ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-                result = sendExtDoc(ContentXML);
+                result = sendExtDoc(rtnXML);
     		} else {
     			var rtnFileName = encodeDN(rtnXML);
     			result = encodeUP(rtnFileName);
@@ -747,10 +746,7 @@ function makeXML(newDocID) {
     	
     	if (sendCNT[1] > 0) {
             var rtnXML = makeExtinfo(sihangXML, newDocID, "SEND");
-            var resultXml = encodeDN(rtnXML);
-            ContentXML = resultXml.split('::')[1];
-            ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-            result = sendExtDoc(ContentXML);
+            result = sendExtDoc(rtnXML);
     	}
     	
     	if (result) {
@@ -1047,6 +1043,7 @@ function encodeUP(emlName) {
 				
 				
 				var NewContents = makePKIHeader(GPKIContent);
+				// 2018-08-25 sendExtDoc 함수 변경됨(클라이언트에서 Content를 넘겨주지 않고 서버에서 읽어서 처리). GPKI쪽 개발 시 참고!
 				rtnVal = sendExtDoc(NewContents);
             } else {
                 if (ObjGPKI.FailCertList != "") {
@@ -1104,6 +1101,7 @@ function encodeUP(emlName) {
 				
 				
 				var NewContents = makePKIHeader(GPKIContent);
+				// 2018-08-25 sendExtDoc 함수 변경됨(클라이언트에서 Content를 넘겨주지 않고 서버에서 읽어서 처리). GPKI쪽 개발 시 참고!
 				rtnVal = sendExtDoc(NewContents);
             } else {
                 if (ObjGPKI.FailCertList != "") {

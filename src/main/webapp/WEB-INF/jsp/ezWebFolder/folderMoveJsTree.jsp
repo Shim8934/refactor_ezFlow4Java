@@ -23,6 +23,7 @@
 		var moveCopyType = "";
 		var parentId = "";
 		var createId = "";
+		var treeData;
 		
 		window.onload = function() {
 			folderList('C');
@@ -106,6 +107,9 @@
 					//						upperId = data.data[0]["parent"];
 					var firstNode = "#" + folderId;
 					
+					treeData = data;
+					addTitle();
+					
 					$('#folderTree').jstree({
 						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
@@ -181,6 +185,18 @@
 				}
 			});
 		}
+		
+		function addTitle() {
+		   	var data = this.treeData;
+		   	for ( var i = 0; i < data.length ; i++  ) {
+		   		var dataId = data[i]["id"] + "_anchor";
+		   		var folderName = data[i]["folderName1"];
+		   		var childE = document.getElementById(dataId);
+		   		if (childE != null){
+					childE.setAttribute("title", folderName);
+	    		}
+	    	}
+	    }
 	</script>
 </head>
 <body class="popup">
