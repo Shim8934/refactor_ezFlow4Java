@@ -1486,7 +1486,6 @@
                  AND 
                  	extensionAttribute2 = '1'
                  ORDER BY 
-                 	A.ParentWriteDate, 
                  	A.WriteDate DESC 
                  LIMIT
                  	#limit#, #rowCount#
@@ -1549,7 +1548,6 @@
                 AND 
                 	extensionAttribute2 = '1'
               	ORDER BY 
-              		A.ParentWriteDate,
               		A.WriteDate DESC
 			]]>
 		</isNotEqual>

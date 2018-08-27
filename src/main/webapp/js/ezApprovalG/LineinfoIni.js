@@ -486,7 +486,8 @@ function InitListView() {
         	
         	var curaprline = 1;
         	for (var i = 0; i < NodeList.length; i++) {
-        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2 
+        				|| SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState5) { //2018-08-25 강민수92 보류일때 결재선나오게하기위해 추가
         			curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
         			break;
         		}

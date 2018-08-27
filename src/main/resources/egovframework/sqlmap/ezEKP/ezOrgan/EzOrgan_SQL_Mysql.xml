@@ -1576,6 +1576,7 @@
 	            displayname displayname1  ,
 	            displayname2 ,
 	            mail ,
+	            compnm2 ,
 	            extensionattribute1 ,
 	            extensionattribute2 ,
 	            extensionattribute3 ,

@@ -2540,7 +2540,7 @@ CREATE TABLE `tbl_attitude` (
   `CONTENT` varchar(3000) DEFAULT NULL,
   `IP` varchar(60) DEFAULT NULL,
   `DATE_TYPE` char(1) NOT NULL,
-  `TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `TYPE_ID` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`ATTITUDE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2667,16 +2667,16 @@ CREATE TABLE `tbl_attitude_modappl_history` (
   `ORIGIN_MOBILE` varchar(50) DEFAULT NULL,
   `ORIGIN_BIZSUB` varchar(120) DEFAULT NULL,
   `ORIGIN_IP` varchar(60) DEFAULT NULL,
-  `ORIGIN_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ORIGIN_TYPE_ID` varchar(30) DEFAULT NULL,
   `CHANGE_REGION` varchar(200) DEFAULT NULL,
   `CHANGE_MOBILE` varchar(50) DEFAULT NULL,
   `CHANGE_BIZSUB` varchar(120) DEFAULT NULL,
   `CHANGE_IP` varchar(60) DEFAULT NULL,
-  `CHANGE_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-  `ORIGIN_TYPE_NAME` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-  `ORIGIN_TYPE_NAME2` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-  `CHANGE_TYPE_NAME` varchar(45) DEFAULT NULL,
-  `CHANGE_TYPE_NAME2` varchar(45) DEFAULT NULL,
+  `CHANGE_TYPE_ID` varchar(30) DEFAULT NULL,
+  `ORIGIN_TYPE_NAME` varchar(120) DEFAULT NULL,
+  `ORIGIN_TYPE_NAME2` varchar(120) DEFAULT NULL,
+  `CHANGE_TYPE_NAME` varchar(120) DEFAULT NULL,
+  `CHANGE_TYPE_NAME2` varchar(120) DEFAULT NULL,
   `ORIGIN_DATE_TYPE` varchar(45) DEFAULT NULL,
   `CHANGE_DATE_TYPE` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`MOD_CNT`)

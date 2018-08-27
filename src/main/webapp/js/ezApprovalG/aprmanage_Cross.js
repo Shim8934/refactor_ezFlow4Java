@@ -709,6 +709,9 @@ function openUserInfo() {
 }
 
 function openDraftUI(pDraftFlag, pCurSelRow) {
+	// 2018.08.27 재기안은 윈도우 하나만 열리도록 수정
+	var windowName = "";
+	
     if (pDraftFlag.toUpperCase() == "REDRAFT") {
         if (pCurSelRow) {
             var ret = CheckAprLineInfo(pCurSelRow);
@@ -719,6 +722,8 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
                 return;
             }
         }
+        
+        windowName = "openDraftUI_REDRAFT";
     }
 
     var pArgument = new Array();
@@ -726,7 +731,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
     pArgument[3] = formDocType;
-
+    
     var openLocation = "";
     if (pCurSelRow) {
         if (pListTypeValue != "5") {
@@ -765,7 +770,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         }
     }
 
-    openwindow(openLocation, "", 890, 560);
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function openApprovUI(allFlag) {
@@ -2730,8 +2735,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
     
+    // 2018.08.27 재기안은 윈도우 하나면 열리게 수정
+    var windowName =  "";
+    
     if (pDraftFlag == "REDRAFT") {
     	pArgument[3] = pCurSelRow.getAttribute("DATA15");
+    	windowName = "openServerDraftUI_REDRAFT";
     } else {
     	pArgument[3] = formDocType;
     }  
@@ -2771,8 +2780,8 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
         }
     }
-
-    openwindow(openLocation, "", 890, 560);
+    
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function RemoveTmpDoc(pDocID) {

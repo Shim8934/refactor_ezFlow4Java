@@ -1024,10 +1024,12 @@
 			    }
 	
 			    function btnSave_onclick() {
-			        HwpCtrl.SetSaveMode(1);
+			       /*  HwpCtrl.SetSaveMode(1);
 			        HwpCtrl.SetDocumentInfo(pFormID);
 			        HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
-			        HwpCtrl.ChangeMode(3);
+			        HwpCtrl.ChangeMode(3); */
+			        
+			    	window.open("/ezApprovalG/downloadHWPdoc.do?DocId=" + pDocID);
 			    }
 			
 			    function btnMail_onclick() {
@@ -1091,7 +1093,7 @@
 					para[3] = ext;
 					
 			        var url = "/ezApprovalG/insSepAttach.do";
-				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+				    var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			
 			        if (url != "")
 			            var rtn = window.showModalDialog(url, para, feature);

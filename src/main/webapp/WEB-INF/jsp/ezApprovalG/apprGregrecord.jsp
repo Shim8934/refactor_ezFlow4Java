@@ -615,7 +615,7 @@
               </tr>
               <tr  id="trOriginSN">
                 <th ><spring:message code='ezApprovalG.t866'/></th>
-                <td><input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="13">
+                <td><input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
                 </td>
               </tr>
               <tr>

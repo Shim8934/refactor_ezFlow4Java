@@ -6386,6 +6386,19 @@
 		       		 APRMEMBERSN
 	]]>
 	</select>
+	<select id="EzApprovalG.getHWPdownload" parameterClass="Map"  resultClass="String">
+			SELECT 					
+	                Href FILEPATH   
+	         FROM 
+	         		TBL_APRDOCINFO 
+	         WHERE  
+	         		DocID = #v_PDOCID#
+	         AND
+	         		TENANT_ID = #v_TENANTID#
+	         AND
+	         		COMPANYID = #companyID#	         		
+	         		
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
 <!-- 		{CALL EZSP_GETTOTALDOWNLOAD(#v_PDOCID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -7204,7 +7217,7 @@
 <!-- 	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isEqual property="v_DOCSTATE" compareValue="000">
 		 SELECT 
 		 		DOCID DOCID  ,
@@ -24116,9 +24129,9 @@
 			AND 
 				XTOCODE = #XTOCODE#
 			AND 
-				DOCID = ''
-			OR 
-				DOCID IS NULL
+				(DOCID = ''
+					OR 
+				DOCID IS NULL)
 	  </select>
 	  	  
 	  <select id="EzApprovalG.relayGetAttachInfo" parameterClass="Map" resultClass="ApprGRelayVO">

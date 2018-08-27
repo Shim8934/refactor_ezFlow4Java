@@ -60,7 +60,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        PageSize = 20;
+		        PageSize = -1; // 2018-08-25 강민수92 단위업무관리는 페이징이아닌 스크롤로 사용됨으로 페이지사이즈 -1로 바꿔줌
 		        Block_Size = 10;
 		        curpage = 1;
 		        nowblock = 0;

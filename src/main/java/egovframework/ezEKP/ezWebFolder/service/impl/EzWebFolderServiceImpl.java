@@ -591,12 +591,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, int tenantId) throws Exception {
+	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",    userId);
 		map.put("deptId",    deptId);
 		map.put("compFolderId", compFolderId);
 		map.put("tenantId",  tenantId);
+		map.put("compId",  compId);
 		
 		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
 		
@@ -1115,7 +1116,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				for (String fileId : fileArr) {
 					FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
 					moveFile(fileId, folderId, tenantId);
-					saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+					saveLog("MV", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				}
 			}
 			else {
@@ -1126,7 +1127,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					for (String fileId : fileArr) {
 						FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
 						moveFile(fileId, folderId, tenantId);
-						saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+						saveLog("MV", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 					}
 				} else {
 					logger.debug("Privileges!");
@@ -1182,7 +1183,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setFilePath(newPath);
 				insertFile(fileVO);
 				
-				saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				saveLog("CP", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			}
 		}
 		

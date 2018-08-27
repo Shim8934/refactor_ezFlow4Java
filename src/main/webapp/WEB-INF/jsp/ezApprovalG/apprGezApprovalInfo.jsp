@@ -2754,7 +2754,7 @@
 								<tr id="trOriginSN" style="display: none;">
 								    <th>문서번호</th><!-- 문서번호 -->
 									<td>
-							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="9">
+							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
 								    </td>
 								</tr>
 								<c:if test="${guBun ne '1'}">
