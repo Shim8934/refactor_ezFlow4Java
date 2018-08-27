@@ -26129,7 +26129,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if( strRecDate.trim().equals("")) {
 				strRecDate = dayTime.format(new Date(time));
 			} else {
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 				
 				strRecDate = format.parse(strRecDate).toString();
 			}
