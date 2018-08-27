@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<!-- data picker-->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -77,6 +78,7 @@
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 		var pAdminType  = "n";
+		var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
 
 	 	window.onresize = function () {
 	 		/* 메모리스트 size 변경 */
@@ -102,7 +104,6 @@
 			$(".individual-memo").mouseleave(function(){
 	        	$(this).children("img").css("visibility", "hidden");
 	        });
-
 			/* $("#memoList").draggable({
 	        	 containment: "#bodyFrame",
 	        	 stop:function(){
@@ -149,8 +150,9 @@
                 	headerColor = memoColor[defaultColor];
                 	bodyColor = memoColor[defaultColor+6]; 
                 	folderId = result["folderId"];
-                	console.log(result);
+                	
 					for(var i=0; i<memoList.length; i++) {
+						//loadMemoList();
 						var html = "";
 				    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
 				    	html += "<input type='checkbox' name='memo'>";
@@ -163,10 +165,10 @@
 				    	html += memoList[i].contents;
 				    	html += "</textarea>";
 				    	html += "</div>"
-				    	$("#memoList").prepend(html);
+				    	$("#boardMemoList").prepend(html);
 				    	$("#textarea").val('');
 				    	
-				    	addDate(memoList[i].write_date.substring(0,10));
+				    	addDateInfo(memoList[i].write_date.substring(0,10));
 				    	
 				    	addremove();
 					} 
@@ -193,21 +195,9 @@
                 },  
                 cache: false,
                 success: function(result) {
-                	var html = "";
-        	    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
-        	    	html += "<input type='checkbox' name='memo'>";
-        	    	html += "<div class='memo-color'>";
-        	    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-        	    	html += "<span class='write-date'></span>";
-        	    	/* html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; */
-        	    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-        	    	html += "<textarea class='memo-text' style='background-color:"+ bodyColor +"'>";
-        	    	html += "</textarea>";
-        	    	html += "</div>"
-        	    	$("#memoList").prepend(html);
-        	    	$("#textarea").val('');
-        	    	
-        	    	addDate();
+                	var memoId = result["memoId"];
+                	
+                	createMemo(headerColor, bodyColor, memoId);
         	    	addremove();
                 },
                 error : function() {
@@ -216,33 +206,6 @@
 			});
 		}
 		
-	    function addDate(date) {
-	    	var nowDate 
-	    	
-	    	if(date == null) {
-	    		nowDate = new Date();
-	    	}
-	    	else {
-	    		nowDate = new Date(date);
-	    	}
-	    	
-	    	var year = nowDate.getFullYear();
-	    	var month = nowDate.getMonth() + 1;
-	    	var date = nowDate.getDate();
-	    	var day = nowDate.getDay();
-	    	var arrayDay = ["(일)", "(월)", "(화)", "(수)", "(목)", "(금)", "(토)"];
-	    	
-	    	if(month < 10) {
-	    		month = "0"+month;
-	    	}
-	    	if(date < 10) {
-	    		date = "0"+date;
-	    	}
-
-			$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
-	    	
-	    }
-	    
 	    function addremove() {
 		    $(".individual-memo").mouseenter(function(){
 		    	$(this).children("img").css("visibility", "visible");
@@ -282,6 +245,15 @@
 	        		$(this).css("visibility", "hidden");
 	        	}
 	        });
+	        
+	        $(".memo-text").blur(function(){
+				modifyMemo(this);
+			});
+	    }
+	    
+		// 메모 내용 변경	    
+	    function modifyMemo(obj) {
+	    	console.log($(obj).parent());
 	    }
 	    
 	    // 메모 삭제
@@ -392,7 +364,7 @@
 		<div style="width:100%; border-bottom: 1px solid #e8e8e8;"></div>
 		<div id="bodyFrame" style="width:100%; overflow-y:scroll; padding-right: 27px; ">
  		 	<table class="mainlist" style="width:100%;">
- 		 		<div id="memoList">
+ 		 		<div id="boardMemoList">
 		 		</div>
  		 	</table>
  		 </div>

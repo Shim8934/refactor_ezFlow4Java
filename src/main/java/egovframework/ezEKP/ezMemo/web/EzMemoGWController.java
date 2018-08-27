@@ -340,9 +340,10 @@ public class EzMemoGWController {
 			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
 			memo.setColor_id(configVO.getDefault_color());
 			
-			ezMemoService.memoWrite(memo);
+			int memoId = ezMemoService.memoWrite(memo);
 			
 			result.put("status", "ok");
+			result.put("memoId", memoId);
 		} catch(Exception e) {
 			result.put("status", "error");
 		}
