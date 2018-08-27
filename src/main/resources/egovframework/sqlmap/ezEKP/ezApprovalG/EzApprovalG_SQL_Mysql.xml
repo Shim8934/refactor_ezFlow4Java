@@ -24087,7 +24087,7 @@
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
    		WHERE 
-   			USERCONTID IN 
+   			<!-- USERCONTID IN 
    						(SELECT 
    							USERCONTID 
    						FROM 
@@ -24106,7 +24106,8 @@
    											COMPANYID = #companyID#
    											) 
    						AND 
-	   						TENANT_ID = #v_TENANTID#) 
+	   						TENANT_ID = #v_TENANTID#)  -->
+	   		USERCONTID = #v_CONTID# 
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		AND
@@ -24212,7 +24213,7 @@
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
    		WHERE 
-   			USERCONTID IN 
+   			<!-- USERCONTID IN 
    						(SELECT 
    							USERCONTID 
    						FROM 
@@ -24231,7 +24232,8 @@
    											COMPANYID = #companyID#
    											) 
    						AND 
-	   						TENANT_ID = #v_TENANTID#) 
+	   						TENANT_ID = #v_TENANTID#)  -->
+	   		USERCONTID = #v_CONTID# 
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
    		AND
