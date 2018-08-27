@@ -65,8 +65,9 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("encryptCompleteApproveFiles started.");
 		LOGGER.debug("docId: {}, companyId: {}, tenantId: {}", docId, companyId, tenantId);
 
-		// useApprovalKlibBackup 콘피그가 활성화 되어 있으면 백업
+		// 백업 시도
 		try {
+			// useApprovalKlibBackup 콘피그가 활성화 되어 있으면 백업
 			if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlibBackup", tenantId))) {
 				backupAllFiles(docId, companyId, tenantId);
 			}
@@ -75,14 +76,16 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			LOGGER.debug("Failed to backup files.");
 		}
 
+		// 암호화 시도
 		try {
+			// 암호화에 필요한 파라미터 맵 초기화
 			Map<String, Object> parameterMap = new HashMap<>();
 
 			parameterMap.put("docId", docId);
 			parameterMap.put("companyId", companyId);
 			parameterMap.put("tenantId", tenantId);
 
-			// shallow copy
+			// 파라미터 얕은 복사 (shallow copy)
 			encryptEndDocFile(new HashMap<>(parameterMap));
 			encryptEndAttachFiles(new HashMap<>(parameterMap));
 			encryptHistoryDocFiles(new HashMap<>(parameterMap));
@@ -96,6 +99,27 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 	}
 
 	// TODO 파일 I/O 작업이라 그런건지 백업 속도가 느림, 개선 사항
+	/**
+	 * 암호화 관련 파일을 전부 백업 하는 메소드<br>
+	 * <hr>
+	 * <i>(아래 나오는 경로는 모두 예시입니다)</i><br>
+	 * fileroot/0/files/upload_approvalG/company/klib_backup 폴더 안으로 전부 백업한다.<br>
+	 * <br>
+	 * <b>백업 대상</b>
+	 * <ul>
+	 * <li>결재완료문서 폴더, doc/2018/792/...</li>
+	 * <li>결재문서 히스토리 폴더, doc/2018/history/792/...</li>
+	 * <li>첨부파일 폴더, uploadFile/2018/792/...</li>
+	 * <li>첨부파일 히스토리 폴더, uploadFile/2018/history/792/...</li>
+	 * </ul>
+	 * 
+	 * @param docId
+	 *            전자결재 문서 번호
+	 * @param companyId
+	 *            회사 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 */
 	private void backupAllFiles(String docId, String companyId, int tenantId) {
 		LOGGER.debug("backupAllFiles started.");
 
@@ -162,6 +186,15 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("backupAllFiles ended.");
 	}
 
+	/**
+	 * <b>결재완료문서를 암호화</b>하여 .ezd 확장자로 저장하고<br>
+	 * TBL_ENDATTACHINFO 테이블에서 파일명을 업데이트한다.<br>
+	 * <br>
+	 * 암호화 실패시 아무 작업도 안 한다.
+	 *
+	 * @param parameterMap
+	 *            문서번호(docId), 회사아이디(companyId), 테넌트아이디(tenantId)
+	 */
 	private void encryptEndDocFile(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptEndDocFile started.");
 
@@ -181,6 +214,15 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("encryptEndDocFile ended.");
 	}
 
+	/**
+	 * <b>결재완료문서의 첨부파일을 전부 암호화</b>하여 .ezd 확장자로 저장하고<br>
+	 * TBL_ENDATTACHINFO 테이블에서 파일명을 업데이트한다.<br>
+	 * <br>
+	 * 암호화 실패시 아무 작업도 안 한다.
+	 *
+	 * @param parameterMap
+	 *            문서번호(docId), 회사아이디(companyId), 테넌트아이디(tenantId)
+	 */
 	private void encryptEndAttachFiles(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptEndAttachFiles started.");
 
@@ -211,6 +253,15 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("encryptEndAttachFiles ended.");
 	}
 
+	/**
+	 * <b>변경내역의 문서를 전부 암호화</b>하여 .ezd 확장자로 저장하고<br>
+	 * TBL_HISTORYDOCINFO 테이블에서 파일명을 업데이트한다.<br>
+	 * <br>
+	 * 암호화 실패시 아무 작업도 안 한다.
+	 *
+	 * @param parameterMap
+	 *            문서번호(docId), 회사아이디(companyId), 테넌트아이디(tenantId)
+	 */
 	private void encryptHistoryDocFiles(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptHistoryDocFiles started.");
 
@@ -236,6 +287,15 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("encryptHistoryDocFiles ended.");
 	}
 
+	/**
+	 * <b>변경내역의 첨부파일을 전부 암호화</b>하여 .ezd 확장자로 저장하고<br>
+	 * TBL_HISTORYATTACHINFO 테이블에서 파일명을 업데이트한다.<br>
+	 * <br>
+	 * 암호화 실패시 아무 작업도 안 한다.
+	 *
+	 * @param parameterMap
+	 *            문서번호(docId), 회사아이디(companyId), 테넌트아이디(tenantId)
+	 */
 	private void encryptHistoryAttachFiles(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptHistoryAttachFiles started.");
 
@@ -297,6 +357,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} catch (UnsatisfiedLinkError linkErr) {
+			// TODO 라이브러리 링크 문제라면 뭔가 다른 작업을 해야할 수도 있어서 Throwable 객체로 익셉션 처리를 안 함
 			LOGGER.error(linkErr.toString());
 		}
 

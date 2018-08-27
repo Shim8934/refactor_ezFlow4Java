@@ -76,12 +76,18 @@ public class KlibUtil {
 		}
 	}
 
+	/**
+	 * KLIB 암/복호화를 위해서 암호화, 복호화 메소드가 있는 인터페이스
+	 */
 	private interface Cipher {
 		byte[] encrypt(byte[] originBytes);
 
 		byte[] decrypt(byte[] encryptedBytes);
 	}
 
+	/**
+	 * KLIB 동적 라이브러리를 통해서 암/복호화를 하는 {@link Cipher} 구현체
+	 */
 	private static class KlibCipher implements Cipher {
 		@Override
 		public native byte[] encrypt(byte[] originBytes);
@@ -90,6 +96,12 @@ public class KlibUtil {
 		public native byte[] decrypt(byte[] encryptedBytes);
 	}
 
+	/**
+	 * KLIB 동적 라이브러리 로드에 실패했을 때 사용되는 {@link Cipher} 구현체<br>
+	 * <br>
+	 * 암/복호화를 사용할 일이 없으면 TBL_TENANT_CONFIG 테이블의 useApprovalKlib 옵션을 "no" 로 변경<br>
+	 * 로컬에서 KLIB 관련으로 테스트를 하고 싶다면 {@link LocalTestCipher} 구현체를 쓰도록 변경
+	 */
 	private static class NonKlibCipher implements Cipher {
 		@Override
 		public byte[] encrypt(byte[] originBytes) {
@@ -102,8 +114,9 @@ public class KlibUtil {
 		}
 	}
 
-	// TEST CODE
 	/**
+	 * KLIB 동적 라이브러리를 사용할 수 없는 환경에서 임시로 테스트를 하기 위한 {@link Cipher} 구현체<br>
+	 * 
 	 * @deprecated 로컬에서 테스트할 때 쓰는 용도
 	 */
 	@SuppressWarnings("unused")
@@ -152,7 +165,7 @@ public class KlibUtil {
 
 		try {
 			result = tryTransformationPolicy(encryptedBytes, CIPHER::decrypt);
-			
+
 			debugBytes("encrypted bytes", encryptedBytes);
 			debugBytes("decrypted bytes", result);
 		} catch (Exception ex) {
