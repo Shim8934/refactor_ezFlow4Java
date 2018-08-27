@@ -93,5 +93,5 @@ var CabinetMessages = {
 	strSelect4   : "선택된 파일이 없습니다.",
 	strSelect5   : "본인은 선택할 수 없습니다.",
 	strNoSearch  : "검색결과가 없습니다.",
-	strDelete3   : "하위 케비넷이 있으면 삭제할 수 없습니다"
+	strDelete3   : "하위 캐비넷이 존재하는 캐비넷은 삭제할 수 없습니다."
 }
