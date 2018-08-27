@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -900,12 +901,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		String companyID = userInfo.getCompanyID();
 		
-		String fileName = docID + ".hwp";
-		String filePath = ezApprovalGService.getHWPdownload(docID, tenantID, companyID);
+		ApprGDocInfoWebSrvVO fileVO = ezApprovalGService.getHWPdownload(docID, tenantID, companyID);
 		
+		String filePath = fileVO.getHref();
+		String fileName = fileVO.getDocTitle() + ".hwp";
 		
 		String realPath = commonUtil.getRealPath(request);
-		String uploadFilePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		/*String uploadFilePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());*/
 		
 		if (fileName == null || fileName.equals("")) {
 			fileName = filePath; 
