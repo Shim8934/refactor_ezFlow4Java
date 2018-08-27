@@ -52,6 +52,7 @@ function insertMemo(hColor, bColor, memoId) {
 }
 
 function loadMemoList() {
+	$("#boardMemoList").html('');
 	for(var i=0; i<memoList.length; i++) {
 		var hColor = memoColor[memoList[i].color_id-1];
 		var bColor = memoColor[memoList[i].color_id+5];

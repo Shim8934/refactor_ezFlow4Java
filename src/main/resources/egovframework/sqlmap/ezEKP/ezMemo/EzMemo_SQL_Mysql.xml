@@ -98,6 +98,7 @@
 			AND
 				DELETE_FLAG = 0
 		]]>
+		<isEqual property="searchType" compareValue="search">
 			<isNotEmpty property="searchInput" >
 				<![CDATA[
 	              AND
@@ -106,12 +107,13 @@
             </isNotEmpty>
 			<isNotEmpty property="startDate" >
 				<![CDATA[
-	              AND 
-	              		WRITE_DATE <= #endDate#
 	              AND
-	              		WRITE_DATE >= #startDate#
+	              		WRITE_DATE >= DATE_ADD(DATE_FORMAT(#startDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)
+	              AND 
+	              		WRITE_DATE <= DATE_ADD(DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)
 	             ]]> 
             </isNotEmpty>
+        </isEqual>
 			<isNotEqual property="folder_id" compareValue="0">
 			  	<![CDATA[
 			  		AND

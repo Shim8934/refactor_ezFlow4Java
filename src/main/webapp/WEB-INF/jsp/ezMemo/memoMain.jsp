@@ -141,7 +141,7 @@
                 	startDate : startDate,
                 	endDate : endDate,
                 	folderId : folderId,
-                	type : type
+                	searchType : type
                 },
                 cache: false,
                 success: function(result) {
@@ -367,7 +367,7 @@
 							<spring:message code='ezBoard.garm01' />
 						</th>
 						<td>
-							<input type="text" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
+							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList(search); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
 						</td>
 					</tr>
 					<tr>
@@ -386,7 +386,7 @@
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
 								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList(search)"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList('search')"><spring:message code='ezBoard.t188' /></span></a>
 							</div>	
 						</td>
 					</tr>

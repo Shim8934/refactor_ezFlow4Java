@@ -97,6 +97,7 @@ public class EzMemoController {
 		param.put("folder_id", folderId);
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("searchType", searchType);
+		param.put("offset", userInfo.getOffset());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		

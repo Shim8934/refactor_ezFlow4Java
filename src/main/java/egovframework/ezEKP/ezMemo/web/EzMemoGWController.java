@@ -68,6 +68,7 @@ public class EzMemoGWController {
 		String searchType = request.getParameter("searchType");
 		String companyId = request.getParameter("company_id");
 		int tenantId = Integer.parseInt(request.getParameter("tenant_id"));
+		String offset = request.getParameter("offset");
 		
 		vo.setUser_id(userId);
 		memoFolderVO.setUser_id(userId);
@@ -82,7 +83,7 @@ public class EzMemoGWController {
 				folderId = Integer.toString(ezMemoService.getMemoDefaultFolder(memoFolderVO));
 			}
 			
-			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId, searchType);
+			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId, searchType, offset);
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
 			
 			result.put("status", "ok");
