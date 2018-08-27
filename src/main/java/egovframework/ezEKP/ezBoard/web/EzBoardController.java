@@ -675,6 +675,20 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 게시판 환경설정 메모 분류 호출
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoDivision.do", method = RequestMethod.GET)
+	public String boardMemoDivision(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardMemoDivision started");	
+		logger.debug("boardMemoDivision ended");
+		return "ezBoard/boardMemoDivision";	
+	}
+	/**
 	 * 게시판 부모게시판명 표출 Method
 	 */
 	public String parentBoardName(List<BoardMyFavoriteVO> resultList, LoginVO userInfo) throws Exception {
