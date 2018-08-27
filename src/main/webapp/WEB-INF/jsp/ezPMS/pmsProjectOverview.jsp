@@ -572,14 +572,19 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 
 			if (targetStatus.indexOf("M") == -1 && targetStatus.indexOf("B") == -1 && userRole != 3) {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_allwork.png' alt='"+ title +"' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+
+				var totalTaskCNT = result.totalTaskCNT;
+				$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			} else if (targetStatus.indexOf("M") != -1 && targetStatus.indexOf("B") == -1 && userRole != 3) {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_mywork.png' alt='"+ title +"' onclick='moreTaskList(\"" + targetStatus.slice(-1) + "\", \"" + targetPosition +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+
+				var totalTaskCNT = result.totalTaskCNT;
+				$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			} else {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+				$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1);
 			}
 			
-			var totalTaskCNT = result.totalTaskCNT;
-			$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			
 			updateOrderStatus();	
 		},

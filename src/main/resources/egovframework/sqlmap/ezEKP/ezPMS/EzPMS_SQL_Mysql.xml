@@ -2530,9 +2530,13 @@
 		<isNotEmpty property="orderWhat">  
 			$orderWhat$ $orderHow$,
 		</isNotEmpty>
-		B.root_item_id DESC, 
-		B.UPPER_DOC_NO_TREE ASC
-		
+		<isEqual property="folderId" compareValue="0">
+			B.WRITE_DATE DESC
+		</isEqual>
+		<isNotEqual property="folderId" compareValue="0">
+			B.root_item_id DESC, 
+			B.UPPER_DOC_NO_TREE ASC
+		</isNotEqual>
 		LIMIT #startRow#, #listCnt#
 	</select>
 	
