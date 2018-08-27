@@ -62,14 +62,14 @@
 	                    }
 	                    
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor:pointer;' isAdd='" + result[i].isAdd + "'>";
-	                    html += "<td style='width:110px;color:gray;border-left:1px solid #e2e2e1;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(result[i].typeName, "'", "&#039;"), "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"', "&#034;") + "'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:110px;color:gray;border-left:1px solid #e2e2e1;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
 	                    html += "<td style='width:110px;color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239);'>" + gubun + "</td>";
 	                    html += "<td style='width:90px;color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239);'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
 	                    html += "<td style='color:gray;text-align:center;border-left:1px solid rgb(239, 239, 239); border-right:1px solid #e2e2e1;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
 	                    html += "</tr>";
 	                }
                 } else {
-    	    		html = "<tr><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
+    	    		html = "<tr><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
                 }
                 
                 $("table.mainlist tbody").html(html);
