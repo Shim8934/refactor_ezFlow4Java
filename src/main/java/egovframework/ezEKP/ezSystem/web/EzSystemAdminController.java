@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
@@ -573,6 +574,39 @@ public class EzSystemAdminController {
 		logger.debug("getSysMonitorInfo end.");
 		
 		return jObj.toString();
+	}
+	
+	@RequestMapping(value="/admin/ezSystem/systemIPManager.do")
+	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPManager started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("tenantID=" + userInfo.getTenantId() + ", companyID=" + userInfo.getCompanyID());
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("systemIPManager ended");
+		 
+		return "/ezSystem/systemIPManager";
 	}
 
 }
