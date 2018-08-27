@@ -6386,9 +6386,10 @@
 		       		 APRMEMBERSN
 	]]>
 	</select>
-	<select id="EzApprovalG.getHWPdownload" parameterClass="Map"  resultClass="String">
+	<select id="EzApprovalG.getHWPdownload" parameterClass="Map"  resultClass="ApprGDocInfoWebSrvVO">
 			SELECT 					
-	                Href FILEPATH   
+	                href,
+	                doctitle   
 	         FROM 
 	         		TBL_APRDOCINFO 
 	         WHERE  

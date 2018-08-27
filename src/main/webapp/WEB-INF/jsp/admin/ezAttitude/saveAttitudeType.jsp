@@ -30,11 +30,11 @@
 	            //수정모드일 때
 	            if(typeId != "") {
 	            	//휴가유형명
-	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&#039;", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 					$("#typeName").val(typeName);
 					
 					if (typeName2 != null && typeName2 != "") {
-						typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&#039;", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+						typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 						$("#typeName2").val(typeName2);
 					}
 	            }
@@ -50,11 +50,10 @@
 				}
 				
 				//태그 적용 안되게 하기
-// 				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
-				
-// 				if (typeName2) {
-// 					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
-// 				}
+				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'","&#39;"), '"',"&quot;");
+				if (typeName2) {
+					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'","&#39;"), '"',"&quot;");
+				}
 				
 				$.ajax({
 		        	type : "POST",
