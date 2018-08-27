@@ -614,10 +614,39 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/ezSystem/systemIPBand.do")
 	public String systemIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
+		
+		if (useIPAccess == null || useIPAccess.equals("")) {
+			useIPAccess = "NO"; // 기본값은 사용안함
+		}
 				
+		model.addAttribute("useIPAccess", useIPAccess);
+		
 		logger.debug("systemIPBand ended");
 		return "/ezSystem/systemIPBand";
 	}
+	
+	@RequestMapping(value="/ezSystem/setUseIPAccess.do")
+	public String setUseIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
+		logger.debug("setUseIPAccess started");
+		
+		// input 체크된 값으로 전달되기 때문에 tbl_tenant_config value에 맞게 변경
+		if (allowResult.equals("true")) {
+			allowResult = "YES";
+		} else {
+			allowResult = "NO";
+		}
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.updateSystemIPAllow(allowResult, userInfo.getTenantId());
+		
+		logger.debug("setUseIPAccess ended");
+		return "/ezSystem/systemIPBand";
+	}
+	
+	
 	
 	@RequestMapping(value="/ezSystem/systemIPAccessList.do")
 	public String systemIPAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {

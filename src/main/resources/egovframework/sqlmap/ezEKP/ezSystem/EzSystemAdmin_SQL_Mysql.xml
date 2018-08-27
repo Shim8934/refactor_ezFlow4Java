@@ -115,5 +115,18 @@
             	CONNECTTIME < SUBDATE(DATE(NOW()), #v_KEEP_LOG_PERIOD#)
 		]]>
 	</delete>
+	
+	<update id="EzSystemAdminDAO.updateSystemIPAllow" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_TENANT_CONFIG 
+			SET 
+				PROPERTY_VALUE=#value# 
+			WHERE 
+				PROPERTY_NAME='useIPAccess'
+			AND
+				TENANT_ID=#tenantID#
+		]]>
+	</update>
 		
 </sqlMap>

@@ -8,7 +8,47 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
+		var useIPAccess = "${useIPAccess}";
+		
+		window.onload = function () {
+			if (useIPAccess === "NO") {
+				document.getElementById("ipRadio0").checked = true;
+			} else {
+				document.getElementById("ipRadio1").checked = true;
+			}
+	    }
+		
+		// 사용여부 저장 버튼 클릭
+		function saveBtn() {
+			
+			var allowResult = false;
+			if (!document.getElementById("ipRadio0").checked) {
+				allowResult = true;
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
+				cache : false,
+				error : function(data) {
+					console.log(data);
+					alert("실패하였습니다.");
+				},
+				complete : function(data) {
+					alert("저장하였습니다.");
+				}
+			});
+		}
+		
+		function cancleBtn() {
+			if (useIPAccess === "NO") {
+				document.getElementById("ipRadio0").checked = true;
+			} else {
+				document.getElementById("ipRadio1").checked = true;
+			}
+		}
 	
 		// IP 대역 등록 및 수정
 		function ipBandEidtPopUp(type) {
@@ -30,17 +70,17 @@
 	<table class="content" style="width:600px;">
 		<tr>
 			<th rowspan="2" style="width: 60px;">사용여부선택</th>
-			<td>&nbsp;<input name="ipRadio" type="radio" id="ipRadio0" checked><span style="vertical-align:middle;">&nbsp;사용안함</span></td>
+			<td>&nbsp;<label id="radioFalse"><input name="ipRadio" type="radio" id="ipRadio0"><span style="vertical-align:middle;">&nbsp;사용안함</span></label></td>
 	    </tr>
 	    <tr>
-			<td>&nbsp;<input name="ipRadio" type="radio" id="ipRadio1"><span style="vertical-align:middle;">&nbsp;사용함</span></td>
+			<td>&nbsp;<label id="radioTrue"><input name="ipRadio" type="radio" id="ipRadio1"><span style="vertical-align:middle;">&nbsp;사용함</span></label></td>
 		</tr>
 	</table>
 	
 	<div style="width:600px;">
 		<div class="btnpositionJsp">
-	    	<a class="imgbtn" onClick="alert('저장')"><span>저장</span></a>
-	    	<a class="imgbtn" onClick="alert('취소')"><span>취소</span></a>
+	    	<a class="imgbtn" onClick="saveBtn()"><span>저장</span></a>
+	    	<a class="imgbtn" onClick="cancleBtn()"><span>취소</span></a>
 	    </div>
 	</div>
 	<div id="mainmenu">

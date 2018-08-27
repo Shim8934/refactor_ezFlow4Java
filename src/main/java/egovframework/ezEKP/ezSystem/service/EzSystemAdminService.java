@@ -22,5 +22,5 @@ public interface EzSystemAdminService {
 	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
-	
+	public void updateSystemIPAllow(String allowResult, int tenantID) throws Exception;
 }

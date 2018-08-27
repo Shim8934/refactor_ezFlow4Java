@@ -312,4 +312,17 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return result;
 	}
+	
+	@Override
+	public void updateSystemIPAllow(String allowResult, int tenantID) throws Exception {
+		logger.debug("updateSystemIPAllow started. tenantID=" + tenantID + ", allowResult=" + allowResult);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("value", allowResult);
+		
+		ezSystemAdminDAO.updateSystemIPAllow(params);
+		
+		logger.debug("updateSystemIPAllow ended");
+	}
 }

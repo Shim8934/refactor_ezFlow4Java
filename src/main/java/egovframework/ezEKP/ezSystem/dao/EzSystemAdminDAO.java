@@ -38,5 +38,9 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
         delete("EzSystemAdminDAO.deleteLoginHist", map);
     }
 	
+	public void updateSystemIPAllow(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateSystemIPAllow", map);
+    }
+	
 	
 }
