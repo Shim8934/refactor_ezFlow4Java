@@ -8066,7 +8066,7 @@ DROP TABLE IF EXISTS `tbl_record_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_record_temp` (
-  `RECORDID` varchar(68) DEFAULT NULL,
+  `RECORDID` varchar(100) DEFAULT NULL,
   `DOCID` varchar(80) NOT NULL,
   `PROCESSDEPTNAME` varchar(200) DEFAULT NULL,
   `PROCESSDEPTCODE` varchar(28) DEFAULT NULL,
