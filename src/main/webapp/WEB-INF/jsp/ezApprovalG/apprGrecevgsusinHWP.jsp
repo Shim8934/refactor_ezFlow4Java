@@ -268,7 +268,7 @@
 			        
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
-	                	document.gReetElementById("btnAddSepAttach").style.display = "none";
+	                	document.getElementById("btnAddSepAttach").style.display = "none";
 			        }
 			        
 			        if (pSusinDocURL != "") {
