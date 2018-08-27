@@ -203,7 +203,7 @@
 	  </tr>
 	  <tr>
 	    <th class="overviewTh"><spring:message code='ezPMS.t104' /></th>
-	    <td class="overviewTd" colspan="2"><div class="overviewDiv">${taskDetails.overview == null ? "-" : taskDetails.overview}</div></td>
+	    <td class="overviewTd" colspan="2"><div class="overviewDiv"></div></td>
 	  </tr>
 	</table>
 </body>

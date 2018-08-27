@@ -365,7 +365,7 @@ function updateTaskInfo() {
 			}
 		});
 	} else if (target == "group") {
-		 overview = convertString(document.getElementById("overview").value.trim());
+		 overview = revertString(document.getElementById("overview").value.trim());
 		 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
