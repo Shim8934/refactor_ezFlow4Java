@@ -576,6 +576,8 @@ public class EzSystemAdminController {
 		return jObj.toString();
 	}
 	
+	// 이하 재은 수정중
+	
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do")
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");
@@ -608,5 +610,42 @@ public class EzSystemAdminController {
 		 
 		return "/ezSystem/systemIPManager";
 	}
+	
+	@RequestMapping(value="/ezSystem/systemIPBand.do")
+	public String systemIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPBand started");
+				
+		logger.debug("systemIPBand ended");
+		return "/ezSystem/systemIPBand";
+	}
+	
+	@RequestMapping(value="/ezSystem/systemIPAccessList.do")
+	public String systemIPAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPAccessList started");
+				
+		logger.debug("systemIPAccessList ended");
+		return "/ezSystem/systemIPAccessList";
+	}
+	
+	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do")
+	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPBandEditPopup started");
+				
+		logger.debug("systemIPBandEditPopup ended");
+		return "/ezSystem/systemIPBandEditPopup";
+	}
+	
+	@RequestMapping(value="/ezSystem/systemAddAccessList.do")
+	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemAddAccessList started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		logger.debug("tenantID=" + userInfo.getTenantId() + ", companyID=" + userInfo.getCompanyID());
+		
+		logger.debug("systemAddAccessList ended");
+		return "/ezSystem/systemAddAccessList";
+	}
+	
+	
 
 }

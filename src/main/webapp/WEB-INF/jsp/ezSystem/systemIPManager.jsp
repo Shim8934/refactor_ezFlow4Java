@@ -26,9 +26,9 @@
 	        		
 	        		var ipManagerIfr = document.getElementById("ipManager_ifrm");
 	        		if (Tab1_SelectID == 'tagsub1') {
-	        			ipManagerIfr.src = "";
+	        			ipManagerIfr.src = "/ezSystem/systemIPBand.do";
 	        		} else {
-	        			ipManagerIfr.src = "";
+	        			ipManagerIfr.src = "/ezSystem/systemIPAccessList.do";
 	        		}
 	        		
 	        	}
@@ -90,10 +90,10 @@
 	        	 
 	        	 switch (pSelectTab) {
 		            case "tagsub1": 
-		            	document.getElementById("ipManager_ifrm").src = "";
+		            	document.getElementById("ipManager_ifrm").src = "/ezSystem/systemIPBand.do";
 		            	break;
 		            case "tagsub2":
-		            	document.getElementById("ipManager_ifrm").src = "";
+		            	document.getElementById("ipManager_ifrm").src = "/ezSystem/systemIPAccessList.do";
 		            	break;
 		        }
 	        }
