@@ -182,7 +182,7 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-			    $.ajax({
+			    /* $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
@@ -198,9 +198,11 @@
 		    			} else {
 		    				LunarUse = false;
 		    			}		    			
-		    			schedule_get_holiday();
 		    		}
-		        });
+		        }); */
+		        
+		        // #13470 일본은 음력사용 안함
+		    	schedule_get_holiday();
 			}
 
 		    var schedule_receive_attendant_cross_dialogArguments = new Array();
