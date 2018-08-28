@@ -29,59 +29,9 @@
             }
 			
             var inputNameDlg_cross_dialogArguments = new Array();
-            
-            function add_onclick() {
-			    inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
-			    inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
-			    inputNameDlg_cross_dialogArguments[2] = "";
-			    inputNameDlg_cross_dialogArguments[3] = "";
-			    
-			    DivPopUpShow(330, 200, "/ezMemo/memoInputName.do");
-			}
-            
-		    function modify_onclick() {
-		     	if(selFolderName === "") {
-		     		alert("<spring:message code='ezMemo.t0038' />");
-		     		return;
-		     	}
-		        inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
-		        inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
-		        inputNameDlg_cross_dialogArguments[2] = selFolderName
-		        inputNameDlg_cross_dialogArguments[3] = selFolderId;
-    
-		        DivPopUpShow(330, 200, "/ezMemo/memoInputName.do");
-		    }
-		    
+            	    
 		    function onclick_Complete(szName) {
 		    	DivPopUpHidden();
-		    }
-		    
-		    function delete_onclick() {
-		    	if(selFolderName === "") {
-		     		alert("<spring:message code='ezMemo.t0038' />");
-		     		return;
-		     	} 
-		    	if (confirm("<spring:message code='ezMemo.t0039' />")) {
-		    		url = "/ezMemo/memoFolderAction.do?folder_id=" + selFolderId;
-            		method = "delete";
-		    	} else {
-		    	    return;
-		    	}
-		    
-		    	
-		    	$.ajax({
-		    		method : "POST",
-					dataType : "text",
-					async : false,
-					url : url,
-					data : {
-						"folder_name" : selFolderName,
-						"methodType" : method
-					},
-					success: function(){
-						memoFoldersInfo();
-					}     			
-				});
 		    }
 		    
 		    function close_onclick() {
@@ -111,7 +61,7 @@
 						$('.memoFolders').append(html);
 					}     			
 				});
-		    	opener.memoFoldersInfo();
+		 
 		    	memoFolderClickE();
 		    }
 		    
@@ -126,6 +76,11 @@
 					selFolderId = $(this).attr('data2');
 					$(this).css("font-weight", "bold");
 				});
+		    }
+		    
+		    function move_onclick() {
+		    	alert("아직");
+		    	window.close();
 		    }
         </script>
 	</head>
@@ -146,9 +101,7 @@
 		  	</tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezMemo.t0027' /></span></a>
-		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezMemo.t0028' /></span></a>
-		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezMemo.t0029' /></span></a>
+		    <a class="imgbtn"><span onClick="move_onclick()" style="text-align:center;"><spring:message code='ezMemo.t0022' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">

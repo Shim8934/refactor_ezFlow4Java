@@ -386,6 +386,11 @@
         		}
         	}
 		}
+		
+		function memoMove() {
+			var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+            try { OpenWin.focus(); } catch (e) { }
+		}
 	</script>
 	<body class="mainbody" style="overflow: hidden;" marginwidth="0" marginheight="0">
 		<h1><spring:message code='ezMemo.t001'/><span id="mailBoxInfo"></span></h1>
@@ -395,7 +400,7 @@
 		        <li><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
-		        <li><span onClick=""><spring:message code='ezMemo.t0022'/></span></li>
+		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
