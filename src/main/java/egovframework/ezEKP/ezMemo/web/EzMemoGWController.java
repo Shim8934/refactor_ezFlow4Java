@@ -484,4 +484,5 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-display/memo/" + memoId + "/memo/" +userId + "] ended.");
 		return result;
 	}
+	
 }

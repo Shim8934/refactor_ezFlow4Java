@@ -460,7 +460,6 @@ public class EzMemoController {
 		param.put("memoId", memoId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-display/memo/" + memoId + "/users/" + userInfo.getId(), param, request, "post", null);
-		
 		String status = resultBody.get("status").toString();
 		
 		if ("ok".equals(status)) {
@@ -470,4 +469,5 @@ public class EzMemoController {
 		logger.debug("setMemoDisplay end");
 		return "json";
 	}
+	
 }

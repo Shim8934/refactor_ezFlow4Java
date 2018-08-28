@@ -109,7 +109,9 @@
 		    	setPanelPointer();
 		    	layerPopupOpacity();
 		    	setDetailMemoPosition();
-		    	checkDefaultFolder() 
+		    	checkDefaultFolder();
+		    	memoFoldersInfo();
+		    	
 		     
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
@@ -306,13 +308,49 @@
 		        			
 		        			if (result.result == "ok") {
 		        				$("#memoList .individual-memo").remove();
+		        				
 		        				getMemoList();
 		        			}
 		        		}
 		        	});
 		        });
 		        
+		        $("#memoList").on("blur", ".individual-memo textarea", function() {
+					modifyMemo(this);
+		        });
+		        
+		        $("#btn-bundle").on("change", "select[name=memoFolderList]", function() {
+		        	$("#memoList .individual-memo").remove();
+		        	getMemoList();
+		        });
 		    });
+		    
+		 	// 메모 내용 변경	    
+		    function modifyMemo(obj) {
+				var memoId = obj.getAttribute("memoid");
+				var beforeContents = obj.innerHTML;
+				var afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+								
+				if(beforeContents != afterContents) {
+			    	$.ajax ({
+		 			   	url : '/ezMemo/memoModify.do',
+		 			   	type : 'POST',
+		                dataType : 'json',
+		                data : { 
+		                	memoId : memoId,
+		                	contents : afterContents
+		                },  
+		                cache: false,
+		                success: function(result) {
+		                	$("#memoList .individual-memo").remove();
+		                	getMemoList("order");
+		                },
+		                error : function() {
+		                	
+		                }
+					}); 
+				}
+		    }
 		    
 		    function setLayerSize() {
 		    	var layerClass = $("#layer-popup").attr("class");
@@ -428,7 +466,7 @@
 			        		success : function(result) {
 			        			
 			        		}
-			        	})
+			        	});
 	        		} 
 		       	});
 			}
@@ -554,15 +592,8 @@
 		        	}
 		        });
 		        
-		        /* $(".memo-text").blur(function(){
-					modifyMemo(this);
-				}); */
 		    }
 		    
-			// 메모 내용 변경	    
-		    /* function modifyMemo(obj) {
-		    	console.log($(obj).parent());
-		    } */
 		    
 		    function getMemoList(type) {
 		    	var folderId = $("select option:selected").val();
@@ -614,7 +645,26 @@
 			    
 		    }
 		    
-		    
+		    function memoFoldersInfo() {
+		    	selFolderId="";
+				selFolderName="";
+		    	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezMemo/getMemoFoldersInfo.do",
+					success: function(result){
+						
+						var folderList = result["folders"];
+						var html="";
+						folderList.forEach(function(list, index){
+							html += "<option value='"+list.folder_id+"'>"+list.folder_name +"</option>"
+						});
+						$('#memoFolderList option').remove();
+						$('#memoFolderList').html(html);
+					}     			
+				});
+		    }
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
@@ -640,8 +690,8 @@
 						<!-- <button id="change-mode" style="float: left">모드</button> -->
 						<div id="slider-range"></div>
 						
-						<select id="memoFolderList">
-							<option value="35" selected="selected">전체</option>
+						<select id="memoFolderList" name="memoFolderList">
+							<!-- <option value="29" selected="selected">전체</option> -->
 						</select>
 						<button id="changeMode">모드</button>
 						<button id="newMemo">추가</button>
