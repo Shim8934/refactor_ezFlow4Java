@@ -83,7 +83,7 @@
 		SET
 		    ATTACHFILEHREF = #href#
 		WHERE
-		    TBL_APRATTACHINFO.DOCID = (
+		    TBL_APRATTACHINFO.DOCID IN (
 		        SELECT
 		            DOCID
 		        FROM
