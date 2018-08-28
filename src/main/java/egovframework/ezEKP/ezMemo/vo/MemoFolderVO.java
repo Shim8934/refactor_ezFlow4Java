@@ -20,6 +20,8 @@ public class MemoFolderVO {
 	private int count;
 	/** 메모 삭제 플래그*/
 	private int delete_flag;
+	/** UTC offset*/
+	private String offset;
 	/** 컴퍼너 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -79,6 +81,12 @@ public class MemoFolderVO {
 	}
 	public void setDelete_flag(int delete_flag) {
 		this.delete_flag = delete_flag;
+	}
+	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
 	}
 	public String getCompany_id() {
 		return company_id;

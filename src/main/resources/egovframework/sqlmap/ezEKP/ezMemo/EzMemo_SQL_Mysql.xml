@@ -26,7 +26,7 @@
 	<select id="EzMemoDAO.getMemoFolderInfo" resultClass="MemoFolderVO">
 		<![CDATA[
 			SELECT
-				C.FOLDER_ID, C.FOLDER_NAME, IFNULL(D.COUNT, 0) AS COUNT, C.REG_DATE 
+				C.FOLDER_ID, C.FOLDER_NAME, IFNULL(D.COUNT, 0) AS COUNT, DATE_FORMAT(DATE_ADD(C.REG_DATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') REG_DATE 
 			FROM (
 				SELECT 
 					A.FOLDER_ID, A.FOLDER_NAME, A.REG_DATE

@@ -60,6 +60,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("offset", commonUtil.getMinuteUTC(memoFolderVO.getOffset()));
 		List<MemoFolderVO> memoFolders = ezMemoDAO.getMemoFolderInfo(map);
 		
 		logger.debug("getMemoFolderInfo ended.");
