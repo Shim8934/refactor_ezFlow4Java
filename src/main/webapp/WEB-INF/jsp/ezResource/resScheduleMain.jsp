@@ -65,6 +65,7 @@
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
+	    var getLang = "<c:out value='${userInfo.lang}'/>";
 	    var ApproveFlag     = "${approveFlag}";
 	    var brd_NM = "<c:out value='${brdNm}' />";
 	    var ResID = "${resID}";
@@ -187,6 +188,11 @@
 	            LunarUse = true;
 	        else
 	            LunarUse = false;
+	        
+	     	// #13470 uselang이 3인 경우 음력사용 금지
+			if(getLang == "3") {
+				LunarUse = false;
+			}
 
 	        schedule_get_holiday();
 	    }
