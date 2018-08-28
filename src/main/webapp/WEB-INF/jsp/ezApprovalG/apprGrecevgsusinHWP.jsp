@@ -1345,7 +1345,7 @@
 	        	  url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
 			      feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 				  ret = window.showModalDialog(url, parameter, feature);
-		        }
+				  
 			        if (ret != undefined && ret[0] == "OK") {
 			            try {
 			            	HwpCtrl.ChangeMode(2);
@@ -1445,7 +1445,6 @@
 			            }
 			        }
 			    }
-			 }
 			 
 			function ReplaceString(Origin, Source, Target) {
 			    return Origin.split(Source).join(Target);
