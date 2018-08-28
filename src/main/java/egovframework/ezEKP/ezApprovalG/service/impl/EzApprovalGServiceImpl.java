@@ -6730,6 +6730,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
+			docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 		}
 		
 		formURL = realPath + fileForder1;
@@ -7106,121 +7107,121 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				    String yyear = "";
 				    String mmonth = "";
 				    String mdate = "";
-				    for (int i = 1; i < arry.length; i++) {
-				        Header = arry[i].substring(0, 2);
-				        Tail = arry[i].substring(2);
-
-				        switch (Header) {
-				            case "DP":
-				                numHeader += (commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent() == "" ? userInfo.getDeptName() : commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent()) + Tail;
-				                break;
-	
-				            case "dp":
-				                numHeader += (commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent() == "" ? userInfo.getDeptName() : commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent()) + Tail;
-				                break;
-
-				            case "YY":
-				                numHeader += commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4) + Tail;
-				                break;
-				                
-				            case "yy":
-				                yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
-				                numHeader += yyear.toString().substring(2,4) + Tail;
-				                break;
-
-				            case "MM":
-				                mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
-				                if (Integer.parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-				                numHeader += mmonth + Tail;
-				                break;
-
-				            case "mm":
-				                numHeader += (commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7)) + Tail;
-				                break;
-
-				            case "NN":
-				                break;
-
-				            case "nn":
-				                break;
-
-				            case "cs":
-				                numHeader += messageSource.getMessage("ezApprovalG.t45",  userInfo.getLocale()) + Tail;
-				                break;
-				                
-				            case "FT":
-				            	numHeader += "FT" + Tail;
-				            	break;
-				            	
-				            case "MV":
-				            	numHeader += "MV" + Tail;
-				            	break;
-				            	
-				            case "YM":
-				            	yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
-				                numHeader += yyear.toString().substring(2,4);
-				                
-				            	mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
-				                numHeader += mmonth;
-				                
-				                mdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(8,10);
-				                numHeader += mdate + Tail;
-				                
-				                break;
-
-			                /* 단암 양식*/
-				            case "D1":
-				            	numHeader += "계약" + Tail;
-				        		break;
-				            case "D2":
-				            	numHeader += "교육기안" + Tail;
-				        		break;
-				            case "D3":
-				            	numHeader += "교육" + Tail;
-				        		break;
-				            case "D4":
-				            	numHeader += "구매" + Tail;
-				        		break;
-				            case "D5":
-				            	numHeader += "제" + Tail;
-				        		break;
-				            case "D6":
-				            	numHeader += "기구" + Tail;
-				        		break;
-				            case "D7":
-				            	numHeader += "기안" + Tail;
-				        		break;
-				            case "D8":
-				            	numHeader += "제 문서 신청" + Tail;
-				        		break;
-				            case "D9":
-				            	numHeader += "보고" + Tail;
-				        		break;
-				            case "DA":
-				            	numHeader += "제조-보고" + Tail;
-				        		break;
-				            case "DB":
-				            	numHeader += "연장근무보고서" + Tail;
-				        		break;
-				            case "DC":
-				            	numHeader += "출장" + Tail;
-				        		break;
-				            case "DD":
-				            	numHeader += "해외출장" + Tail;
-				        		break;
-				            case "DE":
-				            	numHeader += "품질검사" + Tail;
-				        		break;
-				            case "DF":
-				            	numHeader += "휴가" + Tail;
-				            	break;
-				            default:
-				                numHeader += fieldValue;
-				                break;
-				        }
-				    }
+//				    for (int i = 1; i < arry.length; i++) {
+//				        Header = arry[i].substring(0, 2);
+//				        Tail = arry[i].substring(2);
+//
+//				        switch (Header) {
+//				            case "DP":
+//				                numHeader += (commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent() == "" ? userInfo.getDeptName() : commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent()) + Tail;
+//				                break;
+//	
+//				            case "dp":
+//				                numHeader += (commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent() == "" ? userInfo.getDeptName() : commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptName(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent()) + Tail;
+//				                break;
+//
+//				            case "YY":
+//				                numHeader += commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4) + Tail;
+//				                break;
+//				                
+//				            case "yy":
+//				                yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
+//				                numHeader += yyear.toString().substring(2,4) + Tail;
+//				                break;
+//
+//				            case "MM":
+//				                mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
+//				                if (Integer.parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+//				                numHeader += mmonth + Tail;
+//				                break;
+//
+//				            case "mm":
+//				                numHeader += (commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7)) + Tail;
+//				                break;
+//
+//				            case "NN":
+//				                break;
+//
+//				            case "nn":
+//				                break;
+//
+//				            case "cs":
+//				                numHeader += messageSource.getMessage("ezApprovalG.t45",  userInfo.getLocale()) + Tail;
+//				                break;
+//				                
+//				            case "FT":
+//				            	numHeader += "FT" + Tail;
+//				            	break;
+//				            	
+//				            case "MV":
+//				            	numHeader += "MV" + Tail;
+//				            	break;
+//				            	
+//				            case "YM":
+//				            	yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
+//				                numHeader += yyear.toString().substring(2,4);
+//				                
+//				            	mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
+//				                numHeader += mmonth;
+//				                
+//				                mdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(8,10);
+//				                numHeader += mdate + Tail;
+//				                
+//				                break;
+//
+//			                /* 단암 양식*/
+//				            case "D1":
+//				            	numHeader += "계약" + Tail;
+//				        		break;
+//				            case "D2":
+//				            	numHeader += "교육기안" + Tail;
+//				        		break;
+//				            case "D3":
+//				            	numHeader += "교육" + Tail;
+//				        		break;
+//				            case "D4":
+//				            	numHeader += "구매" + Tail;
+//				        		break;
+//				            case "D5":
+//				            	numHeader += "제" + Tail;
+//				        		break;
+//				            case "D6":
+//				            	numHeader += "기구" + Tail;
+//				        		break;
+//				            case "D7":
+//				            	numHeader += "기안" + Tail;
+//				        		break;
+//				            case "D8":
+//				            	numHeader += "제 문서 신청" + Tail;
+//				        		break;
+//				            case "D9":
+//				            	numHeader += "보고" + Tail;
+//				        		break;
+//				            case "DA":
+//				            	numHeader += "제조-보고" + Tail;
+//				        		break;
+//				            case "DB":
+//				            	numHeader += "연장근무보고서" + Tail;
+//				        		break;
+//				            case "DC":
+//				            	numHeader += "출장" + Tail;
+//				        		break;
+//				            case "DD":
+//				            	numHeader += "해외출장" + Tail;
+//				        		break;
+//				            case "DE":
+//				            	numHeader += "품질검사" + Tail;
+//				        		break;
+//				            case "DF":
+//				            	numHeader += "휴가" + Tail;
+//				            	break;
+//				            default:
+//				                numHeader += fieldValue;
+//				                break;
+//				        }
+//				    }
 				    
-					docNO = numHeader + createDocNO(cabinetSN , docNumZeroCnt);
+					docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
 					doc.getElementById("docnumber").text(docNO);
 					
 					if (doc.getElementById("enforcedate") != null) {
