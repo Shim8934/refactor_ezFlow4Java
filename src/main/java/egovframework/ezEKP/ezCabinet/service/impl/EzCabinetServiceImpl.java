@@ -1206,7 +1206,23 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("shareId",  shareId);
 		
 		List<CabinetSimpleVO> cabinetList = ezCabinetDAO.getUserSharedCabinet(map);
+		removeDuplicateCabinet(cabinetList);
+		return cabinetList;
+	}
+	
+	@Override
+	public List<CabinetSimpleVO> getMyShareCabinet(LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userInfo.getId());
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("primary",   userInfo.getPrimary());
 		
+		List<CabinetSimpleVO> cabinetList = ezCabinetDAO.getMySharedCabinetList(map);
+		removeDuplicateCabinet(cabinetList);
+		return cabinetList;
+	}
+	
+	private void removeDuplicateCabinet(List<CabinetSimpleVO> cabinetList) {
 		//Check if duplicate cabinet exist
 		Set<Integer> cabinetIds = cabinetList.stream().map(CabinetSimpleVO::getCabinetId).collect(Collectors.toSet());
 		if (cabinetIds.size() != cabinetList.size()) {
@@ -1254,47 +1270,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Sort cabinetList
 		Collections.sort(cabinetList, (CabinetSimpleVO c1, CabinetSimpleVO c2) -> c1.getCabinetName().compareTo(c2.getCabinetName()));
-		
-		return cabinetList;
-	}
-	
-	@Override
-	public List<CabinetSimpleVO> getMyShareCabinet(LoginVO userInfo) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",    userInfo.getId());
-		map.put("tenantId",  userInfo.getTenantId());
-		map.put("primary",   userInfo.getPrimary());
-		
-		List<CabinetSimpleVO> cabinetList = ezCabinetDAO.getMySharedCabinetList(map);
-		
-		//Check duplicate cabinet
-		List<Integer> cabinetIdHasChildPerm = cabinetList.stream().filter(cab -> cab.getHasSub() == 1).map(CabinetSimpleVO::getCabinetId).collect(Collectors.toList());
-		Iterator<CabinetSimpleVO> it        = cabinetList.iterator();
-		
-		while(it.hasNext()) {
-			int checkflag          = 0;
-			CabinetSimpleVO crrCab = it.next();
-			String cabinetPath     = crrCab.getCabinetPath();
-			cabinetPath            = cabinetPath.substring(1, cabinetPath.length() - 1);
-			List<Integer> nodeIds  = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
-			nodeIds.remove(nodeIds.size() - 1);
-			
-			for (int ancestorId : nodeIds) {
-				if (cabinetIdHasChildPerm.contains(ancestorId)) {
-					checkflag = 1;
-					break;
-				}
-			}
-			
-			if (checkflag == 1) {
-				it.remove();
-			}
-		}
-		
-		//Sort cabinetList
-		Collections.sort(cabinetList, (CabinetSimpleVO c1, CabinetSimpleVO c2) -> c1.getCabinetName().compareTo(c2.getCabinetName()));
-		
-		return cabinetList;
 	}
 	
 	@SuppressWarnings("unchecked")

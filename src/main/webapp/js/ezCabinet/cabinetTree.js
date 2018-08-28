@@ -101,7 +101,7 @@ function CabinetTree() {
 			case "listshare":
 				var len = nodesTree.length;
 				
-				if (len == 0 && _genType == "listshare") {alert(CabinetMessages.strTreeErr);}
+				if (len == 0 && _genType == "listshare") {alert(CabinetMessages.strShareErr3);}
 				
 				for (var i = 0; i < len; i++) {
 					var divChildNode  = document.createElement("div");
