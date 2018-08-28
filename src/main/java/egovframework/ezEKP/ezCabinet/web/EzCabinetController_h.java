@@ -115,6 +115,25 @@ public class EzCabinetController_h {
 		return "ezCabinet/cabinetSearchShare";
 	}
 	
+	@RequestMapping(value="/ezCabinet/getAncestorShareList.do")
+	public String jspGetAncestorShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetAncestorShareList started");
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
+		
+		logger.debug("CabinetId: " + cabinetId);
+		
+		JSONObject resultObj = cabinetRestService_h.getAncestorShareUserList(request, user.getId(), cabinetId);
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			List<SimpleUserVO> listUsers = (List<SimpleUserVO>)resultObj.get("shareList");
+			model.addAttribute("listUsers", listUsers);
+		}
+		
+		logger.debug("jspGetAncestorShareList ended");
+		return "ezCabinet/cabinetAncestorShare";
+	}
+	
 	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {

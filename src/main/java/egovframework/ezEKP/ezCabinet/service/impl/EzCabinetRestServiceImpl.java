@@ -716,4 +716,10 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject getMyShareCabinetTree(HttpServletRequest request, String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

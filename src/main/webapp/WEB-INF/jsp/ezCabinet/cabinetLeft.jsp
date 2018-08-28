@@ -26,6 +26,10 @@
 			<h2 id="relatedCabinet"><span><spring:message code='ezCabinet.t32'/></span></h2>
 			<ul><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
 			
+			<!-- 공유 한은 캐비넷 -->
+			<h2 id="shareCabinet"><span><spring:message code='ezCabinet.t157'/></span></h2>
+			<ul><div id="myShareTree" class="cabinetTree3"></div></ul>
+			
 			<!-- 공유 반은 캐비넷 -->
 			<h2 id="sharedCabinet"><span><spring:message code='ezCabinet.t05'/></span></h2>
 			<ul><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
@@ -69,6 +73,7 @@
 				var cabinetTree = new CabinetTree();
 				var relatedTree = new CabinetTree();
 				var shareTree   = new CabinetTree();
+				var myShareTree = new CabinetTree();
 				setButtons();
 				
 				function setButtons() {
@@ -92,6 +97,7 @@
 					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();    }, false);
 					document.getElementById("relatedCabinet"   ).addEventListener("click", function(e) {getRelatedCabinet();}, false);
 					document.getElementById("sharedCabinet"    ).addEventListener("click", function(e) {getSharedCabinet(); }, false);
+					document.getElementById("shareCabinet"     ).addEventListener("click", function(e) {getMyShareCabinet();}, false);
 					
 					var cabinetAdminElmt = document.getElementById("cabinetAdmin");
 					if (cabinetAdminElmt) {cabinetAdminElmt.addEventListener("click", function(e) {getAdminPage();} , false);}
@@ -165,6 +171,20 @@
 					});
 					
 					shareTree.makeTree();
+				}
+				
+				function getMyShareCabinet() {
+					myShareTree.setTreeInfo({
+						treeId     : "myShareTree",
+						treeType   : "cabinet",
+						type       : "list",
+						initialUrl : "/ezCabinet/getMyShareCabinetTree.do",
+						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						click      : getShareCabinet,
+						dblClick   : null
+					});
+					
+					myShareTree.makeTree();
 				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {

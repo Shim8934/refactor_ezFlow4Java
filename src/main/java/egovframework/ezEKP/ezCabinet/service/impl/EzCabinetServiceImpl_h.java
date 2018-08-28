@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +96,23 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		map.put("tenantId",    tenantId);
 		
 		return ezCabinetDAO_h.getShareUserList(map);
+	}
+	
+	@Override
+	public List<SimpleUserVO> getAncestorShareUserList(String cabinetId, String userId, String primary, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  tenantId);
+		CabinetVO cabinet     = ezCabinetDAO.getCabinetById(map);
+		String cabinetPath    = cabinet.getCabinetPath();
+		cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
+		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+		nodeIds.remove(nodeIds.size() - 1);
+		map.put("userId",    userId);
+		map.put("primary",   primary);
+		map.put("listNodes", nodeIds);
+		
+		return ezCabinetDAO_h.getAncestorShareUserList(map);
 	}
 	
 	@Override
@@ -646,7 +664,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
 		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveCommunityItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
@@ -686,7 +704,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return result;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject savePhotoCommunityitem(String realPath, String mode, int cabinetId, String title, String writer, String content, Locale locale, LoginVO userInfo) throws Exception {

@@ -2,10 +2,8 @@ package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
 import java.util.Locale;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -31,4 +29,5 @@ public interface EzCabinetService_h {
 	public JSONObject saveListAttachFiles(JSONArray attachList, int itemId, String realPath, String modulePath, String uploadPath, Locale locale, LoginVO userInfo) throws Exception;
 	JSONObject saveCommunityItem(String realPath, String mode, int parseInt, String title, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;
 	JSONObject savePhotoCommunityitem(String realPath, String mode, int parseInt, String title, String writer, String content, Locale locale, LoginVO userInfo) throws Exception;
+	List<SimpleUserVO> getAncestorShareUserList(String cabinetId, String userId, String primary, int tenantId) throws Exception;
 }

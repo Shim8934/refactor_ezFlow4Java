@@ -11,7 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabShareFile">
-		<h1 id="moveCabTtl"><spring:message code="ezCabinet.t136"/></h1>
+		<h1><spring:message code="ezCabinet.t136"/></h1>
 		<div class="cabClose"><ul><li><span id="closeBttn"></span></li></ul></div>
 		
 		<div class="cabShareListDiv2">
@@ -80,7 +80,7 @@
 					listBttns[0].onclick    = function(e) {changeShareUsers();};
 					listBttns[1].onclick    = function(e) {deleteShareUsers();};
 					
-					//Set selected tables 
+					//Set selected tables
 					selectedUsers.setTableElement("sharedTable", "id");
 					selectedUsers.resetEvents();
 				}

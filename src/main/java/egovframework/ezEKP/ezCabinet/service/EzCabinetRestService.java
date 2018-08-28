@@ -38,13 +38,14 @@ public interface EzCabinetRestService {
 	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception;
 	
-	//User my cabinet tree
+	//User cabinet tree
 	public JSONObject getMyCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
 	public JSONObject getAllCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception;
 	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception;
 	public JSONObject getSharedCabinetTree(HttpServletRequest request, String userId) throws Exception;
-	public JSONObject getUserSharedCabinet(HttpServletRequest request, String id, String shareId) throws Exception;
+	public JSONObject getUserSharedCabinet(HttpServletRequest request, String userId, String shareId) throws Exception;
+	public JSONObject getMyShareCabinetTree(HttpServletRequest request, String userId) throws Exception;
 	
 	//User cabinet management
 	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1) throws Exception;

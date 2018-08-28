@@ -125,6 +125,7 @@
 														</select>
 														<input type="text" id="keyword2">
 														<a class="imgbtn" id="searchBtn2"><span><spring:message code='ezCabinet.t49'/></span></a>
+														<c:if test="${cabinet.cabinetLevel != '0'}"><a class="imgbtn" id="ancestorshare"><span><spring:message code='ezCabinet.t159'/></span></a></c:if>
 													</div>
 												</td>
 											</tr>

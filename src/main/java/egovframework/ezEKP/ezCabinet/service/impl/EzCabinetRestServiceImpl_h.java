@@ -44,11 +44,21 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
 	@Override
 	public JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue) throws Exception {
-		String url                = "/rest/ezCabinet/shared-member/cabinetId/" + cabinetId + "/get";
+		String url                = "/rest/ezCabinet/shared-member/cabinetid/" + cabinetId + "/get";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",      userId);
 		param.put("searchOpt",   searchOpt);
 		param.put("searchValue", searchValue);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getAncestorShareUserList(HttpServletRequest request, String userId, String cabinetId) throws Exception {
+		String url                = "/rest/ezCabinet/shared-ancestor/cabinetid/" + cabinetId + "/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
@@ -181,7 +191,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception {
@@ -199,7 +209,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception {
@@ -223,7 +233,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String endDate, String content, String attach) throws Exception {
@@ -242,7 +252,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedPhotoCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String content) throws Exception {

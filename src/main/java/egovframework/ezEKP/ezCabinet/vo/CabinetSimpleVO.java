@@ -7,6 +7,7 @@ public class CabinetSimpleVO {
 	private String cabinetName;
 	private String cabinetName1;
 	private String cabinetName2;
+	private String cabinetPath;
 	private int    parentId;
 	private int    cabinetLevel;
 	private int    cabinetStep;
@@ -96,5 +97,13 @@ public class CabinetSimpleVO {
 	
 	public void setCabinetName2(String cabinetName2) {
 		this.cabinetName2 = cabinetName2;
+	}
+	
+	public String getCabinetPath() {
+		return cabinetPath;
+	}
+	
+	public void setCabinetPath(String cabinetPath) {
+		this.cabinetPath = cabinetPath;
 	}
 }

@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -109,7 +106,7 @@ public class EzCabinetGWController_h {
 		
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/shared-member/cabinetId/{cabinetId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/shared-member/cabinetid/{cabinetId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getShareUserList(@PathVariable(value="cabinetId") String cabinetId,   HttpServletRequest request) throws Exception {
 		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
 		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
@@ -128,9 +125,9 @@ public class EzCabinetGWController_h {
 		}
 		
 		try {
-			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
-			String primary = userInfo.getPrimary();
-			String sqlQuery                = "";
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String primary   = userInfo.getPrimary();
+			String sqlQuery  = "";
 			
 			switch(searchOpt) {
 				case "displayname": sqlQuery = primary.equals("1") ? searchOpt : "displayname2" ; break;
@@ -139,6 +136,41 @@ public class EzCabinetGWController_h {
 			}
 			
 			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
+			
+			result.put("shareList", list);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/shared-ancestor/cabinetid/{cabinetId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getAncestorShareUserList(@PathVariable(value="cabinetId") String cabinetId,   HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
+		String userId     = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String primary   = userInfo.getPrimary();
+			
+			List<SimpleUserVO> list = cabinetService_h.getAncestorShareUserList(cabinetId, userId, primary, userInfo.getTenantId());
 			
 			result.put("shareList", list);
 			result.put("status", "ok");

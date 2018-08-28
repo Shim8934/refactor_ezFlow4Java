@@ -7,6 +7,7 @@ var CabinetShareItem = function() {
 	var cabinetNavi  = null;
 	var userPopup    = null;
 	var sharePopup   = null;
+	var ancesPopup   = null;
 	var cabinetId    = null;
 	var ownId        = null;
 	
@@ -45,26 +46,28 @@ var CabinetShareItem = function() {
 			callback : getUsers
 		});
 		
+		var ancestorBttn        = document.getElementById("ancestorshare");
 		var cabShareBttnElmt    = document.getElementById("cabShareBttn");
 		var listBttns           = cabShareBttnElmt.children;
 		listBttns[0].onclick    = function(e) {saveShareUsers();};
 		listBttns[1].onclick    = function(e) {closeWindow();};
-		document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
-		document.getElementById("txtSpanView").addEventListener("click", function(e) {changeListView('TXT');}, false);
-		document.getElementById("imgSpanView").addEventListener("click", function(e) {changeListView('IMG');}, false);
-		document.getElementById("addBttn").addEventListener("click", function(e) {addUsers();}, false);
-		document.getElementById("removeBttn").addEventListener("click", function(e) {removeUsers();}, false);
-		document.getElementById("searchBtn").addEventListener("click", function(e) {searchUserList();}, false);
-		document.getElementById("searchBtn2").addEventListener("click", function(e) {searchShareList();}, false);
-		document.getElementById("addDeptBttn").addEventListener("click", function(e) {addDeptToShareList();}, false);
-		document.getElementById("userInfBttn").addEventListener("click", function(e) {viewUserInfo();}, false);
+		document.getElementById("cabRlClose"   ).addEventListener("click", function(e) {closeWindow()        ;}, false);
+		document.getElementById("txtSpanView"  ).addEventListener("click", function(e) {changeListView('TXT');}, false);
+		document.getElementById("imgSpanView"  ).addEventListener("click", function(e) {changeListView('IMG');}, false);
+		document.getElementById("addBttn"      ).addEventListener("click", function(e) {addUsers()           ;}, false);
+		document.getElementById("removeBttn"   ).addEventListener("click", function(e) {removeUsers()        ;}, false);
+		document.getElementById("searchBtn"    ).addEventListener("click", function(e) {searchUserList()     ;}, false);
+		document.getElementById("searchBtn2"   ).addEventListener("click", function(e) {searchShareList()    ;}, false);
+		document.getElementById("addDeptBttn"  ).addEventListener("click", function(e) {addDeptToShareList() ;}, false);
+		document.getElementById("userInfBttn"  ).addEventListener("click", function(e) {viewUserInfo()       ;}, false);
+		if (ancestorBttn) {ancestorBttn.addEventListener("click", function(e) {viewAncestorShare()  ;}, false);}
 		
 		var sSearchInputElmt   = document.getElementById("keyword");
-		sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
-		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
+		sSearchInputElmt.addEventListener("keypress" , function(e) {onStartSimpleSearch(e);}, false);
+		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this)    ;}, false);
 		var sSearchInputElmt2  = document.getElementById("keyword2");
-		sSearchInputElmt2.addEventListener("keypress", function(e) {onStartShareSearch(e);}, false);
-		sSearchInputElmt2.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
+		sSearchInputElmt2.addEventListener("keypress" , function(e) {onStartShareSearch(e);}, false);
+		sSearchInputElmt2.addEventListener("mousedown", function(e) {clearKeyword(this)   ;}, false);
 		
 		//Set Company Tree
 		companyTree.setTreeInfo({
@@ -339,8 +342,8 @@ var CabinetShareItem = function() {
 		selectedUsers.resetEvents();
 	}
 	
-	function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList();}}
-	function onStartShareSearch(event) {if(event.keyCode == "13") {searchShareList();}}
+	function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList() ;}}
+	function onStartShareSearch(event)  {if(event.keyCode == "13") {searchShareList();}}
 	function clearKeyword(inputElmt) {inputElmt.value = "";}
 	function searchUserList() {
 		searchValue = document.getElementById("keyword").value;
@@ -437,6 +440,17 @@ var CabinetShareItem = function() {
 		userPopup = window.open("/ezCommon/showPersonInfo.do?id=" + userId + "&dept=" + deptId, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	}
 	
+	function viewAncestorShare() {
+		if (ancesPopup) {ancesPopup.close();}
+		var width        = 433;
+		var height       = 412;
+		var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+		var topPosition  = (window.screen.height / 2) - ((height / 2) + 50);
+		var option       = "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		
+		ancesPopup = window.open("/ezCabinet/getAncestorShareList.do?cabinetId=" + cabinetId, "", option);
+	}
+	
 	function addDeptToShareList() {
 		var selectedTable = document.getElementById("sharedTable");
 		var organTreeElmt = document.getElementById("treeView");
@@ -454,11 +468,10 @@ var CabinetShareItem = function() {
 	}
 	
 	function closeAllPopUp() {
-		if (userPopup) {userPopup.close();}
+		if (userPopup)  {userPopup.close() ;}
 		if (sharePopup) {sharePopup.close();}
+		if (ancesPopup) {userPopup.close() ;}
 	}
-	
-	function closeWindow() {window.close();}
 	
 	function saveShareUsers() {
 		var selectedUsers = document.getElementById("sharedTable");
@@ -500,10 +513,8 @@ var CabinetShareItem = function() {
 		});
 	}
 	
-	function saveSuccessfully() {
-		alert(CabinetMessages.strSave);
-		closeWindow();
-	}
+	function saveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
+	function closeWindow() {window.close();}
 	
 	function deleteUsers(userList) {
 		var selectedTable = document.getElementById("sharedTable");

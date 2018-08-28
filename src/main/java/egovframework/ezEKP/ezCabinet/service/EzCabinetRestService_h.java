@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -17,6 +16,7 @@ public interface EzCabinetRestService_h {
 	JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue) throws Exception;
 	JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 	JSONObject saveShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList) throws Exception;
+	JSONObject getAncestorShareUserList(HttpServletRequest request, String userId, String cabinetId) throws Exception;
 	
 	//Check file creator
 	JSONObject checkPermission(HttpServletRequest request, String userId, String itemId, String cabinetId, int permission) throws Exception;
@@ -30,13 +30,13 @@ public interface EzCabinetRestService_h {
 	
 	//Save boardModules
 	JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception;
-
+	
 	//Save optionModules
 	JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception;
-
+	
 	//Save communityModules
 	JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String endDate, String content, String attach) throws Exception;
-
+	
 	//Save communityPhotoModules
 	JSONObject saveRelatedPhotoCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String content) throws Exception;
 

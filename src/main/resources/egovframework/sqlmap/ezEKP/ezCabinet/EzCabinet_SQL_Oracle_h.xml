@@ -348,6 +348,53 @@
 		order by s2.share_date asc
 	</select>
 	
+	<select id="EzCabinetDAO_h.getAncestorShareUserList" resultMap="shareMemberInfo">
+		<![CDATA[
+			select distinct
+				s2.cn,
+				s2.shared_type,
+				s2.display_name,
+				s2.department_name,
+				s2.permission,
+				s2.child_permission
+			from
+			(
+				select
+					u.cn                                                                 as cn,
+					s.shared_type                                                        as shared_type,
+					case when #primary# = '1' then u.displayname else u.displayname2 end as display_name,
+					case when #primary# = '1' then u.description else u.description2 end as department_name,
+					s.permission                                                         as permission,
+					s.child_permission                                                   as child_permission,
+					s.share_date                                                         as share_date
+				from
+					tbl_cb_share s join tbl_usermaster u on s.shared_id = u.cn and s.tenant_id = u.tenant_id and s.shared_type = 2
+				where s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1 and s.child_permission = 1 and s.cabinet_id in 
+		]]>
+		<iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>
+		
+		<![CDATA[
+				union
+				
+				select
+					d.cn                                                                 as cn,
+					s1.shared_type                                                       as shared_type,
+					case when #primary# = '1' then d.displayname else d.displayname2 end as display_name,
+					case when #primary# = '1' then d.displayname else d.displayname2 end as department_name,
+					s1.permission                                                        as permission,
+					s1.child_permission                                                  as child_permission,
+					s1.share_date                                                        as share_date
+				from
+					tbl_cb_share s1 join tbl_deptmaster d on s1.shared_id = d.cn and s1.tenant_id = d.tenant_id and (s1.shared_type = 0 or s1.shared_type = 1)
+				where s1.sharer_id = #userId# and s1.tenant_id = #tenantId# and s1.use_status = 1 and s1.child_permission = 1 and s1.cabinet_id in 
+		]]>
+		<iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>
+		<![CDATA[
+			) s2
+		]]>
+		order by s2.share_date asc
+	</select>
+	
 	<update id="EzCabinetDAO_h.updateShareList">
 		update
 			tbl_cb_share 

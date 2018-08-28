@@ -456,6 +456,19 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/getMyShareCabinetTree.do")
+	@ResponseBody
+	public String jsonMyShareCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonMyShareCabinetTree start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj            = cabinetRestService.getMyShareCabinetTree(request, user.getId());
+		
+		logger.debug("jsonMyShareCabinetTree end");
+		return resultObj.toString();
+	}
+	
 	@RequestMapping(value="/ezCabinet/getSharedCabinetsByUser.do")
 	@ResponseBody
 	public String jsonGetUserSharedCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {

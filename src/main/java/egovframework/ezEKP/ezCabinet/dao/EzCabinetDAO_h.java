@@ -62,4 +62,8 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 	public void modifyItem(CabinetItemVO itemVO) {
 		update ("EzCabinetDAO_h.modifyItem", itemVO);
 	}
+
+	public List<SimpleUserVO> getAncestorShareUserList(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzCabinetDAO_h.getAncestorShareUserList", map);
+	}
 }
