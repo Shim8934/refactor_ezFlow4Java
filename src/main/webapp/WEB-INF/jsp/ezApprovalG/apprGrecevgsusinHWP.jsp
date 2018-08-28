@@ -255,6 +255,27 @@
 		    }
 		
 			function window_onload() {
+				var chkReceivedDoc = 0;
+				
+		    	//접수된 문서인지 확인하기
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/isReceivedDoc.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success : function(result) {
+		    			chkReceivedDoc = result;
+		    		}
+		    	});
+		    	
+		    	if (chkReceivedDoc != 0) {
+		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
+		        	window.close();
+		    	}
+		    	
 			    window.onresize();
 			    
 			    HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
@@ -265,8 +286,6 @@
 			        SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			        
-			        checkAlreadyReceive();
 			        
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
@@ -1261,44 +1280,30 @@
 			        }
 			    }
 			}
-			
-			function checkAlreadyReceive() {
-				var chkReceivedDoc = 0;
-				
-				try {
-			    	//접수된 문서인지 확인하기
-			    	$.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezApprovalG/isReceivedDoc.do",
-			    		data : {
-			    			docID : pDocID
-			    		},
-			    		success : function(result) {
-			    			chkReceivedDoc = result;
-			    		}
-			    	});
-			    	
-			    	if (chkReceivedDoc != 0) {
-			        	alert("<spring:message code='ezApprovalG.pjg04'/>");
-			        	window.close();
-			        }
-				} catch (e) {
-					//위험요소가 많아서 캐치로 봐줌
-				}
-			}
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo() {
 			    var onlydocinfiview = false;
 			    var parameter = new Array();
+				var chkReceivedDoc = 0;
 		    	var url;
 		    	var ret;
 		    	var feature;
 		    	
-				checkAlreadyReceive();
-				
+		    	//접수된 문서인지 확인하기
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/isReceivedDoc.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success : function(result) {
+		    			chkReceivedDoc = result;
+		    		}
+		    	});
+		    	
 			    parameter[0] = pDocID;
 			    parameter[1] = pFormID;
 			    parameter[2] = SignCount;
@@ -1342,10 +1347,14 @@
 			        tempdocnumcode = tempItemCode;
 			    }
 			    
-	        	  url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
-			      feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-				  ret = window.showModalDialog(url, parameter, feature);
-				  
+			    if (chkReceivedDoc != 0) {
+		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
+		        	window.close();
+		        } else {
+		        	  url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
+				      feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
+					  ret = window.showModalDialog(url, parameter, feature);
+		        }
 			        if (ret != undefined && ret[0] == "OK") {
 			            try {
 			            	HwpCtrl.ChangeMode(2);
@@ -1445,6 +1454,7 @@
 			            }
 			        }
 			    }
+			 
 			 
 			function ReplaceString(Origin, Source, Target) {
 			    return Origin.split(Source).join(Target);
