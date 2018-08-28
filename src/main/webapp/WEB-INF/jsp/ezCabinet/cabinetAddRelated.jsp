@@ -11,15 +11,23 @@
 	<body class="popup cabAddRelated" style="overflow: hidden;">
 		<h1 id="cabMagHeader"><spring:message code="ezCabinet.t125"/></h1>
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
+		
+		<div class="divAddInfo">
+			<table class="tblAddRelatedInf">
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input class="tblAddRelatedInput" maxlength="150" type="text" placeholder="<spring:message code='ezCabinet.t70'/>" id="itemTtl"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input class="tblAddRelatedInput" maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>" id="itemSum"></td></tr>
+			</table>
+		</div>
+		
 		<div class="addRlWrapper">
 			<c:if test="${activeFlag == '1'}">
 				<div class="addRelatedConfig" id="addRelated">
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="auto"/>
+						<input type="radio" name="checkCabinet" id="auto" checked="checked"/>
 						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label><br>
 					</a>
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="manual" checked="checked"/>
+						<input type="radio" name="checkCabinet" id="manual"/>
 						<label for="manual"><span><spring:message code="ezCabinet.t127"/></span></label>
 					</a>
 				</div>
