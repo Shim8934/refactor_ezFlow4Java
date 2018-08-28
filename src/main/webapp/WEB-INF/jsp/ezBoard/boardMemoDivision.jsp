@@ -30,7 +30,7 @@
 						memoFolderList = "<colgroup><col width='7%' /><col width='55%' /><col width='38%' /></colgroup>";							
 							 
 						folderList.forEach(function(list, index){
-							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);'>";
+							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_onclick(this);' data1='" + list.folder_id + "' data2='" + list.folder_name +"'>";
 							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
 							memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
 							memoFolderList += "<td style='color:gray;'>" + list.reg_date.substring(0,16) + "</td>";  
@@ -94,10 +94,61 @@
 		    	DivPopUpHidden();
 		    }
 	    	
+	    	// 메모분류함 추가
 	    	function add_onclick() {
+	    		inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
+			    inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
+			    inputNameDlg_cross_dialogArguments[2] = "";
+			    inputNameDlg_cross_dialogArguments[3] = "";
 				var OpenWin = window.open("/ezMemo/memoInputName.do", "", GetOpenWindowfeature(500, 200));        
 				try { OpenWin.focus(); } catch (e) { }
 			}
+	    	
+	    	// 메모분류함 수정
+	    	function modify_onclick(obj) {
+	    		if($(obj).attr('data2') === "") {
+		     		alert("<spring:message code='ezMemo.t0038' />");
+		     		return;
+		     	}
+	    		
+	    		inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
+			    inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
+			    inputNameDlg_cross_dialogArguments[2] = $(obj).attr('data2');
+			    inputNameDlg_cross_dialogArguments[3] = $(obj).attr('data1');
+			    var OpenWin = window.open("/ezMemo/memoInputName.do", "", GetOpenWindowfeature(500, 200));        
+				try { OpenWin.focus(); } catch (e) { }
+			}
+	    	
+	    	// 메모분류함 삭제
+	    	function delete_onclick() {
+				var deleteList = [];
+				
+				$(":checkbox[name=myCheckbox]:checked").each(function(){
+					deleteList.push($(this).val());
+				});
+				
+				if (deleteList.length == 0) {
+		        	alert("<spring:message code='ezMemo.t0043' />");
+		            return;
+		        }
+				
+				if (confirm("<spring:message code='ezMemo.t0044' />")) {
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "json",
+			    		async : false,
+			    		url : "/ezMemo/memoFolderAction.do",
+			    		data : {
+			    			"methodType" : "delete",
+			    			"folder_ids" : deleteList.join()
+			    		}, success: function() {
+			    			memoFoldersInfo();
+			    		}, error: function(err) {
+			    			alert("<spring:message code='ezMemo.t0045' />");
+			    		}
+			        });					
+				}
+	    	}
     	</script>
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">

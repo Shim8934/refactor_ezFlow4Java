@@ -286,17 +286,23 @@ public class EzMemoController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezMemo/memoFolderAction.do")
-	public String memoFolderAdd(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id, String folder_name) throws Exception {
+	public String memoFolderAdd(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id) throws Exception {
 		logger.debug("memoFolderAction started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("company_id",userInfo.getCompanyID());
 		param.put("user_id",userInfo.getId());
-		param.put("folder_name",folder_name);
-		if(!methodType.equals("post")) {
-			param.put("folder_id", folder_id);
+		
+		if (request.getParameter("folder_ids") != null) {	// 삭제
+			param.put("folder_ids", request.getParameter("folder_ids"));
+		}
+		if (request.getParameter("folder_name") != null) {	// 수정
+			param.put("folder_name", request.getParameter("folder_name"));
+		}
+		if (request.getParameter("folder_id") != null) {	// 추가, 수정
+			param.put("folder_id", request.getParameter("folder_id"));
 		}
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, methodType, null);

@@ -182,16 +182,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void deleteMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+	public void deleteMemoFolder(MemoFolderVO memoFolderVO, String folder_ids) throws Exception {
 		logger.debug("deleteMemoFolder started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
-		map.put("folder_name", memoFolderVO.getFolder_name());
-		map.put("folder_id", memoFolderVO.getFolder_id());
-		ezMemoDAO.deleteMemos(map);
-		ezMemoDAO.deleteMemoFolder(map);
+		
+		for (String folder_id : folder_ids.split(",")) {
+			logger.debug("folderId = " + folder_id);
+			map.put("folder_id", folder_id);
+			ezMemoDAO.deleteMemos(map);
+			ezMemoDAO.deleteMemoFolder(map);
+		}
 		logger.debug("deleteMemoFolder ended.");
 	}
 

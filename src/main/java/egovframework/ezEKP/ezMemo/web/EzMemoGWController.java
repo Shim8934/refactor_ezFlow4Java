@@ -303,13 +303,14 @@ public class EzMemoGWController {
 		
 		
 		JSONObject result = new JSONObject();
+		String folder_ids = request.getParameter("folder_ids");
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
 			memoFolderVO.setTenant_id(info.getTenantId());
 			
-			ezMemoService.deleteMemoFolder(memoFolderVO);
+			ezMemoService.deleteMemoFolder(memoFolderVO, folder_ids);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

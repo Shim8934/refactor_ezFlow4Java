@@ -27,7 +27,10 @@
 	        };
 	        
 	        function window_onload() {
-          
+	        	ReturnFunction = opener.inputNameDlg_cross_dialogArguments[0];
+                CancelFunction = opener.inputNameDlg_cross_dialogArguments[1];
+                InputValue = opener.inputNameDlg_cross_dialogArguments[2];
+                FolderId = opener.inputNameDlg_cross_dialogArguments[3];
 	            if (InputValue != "") {
 	                txt_FolderName.value = InputValue;
 	            }

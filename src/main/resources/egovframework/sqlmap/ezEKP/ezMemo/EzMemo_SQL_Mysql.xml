@@ -272,8 +272,6 @@
 		SET
 			DELETE_FLAG = 1
 		WHERE
-			FOLDER_NAME = #folder_name#
-		AND
 			FOLDER_ID = #folder_id#
 		AND
 			USER_ID = #user_id#
