@@ -6386,6 +6386,20 @@
 		       		 APRMEMBERSN
 	]]>
 	</select>
+	<select id="EzApprovalG.getHWPdownload" parameterClass="Map"  resultClass="ApprGDocInfoWebSrvVO">
+			SELECT 					
+	                href,
+	                doctitle   
+	         FROM 
+	         		TBL_APRDOCINFO 
+	         WHERE  
+	         		DocID = #v_PDOCID#
+	         AND
+	         		TENANT_ID = #v_TENANTID#
+	         AND
+	         		COMPANYID = #companyID#	         		
+	         		
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
 <!-- 		{CALL EZSP_GETTOTALDOWNLOAD(#v_PDOCID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -6536,7 +6550,29 @@
 		      		AND
 		      				TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 		      		AND
-		      				TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID		      				
+		      				TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+		      	]]>
+		      		<isEqual property="v_approvalFlag" compareValue="G">
+		      		<![CDATA[
+				      	LEFT JOIN 
+				      		TBL_RECORD_TEMP
+			            ON 
+			            	TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+			            AND 
+			            	TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+			            AND 
+			            	TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+			      		LEFT JOIN 
+			      			TBL_ENDAPRDOCINFO
+			            ON 
+			            	TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD_TEMP.DOCID
+			            AND 
+			            	TBL_ENDAPRDOCINFO.TENANT_ID = TBL_RECORD_TEMP.TENANT_ID
+			            AND 
+			            	TBL_ENDAPRDOCINFO.COMPANYID = TBL_RECORD_TEMP.COMPANYID
+			         ]]>
+			      	</isEqual>
+				<![CDATA[
 		      		WHERE 
 		      				(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
 		      		AND 
@@ -6547,7 +6583,14 @@
 	      					TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      			AND
 	      					TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#		      				
-	      	]]>
+	      		]]>
+	      	<isEqual property="v_approvalFlag" compareValue="G">
+	      	<![CDATA[
+	     		OR (TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID# AND TBL_RECORD_TEMP.TENANT_ID = #v_TENANTID# AND TBL_RECORD_TEMP.COMPANYID = #companyID#) 
+	     		   AND 
+	     		   (TBL_ENDAPRDOCINFO.WRITERID = #v_USERID# AND TBL_ENDAPRDOCINFO.WRITERDEPTID = #v_DEPTID# AND TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID# AND TBL_ENDAPRDOCINFO.COMPANYID = #companyID#)
+	     	]]>
+	     	</isEqual>
 			</isEqual>
 			<isNotEqual property="v_MODE" compareValue="simsa">
 			<![CDATA[
@@ -6595,6 +6638,28 @@
 	      			TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 	      		AND
 	      			TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID	      			
+	      		]]>
+	      		<isEqual property="v_approvalFlag" compareValue="G">
+	      		<![CDATA[
+			      	LEFT JOIN 
+			      		TBL_RECORD_TEMP
+		            ON 
+		            	TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+		            AND 
+		            	TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+		            AND 
+		            	TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+		      		LEFT JOIN 
+		      			TBL_ENDAPRDOCINFO
+		            ON 
+		            	TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD_TEMP.DOCID
+		            AND 
+		            	TBL_ENDAPRDOCINFO.TENANT_ID = TBL_RECORD_TEMP.TENANT_ID
+		            AND 
+		            	TBL_ENDAPRDOCINFO.COMPANYID = TBL_RECORD_TEMP.COMPANYID
+		      	]]>
+		      	</isEqual>
+			<![CDATA[
 	      		WHERE 
 	      			TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
 	      		AND 
@@ -6606,6 +6671,13 @@
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#	      			
 	      	]]>
+	      	<isEqual property="v_approvalFlag" compareValue="G">
+	      	<![CDATA[
+	     		OR (TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID# AND TBL_RECORD_TEMP.TENANT_ID = #v_TENANTID# AND TBL_RECORD_TEMP.COMPANYID = #companyID#) 
+	     		   AND 
+	     		   (TBL_ENDAPRDOCINFO.WRITERID = #v_USERID# AND TBL_ENDAPRDOCINFO.WRITERDEPTID = #v_DEPTID# AND TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID# AND TBL_ENDAPRDOCINFO.COMPANYID = #companyID#)
+	     	]]>
+	     	</isEqual>
 	      	<isEqual property="v_MODE" compareValue="admin">
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
@@ -7204,7 +7276,7 @@
 <!-- 	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isEqual property="v_DOCSTATE" compareValue="000">
 		 SELECT 
 		 		DOCID DOCID  ,
@@ -8139,7 +8211,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -8992,14 +9064,42 @@
 	   			TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 	   		AND
 	   			TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	   		]]>
+		<isEqual property="v_approvalFlag" compareValue="G">
+		<![CDATA[
+	      	LEFT JOIN 
+	      		TBL_RECORD_TEMP
+            ON 
+            	TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+            AND 
+            	TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+            AND 
+            	TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+      		LEFT JOIN 
+      			TBL_ENDAPRDOCINFO
+            ON 
+            	TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD_TEMP.DOCID
+            AND 
+            	TBL_ENDAPRDOCINFO.TENANT_ID = TBL_RECORD_TEMP.TENANT_ID
+            AND 
+            	TBL_ENDAPRDOCINFO.COMPANYID = TBL_RECORD_TEMP.COMPANYID
+      	]]>
+      	</isEqual>
+		<![CDATA[
 	   		WHERE 
 	   			TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
 	   		AND 
 	   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	   		AND 
 	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
-	   			
    		]]>
+   		<isEqual property="v_approvalFlag" compareValue="G">
+   		<![CDATA[
+	     OR (TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID# AND TBL_RECORD_TEMP.TENANT_ID = #v_TENANTID# AND TBL_RECORD_TEMP.COMPANYID = #companyID#) 
+	     		AND 
+	     	(TBL_ENDAPRDOCINFO.WRITERID = #v_USERID# AND TBL_ENDAPRDOCINFO.WRITERDEPTID = #v_DEPTID# AND TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID# AND TBL_ENDAPRDOCINFO.COMPANYID = #companyID#)
+	     ]]>
+	    </isEqual>
    		<isEqual property="v_USERFLAG" compareValue="admin">
    			OR 
    				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
@@ -11578,6 +11678,28 @@
 	      		TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 			AND
 	      		TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      	]]>
+      	<isEqual property="v_approvalFlag" compareValue="G">
+      	<![CDATA[
+	      	LEFT JOIN 
+	      		TBL_RECORD_TEMP
+            ON 
+            	TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+            AND 
+            	TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+            AND 
+            	TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+      		LEFT JOIN 
+      			TBL_ENDAPRDOCINFO
+            ON 
+            	TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD_TEMP.DOCID
+            AND 
+            	TBL_ENDAPRDOCINFO.TENANT_ID = TBL_RECORD_TEMP.TENANT_ID
+            AND 
+            	TBL_ENDAPRDOCINFO.COMPANYID = TBL_RECORD_TEMP.COMPANYID
+      	]]>
+      	</isEqual>
+	      	<![CDATA[
 	      	WHERE 
 	      		(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
 	      	AND 
@@ -11612,6 +11734,28 @@
 	      		TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 			AND
 	      		TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      	]]>
+	      	<isEqual property="v_approvalFlag" compareValue="G">
+	      	<![CDATA[
+		      	LEFT JOIN 
+		      		TBL_RECORD_TEMP
+	            ON 
+	            	TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+	            AND 
+	            	TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	            AND 
+	            	TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      		LEFT JOIN 
+	      			TBL_ENDAPRDOCINFO
+	            ON 
+	            	TBL_ENDAPRDOCINFO.DOCID = TBL_RECORD_TEMP.DOCID
+	            AND 
+	            	TBL_ENDAPRDOCINFO.TENANT_ID = TBL_RECORD_TEMP.TENANT_ID
+	            AND 
+	            	TBL_ENDAPRDOCINFO.COMPANYID = TBL_RECORD_TEMP.COMPANYID
+      		]]>
+      		</isEqual>
+      		<![CDATA[
 	      	WHERE 
 	      		TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
 	      	AND 
@@ -11626,6 +11770,13 @@
 			AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      			]]>
+	     <isEqual property="v_approvalFlag" compareValue="G">
+	     <![CDATA[
+	     OR (TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID# AND TBL_RECORD_TEMP.TENANT_ID = #v_TENANTID# AND TBL_RECORD_TEMP.COMPANYID = #companyID#) 
+	     		AND 
+	     	(TBL_ENDAPRDOCINFO.WRITERID = #v_USERID# AND TBL_ENDAPRDOCINFO.WRITERDEPTID = #v_DEPTID# AND TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID# AND TBL_ENDAPRDOCINFO.COMPANYID = #companyID#)
+	     ]]>
+	     </isEqual>
 	     <isEqual property="v_MODE" compareValue="admin">
 	     OR 
 	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
@@ -12169,7 +12320,7 @@
 	   	</isEqual>
 	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -17774,7 +17925,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T', '0' )
+           		 PROCESSYN IN ( 'N','E','T')
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
@@ -24116,9 +24267,9 @@
 			AND 
 				XTOCODE = #XTOCODE#
 			AND 
-				DOCID = ''
-			OR 
-				DOCID IS NULL
+				(DOCID = ''
+					OR 
+				DOCID IS NULL)
 	  </select>
 	  	  
 	  <select id="EzApprovalG.relayGetAttachInfo" parameterClass="Map" resultClass="ApprGRelayVO">
@@ -24276,7 +24427,7 @@
 	  		UPDATE 
 	  			TBL_ENDRECEIPTPOINTINFO
 			SET 
-				PROCESSDATE = #PROCESSDATE#,
+				PROCESSDATE = TO_DATE(#PROCESSDATE#, 'YYYY-MM-DD HH24:MI:SS'),
 				PROCESSYN = #PROCESSYN#,	
 				ReceiptMemberName = #ACCEPTNAME#
 			WHERE 

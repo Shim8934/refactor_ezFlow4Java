@@ -102,6 +102,7 @@
 	        function window_onload() {
 	            window.onresize();
 	
+	            HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 	            HwpCtrl.SetSaveMode(1);
 				
 	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {

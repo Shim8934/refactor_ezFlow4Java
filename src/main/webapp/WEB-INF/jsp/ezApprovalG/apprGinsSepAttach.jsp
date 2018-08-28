@@ -83,6 +83,8 @@
 		    function InitListView(lvXml) {
 		        if (lvXml == "") {
 		            lvXml = GetLVHearderXml();
+		        } else {
+		        	lvXml = ReplaceText(ReplaceText(ReplaceText(ReplaceText(lvXml, "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
 		        }
 		        /* if (nonElecRec == "Y" && g_CabinetID != "") { // 기록물철명 자동세팅 주석
 		        	var CabInfo = createXmlDom();

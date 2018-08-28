@@ -127,6 +127,7 @@
         function window_onload() {
             try {
                 window.onresize();
+                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
                 HwpCtrl.SetSaveMode(1);
 
                 if (pDocHref != "") { 
@@ -265,13 +266,15 @@
 
                 var chkpass = chk_Passwd(pUserID);
                 if (chkpass == "False") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
                     OpenAlertUI(pAlertContent);
                     return;
-                } else if (chkpass == "cancel") {
+                } else if (chkpass == "cancel" || chkpass == undefined) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                    OpenAlertUI(pAlertContent);
                     return;
                 }
-
+                
                 SaveFile();
 
                 var rtnVal = "FALSE";

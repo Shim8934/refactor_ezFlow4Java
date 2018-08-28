@@ -281,6 +281,10 @@ public class MBoardGWController {
 			//새게시물 눌렀을때, read테이블에 들어가게함.
 			mBoardService.setAsRead(info, boardId, contentId);
 			
+			// 20180824 조진호 - 모바일 viewerflag 값 추가
+        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+        	data.put("useMobileViewer", useMobileViewer);
+			
 			data.put("boardItem", boardItem);
 			data.put("content", mhtContent);
 			data.put("boardInfo", boardInfo);

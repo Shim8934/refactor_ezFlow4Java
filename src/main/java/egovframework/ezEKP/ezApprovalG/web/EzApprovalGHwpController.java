@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -32,6 +33,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -333,6 +335,44 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
 			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
 				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+			}
+		}
+		
+		//2018-08-27 천성준 - 수발신담당자 권한없는 사람도 자신이 등록한 비전자기록물 문서 볼수있게 접수부서 파일 생성 작업
+		if (orgDocID != null && orgDocID.trim() != "") {
+			// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
+			String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			// 비전자문서 일때만 돌수있게
+			if (isNonElecRec.equals("Y")) {
+				String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+				String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+				String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+	            
+				Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+				
+				if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+					String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+					String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+					
+					orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+					docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+					
+					String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+					File file = new File(dir);
+					
+					if (!file.exists()) {
+						file.mkdirs();
+					}
+					
+					File newFile = new File(docFile);
+					
+					if (!newFile.exists()) {
+						File orgFile = new File(orgDocFile);
+						
+						FileUtils.copyFile(orgFile, newFile);
+					}
+				}
 			}
 		}
 		
@@ -888,5 +928,36 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+	
+	/**
+	 * 결재문서 > 저장버튼 다운로드
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		LOGGER.debug("============ downloadHWPdoc started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);		
+		
+		String docID = request.getParameter("DocId");
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		ApprGDocInfoWebSrvVO fileVO = ezApprovalGService.getHWPdownload(docID, tenantID, companyID);
+		
+		String filePath = fileVO.getHref();
+		String fileName = fileVO.getDocTitle() + ".hwp";
+		
+		String realPath = commonUtil.getRealPath(request);
+		/*String uploadFilePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());*/
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath; 
+		}
+		
+		String fullFilePath = realPath + filePath;
+
+		downFile(request, response, fullFilePath, fileName);	
 	}
 }

@@ -1414,8 +1414,7 @@
 		                 	extensionAttribute1 = '0'
 		                 AND 
 		                 	extensionAttribute2 = '1' 
-		                 ORDER BY 
-                 			A.ParentWriteDate, 
+		                 ORDER BY
                  			A.WriteDate DESC ) T1
 		              WHERE ROWNUM_ <= #v_END# ) T2 
 	            WHERE
@@ -1478,8 +1477,7 @@
                 	extensionAttribute1 = '0'
                 AND 
                 	extensionAttribute2 = '1'
-              	ORDER BY 
-              		A.ParentWriteDate,
+              	ORDER BY
               		A.WriteDate DESC
 			]]>
 		</isNotEqual>

@@ -353,7 +353,7 @@
 		
 		        g_RegType = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/REGTYPE");
 		        if (InfoXml.childNodes[0].childNodes[5].lastChild != null) {
-		            txtSummary.value = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/SUMMARY");
+		            txtSummary.value = ReplaceText(ReplaceText(ReplaceText(ReplaceText(SelectSingleNodeValueNew(InfoXml, "PARAMETERS/SUMMARY"), "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
 		        }
 		        else {
 		            txtSummary.value = "";

@@ -238,6 +238,23 @@ public class EzWebFolderController_m {
 		return  resultBody.toString();
 	}
 	
+	@RequestMapping(value="/ezWebFolder/deleteShareConfirm.do")
+	public String deleteShareConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("deleteShareConfirm started.");
+		
+		String type = request.getParameter("type");
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
+		logger.debug("type=" + type + ",fileList=" + fileList + ",folderList=" + folderList);
+		
+		model.addAttribute("type", type);
+		model.addAttribute("fileList", fileList);
+		model.addAttribute("folderList", folderList);
+		
+		logger.debug("deleteShareConfirm ended.");
+		return "ezWebFolder/webfolderShareDelete";
+	}
+	
 	@RequestMapping(value="/ezWebFolder/deleteShare.do", method=RequestMethod.POST)
 	public @ResponseBody String deleteShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteShare started.");

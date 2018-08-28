@@ -1308,6 +1308,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDERCELL", OrderCell);
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
+		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
 
 		        var wWeigth = 630;
 		        var wHeigth = 480;
@@ -1363,8 +1364,8 @@
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
 		        }
 		        
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
-		        feature = feature + GetOpenPosition(580, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
+		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
 		    }
 		
