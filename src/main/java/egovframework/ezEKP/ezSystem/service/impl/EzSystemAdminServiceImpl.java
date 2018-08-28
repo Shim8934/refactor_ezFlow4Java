@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
 @Service("EzSystemAdminService")
@@ -324,5 +325,15 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.updateSystemIPAllow(params);
 		
 		logger.debug("updateSystemIPAllow ended");
+	}
+	
+	@Override
+	public List<IPBandVO> getAllIPBand(int tenantID) throws Exception {
+		logger.debug("getAllIPBand started. tenantID=" + tenantID);
+		
+		List<IPBandVO> list = ezSystemAdminDAO.getAllIPBand(tenantID);
+		
+		logger.debug("getAllIPBand ended.");
+		return list;
 	}
 }

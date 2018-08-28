@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -577,7 +578,6 @@ public class EzSystemAdminController {
 	}
 	
 	// 이하 재은 수정중
-	
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do")
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");
@@ -644,6 +644,37 @@ public class EzSystemAdminController {
 		
 		logger.debug("setUseIPAccess ended");
 		return "/ezSystem/systemIPBand";
+	}
+	
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getAllIPBands.do")
+	public JSONArray getAllIPBands(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("setUseIPAccess started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<IPBandVO> list = ezSystemAdminService.getAllIPBand(userInfo.getTenantId());
+		
+		if (list == null) {
+			return null;
+		}
+		
+		JSONArray returnJsonArr = new JSONArray();
+		
+		for (int i = 0; i < list.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("ipAddress", list.get(i).getIpAddress());
+			obj.put("access", list.get(i).getAccess());
+			obj.put("explanation", list.get(i).getExplanation());
+			
+			returnJsonArr.add(obj);
+		
+		
+		}
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAllIPBands ended");
+		return returnJsonArr;
 	}
 	
 	

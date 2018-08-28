@@ -4,6 +4,7 @@
 
 	<typeAlias alias="SysParamVO" type="egovframework.ezEKP.ezSystem.vo.SysParamVO"/>
 	<typeAlias alias="ConnectionInfoVO" type="egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO"/>
+	<typeAlias alias="IPBandVO" type="egovframework.ezEKP.ezSystem.vo.IPBandVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -128,5 +129,18 @@
 				TENANT_ID=#tenantID#
 		]]>
 	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemAllIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT 
+				IPADDRESS,
+				ACCESS,
+				EXPLANATION
+			FROM 
+				TBL_IP_BAND
+			WHERE 
+				TENANT_ID=#tenantID#
+		]]>
+	</select>
 		
 </sqlMap>

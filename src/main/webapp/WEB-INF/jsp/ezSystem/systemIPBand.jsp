@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
 		var useIPAccess = "${useIPAccess}";
+		var httpRequest;
 		
 		window.onload = function () {
 			if (useIPAccess === "NO") {
@@ -18,7 +19,65 @@
 			} else {
 				document.getElementById("ipRadio1").checked = true;
 			}
+			
+			getIPList_http();
 	    }
+		
+		// 설정된 IP 대역 리스트 뿌리기
+		function getIPList_http() {
+			$.ajax({
+				type : "POST",
+				url : "/ezSystem/getAllIPBands.do",
+				datatype : 'json',
+				error : function(data) {
+					console.log("error");
+				},
+				complete : function(data) {
+					makeIPBands(data.responseJSON);
+			    }
+			});
+		}
+		
+		function makeIPBands(json) {
+			var _TBODY = document.getElementById("tblIP").childNodes[1];
+			
+			for (var Cnt = 0; Cnt < json.length; Cnt++) {
+				var _TR = document.createElement("TR");
+				_TR.setAttribute("id", "IPBand_" + Cnt);
+				
+				var _TDCheckBox = document.createElement("TD");
+                _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.textAlign = "center";
+                _TDCheckBox.style.cursor = "default";
+                
+                var _TDCheckBox_Sub = document.createElement("INPUT");
+                _TDCheckBox_Sub.type = "checkbox";
+                _TDCheckBox_Sub.style.margin = "0px";
+                _TDCheckBox_Sub.style.padding = "0px";
+                _TDCheckBox_Sub.style.width = "13px";
+                _TDCheckBox_Sub.style.height = "13px";
+                _TDCheckBox_Sub.style.cursor = "pointer";
+                
+                _TDCheckBox.appendChild(_TDCheckBox_Sub);
+                _TR.appendChild(_TDCheckBox);
+                
+                var _IPADDRESS = document.createElement("TD");
+                _IPADDRESS.style.width = "230px";
+                _IPADDRESS.innerHTML = json[Cnt].ipAddress;
+                _TR.appendChild(_IPADDRESS);
+                
+                var _ACCESS = document.createElement("TD");
+                _ACCESS.style.width = "100px";
+                _ACCESS.innerHTML = json[Cnt].access;
+                _TR.appendChild(_ACCESS);
+                
+                var _EXPLANATION = document.createElement("TD");
+                _EXPLANATION.innerHTML = json[Cnt].explanation;
+                _TR.appendChild(_EXPLANATION);
+                
+                _TBODY.appendChild(_TR);
+			}
+		}
 		
 		// 사용여부 저장 버튼 클릭
 		function saveBtn() {
@@ -82,7 +141,7 @@
 	    	<a class="imgbtn" onClick="saveBtn()"><span>저장</span></a>
 	    	<a class="imgbtn" onClick="cancleBtn()"><span>취소</span></a>
 	    </div>
-	</div>
+	</div> 
 	<div id="mainmenu">
 	    <ul class="on">
 	        <li><span onclick="ipBandEidtPopUp('add')">추가</span></li>
@@ -91,9 +150,9 @@
 	    </ul>
 	</div>
 	
-	<table class="mainlist" style="width:100%;">	
+	<table id="tblIP" class="mainlist" style="width:100%;">	
 		<tr>
- 			<th width="22px; text-algin:center;"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
  			<th width="230px;">IP 주소</th>
  			<th width="100px; text-algin:center;">허용여부</th>
  			<th>설명</th>

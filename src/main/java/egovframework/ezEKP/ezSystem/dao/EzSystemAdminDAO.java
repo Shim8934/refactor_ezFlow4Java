@@ -9,6 +9,7 @@ import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -40,6 +41,11 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	
 	public void updateSystemIPAllow(Map<String, Object> map) throws Exception {
 		update("EzSystemAdminDAO.updateSystemIPAllow", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<IPBandVO> getAllIPBand(int tenantID) throws Exception {
+	    return (List<IPBandVO>) list("EzSystemAdminDAO.getSystemAllIPBand", tenantID);
     }
 	
 	

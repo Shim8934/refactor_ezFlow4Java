@@ -10,6 +10,7 @@ import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
 public interface EzSystemAdminService {
@@ -23,4 +24,5 @@ public interface EzSystemAdminService {
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
 	public void updateSystemIPAllow(String allowResult, int tenantID) throws Exception;
+	public List<IPBandVO> getAllIPBand(int tenantID) throws Exception;
 }
