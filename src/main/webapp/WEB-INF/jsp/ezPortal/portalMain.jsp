@@ -9,8 +9,8 @@
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<style>
@@ -505,7 +505,7 @@
 	                	var memoId = result["memoId"];
 	                	var layerFlag = result["layerFlag"];
 	                	
-	                	insertMemo(layerFlag, headerColor, bodyColor, memoId);
+	                	insertMemo(headerColor, bodyColor, memoId, layerFlag);
 	        	    	addremove();
 	                },
 	                error : function() {

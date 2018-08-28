@@ -1,4 +1,4 @@
-function createMemo(flag, hColor, bColor, memoId, contents) {
+function createMemo(hColor, bColor, memoId, contents, flag) {
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "individual-memo");
@@ -63,14 +63,12 @@ function createMemo(flag, hColor, bColor, memoId, contents) {
 	return div;
 }
 
-function insertMemo(layerFlag, hColor, bColor, memoId) {
-	var div = createMemo(layerFlag, hColor, bColor, memoId);
+function insertMemo(hColor, bColor, memoId, layerFlag) {
+	var div = createMemo(hColor, bColor, memoId, null, layerFlag);
 	
 	if (layerFlag == 'layer') {
 		$("#memoList").prepend(div);
-		
 	} else {
-		
 		$("#boardMemoList").prepend(div);
 	}
 	addDateInfo();
@@ -82,28 +80,21 @@ function loadMemoList(flag) {
 	$("#boardMemoList").html('');
 	
 	for(var i=0; i<memoList.length; i++) {
-
 		if ('layer' != flag) {
-			
 			var hColor = memoColor[memoList[i].color_id-1];
 			var bColor = memoColor[memoList[i].color_id+5];
-			var div = createMemo(flag, hColor, bColor, memoList[i].memo_id, memoList[i].contents);
+			var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag);
 			
 			$("#boardMemoList").prepend(div);
-			
 		} else {
-			
 			if (memoList[i].display_flag != 1) {
-				
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
-				var div = createMemo(flag, hColor, bColor, memoList[i].memo_id, memoList[i].contents);
+				var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag);
 				
 				$("#memoList").prepend(div);
 			}
-			
 		}
-		
 		addDateInfo(memoList[i].write_date.substring(0,10));
 	}
 }
