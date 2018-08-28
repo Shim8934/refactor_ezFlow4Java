@@ -22874,6 +22874,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_FLAG", "END");
 
 						String fileName = ezApprovalGDAO.getDocInfoHref(map);
+						
+						// 2018.08.28 KLIB ezd 확장자 처리
+						if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileName = fileName.substring(0, fileName.length() - EzApprovalGKlibService.ENCRYPTED_FILE_EXT.length() - 1);
+						}
+						
 						String extFileName = getExtendedFileName(fileName);
                         
                         // 2011.03.29 년도별 폴더 변경 
