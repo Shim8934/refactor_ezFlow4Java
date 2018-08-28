@@ -92,7 +92,7 @@
                 
                 var _ACCESS = document.createElement("TD");
                 _ACCESS.style.width = "100px";
-                _ACCESS.innerHTML = json[Cnt].access;
+                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "허용" : "거부";
                 _TR.appendChild(_ACCESS);
                 
                 var _EXPLANATION = document.createElement("TD");
