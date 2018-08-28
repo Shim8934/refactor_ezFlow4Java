@@ -136,6 +136,26 @@
 			if(type=="order") {
 				type = type + "_" + $("#orderOption").val();
 			}
+			
+			if(type=="search") {
+				if(searchInput == "" && startDate == "" && endDate == "") {
+					 alert("<spring:message code='ezBoard.t192' />");
+		             return;
+				}
+				if(startDate != "" && endDate == "") {
+					alert("<spring:message code='ezSystem.x0035' />");	
+	                return;
+				}
+				if(startDate == "" && endDate != "") {
+					alert("<spring:message code='ezSystem.x0036' />");	
+	                return;
+				}
+				if(startDate > endDate) {
+					alert("<spring:message code='ezBoard.t191' />");
+	                return;
+				}
+				BoardSearchOptionHidden();
+			}
 
 			$.ajax ({
  			   	url : '/ezMemo/getMemoList.do',
@@ -256,7 +276,7 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	getMemoList();
+	                	getMemoList("order");
 	                },
 	                error : function() {
 	                	
@@ -349,17 +369,6 @@
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		});
 		
-		// 날짜 초기화
-		function btn_PostDate_Clear() {
-	        $("#Sdatepicker").datepicker('setDate', "");
-	        $("#Edatepicker").datepicker('setDate', "");
-	    }
-	    
-		// 새로고침
-		function refresh_onclick() {
-	        window.location.href = "/ezMemo/memoMain.do";
-	    }
-		
 		function onSelect_Option() {
 			
 		}
@@ -430,7 +439,7 @@
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
 								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList('search')"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList('search');"><spring:message code='ezBoard.t188' /></span></a>
 							</div>	
 						</td>
 					</tr>

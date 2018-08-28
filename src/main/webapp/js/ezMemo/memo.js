@@ -85,3 +85,29 @@ function addDateInfo(date) {
 
 		$(".write-date:first").html(month+"."+date+" ("+dayArray[day]+")");	
 }
+
+//날짜 초기화
+function btn_PostDate_Clear() {
+    $("#Sdatepicker").datepicker('setDate', "");
+    $("#Edatepicker").datepicker('setDate', "");
+}
+
+// 검색 닫기
+function BoardSearchOptionHidden() {		    	
+	document.getElementById("layer_popup").style.display = "none";
+	btn_PostDate_Clear();
+	$("#searchTitle").val('');
+     
+    if (window.parent.frames['left'] != undefined) {
+       $.modal.close();			       		
+    }
+    
+    if (parent.parent.frames['left'] != undefined) {
+       $.modal.close();
+    }
+}
+
+//새로고침
+function refresh_onclick() {
+    window.location.href = "/ezMemo/memoMain.do";
+}
