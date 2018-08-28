@@ -103,6 +103,29 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/rest/ezMemo/memo-list/memo/{memoId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoModify(@PathVariable String memoId, MemoVO memoVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-list/memo/" + memoId+ "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-list/memo/" + memoId + "] ended.");
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			ezMemoService.setMemoContents(memoVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch(Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		return result;
+	}
+	
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersInfo(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/" +userId + "] started.");

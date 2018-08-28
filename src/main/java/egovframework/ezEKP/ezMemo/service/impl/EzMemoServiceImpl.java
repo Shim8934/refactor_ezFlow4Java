@@ -259,4 +259,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		return folderId;
 	}
 	
+	@Override
+	public void setMemoContents(MemoVO memoVO) {
+		logger.debug("setMemoContents start");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("contents", memoVO.getContents());
+		map.put("write_date", memoVO.getWrite_date());
+		map.put("memo_id", memoVO.getMemo_id());
+		
+		ezMemoDAO.setMemoContents(map);
+		
+		logger.debug("setMemoContents end");
+	}
+	
 }

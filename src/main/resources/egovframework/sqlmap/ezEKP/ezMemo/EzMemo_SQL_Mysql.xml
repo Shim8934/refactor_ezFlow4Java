@@ -283,6 +283,22 @@
 			TENANT_ID = #tenant_id#
 	</update>
 	
+	<update id="EzMemoDAO.setMemoContents" parameterClass="map">
+		UPDATE
+			TBL_MEMO 
+		SET
+			CONTENTS = #contents#,
+			WRITE_DATE = #write_date#
+		WHERE
+			MEMO_ID = #memo_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
 	<insert id="EzMemoDAO.insertMemoConfig" parameterClass="map">
 		insert into tbl_memo_config 
 			(user_id, font_size, use_date, use_gadget, default_color, color_name, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, company_id, tenant_id)
