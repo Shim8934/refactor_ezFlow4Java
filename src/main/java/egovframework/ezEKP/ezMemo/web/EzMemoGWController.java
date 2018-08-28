@@ -139,6 +139,7 @@ public class EzMemoGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setOffset(info.getOffSet());
 			
 			int memoCount = ezMemoService.getMemoCount(memoFolderVO);
 			List<MemoFolderVO> memoFolders  = ezMemoService.getMemoFolderInfo(memoFolderVO);
