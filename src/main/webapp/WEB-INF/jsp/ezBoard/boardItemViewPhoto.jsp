@@ -26,7 +26,7 @@
 					MARGIN-BOTTOM: 0mm;
 				}
 			<%-- 2018-07-24 홍승비 - 썸네일/포토게시물 이미지 클릭 시 레이어팝업 추가 --%>
-			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
+			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; cursor:pointer;}
 			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
 			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
 			.imgPopupBoxMagnify{width: 700px;height: 760px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
@@ -1229,7 +1229,7 @@
 					});
 			    }
 			    
-			  //썸네일에 마우스 오버할 때 처리.
+			  //썸네일에 마우스 오버할 때 처리.(사실상 썸네일 클릭하여 확대 레이어팝업 띄우는 함수)
 			  	function thumbnailImgMouseOver(e){
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","none");
@@ -1254,7 +1254,8 @@
 				    		
 				    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
 				    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-				    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+				    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+				    		imgPopup.attr("zoom","1");
 			    		});
 		    		} else {
 		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
@@ -1265,7 +1266,8 @@
 			    		
 			    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
 			    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-			    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+			    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+			    		imgPopup.attr("zoom","1");
 		    		}
 		    		
 		    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
@@ -1280,14 +1282,31 @@
 		    		var $imgPopupBox = $("#imgPopupBox");
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
+			  		
+			  		// css 상의 zoom 속성을 1로 유지하고, 이미지의 width를 갱신해보자. 정렬도 잘 먹게 된다.
+			  		console.log("---------------magnifyThumbnailSize()----------------");
+			  		console.log($imgPopupBox);
+			  		console.log($imgPopupDiv);
+			  		console.log($imgPopup);
+			  		
 		    		
 			  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
+			  			
+			  			console.log("Plus!!");
+			  			
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
 			  		else{
+			  			
+			  			console.log("Minus!!");
+			  			
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
-			  			$imgPopup.css("zoom","");
+			  			$imgPopup.css("width", "");
 			  		}
+			  		// 확대레이어팝업 토글 네모버튼 클릭할때마다 zoom 속성과 css 1로 셋팅
+		  			//$imgPopup.css("zoom","1");
+		  			$imgPopup.attr("zoom","1");
 		    		
 		    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
 					$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
@@ -1349,25 +1368,34 @@
 			  		var $imgPopupBox = $("#imgPopupBox");
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
+			  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 			  		
-			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-			  		if($imgPopup.css("zoom").indexOf("%") != -1){
-			  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
+			  		console.log("---------------zoomInImgPopup()//처리전----------------");
+			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
+			  		console.log("$imgPopup.width()      ::     " + $imgPopup.width());
+			  		console.log("$imgPopup.attr(zoom)      ::     " + $imgPopup.attr("zoom"));
+			  		
+			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리. -> 그럴때가...있나??
+			  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+			  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) + zoomOffset;
 			  		}
-			  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+			  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 			  			zoom = 1 + zoomOffset;
 			  		}
 			  		else{
-				  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
+				  		zoom = parseFloat($imgPopup.attr("zoom")) + zoomOffset;
 			  		}
-			  		$imgPopup.css("zoom", zoom);
+			  		zoom = zoom.toFixed(1);
+			  		$imgPopup.attr("zoom", zoom);
+			  	//	$imgPopup.css("zoom", "1");
 			  		
 			  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 			  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 			  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 		    		var imgPopup = document.getElementById("imgPopup");
 			  		var imgPopupDivCH = imgPopupDiv.clientHeight;
-			  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+			  		$imgPopup.width(imgPopupOrignW * zoom);
+			  		$imgPopupDiv.width(imgPopupOrignW * zoom);
 			  		
 			  		//imgPopup 세로 위치 조정.
 			  		if(thumbImgH < (imgPopupDivCH - 100)){
@@ -1377,7 +1405,7 @@
 				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 		  				}
 		  				else {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 		  				}
 			  			$imgPopup.css("top", topOffset);
 			  			$imgPopupDiv.css("overflow", "hidden");
@@ -1385,7 +1413,13 @@
 			  		else if(thumbImgH > (imgPopupDivCH - 100)){
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
-			  		}		
+			  		}
+			  		
+			  		console.log("---------------zoomInImgPopup()//처리후----------------");
+			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
+			  		console.log("$imgPopup.width()*zoom      ::     " + $imgPopup.width()*zoom);
+			  		console.log("zoom      ::     " + zoom);
+			  		
 			  	}
 			  	
 			  	//줌아웃 버튼 기능.
@@ -1395,20 +1429,29 @@
 			  		var $imgPopupBox = $("#imgPopupBox");
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
+			  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
+			  		
+			  		console.log("---------------zoomOutImgPopup()//처리전----------------");
+			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
+			  		console.log("$imgPopup.width()      ::     " + $imgPopup.width());
+			  		console.log("$imgPopup.attr(zoom)      ::     " + $imgPopup.attr("zoom"));
 			  		
 			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-			  		if($imgPopup.css("zoom").indexOf("%") != -1){
-			  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
+			  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+			  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) - zoomOffset;
+			  			zoom = Math.floor();
 			  		}
-			  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+			  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 			  			zoom = 1 - zoomOffset;
 			  		}
 			  		else{
-				  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
+				  		zoom = parseFloat($imgPopup.attr("zoom")) - zoomOffset;
 			  		}
-			  		
-			  		if( zoom > 0 ){
-				  		$imgPopup.css("zoom", zoom);
+			  		zoom = zoom.toFixed(1);
+			  		// 0.1보다 작은 비율로는 축소 불가능		  		
+			  		if( zoom >= 0.1 ){
+				  		$imgPopup.attr("zoom", zoom);
+				  //		$imgPopup.css("zoom", "1");
 			  		}else{
 			  			return;
 			  		}
@@ -1420,22 +1463,26 @@
 		    		var imgPopup = document.getElementById("imgPopup");
 			  		var imgPopupDivCW = imgPopupDiv.clientWidth;
 		    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		    		$imgPopup.width(imgPopupOrignW * zoom);
+		    		$imgPopupDiv.width(imgPopupOrignW * zoom);
 		    		
 			  		if(thumbImgW > (imgPopupDivCW - 100)){
 			  			$imgPopup.css("left","");
 			  		}
 			  		
+			  		console.log("thumbImgH      ::      " + thumbImgH);
+			  		console.log("imgPopupDivCH - 100      ::      " + (imgPopupDivCH - 100));
 			  		//imgPopup 세로 위치 조정
 			  		if(thumbImgH < (imgPopupDivCH - 100)){
 			  			var agent = navigator.userAgent.toLowerCase();
 			  			var topOffset = "";
-			  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+			  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {		  				
+				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);			  			
 		  				}
 		  				else {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+			  				topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 		  				}
+			  				  			
 			  			$imgPopup.css("top", topOffset);
 			  			$imgPopupDiv.css("overflow", "hidden");
 			  		}
@@ -1443,6 +1490,14 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
+			  		
+			  		
+			  		console.log("---------------zoomOutImgPopup()//처리후----------------");
+			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
+			  		console.log("$imgPopup.width()      ::     " + $imgPopup.width());
+			  		console.log("$imgPopup.width()*zoom      ::     " + $imgPopup.width()*zoom);
+			  		console.log("zoom     ::     " + zoom);
+			  		
 			  	}		        
 		</script>
 	</head>
