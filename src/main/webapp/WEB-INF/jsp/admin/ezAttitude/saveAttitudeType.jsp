@@ -16,7 +16,7 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<%-- 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script> --%>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<script type="text/javascript">
@@ -53,6 +53,8 @@
 				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'","&#39;"), '"',"&quot;");
 				if (typeName2) {
 					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'","&#39;"), '"',"&quot;");
+				} else {
+					typeName2 = typeName;
 				}
 				
 				$.ajax({
@@ -63,8 +65,8 @@
 		        	data : {
 		        		companyId : companyId,
 		        		typeId : typeId,
-		        		typeName : typeName,
-		        		typeName2 : typeName2
+		        		typeName : trim_Cross(typeName),
+		        		typeName2 : trim_Cross(typeName2)
 		        	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {
