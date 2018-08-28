@@ -65,6 +65,7 @@
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
+	    var getLang = "<c:out value='${userInfo.lang}'/>";
 	    var ApproveFlag     = "${approveFlag}";
 	    var brd_NM = "<c:out value='${brdNm}' />";
 	    var ResID = "${resID}";

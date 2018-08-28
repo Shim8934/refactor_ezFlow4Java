@@ -197,7 +197,8 @@
 		    				LunarUse = true;
 		    			} else {
 		    				LunarUse = false;
-		    			}		    			
+		    			}
+		    			schedule_get_holiday();
 		    		}
 		        }); */
 		        

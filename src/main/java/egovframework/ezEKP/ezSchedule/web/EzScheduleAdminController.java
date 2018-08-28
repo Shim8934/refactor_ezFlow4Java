@@ -73,9 +73,17 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 왼쪽화면 호출함수
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleLeft.do")
-	public String  scheduleAdminLeft() throws Exception {
+	public String  scheduleAdminLeft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminLeft started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang = userInfo.getLang();
+		
+		logger.debug("lang : " + lang);
+		
+		model.addAttribute("lang", lang);
 		
 		return "/admin/ezSchedule/scheduleLeft";
 	}
