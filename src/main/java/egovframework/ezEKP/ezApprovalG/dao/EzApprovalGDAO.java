@@ -3064,7 +3064,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getExtAttr1(Map<String, Object> map) throws Exception{
 		return (String)select("EzApprovalG.getExtAttr1", map);
 	}
-	public String getHWPdownload(Map<String, Object> map) throws Exception{
-		return (String)select("EzApprovalG.getHWPdownload", map);
+	public ApprGDocInfoWebSrvVO getHWPdownload(Map<String, Object> map) throws Exception{
+		return (ApprGDocInfoWebSrvVO)select("EzApprovalG.getHWPdownload", map);
 	}
 }

@@ -309,8 +309,8 @@
 		            	if (!((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1)) {
 		            		throw "hwp";
 		            	}
-		                HwpCtrl.SetImgReg();
 		                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+		                HwpCtrl.SetImgReg();
 		                HwpCtrl.SetSaveMode(1);
 		
 		                getApprovInfo();

@@ -79,6 +79,18 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public int getMemoDefaultFolder(Map<String, Object> map) {
 		return (int) select("EzMemoDAO.getMemoDefaultFolder", map);
 	}
+
+	public MemoVO getMemo(Map<String, Object> map) {
+		return (MemoVO) select("EzMemoDAO.getMemo", map);
+	}
+
+	public void setMemoDisplay(Map<String, Object> map) {
+		update ("EzMemoDAO.setMemoDisplay", map);
+	}
+
+	public void setMemoContents(Map<String, Object> map) {
+		update("EzMemoDAO.setMemoContents", map);
+	}
 	
 	public int maxFolderOrders(Map<String, Object> map) {
 		return (int) select("EzMemoDAO.maxFolderOrders", map);

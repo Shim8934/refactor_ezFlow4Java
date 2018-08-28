@@ -6934,7 +6934,7 @@
 								AND
 									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 			AND
-				B.ENDDATE < ADDDATE(utc_timestamp(), - A.DELETEAFTER)
+				B.ENDDATE < TO_CHAR(SYSDATE - A.DELETEAFTER, 'YYYY-MM-DD HH24:MI:SS')
 		]]>
   	</select>
   

@@ -159,8 +159,8 @@
 	                setMenuBar("btnSendDraft", true);
 	                dragNdrapNo();
 	
-	                HwpCtrl.SetImgReg();
 	                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+	                HwpCtrl.SetImgReg();
 	                HwpCtrl.SetSaveMode(1);
 	
 	                IsSkipDrafter = "FALSE"
