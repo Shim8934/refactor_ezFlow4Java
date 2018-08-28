@@ -369,7 +369,7 @@
 		    		setMemoListSize();
 		    	}
 		    }
-		    /* 메모 컨피그 디비 확인 후 없으면 insert */
+		    /* 메모 컨피그 DB 확인 후 없으면 insert */
 		    function getMemoConfig() {
 	        	
 		        $.ajax({
@@ -616,6 +616,8 @@
 	                },
 	                cache: false,
 	                success: function(result) {
+	                	console.log("메모리스트");
+	                	console.log(result);
 	                	memoColor = result["colorList"].split(";");
 	                	defaultColor = result["defaultColor"];
 	                	memoList = result["memoList"];
@@ -657,6 +659,7 @@
 						
 						var folderList = result["folders"];
 						var html="";
+						html += "<option value=''>전체</option>";
 						folderList.forEach(function(list, index){
 							html += "<option value='"+list.folder_id+"'>"+list.folder_name +"</option>"
 						});
