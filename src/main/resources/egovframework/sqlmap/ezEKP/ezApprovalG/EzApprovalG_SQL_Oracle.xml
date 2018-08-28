@@ -8211,7 +8211,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -12320,7 +12320,7 @@
 	   	</isEqual>
 	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -17925,7 +17925,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T', '0' )
+           		 PROCESSYN IN ( 'N','E','T')
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
@@ -24427,7 +24427,7 @@
 	  		UPDATE 
 	  			TBL_ENDRECEIPTPOINTINFO
 			SET 
-				PROCESSDATE = #PROCESSDATE#,
+				PROCESSDATE = TO_DATE(#PROCESSDATE#, 'YYYY-MM-DD HH24:MI:SS'),
 				PROCESSYN = #PROCESSYN#,	
 				ReceiptMemberName = #ACCEPTNAME#
 			WHERE 

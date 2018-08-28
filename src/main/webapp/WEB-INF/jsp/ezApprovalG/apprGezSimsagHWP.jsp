@@ -127,6 +127,7 @@
         function window_onload() {
             try {
                 window.onresize();
+                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
                 HwpCtrl.SetSaveMode(1);
 
                 if (pDocHref != "") { 

@@ -417,7 +417,7 @@
         		 '새 포틀릿'
         </isEqual>
         <isEqual property="primaryLang" compareValue="3" >
-        		 '새 포틀릿_jp'
+        		 '新しいポートレット'
         </isEqual>
         <![CDATA[
 		, 1, 1, #v_pCOMPANYID#, 0, 0, 0, #tenantID#)

@@ -8019,20 +8019,20 @@ DROP TABLE IF EXISTS `tbl_record`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_record` (
-  `RECORDID` varchar(68) NOT NULL,
+  `RECORDID` varchar(200) NOT NULL,
   `DOCID` varchar(80) DEFAULT NULL,
   `PROCESSDEPTNAME` varchar(200) DEFAULT NULL,
   `PROCESSDEPTCODE` varchar(28) DEFAULT NULL,
   `REGISTERYEAR` varchar(16) DEFAULT NULL,
   `REGISTERDATE` datetime DEFAULT NULL,
-  `REGISTERNO` varchar(52) DEFAULT NULL,
+  `REGISTERNO` varchar(200) DEFAULT NULL,
   `APRMEMBERTITLE` varchar(200) DEFAULT NULL,
   `DRAFTERNAME` varchar(200) DEFAULT NULL,
   `EXECUTEDATE` datetime DEFAULT NULL,
   `RECEIPTMEMBERNAME` varchar(200) DEFAULT NULL,
   `SENDINGMEMBERNAME` varchar(200) DEFAULT NULL,
   `DELIVERYNO` varchar(68) DEFAULT NULL,
-  `PRODUCEDEPTREGNO` varchar(120) DEFAULT NULL,
+  `PRODUCEDEPTREGNO` varchar(200) DEFAULT NULL,
   `ELECTRONICRECFLAG` varchar(4) DEFAULT NULL,
   `SPECIALRECORDCODE` varchar(20) DEFAULT NULL,
   `PUBLICITYCODE` varchar(36) DEFAULT NULL,
@@ -8066,7 +8066,7 @@ DROP TABLE IF EXISTS `tbl_record_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_record_temp` (
-  `RECORDID` varchar(68) DEFAULT NULL,
+  `RECORDID` varchar(200) DEFAULT NULL,
   `DOCID` varchar(80) NOT NULL,
   `PROCESSDEPTNAME` varchar(200) DEFAULT NULL,
   `PROCESSDEPTCODE` varchar(28) DEFAULT NULL,
@@ -8241,7 +8241,7 @@ DROP TABLE IF EXISTS `tbl_recroleinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_recroleinfo` (
-  `RECORDID` varchar(68) NOT NULL,
+  `RECORDID` varchar(200) NOT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `USERID` varchar(400) NOT NULL,
   `USERRIGHT` bigint(10) DEFAULT NULL,
@@ -8267,7 +8267,7 @@ DROP TABLE IF EXISTS `tbl_recroleinfo_temp`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_recroleinfo_temp` (
   `DOCID` varchar(80) NOT NULL,
-  `RECORDID` varchar(68) DEFAULT NULL,
+  `RECORDID` varchar(200) DEFAULT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `USERID` varchar(100) NOT NULL,
   `USERRIGHT` bigint(10) DEFAULT NULL,
@@ -8846,7 +8846,7 @@ DROP TABLE IF EXISTS `tbl_seperateattach`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_seperateattach` (
-  `RECORDID` varchar(68) NOT NULL,
+  `RECORDID` varchar(200) NOT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `TITLE` varchar(1020) DEFAULT NULL,
   `REGISTERTYPE` varchar(4) DEFAULT NULL,
@@ -8878,7 +8878,7 @@ DROP TABLE IF EXISTS `tbl_seperateattach_temp`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_seperateattach_temp` (
   `DOCID` varchar(80) NOT NULL,
-  `RECORDID` varchar(68) DEFAULT NULL,
+  `RECORDID` varchar(200) DEFAULT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `TITLE` varchar(1020) DEFAULT NULL,
   `REGISTERTYPE` varchar(4) DEFAULT NULL,

@@ -22514,7 +22514,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	   Document signXML3 = commonUtil.convertStringToDocument(sb3.toString());
 	   String subSQL="";
 	   for(int k=0; k<signXML3.getElementsByTagName("RECEIPTPOINTID").getLength(); k++) {
-		   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "0" , "QUERY", companyID, lang, tenantID );
+		   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "O" , "QUERY", companyID, lang, tenantID );
 		   if(subSQL.equals("FALSE")){
 			   return "<RESULT>FALSE</RESULT>";
 		   }
@@ -26032,10 +26032,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-    		long time = System.currentTimeMillis(); 
-    		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        	
-             strTime = dayTime.format(new Date(time));
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
@@ -26134,15 +26131,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			String strRecDate = strPrecDate;
 			String strRecStates = "";
-			long time = System.currentTimeMillis(); 
-    		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         	
-			if( strRecDate.trim().equals("")) {
-				strRecDate = dayTime.format(new Date(time));
+			if (strRecDate == null || strRecDate.equals("")) {
+				strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
 			} else {
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				
-				strRecDate = format.parse(strRecDate).toString();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				strRecDate = sdf.format(sdf.parse(strRecDate));
 			}
 
 			switch( strMode.trim()) {
@@ -26647,15 +26641,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception {
 		String recStates = "";
-		long time = System.currentTimeMillis();
-		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	
-		if (recDate.trim().equals("")) {
-			recDate = dayTime.format(new Date(time));
-		} else {
-			recDate = dayTime.parse(recDate).toString();
-		}
 
+		if (recDate == null || recDate.equals("")) {
+			recDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			recDate = sdf.format(sdf.parse(recDate));
+		}
+		
 		switch(mode.trim()) {
 			case "send":
 				recStates = "S";
