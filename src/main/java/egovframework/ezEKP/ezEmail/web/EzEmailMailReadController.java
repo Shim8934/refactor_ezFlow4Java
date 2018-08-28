@@ -1707,8 +1707,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		}        
         } while (retryFlag && retryCount > -1);		
 		
+        String htmlBody = bodyInfoList.get(0);
+        Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(htmlBody);
+		htmlBody = m.replaceAll("");
+        
 		model.addAttribute("url", url);
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
