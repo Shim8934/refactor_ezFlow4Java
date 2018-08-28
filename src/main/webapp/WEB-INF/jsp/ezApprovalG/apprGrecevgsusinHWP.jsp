@@ -253,8 +253,8 @@
 		        HwpCtrl.style.height = null;
 		        HwpCtrl.height = document.documentElement.clientHeight - 150;
 		    }
-		
-			function window_onload() {
+		    
+		    function window_onload() {
 				var chkReceivedDoc = 0;
 				
 		    	//접수된 문서인지 확인하기
@@ -274,8 +274,12 @@
 		    	if (chkReceivedDoc != 0) {
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
+		    	} else {
+		    		window_onload2();
 		    	}
-		    	
+		    }
+		
+			function window_onload2() {
 			    window.onresize();
 			    
 			    HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
