@@ -75,10 +75,9 @@ public class EzOrganController {
         String userCompanyID = userInfo.getCompanyID();
         String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
         
-        if (adminDist.equals("true")) {
+        if (adminDist.equals("true") || adminOrganChk[1].equals("other")) {
         	topID = adminOrganChk[0];
-        } else if (adminOrganChk.length>1 && adminOrganChk[1].equals("organ")){
-        }
+        } 
         
         logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID);
         
