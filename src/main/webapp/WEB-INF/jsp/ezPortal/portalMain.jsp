@@ -12,6 +12,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -62,6 +63,7 @@
 	    	var textColor;
 	    	var currText;
 	    	var bodyColor;
+	    	var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
 			
 			topHeight = "56";
 
@@ -282,15 +284,32 @@
 		        });
 		        
 		        getMemoConfig();
-		        
+		        /* 새 메모 추가 */
 		        $("#newMemo").click(function() {
 		        	newMemo();
 		        });
-
+				
 		        getMemoList();
 		        
-		        $("#memoList").on("click", ".hideMemo", function() {
-		        	alert("숨김버튼클릭");
+		        /* 메모 숨김 상태 변경 */
+		        $("#memoList").on("click", ".individual-memo img", function() {
+		        	var memoId = $(this).attr("id").replace("memoId", "");
+		        	
+		        	$.ajax({
+		        		type: "POST",
+		        		data : {
+		        			memoId: memoId
+		        		},
+		        		dataType: "JSON",
+		        		url : "/ezMemo/memo-display.do",
+		        		success : function(result) {
+		        			
+		        			if (result.result == "ok") {
+		        				$("#memoList .individual-memo").remove();
+		        				getMemoList();
+		        			}
+		        		}
+		        	});
 		        });
 		        
 		    });
@@ -304,9 +323,12 @@
 		    	if (layerClass.indexOf("layer-all") != -1) {
 		    		
 		    		$(".layer-all").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
+		    		$(".memoListBox").css({"width" : winWidth+25, "height" : winHeight-56-16});
+		    		$("#memoList").css({"width" : winWidth+25, "height" : winHeight-56-16});
 		    		
 		    	} else if (layerClass.indexOf("layer-half") != -1) {
 		    		getMemoConfig();
+		    		setMemoListSize();
 		    	}
 		    }
 		    /* 메모 컨피그 디비 확인 후 없으면 insert */
@@ -449,99 +471,6 @@
 		        });
 		    }
 		    
-
-		    
-		    /* function save() {
-		    	if(headerColor == null) {			// 지정색 없을 때
-		    		headerColor = memoBColor[0];
-			    	textColor = memoColor[0];
-		    	}
-		    	
-		    	var text = $("#textarea").val();
-		    	var html = "";
-		    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
-		    	html += "<div class='memo-color'>";
-		    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-		    	html += "<span class='write-date' style='padding-left: 10px'></span>";
-		    	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>";
-		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-		    	html += "<textarea class='memo-text' style='background-color:"+ textColor +"'>";
-		    	html += text;
-		    	html += "</textarea>";
-		    	html += "</div>"
-		    	$("#memoList").prepend(html);
-		    	$("#textarea").val('');
-		    	
-		    	addDate();
-		    	addremove();
-		    }
-		    
-		    function addDate() {
-		    	var nowDate = new Date();
-		    	var month = nowDate.getMonth() + 1;
-		    	var date = nowDate.getDate();
-		    	var day = nowDate.getDay();
-		    	var arrayDay = ["(일)", "(월)", "(화)", "(수)", "(목)", "(금)", "(토)"];
-		    	
-		    	if(month < 10) {
-		    		month = "0"+month;
-		    	}
-		    	if(date < 10) {
-		    		date = "0"+date;
-		    	}
-		    	$(".write-date:first").html(month+"."+date+" "+arrayDay[day]);
-		    }
-		    
-		    function addremove() {
-			    $(".individual-memo").mouseenter(function(){
-			    	$(this).children("img").css("visibility", "visible");
-			    	$(this).children("img:first").click(function(){
-			    		$(this).parent().remove();
-			    	})
-			    	$(this).children("img:last").click(function(){
-			    		$(this).prevAll("div").css("visibility", "visible");
-			    		$(this).prevAll("div").children().each(function(index, element){
-			    			$(element).css("background-color", memoBColor[index]);
-			    		})
-			    	})
-		        });
-		        
-		        $(".individual-memo").mouseleave(function(){
-		        	$(this).children("img").css("visibility", "hidden");
-		        });
-		        
-		        $(".individual-memo").dblclick(function(){
-		        	memoIndex = $(this).index()+1;
-		        	currText = $(this).children(".memo-text").val();
-		        	var headerColor = $(this).css("background-color");
-			    	var textColor = $(this).children("textarea").css("background-color");
-			    	
-		        	// $("#maskDiv").css("display", "");
-			        $(".detailMemo").css("display", "");
-					$("#textarea").css("font-size", "15px");
-					$("#textarea").css("background-color", textColor);
-					$("#textarea").css("border-color", textColor);
-					$(".detailMemo").css("background-color", headerColor);
-			        $("#font-btn").css("background-color", textColor);
-			        $("#font-btn").css("display", "");
-			        $("#textarea").val(currText);
-		        });
-		        
-		        $(".memo-color-list").click(function(){
-		        	headerColor = $(this).css("background-color");
-		        	textColor = memoColor[$(this).index()];
-		        	$(this).parent().parent().css("background-color", headerColor);
-		        	$(this).parent().nextAll("textarea").css("background-color", textColor);
-		        	$(this).parent().css("visibility", "hidden");
-		        });
-		        
-		        $(".memo-color").mouseleave(function(){
-		        	if($(this).css("visibility") == "visible") {
-		        		$(this).css("visibility", "hidden");
-		        	}
-		        });
-		    } */
-		    
 		    function detailMemoSave() {
 		    	$(".individual-memo:nth-child("+memoIndex+") > .memo-text").val($("#textarea").val());
 		    	$("#textarea").val('');
@@ -561,64 +490,30 @@
 		    function newMemo() {
 		    	
 		    	var folderId = $("select option:selected").val();
+		    	var layerFlag = $("#layerFlag").val();
 		    	
 				$.ajax ({
 	 			   	url : '/ezMemo/memoWrite.do',
 	 			   	type : 'POST',
 	                dataType : 'json',
 	                data : { 
-	                	folderId : folderId
+	                	folderId : folderId,
+	                	layerFlag : layerFlag
 	                },  
 	                cache: false,
 	                success: function(result) {
-
-	                	var html = "";
-	        	    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
-	        	    	html += "<input type='checkbox' name='memo'>";
-	        	    	html += "<div class='memo-color'>";
-	        	    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-	        	    	html += "<span class='write-date'></span>";
-	        	    	html += "<img class='hideMemo' src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>";
-	        	    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-	        	    	html += "<textarea class='memo-text' style='background-color:"+ bodyColor +"'>";
-	        	    	html += "</textarea>";
-	        	    	html += "</div>"
-	        	    	$("#memoList").prepend(html);
-	        	    	$("#textarea").val('');
-	        	    	
-	        	    	addDate();
+	                	var memoId = result["memoId"];
+	                	var layerFlag = result["layerFlag"];
+	                	
+	                	insertMemo(layerFlag, headerColor, bodyColor, memoId);
 	        	    	addremove();
+	                },
+	                error : function() {
+	                	
 	                }
 				});
 			}
 			
-		    function addDate(date) {
-		    	var nowDate 
-		    	
-		    	if(date == null) {
-		    		nowDate = new Date();
-		    	}
-		    	else {
-		    		nowDate = new Date(date);
-		    	}
-		    	
-		    	var year = nowDate.getFullYear();
-		    	var month = nowDate.getMonth() + 1;
-		    	var date = nowDate.getDate();
-		    	var day = nowDate.getDay();
-		    	var arrayDay = ["(일)", "(월)", "(화)", "(수)", "(목)", "(금)", "(토)"];
-		    	
-		    	if(month < 10) {
-		    		month = "0"+month;
-		    	}
-		    	if(date < 10) {
-		    		date = "0"+date;
-		    	}
-
-				$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
-		    	
-		    }
-		    
 		    function addremove() {
 			    $(".individual-memo").mouseenter(function(){
 			    	$(this).children("img").css("visibility", "visible");
@@ -630,7 +525,7 @@
 			    	})
 		        });
 			    
-			    $(".individual-memo").dblclick(function(){
+			    $(".memo-text").dblclick(function(){
 			    	var pheight = window.screen.availHeight;
 			        var pwidth = window.screen.availWidth;
 			        pheight = parseInt(pheight) / 2;
@@ -658,15 +553,24 @@
 		        		$(this).css("visibility", "hidden");
 		        	}
 		        });
+		        
+		        /* $(".memo-text").blur(function(){
+					modifyMemo(this);
+				}); */
 		    }
 		    
-		    function getMemoList() {
-		    	
+			// 메모 내용 변경	    
+		    /* function modifyMemo(obj) {
+		    	console.log($(obj).parent());
+		    } */
+		    
+		    function getMemoList(type) {
 		    	var folderId = $("select option:selected").val();
+		    	var layerFlag = $("#layerFlag").val();
 				var searchInput = $("#searchTitle").val();
 				var startDate = $("#Sdatepicker").val();
 				var endDate = $("#Edatepicker").val();
-				
+
 				$.ajax ({
 	 			   	url : '/ezMemo/getMemoList.do',
 	 			   	type : 'POST',
@@ -675,7 +579,9 @@
 	                	searchInput : searchInput,
 	                	startDate : startDate,
 	                	endDate : endDate,
-	                	folderId : folderId   
+	                	folderId : folderId,
+	                	type : type,
+	                	layerFlag : layerFlag
 	                },
 	                cache: false,
 	                success: function(result) {
@@ -685,43 +591,28 @@
 	                	headerColor = memoColor[defaultColor];
 	                	bodyColor = memoColor[defaultColor+6]; 
 	                	folderId = result["folderId"];
-	                	console.log(result);
-						for(var i=0; i<memoList.length; i++) {
-							var html = "";
-					    	html += "<div class='individual-memo' style='background-color:"+ memoColor[memoList[i].color_id-1] +"'>";
-					    	html += "<input type='checkbox' name='memo'>";
-					    	html += "<div class='memo-color'>";
-					    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-					    	html += "<span class='write-date'></span>";
-					    	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>"; 
-					    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
-					    	html += "<textarea class='memo-text' style='background-color:"+ memoColor[memoList[i].color_id+5] +"'>";
-					    	html += memoList[i].contents;
-					    	html += "</textarea>";
-					    	html += "</div>"
-					    	$("#textarea").val('');
-					    	
-					    	$("#memoList").prepend(html);
-					    	addDate(memoList[i].write_date.substring(0,10));
-					    	
-					    	
-						} 
+	                	layer = result["layerFlag"];
+	                	
+						loadMemoList(layer);
 						
-					    var btnBundlHeight = $("#btn-bundle").height();
-					    console.log(btnBundlHeight);
-					    var layerHeight = $("#layer-popup").height();
-					    console.log(layerHeight);
-					    var memoListHeight = layerHeight - btnBundlHeight;
-					    console.log(memoListHeight);
-					    $("#memoList").css("height", memoListHeight);
+					    addremove();
 					    
-				    	addremove();
-				     },
-		             error : function() {
-		                	
-		             }
+				    	setMemoListSize();
+				     }
 				});
 			}
+		    
+		    function setMemoListSize() {
+		    	
+		    	var btnBundlHeight = $("#btn-bundle").height();
+			    var layerHeight = $("#layer-popup").height();
+			    var layerWidth = $("#layer-popup").width();
+			    var memoListHeight = layerHeight - btnBundlHeight;
+			    
+			    $(".memoListBox").css({"height" : memoListHeight});
+			    $("#memoList").css({"width" : "", "height" : memoListHeight});
+			    
+		    }
 		    
 		    
 		</script>
@@ -766,20 +657,18 @@
 			</div>
 			
 			<!-- 하나 클릭 -->
-			<!-- <div id="selected-memo" style="display: none; ">
-				<div class="selected-memoWrapper"> -->
-					<div class="detailMemo" style="display: none">
-						<div id="memo-btn">
-							<button id="font-up">폰트+</button> 
-						    <button id="font-down">폰트-</button>
-							<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
-				        	<!-- <div id="font-btn" style="text-align: left; display: none ">
-					        </div> -->
-						</div>
-						<textarea id="textarea" style="resize:none;"></textarea>
-		        	</div>
-				<!-- </div>
-			</div> -->
+			<div class="selected-memoWrapper">
+				<div class="detailMemo" style="display: none">
+					<input type="hidden" id="layerFlag" value="layer" />
+					<div id="memo-btn">
+						<button id="font-up">폰트+</button> 
+					    <button id="font-down">폰트-</button>
+						<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
+			        	<!-- <div id="font-btn" style="text-align: left; display: none ">
+				        </div> -->
+					</div>
+					<textarea id="textarea" style="resize:none;"></textarea>
+	        	</div>
 			
 			<div id="open-memo" style="display: none;"><img src="/images/cmtFile.png" width="60px"></div>
 		</div>

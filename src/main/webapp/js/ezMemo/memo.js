@@ -1,7 +1,9 @@
-function createMemo(hColor, bColor, memoId, contents) {
+function createMemo(flag, hColor, bColor, memoId, contents) {
+	
 	var div = document.createElement("div");
 	div.setAttribute("class", "individual-memo");
 	div.style.backgroundColor = hColor;
+	div.id  = "memo" + memoId;
 	
 	var input = document.createElement("input");
 	input.setAttribute("name", "memo");
@@ -26,6 +28,15 @@ function createMemo(hColor, bColor, memoId, contents) {
 	textarea.setAttribute("memoId", memoId);
 	textarea.style.backgroundColor = bColor;
 	
+	var closeImg = document.createElement("img");
+	closeImg.setAttribute("src", "/images/ezMemo/close_xBtn.png");
+	closeImg.style.visibility = "hidden";
+	closeImg.style.float = "right";
+	closeImg.style.height = "20px";
+	closeImg.style.paddingRight = "10px";
+	closeImg.style.cursor = "pointer";
+	closeImg.id = "memoId" + memoId;
+	
 	if(contents != null) {
 		textarea.innerHTML = contents;
 	}
@@ -36,8 +47,15 @@ function createMemo(hColor, bColor, memoId, contents) {
 		div3.setAttribute("color-num", i);
 		div2.appendChild(div3);
 	}
+	
+	if (flag == 'layer') {
+		div.appendChild(closeImg);
+		
+	} else {
+		div.appendChild(input);
+	}
+	
 	div.appendChild(div2);
-	div.appendChild(input);
 	div.appendChild(span);
 	div.appendChild(img);
 	div.appendChild(textarea);
@@ -45,18 +63,44 @@ function createMemo(hColor, bColor, memoId, contents) {
 	return div;
 }
 
-function insertMemo(hColor, bColor, memoId) {
-	var div = createMemo(hColor, bColor, memoId);
-	$("#boardMemoList").prepend(div);
+function insertMemo(layerFlag, hColor, bColor, memoId) {
+	var div = createMemo(layerFlag, hColor, bColor, memoId);
+	
+	if (layerFlag == 'layer') {
+		$("#memoList").prepend(div);
+		
+	} else {
+		
+		$("#boardMemoList").prepend(div);
+	}
 	addDateInfo();
 }
 
-function loadMemoList() {
+function loadMemoList(flag) {
+	
 	for(var i=0; i<memoList.length; i++) {
-		var hColor = memoColor[memoList[i].color_id-1];
-		var bColor = memoColor[memoList[i].color_id+5];
-		var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents);
-		$("#boardMemoList").prepend(div);
+
+		if ('layer' != flag) {
+			
+			var hColor = memoColor[memoList[i].color_id-1];
+			var bColor = memoColor[memoList[i].color_id+5];
+			var div = createMemo(flag, hColor, bColor, memoList[i].memo_id, memoList[i].contents);
+			
+			$("#boardMemoList").prepend(div);
+			
+		} else {
+			
+			if (memoList[i].display_flag != 1) {
+				
+				var hColor = memoColor[memoList[i].color_id-1];
+				var bColor = memoColor[memoList[i].color_id+5];
+				var div = createMemo(flag, hColor, bColor, memoList[i].memo_id, memoList[i].contents);
+				
+				$("#memoList").prepend(div);
+			}
+			
+		}
+		
 		addDateInfo(memoList[i].write_date.substring(0,10));
 	}
 }
