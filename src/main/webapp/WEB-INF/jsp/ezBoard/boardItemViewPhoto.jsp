@@ -1322,6 +1322,7 @@
 		    		}
 			  	}
 			  	
+			  //썸네일 이미지 팝업박스를 토글해준다.
 			  	function toggleImgPopupBox(e){
 			  		var imgPopupBox = $("#imgPopupBox");
 			  		var imgPopupDiv = $("#imgPopupDiv");
@@ -1444,7 +1445,7 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  	}		        
+			  	}
 		</script>
 	</head>
 	<body class="popup">
