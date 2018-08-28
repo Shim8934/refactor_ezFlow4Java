@@ -46,6 +46,20 @@
 		function makeIPBands(json) {
 			var _TBODY = document.getElementById("tblIP").childNodes[1];
 			
+			if (json.length == 0) {
+				var _TR = document.createElement("TR");
+				_TR.setAttribute("id", "noData");
+				
+				var _NODATA = document.createElement("TD");
+                _NODATA.colSpan = "4";
+                _NODATA.style.textAlign = "center";
+                _NODATA.innerHTML = "데이터가 없습니다.";
+                
+				_TR.appendChild(_NODATA);
+                _TBODY.appendChild(_TR);
+                return;
+			}
+			
 			for (var Cnt = 0; Cnt < json.length; Cnt++) {
 				var _TR = document.createElement("TR");
 				_TR.setAttribute("id", "IPBand_" + Cnt);
