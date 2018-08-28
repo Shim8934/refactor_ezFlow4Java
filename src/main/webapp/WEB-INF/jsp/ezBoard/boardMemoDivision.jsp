@@ -15,7 +15,7 @@
 	    		memoFoldersInfo();
 			});
 		
-    	
+	    	var inputNameDlg_cross_dialogArguments = new Array();
     		/**
     		 * memo분류함을 조회
     		 */
@@ -65,6 +65,17 @@
 					$(obj).css("backgroundColor", "#edf4fd");
 				}
 	    	}
+	    	
+	    	function selectAll() {
+				// 전체 체크박스 선택, 해제
+				if ($("#checkboxAll").prop("checked") == true) {
+					$(".myCheckbox").prop("checked", true);
+					$("#memoFolderList tr").css("background", "#edf4fd");
+				} else {
+					$(".myCheckbox").prop("checked", false);
+					$("#memoFolderList tr").css("background", "#FFFFFF");
+				}
+			}
     	
 	    	function selectRow(obj) {
 				var num = $(obj).attr("value");
@@ -78,7 +89,15 @@
 	
 				event.stopPropagation();
 			}
-
+			
+	    	function onclick_Complete(szName) {
+		    	DivPopUpHidden();
+		    }
+	    	
+	    	function add_onclick() {
+				var OpenWin = window.open("/ezMemo/memoInputName.do", "", GetOpenWindowfeature(500, 200));        
+				try { OpenWin.focus(); } catch (e) { }
+			}
     	</script>
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
@@ -94,7 +113,7 @@
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
 			        <li style=><span onClick="add_onclick()"><spring:message code='ezMemo.t0027' /></span></li>
-			        <li style=><span onClick="modify_onclick()"><spring:message code='ezMemo.t0028' /></span></li>
+			        <%-- <li style=><span onClick="modify_onclick()"><spring:message code='ezMemo.t0028' /></span></li> --%>
 			        <li style=><span onClick="delete_onclick()"><spring:message code='ezMemo.t0029' /></span></li>
 			    </ul>
 			</div>
