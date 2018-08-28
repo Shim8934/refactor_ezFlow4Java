@@ -197,7 +197,11 @@
 		    				LunarUse = true;
 		    			} else {
 		    				LunarUse = false;
-		    			}		    			
+		    			}
+		    			// #13470 uselang이 3인 경우 음력사용 금지
+		    			if(uselang == "3") {
+		    				LunarUse = false;
+		    			}
 		    			schedule_get_holiday();
 		    		}
 		        });
