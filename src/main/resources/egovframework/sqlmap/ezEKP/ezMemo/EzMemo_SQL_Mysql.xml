@@ -340,6 +340,36 @@
 		</selectKey>
 	</insert>
 	
+	<select id="EzMemoDAO.getMemo" resultClass="MemoVO">
+		SELECT 
+			MEMO_ID, CONTENTS, USER_ID, DISPLAY_FLAG, WRITE_DATE, DELETE_DATE, ORDERS, FOLDER_ID, COLOR_ID, COMPANY_ID, TENANT_ID
+		FROM
+			TBL_MEMO
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</select>
+	
+	<update id="EzMemoDAO.setMemoDisplay">
+		UPDATE
+			TBL_MEMO
+		SET
+			DISPLAY_FLAG = #display_flag#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</update>
+
 	<select id="EzMemoDAO.maxFolderOrders" resultClass="Integer">
 		SELECT 
 			MAX(ORDERS)+1

@@ -20,5 +20,6 @@ public interface EzMemoService {
 	public int hasMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO);
+	public void setMemoDisplay(MemoVO memo);
 	public void setMemoContents(MemoVO memoVO);
 }
