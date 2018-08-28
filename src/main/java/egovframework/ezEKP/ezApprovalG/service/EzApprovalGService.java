@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -569,5 +570,5 @@ public interface EzApprovalGService {
 	
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
 	
-	public String getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
+	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 }

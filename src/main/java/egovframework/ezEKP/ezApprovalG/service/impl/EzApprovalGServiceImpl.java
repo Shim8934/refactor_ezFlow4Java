@@ -31,6 +31,22 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -101,21 +117,6 @@ import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -12293,6 +12294,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private String getReceiveDocList(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder,
 			String basicOrderReverse, String searchQuery, Document xmlDomSub, String companyID ,int tenantID) throws Exception {
 		logger.debug("getReceiveDocList started");
+		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -12304,6 +12307,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PAGESIZE2", querySize2);
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("v_approvalFlag", approvalFlag);
 		
 		if(orderOption1.length() > 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, 11).toLowerCase());
@@ -12362,6 +12366,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, String subQuery, String companyID, Document xmlDomSub, int tenantID) throws Exception {
 		logger.debug("getReceiveDocListCount started");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_MODE", mode.toLowerCase());
@@ -12371,6 +12377,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SPSUBQUERY", subQuery);
 		map.put("v_SPSUBQUERYLENGTH", subQuery.length());
 		map.put("v_TENANTID", tenantID);
+		map.put("v_approvalFlag", approvalFlag);
+		
 		
 		if (xmlDomSub.getElementsByTagName("DOCNO").item(0) != null) {
 			map.put("v_SDOCNO", xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent());
@@ -12392,7 +12400,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			map.put("v_SWRITERDEPTNAME", "");
 		}
-		
+			
 		int totalCnt = ezApprovalGDAO.getReceiveDocListCount(map);
 
 		logger.debug("getReceiveDocListCount ended");
@@ -19180,6 +19188,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String getLeftDocCount(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String companyID , int tenantID) throws Exception {
 		logger.debug("getLeftDocCount started");
+		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -19193,6 +19203,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
 		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
 		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+		map.put("v_approvalFlag", approvalFlag);
 		
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		
@@ -22538,7 +22549,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	   Document signXML3 = commonUtil.convertStringToDocument(sb3.toString());
 	   String subSQL="";
 	   for(int k=0; k<signXML3.getElementsByTagName("RECEIPTPOINTID").getLength(); k++) {
-		   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "0" , "QUERY", companyID, lang, tenantID );
+		   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "O" , "QUERY", companyID, lang, tenantID );
 		   if(subSQL.equals("FALSE")){
 			   return "<RESULT>FALSE</RESULT>";
 		   }
@@ -26057,10 +26068,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-    		long time = System.currentTimeMillis(); 
-    		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        	
-             strTime = dayTime.format(new Date(time));
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
@@ -26159,15 +26167,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			String strRecDate = strPrecDate;
 			String strRecStates = "";
-			long time = System.currentTimeMillis(); 
-    		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         	
-			if( strRecDate.trim().equals("")) {
-				strRecDate = dayTime.format(new Date(time));
+			if (strRecDate == null || strRecDate.equals("")) {
+				strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
 			} else {
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				
-				strRecDate = format.parse(strRecDate).toString();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				strRecDate = sdf.format(sdf.parse(strRecDate));
 			}
 
 			switch( strMode.trim()) {
@@ -26672,15 +26677,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception {
 		String recStates = "";
-		long time = System.currentTimeMillis();
-		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	
-		if (recDate.trim().equals("")) {
-			recDate = dayTime.format(new Date(time));
-		} else {
-			recDate = dayTime.parse(recDate).toString();
-		}
 
+		if (recDate == null || recDate.equals("")) {
+			recDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			recDate = sdf.format(sdf.parse(recDate));
+		}
+		
 		switch(mode.trim()) {
 			case "send":
 				recStates = "S";
@@ -27242,7 +27246,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getHWPdownload(String docID, int tenantID, String companyID) throws Exception{
+	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -27250,8 +27254,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID",  tenantID);
 		map.put("companyID",  companyID);
 		
-		String filepath = ezApprovalGDAO.getHWPdownload(map);
+		ApprGDocInfoWebSrvVO fileVO = ezApprovalGDAO.getHWPdownload(map);
 		
-		return filepath;
+		return fileVO;
 	};
 }
