@@ -1343,6 +1343,19 @@
 		            }
 		        }
 		    }
+	        
+	        //2018-08-27 김보미 - 커뮤니티 타이틀 너비 조정
+	        window.onresize = function () {   	
+	        	commuTitleWidth();
+		    }
+	        
+			function commuTitleWidth() {
+				var titleWidth = "";
+				
+				titleWidth = $(".tabpartMycommunityTitle").eq(1).width() - $(".tabpartMycommunityTitle dd").width() - 35;
+				
+				$(".tabpartMycommunityTitle dt").css("width", titleWidth + "px");
+			}
 		</script>
 	</head>
 	<body>

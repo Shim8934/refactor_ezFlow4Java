@@ -268,7 +268,7 @@ public class EzApprovalGRelayScheduler {
         				 logger.debug("#문서고유번호=" + strXDocID);
         				 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
         				 logger.debug("#문서종류=" + strDocType);
-        				 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
+        				 strWriterName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
         				 logger.debug("#문서작성자이름=" + strWriterName);
         				 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr");
         				 logger.debug("#문서작성자부서=" + strWriterDept);
@@ -281,17 +281,14 @@ public class EzApprovalGRelayScheduler {
         				 strXSLVersion = objXML.getElementsByTagName("xsl-version").item(0).getTextContent();
         				 logger.debug("#XSL버전=" + strXSLVersion);
         				 
-        				 long time = System.currentTimeMillis(); 
-        				 SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        				 
         				 if (objXML.getElementsByTagName("date").item(0).getTextContent().length() > 0) {
         					 strRecDate = objXML.getElementsByTagName("date").item(0).getTextContent();
         				 } else {
-        					 strRecDate = dayTime.format(new Date(time));
+        					 strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
         				 }
         				 
         				 if (!ValidateDateTimeString(strRecDate)) {
-        					 strRecDate = dayTime.format(new Date(time));
+        					 strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
         				 }
         				 
         				 logger.debug("#날짜=" + strRecDate);

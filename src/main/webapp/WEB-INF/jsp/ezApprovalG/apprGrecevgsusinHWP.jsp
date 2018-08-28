@@ -165,6 +165,10 @@
 		                        setMenuBar("btnAssign", false);
 		                        setMenuBar("btnDistribute", false);
 		                    }
+
+		                    if (pOrg_orgDocID == "") {
+		                        setMenuBar("btnReturn", false);
+		                    }
 		
 		                    if (g_RetFlag == "Y") {
 		                        btnReturn_onclick();
@@ -252,7 +256,10 @@
 		
 			function window_onload() {
 			    window.onresize();
+			    
+			    HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 			    HwpCtrl.SetSaveMode(1);
+			    
 			    try {
 			        IsSkipDrafter = "FALSE"
 			        SetBtnStateTrue();
@@ -317,7 +324,8 @@
 			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
-			                    document.getElementById("btnReqReSend").style.display = "";
+			                	/* 재발송기능 display:none처리 2018-08-25 */
+			                    /* document.getElementById("btnReqReSend").style.display = ""; */
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
 			
@@ -389,7 +397,8 @@
 			
 			                var NewIsRelay = GetRelayDocInfo();
 			                if (NewIsRelay) {
-			                    btnReqReSend.style.display = "";
+			                	/* 재발송기능 display:none처리 */
+			                    /* btnReqReSend.style.display = ""; */
 			                } else {
 			                    btnReqReSend.style.display = "none";
 			                }

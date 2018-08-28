@@ -286,7 +286,9 @@
         		for(jk = index;jk < curidxno - 1 ; jk++){
             		var tmpValue = frmCreate.selQues[jk+1].text.split(".");
             		frmCreate.selQues[jk].value = frmCreate.selQues[jk+1].value;
-            		frmCreate.selQues[jk].text = jk+1 + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
+					//2018-08-08 김보미 - 유형 질문 표시
+             		//frmCreate.selQues[jk].text = jk+1 + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
+            		frmCreate.selQues[jk].text = tmpValue[0].split("]")[0] + "]" + (jk + 1) + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
         		}
         		frmCreate.selQues.remove(curidxno-1);
     		}
@@ -445,10 +447,27 @@
 	    		var xmlDom = createXmlDom();
 	    		xmlDom = loadXMLString(DataXML);
 	    		removeQue();
-	    		for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
-	        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+				for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
+		    		//2018-08-09 김보미 - 불러오기 시에 질문 유형명 표시되게끔 변경
+// 		        	var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+// 		        	frmCreate.selQues.options[i] = TmpOption;
+
+	        		var typeName = SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "ANSWERTYPE");
+	        		
+	        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+	        		if (typeName == 1) {
+	        			typeName = "<spring:message code='ezQuestion.t487' />";
+	        		} else if (typeName == 2) {
+	        			typeName = "<spring:message code='ezQuestion.t372' />";
+	        		} else if (typeName == 4) {
+	        			typeName = "<spring:message code='ezQuestion.t373' />";
+	        		} else if (typeName == 5) {
+	        			typeName = "<spring:message code='ezQuestion.t50003' />"
+	        		}
+	        		var TmpOption = new Option("[" + typeName + "]" + (i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
 	        		frmCreate.selQues.options[i] = TmpOption;
 	    		}
+
 	    		AttachFile.innerHTML = AttachFile.innerHTML;
 			}
 			

@@ -74,47 +74,59 @@
 	</sql>
 	
 	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
-		<![CDATA[	
-    		SELECT 
-    			*
-    		
-    		FROM
-                ( SELECT
-                    *
-                  FROM  
-        			(SELECT  
-        					TO_CHAR((C.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
-        					C."SEQUENCE",
-        					C.USERNM,
-        					C.USERNM2,
-        					C.DEPTNM,
-        					C.DEPTNM2,
-        					C.CONNECTIP,
-        					C.CONNECTBROWSER,
-        					C.CONNECTOS,
-        					row_number() over(
-        						ORDER BY 
-        							"SEQUENCE" DESC
-        					) as rNum
-        					
-        			FROM 
-        					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
-        			ON 
-        					C.USERID = U.USERID
-        			WHERE 
-        					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
-        ]]>
-        					<include refid="EzSystemAdminDAO.searchQuery"/>
-        <![CDATA[			
-        			) A
-                  WHERE
-                    A.rNum <= (#pageCount# + #v_start#)  
-                ) X
-        ]]>        
+		 	SELECT
+		 	 	X.rnum, 
+			    TO_CHAR((X.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
+	            X."SEQUENCE",
+	            X.USERNM,
+	            X.USERNM2,
+	            X.DEPTNM,
+	            X.DEPTNM2,
+	            X.CONNECTIP,
+	            X.CONNECTBROWSER,
+	            X.CONNECTOS
+            FROM (
+				SELECT 
+			    	ROWNUM AS rnum,
+				    A.CONNECTTIME, 
+					A."SEQUENCE",
+					A.USERNM,
+					A.USERNM2,
+					A.DEPTNM,
+					A.DEPTNM2,
+					A.CONNECTIP,
+					A.CONNECTBROWSER,
+					A.CONNECTOS
+				FROM 
+					(
+					SELECT  
+					    C.CONNECTTIME,
+						C."SEQUENCE",
+						C.USERNM,
+						C.USERNM2,
+						C.DEPTNM,
+						C.DEPTNM2,
+						C.CONNECTIP,
+						C.CONNECTBROWSER,
+						C.CONNECTOS
+					FROM 
+						TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+					ON 
+						C.USERID = U.USERID
+					WHERE 
+						C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
+						<include refid="EzSystemAdminDAO.searchQuery"/>
+					) A
 		<isNotEqual property="v_start" compareValue="-1">
-            <![CDATA[
-			     WHERE X.rNum >= (#v_start# + 1)
-            ]]> 
+			<![CDATA[
+            	WHERE ROWNUM <= (#pageCount# + #v_start#)
+			]]>
+		</isNotEqual> 
+            	) X
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+         	WHERE X.rnum >= (#v_start# + 1)
+			]]>
 		</isNotEqual> 
 	</select>
 	
@@ -123,7 +135,7 @@
 		FROM   	TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 		ON 		C.USERID = U.USERID
 		WHERE	C.TENANT_ID = #v_tenantID# AND U.TENANT_ID = #v_tenantID# 
-				<include refid="EzSystemAdminDAO.searchQuery"/>
+		<include refid="EzSystemAdminDAO.searchQuery"/>
 	</select>
 	
 	<delete id="EzSystemAdminDAO.deleteLoginHist" parameterClass="Map">

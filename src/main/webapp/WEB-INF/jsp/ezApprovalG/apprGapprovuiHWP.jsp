@@ -309,8 +309,8 @@
 		            	if (!((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1)) {
 		            		throw "hwp";
 		            	}
-		                HwpCtrl.SetImgReg();
 		                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+		                HwpCtrl.SetImgReg();
 		                HwpCtrl.SetSaveMode(1);
 		
 		                getApprovInfo();
@@ -1093,7 +1093,7 @@
 					para[3] = ext;
 					
 			        var url = "/ezApprovalG/insSepAttach.do";
-				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+				    var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			
 			        if (url != "")
 			            var rtn = window.showModalDialog(url, para, feature);
