@@ -1229,7 +1229,7 @@
 					});
 			    }
 			    
-			  //썸네일에 마우스 오버할 때 처리.(사실상 썸네일 클릭하여 확대 레이어팝업 띄우는 함수)
+			  //썸네일에 마우스 오버할 때 처리.(thumbnail클래스 클릭하여 확대 레이어팝업 띄우는 함수)
 			  	function thumbnailImgMouseOver(e){
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","none");
@@ -1283,29 +1283,14 @@
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
 			  		
-			  		// css 상의 zoom 속성을 1로 유지하고, 이미지의 width를 갱신해보자. 정렬도 잘 먹게 된다.
-			  		console.log("---------------magnifyThumbnailSize()----------------");
-			  		console.log($imgPopupBox);
-			  		console.log($imgPopupDiv);
-			  		console.log($imgPopup);
-			  		
-		    		
 			  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
-			  			
-			  			console.log("Plus!!");
-			  			
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
 			  		else{
-			  			
-			  			console.log("Minus!!");
-			  			
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
 			  			$imgPopup.css("width", "");
 			  		}
-			  		// 확대레이어팝업 토글 네모버튼 클릭할때마다 zoom 속성과 css 1로 셋팅
-		  			//$imgPopup.css("zoom","1");
 		  			$imgPopup.attr("zoom","1");
 		    		
 		    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
@@ -1370,12 +1355,7 @@
 			  		var $imgPopup = $("#imgPopup");
 			  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 			  		
-			  		console.log("---------------zoomInImgPopup()//처리전----------------");
-			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
-			  		console.log("$imgPopup.width()      ::     " + $imgPopup.width());
-			  		console.log("$imgPopup.attr(zoom)      ::     " + $imgPopup.attr("zoom"));
-			  		
-			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리. -> 그럴때가...있나??
+			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
 			  		if($imgPopup.attr("zoom").indexOf("%") != -1){
 			  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) + zoomOffset;
 			  		}
@@ -1387,7 +1367,6 @@
 			  		}
 			  		zoom = zoom.toFixed(1);
 			  		$imgPopup.attr("zoom", zoom);
-			  	//	$imgPopup.css("zoom", "1");
 			  		
 			  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 			  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
@@ -1399,14 +1378,9 @@
 			  		
 			  		//imgPopup 세로 위치 조정.
 			  		if(thumbImgH < (imgPopupDivCH - 100)){
-			  			var agent = navigator.userAgent.toLowerCase();
 			  			var topOffset = "";
-			  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-		  				}
-		  				else {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-		  				}
+				  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+
 			  			$imgPopup.css("top", topOffset);
 			  			$imgPopupDiv.css("overflow", "hidden");
 			  		}
@@ -1414,12 +1388,6 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  		
-			  		console.log("---------------zoomInImgPopup()//처리후----------------");
-			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
-			  		console.log("$imgPopup.width()*zoom      ::     " + $imgPopup.width()*zoom);
-			  		console.log("zoom      ::     " + zoom);
-			  		
 			  	}
 			  	
 			  	//줌아웃 버튼 기능.
@@ -1431,15 +1399,9 @@
 			  		var $imgPopup = $("#imgPopup");
 			  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 			  		
-			  		console.log("---------------zoomOutImgPopup()//처리전----------------");
-			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
-			  		console.log("$imgPopup.width()      ::     " + $imgPopup.width());
-			  		console.log("$imgPopup.attr(zoom)      ::     " + $imgPopup.attr("zoom"));
-			  		
 			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
 			  		if($imgPopup.attr("zoom").indexOf("%") != -1){
 			  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) - zoomOffset;
-			  			zoom = Math.floor();
 			  		}
 			  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 			  			zoom = 1 - zoomOffset;
@@ -1448,41 +1410,33 @@
 				  		zoom = parseFloat($imgPopup.attr("zoom")) - zoomOffset;
 			  		}
 			  		zoom = zoom.toFixed(1);
-			  		// 0.1보다 작은 비율로는 축소 불가능		  		
-			  		if( zoom >= 0.1 ){
+			  		
+			  		// 0.1보다 작은 비율로는 축소 불가능
+			  		if ( zoom >= 0.1 ) {
 				  		$imgPopup.attr("zoom", zoom);
-				  //		$imgPopup.css("zoom", "1");
-			  		}else{
+			  		} else {
 			  			return;
 			  		}
 			  		
-			  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+			  		var thumbImgW = imgPopupOrignW * zoom;
 			  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 			  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 			  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 		    		var imgPopup = document.getElementById("imgPopup");
 			  		var imgPopupDivCW = imgPopupDiv.clientWidth;
 		    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		    		$imgPopup.width(imgPopupOrignW * zoom);
-		    		$imgPopupDiv.width(imgPopupOrignW * zoom);
+		    		$imgPopup.width(thumbImgW);
+		    		$imgPopupDiv.width(thumbImgW);
 		    		
 			  		if(thumbImgW > (imgPopupDivCW - 100)){
 			  			$imgPopup.css("left","");
 			  		}
 			  		
-			  		console.log("thumbImgH      ::      " + thumbImgH);
-			  		console.log("imgPopupDivCH - 100      ::      " + (imgPopupDivCH - 100));
 			  		//imgPopup 세로 위치 조정
 			  		if(thumbImgH < (imgPopupDivCH - 100)){
-			  			var agent = navigator.userAgent.toLowerCase();
 			  			var topOffset = "";
-			  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {		  				
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);			  			
-		  				}
-		  				else {
-			  				topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-		  				}
-			  				  			
+				  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+
 			  			$imgPopup.css("top", topOffset);
 			  			$imgPopupDiv.css("overflow", "hidden");
 			  		}
@@ -1490,14 +1444,6 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  		
-			  		
-			  		console.log("---------------zoomOutImgPopup()//처리후----------------");
-			  		console.log("$imgPopupDiv.width()      ::     " + $imgPopupDiv.width());
-			  		console.log("$imgPopup.width()      ::     " + $imgPopup.width());
-			  		console.log("$imgPopup.width()*zoom      ::     " + $imgPopup.width()*zoom);
-			  		console.log("zoom     ::     " + zoom);
-			  		
 			  	}		        
 		</script>
 	</head>
