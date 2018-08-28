@@ -14,11 +14,12 @@ public interface EzMemoService {
 	public void addMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public void modifyMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public void deleteMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
-	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType) throws Exception;
+	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType, String offset) throws Exception;
 	public int memoWrite(MemoVO memo) throws Exception;
 	public void insertMemoConfig(MemoConfigVO memoConfigVO);
 	public int hasMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO);
 	public void setMemoDisplay(MemoVO memo);
+	public void setMemoContents(MemoVO memoVO);
 }

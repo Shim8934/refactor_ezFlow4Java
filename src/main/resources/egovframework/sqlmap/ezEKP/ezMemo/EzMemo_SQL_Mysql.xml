@@ -98,6 +98,7 @@
 			AND
 				DELETE_FLAG = 0
 		]]>
+		<isEqual property="searchType" compareValue="search">
 			<isNotEmpty property="searchInput" >
 				<![CDATA[
 	              AND
@@ -106,22 +107,37 @@
             </isNotEmpty>
 			<isNotEmpty property="startDate" >
 				<![CDATA[
-	              AND 
-	              		WRITE_DATE <= #endDate#
 	              AND
-	              		WRITE_DATE >= #startDate#
+	              		WRITE_DATE >= DATE_ADD(DATE_FORMAT(#startDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)
+	              AND 
+	              		WRITE_DATE <= DATE_ADD(DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)
 	             ]]> 
             </isNotEmpty>
-			<isNotEqual property="folder_id" compareValue="0">
-			  	<![CDATA[
-			  		AND
-					  	FOLDER_ID = #folder_id#
-				]]>
+        </isEqual>
+		<isNotEqual property="folder_id" compareValue="0">
+			  <![CDATA[
+			  	AND
+					 FOLDER_ID = #folder_id#
+			  ]]>
 			 </isNotEqual>
-		<![CDATA[
-			ORDER BY 
-				ORDERS
-		]]>
+		<isEqual property="searchType" compareValue="order_1">
+        	<![CDATA[
+        		ORDER BY
+        			ORDERS
+        	]]>
+        </isEqual>
+        <isEqual property="searchType" compareValue="order_2">
+        	<![CDATA[
+        		ORDER BY
+        			WRITE_DATE ASC
+        	]]>
+        </isEqual>
+        <isEqual property="searchType" compareValue="order_3">
+        	<![CDATA[
+        		ORDER BY
+        			WRITE_DATE DESC
+        	]]>
+        </isEqual>
 	</select>
 	
 	<select id="EzMemoDAO.getMaxOrder" resultClass="Integer">
@@ -205,9 +221,9 @@
 	
 	<insert id="EzMemoDAO.addMemoFolder" parameterClass="map">
 		INSERT INTO 
-			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID)
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ICON_ID, ORDERS)
 		VALUES
-			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#)
+			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#, 1, #orders#)
 		<selectKey keyProperty="folder_id" resultClass="Integer" type="pre">
 			SELECT 
 				MAX(FOLDER_ID)+1 
@@ -259,6 +275,22 @@
 			FOLDER_NAME = #folder_name#
 		AND
 			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.setMemoContents" parameterClass="map">
+		UPDATE
+			TBL_MEMO 
+		SET
+			CONTENTS = #contents#,
+			WRITE_DATE = #write_date#
+		WHERE
+			MEMO_ID = #memo_id#
 		AND
 			USER_ID = #user_id#
 		AND
@@ -337,4 +369,17 @@
 		AND 
 			MEMO_ID = #memo_id#
 	</update>
+
+	<select id="EzMemoDAO.maxFolderOrders" resultClass="Integer">
+		SELECT 
+			MAX(ORDERS)+1
+		FROM 
+			TBL_MEMO_FOLDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			COMPANY_ID = #company_id#
+		AND
+			USER_ID = #user_id#    
+	</select>
 </sqlMap>

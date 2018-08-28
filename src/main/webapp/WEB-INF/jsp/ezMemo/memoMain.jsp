@@ -38,7 +38,7 @@
 			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 		}
 		.individual-memo { 
-			width:200px; height:200px; 
+			width:230px; height:230px; 
 			background-color:#0470e4; 
 			text-align:left; float: left; 
 			margin: 10px 25px 10px 25px; overflow:hidden; 
@@ -47,7 +47,7 @@
 		}
 		.memo-text {
 			margin-top:10px; padding-left:11px; padding-right: 25px; padding-bottom:5px; 
-			border:0px; width:100%; height:81%; resize:none; 
+			border:0px; width:100%; height:84%; resize:none; 
 			overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;
 		}
 		.write-date {
@@ -60,7 +60,7 @@
 			vertical-align: middle;
 		}
 		.memo-color { 
-			padding:0px; box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;
+			padding:0px; box-sizing:border-box; width: 232px; height: 35px; position:absolute; top:0px; left:0px; visibility:hidden;
 		}
 		.memo-color-list { 
 			display:inline-block; width:16.5%; height:100%; text-align:center; float:left;
@@ -125,6 +125,7 @@
 			});  */
 
 			getMemoList();
+			
 		}
 		
 		function getMemoList(type) {
@@ -132,6 +133,30 @@
 			var startDate = $("#Sdatepicker").val();
 			var endDate = $("#Edatepicker").val();
 			
+			if(type=="order") {
+				type = type + "_" + $("#orderOption").val();
+			}
+			
+			if(type=="search") {
+				if(searchInput == "" && startDate == "" && endDate == "") {
+					 alert("<spring:message code='ezBoard.t192' />");
+		             return;
+				}
+				if(startDate != "" && endDate == "") {
+					alert("<spring:message code='ezSystem.x0035' />");	
+	                return;
+				}
+				if(startDate == "" && endDate != "") {
+					alert("<spring:message code='ezSystem.x0036' />");	
+	                return;
+				}
+				if(startDate > endDate) {
+					alert("<spring:message code='ezBoard.t191' />");
+	                return;
+				}
+				BoardSearchOptionHidden();
+			}
+
 			$.ajax ({
  			   	url : '/ezMemo/getMemoList.do',
  			   	type : 'POST',
@@ -141,7 +166,7 @@
                 	startDate : startDate,
                 	endDate : endDate,
                 	folderId : folderId,
-                	type : type
+                	searchType : type
                 },
                 cache: false,
                 success: function(result) {
@@ -230,19 +255,58 @@
 	        });
 	        
 	        $(".memo-text").blur(function(){
-				modifyMemo(this);
-			});
+					modifyMemo(this);
+	        })
 	    }
 	    
 		// 메모 내용 변경	    
 	    function modifyMemo(obj) {
-	    	console.log($(obj).parent());
+			var memoId = obj.getAttribute("memoid");
+			var beforeContents = obj.innerHTML;
+			var afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+			
+			if(beforeContents != afterContents) {
+		    	$.ajax ({
+	 			   	url : '/ezMemo/memoModify.do',
+	 			   	type : 'POST',
+	                dataType : 'json',
+	                data : { 
+	                	memoId : memoId,
+	                	contents : afterContents
+	                },  
+	                cache: false,
+	                success: function(result) {
+	                	getMemoList("order");
+	                },
+	                error : function() {
+	                	
+	                }
+				}); 
+			}
 	    }
 	    
 	    // 메모 삭제
 	    function DeleteItem_onclick() {
 	    	if(confirm("<spring:message code='ezMemo.t0023'/>")) {
 		    	var valuesArray = $("input[name=memo]:checked");
+		    	$.ajax ({
+	 			   	url : '/ezMemo/memoDelete.do',
+	 			   	type : 'POST',
+	                dataType : 'json',
+	                data : { 
+	                	folderId : folderId
+	                },  
+	                cache: false,
+	                success: function(result) {
+	                	var memoId = result["memoId"];
+	                	
+	                	insertMemo(headerColor, bodyColor, memoId);
+	        	    	addremove();
+	                },
+	                error : function() {
+	                	
+	                }
+				});
 	    	}
 	    	else {
 
@@ -305,17 +369,6 @@
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		});
 		
-		// 날짜 초기화
-		function btn_PostDate_Clear() {
-	        $("#Sdatepicker").datepicker('setDate', "");
-	        $("#Edatepicker").datepicker('setDate', "");
-	    }
-	    
-		// 새로고침
-		function refresh_onclick() {
-	        window.location.href = "/ezMemo/memoMain.do";
-	    }
-		
 		function onSelect_Option() {
 			
 		}
@@ -345,7 +398,7 @@
 		  </ul>
 		</div>
 		<div style="width:100%; border-bottom: 1px solid #e8e8e8;"></div>
-		<div id="bodyFrame" style="width:100%; overflow-y:scroll; padding-right: 27px; ">
+		<div id="bodyFrame" style="width:100%; overflow-y:auto; ">
  		 	<table class="mainlist" style="width:100%;">
  		 		<div id="boardMemoList">
 		 		</div>
@@ -367,7 +420,7 @@
 							<spring:message code='ezBoard.garm01' />
 						</th>
 						<td>
-							<input type="text" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
+							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList(search); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
 						</td>
 					</tr>
 					<tr>
@@ -386,7 +439,7 @@
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
 								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList(search)"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList('search');"><spring:message code='ezBoard.t188' /></span></a>
 							</div>	
 						</td>
 					</tr>
@@ -395,7 +448,7 @@
 		</div>
 	</div>
 	
-	<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+	<div id="layer_Viewpopup" style="width: 200px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 		<div class="popupwrap1">
 			<div class="popupwrap2">
 				<table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
@@ -407,10 +460,10 @@
 					<tr>
 						<th><spring:message code='ezEmail.t99000035' /></th>
 						<td>
-							<select id="listcount" style="WIDTH: 80px; height: 20px;" onchange="onSelect_Option(this);">
-								<option value="0"><spring:message code='ezMemo.t0019'/></option>
-                       		    <option value="1"><spring:message code='ezMemo.t0020'/></option>
-                           		<option value="2"><spring:message code='ezMemo.t0021'/></option>
+							<select id="orderOption" style="WIDTH: 80px; height: 20px;" onchange="getMemoList('order');">
+								<option value="1"><spring:message code='ezMemo.t0019'/></option>
+                       		    <option value="2"><spring:message code='ezMemo.t0020'/></option>
+                           		<option value="3"><spring:message code='ezMemo.t0021'/></option>
 							</select>
 						</td>
 					</tr>

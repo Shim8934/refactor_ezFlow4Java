@@ -106,8 +106,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoConfig ended.");
 	}
 	
-	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType) throws Exception {
+	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType, String offset) throws Exception {
 		logger.debug("getMemoList started.");
+		
+		if (!startDate.equals("")) {
+			startDate += " 00:00:00";
+			endDate += " 23:59:59";
+		}
 
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("tenant_id", vo.getTenant_id());
@@ -118,6 +123,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("endDate", endDate);
 		map.put("folder_id", folderId);
 		map.put("searchType", searchType);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<MemoVO> memoList = ezMemoDAO.getMemoList(map);
 
@@ -153,8 +159,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
+		int orders = ezMemoDAO.maxFolderOrders(map);
+		
 		map.put("folder_name", memoFolderVO.getFolder_name());
 		map.put("reg_date", commonUtil.getTodayUTCTime(""));
+		map.put("orders", orders);
 		ezMemoDAO.addMemoFolder(map);
 		logger.debug("addMemoFolder ended.");
 	}
@@ -280,4 +289,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoDisplay end");
 	}
 
+	@Override
+	public void setMemoContents(MemoVO memoVO) {
+		logger.debug("setMemoContents start");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("contents", memoVO.getContents());
+		map.put("write_date", memoVO.getWrite_date());
+		map.put("memo_id", memoVO.getMemo_id());
+		
+		ezMemoDAO.setMemoContents(map);
+		
+		logger.debug("setMemoContents end");
+	}
+	
 }

@@ -97,6 +97,7 @@ public class EzMemoController {
 		param.put("folder_id", folderId);
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("searchType", searchType);
+		param.put("offset", userInfo.getOffset());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		
@@ -237,7 +238,35 @@ public class EzMemoController {
 			return "error";
 		}
 	}
-
+	
+	@RequestMapping(value = "/ezMemo/memoModify.do")
+	public String memoModify(String memoId, String contents, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoModify started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String regDate = commonUtil.getTodayUTCTime("");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("user_id",userInfo.getId());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("memo_id", memoId);
+		param.put("write_date", regDate);
+		param.put("contents", contents);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/memo/" + memoId, param, request, "put", null);		
+		
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("memoModify ended.");
+		
+		if (status.equals("ok")) {		
+			return "json";
+		}
+		else {
+			return "error";
+		}
+	}
 	
 	@RequestMapping(value = "/ezMemo/memoRead.do")
 	public String memoRead(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
