@@ -321,12 +321,14 @@ function CabinetTree() {
 		var previousElmt = divTree.querySelector("span[class='selectedNode']");
 		
 		if (previousElmt != null) {
-			if (previousElmt.getAttribute("role") != selectElmt.getAttribute("role")) {
+			previousElmt.className = "spanName";
+			
+			/*if (previousElmt.getAttribute("role") != selectElmt.getAttribute("role")) {
 				previousElmt.className = "spanName";
 			}
 			else {
 				return;
-			}
+			}*/
 		}
 		
 		selectElmt.className = "selectedNode";

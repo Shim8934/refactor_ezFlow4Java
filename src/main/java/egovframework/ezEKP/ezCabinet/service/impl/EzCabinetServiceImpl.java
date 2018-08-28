@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -1201,10 +1202,60 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("companyId", userInfo.getCompanyID());
 		
 		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
-		map.put("deptList",  userDeptList);
-		map.put("shareId",   shareId);
+		map.put("deptList", userDeptList);
+		map.put("shareId",  shareId);
 		
-		return ezCabinetDAO.getUserSharedCabinet(map);
+		List<CabinetSimpleVO> cabinetList = ezCabinetDAO.getUserSharedCabinet(map);
+		
+		//Check if duplicate cabinet exist
+		Set<Integer> cabinetIds = cabinetList.stream().map(CabinetSimpleVO::getCabinetId).collect(Collectors.toSet());
+		if (cabinetIds.size() != cabinetList.size()) {
+			List<CabinetSimpleVO> tempList   = new ArrayList<>();
+			Map<Integer, Integer> cabinetMap = new HashMap<>();
+			
+			for (int i = 0; i < cabinetList.size(); i++) {
+				int crrId = cabinetList.get(i).getCabinetId();
+				if (!cabinetMap.containsKey(crrId)) {
+					cabinetMap.put(crrId, i);
+				}
+				else {
+					cabinetList.get(cabinetMap.get(crrId)).setHasSub(1);
+				}
+			}
+			
+			cabinetMap.forEach((key, value) -> {tempList.add(cabinetList.get(value));});
+			cabinetList.clear();
+			cabinetList.addAll(tempList);
+		}
+		
+		//Check duplicate cabinet
+		List<Integer> cabinetIdHasChildPerm = cabinetList.stream().filter(cab -> cab.getHasSub() == 1).map(CabinetSimpleVO::getCabinetId).collect(Collectors.toList());
+		Iterator<CabinetSimpleVO> it        = cabinetList.iterator();
+		
+		while(it.hasNext()) {
+			int checkflag          = 0;
+			CabinetSimpleVO crrCab = it.next();
+			String cabinetPath     = crrCab.getCabinetPath();
+			cabinetPath            = cabinetPath.substring(1, cabinetPath.length() - 1);
+			List<Integer> nodeIds  = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+			nodeIds.remove(nodeIds.size() - 1);
+			
+			for (int ancestorId : nodeIds) {
+				if (cabinetIdHasChildPerm.contains(ancestorId)) {
+					checkflag = 1;
+					break;
+				}
+			}
+			
+			if (checkflag == 1) {
+				it.remove();
+			}
+		}
+		
+		//Sort cabinetList
+		Collections.sort(cabinetList, (CabinetSimpleVO c1, CabinetSimpleVO c2) -> Integer.compare(c1.getCabinetId(), c2.getCabinetId()));
+		
+		return cabinetList;
 	}
 	
 	@SuppressWarnings("unchecked")

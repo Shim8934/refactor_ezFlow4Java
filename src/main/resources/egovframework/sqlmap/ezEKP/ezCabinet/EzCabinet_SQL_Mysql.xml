@@ -153,6 +153,18 @@
 		<result property="hasSub"            column="has_sub"      />
 	</resultMap>
 	
+	<!-- cabinetSimpleVO3 resultMap -->
+	<resultMap id="cabinetSimpleVO3"  class="CabinetSimpleVO">
+		<result property="cabinetId"         column="cabinet_id"   />
+		<result property="cabinetName"       column="cabinet_name" />
+		<result property="cabinetName1"      column="cabinet_name1"/>
+		<result property="cabinetName2"      column="cabinet_name2"/>
+		<result property="cabinetLevel"      column="cabinet_level"/>
+		<result property="cabinetStep"       column="cabinet_step" />
+		<result property="cabinetPath"       column="cabinet_path" />
+		<result property="hasSub"            column="has_sub"      />
+	</resultMap>
+	
 	<!-- cabinet item resultMap -->
 	<resultMap id="cabinetItemVO"  class="CabinetItemVO">
 		<result property="itemId"           column="item_id"             columnIndex="1" />
@@ -662,7 +674,7 @@
 		order by display_name desc
 	</select>
 	
-	<select id="EzCabinetDAO.getUserSharedCabinet" resultMap="cabinetSimpleVO2">
+	<select id="EzCabinetDAO.getUserSharedCabinet" resultMap="cabinetSimpleVO3">
 		select distinct
 			c1.cabinet_id                                                                                as cabinet_id,
 			c1.cabinet_name1                                                                             as cabinet_name,
@@ -670,6 +682,7 @@
 			c1.cabinet_name2                                                                             as cabinet_name2,
 			c1.cabinet_level                                                                             as cabinet_level,
 			c1.cabinet_order                                                                             as cabinet_step,
+			c1.cabinet_path                                                                              as cabinet_path,
 			case when (s.child_permission = 1 and (select count(c2.cabinet_id) from tbl_cb_cabinet c2
 				where c2.use_status = 1 and c1.cabinet_id = c2.parent_id and c1.tenant_id = c2.tenant_id) > 0) then 1 else 0 end as has_sub
 		from
