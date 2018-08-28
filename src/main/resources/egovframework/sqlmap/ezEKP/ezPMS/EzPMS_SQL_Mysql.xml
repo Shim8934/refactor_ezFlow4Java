@@ -4847,7 +4847,23 @@
 	]]>	
 	</update>
 	
-	<update id="EzPMSDAO.updateTaskStatusScheduler" parameterClass="String">
+	<update id="EzPMSDAO.updateProjectStatusScheduler">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_project
+		SET
+			status = 'L'
+		WHERE
+			status = 'P'
+		AND
+			del_status = 0
+		AND
+			plan_end_date < CURDATE();
+	
+	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskStatusScheduler">
 	<![CDATA[
 		UPDATE 
 			tbl_pms_task
@@ -4858,7 +4874,7 @@
 		AND
 			del_status = 0
 		AND
-			plan_end_date < #UTCTime#
+			plan_end_date < CURDATE();
 	
 	]]>	
 	</update>

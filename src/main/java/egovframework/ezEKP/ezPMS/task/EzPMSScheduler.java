@@ -73,23 +73,24 @@ public class EzPMSScheduler {
 			return;
 		}
 		
-		String searchStatus = "P";
-		
-		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus, "P");
-		LOGGER.debug("projectList : " + projectList);
-		
-		Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(commonUtil.getTodayUTCTime(""));
-		
-		for (int i = 0; i < projectList.size(); i++) {
-			Date planEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(projectList.get(i).getPlanEndDate());
-			
-			if (planEndDate.before(nowDate)) {
-				LOGGER.debug(projectList.get(i).getProjectName() + " is late");
-				ezPMSService.updateProjectStatus(projectList.get(i).getProjectId(), "L", projectList.get(i).getTenantId(), projectList.get(i).getRealStartDate(), projectList.get(i).getPlanEndDate());
-			} else {
-				LOGGER.debug(projectList.get(i).getProjectName() + " is not late");
-			}
-		}
+//		String searchStatus = "P";
+//		
+//		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus, "P");
+//		LOGGER.debug("projectList : " + projectList);
+//		
+//		Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(commonUtil.getTodayUTCTime(""));
+//		
+//		for (int i = 0; i < projectList.size(); i++) {
+//			Date planEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(projectList.get(i).getPlanEndDate());
+//			
+//			if (planEndDate.before(nowDate)) {
+//				LOGGER.debug(projectList.get(i).getProjectName() + " is late");
+//				ezPMSService.updateProjectStatus(projectList.get(i).getProjectId(), "L", projectList.get(i).getTenantId(), projectList.get(i).getRealStartDate(), projectList.get(i).getPlanEndDate());
+//			} else {
+//				LOGGER.debug(projectList.get(i).getProjectName() + " is not late");
+//			}
+//		}
+		ezPMSService.updateProjectStatusScheduler();
 		
 		LOGGER.debug("updateLateStatus ended.");
 	}
@@ -219,9 +220,9 @@ public class EzPMSScheduler {
 			return;
 		}
 		
-		String UTCTimeStr = commonUtil.getTodayUTCTime("");
+//		String UTCTimeStr = commonUtil.getTodayUTCTime("");
 		
-		ezPMSService.updateTaskStatusScheduler(UTCTimeStr);
+		ezPMSService.updateTaskStatusScheduler();
 		
 		LOGGER.debug("updateLateTaskStatus ended.");
 	}

@@ -612,8 +612,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update("EzPMSDAO.updateAllGroupDatesInPrj", map);
 	}
 	
-	public void updateTaskStatusScheduler(String UTCTime) {
-		update("EzPMSDAO.updateTaskStatusScheduler", UTCTime);
+	public void updateProjectStatusScheduler() {
+		update("EzPMSDAO.updateProjectStatusScheduler");
+	}
+	
+	public void updateTaskStatusScheduler() {
+		update("EzPMSDAO.updateTaskStatusScheduler");
 	}
 
 	public void updateProjectGroupEndDate(Map<String, Object> map) {

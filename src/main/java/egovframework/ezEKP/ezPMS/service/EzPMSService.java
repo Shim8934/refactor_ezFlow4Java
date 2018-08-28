@@ -259,7 +259,9 @@ public interface EzPMSService {
 	
 	public void updateAllGroupDatesInPrj(Map<String, Object> map);
 	
-	public void updateTaskStatusScheduler(String UTCTimeStr) throws Exception;
+	public void updateProjectStatusScheduler() throws Exception;
+	
+	public void updateTaskStatusScheduler() throws Exception;
 
 	public void updateProjectGroupEndDate(long projectId, String changeEndDate, int tenantId, long groupId);
 	
