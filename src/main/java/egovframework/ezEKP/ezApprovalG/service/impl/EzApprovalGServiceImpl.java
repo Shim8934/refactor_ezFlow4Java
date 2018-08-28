@@ -19340,8 +19340,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		List<ApprGDocListVO> docList = ezApprovalGDAO.getAprPortletDocList(map);
 		
 		int dLength = docList.size();
-		if (!pListType.equals("") && dLength > 7) {
-			dLength = 7;
+
+		if (!pListType.equals("") && dLength > 5) {
+			dLength = 5;
 		}
 		
 		resultXML.append("<ROW>");
@@ -19349,7 +19350,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		//for (int j=dLength-1; j>=0; j--) {
 		for (int j=0; j<dLength; j++) {
 			docCnt += 1;
-			if (docCnt <= 7) {
+			if (docCnt <= 5) {
 				resultXML.append("<CELL>");
 				resultXML.append("<DOCTITLE><![CDATA[" + docList.get(j).getDocTitle() + "]]></DOCTITLE>");
 				resultXML.append("<WRITERNAME><![CDATA[" + docList.get(j).getWriterName() + "]]></WRITERNAME>");

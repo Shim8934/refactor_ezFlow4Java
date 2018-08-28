@@ -7,201 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="refresh" content="${refreshSecond}">
-		
-		<section class="body_bg2">
-			<article  class="personal">
-				<p>
-					<span class="info_set">
-						<span id="ModInfo" onClick="btnSumming_click(this)"></span>
-					</span>
-				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
-				 </p>
-				<div class="info">
-    				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
-    				<dl class="info_txt">
-        				<dt>${companyNm }<br></dt>
-			 			<dd>${department} ${title}</dd>
-						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
-    				</dl>
-    				<div class="bottom"></div>
-    			</div>
-    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
-					<a id="NewMail" onClick="btnSumming_click(this)">
-						<ul>
-							<li class="count">
-								<div>
-									<span id="mailnum">0</span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="main.t00017" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="main.t00017" /></li>
-                    			</c:otherwise>
-                    		</c:choose>
-						</ul>
-					</a>
-					
-					<a id="AprSign" onClick="btnSumming_click(this)">
-						<ul>							
-							<li class="count">
-								<div>
-									<span id="aprnum">0</span>
-								</div>
-							</li>
-                   			<c:choose>
-	                   			<c:when test="${userInfo.lang != '3'}">
-	                   				<li class="title"><spring:message code="main.t00018" /></li>
-	                   			</c:when>
-	                   			<c:otherwise>
-	                   				<li class="title1"><spring:message code="main.t00018" /></li>
-	                   			</c:otherwise>
-                    		</c:choose>
-						</ul>
-					</a>
-					<a id="Schedule" onClick="btnSumming_click(this)">
-						<ul>
-							<li class="count">
-								<div>
-									<span id="schedulenum">0</span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="main.t00019" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="main.t00019" /></li>
-                    			</c:otherwise>
-                    		</c:choose>
-						</ul>
-					</a>
-					<a id="Poll" onClick="btnSumming_click(this)">
-						<ul>
-							<li class="count">
-								<div>
-									<span><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="main.t00020" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="main.t00020" /></li>
-                    			</c:otherwise>
-                    		</c:choose>
-						</ul>						
-					</a>
-					<c:if test="${isCircularUsed == 'Y'}">
-					<a id="Circular" onClick="btnSumming_click(this)">
-						<ul class="last">
-							<li class="count">
-								<div>
-									<span id="circularCnt">0</span>
-								</div>
-							</li>
-                    		<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
-                    			</c:otherwise>
-                    		</c:choose>                  		
-						</ul>
-					</a>			
-					</c:if>			
-				</div>
-			</article>
-      		<div class="blue_bar"></div>
-         	<div class="schedule">
-	  			<article class="list"> 
-   			 		<div class="maintab01">
-             			<p id="Psch" class="left_on" onclick="scheduleChangeTab(this)"><spring:message code="main.t00021" /></p>
-             			<p id="Allsch" class="right" onclick="scheduleChangeTab(this)"><spring:message code="main.t00022" /></p>
-             		</div>
-          			<div class="scrollbox-play-light" style="position:relative; width:260px;height:126px;  "> 
-						<div class="scrollbox" id="best-scrbox" style="width:260px; height:126px;overflow:hidden;"> 
-    						<div class="content"> 
-  								<div id="ScheduleList"></div>
-					    	</div>					    
-						    <div class="scrollbar-v"> 
-	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_up_w.gif" class="button-up"> 
-	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_ball_w.gif" class="thumb-v"> 
-	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_down_w.gif" class="button-down"> 
-	    					</div> 
-						</div> 
-					</div> 
-   	   			</article>
-	       		<!-- calender -->
-	        	<article class="calender">
-		            <div id="CalendarMini"></div>
-				</article>
-	      		<!-- /calender -->   
-			</div>
-   			<div class="blue_bar"></div>
-			<div class="bannerlink_area">
-    			<article class="writebanner">
-        			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
-        			<c:choose>
-						<c:when test="${host == 'gw.freet.co.kr'}">
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
-						</c:when>
-						<c:otherwise>
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${host == 'gw.freet.co.kr'}">
-							<p><span id="addresswrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
-						</c:when>
-						<c:otherwise>
-							<p><span id="addresswrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
-						</c:otherwise>
-					</c:choose>
-        			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
-    			</article>
-    		</div>
-    		<div class="blue_bar"></div>
-    		<article class="time" style="margin-right:0px">
-	   			<c:choose>
-	       			<c:when test="${isUseAttMenuItem == 'N'}">
-				             <p class="title"><spring:message code='main.t00023' /></p>
-				             <div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
-				             <div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>             
-	       			</c:when>
-	       			<c:otherwise>
-						<div id="timeinput" style="font-weight:bold; color: black; text-align:center; width:122px;">
-							<p id="todayTime" class="title" style="margin-left:0px"></p>
-			            	<div id="timeFlow" style='margin:13px 0 15px 0; font-size:28px; letter-spacing:1px; font-family:Arial, Helvetica, sans-serif;'><p></p></div>
-			            </div>
-		    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
-<%-- 		    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p> --%>
-<%-- 							<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p> --%>
-<%-- 							<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span> --%>
-<%-- 							<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px"><spring:message code='ezAttitude.t65'/></span> --%>
-							<div class="main_time">
-		    					<dl class="timeCheckIn">
-		    						<dt>출근</dt>
-		    						<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">입력</dd>
-		    					</dl>
-		    					<dl class="timeCheckOut">
-		    						<dt>퇴근</dt>
-		    						<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">입력</dd>
-		    					</dl>
-		    				</div>
-		    			</div>
-	       			</c:otherwise>
-	       		</c:choose>  
-   			</article>
-		</section>
-			
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -231,39 +37,6 @@
 		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<style>
-			#atti_area span{
-				width:35px;
-				margin-left:7px;
-				display:block;
-				float:left;
-				padding: 5px 4px;
-				font: 12px gulim;
-				padding-top: 7px;
- 				border: 1px solid #ddd;
- 				color: #666;
-				border-radius:3px;						
-			}
-			
-			.btn_hover{
-				cursor: pointer;
-				color: rgb(4, 112, 227) !important;
-				border-color: rgb(4, 112, 227) !important;
-			}
-			
-			.btn_disabled{
-				background-color: transparent !important;
-				border: 1px solid #ddd !important;
-				color: #aaa !important;
-			}
-			
-			#inAttiClock, #outAttiClock {
-				background: url("/images/clock.png") no-repeat 0 3px;
-				background-size: 13px;
-				height:20px;
-				font-family: Malgun Gothic, Meiryo UI;
-			}
-		</style>   
 		<script type="text/javascript">
 		    var pMode = "P";
 		    var date = "";
@@ -273,6 +46,8 @@
 			var isCircularUsed = "${isCircularUsed}";
 		    
 			$(document).ready(function(){
+				window_onload_total();
+				
 				if (isCircularUsed != 'Y') {
 					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
 					$(".personal_content a ul:last").attr("class","last");
@@ -300,11 +75,15 @@
 			        document.body.style.UserSelect = 'none';
 			    }
 			    
-			    CalendarMiniView("CalendarMini");
-				
+			    //CalendarMiniView("CalendarMini");
+			
 			    if (isUseAttMenuItem == "N") {
-				    draw_clock();
-				    yourClock();
+			    	/* parseDate();
+			    	attiClock();
+			    	$("#timeFlow").css("display", "none");
+			    	$("#todayTime").css("width", "100%"); */
+				    /* draw_clock();
+				    yourClock(); */
 			    } else {
 			    	parseDate();
 			    	attiClock();
@@ -313,9 +92,9 @@
 					getHolidayList();
 			    }
 
-			    CalendarMiniDataSource();
+			   // CalendarMiniDataSource();
 
-		        try { top.onresize() } catch (e) { }
+		        /* try { top.onresize() } catch (e) { }
 
 		        var scrollbox = {};
 		        scrollbox.content1 = new Scrollbox();
@@ -334,7 +113,7 @@
 		        });
 		        scrollbox.player.touch("player-scrbox", {
 		            overflowY: "scroll" // auto, scroll
-		        });
+		        }); */
 
 // 		        draw_clock();
 // 		        yourClock();
@@ -389,7 +168,7 @@
 
 			function getScheduleList_after(text, mode, date) {
 			    try {
-			        var listHTML = "<ul class=\"schedule_list \">";
+			       /*  var listHTML = "<ul class=\"schedule_list \">";
 			        var xmldom = createXmlDom();
 			        xmldom = loadXMLString(text);
 			        
@@ -432,13 +211,13 @@
 			                } else {
 			                	listHTML += "";
 			                }
-			                /* listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>"; */
-			                listHTML += MakeXMLString(TITLE)+"</span></li>"
+			                
+			                listHTML += MakeXMLString(TITLE)+"</span></li>";
 			                count++;
 			        	}
 			        }
 			        
-			        listHTML += "</ul>";
+			        listHTML += "</ul>"; */
 
 			        if (date == nowDay) {
 			        	var cnt = xmldom.getElementsByTagName("ROW").length;
@@ -447,9 +226,15 @@
 			        		cnt = "99+";	
 			        	}			        	
 			        	document.getElementById("schedulenum").innerHTML = cnt;
+			        	
+			        	if (cnt == "0") {
+		                	$("#schedulenum").attr("class", "iconCount_none");
+		                } else {
+		                	$("#schedulenum").attr("class", "iconCount");
+		                }
 			        }
 
-			        if (count > 0)
+			        /* if (count > 0)
 			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
 			        else {
 			            var nodata = "<div class='nodata_schedule'>";
@@ -500,7 +285,7 @@
 			        });
 			        scrollbox.player.touch("player-scrbox", {
 			            overflowY: "scroll" // auto, scroll 
-			        });
+			        }); */
 			    } catch (e) {}
 			}
 			
@@ -521,6 +306,12 @@
 							cirCnt = "99+";		
 						}						
 						$("#circularCnt").html(cirCnt);
+						
+						if (cirCnt == "0") {
+		                	$("#circularCnt").attr("class", "iconCount_none");
+		                } else {
+		                	$("#circularCnt").attr("class", "iconCount");
+		                }
 					}
 				});
 	        }
@@ -553,6 +344,12 @@
 		                }
 		                else {
 		                    document.getElementById("mailnum").innerText = unreadcount;
+		                }
+		                
+		                if (unreadcount == "0") {
+		                	$("#mailnum").attr("class", "iconCount_none");
+		                } else {
+		                	$("#mailnum").attr("class", "iconCount");
 		                }
 			        }
 			        xmlHttp_getnewmailcount_total = null;
@@ -599,6 +396,13 @@
 		                    	}
 		                        document.getElementById("aprnum").innerText = aprnumCnt;		                        
 		                    }
+		                    
+		                    if (aprnumCnt == "0") {
+			                	$("#aprnum").attr("class", "iconCount_none");
+			                } else {
+			                	$("#aprnum").attr("class", "iconCount");
+			                }
+		                    
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e) {
 						    xmlHttp_getnewapprovalcount_total = null;
@@ -1147,7 +951,8 @@
 	    		    }
 	    		}
 	    		
-	    		$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+	    		//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
+	    		
 	    	}
 		    
 		    function attiClock() {
@@ -1159,13 +964,254 @@
 		        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
 		        document.getElementById("timeFlow").innerHTML = time;
 		        if (time == "00:00:00") {
-		        	$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+		        	//$("#todayTime").html(nowAttiTime.getFullYear() + "." + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
 		        }
 		        gizmo = setTimeout("attiClock()", 1000);
 		        
 		    }
-		    
-		    window_onload_total();
 		</script>
 	</head>
+	<body>
+		<c:if test="${type != 'schd'}">
+			<article class="time_check">
+	           	<div id="timeinput" class="presentTime">
+	               	<p class="timeTit" id="todayTime"><spring:message code="main.t00023" /></p>
+					<div id="timeFlow" class="timeText"></div>
+			    </div>
+	            <div id="atti_area" class="main_time">
+	            	<dl class="timeCheckIn">
+	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">출근</dd>
+	                </dl>
+	                <dl class="timeCheckOut">
+	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)">퇴근</dd>
+	                </dl>
+		    	</div>
+			</article>
+	        <!-- //time_check -->
+	        <!-- countingIcon -->
+	        <article class="countingIcon">
+	          	<div class="countingIcon01">
+					<dl id="NewMail" onClick="btnSumming_click(this)">
+	                	<dt class="iconImg"><img src="/images/kr/main/countingIcon01.png"></dt>
+	                    <dd class="iconText"><spring:message code="main.t00017" /></dd>
+	                    <dd class="iconCount_none" id="mailnum">0</dd>
+	                </dl>
+	                <dl id="AprSign" onClick="btnSumming_click(this)">
+	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon03.png"></dt>
+	                    <dd class="iconText"><spring:message code="main.t00018" /></dd>
+	                    <dd class="iconCount_none" id="aprnum">0</dd>
+	                </dl>
+	                <dl id="Schedule" onClick="btnSumming_click(this)">
+	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon02.png"></dt>
+	                    <dd class="iconText"><spring:message code="main.t00019" /></dd>
+	                    <dd class="iconCount_none" id="schedulenum">0</dd>
+	                </dl>
+				</div>
+	            <div class="countingIcon02">
+	            	<dl id="Poll" onClick="btnSumming_click(this)">
+	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon05.png"></dt>
+	                    <dd class="iconText"><spring:message code="main.t00020" /></dd>                        
+	                    <dd class="${pollNum == 0 ? 'iconCount_none' : 'iconCount' }"><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></dd>
+	                </dl>
+	            	<c:if test="${isCircularUsed == 'Y'}">
+	                <dl id="Circular" onClick="btnSumming_click(this)"> 
+	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon04.png"></dt>
+	                    <dd class="iconText"><spring:message code="ezCircular.t1" /></dd>
+	                    <dd class="iconCount_none" id="circularCnt">0</dd>
+	                </dl>
+	                </c:if>                    
+	            </div>    
+	        </article>
+        </c:if>
+        <c:if test="${type == 'schd'}">
+        	
+        </c:if>
+		<!-- 2018-08-23 장진혁 신규포탈페이지 개발 -->
+		<%-- <section class="body_bg2">
+			<article  class="personal">
+				<p>
+					<span class="info_set">
+						<span id="ModInfo" onClick="btnSumming_click(this)"></span>
+					</span>
+				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
+				 </p>
+				<div class="info">
+    				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
+    				<dl class="info_txt">
+        				<dt>${companyNm }<br></dt>
+			 			<dd>${department} ${title}</dd>
+						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
+    				</dl>
+    				<div class="bottom"></div>
+    			</div>
+    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
+					<a id="NewMail" onClick="btnSumming_click(this)">
+						<ul>
+							<li class="count">
+								<div>
+									<span id="mailnum">0</span>
+								</div>
+							</li>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00017" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="main.t00017" /></li>
+                    			</c:otherwise>
+                    		</c:choose>
+						</ul>
+					</a>
+					
+					<a id="AprSign" onClick="btnSumming_click(this)">
+						<ul>							
+							<li class="count">
+								<div>
+									<span id="aprnum">0</span>
+								</div>
+							</li>
+                   			<c:choose>
+	                   			<c:when test="${userInfo.lang != '3'}">
+	                   				<li class="title"><spring:message code="main.t00018" /></li>
+	                   			</c:when>
+	                   			<c:otherwise>
+	                   				<li class="title1"><spring:message code="main.t00018" /></li>
+	                   			</c:otherwise>
+                    		</c:choose>
+						</ul>
+					</a>
+					<a id="Schedule" onClick="btnSumming_click(this)">
+						<ul>
+							<li class="count">
+								<div>
+									<span id="schedulenum">0</span>
+								</div>
+							</li>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00019" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="main.t00019" /></li>
+                    			</c:otherwise>
+                    		</c:choose>
+						</ul>
+					</a>
+					<a id="Poll" onClick="btnSumming_click(this)">
+						<ul>
+							<li class="count">
+								<div>
+									<span><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></span>
+								</div>
+							</li>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00020" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="main.t00020" /></li>
+                    			</c:otherwise>
+                    		</c:choose>
+						</ul>						
+					</a>
+					<c:if test="${isCircularUsed == 'Y'}">
+					<a id="Circular" onClick="btnSumming_click(this)">
+						<ul class="last">
+							<li class="count">
+								<div>
+									<span id="circularCnt">0</span>
+								</div>
+							</li>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
+                    			</c:otherwise>
+                    		</c:choose>                  		
+						</ul>
+					</a>			
+					</c:if>			
+				</div>
+			</article>
+      		<div class="blue_bar"></div>
+         	<div class="schedule">
+	  			<article class="list"> 
+   			 		<div class="maintab01">
+             			<p id="Psch" class="left_on" onclick="scheduleChangeTab(this)"><spring:message code="main.t00021" /></p>
+             			<p id="Allsch" class="right" onclick="scheduleChangeTab(this)"><spring:message code="main.t00022" /></p>
+             		</div>
+          			<div class="scrollbox-play-light" style="position:relative; width:260px;height:126px;  "> 
+						<div class="scrollbox" id="best-scrbox" style="width:260px; height:126px;overflow:hidden;"> 
+    						<div class="content"> 
+  								<div id="ScheduleList"></div>
+					    	</div>					    
+						    <div class="scrollbar-v"> 
+	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_up_w.gif" class="button-up"> 
+	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_ball_w.gif" class="thumb-v"> 
+	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_down_w.gif" class="button-down"> 
+	    					</div> 
+						</div> 
+					</div> 
+   	   			</article>
+	       		<!-- calender -->
+	        	<article class="calender">
+		            <div id="CalendarMini"></div>
+				</article>
+	      		<!-- /calender -->   
+			</div>
+   			<div class="blue_bar"></div>
+			<div class="bannerlink_area">
+    			<article class="writebanner">
+        			<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
+        			<c:choose>
+						<c:when test="${host == 'gw.freet.co.kr'}">
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
+						</c:when>
+						<c:otherwise>
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${host == 'gw.freet.co.kr'}">
+							<p><span id="addresswrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
+						</c:when>
+						<c:otherwise>
+							<p><span id="addresswrite" onclick="btnWrite_onclick(this)" style="margin-left:0px"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
+						</c:otherwise>
+					</c:choose>
+        			<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>
+    			</article>
+    		</div>
+    		<div class="blue_bar"></div>
+    		<article class="time" style="margin-right:0px">
+	   			<c:choose>
+	       			<c:when test="${isUseAttMenuItem == 'N'}">
+			             <p class="title"><spring:message code='main.t00023' /></p>
+			             <div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
+			             <div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>             
+	       			</c:when>
+	       			<c:otherwise>
+						<div id="timeinput" style="font-weight:bold; color: black; text-align:center; width:122px;">
+							<p id="todayTime" class="title" style="margin-left:0px"></p>
+			            	<div id="timeFlow" style='margin:13px 0 15px 0; font-size:28px; letter-spacing:1px; font-family:Arial, Helvetica, sans-serif;'><p></p></div>
+			            </div>
+		    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
+							<div class="main_time">
+		    					<dl class="timeCheckIn">
+		    						<dt>출근</dt>
+		    						<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">입력</dd>
+		    					</dl>
+		    					<dl class="timeCheckOut">
+		    						<dt>퇴근</dt>
+		    						<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">입력</dd>
+		    					</dl>
+		    				</div>
+		    			</div>
+	       			</c:otherwise>
+	       		</c:choose>  
+   			</article>
+		</section> --%>
+	</body>
 </html>

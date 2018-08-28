@@ -17,12 +17,23 @@
         	}
 		</script>
 	</head>	
-	<body  class="body_bg1">
+	<%-- <body  class="body_bg1">
     	<article class="gw_banner">
     		<img src="/images/<spring:message code='main.t00025' />/main/manual.gif" width="208" height="168" usemap="#Map_gwb" style="cursor:pointer" onclick="Img_OnClick()">
     			<map name="Map_gwb">
       				<area alt="" shape="rect" coords="252,8,344,47" href="#">
     			</map>
     	</article>
-</body>
+	</body> --%>
+	<body>
+		<article class="groupware_banner box_shadow">
+        	<span class="leftImg"><img src="/images/kr/main/bannerImg_left.png"></span>
+            <dl class="bannerText">
+            	<dt class="bText">그룹웨어 쉽게 활용하기</dt>
+                <dt class="sText">그룹웨어 알아보기 등 활용도를<br>높일 수 있는 메뉴얼입니다.</dt>
+                <dd class="bannerBtn" onclick="Img_OnClick()">자세히보기</dd>
+            </dl>
+            <span class="rightImg"><img src="/images/kr/main/bannerImg_right.png"></span>
+        </article>
+	</body>
 </html>

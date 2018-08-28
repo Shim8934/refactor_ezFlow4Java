@@ -5,32 +5,6 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<section  class="body_bg1">
-			 <article class="portletbox photobox ">
-        		<div class="title_nb">
-            		<span class="tl_nb"></span><span class="tr_nb"></span><span class="title_txt"><spring:message code='main.t1007' /></span>
-            		<span class="btn_more" onclick="Boardmore_btnClick()">
-                		<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />">
-            		</span>
-        		</div>
-        		<div class="photocont">
-		 			<c:choose>
-		 				<c:when test="${pExist == 'true'}">
-		 					<ul id="photoul">
-        	    			</ul>
-		 				</c:when>
-		 				<c:otherwise>
-		 					<div class='nodata_portlet'>
-            				<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>
-            				<p><spring:message code='main.t00026' /></p>
-            			</div>
-		 				</c:otherwise>
-		 			</c:choose>
-        		</div>
-        		<div class="guide"><span class="lb"></span><span class="rb"></span></div>
-    		</article>
-		</section>
-		
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<style>
 			.photocont ul li {
@@ -62,7 +36,7 @@
 	    	
 	    	document.onselectstart = function () { return false; };
 	    	
-	    	function window_onload_NewPhoto() {
+	    	window.onload = function() {
 	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            	document.body.style.MozUserSelect = 'none';
 	            	document.body.style.WebkitUserSelect = 'none';
@@ -105,13 +79,13 @@
 	        	totalPage_NewPhoto = Math.ceil(new Number(pageCnt / perCnt));
 
 	        	$('#photoul').html("");
-	        	//document.getElementById("photoul").innerHTML = "";
-	        	var start_li = document.createElement("li");
+	        	
+	        	/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+	        	/* var start_li = document.createElement("li");
 	        	start_li.className = "btn_area";
 	        	start_li.innerHTML = "<img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\">";
-	        	//document.getElementById("photoul").appendChild(start_li);
-	        	$('#photoul').append(start_li);
-				//$('.btn_area').html(start_li);
+	        	
+	        	$('#photoul').append(start_li); */				
 	        	
 		        var cnt = GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS")).length;
 		        
@@ -124,16 +98,21 @@
 
 		                /* 2018-06-04 홍승비 - 포토게시판 포틀릿 표출 썸네일 4개로 수정 */
 	    	            var _li = document.createElement("li");
-	        	        var _span1 = document.createElement("span");
-	            	    _span1.className = "photo";
+		                
+	    	            /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+	        	        /* var _span1 = document.createElement("span");
+	            	    _span1.className = "photo"; */
 						
 	            	    //2016-08-18 urc 수정
 	                	//var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(BoardID) + "&FILENAME=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
 						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
 
-	                	_span1.innerHTML = "<img src='" + imgSrc + "' width='107px' height='75px' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>";
+						/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+	                	/* _span1.innerHTML = "<img src='" + imgSrc + "' width='107px' height='75px' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>"; */
+	                	_li.innerHTML = "<img src='" + imgSrc + "' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>";
 
-		                var _span2 = document.createElement("span");
+	                	/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+		                /* var _span2 = document.createElement("span");
 		                
 		                _span2.className = "ptxt";
 		                
@@ -148,16 +127,16 @@
 	                	_span2.onclick = new Function("ItemRead_onclick(this);");
 
 	                	_li.appendChild(_span1);
-	                	_li.appendChild(_span2);
-
+	                	_li.appendChild(_span2); */
+ 
 	                	document.getElementById("photoul").appendChild(_li);
 	            	}
-	    	        
-	            	var end_li = document.createElement("li");
+	    	        /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+	            	/* var end_li = document.createElement("li");
 	            	
 	            	end_li.className = "btn_next";
 	            	end_li.innerHTML = "<img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\">";
-	            	document.getElementById("photoul").appendChild(end_li);
+	            	document.getElementById("photoul").appendChild(end_li); */
 	        	} else {
 	        		var nodata = "";
 	        		
@@ -207,8 +186,53 @@
 	    	function refresh_onclick() {
 		        getBoardList_NewPhoto();
 		    }
-
-	    	window_onload_NewPhoto();
 		</script>
 	</head>
+	<body>
+		<article class="photo_board box_shadow">
+        	<dl class="portlet_title">
+                <dt class="portletText"><spring:message code='main.t1007' /></dt>
+                <dd class="portletPlus" onclick="Boardmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
+                <dd class="nextBtn" onclick="Pagenationimage('NEXT')"><img src="/images/kr/main/photo_next.png"></dd>
+                <dd class="preBtn" onclick="Pagenationimage('PREV')"><img src="/images/kr/main/photo_pre.png"></dd>
+            </dl>            
+           	<c:choose>
+ 				<c:when test="${pExist == 'true'}">
+ 					<ul class="photoList" id="photoul"></ul>
+ 				</c:when>
+ 				<c:otherwise>
+ 					<%-- <div class='nodata_portlet'>
+          				<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>
+          				<p><spring:message code='main.t00026' /></p>
+          			</div> --%>
+ 				</c:otherwise>
+ 			</c:choose>
+        </article>
+		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
+		<%-- <section  class="body_bg1">
+			 <article class="portletbox photobox ">
+        		<div class="title_nb">
+            		<span class="tl_nb"></span><span class="tr_nb"></span><span class="title_txt"><spring:message code='main.t1007' /></span>
+            		<span class="btn_more" onclick="Boardmore_btnClick()">
+                		<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />">
+            		</span>
+        		</div>
+        		<div class="photocont">
+		 			<c:choose>
+		 				<c:when test="${pExist == 'true'}">
+		 					<ul id="photoul">
+        	    			</ul>
+		 				</c:when>
+		 				<c:otherwise>
+		 					<div class='nodata_portlet'>
+            				<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>
+            				<p><spring:message code='main.t00026' /></p>
+            			</div>
+		 				</c:otherwise>
+		 			</c:choose>
+        		</div>
+        		<div class="guide"><span class="lb"></span><span class="rb"></span></div>
+    		</article>
+		</section> --%>
+	</body>
 </html>

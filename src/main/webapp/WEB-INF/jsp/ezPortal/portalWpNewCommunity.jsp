@@ -90,7 +90,8 @@
 	        }	
 		</script>
 	</head>
-	<body class="body_bg1">
+	<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
+	<%-- <body class="body_bg1">
     	<article class="portletbox communitybox">
 	        <div class="title">
     	        <span class="tl"></span>
@@ -111,5 +112,22 @@
         	</div>
         	<div class="guide"><span class="lb"></span><span class="rb"></span></div>
     	</article>
-	</body>	
+	</body>	 --%>
+	<body>
+		<article class="community box_shadow">
+	        <dl class="portlet_title">
+	            <dt class="portletText"><spring:message code='main.t1006' /></dt>
+	            <dd class="portletPlus" onclick="Copmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
+	        </dl>
+	        <div class="community_list">
+	            <c:if test="${strHTML != ''}">${strHTML}</c:if>
+        		<c:if test="${strHTML == ''}">
+        			<div class="nodata_portlet">
+ 						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
+						<p><spring:message code='main.t00026' /></p>
+					</div>
+        		</c:if>
+	        </div>
+	    </article>
+	</body>
 </html>

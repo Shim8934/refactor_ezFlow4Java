@@ -723,15 +723,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (mode.trim().equals("new")) {
+System.out.println("======================fomace");			
 			strHTML = ezPortalService.getDefaultPortalPage();
 		} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 			if (editMode.equals("new_inherit")) {
+System.out.println("======================fomace1");				
 				logger.debug("new_inherit");
 				strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 //				logger.debug("strHTML="+strHTML);
 			} else {
+System.out.println("======================fomace2");				
 				logger.debug("no new_inherit");
 				strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
@@ -770,7 +773,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			portalPageCategoryXML += "</DATA>";
 			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 		}
-		
+System.out.println(strHTML);		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
@@ -1006,6 +1009,18 @@ public class EzPortalController extends EgovFileMngUtil {
 					pMoveURL = pMoveURL + "&pClassID=" + pUserID;
 				}
 			}
+			
+			/* 2018-08-24 새로운 포탈 */
+			String type = req.getParameter("type");
+			
+			if (type != null && !type.equals("")) {
+				if (pMoveURL.indexOf("?") == -1) {
+					pMoveURL = pMoveURL + "?type=" + type;
+				} else {
+					pMoveURL = pMoveURL + "&type=" + type;
+				}
+			}
+			
 			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
 			resp.getWriter().write("<body onload='window_onload()'></body>");
 		} else {
@@ -1157,6 +1172,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("type", req.getParameter("type"));
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
@@ -1359,6 +1375,8 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		/* 2018-08-24 새로운 포틀릿 */
+		model.addAttribute("type", req.getParameter("type"));
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
@@ -1529,7 +1547,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String votePoll = "";
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
-		String pPollResultContent = "";
+		StringBuilder pPollResultContent = new StringBuilder();
 		
 		String checkFlag = ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId());
 		
@@ -1639,6 +1657,9 @@ public class EzPortalController extends EgovFileMngUtil {
 						List<Integer> pPollResultList = new ArrayList<Integer>();
 						int resultPrintCnt = 0;
 						
+						/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
+						/*pPollResultContent.append("<ul class='voteList'>");*/
+				
 						for (int i=0; i<list.size(); i++) {
 							if (i >= 4) {
 								break;
@@ -1658,8 +1679,13 @@ public class EzPortalController extends EgovFileMngUtil {
 //								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
 //								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
 //								"</dl>";
-								pPollResultContent += 
-								"<div class='poll_list1'>" + 								    
+								pPollResultContent.append("<li class='voteList_0"+(i+1)+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
+								pPollResultContent.append("<div class='percent'>" + String.format("%.1f", poolRstPer) + "%</div>");
+								pPollResultContent.append("<div class='voteGraph'><span style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%'></span></div></li>");
+								
+										
+								/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
+								/*"<div class='poll_list1'>" + 								    
 									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
 										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
 										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
@@ -1672,7 +1698,7 @@ public class EzPortalController extends EgovFileMngUtil {
 									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
 										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
 									"</div>"+	
-								"</div>";
+								"</div>";*/
 								
 		                        resultPrintCnt++;
 							}
@@ -1699,8 +1725,10 @@ public class EzPortalController extends EgovFileMngUtil {
 //									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
 //		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
 //		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-									pPollResultContent += 
-									"<div class='poll_list1'>" + 								    
+									pPollResultContent.append("");
+											
+									/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
+									/*"<div class='poll_list1'>" + 								    
 										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
 											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
 											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
@@ -1713,9 +1741,10 @@ public class EzPortalController extends EgovFileMngUtil {
 										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
 											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
 										"</div>"+
-									"</div>";
+									"</div>";*/
 									
 									resultPrintCnt++;
+									
 									if (resultPrintCnt == 4) {
 										break;
 									}
@@ -1729,7 +1758,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("pPollTitle", pPollTitle);
 			model.addAttribute("votePoll", votePoll);
 			model.addAttribute("pPollItemSeq", pPollItemSeq);
-			model.addAttribute("pPollResultContent", pPollResultContent);
+			model.addAttribute("pPollResultContent", pPollResultContent.toString());
 			model.addAttribute("userLang", userInfo.getLang());
 			
 			logger.debug("wpNewPoll End");

@@ -6,19 +6,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<section  class="body_bg1">
-      		<article class="portlet_notice">
-        		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
-        		<dl class="notice_tab">
-          			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on"><span>${pCompanyBDNM}</span></dt>
-          			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)"><span>${pDeptBDNM}</span></dt>
-          			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)"><span>${pNewsBDNM}</span></dt>
-        		</dl>
-          		<div id="BoardList_NewBoard" >
-        		</div>
-      		</article>
-		</section>
-
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
@@ -30,7 +17,7 @@
 
         	document.onselectstart = function () { return false; };
         
-	        function window_onload_Newboard(){
+	        window.onload = function(){
     	        if (navigator.userAgent.indexOf('Firefox') != -1) {
         	        document.body.style.MozUserSelect = 'none';
             	    document.body.style.WebkitUserSelect = 'none';
@@ -71,12 +58,12 @@
             	
             	try {
                 	if (xml == "") {
-	                    var nodata = "<div class='nodata_portlet '>";
+	                    /* var nodata = "<div class='nodata_portlet '>";
     	                nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
         	            nodata += "<p>" + strLang2_NewBoard + "</p></div>";
 
             	        document.getElementById("BoardList_NewBoard").innerHTML = nodata;
-                	    return;
+                	    return; */
                 	}
                 	document.getElementById("BoardList_NewBoard").innerHTML = "";
                 	var listHTML = "";
@@ -85,26 +72,26 @@
 	                var RowCnt = xmldom.getElementsByTagName("ROW").length;
                 
     	            if (RowCnt > 0) {
-        	            if (RowCnt > 4) {
-            	            RowCnt = 4;
+        	            if (RowCnt > 6) {
+            	            RowCnt = 6;
         	            }
 
-                	    var pfirstItemID = "";
-                    
-                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                        
-                       	var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-                        boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
-                       	
-                        listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>";
+        	            /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */
+                	    /* var pfirstItemID = "";                    
+                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                       	
+                        listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>"; */
 
                         /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목 특수문자 처리 */
-                        var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
+                        /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */
+                        /* var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
                         listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.jpg' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
                         listHTML += "</dl>";
-
-                        listHTML += "<ul class=\"mainlist \">";
+                        listHTML += "<ul class=\"mainlist \">";  */
+                        
+                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+                        boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
                         
                         for (var i = 1; i < RowCnt; i++) {
                             var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
@@ -124,11 +111,11 @@
                         }
                         
 	                } else {
-                    	var nodata = "<div class='nodata_portlet '>";
+                    	/* var nodata = "<div class='nodata_portlet '>";
                     	nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
                     	nodata += "<p>" + strLang2_NewBoard + "</p></div>";
 
-                    	document.getElementById("BoardList_NewBoard").innerHTML = nodata;
+                    	document.getElementById("BoardList_NewBoard").innerHTML = nodata; */
                 	}
             	} catch (e) {
             		
@@ -248,7 +235,30 @@
                 	getBoardList_NewBoard();
             	}
         	}
-
-        	window_onload_Newboard();
-	</script>
+		</script>
+	</head>
+	<body>
+		<article class="notice box_shadow">
+            <dl class="portlet_title">
+                <dt class="portletText">${pCompanyBDNM}</dt>
+                <dd class="portletPlus" onclick='Boardmore_NewBoard_btnClick()'><img src="/images/kr/main/portlet_Plus.png"></dd>
+            </dl>
+            <ul class="portlet_list" id="BoardList_NewBoard">
+                
+            </ul>
+        </article>
+		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
+		<%-- <section  class="body_bg1">
+      		<article class="portlet_notice">
+        		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
+        		<dl class="notice_tab">
+          			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on"><span>${pCompanyBDNM}</span></dt>
+          			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)"><span>${pDeptBDNM}</span></dt>
+          			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)"><span>${pNewsBDNM}</span></dt>
+        		</dl>
+          		<div id="BoardList_NewBoard" >
+        		</div>
+      		</article>
+		</section> --%>
+	</body>
 </html>

@@ -1756,7 +1756,7 @@
 	</c:choose>		
 	
 	<c:if test="${mode == 'view'}">
-		<aside style="position:fixed;">
+		<aside style="position:fixed;display:none">
     		<c:choose>
     			<c:when test="${userInfo.lang == 3}">
     				<p class="quickmenu_title"><img src="/images/jp/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>

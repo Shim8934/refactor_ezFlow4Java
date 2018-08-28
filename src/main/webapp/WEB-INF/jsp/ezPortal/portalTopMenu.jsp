@@ -43,6 +43,8 @@
 			document.onselectstart = function () { return false; };
 			
 			window.onload = function() {
+				cntCalculaor();
+				
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
 			        document.body.style.WebkitUserSelect = 'none';
@@ -1130,6 +1132,16 @@
 				location.href = "/ezPortal/topMenu.do?mode=new";
 			}
 	
+			function subMenuClick() {
+				if (parent.document.getElementById("topFrame").style.position == "") {
+					parent.document.getElementById("topFrame").style.position = "relative";
+					$(".full_menu_toggle").css("display", "");
+				} else {
+					parent.document.getElementById("topFrame").style.position = "";
+					$(".full_menu_toggle").css("display", "none");
+				}
+			}
+			
 			/* 2018-03-07 장진혁 서브메뉴 수정 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */			
 			var subPath = "";
 			var menuName = "";
@@ -1166,7 +1178,7 @@
 					document.getElementById("menu_"+obj.id).style.display = "none";
 				}
 			    
-			    parent.document.getElementById("topFrame").style.position = "";
+			    parent.document.getElementById("topFrame").style.position = "";			    
 			}
 	
 			function submenuover(subObj) {				
@@ -1177,6 +1189,25 @@
 	
 			function submenuout(subObj) {
 			    img_onMouseOut(tempobj);
+			}
+			
+			function cntCalculaor() {
+				var cnt = 0;
+				
+				$(".navUL > li").each(function(index) {
+					if ($(this).offset().top > 10) {
+						cnt++;
+					}
+				});
+				
+				if (cnt > 0) {
+					$(".countBox").css("display", "");
+					$("#topNav").css("max-width", "1212px");
+					$(".hidden_nav_count").html("+" + cnt);
+				} else {
+					$("#topNav").css("max-width", "1160px");
+					$(".countBox").css("display", "none");					
+				}
 			}
 			
 			window.onresize = function () {
@@ -1191,6 +1222,7 @@
 			        
 			        document.getElementById(clickmenusub).style.left = LeftMargin + "px";
 			    }
+			    cntCalculaor();
 			}
 	
 			function sub_toggle(subfolder) {
@@ -1366,6 +1398,9 @@
 			var clickmenuName = "";
 			
 			function OpenWindow(evt, url, location, option) {
+				$(".full_menu_toggle").css("display", "none");
+				parent.document.getElementById("topFrame").style.position = "";				
+				
 				/* if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";

@@ -6,16 +6,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
-		<section  class="body_bg1">
-      		<article class="portletbox boardbox ">
-      		  <div id="BoardTab" class="title"></div>
-        		<div id="BoardList" class="boardcont">
-        		</div>
-        		<div class="guide"><span class="lb"></span><span class="rb"></span></div>
-   		 	</article>
-		</section>
-
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
@@ -27,7 +17,7 @@
 		    
 		    document.onselectstart = function () { return false; };
 		    
-		    function window_onload_NewBoardSTD() {
+		    window.onload = function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -52,8 +42,10 @@
 		            if (BoardCnt_NewBoardSTD > 3)
 		                BoardCnt_NewBoardSTD = 3;
 
-		            var listHTML = "<span class='tr'></span><dl class='portlet_tab'>";
-
+		            /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+		            /* var listHTML = "<span class='tr'></span><dl class='portlet_tab'>"; */
+		            
+		            var listHTML = "";
 		            var classon = "class='on'";
 
 		            for (var i = 0; i < BoardCnt_NewBoardSTD; i++) {
@@ -71,18 +63,20 @@
 		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'><span> " + BoardName + " </span></dt>";
 		                }
 
-		                listHTML += "</dl>";
-		                listHTML += "<span class='btn_more' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/kr/main/btn_more02.gif' width='35' height='20' alt='more'></span>";
+		            	/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+		                /* listHTML += "</dl>";
+		                listHTML += "<span class='btn_more' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/kr/main/btn_more02.gif' width='35' height='20' alt='more'></span>"; */
+		                listHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/kr/main/portlet_Plus.png'></dd>";		                
 
 		                document.getElementById("BoardTab").innerHTML = listHTML;
 		                pBoardID_NewBoardSTD = document.getElementById("Board0").getAttribute("DATA1");
 		                getBoardList_NewBoardSTD();
 		            } else {
-		                var nodata = "<div class='nodata_portlet '>";
+		                /* var nodata = "<div class='nodata_portlet '>";
 		                nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
 
-		                document.getElementById("BoardList").innerHTML = nodata;
+		                document.getElementById("BoardList").innerHTML = nodata; */
 		            }
 		        }
 
@@ -123,11 +117,11 @@
 		            
 		            try {
 		                if (xml == "") {
-		                    var nodata = "<div class='nodata_portlet '>";
+		                    /* var nodata = "<div class='nodata_portlet '>";
 		                    nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                    nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
 		                    document.getElementById("BoardList").innerHTML = nodata;
-		                    return;
+		                    return; */
 		                }
 
 		                document.getElementById("BoardList").innerHTML = "";
@@ -138,20 +132,18 @@
 		                var RowCnt = xmldom.getElementsByTagName("ROW").length;
 
 		                if (RowCnt > 0) {
-		                    if (RowCnt > 4)
-		                        RowCnt = 4;
+		                    if (RowCnt > 6)
+		                        RowCnt = 6;
 
 		                    var pfirstItemID = "";
 		                    if (RowCnt > 0) {
-		                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));
-		                        //var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA10").item(0));
-		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
-
-		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer;margin-top:-4px'>";
+		                    	/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+		                        /* pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));
+		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer;margin-top:-4px'>"; */
 		                        
+		                        /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리  */
 		                        /* 2018-07-16 홍승비 - 포틀릿 게시판 특수문자 처리 */
-		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+		                        /* if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		                            var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
 		                        } else {
 		                            var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
@@ -161,7 +153,10 @@
 		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.jpg' width='86' height='61' alt=''></dd>";
 		                        listHTML += "<dd id='content' class='txt'></dd>";
 		                        listHTML += "</dl>";
-		                        listHTML += "<ul class=\"listtype_txt \">";
+		                        listHTML += "<ul class=\"listtype_txt \">"; */
+		                        
+		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
 		                        
 		                        for (var i = 1; i < RowCnt; i++) {
 		                            if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
@@ -170,7 +165,8 @@
 		                                var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
 		                            }
 		                            
-		                            var STARTDATE = "";
+		                            /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리  */
+		                            /* var STARTDATE = "";
                             		var WRITERNAME = "";
 
                             		for (var j = 0; j < xmldom.getElementsByTagName("HEADER").length; j++) {
@@ -183,13 +179,12 @@
 	
     		                            if (STARTDATE != "" && WRITERNAME != "")
                                     		break;
-                            		}
+                            		} */
 		                            
-		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
-		                            //var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA10").item(0));
+		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));		                            
 		                            var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("GUBUN").item(0));
-		                          //2016-10-31
-		                          //boardType이 아무 값도 들어가지 않아서, 보드타입이0일때, 메인컨텐츠에 내용이 있을때 보트타입3을넣어줌.
+		                          	//2016-10-31
+		                          	//boardType이 아무 값도 들어가지 않아서, 보드타입이0일때, 메인컨텐츠에 내용이 있을때 보트타입3을넣어줌.
 		                             /* var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
 			                        if (FboardType == "" && FboardMainContent != "") {
 			                            boardType = "3";
@@ -200,7 +195,9 @@
 			                            FboardType = "3";
 			                        }
 			                        
-		                            listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" ><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+			                        /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리  */
+		                            //listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" ><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+			                        listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" >" + DOCTITLE + "</li>";
 		                        }
 		                        
 		                        listHTML += "</ul>";
@@ -208,12 +205,12 @@
 		                        
 		                         if (FboardType != "4" && FboardType != "3") {
 		                            if (FboardMainContent != "") {
-		                                document.getElementById("content").innerHTML = FboardMainContent;
+		                                /* document.getElementById("content").innerHTML = FboardMainContent; */
 		                            } else {
-		                                getContent(pfirstItemID);
+		                                /* getContent(pfirstItemID); */
 		                            }
 		                        } else {
-		                            document.getElementById("content").innerHTML = FboardMainContent;
+		                            /* document.getElementById("content").innerHTML = FboardMainContent; */
 		                        } 
 		                    } else {
 		                        var nodata = "<div class='nodata_portlet '>";
@@ -358,9 +355,22 @@
 		                pBoardID_NewBoardSTD = document.getElementById("Board2").getAttribute("DATA1");
 		                getBoardList_NewBoardSTD();
 		            }
-		        }
-
-		        window_onload_NewBoardSTD();	
+		        }		        
 		</script>
-	</head>	
+	</head>
+	<body>
+		<article class="board box_shadow">
+            <dl class="portlet_tab" id="BoardTab"></dl>
+            <ul class="portlet_list" id="BoardList"></ul>
+        </article>
+		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
+		<!-- <section  class="body_bg1">
+      		<article class="portletbox boardbox ">
+      		  <div id="BoardTab" class="title"></div>
+        		<div id="BoardList" class="boardcont">
+        		</div>
+        		<div class="guide"><span class="lb"></span><span class="rb"></span></div>
+   		 	</article>
+		</section> -->
+	</body>
 </html>

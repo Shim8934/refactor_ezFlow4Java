@@ -5,134 +5,12 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
-		<section  class="body_bg1">
-			<article id="appr_article" class="appr_mail">
-				<div class="tab">
-    				<ul>
-						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
-  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
-    				</ul>
-    			</div>
-    			<!-- graph -->
-    			<section class="apprgraph">
-    				<div class="apprgraph_area">
-    					<dl>
-    						<dt><spring:message code='main.t00006' /></dt>
-    							<dd>
-    								<div class="nomal_count">
-        								<span id="SIXHGAP">0</span>
-        							</div>
-     							</dd>
-    					</dl>
-    					<dl>
-    						<dt><spring:message code='main.t00007' /></dt>
-    						<dd>
-    							<div class="nomal_count">
-        							<span id="ONEDGAP">0</span>
-        						</div>
-        					</dd>
-    					</dl>
-    					<dl>
-    						<dt><spring:message code='main.t00008' /></dt>
-    						<dd>
-    							<div class="nomal_count">
-        							<span id="SEVENDGAP">0</span>
-        						</div>
-        					</dd>
-    					</dl>
-    					<dl>
-    						<dt><spring:message code='main.t00009' /></dt>
-    						<dd>
-    							<div class="nomal_count">
-        							<span id="ONEMGAP">0</span>
-        						</div>
-        					</dd>
-    					</dl>
-    					<dl>
-    						<c:choose>
-    							<c:when test="${userLang != '3'}">
-    								<dt><spring:message code='main.t00010' /></dt>
-    							</c:when>
-    							<c:otherwise>
-    								<dt><spring:message code='main.t00010' /></dt>
-    							</c:otherwise>
-    						</c:choose>
-    						
-    						<dd>
-    							<div class="point_count">
-        							<span id="OTHER" >0</span>
-        						</div>
-        					</dd>
-    					</dl>
-    				</div>
-    			</section>
-     			<!-- /graph -->
-    			<!-- list -->
-  				<section class="portletbox appr_mailbox"  style="">
-          			<div class="title">
-          				<span class="tr"></span>
-            			<!-- tab -->
-            			<dl class="portlet_tab">
-              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num">(0)</span></span></dt>
-              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num">(0)</span></span></dt>
-              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
-            			</dl>
-            			<!-- /tab -->
-           				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
-            		</div>
-          			<div id ="ApprList" class="appr_mailcont">            
-              			<ul class="listtype_txt">
-            			</ul>
-          			</div>
-        		</section>
- 				<!-- list -->
- 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
-			</article>
-
-    		<article id="mail_article" style="display:none;" class="appr_mail">
-				<div class="tab">
-    				<ul>
-						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
-  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
-    				</ul>
-    			</div>
-    			<!-- graph -->
-    			<section class="apprgraph">
-    				<div class="mailgraph_area">
-    					<%-- 2018-05-25 홍승비 - 메일 용량 표시 변경 --%>
-    					<div id="mailquatersize" style="width:168px; height:134px;margin-top:-20px;margin-left:-9px;margin-bottom:10px;"></div>
-    					<ul>
-    						<li><spring:message code='main.t00012' /><strong id="UseMailBox" class="rtxt"></strong></li>
-    						<li><spring:message code='main.t00013' /><strong id="MailBoxSize"></strong></li>
-    					</ul>
-  					</div>
-    			</section>
-     			<!-- /graph -->
-    			<!-- list -->
-  				<section class="portletbox appr_mailbox"  style="">
-          			<div class="title">
-          				<span class="tr"></span>
-            				<!-- tab -->
-            				<dl class="portlet_tab">
-              					<dt  class="on"><span><spring:message code='main.t00014' /><span id="InBoxCNT" class="tab_num">(0)</span></span></dt>
-				            </dl>
-            				<!-- /tab -->
-            				<span class="btn_more"><img onclick="Mailmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="more"></span>
-            		</div>
-          			<div id="MailList" class="appr_mailcont"></div>
-        		</section>
- 				<!-- list -->
- 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
-			</article>
-		</section>
-		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
-		 <script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
-		 <script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
+		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
+		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
 		<script type="text/javascript">
 		    var arr_userinfo = new Array();
 		    
@@ -155,7 +33,7 @@
 		    
 		    document.onselectstart = function () { return false; };
 		    
-		    function window_onload_NewApprMail() {
+		    window.onload = function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -164,7 +42,11 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        getApprGraph();
+		        if ("${type}" == "appr") {
+		        	getApprGraph();
+		        } else {		        		        
+		        	getMailGraph();
+		        }
 		        
 		        try { top.onresize() } catch (e) { }
 		    }
@@ -223,19 +105,29 @@
 		                var listHTML = "";
 		                
 		                if (pListTypeValue == "1") {
-		                    document.getElementById("doingCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT1").item(0)) + ")";
+		                    /* document.getElementById("doingCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT1").item(0)) + ")";
 		                    document.getElementById("draftCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT2").item(0)) + ")";
-		                    document.getElementById("rejectCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT3").item(0)) + ")";
-	
-		                    document.getElementById("SIXHGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
-		                    document.getElementById("ONEDGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("ONEDGAP").item(0));
-		                    document.getElementById("SEVENDGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("SEVENDGAP").item(0));
-		                    document.getElementById("ONEMGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("ONEMGAP").item(0));
-		                    document.getElementById("OTHER").innerHTML = getNodeText(xmldom.getElementsByTagName("OTHER").item(0));
+		                    document.getElementById("rejectCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT3").item(0)) + ")"; */
+		                    
+							var sixhgap = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
+		                    document.getElementById("SIXHGAP").innerHTML = (sixhgap > 99 ? '99' : sixhgap);
+		                    
+		                    var onedgap = getNodeText(xmldom.getElementsByTagName("ONEDGAP").item(0));
+		                    document.getElementById("ONEDGAP").innerHTML = (onedgap > 99 ? '99' : onedgap);
+		                    
+		                    var sevendgap = getNodeText(xmldom.getElementsByTagName("SEVENDGAP").item(0));
+		                    document.getElementById("SEVENDGAP").innerHTML = (sevendgap > 99 ? '99' : sevendgap);
+		                    
+		                    var onemgap = getNodeText(xmldom.getElementsByTagName("ONEMGAP").item(0));
+		                    document.getElementById("ONEMGAP").innerHTML = (onemgap > 99 ? '99' : onemgap);
+		                    
+		                    var other = getNodeText(xmldom.getElementsByTagName("OTHER").item(0));
+		                    document.getElementById("OTHER").innerHTML = (other > 99 ? '99' : other);
 		                }
 	
 		                if (xmldom.getElementsByTagName("CELL").length > 0) {
-		                    listHTML = "<ul class=\"listtype_txt \">";
+		                    //listHTML = "<ul class=\"listtype_txt \">";
+             
 		                    for (var i = 0; i < xmldom.getElementsByTagName("CELL").length; i++) {
 		                        var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i)));
 		                        var WRITERNAME = getNodeText(xmldom.getElementsByTagName("WRITERNAME").item(i));
@@ -252,14 +144,14 @@
 		                        var URGENTAPPROVAL = getNodeText(xmldom.getElementsByTagName("URGENTAPPROVAL").item(i));
 		                        
 		                        if (URGENTAPPROVAL == 'Y') {
-		                        	listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt' style='color:red'>" + DOCTITLE + "</span> <span class='date' style='color:red'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name' style='color:red'>" + WRITERNAME + "</span></li>";
+		                        	listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        } else {
-			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        }
 		                     }                                 
 	
 	
-		                    listHTML += "</ul>";
+		                    //listHTML += "</ul>";
 		                } else {
 		                    listHTML = "<div class='nodata_portlet '>";
 		                    listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
@@ -582,7 +474,7 @@
 		        if (xmlhttp_getMailGraph_NewApprMail == null || xmlhttp_getMailGraph_NewApprMail.readyState != 4) return;
 		        
 		        /* 2018-05-25 홍승비 - 메일 용량 표시 변경 */
-		        document.getElementById("mailquatersize").innerHTML = "";
+		        /* document.getElementById("mailquatersize").innerHTML = "";
 		    	MailQuater = new JustGage({
 		            id: "mailquatersize",
 		            value: 0,
@@ -590,7 +482,7 @@
 		            max: 100,
 		            showInnerShadow: true,
 		            levelColorsGradient : true,
-		        });
+		        }); */
 	
 		        try {          
 		            document.getElementById("MailList").innerHTML = "";
@@ -598,14 +490,16 @@
 		            var xmldom = createXmlDom();
 		            xmldom = xmlhttp_getMailGraph_NewApprMail.responseXML;
 		            
-		            MailQuater.refresh(parseInt(getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0))));
-		            document.getElementById("InBoxCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT").item(0)) + ")";
-		            document.getElementById("UseMailBox").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXDETAIL").item(0));
-                    document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0));
+		            /* MailQuater.refresh(parseInt(getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0)))); */
+		            /* document.getElementById("InBoxCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT").item(0)) + ")"; */		            
+                    /* document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0)); */
+                    
+                    document.getElementById("UseMailBox").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXDETAIL").item(0)) + "<span>/" + getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0)) + "</span>";
+                    $("#mGraphSpan").css("width", getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0)) + "px");
                     
 		            var listHTML = "";
 		            if (xmldom.getElementsByTagName("NODE").length > 0) {
-		                var listHTML = "<ul class=\"listtype_txt \">";
+		                /* var listHTML = "<ul class=\"listtype_txt \">"; */		                
 		                
 		                for (var i = 0; i < xmldom.getElementsByTagName("NODE").length; i++) {
 		                	var _SubjectColumSpan = document.createElement("span");
@@ -620,7 +514,7 @@
 		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 		                }
 	
-		                listHTML += "</ul>";
+		                //listHTML += "</ul>";
 		            } else {
 		                listHTML = "<div class='nodata_portlet '>";
 		                listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
@@ -676,8 +570,191 @@
 		            apprChangeTab(document.getElementById("draftTab"));
 		        }
 		    }
-	
-		    window_onload_NewApprMail();
 		</script>
-	</head>	
+	</head>
+	<body>
+		<c:if test="${type == 'mail'}">
+			<article class="mail box_shadow">
+	            <dl class="portlet_title">
+	                <dt class="portletText"><spring:message code='main.t00038' /></dt>
+	                <dd class="portletPlus" onclick="Mailmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
+	                <dd class="mailGraph">
+	                    <p class="mGraph"><span id="mGraphSpan"></span></p>
+	                    <span class="mGraph_text" id="UseMailBox"></span>
+	                </dd>
+	            </dl>
+	            <ul id="MailList" class="portlet_list"></ul>
+	        </article>
+        </c:if>
+        <c:if test="${type == 'appr'}">
+        	<article class="approval box_shadow">
+	            <dl class="portlet_tab">
+	                <dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
+	                <dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
+	                <dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>
+	                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
+	            </dl>
+	            <ul id ="ApprList" class="portlet_list"></ul>
+	        </article>
+	        
+	        <article class="bookmark_approval box_shadow">
+	        	<dl class="portlet_title">
+	                <dt class="portletText">즐겨찾기양식</dt>
+	                <dd class="portletPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
+	            </dl>
+	             <ul class="bookmark">
+	            	<li class="bookmarkLi"><span>경조,휴가<br>교육 신청서</span></li>
+	                <li class="bookmarkLi"><span>출장<br>보고서</span></li>
+	                <li class="bookmarkLi"><span>기안지<br>샘플양식</span></li>
+	                <li class="bookmarkLi"><span>폼빌더<br>양식</span></li>
+	                <li class="bookmarkLi"><span>신청서<br>샘플양식</span></li>
+	            </ul>
+	            <div class="apprgraph">
+	                <div class="apprgraph_area">
+	                    <dl class="bookmarkG01">
+	                        <dt><spring:message code='main.t00006' /></dt>
+	                        <dd>(<span id="SIXHGAP">0</span>)</dd>
+	                    </dl>
+	                    <dl class="bookmarkG02">
+	                        <dt><spring:message code='main.t00007' /></dt>
+	                        <dd>(<span id="ONEDGAP">0</span>)</dd>
+	                    </dl>
+	                    <dl class="bookmarkG03">
+	                        <dt><spring:message code='main.t00008' /></dt>
+	                        <dd>(<span id="SEVENDGAP">0</span>)</dd>
+	                    </dl>
+	                    <dl class="bookmarkG04">
+	                        <dt><spring:message code='main.t00009' /></dt>
+	                        <dd>(<span id="ONEMGAP">0</span>)</dd>
+	                    </dl>
+	                    <dl class="bookmarkG05">
+	                        <dt><spring:message code='main.t00010' /></dt>
+	                        <dd>(<span id="OTHER">0</span>)</dd>
+	                    </dl>
+	                </div>
+	            </div>
+	        </article>
+        </c:if>
+		<!-- 2018-08-24 장진혁 - 새로운 포탈 -->
+		<%-- <section  class="body_bg1">
+			<article id="appr_article" class="appr_mail">
+				<div class="tab">
+    				<ul>
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
+    				</ul>
+    			</div>
+    			<!-- graph -->
+    			<section class="apprgraph">
+    				<div class="apprgraph_area">
+    					<dl>
+    						<dt><spring:message code='main.t00006' /></dt>
+    							<dd>
+    								<div class="nomal_count">
+        								<span id="SIXHGAP">0</span>
+        							</div>
+     							</dd>
+    					</dl>
+    					<dl>
+    						<dt><spring:message code='main.t00007' /></dt>
+    						<dd>
+    							<div class="nomal_count">
+        							<span id="ONEDGAP">0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    					<dl>
+    						<dt><spring:message code='main.t00008' /></dt>
+    						<dd>
+    							<div class="nomal_count">
+        							<span id="SEVENDGAP">0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    					<dl>
+    						<dt><spring:message code='main.t00009' /></dt>
+    						<dd>
+    							<div class="nomal_count">
+        							<span id="ONEMGAP">0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    					<dl>
+    						<c:choose>
+    							<c:when test="${userLang != '3'}">
+    								<dt><spring:message code='main.t00010' /></dt>
+    							</c:when>
+    							<c:otherwise>
+    								<dt><spring:message code='main.t00010' /></dt>
+    							</c:otherwise>
+    						</c:choose>
+    						
+    						<dd>
+    							<div class="point_count">
+        							<span id="OTHER" >0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    				</div>
+    			</section>
+     			<!-- /graph -->
+    			<!-- list -->
+  				<section class="portletbox appr_mailbox"  style="">
+          			<div class="title">
+          				<span class="tr"></span>
+            			<!-- tab -->
+            			<dl class="portlet_tab">
+              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
+            			</dl>
+            			<!-- /tab -->
+           				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
+            		</div>
+          			<div id ="ApprList" class="appr_mailcont">            
+              			<ul class="listtype_txt">
+            			</ul>
+          			</div>
+        		</section>
+ 				<!-- list -->
+ 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
+			</article>
+
+    		<article id="mail_article" style="display:none;" class="appr_mail">
+				<div class="tab">
+    				<ul>
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
+    				</ul>
+    			</div>
+    			<!-- graph -->
+    			<section class="apprgraph">
+    				<div class="mailgraph_area">
+    					2018-05-25 홍승비 - 메일 용량 표시 변경
+    					<div id="mailquatersize" style="width:168px; height:134px;margin-top:-20px;margin-left:-9px;margin-bottom:10px;"></div>
+    					<ul>
+    						<li><spring:message code='main.t00012' /><strong id="UseMailBox" class="rtxt"></strong></li>
+    						<li><spring:message code='main.t00013' /><strong id="MailBoxSize"></strong></li>
+    					</ul>
+  					</div>
+    			</section>
+     			<!-- /graph -->
+    			<!-- list -->
+  				<section class="portletbox appr_mailbox"  style="">
+          			<div class="title">
+          				<span class="tr"></span>
+            				<!-- tab -->
+            				<dl class="portlet_tab">
+              					<dt  class="on"><span><spring:message code='main.t00014' /><span id="InBoxCNT" class="tab_num">(0)</span></span></dt>
+				            </dl>
+            				<!-- /tab -->
+            				<span class="btn_more"><img onclick="Mailmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="more"></span>
+            		</div>
+          			<div id="MailList" class="appr_mailcont"></div>
+        		</section>
+ 				<!-- list -->
+ 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
+			</article>
+		</section> --%>
+	</body>
 </html>

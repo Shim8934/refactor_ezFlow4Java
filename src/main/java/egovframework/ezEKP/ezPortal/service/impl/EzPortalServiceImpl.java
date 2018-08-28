@@ -1796,9 +1796,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		switch (result) {
 		case 1:
-			strHTML = "<div class='logo'>";
+			/*strHTML = "<div class='logo'>";
 			strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
-			strHTML += "</div>";
+			strHTML += "</div>";*/
+			
+			strHTML = "<ul class='contentlayout'><li class='contentlayout_left'>";
+			strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
+			strHTML += "</li>";
+			
 			break;
 		case 2:
 			strHTML = getUtilMenuHTML(pCallingMenuID, pUID, userInfo);
@@ -1807,7 +1812,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			strHTML = getMainMenuHTML(pCallingMenuID, pUID, userInfo);
 			break;
 		case 4:
-			strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);
+			/*strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);*/
 			break;
 		case 5:
 			/*strHTML = getSearchHTML(pCallingMenuID, pUID);*/
@@ -2012,8 +2017,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 
 		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
-		sb.append("<article class='utmenu'>\n");
-		sb.append("<ul>\n");
+		
+		sb.append("<li class='contentlayout_right'><ul class='util'>");
+		/*sb.append("<article class='utmenu'>\n");
+		sb.append("<ul>\n");*/
 		
 		String lastLogout = "";
 		logger.debug("resultSize="+result.size());
@@ -2055,7 +2062,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					/* 2018-03-06 장진혁 유틸메뉴 이미지화 작업 */
 					String defaultIcon = "";
 					
-					if (menuitemLinkURL.equals("/admin/main.do")) {
+					/*if (menuitemLinkURL.equals("/admin/main.do")) {
 						defaultIcon = "/images/kr/main/admin.png";
 					} else if (menuitemLinkURL.equals("/ezPersonal/personSearch.do")) {
 						defaultIcon = "/images/kr/main/person.png";
@@ -2070,25 +2077,87 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					}
 					
 					if (i == result.size() - 1) {
-						/*sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");*/						
+						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");						
 						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"' title='" + menuitemDisplayName +"' /></li>\n");
 					} else {
 						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
                         //sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
 						sb.append(", \"" + menuitemWindowOption + "\")' title='" + menuitemDisplayName + "' /></li>\n");
+					}*/
+					
+					if (menuitemLinkURL.equals("/admin/main.do")) {
+						defaultIcon = "icon_topmenu util_admin";
+					} else if (menuitemLinkURL.equals("/ezPersonal/personSearch.do")) {
+						defaultIcon = "icon_topmenu util_employee_search";
+					} else if (menuitemLinkURL.equals("/ezPortal/environmentMain.do")) {
+						defaultIcon = "icon_topmenu util_set";
+					} else if (menuitemLinkURL.equals("/ezPortal/help/help.do")) {
+						defaultIcon = "icon_topmenu util_help";
+					} else if (menuitemLinkURL.equals("/user/login/actionLogout.do")) {
+						defaultIcon = "icon_topmenu util_logout";
+					} else {
+						defaultIcon = "/images/kr/main/common.png";
 					}
-                      
+					
+					sb.append("<li><span class='" + defaultIcon + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+					sb.append(", \"" + menuitemLinkLocation + "\"");
+					sb.append(", \"" + menuitemWindowOption + "\")' title='" + menuitemDisplayName + "' /></span></li>\n");
 				} else {
 					sb.append("<li " + lastLogout + ">" + menuitemDisplayName + "</li>\n");
 				}
 			}
 		}
-		sb.append("</ul></article>\n");
+		
+		sb.append("<li><span class='icon_topmenu util_systemlink' onclick='javascript:viewQuick()' /></span></li>\n");
+		
+		sb.append("</ul></li>\n");
 		logger.debug("sb="+sb.toString());
 		logger.debug("getUtilMenuHTML ended");
 		
 		return sb.toString();
+	}
+	
+	public String getMenuClass(String url) {
+		String str = "";
+		
+		if (url.equals("/ezEmail/mailMain.do")) { //메일
+			str = "icon_topmenu icon_nav_mail";
+		} else if (url.equals("/ezSchedule/scheduleIndex.do?funCode=2")) { //일정관리
+			str ="icon_topmenu icon_nav_calendar";
+		} else if (url.equals("/ezApprovalG/apprGMain.do")) { //전자결재
+			str ="icon_topmenu icon_nav_approval";
+		} else if (url.equals("/ezBoard/boardMain.do")) { //게시판
+			str ="icon_topmenu icon_nav_board";
+		} else if (url.equals("/ezCommunity/communityMain.do")) { //커뮤니티
+			str ="icon_topmenu icon_nav_community";
+		} else if (url.equals("/ezResource/resMain.do")) { //자원관리
+			str ="icon_topmenu icon_nav_resource";
+		} else if (url.equals("/ezCircular/circularIndex.do")) { //회람판
+			str ="icon_topmenu icon_nav_circular_edition";
+		} else if (url.equals("/ezJournal/journalMain.do")) { //업무일지
+			str ="icon_topmenu icon_nav_workdiary";
+		} else if (url.equals("/ezWebFolder/webfolderMain.do")) { //웹폴더
+			str ="icon_topmenu icon_nav_webfolder";
+		} else if (url.equals("/ezAttitude/attitudeMain.do")) { //근태관리
+			str ="icon_topmenu icon_nav_absenteeism";
+		} else if (url.equals("/ezPMS/pmsMain.do")) { //프로젝트관리
+			str ="icon_topmenu icon_nav_project";
+		} else if (url.equals("/ezEmail/mailMain.do?funCode=2")) { //주소록
+			str ="icon_topmenu icon_nav_addressbook";
+		} else if (url.equals("/ezSchedule/scheduleIndex.do?funCode=3")) { //업무관리
+			str ="icon_topmenu icon_nav_work";
+		} else if (url.equals("/ezBoard/boardMain.do?func=1")) { //전자설문
+			str ="icon_topmenu icon_nav_survey";
+		} else if (url.equals("/ezBoard/boardMain.do?func=3")) { //투표
+			str ="icon_topmenu icon_nav_voting";
+		} else if (url.equals("/ezBoard/boardMain.do?func=4")) { //사다리
+			str ="icon_topmenu icon_nav_laddergame";
+		} else if (url.equals("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO")) { //협업
+			str ="icon_topmenu icon_nav_collaboration";
+		} 
+		
+		return str;
 	}
 	
 	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
@@ -2107,14 +2176,126 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			use_journal = "YES";
 		}
 		
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
+		sb.append("<li class='contentlayout_none'><ul class='contentlayout topmenu'><li class='contentlayout_none' style='margin:0 auto'>");
+		sb.append("<nav id='topNav' class='topNavCls'><div class='full_nav on' title='전체메뉴' onclick='subMenuClick()'><span class='icon_topmenu full_menu'></span></div>");
+		sb.append("<div class='countBox'><span class='hidden_nav_count'>+0</span><span class='icon_topmenu icon_count_arrow'></span></div>");
+		sb.append("<ul class='navUL'>");		
 		
-		/*if (userInfo.getTheme().equals("BASIC")) {
-			sb.append("</header>\n");
-		}*/
+		StringBuilder sbSub = new StringBuilder();
+		StringBuilder sbSubMain = new StringBuilder();
+		StringBuilder sbSubSub = new StringBuilder();
+		sbSub.append("<div class='full_menu_toggle' style='display:none'><ul class='full_menu_toggleUL'>");		
 		
-		sb.append("<nav>\n");
-		sb.append("<ul class='topmenu'>");
+		for (int i=0; i < result.size(); i++) {
+			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+				continue;
+			}
+			
+			/* 2018-05-24 장진혁 홈 메뉴 pass */
+			String menuitemLinkURL = result.get(i).getLinkURL();			
+			String menuitemUID = result.get(i).getuID();
+			String menuitemDisplayName = result.get(i).getDisplayName();
+			String menuitemWindowOption = result.get(i).getWindowOption();
+			
+			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
+				continue;
+			}
+			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
+			
+			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
+			/* 2018-08-17 장진혁 메인 대메뉴 가져오기 */
+			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+				sb.append("<li id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sb.append(", \"" + "main" + "\"");
+				sb.append(", \"" + menuitemWindowOption + "\")'");
+				sb.append(">" + menuitemDisplayName + "</li>");
+			}
+			
+			/* 2018-08-17 장진혁 서브메뉴화면에 메인 대메뉴 데이터 가져오기 */
+			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+				if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
+					continue;
+				}
+				sbSubMain.append("<li><dl class='full_menu_toggleDL' ");
+				sbSubMain.append("id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sbSubMain.append(", \"" + "main" + "\"");
+				sbSubMain.append(", \"" + menuitemWindowOption + "\")'");
+				sbSubMain.append("><dt><span class='");
+				/* 2018-08-17 장진혁 매뉴 class 호출 */
+				sbSubMain.append(getMenuClass(menuitemLinkURL));
+				sbSubMain.append("'></span></dt><dd>" + menuitemDisplayName + "</dd></dl></li>");
+			}
+			
+			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getuID(), userInfo.getTenantId());			
+			
+			for (int j=0; j<result2.size(); j++) {				
+				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+					continue;
+				}
+				
+				String menuitemDisplayNameSub = result2.get(j).getDisplayName();
+				String menuitemLinkURLSub = result2.get(j).getLinkURL();
+				
+				//baonk 추가
+				if (menuitemLinkURLSub.equals("/ezBoard/boardMain.do?func=3")) {
+					if (!ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				//end
+				
+				// 2018-07-27 황윤호 추가 
+				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURLSub.equals("/ezBoard/boardMain.do?func=4")) {
+					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				
+				String menuitemLinkLocationSub = result2.get(j).getLinkLocation();
+				String menuitemWindowOptionSub = result2.get(j).getWindowOption();
+				
+				sbSubSub.append("<li><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURLSub + topLoadGetParameters(menuitemLinkURLSub, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocationSub + "', '" + menuitemWindowOptionSub + "')\"><dt><span class='");
+				/* 2018-08-17 장진혁 매뉴 class 호출 */
+				sbSubSub.append(getMenuClass(menuitemLinkURLSub));
+				sbSubSub.append("'></span></dt><dd>" + menuitemDisplayNameSub + "</dd></dl></li>\n");			
+			}
+		}
+		
+		sb.append("</ul>");
+		sb.append(sbSub.toString());
+		sb.append(sbSubMain.toString());
+		sb.append(sbSubSub.toString());
+		sb.append("</ul></div></nav></li></ul></li></ul></header></div>\n");
+
+		logger.debug("getMainMenuHTML ended");
+        
+		return sb.toString();
+	}
+	
+	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		logger.debug("getSubMenuHTML started");		
+		
+		StringBuilder sb = new StringBuilder();		
+		sb.append("<div class='full_menu_toggle' style='display:none'><ul class='full_menu_toggleUL'>");
+		
+		/* 새로운 서브페이지 */
+		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml("203", pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+
+		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		if (use_journal == null || use_journal.equals("")) {
+			use_journal = "YES";
+		}
 		
 		for (int i=0; i<result.size(); i++) {
 			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
@@ -2123,19 +2304,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
 			String menuitemLinkURL = result.get(i).getLinkURL();
-			
-			/*
-			 * 2018-06-14 장진혁 홈 메뉴 안보이게 작업한거 주석처리
-			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
-				continue;
-			}*/
-			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
-			/*String menuitemImageUID = result.get(i).getImageUId();*/
-			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
-			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
 			
 			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
 			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
@@ -2149,48 +2320,56 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			sb.append("<li ");
 			
 			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sb.append("id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 				sb.append(", \"" + "main" + "\"");
 				sb.append(", \"" + menuitemWindowOption + "\")'");
 			}
 			
-			sb.append(">" + menuitemDisplayName + "</li>");
-			
-			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 */
-			/* if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
-				sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
-			} else {
-				sb.append("<li ");
-				
-				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-					sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-					sb.append(", \"" + menuitemLinkLocation + "\"");
-					sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
+			sb.append(">" + menuitemDisplayName + "</li>");			
+		}		
+		
+		for (int i=0; i<result.size(); i++) {
+			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getuID(), userInfo.getTenantId());
+						
+			for (int j=0; j<result2.size(); j++) {
+				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+					continue;
 				}
 				
-				sb.append(">" + menuitemDisplayName + "</li>");
-			}*/
-		}
-		
-		sb.append("</ul></nav>");
-		
-		if (userInfo.getTheme().equals("BASIC")) {
-			sb.append("</header>\n");
+				String menuitemDisplayName = result2.get(j).getDisplayName();
+				String menuitemImageUID = result2.get(j).getImageUId();
+				String menuitemLinkURL = result2.get(j).getLinkURL();
+				
+				//baonk 추가
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=3")) {
+					if (!ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				//end
+				
+				// 2018-07-27 황윤호 추가 
+				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=4")) {
+					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				
+				String menuitemLinkLocation = result2.get(j).getLinkLocation();
+				String menuitemWindowOption = result2.get(j).getWindowOption();
+				
+				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
+					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
+				} else {
+					sb.append("<li><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\"><dt><span class='icon_topmenu icon_nav_mail'></span></dt><dd>" + menuitemDisplayName + "</dd></dl></li>\n");
+				}
+			}
 		}
 
-		logger.debug("getMainMenuHTML ended");
-        
-		return sb.toString();
-	}
-	
-	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
-		logger.debug("getSubMenuHTML started");
-
-		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(" <div class=\"topSubMenu\">");
-		
+/* 		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
+  
+System.out.println("result.size() :" + result.size());		
 		for (int i=0; i<result.size(); i++) {
 			String leftMargin = result.get(i).getLeftMargin();
 			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID(), userInfo.getTenantId());
@@ -2234,12 +2413,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
 					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 				} else {
-					sb.append("<li onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
+					//sb.append("<li onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
+					sb.append("<li><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\"><dt><span class='icon_topmenu icon_nav_mail'></span></dt><dd>" + menuitemDisplayName + "</dd></dl></li>\n");
 				}
 			}
-			sb.append("<li class=\"right\"></ul>");
-		}
-		sb.append("</div>\n");
+			//sb.append("</ul>");
+		}*/
+		sb.append("</ul></div></nav></li></ul></li></ul></header></div>\n");
 
 		logger.debug("getSubMenuHTML ended");
 		
@@ -2434,7 +2614,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			sb.append("<tr id='main_row'>\n");
 		} else {
 			if (userInfo.getTheme().equals("BASIC")) {
-				sb.append("<div id=\"Center\">");
+				sb.append("<div id=\"center\">");
 			}
 		}
 		
@@ -2614,6 +2794,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                 }
         	} else {
         		if (userInfo.getTableViewOption().equals("D")) {
+System.out.println("iam D");        			
         			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
         		} else {
         			String columnWidth = "*";
@@ -2723,9 +2904,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return "";
 		}
 		
+System.out.println("strSQL : " + strSQL);
+System.out.println("result : " + result);
+		
 		boolean loadFlag = true;
 		
-		for (int i=0; i<result.size(); i++) {
+		for (int i=0; i<result.size()-2; i++) {
 			int portletType = result.get(i).getPortletType();
 			String portletUID = result.get(i).getuID();
 			String portletPageUID = result.get(i).getPageUID();
@@ -2760,10 +2944,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			} else {
 				logger.debug("no edit");
 				logger.debug("userInfo tableViewOption="+userInfo.getTableViewOption());
-				
+				/* jjh */
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
-						sb.append("<div class='section1_bg'><section class='section1'>\n");
+						sb.append("<section class='section_left'>\n");
+						sb.append("<iframe width='100%' border=0 src='/ezPortal/urlPortlet.do?uID=0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3' frameborder=0 scrolling=no></iframe>\n");
+						sb.append("<iframe width='100%' height='300px' border=0 src='/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c' frameborder=0 scrolling=no></iframe>\n");
+						sb.append("<iframe width='100%' height='197px' border=0 src='/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4' frameborder=0 scrolling=no></iframe>\n");							
 					} else {
 						logger.debug("userInfo getTheme="+userInfo.getTheme());
 						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
@@ -2771,7 +2958,40 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							loadFlag = false;
 						}
 						
-						sb.append("<section class='section" + (i + 1) + "'>\n");
+						if (i == 1) {
+							sb.append("<aside><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
+							sb.append("<li><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
+							sb.append("<li><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
+							sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>일정작성</span></li>");
+							sb.append("<li><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>조직도</span></li></ul></div>");
+							sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu'></ul>");
+							sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre'><img src='/images/kr/main/link_preBtn.png'></span><span class='linkBtn_next'><img src='/images/kr/main/link_nextBtn.png'></span></p></div></div></aside>");
+						} else {
+							sb.append("<section class='section_main'>\n");
+							
+							for (int j=0; j < 3; j++) {
+								if (j==0) {
+									sb.append("<div class='mainLayout_left'>");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683&companyBoardID={67d0a0e4-ad24-1be6-9b5f-64a16cf6dca2}&deptBoardID={80ef430a-39cd-ee7f-cd81-157faa4979aa}' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=1a36d14a-cea3-4126-9ae0-4f9989f52d27' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e&ffdgdfg=dfgdfgdfg' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("</div>");
+								} else if (j==1) {
+									sb.append("<div class='mainLayout_middle'>");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=mail' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=appr' frameborder=0 scrolling=no></iframe>\n");									
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("</div>");
+								} else if (j==2) {
+									sb.append("<div class='mainLayout_right'>");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac&photoGalleryID={9d5dfc7f-5f5e-ec24-1009-6c47991926cc}' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b&boardID1={8beb7d4d-3f07-c739-859d-762af6a6b61a}' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("</div>");
+								}
+							}
+						}
 					}
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
@@ -2779,16 +2999,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
-						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						//sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
 					}
 					if (i == 0) {
-						sb.append("</section></div>\n");
+						sb.append("</section>\n");
 					} else {
 						sb.append("</section>\n");
 					}
 				} else {
 					if (i == 0) {
-						sb.append("<div class='section1_bg'><section class='section1'>\n");
+						sb.append("<section class='section_left'>\n");
 						if (portletType == 0) {
 							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
@@ -2798,7 +3018,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
 						}
 						if (i == 0) {
-							sb.append("</section></div>\n");
+							sb.append("</section>\n");
 						} else {
 							sb.append("</section>\n");
 						}
@@ -2906,12 +3126,25 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
+							
+							if (result.size() != 1) {							
+								if (i==0) {
+									sb.append("<div class='mainLayout_left'>");
+								} else if (i==1) {
+									sb.append("<div class='mainLayout_middle'>");
+								} else if (i==2) {
+									sb.append("<div class='mainLayout_right'>");
+								}
+							}
+							
 							if (portletWidth == 9999) {
 								portletWidthStr = "100%"; 
 								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							} else {
 								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
+							
+							sb.append("</div>");
 						}
 					} else {
 						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
@@ -3100,10 +3333,38 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
-		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
-		for (int i=0; i<2; i++) {
+		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */		
+		for (int i=0; i<2; i++) {			
+			strData.append("<dl class='comListDL0"+(i+1)+"' style='cursor:pointer'");			
 			
-			if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
+			if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
+				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+			} else {
+				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+			}
+			
+			strData.append("<dt class='comPic'>");
+			
+			if (i == 0) {
+				strData.append("<span class='best'><img src='/images/kr/main/com_best.png'></span>");
+			}
+			
+			String bannerSrc = "";
+			
+			if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+				bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+			} else {
+				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+			}
+			
+			logger.debug("bannerSrc="+bannerSrc);
+			
+			strData.append("<img src='" + bannerSrc + "'></dt>");			
+			strData.append("<dd class='comTit'>\"" + list.get(i).getC_ClubName() + "\"</dd>");
+			strData.append("<dd class='comText'>" + list.get(i).getC_ClubDesc() + "</dd></dl>");
+			
+			/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
+			/*if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
 				strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
 			}
 			else {
@@ -3139,7 +3400,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			strData.append("<dd  class='txt'>");
 			strData.append(list.get(i).getC_ClubDesc());
 			strData.append("</dd>");
-			strData.append("</dl>");
+			strData.append("</dl>");*/
 			
 		}
 		return strData.toString();
