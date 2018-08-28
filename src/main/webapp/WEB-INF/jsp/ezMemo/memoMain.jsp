@@ -79,7 +79,8 @@
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 		var pAdminType  = "n";
 		var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
-
+		window.onunload = Window_onunload;
+		
 	 	window.onresize = function () {
 	 		/* 메모리스트 size 변경 */
 	        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
@@ -154,6 +155,11 @@
 					alert("<spring:message code='ezBoard.t191' />");
 	                return;
 				}
+				
+				if (searchInput.indexOf("%") != -1) {
+		            alert("'%'" + "<spring:message code='ezTask.jsh08' />");
+		            return;
+		        }
 				BoardSearchOptionHidden();
 			}
 
@@ -371,6 +377,16 @@
 		
 		function onSelect_Option() {
 			
+		}
+		
+		// 레이어 팝업 생성된 상태에서 뒤로가기 이벤트 처리
+		function Window_onunload() {
+			if (parent.frames["left"]) {
+        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+        			$(parent.frames["left"].document.body).css("overflow", "");
+        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+        		}
+        	}
 		}
 	</script>
 	<body class="mainbody" style="overflow: hidden;" marginwidth="0" marginheight="0">
