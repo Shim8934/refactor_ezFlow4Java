@@ -397,6 +397,17 @@
 		}
 		
 		function memoMove() {
+			var memo_ids = [];
+			
+			$(":checkbox[name=memo]:checked").each(function(){
+				memo_ids.push($(this).val());
+			});
+			
+			if (memo_ids.length == 0) {
+	        	alert("<spring:message code='ezMemo.t0043' />");
+	            return;
+	        }
+			
 			var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
             try { OpenWin.focus(); } catch (e) { }
 		}

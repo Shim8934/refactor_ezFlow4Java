@@ -8,6 +8,7 @@ function createMemo(hColor, bColor, memoId, contents, flag) {
 	var input = document.createElement("input");
 	input.setAttribute("name", "memo");
 	input.setAttribute("type", "checkbox");
+	input.setAttribute("value", memoId);
 	
 	var div2 = document.createElement("div");
 	div2.setAttribute("class", "memo-color");
