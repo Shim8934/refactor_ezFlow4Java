@@ -190,11 +190,20 @@
 	             }
 			});
 		}
+		var checkOpt="off";
 		function allClick() {
 			// 체크 박스 모두 체크
-			$("input[name=memo]:checkbox").each(function() {
-				$(this).attr("checked", true);
-			});
+			if(checkOpt == "off") {
+				$("input[name=memo]:checkbox").each(function() {
+					$(this).prop("checked", true);
+				});
+				checkOpt = "true";
+			} else {
+				$("input[name=memo]:checkbox").each(function() {
+					$(this).prop("checked", false);
+				});
+				checkOpt = "off";
+			}
 		}
 		
 		function newMemo() {
