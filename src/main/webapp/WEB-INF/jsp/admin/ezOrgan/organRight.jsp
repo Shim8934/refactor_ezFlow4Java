@@ -152,7 +152,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : cellContent, prop : "", type : typeContent},
+		        	data : {deptID : DeptID, cell : cellContent, prop : "userType", type : typeContent},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();

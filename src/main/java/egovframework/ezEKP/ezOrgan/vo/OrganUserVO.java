@@ -109,6 +109,8 @@ public class OrganUserVO {
 	private String nowDate;
 	/** 사용자가 속한 Tenant의 고유 ID */
 	private int tenantId = -1;
+	/** 겸직사원 구분(addjob or user) */
+	private String userType;
 	
 	public String getCn() {
 		return cn;
@@ -540,6 +542,14 @@ public class OrganUserVO {
 
 	public void setNowDate(String nowDate) {
 		this.nowDate = nowDate;
+	}
+	
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 }
