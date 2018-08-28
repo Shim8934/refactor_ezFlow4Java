@@ -15,13 +15,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<!-- data picker-->
-		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
@@ -105,12 +105,10 @@
 			$(".individual-memo").mouseleave(function(){
 	        	$(this).children("img").css("visibility", "hidden");
 	        });
-			/* $("#memoList").draggable({
-	        	 containment: "#bodyFrame",
-	        	 stop:function(){
-	        			defaultPointer();		
-	        	}
-	        }); */
+			
+			$("#boardMemoList").sortable({
+	        	 containment: '#bodyFrame'
+	        });
 	        
 			/* // 체크 박스 모두 해제
 			$("#uncheckAll").click(function() {
