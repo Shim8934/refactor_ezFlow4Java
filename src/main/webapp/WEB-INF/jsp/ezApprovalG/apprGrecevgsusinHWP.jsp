@@ -1445,7 +1445,7 @@
 			            }
 			        }
 			    }
-			 
+			 }
 			 
 			function ReplaceString(Origin, Source, Target) {
 			    return Origin.split(Source).join(Target);
