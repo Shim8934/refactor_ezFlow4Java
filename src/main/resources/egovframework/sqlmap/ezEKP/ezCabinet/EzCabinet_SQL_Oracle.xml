@@ -698,6 +698,23 @@
 			)
 	</select>
 	
+	<select id="EzCabinetDAO.getMySharedCabinetList" resultMap="cabinetSimpleVO3">
+		select distinct
+			c1.cabinet_id                                                                                as cabinet_id,
+			c1.cabinet_name1                                                                             as cabinet_name,
+			c1.cabinet_name1                                                                             as cabinet_name1,
+			c1.cabinet_name2                                                                             as cabinet_name2,
+			c1.cabinet_level                                                                             as cabinet_level,
+			c1.cabinet_order                                                                             as cabinet_step,
+			c1.cabinet_path                                                                              as cabinet_path,
+			case when (s.child_permission = 1 and (select count(c2.cabinet_id) from tbl_cb_cabinet c2
+				where c2.use_status = 1 and c1.cabinet_id = c2.parent_id and c1.tenant_id = c2.tenant_id) > 0) then 1 else 0 end as has_sub
+		from
+			tbl_cb_cabinet c1 join tbl_cb_share s on c1.cabinet_id = s.cabinet_id and s.sharer_id = #userId# and s.tenant_id = c1.tenant_id and s.use_status = 1
+		where
+		<![CDATA[c1.creator_id = #userId# and c1.tenant_id = #tenantId# and c1.use_status = 1]]>
+	</select>
+	
 	<!--***********************************************************************************
 	**                             Check permission process                              **
 	************************************************************************************-->

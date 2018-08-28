@@ -500,7 +500,7 @@ var CabinetShareItem = function() {
 			success: function(data) {
 				var code = data.code;
 				switch(code) {
-					case 0 : saveSuccessfully()                 ; break;
+					case 0 : saveSuccessfully(userList.length)  ; break;
 					case 1 : alert(CabinetMessages.strParamErr) ; break;
 					case 2 : alert(CabinetMessages.strError)    ; break;
 					case 3 : alert(CabinetMessages.strPerm)     ; break;
@@ -513,7 +513,24 @@ var CabinetShareItem = function() {
 		});
 	}
 	
-	function saveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
+	function saveSuccessfully(totalUsers) {
+		alert(CabinetMessages.strSave);
+		
+		if (totalUsers == 0) {
+			var leftMenu = window.opener.parent.frames["left"];
+			
+			if (leftMenu) {
+				var myShareTreeH2 = leftMenu.document.getElementById("shareCabinet");
+				if (myShareTreeH2.className == "on") {
+					//Reload my share tree
+					if (leftMenu.CabUserLeft) {leftMenu.CabUserLeft.reloadMyShare(cabinetId);}
+				}
+			}
+		}
+		
+		closeWindow();
+	}
+	
 	function closeWindow() {window.close();}
 	
 	function deleteUsers(userList) {

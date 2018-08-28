@@ -28,7 +28,7 @@
 			
 			<!-- 공유 한은 캐비넷 -->
 			<h2 id="shareCabinet"><span><spring:message code='ezCabinet.t157'/></span></h2>
-			<ul><div id="myShareTree" class="cabinetTree3"></div></ul>
+			<ul><div id="myShareTree" class="cabinetTree2"></div></ul>
 			
 			<!-- 공유 반은 캐비넷 -->
 			<h2 id="sharedCabinet"><span><spring:message code='ezCabinet.t05'/></span></h2>
@@ -135,6 +135,14 @@
 					cabinetTree.makeTree({cabinetNode : cabinetNodeId});
 				}
 				
+				function reloadMyShareTree(nodeId) {
+					var myShareCabinet  = document.getElementById("myShareTree");
+					var currentSelected = myShareCabinet.querySelector("span[class='selectedNode']");
+					if (currentSelected && currentSelected.getAttribute("role") == nodeId) {currentSelected = "";}
+					
+					myShareTree.makeTree({cabinetNode : currentSelected});
+				}
+				
 				function getManagement() {
 					var mycabinetElmt  = document.getElementById("cabinetTree");
 					var selectedNode   = mycabinetElmt.querySelector("span[class='selectedNode']");
@@ -177,10 +185,10 @@
 					myShareTree.setTreeInfo({
 						treeId     : "myShareTree",
 						treeType   : "cabinet",
-						type       : "list",
+						type       : "listshare",
 						initialUrl : "/ezCabinet/getMyShareCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
-						click      : getShareCabinet,
+						click      : getCabinet,
 						dblClick   : null
 					});
 					
@@ -256,9 +264,10 @@
 				}
 				
 				return {
-					reloadTree : reloadTree,
-					relateTree : reloadRelatedTree,
-					draw       : drawVolume
+					reloadTree    : reloadTree,
+					relateTree    : reloadRelatedTree,
+					reloadMyShare : reloadMyShareTree,
+					draw          : drawVolume
 				};
 			}();
 		</script>

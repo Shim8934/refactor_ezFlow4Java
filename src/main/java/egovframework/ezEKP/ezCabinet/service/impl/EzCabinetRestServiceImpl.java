@@ -268,6 +268,15 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
+	public JSONObject getMyShareCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception {
+		String url                = "/rest/ezcabinet/myshare/id/" + userId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("currentNode", currentNode);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject getUserSharedCabinet(HttpServletRequest request, String userId, String shareId) throws Exception {
 		String url                = "/rest/ezcabinet/sharedcabinet/shareid/" + shareId;
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -697,7 +706,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject savePhotoBoard(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String descript, String boardId, String itemId) throws Exception {
@@ -715,11 +724,5 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
-	}
-
-	@Override
-	public JSONObject getMyShareCabinetTree(HttpServletRequest request, String userId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

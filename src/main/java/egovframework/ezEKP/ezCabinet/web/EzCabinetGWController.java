@@ -837,6 +837,53 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/myshare/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getMyShareCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
+		String serverName  = request.getHeader("host-name")      != null ? request.getHeader("host-name")      : "";
+		String currentNode = request.getParameter("currentNode") != null ? request.getParameter("currentNode") : "";
+		JSONObject result  = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo                  = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetSimpleVO> cabinetList = cabinetService.getMyShareCabinet(userInfo);
+			
+			if (cabinetList != null && cabinetList.size() > 0) {
+				if (!currentNode.equals("")) {
+					List<String> listCabinetIds = cabinetList.stream().map(cab -> Integer.toString(cab.getCabinetId())).collect(Collectors.toList());
+					if (listCabinetIds.contains(currentNode)) {
+						result.put("node", currentNode);
+					}
+					else {
+						result.put("node", cabinetList.get(0).getCabinetId());
+					}
+				}
+				else {
+					result.put("node", cabinetList.get(0).getCabinetId());
+				}
+			}
+			
+			result.put("tree", cabinetList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/shareid/{shareid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserSharedCabinet(@PathVariable(value="shareid") String shareId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";

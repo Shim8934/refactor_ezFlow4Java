@@ -266,4 +266,8 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public int getTotalChildren(Map<String, Object> map) {
 		return (int)select("EzCabinetDAO.getTotalChildren", map);
 	}
+
+	public List<CabinetSimpleVO> getMySharedCabinetList(Map<String, Object> map) {
+		return (List<CabinetSimpleVO>)list("EzCabinetDAO.getMySharedCabinetList", map);
+	}
 }

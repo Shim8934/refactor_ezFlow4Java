@@ -48,6 +48,7 @@ public interface EzCabinetService {
 	List<CabinetSimpleVO> getRelatedCabinetListForUser(LoginVO userInfo) throws Exception;
 	List<CabinetSimpleVO> getUserSharedCabinet(String shareId, LoginVO userInfo) throws Exception;
 	List<SimpleUserVO> getSharedUserList(LoginVO userInfo) throws Exception;
+	List<CabinetSimpleVO> getMyShareCabinet(LoginVO userInfo) throws Exception;
 	
 	//User cabinet management functions
 	void addCabinet(int parentId, String cabName1, LoginVO userInfo) throws Exception;

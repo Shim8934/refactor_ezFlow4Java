@@ -98,7 +98,10 @@ function CabinetTree() {
 				generateSubTree(divTree, divNode, nodesTree);
 				break;
 			case "list":
+			case "listshare":
 				var len = nodesTree.length;
+				
+				if (len == 0 && _genType == "listshare") {alert(CabinetMessages.strTreeErr);}
 				
 				for (var i = 0; i < len; i++) {
 					var divChildNode  = document.createElement("div");

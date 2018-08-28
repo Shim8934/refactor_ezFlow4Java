@@ -45,7 +45,7 @@ public interface EzCabinetRestService {
 	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception;
 	public JSONObject getSharedCabinetTree(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject getUserSharedCabinet(HttpServletRequest request, String userId, String shareId) throws Exception;
-	public JSONObject getMyShareCabinetTree(HttpServletRequest request, String userId) throws Exception;
+	public JSONObject getMyShareCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception;
 	
 	//User cabinet management
 	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1) throws Exception;
