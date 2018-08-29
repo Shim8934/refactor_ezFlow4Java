@@ -142,5 +142,41 @@
 				TENANT_ID=#tenantID#
 		]]>
 	</select>
+	
+	<insert id="EzSystemAdminDAO.insertIPBand" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_IP_BAND (TENANT_ID, IPADDRESS, ACCESS, EXPLANATION) 
+			VALUES (#tenantID#, #ipAddress#, #access#, #explanation#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateIPBand" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_IP_BAND
+			SET 
+				IPADDRESS=#ipAddress#,
+				ACCESS=#access#,
+				EXPLANATION=#explanation#
+			WHERE 
+				TENANT_ID=#tenantID#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemIPBand" parameterClass="map" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT 
+				IPADDRESS,
+				ACCESS,
+				EXPLANATION
+			FROM 
+				TBL_IP_BAND
+			WHERE 
+				TENANT_ID=#tenantID#
+			AND
+				IPADDRESS=#ipAddress#
+		]]>
+	</select>
 		
 </sqlMap>

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -677,6 +679,17 @@ public class EzSystemAdminController {
 		return returnJsonArr;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertIPBand.do")
+	public void insertIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("insertIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.insertIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
+		
+		logger.debug("insertIPBand ended");
+	}
+	 
 	
 	
 	@RequestMapping(value="/ezSystem/systemIPAccessList.do")

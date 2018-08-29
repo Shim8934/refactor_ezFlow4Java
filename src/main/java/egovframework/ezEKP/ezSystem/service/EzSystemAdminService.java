@@ -25,4 +25,5 @@ public interface EzSystemAdminService {
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
 	public void updateSystemIPAllow(String allowResult, int tenantID) throws Exception;
 	public List<IPBandVO> getAllIPBand(int tenantID) throws Exception;
+	public void insertIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception;
 }

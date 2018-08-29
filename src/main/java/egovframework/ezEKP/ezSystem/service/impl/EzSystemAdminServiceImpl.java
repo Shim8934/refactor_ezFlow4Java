@@ -336,4 +336,20 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAllIPBand ended.");
 		return list;
 	}
+	
+	@Override
+	public void insertIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("insertIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.insertIPBand(params);
+		
+		logger.debug("insertIPBand ended.");
+	}
 }

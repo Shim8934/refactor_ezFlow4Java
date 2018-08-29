@@ -48,5 +48,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	    return (List<IPBandVO>) list("EzSystemAdminDAO.getSystemAllIPBand", tenantID);
     }
 	
+	public void insertIPBand(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertIPBand", map);
+	}
 	
 }
