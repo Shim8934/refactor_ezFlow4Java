@@ -81,10 +81,6 @@ public class EzMemoGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			if(folderId.equals("0")) {
-				folderId = Integer.toString(ezMemoService.getMemoDefaultFolder(memoFolderVO));
-			}
-			
 			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId, searchType, offset);
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
 			

@@ -23,7 +23,7 @@ public class MemoVO {
 	/** 메모지 색상 아이디*/
 	private int color_id;
 	/** UTC offset*/
-	//private String offset;
+	private String offset;
 	/** 컴퍼니 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -102,14 +102,10 @@ public class MemoVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
-/*	public String getOffset() {
+	public String getOffset() {
 		return offset;
 	}
 	public void setOffset(String offset) {
 		this.offset = offset;
-	}*/
-	
-	
-	
-	
+	}
 }

@@ -78,6 +78,8 @@
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 		var pAdminType  = "n";
+		var folders;
+    	var memoCount;
 		var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
 		window.onunload = Window_onunload;
 		
@@ -122,15 +124,32 @@
 					var test = $(this).val();
 				});
 			});  */
-
+			getFolderList();
 			getMemoList();
-			
+		}
+		
+		function getFolderList() {
+			$.ajax({
+   				type : "post",
+   				dataType : "json",
+   				url : '/ezMemo/getMemoFoldersInfo.do',
+   				success : function(result){
+   					memoCount = result.memoCount;
+   					var opts = "<option value='0'><spring:message code='ezLadder.t011'/></option>";;
+   					$(result.folders).each(function() {
+   						opts += "<option value=" + this.folder_id + ">" + this.folder_name + "</option>";
+   					})
+   					$("#memoType").html(opts);
+   				}
+   			});
 		}
 		
 		function getMemoList(type) {
 			var searchInput = $("#searchTitle").val();
 			var startDate = $("#Sdatepicker").val();
 			var endDate = $("#Edatepicker").val();
+			if($("#memoType").val() != undefined) 		
+				folderId = $("#memoType").val();
 			
 			if(type=="order") {
 				type = type + "_" + $("#orderOption").val();
@@ -179,7 +198,7 @@
                 	memoList = result["memoList"];
                 	headerColor = memoColor[defaultColor];
                 	bodyColor = memoColor[defaultColor+6]; 
-                	folderId = result["folderId"];
+                	//folderId = result["folderId"];
                 	
 					loadMemoList();
 						
@@ -190,10 +209,11 @@
 	             }
 			});
 		}
+		
 		function allClick() {
 			// 체크 박스 모두 체크
 			$("input[name=memo]:checkbox").each(function() {
-				$(this).attr("checked", true);
+				$(this).prop("checked", true);
 			});
 		}
 		
@@ -395,17 +415,13 @@
 		        <li><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
-		        <li><span onClick=""><spring:message code='ezMemo.t0022'/></span></li>
+				<c:if test="${folderId eq 0 }">
+		        	<li><span onClick=""><spring:message code='ezMemo.t0022'/></span></li>
+				</c:if>
 		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
-		        <li>
-		        	<select id="memoType" style="height: 20px;" onchange="onSelect_Option(this);">
-                           <option value="0"><spring:message code='ezMemo.t0019'/></option>
-                           <option value="1"><spring:message code='ezMemo.t0020'/></option>
-                           <option value="2"><spring:message code='ezMemo.t0021'/></option>
-                    </select>    
-		        </li>
+		        <li><select id="memoType" style="height: 20px;" onchange="getMemoList()"></select></li>
 		        <li id="right" class="off">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
 		        </li>
