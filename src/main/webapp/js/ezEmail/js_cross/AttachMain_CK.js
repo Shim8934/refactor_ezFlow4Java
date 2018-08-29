@@ -249,15 +249,12 @@ function AppendFileAttachInfo(ret) {
                         		var filename = $(this).closest('tr').attr('_itemid');
                         		var isBig = $(this).closest('tr').attr('_big');
                         		var msgId = g_url;
-                        		var reqUrl = "/ezEmail/downloadAttach.do?" 
+                        		var reqUrl = "/ezEmail/downloadAttachInWriter.do?" 
 		                            			+ "mode=Attach"
 		                            			+ "&folderPath=" + encodeURIComponent(folderPath)
 		                            			+ "&filename=" + encodeURIComponent(filename);
                         		
                         		$(this).attr('_href', reqUrl);
-                        		
- 		                    	var firstIdx = multipartFirstIdx;
- 		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
 	                    	
  		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
  		                    };
@@ -355,16 +352,13 @@ function AppendFileAttachInfo(ret) {
                             		var filename = $(this).closest('tr').attr('_itemid');
                             		var isBig = $(this).closest('tr').attr('_big');
                             		var msgId = g_url;
-                            		var reqUrl = "/ezEmail/downloadAttach.do?" 
+                            		var reqUrl = "/ezEmail/downloadAttachInWriter.do?" 
 			                            			+ "mode=Attach"
 			                            			+ "&folderPath=" + encodeURIComponent(folderPath)
 			                            			+ "&filename=" + encodeURIComponent(filename);
                             		
                             		$(this).attr('_href', reqUrl);
                             		
-     		                    	var firstIdx = multipartFirstIdx;
-     		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
-		                    	
      		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
      		                    };
      		                    

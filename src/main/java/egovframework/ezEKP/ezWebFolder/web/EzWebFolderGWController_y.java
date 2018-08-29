@@ -411,7 +411,7 @@ public class EzWebFolderGWController_y {
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
 			
 			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
-			LOGGER.debug(" usrListCnt : " + usrListCnt + "tenantId : " +tenantId + "userId : " + userId);
+			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
 			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
@@ -424,9 +424,9 @@ public class EzWebFolderGWController_y {
 				service.insertEnv(userId, tenantId, listCount);
 			}
 			
-			LOGGER.debug("listCount : " + listCount + ", currPage" + currPage+ ", totalpages"+ totalpages + ", pEnd" + pEnd );
-			LOGGER.debug("folderId : " + folderId + ", deptId : "+ deptId + ", offset" + offset );
-			LOGGER.debug("pStart : " + pStart + ", pEnd : " + pEnd);
+			LOGGER.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
+			LOGGER.debug("folderId : " + folderId + " || deptId : "+ deptId + " || offset : " + offset );
+			LOGGER.debug("pStart : " + pStart + " || pEnd : " + pEnd);
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount(folderId, userId, deptId, tenantId, comId,
@@ -455,7 +455,7 @@ public class EzWebFolderGWController_y {
 			fileList = service.getFileList(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary);
-			LOGGER.debug("fileListSize : " + fileList.size()+ ", searchStartDate : " +searchStartDate+", searchEndDate : "+searchEndDate );
+			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
 			
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
