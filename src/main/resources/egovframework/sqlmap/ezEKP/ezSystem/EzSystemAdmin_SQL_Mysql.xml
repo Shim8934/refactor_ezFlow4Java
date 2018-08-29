@@ -180,5 +180,16 @@
 				IPADDRESS=#ipAddress#
 		]]>
 	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_IP_BAND
+            WHERE
+            	TENANT_ID = #tenantID#	
+            AND
+            	IPADDRESS = #ipAddress#
+		]]>
+	</delete>
 		
 </sqlMap>

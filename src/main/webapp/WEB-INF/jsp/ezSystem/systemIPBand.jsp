@@ -28,6 +28,27 @@
 			getIPList_http();
 	    }
 		
+		// 사용여부 저장 버튼 클릭
+		function saveBtn() {
+			var allowResult = false;
+			if (!document.getElementById("ipRadio0").checked) {
+				allowResult = true;
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
+				cache : false,
+				error : function(data) {
+					console.log(data);
+					alert("실패하였습니다.");
+				},
+				complete : function(data) {
+					alert("저장하였습니다.");
+				}
+			});
+		}
+		
 		// 설정된 IP 대역 리스트 뿌리기
 		function getIPList_http() {
 			$.ajax({
@@ -103,28 +124,6 @@
 			}
 		}
 		
-		// 사용여부 저장 버튼 클릭
-		function saveBtn() {
-			
-			var allowResult = false;
-			if (!document.getElementById("ipRadio0").checked) {
-				allowResult = true;
-			}
-			
-			$.ajax({
-				type : "POST",
-				url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
-				cache : false,
-				error : function(data) {
-					console.log(data);
-					alert("실패하였습니다.");
-				},
-				complete : function(data) {
-					alert("저장하였습니다.");
-				}
-			});
-		}
-		
 		function cancleBtn() {
 			if (useIPAccess === "NO") {
 				document.getElementById("ipRadio0").checked = true;
@@ -147,7 +146,6 @@
 					alert("수정할 IP대역 리스트를 선택해주세요.");
 					return;
 				} else {
-					//서버에 넘길값
 					var ipAddress = selectedList[0].childNodes[1].innerText;
 					var access = selectedList[0].childNodes[2].innerText == "허용" ? "YES" : "NO";
 					var explanation = selectedList[0].childNodes[3].innerText;
@@ -157,6 +155,33 @@
 			}
 			
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
+		}
+		
+		function deleteIPBand() {
+			var selectedList = $("#tblIP tbody tr[selected=true]");
+			
+			if (selectedList.length == 0) {
+				alert("삭제할 IP대역 리스트를 선택해주세요.");
+				return;
+			}
+			var ipAddress = selectedList[0].childNodes[1].innerText;
+			var con = confirm("삭제하시겠습니까?");
+			
+			if (con) {
+				$.ajax({
+					type : "POST",
+					url : "/ezSystem/deleteIPBand.do",
+					data : "ipAddress=" + ipAddress,
+					error : function(data) {
+						console.log("error");
+						alert("삭제 실패");
+					},
+					complete : function(data) {
+						alert("삭제하였습니다.");
+				    }
+				});
+			}
+			
 		}
 		
 		function event_listclick(obj) {
@@ -237,7 +262,7 @@
 	    <ul class="on">
 	        <li><span onclick="ipBandEidtPopUp('add')">추가</span></li>
 	        <li><span onclick="ipBandEidtPopUp('modify')">수정</span></li>
-	        <li><span onclick="alert('삭제')">삭제</span></li>
+	        <li><span onclick="deleteIPBand()">삭제</span></li>
 	    </ul>
 	</div>
 	

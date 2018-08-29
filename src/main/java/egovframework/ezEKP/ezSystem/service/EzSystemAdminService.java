@@ -28,4 +28,5 @@ public interface EzSystemAdminService {
 	public void insertIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception;
 	public IPBandVO getSystemIPBand(int tenantID, String ipAddress) throws Exception;
 	public void updateIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception;
+	public void deleteIPBand(int tenantID, String ipAddress) throws Exception;
 }

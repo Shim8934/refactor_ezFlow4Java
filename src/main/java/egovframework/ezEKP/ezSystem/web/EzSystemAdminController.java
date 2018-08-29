@@ -701,6 +701,18 @@ public class EzSystemAdminController {
 		logger.debug("updateIPBand ended");
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteIPBand.do")
+	public void deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipAddress) throws Exception {
+		logger.debug("deleteIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.deleteIPBand(userInfo.getTenantId(), ipAddress);
+		
+		logger.debug("deleteIPBand ended");
+	}
+	
+	
 	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do")
 	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model, String type, @ModelAttribute IPBandVO ipBand) throws Exception {
 		logger.debug("systemIPBandEditPopup started");

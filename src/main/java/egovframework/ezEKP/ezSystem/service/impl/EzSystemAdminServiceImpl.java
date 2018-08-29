@@ -384,4 +384,18 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		logger.debug("updateIPBand ended.");
 	}
+	
+	@Override
+	public void deleteIPBand(int tenantID, String ipAddress) throws Exception {
+		logger.debug("deleteIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		
+		ezSystemAdminDAO.deleteIPBand(params);
+		
+		logger.debug("deleteIPBand ended.");
+	}
 }
