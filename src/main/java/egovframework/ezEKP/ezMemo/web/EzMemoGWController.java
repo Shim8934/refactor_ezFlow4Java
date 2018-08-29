@@ -481,24 +481,58 @@ public class EzMemoGWController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/user/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started.");
+	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/user/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception { 
+	LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started."); 
+	 
+		JSONObject result = new JSONObject(); 
+		 
+		MemoVO memo = new MemoVO(); 
+		memo.setUser_id(userId); 
+		memo.setMemo_id(Integer.parseInt(memoId)); 
+		memo.setCompany_id(memoConfigVO.getCompany_id()); 
+		memo.setTenant_id(memoConfigVO.getTenant_id()); 
+		 
+		try { 
+			//ezMemoService.setMemoDisplay(memo); 
+			memo = ezMemoService.getMemo(memo); 
+			result.put("status", "ok"); 
+			result.put("code", 0); 
+			result.put("data", memo); 
+			 
+		} catch(Exception e) { 
+		 
+			result.put("code", 1); 
+			result.put("status", "error"); 
+			result.put("data", ""); 
+		} 
+		 
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] ended."); 
+		 
+		return result; 
+	}
+	
+	@RequestMapping(value = "/rest/ezMemo/move/folder/{folder_id}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoMove(@PathVariable String folder_id, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/move/folder/" + folder_id + "/users/" +userId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		
-		MemoVO memo = new MemoVO();
-		memo.setUser_id(userId);
-		memo.setMemo_id(Integer.parseInt(memoId));
-		memo.setCompany_id(memoConfigVO.getCompany_id());
-		memo.setTenant_id(memoConfigVO.getTenant_id());
+		String memo_ids = request.getParameter("memo_ids");
 		
 		try {
-			//ezMemoService.setMemoDisplay(memo);
-			memo = ezMemoService.getMemo(memo);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MemoFolderVO memoFolderVO = new MemoFolderVO();
+			memoFolderVO.setUser_id(info.getUserId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setFolder_id(Integer.parseInt(folder_id));
+			
+			ezMemoService.memoMove(memoFolderVO, memo_ids);
+		
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", memo);
+			result.put("data", "");
 			
 		} catch(Exception e) {
 			
@@ -507,8 +541,8 @@ public class EzMemoGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] ended.");
-		
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/move/folder/" + folder_id + "/users/" +userId + "] ended.");
+
 		return result;
 	}
 }

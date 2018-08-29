@@ -423,6 +423,7 @@
         	}
 		}
 		
+		var inputNameDlg_cross_dialogArguments = new Array();
 		function memoMove() {
 			var memo_ids = [];
 			
@@ -434,6 +435,9 @@
 	        	alert("<spring:message code='ezMemo.t0043' />");
 	            return;
 	        }
+			
+			inputNameDlg_cross_dialogArguments[0] = memo_ids.join();
+		    inputNameDlg_cross_dialogArguments[1] = "지금 폴더함 이름";
 			
 			var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
             try { OpenWin.focus(); } catch (e) { }

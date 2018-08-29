@@ -95,4 +95,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public int maxFolderOrders(Map<String, Object> map) {
 		return (int) select("EzMemoDAO.maxFolderOrders", map);
 	}
+	
+	public void memoMove(Map<String, Object> map) {
+		update("EzMemoDAO.memoMove", map);
+	}
 }

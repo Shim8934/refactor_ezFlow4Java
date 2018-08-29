@@ -472,6 +472,7 @@ public class EzMemoController {
 		return "json";
 	}
 	
+
 	@RequestMapping(value = "/ezMemo/memoDetail.do")
 	public String getMemoDetail(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoDetail start");
@@ -492,6 +493,38 @@ public class EzMemoController {
 		}
 		
 		logger.debug("getMemoDetail end");
+		return "json";
+	}
+
+	/**
+	 * 메모분류함 이동
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @param folder_id
+	 * @param memo_ids
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/ezMemo/memoMove.do")
+	public String memoMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String folder_id, String memo_ids) throws Exception{
+		logger.debug("memoMove started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("folder_id", folder_id);
+		param.put("memo_ids", memo_ids);
+	
+	
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/move/folder/" + folder_id + "/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		if ("ok".equals(status)) {
+			model.addAttribute("result", "ok");
+		}
+		
+		logger.debug("memoMove ended");
 		return "json";
 	}
 }

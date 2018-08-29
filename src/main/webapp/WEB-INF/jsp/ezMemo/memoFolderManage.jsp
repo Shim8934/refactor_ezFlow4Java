@@ -22,10 +22,16 @@
 			var selFolderId="";
 			var selFolderName="";
 			var ReturnFunction;
+			var inputNameDlg_cross_dialogArguments = new Array();
 			window.onload = function () {
 			    CurrentHeight = document.body.clientHeight;
 			    CurrenWidth = document.body.clientWidth;
 			    memoFoldersInfo();
+			    inputNameDlg_cross_dialogArguments[0] = opener.inputNameDlg_cross_dialogArguments[0];
+			    inputNameDlg_cross_dialogArguments[1] = opener.inputNameDlg_cross_dialogArguments[1];
+			    
+			    alert("input0 : " + inputNameDlg_cross_dialogArguments[0]);
+			    alert("input1 : " + inputNameDlg_cross_dialogArguments[1]);
             }
 			
             var inputNameDlg_cross_dialogArguments = new Array();
@@ -79,7 +85,21 @@
 		    }
 		    
 		    function move_onclick() {
-		    	alert("아직");
+		    	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezMemo/memoMove.do",
+					data : {
+						"memo_ids": inputNameDlg_cross_dialogArguments[0],
+						"folder_id": selFolderId
+					},
+					success: function(){
+						alert("이동되었습니다.")
+					}, error: function(err) {
+		    			alert("<spring:message code='ezMemo.t0046' />");
+		    		}     			
+				});
 		    	window.close();
 		    }
         </script>

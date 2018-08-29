@@ -380,4 +380,19 @@
 		AND
 			USER_ID = #user_id#    
 	</select>
+	
+	<update id="EzMemoDAO.memoMove">
+		UPDATE
+			TBL_MEMO
+		SET
+			FOLDER_ID = #folder_id#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</update>
 </sqlMap>
