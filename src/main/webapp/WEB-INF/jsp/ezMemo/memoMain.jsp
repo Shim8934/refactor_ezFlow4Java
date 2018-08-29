@@ -433,6 +433,7 @@
         	}
 		}
 		
+		var inputNameDlg_cross_dialogArguments = new Array();
 		function memoMove() {
 			var memo_ids = [];
 			
@@ -444,6 +445,11 @@
 	        	alert("<spring:message code='ezMemo.t0043' />");
 	            return;
 	        }
+			
+			var target = document.getElementById("memoType");
+			
+			inputNameDlg_cross_dialogArguments[0] = memo_ids.join();
+		    inputNameDlg_cross_dialogArguments[1] = target.options[target.selectedIndex].text;
 			
 			var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
             try { OpenWin.focus(); } catch (e) { }

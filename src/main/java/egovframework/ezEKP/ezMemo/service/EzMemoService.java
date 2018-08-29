@@ -23,4 +23,5 @@ public interface EzMemoService {
 	public void setMemoDisplay(MemoVO memo);
 	public void setMemoContents(MemoVO memoVO);
 	public MemoVO getMemo(MemoVO memoVO);
+	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids);
 }

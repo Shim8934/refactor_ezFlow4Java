@@ -328,4 +328,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		return memoVO;
 	}
 	
+	@Override
+	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids) {
+		logger.debug("memoMove started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoFolderVO.getUser_id());
+		map.put("tenant_id", memoFolderVO.getTenant_id());
+		map.put("company_id", memoFolderVO.getCompany_id());
+		map.put("folder_id", memoFolderVO.getFolder_id());
+		
+		for (String memo_id : memo_ids.split(",")) {
+			logger.debug("memo_id = " + memo_id);
+			map.put("memo_id", memo_id);
+			ezMemoDAO.memoMove(map);
+		}
+		logger.debug("memoMove ended.");
+	}
 }
