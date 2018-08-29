@@ -1855,6 +1855,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
 		map1.put("approvalFlag", approvalFlag);
+		map1.put("v_CODELANG", lang == "1" ? "" : lang);
 		
 		logger.debug("aprType=" + aprType);
 		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);
