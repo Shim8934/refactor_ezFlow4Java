@@ -786,6 +786,7 @@
 			    var nodeIdx = treeView.GetSelectNode();			    
 			    var treeNode = new TreeNode();
 			    treeNode.LoadFromID(nodeIdx.NodeID);
+			    var userType = "";
 
 		        var listview = new ListView();		        
 		        listview.LoadFromID("lvUserList");
@@ -796,8 +797,11 @@
 
 				for (var i = 0 ; i < listview.GetDataRows().length ; i++){
 					objNode += listview.GetDataRows()[i].getAttribute("DATA2");
+					userType += listview.GetDataRows()[i].getAttribute("DATA3");
+					
 					if(i != listview.GetDataRows().length){
 						objNode += ",";
+						userType +=",";
 					}
 				}
 				
@@ -812,7 +816,7 @@
 					dataType : "text",
 					url : "/admin/ezOrgan/saveOrderList.do",
 					async : false,
-					data : {cn : objNode, pClass : pClass},
+					data : {cn : objNode, pClass : pClass, userType : userType , deptId : DeptID},
 					success : function(result){
 						alert("<spring:message code='ezOrgan.t49' />");
 						getDeptFullTree(treeNode.GetNodeData("CN"));
