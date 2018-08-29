@@ -352,7 +352,7 @@
 		                cache: false,
 		                success: function(result) {
 		                	
-		                	getMemoList("order");
+		                	getMemoList();
 		                },
 		                error : function() {
 		                	
@@ -608,23 +608,15 @@
 		    
 		    
 		    function getMemoList(type) {
-		    	
 		    	var folderId = $("select option:selected").val();
 		    	var layerFlag = $("#layerFlag").val();
-				var searchInput = $("#searchTitle").val();
-				var startDate = $("#Sdatepicker").val();
-				var endDate = $("#Edatepicker").val();
 				
 				$.ajax ({
 	 			   	url : '/ezMemo/getMemoList.do',
 	 			   	type : 'POST',
 	                dataType : 'json',
 	                data : { 
-	                	searchInput : searchInput,
-	                	startDate : startDate,
-	                	endDate : endDate,
 	                	folderId : folderId,
-	                	type : type,
 	                	layerFlag : layerFlag
 	                },
 	                cache: false,
