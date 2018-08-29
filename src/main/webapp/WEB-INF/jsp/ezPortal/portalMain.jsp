@@ -52,19 +52,12 @@
 			var topHeight = "${topHeight}";
 			var topUrl = "${topUrl}";
 			var mainUrl = "${mainUrl}";
-			var memoIndex = -1;
-			var memoBColor = [
-					"rgb(52, 152, 219)", "rgb(243, 202, 38)", "rgb(230, 126, 34)", "rgb(39, 174, 96)", "rgb(155, 89, 182)", "rgb(149, 165, 166)"
-			];
-			var memoColor = [
-			  "rgb(159, 212, 246)", "rgb(244, 232, 182)",  "rgb(246, 201, 159)", "rgb(165, 241, 197)", "rgb(233, 193, 250)", "rgb(255, 255, 255)"              
-			];
 			var headerColor;
 	    	var textColor;
 	    	var currText;
 	    	var bodyColor;
 	    	var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
-			
+	    	
 			topHeight = "56";
 
 		 	window.onresize = function () {
@@ -224,7 +217,7 @@
 		        			dataType: "JSON",
 		        			url :  "/ezMemo/setLayerArea.do", 
 		        			success : function (result) {
-		        				console.log(result);
+		        				
 		        			},
 		        			error : function() {
 		        				console.log("에러");
@@ -307,8 +300,6 @@
 		        		success : function(result) {
 		        			
 		        			if (result.result == "ok") {
-		        				//$("#memoList .individual-memo").remove();
-		        				
 		        				getMemoList();
 		        			}
 		        		}
@@ -316,21 +307,39 @@
 		        });
 		        
 		        $("#memoList").on("blur", ".individual-memo textarea", function() {
-					modifyMemo(this);
+		        	modifyMemo(this);
 		        });
 		        
 		        $("#btn-bundle").on("change", "select[name=memoFolderList]", function() {
-		        	//$("#memoList .individual-memo").remove();
+
 		        	getMemoList();
+		        });
+		        
+		        $("#detailClose").click(function() {
+		        	$(".detailMemo").css("display", "none");
+		        });
+		        
+		        $("#textarea").blur(function() {
+					modifyMemo(this);
 		        });
 		    });
 		    
 		 	// 메모 내용 변경	    
 		    function modifyMemo(obj) {
-				var memoId = obj.getAttribute("memoid");
-				var beforeContents = obj.innerHTML;
-				var afterContents = $(".memo-text[memoid=" + memoId + "]").val();
-								
+
+		 		var memoId, beforeContents, afterContents;
+		 		
+		 		if (obj.getAttribute("memoid") != null) {
+		 			
+					memoId = obj.getAttribute("memoid");
+					beforeContents = obj.innerHTML;
+					afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+		 		} else {
+		 			memoId = obj.getAttribute("textareaMemoid");
+					beforeContents = obj.innerHTML;
+					afterContents = $("textarea[textareamemoid=" + memoId + "]").val();
+		 		}
+				
 				if(beforeContents != afterContents) {
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
@@ -342,7 +351,7 @@
 		                },  
 		                cache: false,
 		                success: function(result) {
-		                	$("#memoList .individual-memo").remove();
+		                	
 		                	getMemoList("order");
 		                },
 		                error : function() {
@@ -559,31 +568,18 @@
 			    		$(this).prevAll("div").css("visibility", "visible");
 			    		$(this).prevAll("div").children().each(function(index, element){
 			    			$(element).css("background-color", memoColor[index]);
-			    		})
-			    	})
+			    		});
+			    	});
 		        });
 			    
 		        $(".individual-memo").mouseleave(function(){
 		        	$(this).children("img").css("visibility", "hidden");
 		        });
 		        
-		        $(".memo-color-list").click(function(){
-		        	headerColor = $(this).css("background-color");
-		        	bodyColor = memoColor[$(this).index()];
-		        	$(this).parent().parent().css("background-color", headerColor);
-		        	$(this).parent().nextAll("textarea").css("background-color", bodyColor);
-		        	$(this).parent().css("visibility", "hidden");
-		        })
-		        
-		        $(".memo-color").mouseleave(function(){
-		        	if($(this).css("visibility") == "visible") {
-		        		$(this).css("visibility", "hidden");
-		        	}
-		        });
-		        
 		        $(".memo-text").dblclick(function() {
-		        	console.log($(this).attr("memoid"));
+		        	
 		        	var memoId = $(this).attr("memoid");
+		        	
 		        	$.ajax({
 		        		type : "GET",
 		        		data : {
@@ -592,24 +588,33 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-		        			console.log(result.memo.contents);
+		        			console.log(result.memo);
+		        			var $textarea = $("#textarea");
+		        			var $memoDetail = $(".detailMemo");
 		        			
-		        			$("#textarea").val(result.memo.contents);
-		        			$(".detailMemo").css("display", "");
+		                	var memoColor = result.memoList.split(";");
+		                	var headerColor = memoColor[defaultColor];
+		                	var bodyColor = memoColor[defaultColor+6]; 
+		        			
+		        			$textarea.val(result.memo.contents);
+		        			$textarea.css("background-color", bodyColor);
+		        			$textarea.attr("textareaMemoid", result.memo.memo_id);
+		        			$memoDetail.css("background-color", headerColor);
+		        			$memoDetail.css("display", "");
 		        		}
-		        	})
+		        	});
 		        });
 		    }
 		    
 		    
 		    function getMemoList(type) {
+		    	
 		    	var folderId = $("select option:selected").val();
 		    	var layerFlag = $("#layerFlag").val();
 				var searchInput = $("#searchTitle").val();
 				var startDate = $("#Sdatepicker").val();
 				var endDate = $("#Edatepicker").val();
-				console.log("폴더 아이디");
-				console.log(folderId);
+				
 				$.ajax ({
 	 			   	url : '/ezMemo/getMemoList.do',
 	 			   	type : 'POST',
@@ -624,8 +629,7 @@
 	                },
 	                cache: false,
 	                success: function(result) {
-	                	console.log("메모리스트");
-	                	console.log(result);
+	                	
 	                	memoColor = result["colorList"].split(";");
 	                	defaultColor = result["defaultColor"];
 	                	memoList = result["memoList"];
@@ -691,19 +695,14 @@
 		<!-- memo note -->
 		<div class="noteBlock">
 			<div id="layer-popup" style="display: none" class="layer-half">
-				<!-- <div id="maskDiv" style="display: none"></div> -->
 
 				<!-- 메모 리스트 -->
 				<div style="text-align: center">
 					
-					<!-- <div style="text-align: right; margin:8px; " id="btn-bundle"> -->
 					<div id="btn-bundle">
-						<!-- <button id="change-mode" style="float: left">모드</button> -->
 						<div id="slider-range"></div>
 						
-						<select id="memoFolderList" name="memoFolderList">
-							<!-- <option value="29" selected="selected">전체</option> -->
-						</select>
+						<select id="memoFolderList" name="memoFolderList"></select>
 						<button id="changeMode">모드</button>
 						<button id="newMemo">추가</button>
 						<button id="close-button">닫기</button>
@@ -724,9 +723,7 @@
 					<div id="memo-btn">
 						<button id="font-up">폰트+</button> 
 					    <button id="font-down">폰트-</button>
-						<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
-			        	<!-- <div id="font-btn" style="text-align: left; display: none ">
-				        </div> -->
+						<div id="detailClose" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
 					</div>
 					<textarea id="textarea" style="resize:none;"></textarea>
 	        	</div>

@@ -487,6 +487,7 @@ public class EzMemoController {
 
 		if ("ok".equals(status)) {
 			model.addAttribute("memo", resultBody.get("data"));
+			model.addAttribute("memoList", resultBody.get("colorList").toString());
 		}
 		
 		logger.debug("getMemoDetail end");
