@@ -373,31 +373,6 @@ public class EzMemoGWController {
 		return result;
 	}						
 	
-	/*@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezMemo/getMemoConfig/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMemoConfig(@PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/getMemoConfig/users/" +userId + "] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try {
-			memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
-
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", memoConfigVO);
-			
-		} catch(Exception e) {
-			
-			result.put("code", 1);
-			result.put("status", "error");
-			result.put("data", "");
-		}
-		
-		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/getMemoConfig/users/" +userId + "] ended.");
-		return result;
-	}*/
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezMemo/createMemoConfig/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertMemoConfig(@PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
@@ -481,7 +456,7 @@ public class EzMemoGWController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/user/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started.");
 		
@@ -494,11 +469,13 @@ public class EzMemoGWController {
 		memo.setTenant_id(memoConfigVO.getTenant_id());
 		
 		try {
-			//ezMemoService.setMemoDisplay(memo);
 			memo = ezMemoService.getMemo(memo);
+			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", memo);
+			result.put("colorList", config.getColor_name());
 			
 		} catch(Exception e) {
 			

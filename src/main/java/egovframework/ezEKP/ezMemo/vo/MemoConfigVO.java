@@ -115,17 +115,5 @@ public class MemoConfigVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
-	@Override
-	public String toString() {
-		return "MemoConfigVO [user_id=" + user_id + ", font_size=" + font_size
-				+ ", use_date=" + use_date + ", use_gadget=" + use_gadget
-				+ ", default_color=" + default_color + ", color_name="
-				+ color_name + ", gadget_right=" + gadget_right
-				+ ", gadget_bottom=" + gadget_bottom + ", layer_left="
-				+ layer_left + ", layer_top=" + layer_top + ", layer_width="
-				+ layer_width + ", layer_height=" + layer_height
-				+ ", company_id=" + company_id
-				+ ", tenant_id=" + tenant_id + "]";
-	}
 
 }
