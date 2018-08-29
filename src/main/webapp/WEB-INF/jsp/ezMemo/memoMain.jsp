@@ -447,8 +447,10 @@
 	            return;
 	        }
 			
+			var target = document.getElementById("memoType");
+			
 			inputNameDlg_cross_dialogArguments[0] = memo_ids.join();
-		    inputNameDlg_cross_dialogArguments[1] = "지금 폴더함 이름";
+		    inputNameDlg_cross_dialogArguments[1] = target.options[target.selectedIndex].text;
 			
 			var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
             try { OpenWin.focus(); } catch (e) { }

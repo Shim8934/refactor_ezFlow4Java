@@ -124,6 +124,14 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	/**
+	 * 메모분류함 list 호출 method
+	 * @param userId
+	 * @param memoFolderVO
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersInfo(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/" +userId + "] started.");
@@ -243,6 +251,14 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	/**
+	 * 메모분류함 추가 method
+	 * @param userId
+	 * @param memoFolderVO
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersAdd(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/users/" +userId + "] started.");
@@ -268,6 +284,14 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	/**
+	 * 메모분류함 이름 수정 method
+	 * @param userId
+	 * @param memoFolderVO
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFolderModify(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/folders/users/" +userId + "] started.");
@@ -294,6 +318,14 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	/**
+	 * 메모분류함 삭제 method
+	 * @param userId
+	 * @param memoFolderVO
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFolderDelete(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [Delete /rest/ezMemo/folders/users/" +userId + "] started.");
@@ -399,6 +431,13 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	/**
+	 * 폴더함 존재 유무 확인 method
+	 * @param memoFolderVO
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezMemo/folders/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject hasMemoFolder(MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/check started.");
@@ -489,6 +528,14 @@ public class EzMemoGWController {
 		return result; 
 	}
 	
+	/**
+	 * 메모분류함 이동 수행 method
+	 * @param folder_id
+	 * @param userId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/rest/ezMemo/move/folder/{folder_id}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoMove(@PathVariable String folder_id, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/move/folder/" + folder_id + "/users/" +userId + "] started.");

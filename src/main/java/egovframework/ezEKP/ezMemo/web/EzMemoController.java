@@ -31,6 +31,18 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+/** 
+ * @Description [Controller] 메모
+ * @author 솔루션3팀 황윤호, 이석화, 김민성
+ * @Modification Information
+ *
+ *    수정일       		수정자         				수정내용
+ *    ----------    --------------    	-------------------
+ *    2018.08.14	황윤호, 이석화, 김민성		신규작성
+ *
+ * @see
+ */
+
 @Controller
 public class EzMemoController {
 	private static final Logger logger = LoggerFactory.getLogger(EzMemoController.class);
@@ -124,7 +136,7 @@ public class EzMemoController {
 	}
 	
 	/**
-	 * 메모함 정보 호출 method
+	 * 메모븐류함 리스트 호출 method
 	 * @param loginCookie
 	 * @param modelMap
 	 * @param request
@@ -157,7 +169,7 @@ public class EzMemoController {
 	}
 	
 	/**
-	 * 메모함관리 화면 이동 method
+	 * 메모분류함 이동 화면 호출 method
 	 * @param loginCookie
 	 * @param modelMap
 	 * @param request
@@ -173,7 +185,7 @@ public class EzMemoController {
 	}
 	
 	/**
-	 * 메모함 추가/수정 화면 호출 method
+	 * 메모분류함 추가/수정 화면 호출 method
 	 * @param loginCookie
 	 * @param modelMap
 	 * @param request
@@ -277,7 +289,7 @@ public class EzMemoController {
 	}
 	
 	/**
-	 * 메모함 생성, 수정, 삭제
+	 * 메모분류함 생성, 수정, 삭제 method
 	 * @param loginCookie
 	 * @param modelMap
 	 * @param request
@@ -424,7 +436,7 @@ public class EzMemoController {
 	}
 	
 	/**
-	 * 폴더함 존재 유무 확인
+	 * 메모분류함 존재 유무 확인 method
 	 * @param loginCookie
 	 * @param request
 	 * @return
@@ -496,7 +508,7 @@ public class EzMemoController {
 	}
 
 	/**
-	 * 메모분류함 이동
+	 * 메모분류함 이동 수행 method
 	 * @param loginCookie
 	 * @param request
 	 * @param model
