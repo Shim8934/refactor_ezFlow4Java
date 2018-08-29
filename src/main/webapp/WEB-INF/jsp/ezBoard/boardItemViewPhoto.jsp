@@ -1075,7 +1075,7 @@
 		            var swidth;
 		            var sheight;
 		
-		            swidth = 430;
+		            swidth = 420;
 		            sheight = 500;
 		            
 		            var pwidth = window.screen.availWidth;
