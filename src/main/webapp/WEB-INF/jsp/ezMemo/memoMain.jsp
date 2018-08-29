@@ -148,6 +148,7 @@
 			var searchInput = $("#searchTitle").val();
 			var startDate = $("#Sdatepicker").val();
 			var endDate = $("#Edatepicker").val();
+			
 			if($("#memoType").val() != undefined) 		
 				folderId = $("#memoType").val();
 			
@@ -203,6 +204,13 @@
 					loadMemoList();
 						
 				    addremove();
+				    
+				    if(folderId == 0) {
+						$("#moveMemo").css("display", "none");
+					}
+				    else {
+						$("#moveMemo").css("display", "");
+				    }
 			     },
 	             error : function() {
 	                	
@@ -439,13 +447,7 @@
 		        <li><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
-<<<<<<< HEAD
-				<c:if test="${folderId eq 0 }">
-		        	<li><span onClick=""><spring:message code='ezMemo.t0022'/></span></li>
-				</c:if>
-=======
-		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
->>>>>>> 0fbe9ddc1258d750ef5815d0f91279ecf41cdc2d
+		        <li id="moveMemo"><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
