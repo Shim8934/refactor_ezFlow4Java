@@ -73,16 +73,16 @@ public class EzMemoController {
 	}
 	
 	@RequestMapping(value = "/ezMemo/getMemoList.do")
-	public String getMemoList(String layerFlag, String searchInput, String startDate, String endDate, String folderId, String searchType, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String getMemoList(String layerFlag, String searchInput, String startDate, String endDate, String folderId, String orderOption, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoList started.");
 
 		searchInput = searchInput != null ? searchInput : "";		// 검색 사용 시 검색 단어
 		startDate = startDate != null ? startDate : "";				// 검색 사용 시 시작일
 		endDate = endDate != null ? endDate : "";					// 검색 사용 시 종료일
 		folderId = folderId != null ? folderId : "0";					// 메모함 선택
-		searchType = searchType != null ? searchType : "";		// 정렬 방식
+		orderOption = orderOption != null ? orderOption : "1";	// 리스트설정(order, new, old)
 		
-		logger.debug("searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate + ", folderId : " + folderId + ", searchType : " + searchType);
+		logger.debug("searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate + ", folderId : " + folderId + ", orderOption : " + orderOption);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -96,8 +96,8 @@ public class EzMemoController {
 		param.put("endDate", endDate);
 		param.put("folder_id", folderId);
 		param.put("tenant_id", userInfo.getTenantId());
-		param.put("searchType", searchType);
 		param.put("offset", userInfo.getOffset());
+		param.put("orderOption", orderOption);
 
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		

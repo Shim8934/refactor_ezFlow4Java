@@ -98,7 +98,6 @@
 			AND
 				DELETE_FLAG = 0
 		]]>
-		<isEqual property="searchType" compareValue="search">
 			<isNotEmpty property="searchInput" >
 				<![CDATA[
 	              AND
@@ -113,31 +112,30 @@
 	              		WRITE_DATE <= DATE_ADD(DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)
 	             ]]> 
             </isNotEmpty>
-        </isEqual>
-		<isNotEqual property="folder_id" compareValue="0">
-			  <![CDATA[
-			  	AND
-					 FOLDER_ID = #folder_id#
-			  ]]>
-		 </isNotEqual>
-		<isEqual property="searchType" compareValue="order_1">
-        	<![CDATA[
-        		ORDER BY
-        			ORDERS
-        	]]>
-        </isEqual>
-        <isEqual property="searchType" compareValue="order_2">
-        	<![CDATA[
-        		ORDER BY
-        			WRITE_DATE ASC
-        	]]>
-        </isEqual>
-        <isEqual property="searchType" compareValue="order_3">
-        	<![CDATA[
-        		ORDER BY
-        			WRITE_DATE DESC
-        	]]>
-        </isEqual>
+			<isNotEqual property="folder_id" compareValue="0">
+				  <![CDATA[
+				  	AND
+						 FOLDER_ID = #folder_id#
+				  ]]>
+			 </isNotEqual>
+			<isEqual property="orderOption" compareValue="1">
+	        	<![CDATA[
+	        		ORDER BY
+	        			ORDERS
+	        	]]>
+	        </isEqual>
+	        <isEqual property="orderOption" compareValue="2">
+	        	<![CDATA[
+	        		ORDER BY
+	        			WRITE_DATE ASC
+	        	]]>
+	        </isEqual>
+	        <isEqual property="orderOption" compareValue="3">
+	        	<![CDATA[
+	        		ORDER BY
+	        			WRITE_DATE DESC
+	        	]]>
+	        </isEqual>
 	</select>
 	
 	<select id="EzMemoDAO.getMaxOrder" resultClass="Integer">

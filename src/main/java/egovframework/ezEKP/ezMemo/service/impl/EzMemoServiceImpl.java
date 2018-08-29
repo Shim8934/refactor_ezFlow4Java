@@ -107,7 +107,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoConfig ended.");
 	}
 	
-	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType, String offset) throws Exception {
+	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String offset, String orderOption) throws Exception {
 		logger.debug("getMemoList started.");
 
 		if (!startDate.equals("")) {
@@ -123,8 +123,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("folder_id", folderId);
-		map.put("searchType", searchType);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("orderOption", orderOption);
 		
 		List<MemoVO> memoList = ezMemoDAO.getMemoList(map);
 

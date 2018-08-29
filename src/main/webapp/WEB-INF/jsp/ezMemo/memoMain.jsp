@@ -79,6 +79,9 @@
 		var pAdminType  = "n";
 		var folders;
     	var memoCount;
+    	var searchInput;
+		var startDate;
+		var endDate;
 		var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
 		window.onunload = Window_onunload;
 		
@@ -112,19 +115,7 @@
 			$("#boardMemoList").sortable({
 	        	 containment: '#bodyFrame'
 	        });
-	        
-			/* // 체크 박스 모두 해제
-			$("#uncheckAll").click(function() {
-				$("input[name=box]:checkbox").each(function() {
-					$(this).attr("checked", false);
-				});
-			});
-
-			$("#getCheckedAll").click(function() {
-				$("input[name=box]:checked").each(function() {
-					var test = $(this).val();
-				});
-			});  */
+			
 			getFolderList();
 			getMemoList();
 			
@@ -143,8 +134,9 @@
 		
 		function getFolderList() {
 			$.ajax({
-   				type : "post",
-   				dataType : "json",
+				type : "GET",
+				dataType : "json",
+				async : false,
    				url : '/ezMemo/getMemoFoldersInfo.do',
    				success : function(result){
    					memoCount = result.memoCount;
@@ -158,16 +150,14 @@
 		}
 		
 		function getMemoList(type) {
-			var searchInput = $("#searchTitle").val();
-			var startDate = $("#Sdatepicker").val();
-			var endDate = $("#Edatepicker").val();
-			
-			if($("#memoType").val() != undefined) 		
-				folderId = $("#memoType").val();
-			
-			type = type + "_" + $("#orderOption").val();
+			var orderOption = $("#orderOption").val();
+			folderId = $("#memoType").val();
 			
 			if(type=="search") {
+				searchInput = $("#searchTitle").val();
+				startDate = $("#Sdatepicker").val();
+				endDate = $("#Edatepicker").val();
+
 				if(searchInput == "" && startDate == "" && endDate == "") {
 					 alert("<spring:message code='ezBoard.t192' />");
 		             return;
@@ -189,9 +179,15 @@
 		            alert("'%'" + "<spring:message code='ezTask.jsh08' />");
 		            return;
 		        }
+				
 				BoardSearchOptionHidden();
 			}
-
+			else if(type=="folder") {
+				searchInput = "";
+				startDate = "";
+				endDate = "";
+			}
+			
 			$.ajax ({
  			   	url : '/ezMemo/getMemoList.do',
  			   	type : 'POST',
@@ -201,7 +197,7 @@
                 	startDate : startDate,
                 	endDate : endDate,
                 	folderId : folderId,
-                	searchType : type
+                	orderOption : orderOption
                 },
                 cache: false,
                 success: function(result) {
@@ -327,7 +323,7 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	getMemoList("order");
+	                	getMemoList();
 	                },
 	                error : function() {
 	                	
@@ -366,6 +362,9 @@
 	    
 	  // 상세검색 레이어팝업
 		function doLayerPopup() {
+			btn_PostDate_Clear();
+			$("#searchTitle").val('');
+			
 			$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 	    	parent.frames["left"].document.body.style.overflow = "hidden";
 	    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
@@ -462,7 +461,7 @@
 		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
-		        <li><select id="memoType" style="height: 20px;" onchange="getMemoList()"></select></li>
+		        <li><select id="memoType" style="height: 20px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
 		        </li>
@@ -491,7 +490,7 @@
 							<spring:message code='ezBoard.garm01' />
 						</th>
 						<td>
-							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList(search); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
+							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList('search'); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
 						</td>
 					</tr>
 					<tr>
