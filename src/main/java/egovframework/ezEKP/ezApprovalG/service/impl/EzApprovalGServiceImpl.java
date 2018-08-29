@@ -26721,7 +26721,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String href = ezApprovalGDAO.getDocExt(map);
 		
-		ext = href.substring(href.length()-3, href.length());
+		logger.debug("@@@@@@@@@@@@getDocExt error@@@@@@@@@@@");
+		logger.debug("docID :" + docID + ", companyID : " + companyID + ", tenantID : " + tenantID );
+		
+		//2018-08-29 강민수92 건설관리공사 기안할 때 null인 경우가 발생해서 임시로 넣어줌
+		if (href == null) {
+			ext = "hwp";
+		} else {
+			ext = href.substring(href.length()-3, href.length());
+		}
 		ext = ext.toLowerCase();
 		
 		logger.debug("ext : " + ext);
