@@ -1471,6 +1471,8 @@ public class EzCabinetGWController {
 		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
 		JSONObject result = new JSONObject();
 		
+		logger.debug("UserId: " + userId + " || Host name: " + serverName);
+		
 		if (serverName.equals("") || userId.equals("") || cabinetId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
