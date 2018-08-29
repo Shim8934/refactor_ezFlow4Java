@@ -26133,10 +26133,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String strRecStates = "";
         	
 			if (strRecDate == null || strRecDate.equals("")) {
-				strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+				strRecDate = commonUtil.getTodayUTCTime("");
 			} else {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				strRecDate = sdf.format(sdf.parse(strRecDate));
+				
+				strRecDate = commonUtil.getDateStringInUTC(strRecDate, "235|+09:00", false);
 			}
 
 			switch( strMode.trim()) {
