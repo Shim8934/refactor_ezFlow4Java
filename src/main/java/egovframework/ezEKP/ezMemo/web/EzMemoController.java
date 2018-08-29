@@ -538,4 +538,27 @@ public class EzMemoController {
 		logger.debug("memoMove ended");
 		return "json";
 	}
+	
+	@RequestMapping("/ezMemo/memoDelete.do")
+	public String memoDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String memo_ids) throws Exception{
+		logger.debug("memoDelete started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String regDate = commonUtil.getTodayUTCTime("");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("memo_ids", memo_ids);
+		param.put("userId", userInfo.getId());
+		param.put("delete_date", regDate);
+	
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/memo/" + memo_ids, param, request, "delete", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("result", "ok");
+		}
+		
+		logger.debug("memoDelete ended");
+		return "json";
+	}
 }

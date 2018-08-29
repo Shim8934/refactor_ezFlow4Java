@@ -342,6 +342,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			map.put("memo_id", memo_id);
 			ezMemoDAO.memoMove(map);
 		}
-		logger.debug("memoMove ended.");
+		logger.debug("memoDelete ended.");
+	}
+	
+	public void memoDelete(MemoVO memoVO, String memo_ids) throws Exception {
+		logger.debug("memoDelete started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("delete_date", memoVO.getDelete_date());
+		
+		for (String memo_id : memo_ids.split(",")) {
+			map.put("memo_id", memo_id);
+			ezMemoDAO.memoDelete(map);
+		}
+		
+		logger.debug("memoDelete ended.");
 	}
 }

@@ -99,4 +99,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public void memoMove(Map<String, Object> map) {
 		update("EzMemoDAO.memoMove", map);
 	}
+
+	public void memoDelete(Map<String, Object> map) {
+		update("EzMemoDAO.memoDelete", map);
+	}
 }

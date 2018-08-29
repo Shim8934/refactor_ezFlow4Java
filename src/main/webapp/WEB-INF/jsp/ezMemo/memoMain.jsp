@@ -339,21 +339,28 @@
 	    
 	    // 메모 삭제
 	    function DeleteItem_onclick() {
+	    	var memo_ids = [];
+			
+			$(":checkbox[name=memo]:checked").each(function(){
+				memo_ids.push($(this).val());
+			});
+			
+			if (memo_ids.length == 0) {
+	        	alert("<spring:message code='ezMemo.t0043' />");
+	            return;
+	        }
+			
 	    	if(confirm("<spring:message code='ezMemo.t0023'/>")) {
-		    	var valuesArray = $("input[name=memo]:checked");
 		    	$.ajax ({
 	 			   	url : '/ezMemo/memoDelete.do',
 	 			   	type : 'POST',
 	                dataType : 'json',
 	                data : { 
-	                	folderId : folderId
+	                	memo_ids : memo_ids.join()
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	var memoId = result["memoId"];
-	                	
-	                	insertMemo(headerColor, bodyColor, memoId);
-	        	    	addremove();
+	                	getMemoList();
 	                },
 	                error : function() {
 	                	

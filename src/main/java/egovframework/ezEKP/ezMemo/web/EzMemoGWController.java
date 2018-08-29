@@ -569,4 +569,38 @@ public class EzMemoGWController {
 
 		return result;
 	}
+	
+	@RequestMapping(value = "/rest/ezMemo/memo-list/memo/{memo_ids}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoDelete(MemoVO memoVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [DELETE /rest/ezMemo/memo-list/memo/memoId] started.");
+		
+		JSONObject result = new JSONObject();
+		String memo_ids = request.getParameter("memo_ids");
+		String userId = request.getParameter("userId");
+		String deleteDate = request.getParameter("delete_date");
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			memoVO.setUser_id(info.getUserId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setDelete_date(deleteDate);
+			
+			ezMemoService.memoDelete(memoVO, memo_ids);
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [DELETE /rest/ezMemo/memo-list/memo/memoId] ended.");
+		return result;
+	}
 }
