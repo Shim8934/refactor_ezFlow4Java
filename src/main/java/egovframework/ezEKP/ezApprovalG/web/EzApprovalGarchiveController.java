@@ -1641,8 +1641,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String contID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String description = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String orgCompanyID = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+		if (orgCompanyID == null || orgCompanyID.equals("")) {
+			orgCompanyID = userInfo.getCompanyID();
+		}
 		
-		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, orgCompanyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("setUserContDoc ended");
 		
@@ -2069,8 +2073,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String contID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String orgCompanyID = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		if (orgCompanyID == null || orgCompanyID.equals("")) {
+			orgCompanyID = userInfo.getCompanyID();
+		}
 		
-		String result = ezApprovalGService.deleteUserContDoc(docID, contID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.deleteUserContDoc(docID, contID, orgCompanyID, userInfo.getLang(), userInfo.getTenantId());
 
 		logger.debug("delUserContDoc ended");
 		

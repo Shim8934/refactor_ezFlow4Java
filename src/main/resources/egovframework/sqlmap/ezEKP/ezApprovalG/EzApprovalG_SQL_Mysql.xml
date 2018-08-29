@@ -23899,8 +23899,6 @@
          	TBL_USERCONT 
          WHERE 
          	TENANT_ID = #v_TENANTID#
-         AND
-         	COMPANYID = #companyID#
    	</select>
    	
    	<insert id="EzApprovalG.insertUserCont" parameterClass="Map">
@@ -23953,8 +23951,6 @@
     	 	USERCONTID = #v_PCONTID#
     	AND
     		TENANT_ID = #v_TENANTID#
-    	AND
-    		COMPANYID = #companyID#
    	</delete>
    	
    	<delete id="EzApprovalG.delUserCont" parameterClass="Map">
@@ -24087,78 +24083,10 @@
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
    		WHERE 
-   			<!-- USERCONTID IN 
-   						(SELECT 
-   							USERCONTID 
-   						FROM 
-   							TBL_USERCONT 
-   						WHERE 
-   							OWNUSERID = (
-   										SELECT 
-   											OWNUSERID 
-   										FROM 
-   											TBL_USERCONT 
-   										WHERE 
-   											USERCONTID = #v_CONTID# 
-   										AND 
-   											TENANT_ID = #v_TENANTID#
-   										AND 
-   											COMPANYID = #companyID#
-   											) 
-   						AND 
-	   						TENANT_ID = #v_TENANTID#)  -->
 	   		USERCONTID = #v_CONTID# 
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		AND
-   			<!-- TBL_ENDAPRDOCINFO.COMPANYID IN (
-   						           			 SELECT              
-   						           			 	EXTENSIONATTRIBUTE2             
-   						           			 FROM              
-   						           			 	TBL_DEPTMASTER             
-   						           			 INNER JOIN              
-   						           			 	TBL_ADDJOBMASTER             
-   						           			 ON (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID              
-   						           			 AND              
-   						           			 	TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)            
-   						           			 WHERE              
-   						           			 	TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#            
-   						           			 AND              
-   						           			 	TBL_ADDJOBMASTER.CN = (
-						   						           			 SELECT 
-						   						           			 OWNUSERID 
-						   						           			 FROM 
-						   						           			 TBL_USERCONT 
-						   						           			 WHERE 
-						   						           			 USERCONTID = #v_CONTID#
-						   						           			 AND 
-						   						           			 TENANT_ID = #v_TENANTID# 
-						   						           			 AND 
-						   						           			 COMPANYID = #companyID#
-   						           			 						)           
-   						           			 UNION ALL            
-   						           			 SELECT              
-   						           			 	PHYSICALDELIVERYOFFICENAME            
-   						           			 FROM             
-   						           			 	TBL_USERMASTER            
-   						           			 WHERE             
-   						           			 CN = (
-		   						           			 SELECT 
-		   						           			 OWNUSERID 
-		   						           			 FROM 
-		   						           			 TBL_USERCONT 
-		   						           			 WHERE 
-		   						           			 USERCONTID = #v_CONTID#
-		   						           			 AND 
-		   						           			 TENANT_ID = #v_TENANTID# 
-		   						           			 AND 
-		   						           			 COMPANYID = #companyID#
-	   						           			 )          
-   						           			 AND             
-   						           			 	TENANT_ID = #v_TENANTID#             
-   						           			 )  -->
-   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-   		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL 
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		AND 
@@ -24193,7 +24121,8 @@
    			TBL_ENDAPRDOCINFO.ISPUBLIC, 
    			TBL_EXPENDAPRDOCINFO.EDMSYN, 
    			TBL_USERCONTLIST.LINKDATE, 
-   			TBL_USERCONTLIST.DESCRIPTION
+   			TBL_USERCONTLIST.DESCRIPTION,
+   			TBL_USERCONTLIST.COMPANYID
 <!--    			GETSENDSTATUS' || v_PSTRLANG || '(TBENDAPRDOCINFO.DOCID) AS SENDFLAG -->
    		FROM 
    			TBL_ENDAPRDOCINFO  
@@ -24214,79 +24143,11 @@
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
    		WHERE 
-   			<!-- USERCONTID IN 
-   						(SELECT 
-   							USERCONTID 
-   						FROM 
-   							TBL_USERCONT 
-   						WHERE 
-   							OWNUSERID = (
-   										SELECT 
-   											OWNUSERID 
-   										FROM 
-   											TBL_USERCONT 
-   										WHERE 
-   											USERCONTID = #v_CONTID# 
-   										AND 
-   											TENANT_ID = #v_TENANTID#
-   										AND 
-   											COMPANYID = #companyID#
-   											) 
-   						AND 
-	   						TENANT_ID = #v_TENANTID#)  -->
 	   		USERCONTID = #v_CONTID# 
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
    		AND
    			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
-   		AND
-   			<!-- TBL_USERCONTLIST.COMPANYID IN (
-   						           			 SELECT              
-   						           			 	EXTENSIONATTRIBUTE2             
-   						           			 FROM              
-   						           			 	TBL_DEPTMASTER             
-   						           			 INNER JOIN              
-   						           			 	TBL_ADDJOBMASTER             
-   						           			 ON (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID              
-   						           			 AND              
-   						           			 	TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)            
-   						           			 WHERE              
-   						           			 	TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#            
-   						           			 AND              
-   						           			 	TBL_ADDJOBMASTER.CN = (
-						   						           			 SELECT 
-						   						           			 OWNUSERID 
-						   						           			 FROM 
-						   						           			 TBL_USERCONT 
-						   						           			 WHERE 
-						   						           			 USERCONTID = #v_CONTID#
-						   						           			 AND 
-						   						           			 TENANT_ID = #v_TENANTID# 
-						   						           			 AND 
-						   						           			 COMPANYID = #companyID#
-   						           			 						)           
-   						           			 UNION ALL            
-   						           			 SELECT              
-   						           			 	PHYSICALDELIVERYOFFICENAME            
-   						           			 FROM             
-   						           			 	TBL_USERMASTER            
-   						           			 WHERE             
-   						           			 CN = (
-		   						           			 SELECT 
-		   						           			 OWNUSERID 
-		   						           			 FROM 
-		   						           			 TBL_USERCONT 
-		   						           			 WHERE 
-		   						           			 USERCONTID = #v_CONTID#
-		   						           			 AND 
-		   						           			 TENANT_ID = #v_TENANTID# 
-		   						           			 AND 
-		   						           			 COMPANYID = #companyID#
-	   						           			 )          
-   						           			 AND             
-   						           			 	TENANT_ID = #v_TENANTID#             
-   						           			 )  -->
-   			 TBL_USERCONTLIST.COMPANYID = #companyID#
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$

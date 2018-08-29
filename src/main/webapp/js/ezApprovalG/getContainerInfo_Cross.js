@@ -427,10 +427,13 @@ function RemoveDoc_Complete(RtnVal)
         var xmlpara = createXmlDom();
         var objNode;
         var tr = selRow[i];
+        
+        var orgCompanyID = tr.getAttribute("ORGCOMPANYID");
 
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
         createNodeAndInsertText(xmlpara, objNode, "ContID", ContainerID);
+        createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
 
         if (DocListType == "UserContDocList")
             xmlhttp.open("POST", "/ezApprovalG/delUserContDoc.do", false);
@@ -1253,9 +1256,17 @@ function check_presence2() {
                 } else {
                 	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
                 }
+                
                 createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
                 createNodeAndInsertText(xmlpara, objNode, "Desc", "");
 
+                var orgCompnayID = tr.getAttribute("ORGCOMPANYID");
+                if (orgCompanyID != null && orgCompanyID != "") {
+                	createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
+                } else {
+                	createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", "");
+                }
+                
                 xmlhttp.open("POST", "/ezApprovalG/setUserContDoc.do", false);
                 xmlhttp.send(xmlpara);
             }
