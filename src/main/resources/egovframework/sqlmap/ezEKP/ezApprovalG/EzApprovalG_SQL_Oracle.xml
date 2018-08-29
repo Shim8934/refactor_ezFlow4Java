@@ -20273,7 +20273,7 @@
    		 WHERE 
    		 		DocID = #v_DOCID# 
    		 AND 
-   		 		TENANT_ID = #_TENANTID#
+   		 		TENANT_ID = #v_TENANTID#
    		 AND
    		 		COMPANYID = #companyID#)
    </insert>
