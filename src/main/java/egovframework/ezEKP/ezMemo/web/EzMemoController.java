@@ -98,10 +98,8 @@ public class EzMemoController {
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("searchType", searchType);
 		param.put("offset", userInfo.getOffset());
-		logger.debug("===========================");
-		logger.debug("" + folderId);
-		logger.debug("===========================");
- 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
+
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/users/" + userInfo.getId(), param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
 		
@@ -490,6 +488,7 @@ public class EzMemoController {
 
 		if ("ok".equals(status)) {
 			model.addAttribute("memo", resultBody.get("data"));
+			model.addAttribute("memoList", resultBody.get("colorList").toString());
 		}
 		
 		logger.debug("getMemoDetail end");
