@@ -108,6 +108,16 @@ public class MemoVO {
 	public void setOffset(String offset) {
 		this.offset = offset;
 	}*/
+	@Override
+	public String toString() {
+		return "MemoVO [memo_id=" + memo_id + ", contents=" + contents
+				+ ", user_id=" + user_id + ", display_flag=" + display_flag
+				+ ", delete_flag=" + delete_flag + ", write_date=" + write_date
+				+ ", delete_date=" + delete_date + ", orders=" + orders
+				+ ", folder_id=" + folder_id + ", color_id=" + color_id
+				+ ", company_id=" + company_id + ", tenant_id=" + tenant_id
+				+ "]";
+	}
 	
 	
 	

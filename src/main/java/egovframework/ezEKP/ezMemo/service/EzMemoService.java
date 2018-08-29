@@ -22,4 +22,5 @@ public interface EzMemoService {
 	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO);
 	public void setMemoDisplay(MemoVO memo);
 	public void setMemoContents(MemoVO memoVO);
+	public MemoVO getMemo(MemoVO memoVO);
 }

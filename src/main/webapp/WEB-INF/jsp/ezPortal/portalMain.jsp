@@ -307,7 +307,7 @@
 		        		success : function(result) {
 		        			
 		        			if (result.result == "ok") {
-		        				$("#memoList .individual-memo").remove();
+		        				//$("#memoList .individual-memo").remove();
 		        				
 		        				getMemoList();
 		        			}
@@ -320,7 +320,7 @@
 		        });
 		        
 		        $("#btn-bundle").on("change", "select[name=memoFolderList]", function() {
-		        	$("#memoList .individual-memo").remove();
+		        	//$("#memoList .individual-memo").remove();
 		        	getMemoList();
 		        });
 		    });
@@ -592,6 +592,21 @@
 		        	}
 		        });
 		        
+		        $(".memo-text").dblclick(function() {
+		        	console.log($(this).attr("memoid"));
+		        	var memoId = $(this).attr("memoid");
+		        	$.ajax({
+		        		type : "GET",
+		        		data : {
+		        			memoId : memoId
+		        		},
+		        		dataType : "JSON",
+		        		url : "/ezMemo/memoDetail.do",
+		        		success : function(result) {
+		        			console.log(result);
+		        		}
+		        	})
+		        });
 		    }
 		    
 		    
@@ -601,7 +616,8 @@
 				var searchInput = $("#searchTitle").val();
 				var startDate = $("#Sdatepicker").val();
 				var endDate = $("#Edatepicker").val();
-
+				console.log("폴더 아이디");
+				console.log(folderId);
 				$.ajax ({
 	 			   	url : '/ezMemo/getMemoList.do',
 	 			   	type : 'POST',
@@ -659,7 +675,7 @@
 						
 						var folderList = result["folders"];
 						var html="";
-						html += "<option value=''>전체</option>";
+						html += "<option value='0'>전체</option>";
 						folderList.forEach(function(list, index){
 							html += "<option value='"+list.folder_id+"'>"+list.folder_name +"</option>"
 						});

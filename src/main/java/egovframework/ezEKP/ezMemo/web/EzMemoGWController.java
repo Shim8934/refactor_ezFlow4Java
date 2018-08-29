@@ -485,4 +485,34 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/user/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		MemoVO memo = new MemoVO();
+		memo.setUser_id(userId);
+		memo.setMemo_id(Integer.parseInt(memoId));
+		memo.setCompany_id(memoConfigVO.getCompany_id());
+		memo.setTenant_id(memoConfigVO.getTenant_id());
+		
+		try {
+			//ezMemoService.setMemoDisplay(memo);
+			memo = ezMemoService.getMemo(memo);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", memo);
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] ended.");
+		
+		return result;
+	}
 }
