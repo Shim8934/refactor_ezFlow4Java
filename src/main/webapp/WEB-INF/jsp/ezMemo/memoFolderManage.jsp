@@ -58,12 +58,10 @@
 						$('.node').remove();
 							
 						folderList.forEach(function(list, index){
-							if(inputNameDlg_cross_dialogArguments[1] !== list.folder_name) {
-								html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
-								html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-								html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer;' class='node' data1='" + list.folder_name+ "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
-							}
+							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
+							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
+							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer;' class='node' data1='" + list.folder_name+ "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
 						});
 						$('.memoFolders').append(html);
 					}     			
@@ -86,6 +84,11 @@
 		    }
 		    
 		    function move_onclick() {
+		    	if(inputNameDlg_cross_dialogArguments[1] === selFolderName) {
+		    		alert("<spring:message code='ezMemo.t0048' />");
+		    		return;
+		    	}
+		    	
 		    	$.ajax({
 					type : "GET",
 					dataType : "json",
