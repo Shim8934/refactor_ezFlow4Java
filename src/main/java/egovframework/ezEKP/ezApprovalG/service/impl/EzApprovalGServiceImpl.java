@@ -12329,6 +12329,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SWRITERDEPTNAME", "");
 		}
 		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
+		
 		List<ApprGReceiveDocVO> apprGReceiveDocVOList = ezApprovalGDAO.getReceiveDocList(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -12377,6 +12380,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			map.put("v_SWRITERDEPTNAME", "");
 		}
+		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
 		
 		int totalCnt = ezApprovalGDAO.getReceiveDocListCount(map);
 
@@ -19173,6 +19179,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
 		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
 		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
 		
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		
