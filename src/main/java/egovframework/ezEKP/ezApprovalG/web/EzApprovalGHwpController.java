@@ -330,6 +330,36 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		//2018-08-29 천성준 - 부서수신함에 들어온 접수문서를 최초 접수창으로 열지않고 문서보기로 열었을경우 문서파일이 생성되지 않아서 에러터지는것 수정 
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(dir);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(docFile);
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(orgDocFile);
+				
+				FileUtils.copyFile(orgFile, newFile);
+			}
+		}
+		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
