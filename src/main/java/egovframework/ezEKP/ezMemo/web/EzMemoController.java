@@ -19,14 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezLadder.web.EzLadderController;
-import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
-import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
+
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -439,12 +434,13 @@ public class EzMemoController {
 	 * 메모분류함 존재 유무 확인 method
 	 * @param loginCookie
 	 * @param request
+	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezMemo/hasMemoFolder.do")
-	public String hasMemoFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("insertMemoConfig start");
+	public String hasMemoFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("hasMemoFodler started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -456,9 +452,14 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("insertMemoConfig end");
+		if ("ok".equals(status)) {
+			model.addAttribute("result", "ok");
+		}
+		
+		logger.debug("hasMemoFodler ended");
 		return "json";
 	}
+	
 	@RequestMapping("/ezMemo/memo-display.do")
 	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoDisplay start");
@@ -526,7 +527,6 @@ public class EzMemoController {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("folder_id", folder_id);
 		param.put("memo_ids", memo_ids);
-	
 	
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/move/folder/" + folder_id + "/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();

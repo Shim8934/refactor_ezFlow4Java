@@ -96,7 +96,7 @@
 						"folder_id": selFolderId
 					},
 					success: function(){
-						alert("이동되었습니다.")
+						alert("<spring:message code='ezMemo.t0047' />");
 					}, error: function(err) {
 		    			alert("<spring:message code='ezMemo.t0046' />");
 		    		}     			

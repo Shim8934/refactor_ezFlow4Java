@@ -445,7 +445,7 @@ public class EzMemoGWController {
 		JSONObject result = new JSONObject();
 
 		try {
-
+			
 			int hasMemoFolder = ezMemoService.hasMemoFolder(memoFolderVO);
 			if(hasMemoFolder==0) {
 				ezMemoService.setDefualtMemoFolder(memoFolderVO);
