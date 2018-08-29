@@ -338,41 +338,33 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
-		//2018-08-27 천성준 - 수발신담당자 권한없는 사람도 자신이 등록한 비전자기록물 문서 볼수있게 접수부서 파일 생성 작업
-		if (orgDocID != null && orgDocID.trim() != "") {
-			// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
-			String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+		//2018-08-29 천성준 - 부서수신함에 들어온 접수문서를 최초 접수창으로 열지않고 문서보기로 열었을경우 문서파일이 생성되지 않아서 에러터지는것 수정 
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
 			
-			// 비전자문서 일때만 돌수있게
-			if (isNonElecRec.equals("Y")) {
-				String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-				String dirPath = commonUtil.getRealPath(request) + approvalRoot;
-				String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-	            
-				Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(dir);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(docFile);
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(orgDocFile);
 				
-				if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
-					String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
-					String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
-					
-					orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
-					docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
-					
-					String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-					File file = new File(dir);
-					
-					if (!file.exists()) {
-						file.mkdirs();
-					}
-					
-					File newFile = new File(docFile);
-					
-					if (!newFile.exists()) {
-						File orgFile = new File(orgDocFile);
-						
-						FileUtils.copyFile(orgFile, newFile);
-					}
-				}
+				FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		
