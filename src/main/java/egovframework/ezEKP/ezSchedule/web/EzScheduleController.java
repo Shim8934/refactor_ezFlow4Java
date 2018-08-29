@@ -1794,9 +1794,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");		
-		String pidList = "'" + idList + "',";
+		String pidList = "'" + idList + "'";
 		
-		String DeptID = ezScheduleService.getCumDeptId(idList,loginSimpleVO.getTenantId(), userInfo.getCompanyID());
+		String DeptID = ezScheduleService.getCumDeptId(idList, userInfo.getTenantId(), userInfo.getCompanyID());
 		String CompanyID = userInfo.getCompanyID();
 		
 		String dcidList = "'" + DeptID + "'" + ",'" + CompanyID + "'";
