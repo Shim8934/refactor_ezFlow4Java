@@ -27,10 +27,10 @@
 			    CurrentHeight = document.body.clientHeight;
 			    CurrenWidth = document.body.clientWidth;
 			    memoFoldersInfo();
+	
 			    inputNameDlg_cross_dialogArguments[0] = opener.inputNameDlg_cross_dialogArguments[0];
 			    inputNameDlg_cross_dialogArguments[1] = opener.inputNameDlg_cross_dialogArguments[1];
-			    
-			    alert("input0 : " + inputNameDlg_cross_dialogArguments[0]);
+	
 			    alert("input1 : " + inputNameDlg_cross_dialogArguments[1]);
             }
 			
@@ -100,6 +100,7 @@
 		    			alert("<spring:message code='ezMemo.t0046' />");
 		    		}     			
 				});
+		    	opener.getMemoList();
 		    	window.close();
 		    }
         </script>

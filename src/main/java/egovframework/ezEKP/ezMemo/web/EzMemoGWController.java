@@ -498,7 +498,7 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			MemoFolderVO memoFolderVO = new MemoFolderVO();
 			memoFolderVO.setUser_id(info.getUserId());
 			memoFolderVO.setCompany_id(info.getCompanyId());
