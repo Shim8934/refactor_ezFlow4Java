@@ -509,12 +509,12 @@
 		        });
 		    }
 		    
-		    function detailMemoSave() {
+		    /* function detailMemoSave() {
 		    	$(".individual-memo:nth-child("+memoIndex+") > .memo-text").val($("#textarea").val());
 		    	$("#textarea").val('');
 		    	$(".detailMemo").css("display", "none");
 		    	memoIndex = -1;
-		    }
+		    } */
 		    
 		    function checkDefaultFolder() {
 		    	$.ajax({
@@ -563,17 +563,6 @@
 			    	})
 		        });
 			    
-			    $(".memo-text").dblclick(function(){
-			    	var pheight = window.screen.availHeight;
-			        var pwidth = window.screen.availWidth;
-			        pheight = parseInt(pheight) / 2;
-			        pwidth = parseInt(pwidth) / 2;
-			        pheight = pheight - 200;
-			        pwidth = pwidth - 127;
-			        
-			    	window.open("/ezMemo/memoRead.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
-			    });
-		        
 		        $(".individual-memo").mouseleave(function(){
 		        	$(this).children("img").css("visibility", "hidden");
 		        });
@@ -603,7 +592,10 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-		        			console.log(result);
+		        			console.log(result.memo.contents);
+		        			
+		        			$("#textarea").val(result.memo.contents);
+		        			$(".detailMemo").css("display", "");
 		        		}
 		        	})
 		        });
