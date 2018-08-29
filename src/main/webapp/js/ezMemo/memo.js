@@ -150,3 +150,33 @@ function BoardSearchOptionHidden() {
 function refresh_onclick() {
     window.location.href = "/ezMemo/memoMain.do";
 }
+
+//리스트설정 on/off 설정
+function MailOptionView(obj) {
+    if (obj.getAttribute("mode") == "off") {
+        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 210 + "px";
+        document.getElementById("layer_Viewpopup").style.top = "100px";
+        document.getElementById("layer_Viewpopup").style.display = "";
+        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        obj.setAttribute("mode", "on");
+    }
+    else {
+        MailOptionHidden();
+    }
+}
+
+function MailOptionHidden() {
+    document.getElementById("layer_Viewpopup").style.display = "none";
+    document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
+    document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+}
+
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+			MailOptionHidden();
+		}
+	}
+}

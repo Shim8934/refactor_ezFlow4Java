@@ -12,7 +12,6 @@
 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
-		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
@@ -91,6 +90,8 @@
 	        /* 검색 레이어 팝업 위치 변경 */
 	        var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 			$("#srarchpopup").css("left", popupX);		
+			
+			MailOptionHidden();
 	 	}
 	 	
 		window.onload = function() {
@@ -126,6 +127,18 @@
 			});  */
 			getFolderList();
 			getMemoList();
+			
+			$($(window.parent.frames['left'].document)).mouseup(function (e) {
+	    		MailOptionHiddenOutside(e);
+	    	});
+	    	
+	    	$(parent.document).mouseup(function (e) {
+	    		MailOptionHiddenOutside(e);
+	    	});
+	    	
+	    	$(document).mouseup(function (e) {
+	    		MailOptionHiddenOutside(e);
+	    	});
 		}
 		
 		function getFolderList() {
@@ -152,9 +165,7 @@
 			if($("#memoType").val() != undefined) 		
 				folderId = $("#memoType").val();
 			
-			if(type=="order") {
-				type = type + "_" + $("#orderOption").val();
-			}
+			type = type + "_" + $("#orderOption").val();
 			
 			if(type=="search") {
 				if(searchInput == "" && startDate == "" && endDate == "") {
@@ -520,7 +531,7 @@
 					<tr>
 						<th><spring:message code='ezEmail.t99000035' /></th>
 						<td>
-							<select id="orderOption" style="WIDTH: 80px; height: 20px;" onchange="getMemoList('order');">
+							<select id="orderOption" style="WIDTH: 80px; height: 20px;" onchange="getMemoList();">
 								<option value="1"><spring:message code='ezMemo.t0019'/></option>
                        		    <option value="2"><spring:message code='ezMemo.t0020'/></option>
                            		<option value="3"><spring:message code='ezMemo.t0021'/></option>
