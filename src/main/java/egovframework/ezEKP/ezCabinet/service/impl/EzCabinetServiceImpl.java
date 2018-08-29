@@ -1285,6 +1285,10 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("cabinetId", cabinetId);
 		map.put("tenantId",  tenantId);
+		map.put("primary",   userInfo.getPrimary());
+		map.put("deptId",    userInfo.getDeptID());
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("userId",    userInfo.getId());
 		
 		CabinetVO cabinet     = ezCabinetDAO.getCabinetById(map);
 		String cabinetPath    = cabinet.getCabinetPath();
@@ -1292,6 +1296,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
 		nodeIds.remove(nodeIds.size() - 1);
 		map.put("listNodes", nodeIds);
+		
+		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+		map.put("deptList", userDeptList);
 		
 		List<CabinetShareVO> listShared = ezCabinetDAO.getSharedCabinetListById(map);
 		
@@ -1368,6 +1375,13 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				map.put("sharerId",  cabinet.getCreatorId());
 				map.put("sharedId",  userId);
 				map.put("listNodes", nodeIds);
+				
+				//Get user dept list
+				map.put("deptId",    userInfo.getDeptID());
+				map.put("companyId", userInfo.getCompanyID());
+				map.put("userId",    userId);
+				List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+				map.put("deptList", userDeptList);
 				
 				List<CabinetShareVO> listShared = ezCabinetDAO.checkSubPermission(map);
 				

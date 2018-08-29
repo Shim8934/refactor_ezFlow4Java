@@ -1056,19 +1056,26 @@
 		from
 			tbl_cb_share s
 			where
-				s.use_status = 1 and s.tenant_id = #tenantId# and
+				s.use_status = 1 and s.tenant_id = #tenantId# and 
 				(
 					<isNotEmpty property="listNodes">
 						(
 							s.cabinet_id in
-							<iterate property="listNodes" open="(" close=")" conjunction=",">
-								#listNodes[]#
-							</iterate>
+							<iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>
 							and s.child_permission = 1
 						)
 						or
 					</isNotEmpty>
 					(s.cabinet_id = #cabinetId#)
+				)
+				and 
+				(
+					(
+						s.shared_id = #userId# and s.shared_type = 2) or (s.shared_id in 
+						<iterate property="deptList" open="(" close=")" conjunction=",">
+							#deptList[]#
+						</iterate> and (s.shared_type = 0 or s.shared_type = 1)
+					)
 				)
 	</select>
 	
@@ -1078,19 +1085,25 @@
 		from
 			tbl_cb_share s
 			where
-				s.use_status = 1 and s.tenant_id = #tenantId# and s.sharer_id = #sharerId# and s.shared_id = #sharedId# and
+				s.use_status = 1 and s.tenant_id = #tenantId# and s.sharer_id = #sharerId# and
 				(
 					<isNotEmpty property="listNodes">
 						(
 							s.cabinet_id in
-							<iterate property="listNodes" open="(" close=")" conjunction=",">
-								#listNodes[]#
-							</iterate>
+							<iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>
 							and s.child_permission = 1
 						)
 						or
 					</isNotEmpty>
 					(s.cabinet_id = #cabinetId# and s.child_permission = 1)
+				)
+				and 
+				(
+					(
+						s.shared_id = #sharedId# and s.shared_type = 2) or (s.shared_id in 
+						<iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+						 and (s.shared_type = 0 or s.shared_type = 1)
+					)
 				)
 	</select>
 	
