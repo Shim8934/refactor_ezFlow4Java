@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
 import java.util.Locale;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -21,7 +23,7 @@ public interface EzCabinetService_h {
 	List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception;
 	List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception;
 	JSONObject modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
-	JSONObject saveBoardItem(String realPath, String mode, int parseInt, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveBoardItem(String realPath, String mode, int parseInt, String title, String summary, String boardTitle, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 	public void modifyRelatedList(int itemId, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 	public void modifyAttachList(int itemId, JSONArray attacheFiles, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject saveOptionItem(String realPath, String mode, int parseInt, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;

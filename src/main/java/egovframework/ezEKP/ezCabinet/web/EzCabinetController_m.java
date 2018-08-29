@@ -66,6 +66,8 @@ public class EzCabinetController_m {
 		String mode            = request.getParameter("mode")           != null? request.getParameter("mode")            : "";
 		String cabinetId       = request.getParameter("cabinetId")      != null? request.getParameter("cabinetId")       : "";
 		String title           = request.getParameter("title")          != null? request.getParameter("title")           : "";
+		String summary         = request.getParameter("summary")        != null? request.getParameter("summary")         : "";
+		String journalTitle    = request.getParameter("journalTitle")   != null? request.getParameter("journalTitle")    : "";
 		String createDate      = request.getParameter("createDate")     != null? request.getParameter("createDate")      : "";
 		String journalWriter   = request.getParameter("journalWriter")  != null? request.getParameter("journalWriter")   : "";
 		String journalType     = request.getParameter("journalType")    != null? request.getParameter("journalType")     : "";
@@ -74,15 +76,15 @@ public class EzCabinetController_m {
 		String attach          = request.getParameter("attach")         != null? request.getParameter("attach")          : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("mode: " + mode+ " cabinetId : " +cabinetId+ " title: " + title+ " createDate : "+createDate+ " journalWriter : " + journalWriter + " journalType : " +journalType+ " formName : "+formName+" content : "+content+" attach: "+attach );
-		if ((mode.equals("1") && cabinetId.equals("")) || title.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("") || content.equals("") || mode.equals("")){
+		logger.debug("mode: " + mode + " || cabinetId : " + cabinetId + " || title: " + title + " || summary: " + summary + " || journalTitle: " + journalTitle + " || createDate : " + createDate + " || journalWriter : " + journalWriter + " || journalType : " + journalType + " || formName : " + formName + " || content : " + content + " || attach: " + attach );
+		if ((mode.equals("1") && cabinetId.equals("")) || title.equals("") || journalTitle.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("") || content.equals("") || mode.equals("")){
 			logger.debug("Invalid parameter!");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_m.saveRelatedJournal(request, userInfo.getId(), cabinetId, mode, title, createDate, journalWriter, journalType, formName, content, attach);
+		resultObj = cabinetRestService_m.saveRelatedJournal(request, userInfo.getId(), cabinetId, mode, title, summary, journalTitle, createDate, journalWriter, journalType, formName, content, attach);
 		
 		logger.debug("jsonSaveRelatedJournal finishes!");
 		return resultObj.toString();

@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 
 @Service
@@ -41,15 +44,18 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 		return resultBody;
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedJournal(HttpServletRequest request, String userId, String cabinetId, String mode, String title, String createDate, String journalWriter, String journalType, String formName, String content, String attach) throws Exception {
+	public JSONObject saveRelatedJournal(HttpServletRequest request, String userId, String cabinetId, String mode, String title, String summary, String journalTitle, String createDate, String journalWriter, String journalType, String formName, String content, String attach) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/jounl";
 		JSONObject jsonParam      = new JSONObject();
 		jsonParam.put("userId",        userId);
 		jsonParam.put("cabinetId",     cabinetId);
 		jsonParam.put("mode",          mode);
 		jsonParam.put("title",         title);
+		jsonParam.put("summary",       summary);
+		jsonParam.put("journalTitle",  journalTitle);
 		jsonParam.put("createDate",    createDate);
 		jsonParam.put("journalWriter", journalWriter);
 		jsonParam.put("journalType",   journalType);

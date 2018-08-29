@@ -75,21 +75,24 @@ public class EzCabinetGWController_m {
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/jounl", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveRelatedJournal(@RequestBody JSONObject jContent, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName      = request.getHeader("host-name")             != null ? request.getHeader("host-name")               : "";
-		String journalContent  = jContent.get("content").toString()         != null ? jContent.get("content").toString()           : "";
 		String userId          = jContent.get("userId").toString()          != null ? jContent.get("userId").toString()            : "";
 		String mode            = jContent.get("mode").toString()            != null ? jContent.get("mode").toString()              : "";
-		String title           = jContent.get("title").toString()           != null ? jContent.get("title").toString()             : "";
 		String cabinetId       = jContent.get("cabinetId").toString()       != null ? jContent.get("cabinetId").toString()         : "";
+		String title           = jContent.get("title").toString()           != null ? jContent.get("title").toString()             : "";
+		String summary         = jContent.get("summary").toString()         != null ? jContent.get("summary").toString()           : "";
+		String journalTitle    = jContent.get("journalTitle").toString()    != null ? jContent.get("journalTitle").toString()      : "";
 		String createDate      = jContent.get("createDate").toString()      != null ? jContent.get("createDate").toString()        : ""; 
 		String journalWriter   = jContent.get("journalWriter").toString()   != null ? jContent.get("journalWriter").toString()     : ""; 
 		String journalType     = jContent.get("journalType").toString()     != null ? jContent.get("journalType").toString()       : ""; 
+		String journalContent  = jContent.get("content").toString()         != null ? jContent.get("content").toString()           : "";
 		String formName        = jContent.get("formName").toString()        != null ? jContent.get("formName").toString()          : ""; 
 		String attach          = jContent.get("attach").toString()          != null ? jContent.get("attach").toString()            : "";
+		
 		JSONObject result      = new JSONObject();
 		
-		logger.debug("ServerName : " + serverName + " || journalContent : " + journalContent + " || userId : " + userId + " || mode : " + mode + " || title : " +title+ " || cabinetId : " + cabinetId + " createDate : " + createDate + " journalWriter : " + journalWriter + " || formName : " + formName + " attach : " + attach);
+		logger.debug("ServerName : " + serverName + " || userId: " + userId + " || mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || journalTitle: " + journalTitle + " || createDate: " + createDate + " || journalWriter: " + journalWriter + " || journalType: " + journalType + " || journalContent: " + journalContent + "|| formName: " + formName + "|| attach:" +  attach);
 		
-		if (serverName.equals("") || journalContent.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("")){
+		if (serverName.equals("") || journalContent.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || journalTitle.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("")){
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -102,7 +105,7 @@ public class EzCabinetGWController_m {
 			String realPath        = request.getServletContext().getRealPath("");
 			
 			//Save receiver list
-			result                 = cabinetService_m.saveJournalItem(realPath, dstCabinetId, journalContent, mode, title, createDate, journalWriter, journalType, formName, attach, locale, userInfo);
+			result                 = cabinetService_m.saveJournalItem(realPath, dstCabinetId, title, summary, mode, journalTitle, createDate, journalWriter, journalType, journalContent, formName, attach, locale, userInfo);
 		}catch(Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

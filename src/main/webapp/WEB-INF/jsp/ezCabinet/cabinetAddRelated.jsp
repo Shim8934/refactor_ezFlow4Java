@@ -14,7 +14,7 @@
 		
 		<div class="divAddInfo">
 			<table class="tblAddRelatedInf">
-				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input class="tblAddRelatedInput" maxlength="150" type="text" placeholder="<spring:message code='ezCabinet.t70'/>" id="itemTtl"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input class="tblAddRelatedInput" maxlength="150" type="text" id="itemTtl"></td></tr>
 				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input class="tblAddRelatedInput" maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>" id="itemSum"></td></tr>
 			</table>
 		</div>
@@ -68,6 +68,7 @@
 					});
 					
 					myCabinetTree.makeTree({cabinetNode : document.getElementById("cabMagHeader").getAttribute("role")});
+					setModuleTitle();
 					
 					document.onselectstart   = function(e) {return false;};
 					var cabMgConfig          = document.getElementById("addRelated");
@@ -102,7 +103,146 @@
 				
 				function closeWindow() {window.close();}
 				
+				function setModuleTitle() {
+					switch(moduleType) {
+					case "apprv" : setApprovalTitle()             ; break;
+					case "board" : setBoardTitle()                ; break;
+					case "email" : setEmailTitle()                ; break;
+					case "schedl": setScheduleTitle()             ; break;
+					case "todo"  : setTodoTitle()                 ; break;
+					case "commu" : setCommunityTitle()            ; break;
+					case "option": setOptionTitle()               ; break;
+					case "projt" : setProjectTitle()              ; break;
+					case "resrc" : setResourceTitle()             ; break;
+					case "addrs" : setAddressTitle()              ; break;
+					case "jounl" : setJournalTitle()              ; break;
+					default      : alert(CabinetMessages.strError); return;
+					}
+				}
+				
+				function setApprovalTitle() {
+					var approvalOpener = window.opener;
+					if(!approvalOpener) {alert(CabinetMessages.strSelect); return;}
+					var messageFrame   = approvalOpener.document.getElementById("message");
+					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
+					var doctitle       = trimStr(contentWd.document.getElementById("doctitle").textContent);
+					
+					document.getElementById("itemTtl").value = doctitle;
+				}
+				
+				function setBoardTitle() {
+					var boardOpener    = window.opener;
+					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var messageFrame   =  boardOpener.document.getElementById("message");
+					if (messageFrame) {
+						var titleTd    = boardOpener.document.getElementById("cTitle");
+						var boardTitle = titleTd.getElementsByTagName("div")[0].textContent;
+					}
+					else {
+						var boardTitle = boardOpener.document.getElementById("title").textContent;
+					}
+					
+					document.getElementById("itemTtl").value = boardTitle;
+				}
+				
+				function setEmailTitle() {
+					var mailOpener = window.opener;
+					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var mailSubject = mailOpener.document.getElementById("LabelSubject").textContent;
+					
+					document.getElementById("itemTtl").value = mailSubject;
+				}
+				
+				function setScheduleTitle() {
+					var scheduleOpener = window.opener;
+					if (!scheduleOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var scheduleTitle = trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent);
+					
+					document.getElementById("itemTtl").value = scheduleTitle;
+				}
+				
+				function setCommunityTitle() {
+					var commuOpener = window.opener;
+					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
+				
+					var postdate = commuOpener.document.getElementById("PostDate");
+					if (postdate) {
+						var title = trimStr(commuOpener.document.getElementById("title").textContent);
+					}
+					else {
+						var title = trimStr(commuOpener.document.getElementById("Div1").textContent);
+					}
+					
+					document.getElementById("itemTtl").value = title;
+				}
+				
+				function setOptionTitle() {
+					var optionOpener = window.opener;
+					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var title = trimStr(optionOpener.document.getElementById("titleTd").textContent);
+					
+					document.getElementById("itemTtl").value = title;
+				}
+				
+				function setResourceTitle() {
+					var resourceOpener = window.opener;
+					if (!resourceOpener) {alert(CabinetMessages.strSelect); return;}
+					var resTitle = trimStr(resourceOpener.document.getElementById("titleDIV").textContent);
+					
+					document.getElementById("itemTtl").value = resTitle;
+				}
+				
+				function setAddressTitle() {
+					var addressOpener = window.opener;
+					if (!addressOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var listMembers = addressOpener.document.getElementById("ListMember");
+					var addressType = listMembers ? "group" : "normal";
+					
+					if (listMembers) {
+						var addressDocument = addressOpener.document;
+						var title           = trimStr(addressDocument.getElementById("TextName").textContent);
+					}
+					else {
+						var addressDocument = addressOpener.document;
+						var title           = trimStr(addressDocument.getElementById("TextName").textContent);
+					}
+					
+					document.getElementById("itemTtl").value = title;
+				}
+				
+				function setJournalTitle() {
+					var journalOpener = window.opener;
+					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var title = trimStr(journalOpener.document.getElementById("cTitle").textContent);
+					
+					document.getElementById("itemTtl").value = title;
+				}
+				
 				function documentSavehandler() {
+					var moduleTitle  = document.getElementById("itemTtl").value;
+					if (!moduleTitle.replace(/\s/g,'')) {
+						alert(CabinetMessages.strNoTitle);
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
+						return;
+					}
+					
+					if (moduleTitle.length > 150) {
+						alert(CabinetMessages.strTitleLen);
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
+						return;
+					}
+					
+					var moduleSummary  = document.getElementById("itemSum").value;
 					var saveMode     = 1; //Mode 0 : auto save, mode 1: manual
 					var cabinetId    = null;
 					var checkedInput = document.querySelector("input[name='checkCabinet']:checked");
@@ -118,22 +258,22 @@
 					}
 					
 					switch(moduleType) {
-						case "apprv" : saveApprovalDocument(saveMode, cabinetId) ; break;
-						case "board" : saveBoardDocument(saveMode, cabinetId)    ; break;
-						case "email" : saveEmailDocument(saveMode, cabinetId)    ; break;
-						case "schedl": saveScheduleDocument(saveMode, cabinetId) ; break;
-						case "todo"  : saveTodoDocument(saveMode, cabinetId)     ; break;
-						case "commu" : saveCommunityDocument(saveMode, cabinetId); break;
-						case "option": saveOptionDocument(saveMode, cabinetId)   ; break;
-						case "projt" : saveProjectDocument(saveMode, cabinetId)  ; break;
-						case "resrc" : saveResourceDocument(saveMode, cabinetId) ; break;
-						case "addrs" : saveAddressDocument(saveMode, cabinetId)  ; break;
-						case "jounl" : saveJournalDocument(saveMode, cabinetId)  ; break;
-						default      : alert(CabinetMessages.strError)           ; return;
+						case "apprv" : saveApprovalDocument(moduleTitle, moduleSummary, saveMode, cabinetId) ; break;
+						case "board" : saveBoardDocument(moduleTitle, moduleSummary, saveMode, cabinetId)    ; break;
+						case "email" : saveEmailDocument(moduleTitle, moduleSummary, saveMode, cabinetId)    ; break;
+						case "schedl": saveScheduleDocument(moduleTitle, moduleSummary, saveMode, cabinetId) ; break;
+						case "todo"  : saveTodoDocument(moduleTitle, moduleSummary, saveMode, cabinetId)     ; break;
+						case "commu" : saveCommunityDocument(moduleTitle, moduleSummary, saveMode, cabinetId); break;
+						case "option": saveOptionDocument(moduleTitle, moduleSummary, saveMode, cabinetId)   ; break;
+						case "projt" : saveProjectDocument(moduleTitle, moduleSummary, saveMode, cabinetId)  ; break;
+						case "resrc" : saveResourceDocument(moduleTitle, moduleSummary, saveMode, cabinetId) ; break;
+						case "addrs" : saveAddressDocument(moduleTitle, moduleSummary, saveMode, cabinetId)  ; break;
+						case "jounl" : saveJournalDocument(moduleTitle, moduleSummary, saveMode, cabinetId)  ; break;
+						default      : alert(CabinetMessages.strError)                                       ; return;
 					}
 				}
 				
-				function saveEmailDocument(saveMode, cabinetId) {
+				function saveEmailDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var mailOpener   = window.opener;
 					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -193,7 +333,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveApprovalDocument(saveMode, cabinetId) {
+				function saveApprovalDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var approvalOpener = window.opener;
 					if(!approvalOpener) {alert(CabinetMessages.strSelect); return;}
 					var messageFrame   = approvalOpener.document.getElementById("message");
@@ -246,19 +386,19 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveBoardDocument(saveMode, cabinetId) {
+				function saveBoardDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
 					var messageFrame  =  boardOpener.document.getElementById("message");
 					if (messageFrame) {
-						saveNormalBoard(boardOpener, saveMode, cabinetId);
+						saveNormalBoard(boardOpener, moduleTitle, moduleSummary, saveMode, cabinetId);
 					}
 					else {
-						savePhotoBoard(boardOpener, saveMode, cabinetId);
+						savePhotoBoard(boardOpener, moduleTitle, moduleSummary, saveMode, cabinetId);
 					}
 				}
 				
-				function savePhotoBoard(boardOpener, saveMode, cabinetId) {
+				function savePhotoBoard(boardOpener, moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var boardWriter   = boardOpener.strWriterID;
 					var boardTitle    = boardOpener.document.getElementById("title").textContent;
 					var boardDate     = trimStr(boardOpener.document.getElementById("User_WriteDate").textContent);
@@ -268,13 +408,15 @@
 					
 					var url  = "/ezCabinet/saveRelatedPhotoBoard.do";
 					var data = {
-						mode     : saveMode,
-						title    : boardTitle,
-						writer   : boardWriter,
-						date     : boardDate,
-						descript : boardDescript,
-						boardid  : boardId,
-						itemid   : boardItemId
+						mode       : saveMode,
+						title      : moduleTitle,
+						summary    : moduleSummary,
+						boardTitle : boardTitle,
+						writer     : boardWriter,
+						date       : boardDate,
+						descript   : boardDescript,
+						boardid    : boardId,
+						itemid     : boardItemId
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
@@ -282,7 +424,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveNormalBoard(boardOpener, saveMode, cabinetId) {
+				function saveNormalBoard(boardOpener, moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var writerTd      = boardOpener.document.getElementById("WriteUserNM");
 					var postTd        = boardOpener.document.getElementById("PostDate");
 					var titleTd       = boardOpener.document.getElementById("cTitle");
@@ -314,12 +456,14 @@
 					
 					var url  = "/ezCabinet/saveRelatedBoard.do";
 					var data = {
-						mode      : saveMode,
-						title     : boardTitle,
-						writer    : boardWriter,
-						date      : postDate,
-						attach    : JSON.stringify(attachList),
-						content   : boardContent
+						mode       : saveMode,
+						title      : moduleTitle,
+						summary    : moduleSummary,
+						boardTitle : boardTitle, 
+						writer     : boardWriter,
+						date       : postDate,
+						attach     : JSON.stringify(attachList),
+						content    : boardContent
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
@@ -327,7 +471,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveAddressDocument(saveMode, cabinetId) {
+				function saveAddressDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var addressOpener = window.opener;
 					if (!addressOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -342,11 +486,11 @@
 					}
 				}
 				
-				function saveProjectDocument(saveMode, cabinetId) {
+				function saveProjectDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					//Add code here
 				}
 				
-				function saveCommunityDocument(saveMode, cabinetId) {
+				function saveCommunityDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var commuOpener   = window.opener;
 					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -423,7 +567,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveTodoDocument(saveMode, cabinetId) {
+				function saveTodoDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var todoOpener = window.opener;
 					if (!todoOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -575,7 +719,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveScheduleDocument(saveMode, cabinetId) {
+				function saveScheduleDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var scheduleOpener = window.opener;
 					if (!scheduleOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -651,7 +795,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveOptionDocument(saveMode, cabinetId) {
+				function saveOptionDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var optionOpener   = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -702,7 +846,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveJournalDocument(saveMode, cabinetId) {
+				function saveJournalDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var journalOpener = window.opener;
 					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -736,11 +880,13 @@
 					var url  = "/ezCabinet/saveRelatedJournal.do";
 					var data = {
 						mode          : saveMode,
+						title         : moduleTitle,
+						summary       : moduleSummary,
+						journalTitle  : title,
 						createDate    : date,
 						journalWriter : writer,
 						journalType   : type,
 						formName      : formName,
-						title         : title,
 						content       : content,
 						attach        : JSON.stringify(attachList)
 					};
@@ -750,7 +896,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveResourceDocument(saveMode, cabinetId) {
+				function saveResourceDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var resourceOpener = window.opener;
 					if (!resourceOpener) {alert(CabinetMessages.strSelect); return;}
 					

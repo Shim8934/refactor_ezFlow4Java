@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -305,7 +308,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveBoardItem(String realPath, String mode, int cabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveBoardItem(String realPath, String mode, int cabinetId, String title, String summary, String boardTitle,String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result          = new JSONObject();
 		int tenantId               = userInfo.getTenantId();
 		String companyId           = userInfo.getCompanyID();
@@ -327,13 +330,14 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save item
 		int moduleType = 3; //board module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223", writer  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224", dateTime, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardType"  , itemId, "ezBoard.t224", "normal", companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTitle" , itemId, "ezCabinet.t62", boardTitle, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223",  writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224",  dateTime  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardType"  , itemId, "ezBoard.t224",  "normal"  , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -463,7 +467,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add option item
 		int moduleType = 6; //option module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -609,7 +613,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		return result;
 	}
 	
-	public synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
+	public synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String summary, String content, String mode, LoginVO userInfo) throws Exception {
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -630,7 +634,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		}
 		
 		//Add item
-		addNewItem(itemCabinetId, itemId, moduleType, title, null, content, timeUTC, userInfo);
+		addNewItem(itemCabinetId, itemId, moduleType, title, summary, content, timeUTC, userInfo);
 	}
 	
 	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String summary, String content, String timeUTC, LoginVO userInfo) {
@@ -689,7 +693,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add community item
 		int moduleType = 7; //community module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -719,7 +723,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add community item
 		int moduleType = 7; //community module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();

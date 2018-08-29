@@ -23,22 +23,33 @@
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
+					<th><spring:message code='ezCabinet.t51'/></th>
+					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t52'/></th>
+					<td class="overfl" colspan="3"><c:out value="${item.summary}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t94'/></th>
+					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
+				</tr>
+			</table>
+			
+			<table class="tblBoardInf">
+				<tr>
 					<th><c:out value="${boardWriter.columnName}"/></th>
 					<td id="boardCreator" class="cursor overfl"></td>
 					<th><c:out value="${boardTime.columnName}"/></th>
 					<td><c:out value="${fn:substring(boardTime.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
+					<th><c:out value="${boardTitle.columnName}"/></th>
+					<td class="overfl" colspan="3"><c:out value="${boardTitle.columnValue}"/></td>
+				</tr>
+				<tr>
 					<th><c:out value="${boardDesc.columnName}"/></th>
 					<td class="overfl" colspan="3" title="<c:out value="${boardDesc.columnValue}"/>"><c:out value="${boardDesc.columnValue}"/></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezCabinet.t94'/></th>
-					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
 				</tr>
 			</table>
 		</div>

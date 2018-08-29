@@ -114,7 +114,7 @@ public interface EzCabinetService {
 	JSONObject saveTodoItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Save related photo board item function
-	JSONObject savePhotoBoard(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String descript, String boardId, String itemId, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject savePhotoBoard(int dstCabinetId, String realPath, String title, String summary, String boardTitle, String mode, String createUser, String createDate, String descript, String boardId, String itemId, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Get all board photo
 	List<BoardAttachVO> getAllPhoto(String columnValue, String columnValue2, int tenantId) throws Exception;

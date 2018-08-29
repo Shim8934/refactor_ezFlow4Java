@@ -316,21 +316,23 @@ public class EzCabinetController_h {
 		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
 		String cabinetId       = request.getParameter("cabinet")   != null ? request.getParameter("cabinet")   : "";
 		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String summary         = request.getParameter("summary")   != null ? request.getParameter("summary")   : "";
+		String boardTitle      = request.getParameter("boardTitle")!= null ? request.getParameter("boardTitle"): "";
 		String writer          = request.getParameter("writer")    != null ? request.getParameter("writer")    : "";
 		String dateTime        = request.getParameter("date")      != null ? request.getParameter("date")      : "";
 		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
 		String content         = request.getParameter("content")   != null ? request.getParameter("content")   : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach + " || content : " + content);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || boardTitle: " + boardTitle + "|| writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach + " || content : " + content);
 		
-		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || dateTime.equals("")) {
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || boardTitle.equals("") || writer.equals("") || dateTime.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.saveRelatedBoard(request, userInfo.getId(), mode, cabinetId, title, writer, dateTime, attach, content);
+		resultObj = cabinetRestService_h.saveRelatedBoard(request, userInfo.getId(), mode, cabinetId, title, summary, boardTitle, writer, dateTime, attach, content);
 		
 		logger.debug("jsonSaveRelatedBoard finishes!");
 		return resultObj.toString();

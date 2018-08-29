@@ -538,20 +538,22 @@ public class EzCabinetGWController_h {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/board", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveBoarditem(@RequestBody JSONObject boardItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String userId     = boardItemInf.get("userId")   != null ? boardItemInf.get("userId").toString()   : "";
-		String mode       = boardItemInf.get("mode")     != null ? boardItemInf.get("mode").toString()     : "";
-		String cabinetId  = boardItemInf.get("cabinet")  != null ? boardItemInf.get("cabinet").toString()  : "";
-		String title      = boardItemInf.get("title")    != null ? boardItemInf.get("title").toString()    : "";
-		String writer     = boardItemInf.get("writer")   != null ? boardItemInf.get("writer").toString()   : "";
-		String dateTime   = boardItemInf.get("dateTime") != null ? boardItemInf.get("dateTime").toString() : "";
-		String attach     = boardItemInf.get("attach")   != null ? boardItemInf.get("attach").toString()   : "";
-		String content    = boardItemInf.get("content")  != null ? boardItemInf.get("content").toString()  : "";
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")            : "";
+		String userId     = boardItemInf.get("userId")     != null ? boardItemInf.get("userId").toString()     : "";
+		String mode       = boardItemInf.get("mode")       != null ? boardItemInf.get("mode").toString()       : "";
+		String cabinetId  = boardItemInf.get("cabinet")    != null ? boardItemInf.get("cabinet").toString()    : "";
+		String title      = boardItemInf.get("title")      != null ? boardItemInf.get("title").toString()      : "";
+		String summary    = boardItemInf.get("summary")    != null ? boardItemInf.get("summary").toString()    : "";
+		String boardTitle = boardItemInf.get("boardTitle") != null ? boardItemInf.get("boardTitle").toString() : "";
+		String writer     = boardItemInf.get("writer")     != null ? boardItemInf.get("writer").toString()     : "";
+		String dateTime   = boardItemInf.get("dateTime")   != null ? boardItemInf.get("dateTime").toString()   : "";
+		String attach     = boardItemInf.get("attach")     != null ? boardItemInf.get("attach").toString()     : "";
+		String content    = boardItemInf.get("content")    != null ? boardItemInf.get("content").toString()    : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || userId: " + userId + " || mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach  + " || content: " + content);
+		logger.debug("ServerName: " + serverName + " || userId: " + userId + " || mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title  + " || summary: "+ summary + " || boardTitle: " + boardTitle + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach  + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || dateTime.equals("")) {
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || boardTitle.equals("") || writer.equals("") || dateTime.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -562,7 +564,7 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService_h.saveBoardItem(realPath, mode, dstCabinetId, title, writer, attach, content, dateTime, locale, userInfo);
+			result           = cabinetService_h.saveBoardItem(realPath, mode, dstCabinetId, title, summary, boardTitle, writer, attach, content, dateTime, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

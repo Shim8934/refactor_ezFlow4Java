@@ -23,12 +23,14 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,7 +41,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -1526,7 +1530,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add email item
 		int moduleType = 1; //mail module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save email columns information
 		List<String> receiverList      = (List<String>) jp.parse(receiver);
@@ -1705,7 +1709,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add group address item
 		int moduleType = 8; //address module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save group columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1768,7 +1772,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add normal address item
 		int moduleType = 8; //address module
-		addRelatedItem(itemId, moduleType, cabinetId, title, null, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", null, mode, userInfo);
 		
 		//Save normal columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1812,7 +1816,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add resource item
 		int moduleType = 11; //resource module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save resource columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1828,7 +1832,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return result;
 	}
 	
-	private synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
+	private synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String summary, String content, String mode, LoginVO userInfo) throws Exception {
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1849,7 +1853,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		//Add item
-		addNewItem(itemCabinetId, itemId, moduleType, title, null, content, timeUTC, userInfo);
+		addNewItem(itemCabinetId, itemId, moduleType, title, summary, content, timeUTC, userInfo);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1876,7 +1880,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add schedule item
 		int moduleType = 4; //schedule module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		//Save schedule columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1931,7 +1935,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add todo item
 		int moduleType = 5; //todo module
-		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
 		
 		if (!shareList.equals("")) {
 			List<String> shareUsers = (List<String>) jp.parse(shareList);
@@ -1990,7 +1994,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject savePhotoBoard(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String descript, String boardId, String boardItemId, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject savePhotoBoard(int cabinetId, String realPath, String title, String summary, String boardTitle, String mode, String createUser, String createDate, String descript, String boardId, String boardItemId, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -2025,10 +2029,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add board item
 		int moduleType = 3; //board module
-		addRelatedItem(itemId, moduleType, cabinetId, title, null, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, null, mode, userInfo);
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("boardTitle" , itemId, "ezCabinet.t62", boardTitle,  companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223" , createUser , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224" , createDate , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardId"    , itemId, "ezBoard.t224" , boardId    , companyId, tenantId));

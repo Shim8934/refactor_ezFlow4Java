@@ -194,17 +194,19 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception {
+	public JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String boardTitle, String writer, String dateTime, String attach, String content) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/board";
 		JSONObject jsonBody       = new JSONObject();
-		jsonBody.put("userId",   userId);
-		jsonBody.put("mode",     mode);
-		jsonBody.put("cabinet",  cabinetId);
-		jsonBody.put("title",    title);
-		jsonBody.put("writer",   writer);
-		jsonBody.put("dateTime", dateTime);
-		jsonBody.put("attach",   attach);
-		jsonBody.put("content",  content);
+		jsonBody.put("userId",     userId);
+		jsonBody.put("mode",       mode);
+		jsonBody.put("cabinet",    cabinetId);
+		jsonBody.put("title",      title);
+		jsonBody.put("summary",    summary);
+		jsonBody.put("boardTitle", boardTitle);
+		jsonBody.put("writer",     writer);
+		jsonBody.put("dateTime",   dateTime);
+		jsonBody.put("attach",     attach);
+		jsonBody.put("content",    content);
 		
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;

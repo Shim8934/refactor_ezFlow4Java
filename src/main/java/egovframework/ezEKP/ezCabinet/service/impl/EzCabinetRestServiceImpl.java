@@ -709,11 +709,13 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject savePhotoBoard(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String descript, String boardId, String itemId) throws Exception {
+	public JSONObject savePhotoBoard(HttpServletRequest request, String userId, String title, String summary, String boardTitle, String mode, String cabinetId, String createUser, String createDate, String descript, String boardId, String itemId) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/photo-board";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
 		jsonBody.put("title",      title);
+		jsonBody.put("summary",    summary);
+		jsonBody.put("boardTitle", boardTitle);
 		jsonBody.put("mode",       mode);
 		jsonBody.put("cabinet",    cabinetId);
 		jsonBody.put("createUser", createUser);

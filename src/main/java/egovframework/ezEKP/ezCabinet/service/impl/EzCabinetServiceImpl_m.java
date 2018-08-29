@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
@@ -90,7 +93,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		
 		//Save Item
 		int moduleType = 2; //Approval module
-		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, doctitle, approvalContent, mode, userInfo);
+		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, doctitle, approvalContent, "", mode, userInfo);
 		
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -103,47 +106,6 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	
 	private synchronized void saveItem(CabinetItemVO itemVO) {
 		ezCabinetDAO.saveItem(itemVO);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject saveJournalItem(String realPath, int cabinetId, String journalContent, String mode, String title, String createDate, String journalWriter, String journalType, String formName, String attach, Locale locale, LoginVO userInfo) throws Exception {
-		JSONObject result          = new JSONObject();
-		int tenantId               = userInfo.getTenantId();
-		String companyId           = userInfo.getCompanyID();
-		JSONParser jp              = new JSONParser();
-		Map<String,Object> map     = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		
-		//Get itemId
-		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
-		
-		logger.debug("real path: " + realPath );
-		//Save attach files
-		if (!attach.equals("")) {
-			JSONArray attachList = (JSONArray) jp.parse(attach);
-			result               = ezCabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "upload_journal.ROOT", "uploadFile", locale, userInfo);
-			if (!result.get("status").equals("ok")) {
-				return result;
-			}
-		}
-		
-		//Save Item
-		int moduleType = 9; //Journal module
-		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, title, journalContent, mode, userInfo);
-		
-		//Save journal columns information
-		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("jourWriter", itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("jourDate"  , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("formname"  , itemId, "ezJournal.t22", formName     , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("jourType"  , itemId, "ezJournal.t12", journalType  , companyId, tenantId));
-		
-		saveAllColumns(listColm);
-		
-		result.put("status", "ok");
-		result.put("code", 0);
-		return result;
 	}
 	
 	@Override
@@ -196,5 +158,47 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		String columnName1 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
 		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
 		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveJournalItem(String realPath, int cabinetId, String title, String summary, String mode, String journalTitle, String createDate, String journalWriter, String journalType, String journalContent, String formName, String attach, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		JSONParser jp              = new JSONParser();
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		logger.debug("real path: " + realPath );
+		//Save attach files
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			result               = ezCabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "upload_journal.ROOT", "uploadFile", locale, userInfo);
+			if (!result.get("status").equals("ok")) {
+				return result;
+			}
+		}
+		
+		//Save Item
+		int moduleType = 9; //Journal module
+		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, title, summary, journalContent, mode, userInfo);
+		
+		//Save journal columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("jourTitle" , itemId, "ezCabinet.t62", journalTitle , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("jourWriter", itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("jourDate"  , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("formname"  , itemId, "ezJournal.t22", formName     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("jourType"  , itemId, "ezJournal.t12", journalType  , companyId, tenantId));
+		
+		saveAllColumns(listColm);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
 	}
 }

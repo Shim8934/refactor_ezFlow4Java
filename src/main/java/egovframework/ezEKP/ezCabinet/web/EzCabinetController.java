@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -942,26 +946,28 @@ public class EzCabinetController {
 	public String jsonSavePhotoBoard(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSavePhotoBoard is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String title           = request.getParameter("title")    != null ? request.getParameter("title")    : "";
-		String mode            = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
-		String cabinetId       = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
-		String createUser      = request.getParameter("writer")   != null ? request.getParameter("writer")   : "";
-		String createDate      = request.getParameter("date")     != null ? request.getParameter("date")     : "";
-		String descript        = request.getParameter("descript") != null ? request.getParameter("descript") : "";
-		String boardId         = request.getParameter("boardid")  != null ? request.getParameter("boardid")  : "";
-		String itemId          = request.getParameter("itemid")   != null ? request.getParameter("itemid")   : "";
+		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		String cabinetId       = request.getParameter("cabinet")   != null ? request.getParameter("cabinet")   : "";
+		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String summary         = request.getParameter("summary")   != null ? request.getParameter("summary")   : "";
+		String boardTitle      = request.getParameter("boardTitle")!= null ? request.getParameter("boardTitle"): "";
+		String createUser      = request.getParameter("writer")    != null ? request.getParameter("writer")    : "";
+		String createDate      = request.getParameter("date")      != null ? request.getParameter("date")      : "";
+		String descript        = request.getParameter("descript")  != null ? request.getParameter("descript")  : "";
+		String boardId         = request.getParameter("boardid")   != null ? request.getParameter("boardid")   : "";
+		String itemId          = request.getParameter("itemid")    != null ? request.getParameter("itemid")    : "";
 		
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || BoardId: " + boardId + " || ItemId: " + itemId + " || Description: " + descript);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + "title: " + title + " || summary: " + summary +  " || boardTitle: " + boardTitle +" || createUser: " + createUser + " || createDate: " + createDate + " || BoardId: " + boardId + " || ItemId: " + itemId + " || Description: " + descript);
 		
-		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || boardId.equals("") || itemId.equals("")) {
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || title.equals("") || boardTitle.equals("") || createUser.equals("") || createDate.equals("") || boardId.equals("") || itemId.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.savePhotoBoard(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, descript, boardId, itemId);
+		resultObj = cabinetRestService.savePhotoBoard(request, userInfo.getId(), title, summary, boardTitle, mode, cabinetId, createUser, createDate, descript, boardId, itemId);
 		
 		logger.debug("jsonSavePhotoBoard finishes!");
 		return resultObj.toString();

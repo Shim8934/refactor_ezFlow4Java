@@ -23,6 +23,21 @@
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
+					<th><spring:message code='ezCabinet.t51'/></th>
+					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t52'/></th>
+					<td class="overfl" colspan="3"><c:out value="${item.summary}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t94'/></th>
+					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
+				</tr>
+			</table>
+			
+			<table class="tblBoardInf">
+				<tr>
 					<th><c:out value="${jourWriter.columnName}"/></th>
 					<td id="journalCreator" class="cursor overfl"></td>
 					<th><c:out value="${jourDate.columnName}"/></th>
@@ -35,12 +50,8 @@
 					<td><c:out value="${formname.columnValue}"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezCabinet.t94'/></th>
-					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
+					<th><c:out value="${jourTitle.columnName}"/></th>
+					<td class="overfl" colspan="3"><c:out value="${jourTitle.columnValue}"/></td>
 				</tr>
 			</table>
 		</div>

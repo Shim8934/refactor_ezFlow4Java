@@ -1892,6 +1892,8 @@ public class EzCabinetGWController {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")            : "";
 		String userId     = boardItemInf.get("userId")     != null ? boardItemInf.get("userId").toString()     : "";
 		String title      = boardItemInf.get("title")      != null ? boardItemInf.get("title").toString()      : "";
+		String summary    = boardItemInf.get("summary")    != null ? boardItemInf.get("summary").toString()    : "";
+		String boardTitle = boardItemInf.get("boardTitle") != null ? boardItemInf.get("boardTitle").toString() : "";
 		String mode       = boardItemInf.get("mode")       != null ? boardItemInf.get("mode").toString()       : "";
 		String cabinetId  = boardItemInf.get("cabinet")    != null ? boardItemInf.get("cabinet").toString()    : "";
 		String createUser = boardItemInf.get("createUser") != null ? boardItemInf.get("createUser").toString() : "";
@@ -1902,7 +1904,7 @@ public class EzCabinetGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || boardId: " + boardId + " || itemId: " + itemId + " || Description: " + descript);
+		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || summary: " + summary + " || boardTitle: " + boardTitle + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || boardId: " + boardId + " || itemId: " + itemId + " || Description: " + descript);
 		
 		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || boardId.equals("") || itemId.equals("")) {
 			logger.debug("Parameter error!");
@@ -1915,7 +1917,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.savePhotoBoard(dstCabinetId, realPath, title, mode, createUser, createDate, descript, boardId, itemId, locale, userInfo);
+			result           = cabinetService.savePhotoBoard(dstCabinetId, realPath,  title, summary, boardTitle, mode, createUser, createDate, descript, boardId, itemId, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
