@@ -78,7 +78,6 @@
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 		var pAdminType  = "n";
 		var folders;
-    	var memoCount;
     	var searchInput;
 		var startDate;
 		var endDate;
@@ -139,7 +138,6 @@
 				async : false,
    				url : '/ezMemo/getMemoFoldersInfo.do',
    				success : function(result){
-   					memoCount = result.memoCount;
    					var opts = "<option value='0'><spring:message code='ezLadder.t011'/></option>";;
    					$(result.folders).each(function() {
    						opts += "<option value=" + this.folder_id + ">" + this.folder_name + "</option>";
@@ -206,10 +204,9 @@
                 	memoList = result["memoList"];
                 	headerColor = memoColor[defaultColor];
                 	bodyColor = memoColor[defaultColor+6]; 
-                	//folderId = result["folderId"];
                 	
 					loadMemoList();
-						
+					setMemoCount(memoList.length);
 				    addremove();
 				    
 				    if(folderId == 0) {
@@ -224,6 +221,14 @@
 	             }
 			});
 		}
+		
+		function setMemoCount(memoCount) {
+			var str = " - [" + "<spring:message code='ezJournal.t54' />"
+			+ "<span style='color:#017BEC;'> " + memoCount + " </span>"
+			+ "<spring:message code='ezJournal.t55' />" + "]";
+			$("#mailBoxInfo").html(str);
+		}
+		
 		var checkOpt="off";
 		function allClick() {
 			// 체크 박스 모두 체크
