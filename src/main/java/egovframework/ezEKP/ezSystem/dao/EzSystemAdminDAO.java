@@ -52,4 +52,12 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertIPBand", map);
 	}
 	
+	public IPBandVO getSystemIPBand(Map<String, Object> map) throws Exception {
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemIPBand", map);
+	}
+	
+	public void updateIPBand(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateIPBand", map);
+	}
+	
 }

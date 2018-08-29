@@ -135,13 +135,27 @@
 	
 		// IP 대역 등록 및 수정
 		function ipBandEidtPopUp(type) {
+			var url = "/ezSystem/systemIPBandEditPopup.do";
 			if (type === "add") {
-	
+				url += "?type=add";
 			} else {
-				
+				var selectedList = $("#tblIP tbody tr[selected=true]");
+				if (selectedList.length > 1) {
+					alert("수정할 IP대역 리스트를 한개만 선택해주세요.");
+					return;
+				} else if (selectedList.length == 0) {
+					alert("수정할 IP대역 리스트를 선택해주세요.");
+					return;
+				} else {
+					//서버에 넘길값
+					var ipAddress = selectedList[0].childNodes[1].innerText;
+					var access = selectedList[0].childNodes[2].innerText == "허용" ? "YES" : "NO";
+					var explanation = selectedList[0].childNodes[3].innerText;
+					
+					url += "?type=modify&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+				}
 			}
 			
-			var url = "/ezSystem/systemIPBandEditPopup.do";
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 		}
 		
@@ -153,9 +167,11 @@
 			if (obj.childNodes.item(0).childNodes.item(0).checked) {
 				obj.style.backgroundColor = m_strColorDefault;
 				obj.childNodes.item(0).childNodes.item(0).checked = false;
+				obj.setAttribute("selected", false);
 			} else {
 				obj.style.backgroundColor = m_strColorSelect;
 				obj.childNodes.item(0).childNodes.item(0).checked = true;
+				obj.setAttribute("selected", true);
 			}
 		}
 		
@@ -172,12 +188,14 @@
 		        	var ipNode = ipListElement[i];
 		        	ipNode.style.backgroundColor = m_strColorSelect;
 		        	ipNode.childNodes[0].childNodes[0].checked = true;
+		        	ipNode.setAttribute("selected", true);
 		        }
 			} else {
 				for (var i = 0; i < ipListElement.length; i++) {
 		        	var ipNode = ipListElement[i];
 		        	ipNode.style.backgroundColor = m_strColorDefault;
 		        	ipNode.childNodes[0].childNodes[0].checked = false;
+		        	ipNode.setAttribute("selected", false);
 		        }
 			}
 		}

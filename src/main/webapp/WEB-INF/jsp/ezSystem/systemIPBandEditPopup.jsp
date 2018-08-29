@@ -15,31 +15,60 @@
 	    
 	</head>
 	<script>
+		var _type = "${type}";
+		var _ipAddress = "${ipAddress}";
+		var _access = "${access}";
+		var _explanation = "${explanation}";
+	
+		window.onload = function () {
+			if (_type === 'modify') {
+				var ipAddressTemp = _ipAddress.split(".");
+				
+				for (var i = 1; i <= ipAddressTemp.length; i++) {
+					document.getElementById("ipBand" + i).value = ipAddressTemp[i-1];
+				}
+				
+				if (_access == "YES") {
+					document.getElementById("ipAllow1").checked = true;
+					document.getElementById("ipAllow2").checked = false;
+				} else {
+					document.getElementById("ipAllow2").checked = true;
+					document.getElementById("ipAllow1").checked = false;
+				}
+				
+				document.getElementById("explanText").value = _explanation;
+			}
+		}
+	
 		function saveBtn() {
-			// 허용여부, ip주소, 설명 가져오기
+			
 			var formData = $("#myForm").serialize();
 			var formUrl = "/ezSystem/insertIPBand.do";
+			
+			if (_type == "modify") {
+				formUrl = "/ezSystem/updateIPBand.do";
+			}
 			
 			// 먼저 &!@#$%^ 이런거 체크 후, 아이피 중복되는지 체크
 			// 메서드 만들어서 하기
 			
-			//ip주소
+			
 			formData = formData.split("ipBand=");
 			var ipAddress = "";
 			var access = "YES";
 			var explanation = "";
 			
-			// ip주소
+			
 			for (var i = 1; i < formData.length; i++) {
 				ipAddress += formData[i];
 			}
 			formData = "";
 			ipAddress = replaceAll(ipAddress, "&", ".");
-			// 허용 여부
+			
 			if (!document.getElementById("ipAllow1").checked) {
 				access = "NO";
 			}
-			// 설명
+			
 			explanation = document.getElementById("explanText").value;
 			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
 			
@@ -53,7 +82,10 @@
 					console.log(data);
 				},
 				complete : function(data) {
-					alert("저장하였습니다."); // 저장 후 parentWindow refresh하기
+					alert("저장하였습니다.");
+					window.close();
+					//window.opener.refresh(); 이런거
+					
 				}
 			});
 			

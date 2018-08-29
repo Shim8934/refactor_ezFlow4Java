@@ -352,4 +352,36 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		logger.debug("insertIPBand ended.");
 	}
+	
+	@Override
+	public IPBandVO getSystemIPBand(int tenantID, String ipAddress) throws Exception {
+		logger.debug("getSystemIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemIPBand(params);
+		
+		logger.debug("getSystemIPBand ended.");
+		
+		return ipBand;
+	}
+	
+	@Override
+	public void updateIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.updateIPBand(params);
+		
+		logger.debug("updateIPBand ended.");
+	}
 }

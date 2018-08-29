@@ -689,6 +689,44 @@ public class EzSystemAdminController {
 		
 		logger.debug("insertIPBand ended");
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/updateIPBand.do")
+	public void updateIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("updateIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.updateIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
+		
+		logger.debug("updateIPBand ended");
+	}
+	
+	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do")
+	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model, String type, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("systemIPBandEditPopup started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String ipAddress = "";
+		String access = "";
+		String explanation = "";
+		
+		if (type.equals("modify")) {
+			//ezSystemAdminService.updateIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
+			IPBandVO getIPBand = ezSystemAdminService.getSystemIPBand(userInfo.getTenantId(), ipBand.getIpAddress());
+			
+			ipAddress = getIPBand.getIpAddress();
+			access = getIPBand.getAccess();
+			explanation = getIPBand.getExplanation();
+		}
+		
+		model.addAttribute("ipAddress", ipAddress);
+		model.addAttribute("access", access);
+		model.addAttribute("explanation", explanation);
+		model.addAttribute("type", type);
+				
+		logger.debug("systemIPBandEditPopup ended");
+		return "/ezSystem/systemIPBandEditPopup";
+	}
 	 
 	
 	
@@ -698,14 +736,6 @@ public class EzSystemAdminController {
 				
 		logger.debug("systemIPAccessList ended");
 		return "/ezSystem/systemIPAccessList";
-	}
-	
-	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do")
-	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("systemIPBandEditPopup started");
-				
-		logger.debug("systemIPBandEditPopup ended");
-		return "/ezSystem/systemIPBandEditPopup";
 	}
 	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do")

@@ -161,10 +161,12 @@
 				EXPLANATION=#explanation#
 			WHERE 
 				TENANT_ID=#tenantID#
+			AND
+				IPADDRESS=#ipAddress#
 		]]>
 	</update>
 	
-	<select id="EzSystemAdminDAO.getSystemIPBand" parameterClass="map" resultClass="IPBandVO">
+	<select id="EzSystemAdminDAO.getSystemIPBand" parameterClass="Map" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT 
 				IPADDRESS,
