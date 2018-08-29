@@ -109,7 +109,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	
 	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String searchType, String offset) throws Exception {
 		logger.debug("getMemoList started.");
-		
+		logger.debug("===========================");
+		logger.debug("" + folderId);
+		logger.debug("===========================");
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
 			endDate += " 23:59:59";
@@ -127,7 +129,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<MemoVO> memoList = ezMemoDAO.getMemoList(map);
-
+		logger.debug("===========================");
+		logger.debug("" + memoList);
+		logger.debug("===========================");
 		logger.debug("getMemoList ended.");
 		return memoList;
 	}
@@ -308,6 +312,24 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		ezMemoDAO.setMemoContents(map);
 		
 		logger.debug("setMemoContents end");
+	}
+
+	@Override
+	public MemoVO getMemo(MemoVO memoVO) {
+		logger.debug("getMemo start");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("contents", memoVO.getContents());
+		map.put("write_date", memoVO.getWrite_date());
+		map.put("memo_id", memoVO.getMemo_id());
+		
+		ezMemoDAO.getMemo(map);
+		
+		logger.debug("getMemo start");
+		return null;
 	}
 	
 }

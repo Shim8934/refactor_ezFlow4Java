@@ -209,12 +209,20 @@
 	             }
 			});
 		}
-		
+		var checkOpt="off";
 		function allClick() {
 			// 체크 박스 모두 체크
-			$("input[name=memo]:checkbox").each(function() {
-				$(this).prop("checked", true);
-			});
+			if(checkOpt == "off") {
+				$("input[name=memo]:checkbox").each(function() {
+					$(this).prop("checked", true);
+				});
+				checkOpt = "true";
+			} else {
+				$("input[name=memo]:checkbox").each(function() {
+					$(this).prop("checked", false);
+				});
+				checkOpt = "off";
+			}
 		}
 		
 		function newMemo() {
@@ -406,6 +414,22 @@
         		}
         	}
 		}
+		
+		function memoMove() {
+			var memo_ids = [];
+			
+			$(":checkbox[name=memo]:checked").each(function(){
+				memo_ids.push($(this).val());
+			});
+			
+			if (memo_ids.length == 0) {
+	        	alert("<spring:message code='ezMemo.t0043' />");
+	            return;
+	        }
+			
+			var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+            try { OpenWin.focus(); } catch (e) { }
+		}
 	</script>
 	<body class="mainbody" style="overflow: hidden;" marginwidth="0" marginheight="0">
 		<h1><spring:message code='ezMemo.t001'/><span id="mailBoxInfo"></span></h1>
@@ -415,9 +439,13 @@
 		        <li><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
+<<<<<<< HEAD
 				<c:if test="${folderId eq 0 }">
 		        	<li><span onClick=""><spring:message code='ezMemo.t0022'/></span></li>
 				</c:if>
+=======
+		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
+>>>>>>> 0fbe9ddc1258d750ef5815d0f91279ecf41cdc2d
 		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 

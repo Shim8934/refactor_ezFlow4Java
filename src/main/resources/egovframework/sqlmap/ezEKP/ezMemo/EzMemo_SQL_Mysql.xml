@@ -86,7 +86,7 @@
 	<select id="EzMemoDAO.getMemoList" resultClass="MemoVO">
 		<![CDATA[
 			SELECT
-				MEMO_ID, IFNULL(CONTENTS, '') AS CONTENTS, DISPLAY_FLAG, WRITE_DATE, ORDERS, COLOR_ID
+				MEMO_ID, IFNULL(CONTENTS, '') AS CONTENTS, DISPLAY_FLAG, WRITE_DATE, ORDERS, FOLDER_ID, COLOR_ID
 			FROM
 				TBL_MEMO
 			WHERE 
@@ -119,7 +119,7 @@
 			  	AND
 					 FOLDER_ID = #folder_id#
 			  ]]>
-			 </isNotEqual>
+		 </isNotEqual>
 		<isEqual property="searchType" compareValue="order_1">
         	<![CDATA[
         		ORDER BY
