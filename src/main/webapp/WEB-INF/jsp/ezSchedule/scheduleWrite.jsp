@@ -136,6 +136,9 @@
 		        if (document.getElementById("iReFlag")) {
 		        	tmpReFlag = document.getElementById("iReFlag").value;
 		        }
+		        
+		        //수정시 저장된 일정시간으로 설정
+		        setDate();
 		    }
 		    
 		    window.onresize = function () {   	
@@ -172,6 +175,11 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
+
+				setDate();
+		    });
+		    
+		    function setDate() {
 				var uploadSDate = "${UploadSDate}";
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
@@ -205,7 +213,7 @@
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', EDate);
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
-		    });
+		    }
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
 		    var monthStr = monthMsg.split(";");		    

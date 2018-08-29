@@ -88,6 +88,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
+	spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
 	spanFolderName.onclick = function() {getSelected(this, folderType);};
 	
 	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
