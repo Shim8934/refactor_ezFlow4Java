@@ -690,35 +690,37 @@ function allday_change()
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
        
-        //2018-08-28 김보미 - 현재시간으로 설정
-    	var now = new Date();
-    	
-    	//시작시간
-    	var startTime;
-    	var hour = now.getHours();
-    	var time = now.getMinutes();
-    	
-    	if (parseInt(time) < 30) {
-    		startTime = hour + ":00:00";
-    	} else {
-    		startTime = hour + ":30:00";
-    	}
-    	
-    	//종료시간
-    	var endTime;
-    	now.setMinutes(now.getMinutes() + 30);
-    	
-    	hour = now.getHours();
-    	time = now.getMinutes();
-    	
-    	if (parseInt(time) < 30) {
-    		endTime = hour + ":00:00";
-    	} else {
-    		endTime = hour + ":30:00";
-    	}
-    	
-    	$('#Stimepicker').timepicker('setTime', startTime);
-    	$('#Etimepicker').timepicker('setTime', endTime);
+        if (!timeSelect && datetype == "2") { //하루종일 일정일 때 시간
+        	//2018-08-28 김보미 - 현재시간으로 설정
+        	var now = new Date();
+        	
+        	//시작시간
+        	var startTime;
+        	var hour = now.getHours();
+        	var time = now.getMinutes();
+        	
+        	if (parseInt(time) < 30) {
+        		startTime = hour + ":00:00";
+        	} else {
+        		startTime = hour + ":30:00";
+        	}
+        	
+        	//종료시간
+        	var endTime;
+        	now.setMinutes(now.getMinutes() + 30);
+        	
+        	hour = now.getHours();
+        	time = now.getMinutes();
+        	
+        	if (parseInt(time) < 30) {
+        		endTime = hour + ":00:00";
+        	} else {
+        		endTime = hour + ":30:00";
+        	}
+        	
+        	$('#Stimepicker').timepicker('setTime', startTime);
+        	$('#Etimepicker').timepicker('setTime', endTime);
+        }
 	}
 }
 

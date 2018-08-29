@@ -58,6 +58,7 @@
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
 	        var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 		    var timeCheck = false;
+		    var timeSelect = false;
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -422,6 +423,11 @@
 	            document.body.appendChild(form);
 	            form.submit();
 	        }
+	        
+	        $(document).on('click', ".ui-timepicker-list li", function() {
+	        	timeSelect = true;
+	        })
+
 	    </script>
 	</head>
 
