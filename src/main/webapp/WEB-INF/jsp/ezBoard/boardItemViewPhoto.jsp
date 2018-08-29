@@ -1225,7 +1225,7 @@
 						htmlString += "</body></html>";
 						
 						imgPopupWindow.document.write(htmlString);
-						imgPopupWindow.document.close();			
+						imgPopupWindow.document.close();
 					});
 			    }
 			    
@@ -1290,6 +1290,7 @@
 			  		else{
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
 			  			$imgPopup.css("width", "");
+			  			$imgPopupDiv.css("overflow", "");
 			  		}
 		  			$imgPopup.attr("zoom","1");
 		    		
