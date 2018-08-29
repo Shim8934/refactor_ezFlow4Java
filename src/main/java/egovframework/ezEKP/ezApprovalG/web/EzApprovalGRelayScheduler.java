@@ -681,6 +681,7 @@ public class EzApprovalGRelayScheduler {
 
 	        result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
@@ -712,6 +713,7 @@ public class EzApprovalGRelayScheduler {
              }
 
          } catch (Exception ex) {
+        	 ex.printStackTrace();
              logger.debug("ezReceiverMain", "pubdocUpdate", ex.getMessage());
          }
 	}
@@ -747,6 +749,7 @@ public class EzApprovalGRelayScheduler {
 			
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		
@@ -782,6 +785,7 @@ public class EzApprovalGRelayScheduler {
 
 			result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
@@ -816,6 +820,7 @@ public class EzApprovalGRelayScheduler {
 	    	
 	    	result = "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = e.getMessage();
 		}
 		return result;
@@ -919,6 +924,7 @@ public class EzApprovalGRelayScheduler {
             return pOrgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("%", "");
         }
         catch (Exception Ex){
+        	Ex.printStackTrace();
             return null;
         }
     }
