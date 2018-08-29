@@ -75,6 +75,8 @@
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
 	    	var title = "${title}";
+	    	var allDay = "${allDay}";//"1":하루종일
+	    	var timeSelect = false;
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -331,6 +333,10 @@
 		                document.getElementById("Stimepicker").style.display = "";
 		                document.getElementById("Etimepicker").style.display = "";
 	    	            onck = "1";
+	    	            //2018-08-29 김보미 - 수정시 하루종일 체크 해제시 현재시간으로 나오게 변경
+	    	            if (allDay == "1" && !timeSelect) {
+		    	            setNowTime();
+	    	            }
 	        	        return;
 	            	}
 	        	}
@@ -464,6 +470,41 @@
 	        	}
 	    	}
 
+            //2018-08-28 김보미 - 현재시간으로 설정
+	    	function setNowTime() {
+	        	var now = new Date();
+	        	
+	        	//시작시간
+	        	var startTime;
+	        	var hour = now.getHours();
+	        	var time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		startTime = hour + ":00:00";
+	        	} else {
+	        		startTime = hour + ":30:00";
+	        	}
+	        	
+	        	//종료시간
+	        	var endTime;
+	        	now.setMinutes(now.getMinutes() + 30);
+	        	
+	        	hour = now.getHours();
+	        	time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		endTime = hour + ":00:00";
+	        	} else {
+	        		endTime = hour + ":30:00";
+	        	}
+	        	
+	        	$('#Stimepicker').timepicker('setTime', startTime);
+	        	$('#Etimepicker').timepicker('setTime', endTime);
+	    	}
+            
+	        $(document).on('click', ".ui-timepicker-list li", function() {
+	        	timeSelect = true;
+	        })
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>

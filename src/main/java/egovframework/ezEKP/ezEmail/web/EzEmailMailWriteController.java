@@ -4382,7 +4382,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							} else {
 								break;
 							}
-							}
+						}
 							
 						for (int i = 0; i < count; i++) {
 							p = mp.getBodyPart(i);
