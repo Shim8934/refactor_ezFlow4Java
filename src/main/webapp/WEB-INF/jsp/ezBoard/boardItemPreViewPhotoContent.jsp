@@ -751,6 +751,7 @@
 		  		else{
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
 		  			$imgPopup.css("width", "");
+		  			$imgPopupDiv.css("overflow", "");
 		  		}
 		  		$imgPopup.attr("zoom","1")
 		  		
@@ -844,7 +845,6 @@
 					topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 					
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);
@@ -901,7 +901,6 @@
 			  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 			  		
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);

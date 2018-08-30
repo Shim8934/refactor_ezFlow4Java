@@ -215,7 +215,7 @@ public class EzStatisticsMailLogController {
 	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezStatistics/statisticsMailLogExcelExport.do")
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale)  throws Exception {
-		logger.debug("statisticsMailLogExcelExport controller started.");
+		logger.debug("statisticsMailLogExcelExport started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -418,7 +418,7 @@ public class EzStatisticsMailLogController {
 			//sheet.autoSizeColumn(i-1);
 		}
 		
-		for (int i=0; i< 9; i++) {
+		for (int i = 0; i < 9; i++) {
 			sheet.autoSizeColumn(i);
 			//sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
 		}
@@ -430,6 +430,6 @@ public class EzStatisticsMailLogController {
 		workbook.write(response.getOutputStream());
 		workbook.close();
 		
-		logger.debug("statisticsMailLogExcelExport controller ended.");
+		logger.debug("statisticsMailLogExcelExport ended.");
 	}
 }
