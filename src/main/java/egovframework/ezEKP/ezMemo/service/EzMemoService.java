@@ -16,13 +16,14 @@ public interface EzMemoService {
 	public void deleteMemoFolder(MemoFolderVO memoFolderVO, String folder_ids) throws Exception;
 	public List<MemoVO> getMemoList(MemoVO vo, String searchInput, String startDate, String endDate, String folderId, String offset, String orderOption) throws Exception;
 	public int memoWrite(MemoVO memo) throws Exception;
-	public void insertMemoConfig(MemoConfigVO memoConfigVO);
+	public void insertMemoConfig(MemoConfigVO memoConfigVO) throws Exception;
 	public int hasMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
-	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO);
-	public void setMemoDisplay(MemoVO memo, String memo_ids);
-	public void setMemoContents(MemoVO memoVO);
-	public MemoVO getMemo(MemoVO memoVO);
-	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids);
+	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO) throws Exception;
+	public void setMemoDisplay(MemoVO memo, String memo_ids) throws Exception;
+	public void setMemoContents(MemoVO memoVO) throws Exception;
+	public MemoVO getMemo(MemoVO memoVO) throws Exception;
+	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids) throws Exception;
 	public void memoDelete(MemoVO memoVO, String memo_ids) throws Exception;
+	public void setMemoColor(MemoVO memoVO) throws Exception;
 }

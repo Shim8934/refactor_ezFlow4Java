@@ -278,12 +278,8 @@
 	        });
 		    
 		    $(".individual-memo").dblclick(function(){
-		    	var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        pheight = parseInt(pheight) / 2;
-		        pwidth = parseInt(pwidth) / 2;
-		        pheight = pheight - 200;
-		        pwidth = pwidth - 127;
+		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
+		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
 		        
 		    	window.open("/ezMemo/memoRead.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
 		    });
@@ -293,11 +289,13 @@
 	        });
 	        
 	        $(".memo-color-list").click(function(){
-	        	headerColor = $(this).css("background-color");
+	        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+	        	
+	        	/* headerColor = $(this).css("background-color");
 	        	bodyColor = memoColor[$(this).index()];
 	        	$(this).parent().parent().css("background-color", headerColor);
 	        	$(this).parent().nextAll("textarea").css("background-color", bodyColor);
-	        	$(this).parent().css("visibility", "hidden");
+	        	$(this).parent().css("visibility", "hidden"); */
 	        })
 	        
 	        $(".memo-color").mouseleave(function(){
@@ -309,6 +307,28 @@
 	        $(".memo-text").blur(function(){
 					modifyMemo(this);
 	        })
+	    }
+	    
+	    // 메모지 색상 변경
+	    function modifyMemoColor(obj, idx) {
+	    	var memoId = obj.attr("id").replace("memo", "");
+	    	
+	    	$.ajax ({
+ 			   	url : '/ezMemo/memoColorModify.do',
+ 			   	type : 'POST',
+                dataType : 'json',
+                data : { 
+                	memoId : memoId,
+                	colorId : idx
+                },  
+                cache: false,
+                success: function(result) {
+                	getMemoList();
+                },
+                error : function() {
+                	
+                }
+			}); 
 	    }
 	    
 		// 메모 내용 변경	    

@@ -608,4 +608,38 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [DELETE /rest/ezMemo/memo-list/memo/memoId] ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/rest/ezMemo/memo-color/memo/{memoId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject gwSetMemoColor(@PathVariable String memoId, @PathVariable String userId, MemoVO memoVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		int colorId = Integer.parseInt(request.getParameter("color_id"));
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			
+			memoVO.setUser_id(info.getUserId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setColor_id(colorId);
+			
+			ezMemoService.setMemoColor(memoVO);
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userId + "] ended.");
+
+		return result;
+	}
 }
