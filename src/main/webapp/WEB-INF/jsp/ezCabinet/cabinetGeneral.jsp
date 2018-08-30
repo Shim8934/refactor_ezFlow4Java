@@ -43,12 +43,12 @@
 					<span id="previewHSizeDiv" ${config.previewMode == 'h' ? '' : 'style="display: none;"'}>
 						<spring:message code='ezCabinet.t29'/>
 						<select id="hUserList" class="cabSelectConf">
-								<c:forEach var="i" begin="39" end="74" step="1">
+								<c:forEach var="i" begin="30" end="65" step="1">
 									<option ${config.contentHpercent == i ? 'selected' : ''}><c:out value='${i}'/></option>
 								</c:forEach>
 						</select> <spring:message code='ezCabinet.t30'/>
 						<select id="hUserPre" class="cabSelectConf">
-								<c:forEach var="i" begin="26" end="61" step="1">
+								<c:forEach var="i" begin="35" end="70" step="1">
 									<option ${config.previewHpercent == i ? 'selected' : ''}><c:out value='${i}' /></option>
 								</c:forEach>
 						</select>
@@ -56,13 +56,13 @@
 					<span id="previewWSizeDiv" ${config.previewMode == 'w' ? '' : 'style="display: none;"'}>
 						<spring:message code='ezCabinet.t29' />
 						<select id="wUserList" role="" class="cabSelectConf">
-							<c:forEach var="i" begin="24" end="65" step="1">
+							<c:forEach var="i" begin="40" end="75" step="1">
 								<option ${config.contentWpercent == i ? 'selected' : ''}><c:out value='${i}' /></option>
 							</c:forEach>
 						</select>
 						<spring:message code='ezCabinet.t30'/>
 						<select id="wUserPre" class="cabSelectConf">
-							<c:forEach var="i" begin="35" end="76" step="1">
+							<c:forEach var="i" begin="25" end="60" step="1">
 								<option ${config.previewWpercent == i ? 'selected' : ''}><c:out value='${i}' /></option>
 							</c:forEach>
 					</select>

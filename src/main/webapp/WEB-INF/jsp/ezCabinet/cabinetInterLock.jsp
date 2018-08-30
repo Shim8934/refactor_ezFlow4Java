@@ -12,9 +12,6 @@
 	</head>
 	<body class="cabGeneral">
 		<br>
-		<script type="text/javascript">
-			console.log(JSON.stringify(${modules}));
-		</script>
 		<table class="cabTable2">
 			<tr>
 				<th><spring:message code="ezCabinet.t32"/></th>

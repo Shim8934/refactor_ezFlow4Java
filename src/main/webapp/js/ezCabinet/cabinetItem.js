@@ -11,10 +11,10 @@ var CabinetItem = function() {
 	var summaryStr     = "";
 	var creatorNameStr = "";
 	var cabinetId      = null;
-	var minWPercent    = 30;
-	var maxWPercent    = 70;
-	var minHPercent    = 20;
-	var maxHPercent    = 80;
+	var minWPercent    = 40;
+	var maxWPercent    = 75;
+	var minHPercent    = 30;
+	var maxHPercent    = 65;
 	var sharePopup     = null;
 	var addPopup       = null;
 	var itemPopup      = null;
@@ -98,11 +98,19 @@ var CabinetItem = function() {
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
 	function preProcessing() {
-		var divList           = document.getElementById("cabWraperDiv");
-		var divChild          = divList.querySelector("div[class='tableDataDiv']");
-		var reheight          = document.documentElement.clientHeight - 120;
-		divList.style.height  = reheight + "px";
-		divChild.style.height = reheight - 70 + "px";
+		var divList  = document.getElementById("cabWraperDiv");
+		var divChild = divList.querySelector("div[class='tableDataDiv']");
+		var reheight = 0;
+		
+		if (crrPreMode == "h") {
+			reheight              = divChild.parentElement.parentElement.clientHeight - 80;
+			divChild.style.height = reheight + "px";
+		}
+		else {
+			reheight              = document.documentElement.clientHeight - 120;
+			divList.style.height  = reheight + "px";
+			divChild.style.height = reheight - 70 + "px";
+		}
 	}
 	
 	function initEvents(cabId, height, width, prevMode) {
