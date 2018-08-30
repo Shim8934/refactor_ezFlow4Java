@@ -10,6 +10,7 @@
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 	        <script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 	    	<style>
 	    		
 .context-menus {
@@ -376,6 +377,21 @@
 		     		
 			    	parent.mailPrevSentDateChk();
 		        }
+		     	
+		     	var content;
+		        function copy() {
+					selected = window.getSelection();
+		            content = selected.toString();
+		        }
+		        
+		        function copyToClip() {
+			      	var tempTextArea = document.createElement('textarea');
+			      	tempTextArea.value = content;
+			      	document.body.appendChild(tempTextArea);
+			      	tempTextArea.select();
+	  				document.execCommand('copy');
+	  				document.body.removeChild(tempTextArea);
+		        }
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
@@ -430,6 +446,7 @@
 	  	    document.addEventListener("contextmenu", function(e) {
 	  	      event.preventDefault();
 	  	      toggleOnOff(1);
+	 	 	  copy();
 	  	      showMenu(e.x, e.y);
 	  	    });
 	  	  }
@@ -450,9 +467,10 @@
 	  	  	$(".menus").click(function(){
 	  		  	var rightId = $(this).attr('id');
 	  		  	toggleOnOff(0);
-	  		  
+	  	
 	  		  	switch(rightId) {
 				case "menu1":
+					copyToClip(selected);
 					break;
 				case "menu2":
 					btnPrint_onClick();

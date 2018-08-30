@@ -37,7 +37,7 @@
 							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_onclick(this);' data1='" + list.folder_id + "' data2='" + list.folder_name +"'>";
 							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
 							memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
-							memoFolderList += "<td style='color:gray;'>" + list.reg_date.substring(0,16) + "</td>";  
+							memoFolderList += "<td style='color:gray;'>" + list.reg_date.substring(0,10) + "</td>";  
 							memoFolderList += "</tr>";
 						});
 						
