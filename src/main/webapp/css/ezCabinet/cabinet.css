@@ -269,7 +269,7 @@
 .divInfo {width: 100%;}
 .divInfo ul {list-style: none; padding: 8px;}
 .divInfo table + table {margin-top: 15px;}
-.divInfo .cabmemo {height: 70px; overflow: auto; margin: 8px 0px;}
+.divInfo .cabmemo {height: 50px; overflow: auto; margin: 8px 0px;}
 .divAddInfo {height: 70px;}
 .tblFileInf, .cabShareInf, .tblEmailInf, .tblBoardInf, .tblAddRelatedInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
 .tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td, .tblAddRelatedInf tr th, .tblAddRelatedInf tr td {border: 1px solid #ddd;}
@@ -299,9 +299,9 @@
 .ulFiles li >img {position: absolute; top: 4.5px; right: 2.5px;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
 
-.mailContDiv1  {margin: 10px 0px; border: 1px solid #ddd; min-height: 445px; height: 445px; overflow: auto;}
-.mailContDiv2  {margin: 10px 0px; border: 1px solid #ddd; min-height: 475px; height: 475px; overflow: auto;}
-.boardContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 507px; height: 507px; overflow: auto;}
+.mailContDiv1  {margin: 10px 0px; border: 1px solid #ddd; min-height: 370px; height: 370px; overflow: auto;}
+.mailContDiv2  {margin: 10px 0px; border: 1px solid #ddd; min-height: 400px; height: 400px; overflow: auto;}
+.boardContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 430px; height: 430px; overflow: auto;}
 .boardContDiv2 {margin: 10px 0px; border: 1px solid #ddd; min-height: 480px; height: 480px; overflow: auto;}
 .optionContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 420px; height: 420px; overflow: auto;}
 .resContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 444px; height: 444px; overflow: auto;}
@@ -309,7 +309,7 @@
 .schContDiv2   {margin: 10px 0px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
 .todoContDiv   {margin: 10px 0px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
 .commuContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 477px; height: 477px; overflow: auto;}
-.apprvContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 540px; height: 540px; overflow: auto;}
+.apprvContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 505px; height: 505px; overflow: auto;}
 .commuPhotoContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 510px; height: 510px; overflow: auto;}
 .journalContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 477px; height: 477px; overflow: auto;}
 
