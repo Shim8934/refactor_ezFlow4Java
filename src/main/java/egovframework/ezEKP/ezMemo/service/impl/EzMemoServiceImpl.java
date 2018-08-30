@@ -90,6 +90,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 		map.put("use_date", memoConfigVO.getUse_date());
 		map.put("use_gadget", memoConfigVO.getUse_gadget());
+		map.put("font_size", memoConfigVO.getFont_size());
 		
 		if (memoConfigVO.getLayer_width() > 0 && memoConfigVO.getLayer_height() > 0) {
 
