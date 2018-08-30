@@ -91,6 +91,9 @@ var CabinetFileHelper = function() {
 			titleTd.textContent = result["title"];
 			titleTd.setAttribute("title", result["title"]);
 			
+			var summaryTd       = document.getElementById("summary");
+			summaryTd.textContent = result["summary"];
+			
 			//Related list
 			var divElmt       = document.getElementById("fileListDiv");
 			divElmt.innerHTML = "";
