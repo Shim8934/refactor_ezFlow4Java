@@ -34,6 +34,7 @@ function createMemo(hColor, bColor, memoId, contents, flag) {
 	textarea.setAttribute("class", "memo-text");
 	textarea.setAttribute("memoId", memoId);
 	textarea.style.backgroundColor = bColor;
+	textarea.style.fontSize = fontSize + "px";
 	
 	var closeImg = document.createElement("img");
 	closeImg.setAttribute("src", "/images/ezMemo/close_xBtn.png");
@@ -78,7 +79,8 @@ function insertMemo(hColor, bColor, memoId, layerFlag) {
 	} else {
 		$("#boardMemoList").prepend(div);
 	}
-	addDateInfo();
+	if(useDate == 0)
+		addDateInfo();
 }
 
 
@@ -103,7 +105,8 @@ function loadMemoList(flag) {
 				$("#memoList").prepend(div);
 			}
 		}
-		addDateInfo(memoList[i].write_date.substring(0,10));
+		if(useDate == 0)
+			addDateInfo(memoList[i].write_date.substring(0,10));
 	}
 }
 
