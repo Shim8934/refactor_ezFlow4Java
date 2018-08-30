@@ -254,7 +254,7 @@ var CabinetFileHelper = function() {
 			var fileModifyDivBttn = document.getElementById("fileModifyDivBttn");
 			fileModifyDivBttn.style.display = "";
 			
-			//Set inputBox
+			//Set TitleInputBox
 			var titleTdElmt       = document.getElementById("title");
 			var inputElmt1        = document.createElement("input"); 
 			inputElmt1.value      = titleTdElmt.textContent;
@@ -263,6 +263,16 @@ var CabinetFileHelper = function() {
 			inputElmt1.setAttribute("id", "itemTtl");
 			inputElmt1.setAttribute("maxlength", "150");
 			titleTdElmt.appendChild(inputElmt1);
+			
+			//Set SummaryInputBox
+			var SummTdElmt       = document.getElementById("summary");
+			var inputElmt2        = document.createElement("input"); 
+			inputElmt2.value      = SummTdElmt.textContent;
+			titleTdElmt.innerHTML = "";
+			inputElmt2.className  = "tblFileInput";
+			inputElmt2.setAttribute("id", "itemSumm");
+			inputElmt2.setAttribute("maxlength", "250");
+			SummTdElmt.appendChild(inputElmt2);
 			
 			//Set relatedBttn
 			var relDocDivElmt         = document.getElementById("rlWrapDiv");
@@ -381,6 +391,7 @@ var CabinetFileHelper = function() {
 		
 		function saveItem() {
 			var title   = document.getElementById("itemTtl").value;
+			var summary = document.getElementById("itemSumm").value;
 			
 			if (!title.replace(/\s/g,'')) {
 				alert(CabinetMessages.strNoTitle);

@@ -96,5 +96,6 @@ var CabinetMessages = {
 	strSelect5   : "본인은 선택할 수 없습니다.",
 	strNoSearch  : "검색결과가 없습니다.",
 	strDelete3   : "하위 캐비넷이 존재하는 캐비넷은 삭제할 수 없습니다.",
-	strShareErr3 : "공유한 캐비넷이 없습니다."
+	strShareErr3 : "공유한 캐비넷이 없습니다.",
+	strSummLen   : "요약은 250 글자 이내이어야 합니다."
 }

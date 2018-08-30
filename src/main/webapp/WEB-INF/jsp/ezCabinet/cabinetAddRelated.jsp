@@ -307,9 +307,10 @@
 					if (normalAttach) {
 						var listChildren = normalAttach.children;
 						for (var i = 0, len = listChildren.length; i < len; i++) {
-							var spElmt  = listChildren[i].firstElementChild;
-							var hrefStr = spElmt.getAttribute("_filehref");
-							var params  = getAllUrlParams(hrefStr);
+							var spElmt           = listChildren[i].firstElementChild;
+							var hrefStr          = spElmt.getAttribute("_filehref");
+							var params           = getAllUrlParams(hrefStr);
+							params["folderPath"] = javaURLDecode(params["folderPath"]).replace("+", " ");
 							
 							normalList.push({
 								fileHref : params,

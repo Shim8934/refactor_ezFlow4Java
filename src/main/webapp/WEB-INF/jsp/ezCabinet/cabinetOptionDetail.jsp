@@ -29,7 +29,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t52'/></th>
-					<td class="overfl" colspan="3"><c:out value="${item.summary}"/></td>
+					<td id="summary" class="overfl" colspan="3"><c:out value="${item.summary}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
