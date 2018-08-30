@@ -181,6 +181,8 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+
+				        moveDisplay(false);
 		        	},
 		        	error : function(error){
 		        		alert("<spring:message code='ezOrgan.t2'/>" + error);	
@@ -674,6 +676,8 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+				        
+				        moveDisplay(true);
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -1393,6 +1397,14 @@
 		    	}
 		    }
 		    
+		    function moveDisplay(mode) {
+		    	if (mode) {
+		    		$(".moveWrap").css("display","none");	
+		    	} else {
+		    		$(".moveWrap").css("display","block");	
+		    	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -1565,7 +1577,7 @@
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>
 		            <c:if test="${dotNetIntegration != 'YES'}">
-		            <div style="width:100%; vertical-align:middle; text-align:center">
+		            <div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center">
 		            	<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 						<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
 		                <a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
