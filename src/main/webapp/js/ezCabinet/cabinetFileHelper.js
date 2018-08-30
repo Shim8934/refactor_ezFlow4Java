@@ -321,7 +321,7 @@ var CabinetFileHelper = function() {
 					tdElmt.appendChild(cloneUlEmt);
 					trElmt.appendChild(thElmt);
 					trElmt.appendChild(tdElmt);
-					divInfo.firstElementChild.appendChild(trElmt);
+					divInfo.lastElementChild.appendChild(trElmt);
 				}
 			}
 			
