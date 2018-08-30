@@ -178,13 +178,12 @@
 		]]>
 	</select>
 	
-	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="String">
+	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="java.util.List">
 		<![CDATA[
 			DELETE FROM
 				TBL_ACCESS_IP
-            WHERE
-            	IPNO = #ipNo#
-		]]>
+            ]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
+       
 	</delete>
 		
 </sqlMap>

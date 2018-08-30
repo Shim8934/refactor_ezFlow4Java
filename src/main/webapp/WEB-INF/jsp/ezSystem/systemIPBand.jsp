@@ -177,12 +177,23 @@
 		
 		function deleteIPBand() {
 			var selectedList = $("#tblIP tbody tr[selected=true]");
+			var ipNo = "";
 			
 			if (selectedList.length == 0) {
 				alert("삭제할 IP대역 리스트를 선택해주세요.");
 				return;
+			} else if (selectedList.length == 1) {
+				ipNo = selectedList[0].getAttribute("ipno");
+			} else {
+				for (var i = 0; i <selectedList.length; i++) {
+					ipNo += selectedList[i].getAttribute("ipno");
+					
+					if (i < selectedList.length - 1) {
+						ipNo += ",";
+					}
+				}
 			}
-			var ipNo = selectedList[0].getAttribute("ipno");
+			
 			var con = confirm("삭제하시겠습니까?");
 			
 			if (con) {

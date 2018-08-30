@@ -386,7 +386,14 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("deleteIPBand started.");
 		logger.debug("ipNo=" + ipNo);
 		
-		ezSystemAdminDAO.deleteIPBand(ipNo);
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+		
+		ezSystemAdminDAO.deleteIPBand(list);
 		
 		logger.debug("deleteIPBand ended.");
 	}

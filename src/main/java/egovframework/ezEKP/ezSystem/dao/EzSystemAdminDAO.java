@@ -60,8 +60,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		update("EzSystemAdminDAO.updateIPBand", map);
 	}
 	
-	public void deleteIPBand(String ipNo) throws Exception {
-		delete ("EzSystemAdminDAO.deleteIPBand", ipNo);
+	public void deleteIPBand(List<String> ipNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteIPBand", ipNoList);
 	}
 	
 }
