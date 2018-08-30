@@ -96,6 +96,7 @@
 				_TR.onclick = function() { event_listclick(this); };
 				_TR.onmouseover = function () { event_listMover(this); };
 				_TR.onmouseout = function () { event_listMout(this); };
+				_TR.ondblclick = function () { ipBandUpdateInfo(this); };
 				_TR.style.cursor = "pointer";
 				
 				var _TDCheckBox = document.createElement("TD");
@@ -146,6 +147,7 @@
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			if (type === "add") {
 				url += "?type=add";
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 			} else {
 				var selectedList = $("#tblIP tbody tr[selected=true]");
 				if (selectedList.length > 1) {
@@ -155,13 +157,18 @@
 					alert("수정할 IP대역 리스트를 선택해주세요.");
 					return;
 				} else {
-					var ipAddress = selectedList[0].childNodes[1].innerText;
-					var access = selectedList[0].childNodes[2].innerText == "허용" ? "YES" : "NO";
-					var explanation = selectedList[0].childNodes[3].innerText;
-					
-					url += "?type=modify&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+					ipBandUpdateInfo(selectedList[0]);
 				}
 			}
+		}
+		
+		function ipBandUpdateInfo(obj) {
+			var ipAddress = obj.childNodes[1].innerText;
+			var access = obj.childNodes[2].innerText == "허용" ? "YES" : "NO";
+			var explanation = obj.childNodes[3].innerText;
+			var url = "/ezSystem/systemIPBandEditPopup.do";
+			
+			url += "?type=modify&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
 			
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 		}
