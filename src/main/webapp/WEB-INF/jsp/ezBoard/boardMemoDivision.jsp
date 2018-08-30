@@ -35,7 +35,7 @@
 								inputNameDlg_cross_dialogArguments[5] = list.folder_name;
 							}
 							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_onclick(this);' data1='" + list.folder_id + "' data2='" + list.folder_name +"'>";
-							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
+							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
 							memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
 							memoFolderList += "<td style='color:gray;'>" + list.reg_date.substring(0,10) + "</td>";  
 							memoFolderList += "</tr>";
@@ -133,25 +133,43 @@
 	    	function delete_onclick() {
 				var deleteList = [];
 				var deleteAble = "on";
+				var hasMemo="on";
 				
 				$(":checkbox[name=myCheckbox]:checked").each(function(){
-					if($(this).val() == inputNameDlg_cross_dialogArguments[4]) {
+					if($(this).attr("data3")>0) {	// 메모분류함의 메모 갯수 체크
+						hasMemo="off";
+					}
+					if($(this).val() == inputNameDlg_cross_dialogArguments[4]) {	// 기본메모함인지 체크
 						deleteAble = "off";
 					}
 					deleteList.push($(this).val());
 				});
 				
+				// 체크된 리스트 유무 확인
+				if (deleteList.length == 0) {	
+		        	alert("<spring:message code='ezMemo.t0043' />");
+		            return;
+		        }
+				
+				// 기본메모함이 선택 되었다면 종료
 				if(deleteAble === "off" ) {
 					var strLangTemp = "<spring:message code='ezMemo.t0049' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
 					alert(strLangTemp);
 					return;
 				}
 				
-				if (deleteList.length == 0) {
-		        	alert("<spring:message code='ezMemo.t0043' />");
-		            return;
-		        }
+				// 빈 메모함이 아니라면
+				var deleted ="off";
+				if(hasMemo === "off" ) {
+					deleted = confirm("메모분류함에 메모가 있습니다. 삭제를 진행하겠습니까?");
+				}
 				
+				// 메모함이 차 있고 삭제를 원하지 않을 때
+				if(deleted == false) {
+					return;
+				}
+				
+				// 삭제 수행
 				if (confirm("<spring:message code='ezMemo.t0044' />")) {
 					$.ajax({
 			    		type : "POST",
