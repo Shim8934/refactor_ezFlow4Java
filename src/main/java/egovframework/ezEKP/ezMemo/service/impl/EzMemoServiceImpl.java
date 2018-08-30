@@ -200,7 +200,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void insertMemoConfig(MemoConfigVO memoConfigVO) {
+	public void insertMemoConfig(MemoConfigVO memoConfigVO) throws Exception {
 		logger.debug("insertMemoConfig start");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoConfigVO.getUser_id());
@@ -252,7 +252,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 	
 	@Override
-	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO) {
+	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO) throws Exception {
 		logger.debug("getMemoDefaultFolder start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -267,7 +267,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void setMemoDisplay(MemoVO memo, String memo_ids) {
+	public void setMemoDisplay(MemoVO memo, String memo_ids) throws Exception {
 		logger.debug("setMemoDisplay start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -286,7 +286,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void setMemoContents(MemoVO memoVO) {
+	public void setMemoContents(MemoVO memoVO) throws Exception {
 		logger.debug("setMemoContents start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -303,7 +303,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public MemoVO getMemo(MemoVO memoVO) {
+	public MemoVO getMemo(MemoVO memoVO) throws Exception {
 		logger.debug("getMemo start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -321,7 +321,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 	
 	@Override
-	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids) {
+	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids) throws Exception {
 		logger.debug("memoMove started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
@@ -357,7 +357,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	@Override
 	public void otherModuleCopy(MemoVO memoVO) throws Exception {
 		logger.debug("otherModuleCopy started.");
-		
+
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoVO.getUser_id());
 		map.put("tenant_id", memoVO.getTenant_id());
@@ -370,6 +370,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		ezMemoDAO.otherModuleCopy(map);
 		
 		logger.debug("otherModuleCopy ended.");
+	}
+	
+	public void setMemoColor(MemoVO memoVO) throws Exception {
+		logger.debug("setMemoColor started.");
 
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("memo_id", memoVO.getMemo_id());
+		map.put("color_id", memoVO.getColor_id());
+		
+		ezMemoDAO.setMemoColor(map);
+		
+		logger.debug("setMemoColor ended.");
 	}
 }

@@ -562,6 +562,7 @@ public class EzMemoController {
 		return "json";
 	}
 	
+
 	/**
 	 * 다른 모듈에서 메모 추가
 	 * @param loginCookie
@@ -587,6 +588,28 @@ public class EzMemoController {
 		}
 		
 		logger.debug("otherModuleCopy ended");
+		return "json";
+	}
+
+	@RequestMapping("/ezMemo/memoColorModify.do")
+	public String setMemoColor(@CookieValue("loginCookie") String loginCookie, String memoId, String colorId, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setMemoColor start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("memo_id", memoId);
+		param.put("userId", userInfo.getId());
+		param.put("color_id", colorId);
+	
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("result", "ok");
+		}
+		
+		logger.debug("setMemoColor end");
 		return "json";
 	}
 }
