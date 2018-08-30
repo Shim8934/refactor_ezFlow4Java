@@ -499,7 +499,7 @@ public class EzMemoGWController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/user/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
 	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception { 
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started."); 
 	 

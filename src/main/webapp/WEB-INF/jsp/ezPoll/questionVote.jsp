@@ -2641,6 +2641,7 @@
 		    	}
 		    }
 		    
+		    /* 2018-08-29 홍승비 - 이미지 확대 레이어팝업 IE 오류 수정 */
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
 		    var tempTimer;
 		    function addThumbnailEvent(){
@@ -2673,17 +2674,17 @@
 						clearInterval(tempTimer);
 					}
 				}).on("click", "#imgPopup", function(e){
-					var popupOption = "resizable=yes, scrollbars=yes, location=no, status=no";
-					var title = e.target.getAttribute("_filename");
-					var imgPopupWindow = window.open("", title, popupOption);
-					imgPopupWindow.document.write(
-							"<table style='width:100%; height:100%;'>"
-						   		+"<td style='vertical-align:middle;'>"
-						   			+"<img src='" + e.target.src + "' title='" + title + "' style='display:block; margin:auto;'/>"
-						   		+"</td>"
-				   		  +"</table>"
-					);					
-					imgPopupWindow.document.title = title;
+					var pwidth = window.screen.availWidth;
+					var pheight = window.screen.availHeight;
+		            var htmlString = "";
+		            var imgPopupWindow = window.open("" , "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ pheight + ",width="+ pwidth + ",top=0,left=0", "");
+		            
+		            htmlString = "<html><head><title><spring:message code='ezPortal.t49'/></title></head>";
+					htmlString += "<body style='margin:0px;text-align:center;' onClick='window.close()'>";
+					htmlString += "<div style='height:" + pheight + "px;width:" + pwidth + "px;vertical-align:middle;display:table-cell;'><img style='cursor:pointer;' src=" + e.target.src + "></div>";
+					htmlString += "</body></html>";
+					
+					imgPopupWindow.document.write(htmlString);
 					imgPopupWindow.document.close();
 				});
 		    }
@@ -2703,15 +2704,33 @@
 	    		imgPopup.attr("_filename", e.target.getAttribute("_filename"));
 	    		imgPopup.attr("title", e.target.getAttribute("_filename"));
 	    		
-	    		var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
-	    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
-	    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
-	    		
-	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
-	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
-	    		
-	    		//imgPopup.css({"left": 0, "zoom": ""});
+	    		// src에 부여된 height값 읽어오지 못한 경우
+	    		if (imgPopup.height() == 0){
+		    		imgPopup.load (function() {
+		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+		    			
+		    			var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
+			    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
+			    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
+			    		
+			    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+			    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+			    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+			    		imgPopup.attr("zoom","1");
+		    		});
+	    		} else {
+	    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+	    			
+	    			var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
+		    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
+		    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
+		    		
+		    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+		    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+		    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+		    		imgPopup.attr("zoom","1");
+	    		}
+
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
 		  	}
@@ -2727,11 +2746,14 @@
 	    		
 		  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		  		else{
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
-		  			$imgPopup.css("zoom","");
+		  			$imgPopup.css("width", "");
+		  			$imgPopupDiv.css("overflow", "");
 		  		}
+		  		$imgPopup.attr("zoom","1");
 	    		
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
 				$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
@@ -2805,40 +2827,35 @@
 		  		var $imgPopupBox = $("#imgPopupBox");
 		  		var $imgPopupDiv = $("#imgPopupDiv");
 		  		var $imgPopup = $("#imgPopup");
+		  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($imgPopup.css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
+		  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) + zoomOffset;
 		  		}
-		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 		  			zoom = 1 + zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
+			  		zoom = parseFloat($imgPopup.attr("zoom")) + zoomOffset;
 		  		}
-		  		$imgPopup.css("zoom", zoom);
+		  		zoom = zoom.toFixed(1);
+		  		$imgPopup.attr("zoom", zoom);
 		  		
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		  		$imgPopup.width(imgPopupOrignW * zoom);
+		  		$imgPopupDiv.width(imgPopupOrignW * zoom);
 		  		
 		  		//imgPopup 세로 위치 조정.
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
-		  			var agent = navigator.userAgent.toLowerCase();
 		  			var topOffset = "";
-		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-	  					//alert("인터넷 익스플로러 브라우저 입니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-	  				}
-	  				else {
-	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-	  				}
+			  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+			  		
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);
@@ -2854,32 +2871,36 @@
 		  		var $imgPopupBox = $("#imgPopupBox");
 		  		var $imgPopupDiv = $("#imgPopupDiv");
 		  		var $imgPopup = $("#imgPopup");
+		  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($imgPopup.css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
+		  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) - zoomOffset;
 		  		}
-		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 		  			zoom = 1 - zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
+			  		zoom = parseFloat($imgPopup.attr("zoom")) - zoomOffset;
 		  		}
+		  		zoom = zoom.toFixed(1);
 		  		
-		  		if( zoom > 0 ){
-			  		$imgPopup.css("zoom", zoom);
-		  		}else{
+		  		// 0.1보다 작은 비율로는 축소 불가능
+		  		if ( zoom >= 0.1 ) {
+			  		$imgPopup.attr("zoom", zoom);
+		  		} else {
 		  			return;
 		  		}
 		  		
-		  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+		  		var thumbImgW = imgPopupOrignW * zoom;
 		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCW = imgPopupDiv.clientWidth;
-	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-	    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
+	    		$imgPopup.width(thumbImgW);
+	    		$imgPopupDiv.width(thumbImgW);
 	    		
 		  		if(thumbImgW > (imgPopupDivCW - 100)){
 		  			$imgPopup.css("left","");
@@ -2887,24 +2908,15 @@
 		  		
 		  		//imgPopup 세로 위치 조정
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
-		  			var agent = navigator.userAgent.toLowerCase();
 		  			var topOffset = "";
-		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-	  					//alert("인터넷 익스플로러 브라우저 입니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-	  				}
-	  				else {
-	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-	  				}
+					topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+					
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);
 		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
-		  		
 		  	}
 		  	
 		  	//종료일 변경 기능
