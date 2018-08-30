@@ -37,6 +37,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -1104,11 +1105,13 @@ System.out.println(strHTML);
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
-			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=36 height=36>";
 		} else {
 			userPhoto = "";
 		}
 		logger.debug("userPhoto="+userPhoto);
+		//2018-08-29 장진혁 - 이미지 슬라이더
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 		
 		//새로고침 시간 컨피그화
 		String refreshSecond = config.getProperty("refreshSecond");
@@ -1173,6 +1176,7 @@ System.out.println(strHTML);
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("type", req.getParameter("type"));
+		model.addAttribute("sliderList", sliderList);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
@@ -1375,17 +1379,36 @@ System.out.println(strHTML);
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String id = "ROOT"; // Get_Favoritelist 함수에서 id에  "ROOT"로 박아두어서 함께 복사했으나 쿼리에는 타지 않는다.
+		String kind = "000"; // 양식종류 전체에 해당하는 value 값, Portal에 양식종류 선택하는 셀렉트 박스 제작시 "000" 하드코딩을 빼고 req로 값 불러올 것
+		String searchType = "";
+		String searchName = "";
+		
+		List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+//		//구해안 잠시 결과물 로그 찍어봄
+//		int count1 =0;
+//		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
+//		for (ApprGFormVO fL : result) {
+//			count1++;
+//			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
+//			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
+//			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
+//		}
+//		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
+		
 		/* 2018-08-24 새로운 포틀릿 */
 		model.addAttribute("type", req.getParameter("type"));
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("host", userInfo.getServerName());
+		model.addAttribute("result", result);
 
 		logger.debug("wpNewApprMail ended");
 		return "/ezPortal/portalWpNewApprMail";
 	}
-	
+		
 	/**
 	 * 포탈 - webPart 배너 화면 호출 함수
 	 */
@@ -1907,9 +1930,13 @@ System.out.println(strHTML);
 		
 		int noViewCnt = 0;
 		int cnt = 0;
+		int page = Integer.parseInt(req.getParameter("page"));
+		
 		String[] noViewArrayID = new String[1000];
 		String[] arrayID = new String[1000];
 		StringBuilder result = new StringBuilder("<DATA>");
+		
+		List<PersonalGetQuickLinkMenuVO> realList = new ArrayList<PersonalGetQuickLinkMenuVO>();
 		
 		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
 		
@@ -1947,16 +1974,31 @@ System.out.println(strHTML);
 					
 					if (TF) {
 						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
+						realList.add(getQuickLinkMenu.get(k));						
 						cnt ++;
-						result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
+						//result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
 					}
 				}
 			}
 		}
-		result.append("</DATA>");
-		logger.debug("quickLinkXML="+result.toString());
+		
+		int lastSize = 0;
+		
+		if (page+5 >= realList.size()) {
+			lastSize = realList.size();
+		} else {
+			lastSize = page+5;
+		}
+		
+		for (int z=page; z < lastSize; z++) {
+			result.append(commonUtil.getQueryResult(realList.get(z)));
+		}
+		
+		result.append("<SIZE>" + realList.size() + "</SIZE></DATA>");
 
+		logger.debug("quickLinkXML="+result.toString());
 		logger.debug("getQuickLink ended");
+		
 		return result.toString();
 	}
 	
@@ -3977,5 +4019,19 @@ System.out.println(strHTML);
 			resp.getWriter().close();
 		}
 		logger.debug("boardPortlet ended");
+	}
+	
+	@RequestMapping(value = "/ezPortal/wpNewSchedule.do")
+	public String wpNewSchedule(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("wpNewSchedule started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
+		model.addAttribute("sliderList", sliderList);
+		
+		logger.debug("wpNewSchedule ended");
+		
+		return "/ezPortal/portalWpNewSchedule";
 	}	
 }
