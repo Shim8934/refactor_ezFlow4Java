@@ -462,18 +462,18 @@ var CabinetItem = function() {
 		var result = "";
 		
 		switch(type) {
-			case 0 : result = "수동"      ; break;
-			case 1 : result = "메일"      ; break;
-			case 2 : result = "전자결재"    ; break;
-			case 3 : result = "게시판"    ; break;
-			case 4 : result = "일정관리"   ; break;
-			case 5 : result = "업무관리"   ; break;
-			case 6 : result = "회람판"     ; break;
-			case 7 : result = "커뮤니티"   ; break;
-			case 8 : result = "주소록"     ; break;
-			case 9 : result = "업무일지"   ; break;
-			case 10: result = "프로젝트 관리"; break;
-			case 11: result = "자원관리"   ; break;
+			case 0 : result = CabinetMessages.strNormal ; break;
+			case 1 : result = CabinetMessages.strEmail  ; break;
+			case 2 : result = CabinetMessages.strApprv  ; break;
+			case 3 : result = CabinetMessages.strBoard  ; break;
+			case 4 : result = CabinetMessages.strSchedl ; break;
+			case 5 : result = CabinetMessages.strTodo   ; break;
+			case 6 : result = CabinetMessages.strOption ; break;
+			case 7 : result = CabinetMessages.strCommu  ; break;
+			case 8 : result = CabinetMessages.strAddrs  ; break;
+			case 9 : result = CabinetMessages.strJournal; break;
+			case 10: result = CabinetMessages.strProjt  ; break;
+			case 11: result = CabinetMessages.strResrc  ; break;
 		}
 		
 		return result;

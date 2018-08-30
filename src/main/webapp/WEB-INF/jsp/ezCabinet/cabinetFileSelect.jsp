@@ -31,7 +31,7 @@
 						<table class="rlSelectTbl" id="tableFiles">
 							<tr>
 								<th class="thType"><spring:message code='ezCabinet.t61'/></th>
-								<th><spring:message code='ezCabinet.t62'/></th>
+								<th class="tdLeft"><spring:message code='ezCabinet.t62'/></th>
 							</tr>
 							<tr>
 								<td colspan="2" style="text-align: center; background-color: #fff;"><spring:message code='ezCabinet.err3'/></td>
@@ -53,7 +53,7 @@
 					<table class="rlSelectTbl" id="selectedTable">
 						<tr>
 							<th class="thType"><spring:message code='ezCabinet.t61'/></th>
-							<th><spring:message code='ezCabinet.t62'/></th>
+							<th class="tdLeft"><spring:message code='ezCabinet.t62'/></th>
 						</tr>
 					</table>
 				</div>

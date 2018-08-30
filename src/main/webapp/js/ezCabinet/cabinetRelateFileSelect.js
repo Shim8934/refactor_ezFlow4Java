@@ -107,9 +107,9 @@ var CabinetRlFileSelect = function() {
 				var trElmt  = document.createElement("tr");
 				var tdElmt1 = document.createElement("td");
 				var tdElmt2 = document.createElement("td");
-				var imgElmt = document.createElement("img");
-				imgElmt.src = getImageSource(item["itemType"]);
-				tdElmt1.appendChild(imgElmt);
+				var spMName = document.createElement("span");
+				spMName.textContent = getModuleName(item["itemType"]);
+				tdElmt1.appendChild(spMName);
 				tdElmt2.textContent = item["itemTitle"];
 				tdElmt2.setAttribute("title", item["itemTitle"]);
 				tdElmt2.className   = "tdLeft";
@@ -221,9 +221,9 @@ var CabinetRlFileSelect = function() {
 				var trElmt  = document.createElement("tr");
 				var tdElmt1 = document.createElement("td");
 				var tdElmt2 = document.createElement("td");
-				var imgElmt = document.createElement("img");
-				imgElmt.src = getImageSource(itemList[i]["itemType"]);
-				tdElmt1.appendChild(imgElmt);
+				var sMdName = document.createElement("span");
+				sMdName.textContent = getModuleName(itemList[i]["itemType"]);
+				tdElmt1.appendChild(sMdName);
 				tdElmt2.textContent = itemList[i]["title"];
 				tdElmt2.setAttribute("title", itemList[i]["title"]);
 				tdElmt2.className   = "tdLeft";
@@ -278,24 +278,25 @@ var CabinetRlFileSelect = function() {
 		}
 	}
 	
-	function getImageSource(moduleType) {
-		var srcImg = "";
-		switch(parseInt(moduleType)) {
-			case 0 : srcImg = "/images/cabinet/docx.png"     ; break;
-			case 1 : srcImg = "/images/cabinet/mail.png"     ; break;
-			case 2 : srcImg = "/images/cabinet/approval.png" ; break;
-			case 3 : srcImg = "/images/cabinet/board.png"    ; break;
-			case 4 : srcImg = "/images/cabinet/schedule.png" ; break;
-			case 5 : srcImg = "/images/cabinet/schedule.png" ; break;
-			case 6 : srcImg = "/images/cabinet/circular.png" ; break;
-			case 7 : srcImg = "/images/cabinet/community.png"; break;
-			case 8 : srcImg = "/images/cabinet/mail.png"     ; break;
-			case 9 : srcImg = "/images/cabinet/circular.png" ; break;
-			case 10: srcImg = "/images/cabinet/rar.png"      ; break;
-			case 11: srcImg = "/images/cabinet/resource.png" ; break;
+	function getModuleName(moduleType) {
+		var result = "";
+		
+		switch(moduleType) {
+			case 0 : result = CabinetMessages.strNormal ; break;
+			case 1 : result = CabinetMessages.strEmail  ; break;
+			case 2 : result = CabinetMessages.strApprv  ; break;
+			case 3 : result = CabinetMessages.strBoard  ; break;
+			case 4 : result = CabinetMessages.strSchedl ; break;
+			case 5 : result = CabinetMessages.strTodo   ; break;
+			case 6 : result = CabinetMessages.strOption ; break;
+			case 7 : result = CabinetMessages.strCommu  ; break;
+			case 8 : result = CabinetMessages.strAddrs  ; break;
+			case 9 : result = CabinetMessages.strJournal; break;
+			case 10: result = CabinetMessages.strProjt  ; break;
+			case 11: result = CabinetMessages.strResrc  ; break;
 		}
 		
-		return srcImg;
+		return result;
 	}
 	
 	function onStartSimpleSearch(event) {if(event.keyCode == "13") {startSimpleSearch();}}
