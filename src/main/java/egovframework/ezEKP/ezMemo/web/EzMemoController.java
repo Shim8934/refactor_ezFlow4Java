@@ -614,12 +614,12 @@ public class EzMemoController {
 	}
 		
 	@RequestMapping("/ezMemo/reOrder.do")
-	public String reOrder(@CookieValue("loginCookie") String loginCookie, String draggedElId, String nextElId, HttpServletRequest request, Model model) throws Exception {
+	public String reOrder(@CookieValue("loginCookie") String loginCookie, String draggedElId, String compareElId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("reOrder started");
 		
 		logger.debug("아이디");
 		logger.debug("" + draggedElId);
-		logger.debug("" + nextElId);
+		logger.debug("" + compareElId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -628,10 +628,9 @@ public class EzMemoController {
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("user_id",userInfo.getId());
 		param.put("draggedElId", draggedElId);
+		param.put("compareElId", compareElId);
 		
-		param.put("nextElId", nextElId);
-		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/nextElId/" + nextElId + "/users/" + userInfo.getId(), param, request, "post", null);
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/compareElId/" + compareElId + "/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("reOrder ended");

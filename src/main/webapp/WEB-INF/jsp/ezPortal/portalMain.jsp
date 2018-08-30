@@ -60,6 +60,9 @@
 			var fontSize;
 			var defaultColor;
 	    	var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
+	    	var fontSize;
+	    	var useDate;
+			var defaultColor;
 	    	
 			topHeight = "56";
 
@@ -120,55 +123,49 @@
 		        	 containment: '.memoListBox',
 		        	 opacity : 0.5,
 		        	 revert : true,
-		        	 
-		        	 /* start : function(event, ui) {
-		        		 
-		        		 var clickedItem = ui.item;
-		        		 var clickedItemId = clickedItem.attr("id");
-		        		 
-		        		 var prevElement = clickedItem.prev();
-		        		 console.log("정렬 시작");
-		        		 console.log("내가 선택한 요소의 앞 요소");
-		        		 console.log(prevElement);
-		        		 
-		        		 console.log("내가 선택한 요소");
-		        		 console.log(ui.item);
-		        		 console.log(clickedItemId);
-		        	 }, */
 		        	 stop : function (event, ui) {
-		        		 /* console.log("이벤트 객체");
-		        		 console.log(event);
-		        		 console.log("ui 객체"); */
 		        		 
+	        			 var compareElId; 
 		        		 var clickedItem = ui.item;
 		        		 var clickedItemId = clickedItem.attr("id");
-		        		 console.log("정렬 끝");
-		        		 //console.log(ui.item);
-		        		 console.log("이동시킨 요소");
-		        		 console.log(clickedItemId);
-		        		 console.log("뒷 요소");
-		        		 console.log(clickedItem.next().attr("id"));
 		        		 
 		        		 var draggedElId = clickedItemId.replace("memo", "");
-		        		 var nextElId = clickedItem.next().attr("id").replace("memo", "");
 		        		 
-		        		 console.log(draggedElId);
-		        		 console.log(nextElId);
+		        		 if (clickedItem.prev().attr("id") != undefined) {
+		        			 if (parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.next().attr("orders"))) {
+		        				 
+								compareElId = clickedItem.prev().attr("id").replace("memo", "");
+		        			 } else {
+		        				 
+								compareElId = clickedItem.next().attr("id").replace("memo", "");
+		        			 }
+		        			
+		        		 	
+		        		 } else if (clickedItem.next().attr("id") != undefined) {
+		        			
+		        			 if (parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.next().attr("orders"))) {
+		        				 
+									compareElId = clickedItem.next().attr("id").replace("memo", "");
+			        			 } else {
+			        				 
+									compareElId = clickedItem.prev().attr("id").replace("memo", "");
+			        			 }
+		        		 }
+		        		 
 		        		 $.ajax({
 		        			type : "POST",
 		        			data : {
 		        				draggedElId : draggedElId,
-		        				nextElId : nextElId
+		        				compareElId : compareElId
 		        			},
 		        			dataType : "JSON",
 		        			url : "/ezMemo/reOrder.do",
 		        			success : function(result) {
 		        				console.log(result);
+		        				
 		        			}
 		        		 });
 		        		 
-		        		 /* var result = $(this).sortable("toArray").toString();
-				        console.log(result); */
 		        	 }
 		        	 
 		        });
@@ -446,7 +443,7 @@
 		        	async : false,
 		        	url : "/ezMemo/getMemoConfig.do",
 		        	success : function(result) {
-						
+		        		
 		        		if (result.memoConfigVO != null) {
 		        			fontSize = result.memoConfigVO.font_size;
 							useDate = result.memoConfigVO.use_date;
@@ -650,17 +647,21 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-		        			
+		        			console.log(result);
 		        			var $textarea = $("#textarea");
 		        			var $memoDetail = $(".detailMemo");
 		        			
 		                	var memoColor = result.memoList.split(";");
 		                	var headerColor = memoColor[defaultColor-1];
 		                	var bodyColor = memoColor[defaultColor+5]; 
+		                	console.log("메모지 색상");
+		        			console.log(defaultColor);
+		        			console.log(memoColor);
 		        			
 		        			$textarea.val(result.memo.contents);
 		        			$textarea.css("background-color", bodyColor);
 		        			$textarea.attr("textareaMemoid", result.memo.memo_id);
+		        			
 		        			$memoDetail.css("background-color", headerColor);
 		        			$memoDetail.css("display", "");
 		        		}
@@ -683,7 +684,8 @@
 	                },
 	                cache: false,
 	                success: function(result) {
-	                	
+	                	console.log("메모 리스트");
+	                	console.log(result["memoList"]);
 	                	memoColor = result["colorList"].split(";");
 	                	//defaultColor = result["defaultColor"];
 	                	memoList = result["memoList"];

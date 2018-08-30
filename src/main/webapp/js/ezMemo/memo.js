@@ -1,9 +1,10 @@
-function createMemo(hColor, bColor, memoId, contents, flag) {
+function createMemo(hColor, bColor, memoId, contents, flag, orders) {
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "individual-memo");
 	div.style.backgroundColor = hColor;
 	div.id  = "memo" + memoId;
+	div.setAttribute("orders", orders)
 	if(flag == 1) {
 		div.style.opacity = 0.5;
 	}
@@ -93,14 +94,14 @@ function loadMemoList(flag) {
 		if ('layer' != flag) {
 			var hColor = memoColor[memoList[i].color_id-1];
 			var bColor = memoColor[memoList[i].color_id+5];
-			var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, memoList[i].display_flag);
+			var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, memoList[i].display_flag, memoList[i].orders);
 			
 			$("#boardMemoList").prepend(div);
 		} else {
 			if (memoList[i].display_flag != 1) {
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
-				var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag);
+				var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag, memoList[i].orders);
 				
 				$("#memoList").prepend(div);
 			}

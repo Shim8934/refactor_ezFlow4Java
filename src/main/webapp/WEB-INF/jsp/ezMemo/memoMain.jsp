@@ -34,7 +34,7 @@
 	
 	<style>
 		h1 {
-			font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 		}
 		.individual-memo { 
 			width:230px; height:230px; 
@@ -70,8 +70,6 @@
 		var memoList;
 		var folderId =  "<c:out value='${folderId}' />";
 		var topHeight = "100";
-		var useDate;
-		var fontSize;
 		var memoColor;
 		var defaultColor;
 		var listType = 0;		// 정렬 보기 방식 선택
@@ -115,7 +113,6 @@
 	        	 containment: '#bodyFrame'
 	        });
 			
-			getMemoConfig();
 			getFolderList();
 			getMemoList();
 			
@@ -130,6 +127,7 @@
 	    	$(document).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);
 	    	});
+<<<<<<< Updated upstream
 	    	
 	    }
 		
@@ -145,6 +143,8 @@
 					defaultColor = result.memoConfigVO.default_color;
 				}
    			});
+=======
+>>>>>>> Stashed changes
 		}
 		
 		function getFolderList() {
@@ -196,7 +196,7 @@
 				
 				BoardSearchOptionHidden();
 			}
-			else if(type=="folder" || type=="new") {
+			else if(type=="folder") {
 				searchInput = "";
 				startDate = "";
 				endDate = "";
@@ -216,6 +216,10 @@
                 cache: false,
                 success: function(result) {
                 	memoColor = result["colorList"].split(";");
+<<<<<<< Updated upstream
+=======
+                	defaultColor = result["defaultColor"];
+>>>>>>> Stashed changes
                 	memoList = result["memoList"];
                 	
 					loadMemoList();
@@ -258,7 +262,6 @@
 			}
 		}
 		
-		// 새 메모
 		function newMemo() {
 			$.ajax ({
  			   	url : '/ezMemo/memoWrite.do',
@@ -271,9 +274,8 @@
                 success: function(result) {
                 	var memoId = result["memoId"];
                 	
-                	getMemoList("new");
-                	/* insertMemo(headerColor, bodyColor, memoId);
-        	    	addremove(); */
+                	insertMemo(headerColor, bodyColor, memoId);
+        	    	addremove();
                 },
                 error : function() {
                 	
@@ -293,8 +295,12 @@
 	        });
 		    
 		    $(".individual-memo").dblclick(function(){
-		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
-		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        pheight = parseInt(pheight) / 2;
+		        pwidth = parseInt(pwidth) / 2;
+		        pheight = pheight - 200;
+		        pwidth = pwidth - 127;
 		        
 		    	window.open("/ezMemo/memoRead.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
 		    });
@@ -304,7 +310,11 @@
 	        });
 	        
 	        $(".memo-color-list").click(function(){
-	        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+	        	headerColor = $(this).css("background-color");
+	        	bodyColor = memoColor[$(this).index()];
+	        	$(this).parent().parent().css("background-color", headerColor);
+	        	$(this).parent().nextAll("textarea").css("background-color", bodyColor);
+	        	$(this).parent().css("visibility", "hidden");
 	        })
 	        
 	        $(".memo-color").mouseleave(function(){
@@ -316,29 +326,6 @@
 	        $(".memo-text").blur(function(){
 					modifyMemo(this);
 	        })
-	    }
-	    
-	    // 메모지 색상 변경
-	    function modifyMemoColor(obj, idx) {
-	    	var memoId = obj.attr("id").replace("memo", "");
-	    	
-	    	$.ajax ({
- 			   	url : '/ezMemo/memoColorModify.do',
- 			   	type : 'POST',
-                dataType : 'json',
-                data : { 
-                	memoId : memoId,
-                	colorId : idx
-                },  
-                cache: false,
-                success: function(result) {
-                	defaultColor = idx;
-                	getMemoList();
-                },
-                error : function() {
-                	
-                }
-			}); 
 	    }
 	    
 		// 메모 내용 변경	    
@@ -400,86 +387,6 @@
 	    	else {
 
 	    	}
-	    }
-	    
-	    // 메모 숨기기
-	    function memoDisplayChange() {	
-			var memo_ids = [];
-	    	var checkList = [];
-			
-			$(":checkbox[name=memo]:checked").each(function(){
-				checkList.push($(this).val());
-				if($(this).attr("display") == 0){
-					memo_ids.push($(this).val());
-				} 
-			});
-			
-			if (checkList.length == 0) {
-	        	alert("<spring:message code='ezMemo.t0043' />");
-	            return;
-	        }
-			
-			if(memo_ids.length != 0) {
-		    	$.ajax ({
-		 			  url : '/ezMemo/memo-display.do',
-		 			  type : 'POST',
-		              dataType : 'json',
-		              data : { 
-		                memo_ids : memo_ids.join(),
-		                display : 1
-		              },  
-		              cache: false,
-		              success: function(result) {
-		                getMemoList();
-		              },
-		              error : function() {
-		                	
-		              }
-				}); 
-			}
-	    	
-	    	checkOpt = "true";
-            allClick();
-	    }
-	    
-	 // 메모 나타내기
-		function memoDisplayChange2() {		
-			var memo_ids = [];
-			var checkList = [];
-			
-			$(":checkbox[name=memo]:checked").each(function(){
-				checkList.push($(this).val());
-				if($(this).attr("display") == 1){
-					memo_ids.push($(this).val());
-				} 
-			});
-			
-			if (checkList.length == 0) {
-	        	alert("<spring:message code='ezMemo.t0043' />");
-	            return;
-	        }
-			
-			if(memo_ids.length != 0) {
-		    	$.ajax ({
-		 			  url : '/ezMemo/memo-display.do',
-		 			  type : 'POST',
-		              dataType : 'json',
-		              data : { 
-		                memo_ids : memo_ids.join(),
-		                display : 0
-		              },  
-		              cache: false,
-		              success: function(result) {
-		                getMemoList();
-		              },
-		              error : function() {
-		                	
-		              }
-				}); 
-			}
-			
-			checkOpt = "true";
-            allClick();
 	    }
 	    
 	  // 상세검색 레이어팝업
@@ -586,8 +493,8 @@
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
 		        <li id="moveMemo"><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
-		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
-		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
+		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
+		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
 		        <li><select id="memoType" style="height: 20px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">

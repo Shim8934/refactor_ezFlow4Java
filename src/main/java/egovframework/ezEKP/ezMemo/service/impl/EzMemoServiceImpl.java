@@ -393,7 +393,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoColor endeded.");
 	}
 	
-	public Map<String, Object> comparOrders(String draggedElId, String nextElId, String userId, MemoConfigVO memoConfigVO) {
+	public Map<String, Object> comparOrders(String draggedElId, String compareElId, String userId, MemoConfigVO memoConfigVO) {
 		logger.debug("comparOrders started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -407,26 +407,26 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		
 		map.remove("memo_id");
 
-		map.put("memo_id", nextElId);
+		map.put("memo_id", compareElId);
 		MemoVO nextMemo = ezMemoDAO.getMemo(map);
-		int nextMemoOrder = nextMemo.getOrders();
+		int compareMemoOrder = nextMemo.getOrders();
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		if (draggedMemoOrder > nextMemoOrder) {
+		if (draggedMemoOrder > compareMemoOrder) {
 			result.put("result", 1);
 			logger.debug("===============================");
 			logger.debug("왼쪽에서 오른쪽으로");
 			logger.debug("===============================");
 			
-		} else if (draggedMemoOrder < nextMemoOrder) {
+		} else if (draggedMemoOrder < compareMemoOrder) {
 			result.put("result", 0);
 			logger.debug("===============================");
 			logger.debug("오른쪽에서 왼쪽으로");
 			logger.debug("===============================");
 		}
 		result.put("draggedMemoOrder", draggedMemoOrder);
-		result.put("nextMemoOrder", nextMemoOrder);
+		result.put("compareMemoOrder", compareMemoOrder);
 		
 		logger.debug("comparOrders ended.");
 		return result;
