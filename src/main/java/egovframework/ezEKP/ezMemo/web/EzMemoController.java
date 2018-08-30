@@ -115,13 +115,11 @@ public class EzMemoController {
 		if (status.equals("ok")) {		
 				JSONArray memoList = (JSONArray) resultBody.get("memoList");
 				String colorList = resultBody.get("colorList").toString();
-				int defaultColor = Integer.parseInt(resultBody.get("defaultColor").toString());
-				folderId = resultBody.get("folderId").toString();
+				//folderId = resultBody.get("folderId").toString();
 				
 				model.addAttribute("memoList", memoList);
 				model.addAttribute("colorList", colorList);
-				//model.addAttribute("defaultColor", defaultColor);
-				model.addAttribute("folderId", folderId);
+				//model.addAttribute("folderId", folderId);
 				
 				if (layerFlag != null) {
 					model.addAttribute("layerFlag", layerFlag);

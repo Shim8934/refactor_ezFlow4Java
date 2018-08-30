@@ -56,6 +56,9 @@
 	    	var textColor;
 	    	var currText;
 	    	var bodyColor;
+	    	var useDate;
+			var fontSize;
+			var defaultColor;
 	    	var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
 	    	
 			topHeight = "56";
@@ -385,11 +388,14 @@
 		        $.ajax({
 		        	type : "GET",
 		        	dataType : "JSON",
+		        	async : false,
 		        	url : "/ezMemo/getMemoConfig.do",
 		        	success : function(result) {
 						
 		        		if (result.memoConfigVO != null) {
-
+		        			fontSize = result.memoConfigVO.font_size;
+							useDate = result.memoConfigVO.use_date;
+							defaultColor = result.memoConfigVO.default_color;
 		        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
 		        		} else {
 		        			
@@ -594,8 +600,8 @@
 		        			var $memoDetail = $(".detailMemo");
 		        			
 		                	var memoColor = result.memoList.split(";");
-		                	var headerColor = memoColor[defaultColor];
-		                	var bodyColor = memoColor[defaultColor+6]; 
+		                	var headerColor = memoColor[defaultColor-1];
+		                	var bodyColor = memoColor[defaultColor+5]; 
 		        			
 		        			$textarea.val(result.memo.contents);
 		        			$textarea.css("background-color", bodyColor);
@@ -624,11 +630,11 @@
 	                success: function(result) {
 	                	
 	                	memoColor = result["colorList"].split(";");
-	                	defaultColor = result["defaultColor"];
+	                	//defaultColor = result["defaultColor"];
 	                	memoList = result["memoList"];
-	                	headerColor = memoColor[defaultColor];
-	                	bodyColor = memoColor[defaultColor+6]; 
-	                	folderId = result["folderId"];
+	                	//headerColor = memoColor[defaultColor];
+	                	//bodyColor = memoColor[defaultColor+6]; 
+	                	//folderId = result["folderId"];
 	                	layer = result["layerFlag"];
 	                	
 						loadMemoList(layer);

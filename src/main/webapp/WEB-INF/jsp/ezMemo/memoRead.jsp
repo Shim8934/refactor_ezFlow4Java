@@ -21,13 +21,13 @@
 			
 			window.onbeforeunload = function() {
 				// 창 닫을 때 값 저장
-			}
+			};
 </script>
 <body class="popup" style="overflow:hidden">
 		<div id="menu">
 			<ul>
 		      <li>
-		      	<span onClick=""><spring:message code='ezMemo.t0015'/></span>
+		      	<span onClick="close_onclick()"><spring:message code='ezMemo.t0015'/></span>
 		      </li>
 		    </ul>
 		 </div>
@@ -40,7 +40,7 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		  </script>
 		<table class="content">
-			<textarea style="margin: 0px; width: 320px; height: 430px; resize: none;"></textarea>
+			<textarea style="margin: 0px; width: 100%; height: 100%; resize: none;"></textarea>
 		</table>
 </body>
 </html>

@@ -74,8 +74,6 @@
 		var fontSize;
 		var memoColor;
 		var defaultColor;
-		var headerColor;
-		var bodyColor;
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
 		var pAdminType  = "n";
@@ -133,8 +131,7 @@
 	    		MailOptionHiddenOutside(e);
 	    	});
 	    	
-	    	console.log('기본설정 - font size : ' + fontSize + ', use date : ' + useDate + ', defaultColor : ' + defaultColor);
-		}
+	    }
 		
 		function getMemoConfig() {
 			$.ajax({
@@ -219,10 +216,7 @@
                 cache: false,
                 success: function(result) {
                 	memoColor = result["colorList"].split(";");
-                	//defaultColor = result["defaultColor"];
                 	memoList = result["memoList"];
-                	headerColor = memoColor[defaultColor];
-                	bodyColor = memoColor[defaultColor+6]; 
                 	
 					loadMemoList();
 					setMemoCount(memoList.length);
