@@ -73,6 +73,8 @@
 					document.onselectstart   = function(e) {return false;};
 					var cabMgConfig          = document.getElementById("addRelated");
 					
+					autoSelect();
+					
 					if (cabMgConfig) {
 						document.getElementById("auto").onchange   = function (e) {autoSelect();}
 						document.getElementById("manual").onchange = function (e) {manualSelect();}
