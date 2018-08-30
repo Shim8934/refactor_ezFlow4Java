@@ -26640,16 +26640,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception {
+	public String updateSusinState(String docID, String mode, String deptID, String companyID, int tenantID) throws Exception {
 		String recStates = "";
 
-		if (recDate == null || recDate.equals("")) {
-			recDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			recDate = sdf.format(sdf.parse(recDate));
-		}
-		
 		switch(mode.trim()) {
 			case "send":
 				recStates = "S";
@@ -26687,7 +26680,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
 		map.put("receiptPointID", deptID);
-		map.put("processDate", recDate);
+		map.put("processDate", commonUtil.getTodayUTCTime(""));
 		map.put("processYN", recStates);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);

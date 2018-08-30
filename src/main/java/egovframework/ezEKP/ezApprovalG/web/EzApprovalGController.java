@@ -7764,11 +7764,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String recDate = request.getParameter("recDate");
 		String mode = request.getParameter("mode");
 		String deptID = request.getParameter("deptID");
 		
-		String result = ezApprovalGService.updateSusinState(docID, recDate, mode, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.updateSusinState(docID, mode, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("updateSusinState ended.");
 		
