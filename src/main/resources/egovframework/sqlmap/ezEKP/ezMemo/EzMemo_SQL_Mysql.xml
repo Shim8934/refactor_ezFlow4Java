@@ -118,6 +118,7 @@
 						 FOLDER_ID = #folder_id#
 				  ]]>
 			 </isNotEqual>
+			 
 			<isEqual property="orderOption" compareValue="1">
 	        	<![CDATA[
 	        		ORDER BY
@@ -429,6 +430,47 @@
 			TBL_MEMO
 		SET
 			COLOR_ID = #color_id#
+	</update>
+	
+	<select id="EzMemoDAO.getMemoListForReOrder" resultClass="MemoVO">
+		<![CDATA[
+			SELECT
+				MEMO_ID, CONTENTS, USER_ID, DISPLAY_FLAG, DELETE_FLAG, WRITE_DATE, 
+				DELETE_DATE, ORDERS, FOLDER_ID, COLOR_ID, COMPANY_ID, TENANT_ID
+			FROM
+				TBL_MEMO
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0
+		]]>
+		<isNotEqual property="bigger_order" compareValue="0">
+			  <![CDATA[
+			  	AND
+					 ORDERS <= #bigger_order#
+			  ]]>
+		 </isNotEqual>
+		 <isNotEqual property="smaller_order" compareValue="0">
+			  <![CDATA[
+			  	AND
+					 ORDERS >= #smaller_order#
+			  ]]>
+		 </isNotEqual>
+		 order by
+		 		orders
+	</select>
+	
+	<update id="EzMemoDAO.setMemoOrders">
+		UPDATE
+			TBL_MEMO
+		SET
+		<isNotEqual property="orders" compareValue="0">
+			orders = #orders#
+		</isNotEqual>
 		WHERE 
 			TENANT_ID = #tenant_id# 
 		AND 

@@ -202,7 +202,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 	@Override
 	public void insertMemoConfig(MemoConfigVO memoConfigVO) throws Exception {
-		logger.debug("insertMemoConfig start");
+		logger.debug("insertMemoConfig started");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoConfigVO.getUser_id());
 		map.put("tenant_id", memoConfigVO.getTenant_id());
@@ -220,25 +220,25 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("layer_width", memoConfigVO.getLayer_width());
 		
 		ezMemoDAO.insertMemoConfig(map);
-		logger.debug("insertMemoConfig end");
+		logger.debug("insertMemoConfig ended");
 	}
 
 	@Override
 	public int hasMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
-		logger.debug("hasMemoFolder start");
+		logger.debug("hasMemoFolder started");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
 		int hasMemoFolder = ezMemoDAO.hasMemoFolder(map);
-		logger.debug("hasMemoFolder end");
+		logger.debug("hasMemoFolder ended");
 		return hasMemoFolder;
 	}
 
 	
 	@Override
 	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
-		logger.debug("setDefaultMemoFolder start");
+		logger.debug("setDefaultMemoFolder started");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
@@ -249,12 +249,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("icon_id", 1);
 		map.put("delete_flag", 0);
 		ezMemoDAO.setDefaultMemoFolder(map);
-		logger.debug("setDefaultMemoFolder end");
+		logger.debug("setDefaultMemoFolder ended");
 	}
 	
 	@Override
 	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO) throws Exception {
-		logger.debug("getMemoDefaultFolder start");
+		logger.debug("getMemoDefaultFolder started");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
@@ -263,13 +263,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		
 		int folderId = ezMemoDAO.getMemoDefaultFolder(map);
 		
-		logger.debug("getMemoDefaultFolder end");
+		logger.debug("getMemoDefaultFolder ended");
 		return folderId;
 	}
 
 	@Override
 	public void setMemoDisplay(MemoVO memo, String memo_ids) throws Exception {
-		logger.debug("setMemoDisplay start");
+		logger.debug("setMemoDisplay started");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memo.getUser_id());
@@ -283,7 +283,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			ezMemoDAO.setMemoDisplay(map);
 		}
 		
-		logger.debug("setMemoDisplay end");
+		ezMemoDAO.setMemoDisplay(map);
+		
+		logger.debug("setMemoDisplay ended");
 	}
 
 	@Override
@@ -305,7 +307,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 	@Override
 	public MemoVO getMemo(MemoVO memoVO) throws Exception {
-		logger.debug("getMemo start");
+		logger.debug("getMemo started");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoVO.getUser_id());
@@ -317,7 +319,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 		memoVO = ezMemoDAO.getMemo(map);
 		
-		logger.debug("getMemo start");
+		logger.debug("getMemo ended");
 		return memoVO;
 	}
 	
@@ -380,6 +382,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoVO.getUser_id());
 		map.put("tenant_id", memoVO.getTenant_id());
 		map.put("company_id", memoVO.getCompany_id());
+	
 		map.put("memo_id", memoVO.getMemo_id());
 		map.put("color_id", memoVO.getColor_id());
 		
@@ -387,6 +390,90 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		
 		ezMemoDAO.setDefaultColor(map);
 		
-		logger.debug("setMemoColor ended.");
+		logger.debug("setMemoColor endeded.");
 	}
+	
+	public Map<String, Object> comparOrders(String draggedElId, String nextElId, String userId, MemoConfigVO memoConfigVO) {
+		logger.debug("comparOrders started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", userId);
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+		map.put("memo_id", Integer.parseInt(draggedElId));
+		
+		MemoVO draggedMemo = ezMemoDAO.getMemo(map);
+		int draggedMemoOrder = draggedMemo.getOrders();
+		
+		map.remove("memo_id");
+
+		map.put("memo_id", nextElId);
+		MemoVO nextMemo = ezMemoDAO.getMemo(map);
+		int nextMemoOrder = nextMemo.getOrders();
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		if (draggedMemoOrder > nextMemoOrder) {
+			result.put("result", 1);
+			logger.debug("===============================");
+			logger.debug("왼쪽에서 오른쪽으로");
+			logger.debug("===============================");
+			
+		} else if (draggedMemoOrder < nextMemoOrder) {
+			result.put("result", 0);
+			logger.debug("===============================");
+			logger.debug("오른쪽에서 왼쪽으로");
+			logger.debug("===============================");
+		}
+		result.put("draggedMemoOrder", draggedMemoOrder);
+		result.put("nextMemoOrder", nextMemoOrder);
+		
+		logger.debug("comparOrders ended.");
+		return result;
+	}
+
+	@Override
+	public List<MemoVO> getMemoListForReOrder(int draggedMemoOrder, int nextMemoOrder, MemoConfigVO memoConfigVO) {
+		logger.debug("getMemoListForReOrder ended.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+		
+		if (draggedMemoOrder > nextMemoOrder) {
+			map.put("bigger_order", draggedMemoOrder);
+			map.put("smaller_order", nextMemoOrder);
+			
+		} else if (draggedMemoOrder < nextMemoOrder) {
+			map.put("bigger_order", nextMemoOrder);
+			map.put("smaller_order", draggedMemoOrder);
+		}
+		
+		List<MemoVO> memoList = ezMemoDAO.getMemoListForReOrder(map);
+		logger.debug("==============================");
+		logger.debug("서비스 메모 리스트: " + memoList);
+		logger.debug("==============================");
+		
+		logger.debug("getMemoListForReOrder ended.");
+		return memoList;
+	}
+
+	@Override
+	public void setMemoOrders(MemoVO memoVO) {
+		logger.debug("setMemoOrders started");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+
+		map.put("orders", memoVO.getOrders());
+		map.put("memo_id", memoVO.getMemo_id());
+
+		ezMemoDAO.setMemoOrders(map);
+		
+		logger.debug("setMemoOrders ended");
+	}
+
 }

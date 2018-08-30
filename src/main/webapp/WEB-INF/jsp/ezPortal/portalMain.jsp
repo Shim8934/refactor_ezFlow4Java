@@ -111,8 +111,63 @@
 		        	$("#open-memo" ).css("display", "");
 		        })
 		        
+		        
+		        
 		        $("#memoList").sortable({
-		        	 containment: '.memoListBox'
+		        	 containment: '.memoListBox',
+		        	 opacity : 0.5,
+		        	 revert : true,
+		        	 
+		        	 /* start : function(event, ui) {
+		        		 
+		        		 var clickedItem = ui.item;
+		        		 var clickedItemId = clickedItem.attr("id");
+		        		 
+		        		 var prevElement = clickedItem.prev();
+		        		 console.log("정렬 시작");
+		        		 console.log("내가 선택한 요소의 앞 요소");
+		        		 console.log(prevElement);
+		        		 
+		        		 console.log("내가 선택한 요소");
+		        		 console.log(ui.item);
+		        		 console.log(clickedItemId);
+		        	 }, */
+		        	 stop : function (event, ui) {
+		        		 /* console.log("이벤트 객체");
+		        		 console.log(event);
+		        		 console.log("ui 객체"); */
+		        		 
+		        		 var clickedItem = ui.item;
+		        		 var clickedItemId = clickedItem.attr("id");
+		        		 console.log("정렬 끝");
+		        		 //console.log(ui.item);
+		        		 console.log("이동시킨 요소");
+		        		 console.log(clickedItemId);
+		        		 console.log("뒷 요소");
+		        		 console.log(clickedItem.next().attr("id"));
+		        		 
+		        		 var draggedElId = clickedItemId.replace("memo", "");
+		        		 var nextElId = clickedItem.next().attr("id").replace("memo", "");
+		        		 
+		        		 console.log(draggedElId);
+		        		 console.log(nextElId);
+		        		 $.ajax({
+		        			type : "POST",
+		        			data : {
+		        				draggedElId : draggedElId,
+		        				nextElId : nextElId
+		        			},
+		        			dataType : "JSON",
+		        			url : "/ezMemo/reOrder.do",
+		        			success : function(result) {
+		        				console.log(result);
+		        			}
+		        		 });
+		        		 
+		        		 /* var result = $(this).sortable("toArray").toString();
+				        console.log(result); */
+		        	 }
+		        	 
 		        });
 		        
 		        $("#font-up").click(function() {
