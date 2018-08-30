@@ -940,12 +940,9 @@ function SaveDraftDocInfo_susin() {
 	} else {
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
 	}
-
-	if (pHasOpinionYN == "") {
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(objNodes[10]));
-	} else {
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
-	}
+	
+	//2018-08-30 배현상, 재기안 시 의견이 없는 경우 의견이 있다고 알럿창이 나오는 버그 수정
+    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
 
 	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFT");
 	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
