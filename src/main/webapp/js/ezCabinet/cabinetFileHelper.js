@@ -361,15 +361,7 @@ var CabinetFileHelper = function() {
 			var printWrapDiv = document.getElementById("cabwrapPrint");
 			var divElmt      = printWrapDiv.querySelector("div[id='" + divElmtId + "']");
 			
-			if (divElmt) {
-				var dclientHeight = divElmt.clientHeight;
-				var dscrollHeight = divElmt.scrollHeight;
-				
-				if (dscrollHeight > dclientHeight) {
-					var dtdElmt = divElmt.parentElement;
-					dtdElmt.setAttribute("style", "vertical-align: top; height: " + (dscrollHeight) + "px;");
-				}
-			}
+			if (divElmt) {divElmt.className = "scrollPrint";}
 		}
 		
 		function setAllScrollElmt(arrIds) {

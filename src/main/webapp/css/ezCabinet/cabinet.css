@@ -427,5 +427,6 @@
 .cabphotoprev {height: 80px; min-height: 80px; display: flex; background:#f8f8fa; border-top:1px solid #ddd;}
 .cabphotoprevmain {display: flex; flex: 1; align-items: center; justify-content: center;}
 .cabphotooff {display: none;}
+.scrollPrint {padding: 7px 0px;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .overfl {white-space: normal !important;}}
