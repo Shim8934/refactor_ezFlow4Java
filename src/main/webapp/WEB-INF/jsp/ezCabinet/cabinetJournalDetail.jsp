@@ -18,9 +18,9 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="fileCreator" class="cursor overfl"><c:out value="${item.creatorName}"/></td>
+					<td id="fileCreator" class="cursor overfl wide"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -39,13 +39,13 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><c:out value="${jourWriter.columnName}"/></th>
-					<td id="journalCreator" class="cursor overfl"></td>
+					<td id="journalCreator" class="cursor overfl wide"></td>
 					<th><c:out value="${jourDate.columnName}"/></th>
-					<td><c:out value="${jourDate.columnValue}"/></td>
+					<td class="nowrap"><c:out value="${jourDate.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${jourType.columnName}"/></th>
-					<td><c:out value="${jourType.columnValue}"/></td>
+					<td class="wide"><c:out value="${jourType.columnValue}"/></td>
 					<th><c:out value="${formname.columnName}"/></th>
 					<td><c:out value="${formname.columnValue}"/></td>
 				</tr>

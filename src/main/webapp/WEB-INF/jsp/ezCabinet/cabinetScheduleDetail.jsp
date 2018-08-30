@@ -20,7 +20,7 @@
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -47,13 +47,13 @@
 					<th><c:out value="${publicstatus.columnName}"/></th>
 					<td class="overfl" title="<c:out value="${publicstatus.columnValue}"/>"><c:out value="${publicstatus.columnValue}"/></td>
 					<th><c:out value="${priority.columnName}"/></th>
-					<td class="nowrap cabdatetd"><c:out value="${priority.columnValue}"/></td>
+					<td class="nowrap"><c:out value="${priority.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${scheduletype.columnName}"/></th>
 					<td class="overfl" title="<c:out value="${scheduletype.columnValue}"/>"><c:out value="${scheduletype.columnValue}"/></td>
 					<th><c:out value="${location.columnName}"/></th>
-					<td class="nowrap cabdatetd"><c:out value="${location.columnValue}"/></td>
+					<td class="nowrap"><c:out value="${location.columnValue}"/></td>
 				</tr>
 				<c:if test="${not empty groupname}">
 					<tr>
