@@ -769,27 +769,29 @@ public class EzCabinetGWController_h {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/option", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveOptionitem(@RequestBody JSONObject optionItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String userId     = optionItemInf.get("userId")     != null ? optionItemInf.get("userId").toString()     : "";
-		String mode       = optionItemInf.get("mode")       != null ? optionItemInf.get("mode").toString()       : "";
-		String cabinetId  = optionItemInf.get("cabinet")    != null ? optionItemInf.get("cabinet").toString()    : "";
-		String title      = optionItemInf.get("title")      != null ? optionItemInf.get("title").toString()      : "";
-		String writer     = optionItemInf.get("writer")     != null ? optionItemInf.get("writer").toString()     : "";
-		String date       = optionItemInf.get("date")       != null ? optionItemInf.get("date").toString()       : "";
-		String importance = optionItemInf.get("importance") != null ? optionItemInf.get("importance").toString() : "";
-		String option     = optionItemInf.get("option")     != null ? optionItemInf.get("option").toString()     : "";
-		String statusNum  = optionItemInf.get("statusNum")  != null ? optionItemInf.get("statusNum").toString()  : "";
-		String status     = optionItemInf.get("status")     != null ? optionItemInf.get("status").toString()     : "";
-		String confirm    = optionItemInf.get("confirm")    != null ? optionItemInf.get("confirm").toString()    : "";
-		String endDate    = optionItemInf.get("endDate")    != null ? optionItemInf.get("endDate").toString()    : "";
-		String content    = optionItemInf.get("content")    != null ? optionItemInf.get("content").toString()    : "";
-		String attach     = optionItemInf.get("attach")     != null ? optionItemInf.get("attach").toString()     : "";
+		String serverName  = request.getHeader("host-name")  != null ? request.getHeader("host-name")             : "";
+		String userId      = optionItemInf.get("userId")     != null ? optionItemInf.get("userId").toString()     : "";
+		String mode        = optionItemInf.get("mode")       != null ? optionItemInf.get("mode").toString()       : "";
+		String cabinetId   = optionItemInf.get("cabinet")    != null ? optionItemInf.get("cabinet").toString()    : "";
+		String title       = optionItemInf.get("title")      != null ? optionItemInf.get("title").toString()      : "";
+		String summary     = optionItemInf.get("summary")    != null ? optionItemInf.get("summary").toString()    : "";
+		String optionTitle = optionItemInf.get("optionTitle")!= null ? optionItemInf.get("optionTitle").toString(): "";
+		String writer      = optionItemInf.get("writer")     != null ? optionItemInf.get("writer").toString()     : "";
+		String date        = optionItemInf.get("date")       != null ? optionItemInf.get("date").toString()       : "";
+		String importance  = optionItemInf.get("importance") != null ? optionItemInf.get("importance").toString() : "";
+		String option      = optionItemInf.get("option")     != null ? optionItemInf.get("option").toString()     : "";
+		String statusNum   = optionItemInf.get("statusNum")  != null ? optionItemInf.get("statusNum").toString()  : "";
+		String status      = optionItemInf.get("status")     != null ? optionItemInf.get("status").toString()     : "";
+		String confirm     = optionItemInf.get("confirm")    != null ? optionItemInf.get("confirm").toString()    : "";
+		String endDate     = optionItemInf.get("endDate")    != null ? optionItemInf.get("endDate").toString()    : "";
+		String content     = optionItemInf.get("content")    != null ? optionItemInf.get("content").toString()    : "";
+		String attach      = optionItemInf.get("attach")     != null ? optionItemInf.get("attach").toString()     : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || date: "  + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || optionTitle: " + optionTitle + " || writer: " + writer + " || date: "  + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
 		
-		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || optionTitle.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -800,7 +802,7 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService_h.saveOptionItem(realPath, mode, dstCabinetId, title, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach, locale, userInfo);
+			result           = cabinetService_h.saveOptionItem(realPath, mode, dstCabinetId, title, summary, optionTitle, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -812,22 +814,24 @@ public class EzCabinetGWController_h {
 	}
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String userId     = commuItemInf.get("userId")     != null ? commuItemInf.get("userId").toString()     : "";
-		String mode       = commuItemInf.get("mode")       != null ? commuItemInf.get("mode").toString()       : "";
-		String cabinetId  = commuItemInf.get("cabinet")    != null ? commuItemInf.get("cabinet").toString()    : "";
-		String title      = commuItemInf.get("title")      != null ? commuItemInf.get("title").toString()      : "";
-		String writer     = commuItemInf.get("writer")     != null ? commuItemInf.get("writer").toString()     : "";
-		String date       = commuItemInf.get("date")       != null ? commuItemInf.get("date").toString()       : "";
-		String endDate    = commuItemInf.get("endDate")    != null ? commuItemInf.get("endDate").toString()    : "";
-		String content    = commuItemInf.get("content")    != null ? commuItemInf.get("content").toString()    : "";
-		String attach     = commuItemInf.get("attach")     != null ? commuItemInf.get("attach").toString()     : "";
+		String serverName = request.getHeader("host-name")!= null ? request.getHeader("host-name")           : "";
+		String userId     = commuItemInf.get("userId")    != null ? commuItemInf.get("userId").toString()    : "";
+		String mode       = commuItemInf.get("mode")      != null ? commuItemInf.get("mode").toString()      : "";
+		String cabinetId  = commuItemInf.get("cabinet")   != null ? commuItemInf.get("cabinet").toString()   : "";
+		String title      = commuItemInf.get("title")     != null ? commuItemInf.get("title").toString()     : "";
+		String summary    = commuItemInf.get("summary")   != null ? commuItemInf.get("summary").toString()   : "";
+		String commuTitle = commuItemInf.get("commuTitle")!= null ? commuItemInf.get("commuTitle").toString(): "";
+		String writer     = commuItemInf.get("writer")    != null ? commuItemInf.get("writer").toString()    : "";
+		String date       = commuItemInf.get("date")      != null ? commuItemInf.get("date").toString()      : "";
+		String endDate    = commuItemInf.get("endDate")   != null ? commuItemInf.get("endDate").toString()   : "";
+		String content    = commuItemInf.get("content")   != null ? commuItemInf.get("content").toString()   : "";
+		String attach     = commuItemInf.get("attach")    != null ? commuItemInf.get("attach").toString()    : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || date: "  + date + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary  + " || commuTitle: " + commuTitle +  " || writer: " + writer + " || date: "  + date + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
 		
-		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("") || date.equals("") || endDate.equals("")) {
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || commuTitle.equals("") || writer.equals("") || date.equals("") || endDate.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -838,7 +842,7 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService_h.saveCommunityItem(realPath, mode, dstCabinetId, title, writer, date, endDate, content, attach, locale, userInfo);
+			result           = cabinetService_h.saveCommunityItem(realPath, mode, dstCabinetId, title, summary, commuTitle, writer, date, endDate, content, attach, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -851,19 +855,21 @@ public class EzCabinetGWController_h {
 
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/photo-community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject savePhotoCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String userId     = commuItemInf.get("userId")     != null ? commuItemInf.get("userId").toString()     : "";
-		String mode       = commuItemInf.get("mode")       != null ? commuItemInf.get("mode").toString()       : "";
-		String cabinetId  = commuItemInf.get("cabinet")    != null ? commuItemInf.get("cabinet").toString()    : "";
-		String title      = commuItemInf.get("title")      != null ? commuItemInf.get("title").toString()      : "";
-		String writer     = commuItemInf.get("writer")     != null ? commuItemInf.get("writer").toString()     : "";
-		String content    = commuItemInf.get("content")    != null ? commuItemInf.get("content").toString()    : "";
+		String serverName = request.getHeader("host-name")!= null ? request.getHeader("host-name")            : "";
+		String userId     = commuItemInf.get("userId")    != null ? commuItemInf.get("userId").toString()     : "";
+		String mode       = commuItemInf.get("mode")      != null ? commuItemInf.get("mode").toString()       : "";
+		String cabinetId  = commuItemInf.get("cabinet")   != null ? commuItemInf.get("cabinet").toString()    : "";
+		String title      = commuItemInf.get("title")     != null ? commuItemInf.get("title").toString()      : "";
+		String summary    = commuItemInf.get("summary")   != null ? commuItemInf.get("summary").toString()    : "";
+		String commuTitle = commuItemInf.get("commuTitle")!= null ? commuItemInf.get("commuTitle").toString() : "";
+		String writer     = commuItemInf.get("writer")    != null ? commuItemInf.get("writer").toString()     : "";
+		String content    = commuItemInf.get("content")   != null ? commuItemInf.get("content").toString()    : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || content : " + content);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || commuTitle: " + commuTitle + " || writer: " + writer + " || content : " + content);
 		
-		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("")) {
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || commuTitle.equals("") || writer.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -874,7 +880,7 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService_h.savePhotoCommunityitem(realPath, mode, dstCabinetId, title, writer, content, locale, userInfo);
+			result           = cabinetService_h.savePhotoCommunityitem(realPath, mode, dstCabinetId, title, summary, commuTitle, writer, content, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

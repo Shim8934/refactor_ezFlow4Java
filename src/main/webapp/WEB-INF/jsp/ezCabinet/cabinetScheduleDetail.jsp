@@ -23,6 +23,21 @@
 					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
+					<th><spring:message code='ezCabinet.t51'/></th>
+					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t52'/></th>
+					<td class="overfl" colspan="3"><c:out value="${item.summary}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t94'/></th>
+					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
+				</tr>
+			</table>
+			
+			<table class="tblEmailInf">
+				<tr>
 					<th><c:out value="${creator.columnName}"/></th>
 					<td id="resCreator" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
 					<th><c:out value="${createdate.columnName}"/></th>
@@ -57,12 +72,8 @@
 					<td class="overfl" colspan="3" title="<c:out value="${scheduledate.columnValue}"/>"><c:out value="${scheduledate.columnValue}"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezCabinet.t94'/></th>
-					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
+					<th><c:out value="${scheduleTitle.columnName}"/></th>
+					<td class="overfl" colspan="3"><c:out value="${scheduleTitle.columnValue}"/></td>
 				</tr>
 			</table>
 		</div>

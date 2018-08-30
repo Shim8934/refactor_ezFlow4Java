@@ -12,9 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -335,9 +332,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
 		listColm.add(createNewRelatedColumn("boardTitle" , itemId, "ezCabinet.t62", boardTitle, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223",  writer    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224",  dateTime  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardType"  , itemId, "ezBoard.t224",  "normal"  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223" , writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224" , dateTime  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardType"  , itemId, "ezBoard.t224" , "normal"  , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -445,7 +442,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String summary, String optionTitle, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -467,18 +464,19 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add option item
 		int moduleType = 6; //option module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezCircular.t122", writer    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date      , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("statusNum"   , itemId, "ezCircular.t74" , statusNum , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("status"      , itemId, "ezCircular.t124", status    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("confirm"     , itemId, "ezCircular.t86" , confirm   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionTitle" , itemId, "ezCabinet.t62"  , optionTitle, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezCircular.t122", writer     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date       , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("statusNum"   , itemId, "ezCircular.t74" , statusNum  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("status"      , itemId, "ezCircular.t124", status     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("confirm"     , itemId, "ezCircular.t86" , confirm    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate    , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		result.put("status", "ok");
@@ -671,7 +669,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveCommunityItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveCommunityItem(String realPath, String mode, int cabinetId, String title, String summary, String commuTitle, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -693,14 +691,15 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add community item
 		int moduleType = 7; //community module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("commuWriter" , itemId, "ezCommunity.t138", writer  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("commuTime"   , itemId, "ezCommunity.t209", date    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("commuEndDate", itemId, "ezCommunity.t931", endDate , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("commuType"   , itemId, "ezCommunity.t931", "normal", companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuTitle"  , itemId, "ezCabinet.t62"   , commuTitle, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuWriter" , itemId, "ezCommunity.t138", writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuTime"   , itemId, "ezCommunity.t209", date      , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuEndDate", itemId, "ezCommunity.t931", endDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuType"   , itemId, "ezCommunity.t931", "normal"  , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		result.put("status", "ok");
@@ -711,7 +710,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject savePhotoCommunityitem(String realPath, String mode, int cabinetId, String title, String writer, String content, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject savePhotoCommunityitem(String realPath, String mode, int cabinetId, String title, String summary, String commuTitle, String writer, String content, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -723,12 +722,13 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add community item
 		int moduleType = 7; //community module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("commuWriter", itemId, "ezCommunity.t138", writer , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("commuType"  , itemId, "ezCommunity.t931", "photo", companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuTitle" , itemId, "ezCabinet.t62"   , commuTitle, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuWriter", itemId, "ezCommunity.t138", writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuType"  , itemId, "ezCommunity.t931", "photo"   , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		result.put("status", "ok");

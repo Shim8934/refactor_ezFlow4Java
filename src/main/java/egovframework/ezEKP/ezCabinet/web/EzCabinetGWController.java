@@ -1600,6 +1600,8 @@ public class EzCabinetGWController {
 	public JSONObject saveEmailItem(@RequestBody JSONObject emailItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
 		String title      = emailItemInf.get("title")      != null ? emailItemInf.get("title").toString()    : "";
+		String summary    = emailItemInf.get("summary")    != null ? emailItemInf.get("summary").toString()  : "";
+		String mailTitle  = emailItemInf.get("mailTitle")  != null ? emailItemInf.get("mailTitle").toString(): "";
 		String sender     = emailItemInf.get("sender")     != null ? emailItemInf.get("sender").toString()   : "";
 		String attach     = emailItemInf.get("attach")     != null ? emailItemInf.get("attach").toString()   : "";
 		String mode       = emailItemInf.get("mode")       != null ? emailItemInf.get("mode").toString()     : "";
@@ -1611,9 +1613,9 @@ public class EzCabinetGWController {
 		String dateTime   = emailItemInf.get("dateTime")   != null ? emailItemInf.get("dateTime").toString() : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || sender: " + sender + " || receiver: " + receiver + " || forward: " + forward + " || userId: " + userId + " || attach: " + attach + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content + " || dateTime: " + dateTime);
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || summary: " + summary + " || mailTitle: " + mailTitle + " || sender: " + sender + " || receiver: " + receiver + " || forward: " + forward + " || userId: " + userId + " || attach: " + attach + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content + " || dateTime: " + dateTime);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || mailTitle.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1624,7 +1626,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.saveEmailItem(realPath, dstCabinetId, title, sender, attach, mode, content, receiver, forward, dateTime, locale, userInfo);
+			result           = cabinetService.saveEmailItem(realPath, dstCabinetId, title, summary, mailTitle, sender, attach, mode, content, receiver, forward, dateTime, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1771,8 +1773,10 @@ public class EzCabinetGWController {
 	public JSONObject saveResourceItem(@RequestBody JSONObject resourceItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")               : "";
 		String title      = resourceItemInf.get("title")      != null ? resourceItemInf.get("title").toString()      : "";
+		String summary    = resourceItemInf.get("summary")    != null ? resourceItemInf.get("summary").toString()    : "";
 		String mode       = resourceItemInf.get("mode")       != null ? resourceItemInf.get("mode").toString()       : "";
 		String cabinetId  = resourceItemInf.get("cabinet")    != null ? resourceItemInf.get("cabinet").toString()    : "";
+		String resTitle   = resourceItemInf.get("resTitle")    != null ? resourceItemInf.get("resTitle").toString()    : "";
 		String createUser = resourceItemInf.get("createUser") != null ? resourceItemInf.get("createUser").toString() : "";
 		String resDate    = resourceItemInf.get("resDate")    != null ? resourceItemInf.get("resDate").toString()    : "";
 		String userId     = resourceItemInf.get("userId")     != null ? resourceItemInf.get("userId").toString()     : "";
@@ -1782,9 +1786,9 @@ public class EzCabinetGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || userId: " + userId + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		logger.debug("ServerName: " + serverName + " || title: " + title + "|| summary: " + summary + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || userId: " + userId + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || resTitle: " + resTitle + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || resDate.equals("") || priority.equals("") || resItem.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || resTitle.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || resDate.equals("") || priority.equals("") || resItem.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1794,7 +1798,7 @@ public class EzCabinetGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			result           = cabinetService.saveResourceItem(dstCabinetId, content, title, mode, createUser, resDate, priority, resItem, userInfo);
+			result           = cabinetService.saveResourceItem(dstCabinetId, resTitle, content, title, summary, mode, createUser, resDate, priority, resItem, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1807,28 +1811,30 @@ public class EzCabinetGWController {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/schedule", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveScheduleItem(@RequestBody JSONObject scheduleItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName   = request.getHeader("host-name")      != null ? request.getHeader("host-name")                 : "";
-		String userId       = scheduleItemInf.get("userId")       != null ? scheduleItemInf.get("userId").toString()       : "";
-		String title        = scheduleItemInf.get("title")        != null ? scheduleItemInf.get("title").toString()        : "";
-		String mode         = scheduleItemInf.get("mode")         != null ? scheduleItemInf.get("mode").toString()         : "";
-		String cabinetId    = scheduleItemInf.get("cabinet")      != null ? scheduleItemInf.get("cabinet").toString()      : "";
-		String createUser   = scheduleItemInf.get("createUser")   != null ? scheduleItemInf.get("createUser").toString()   : "";
-		String createDate   = scheduleItemInf.get("createDate")   != null ? scheduleItemInf.get("createDate").toString()   : "";
-		String scheduleDate = scheduleItemInf.get("scheduleDate") != null ? scheduleItemInf.get("scheduleDate").toString() : "";
-		String priority     = scheduleItemInf.get("priority")     != null ? scheduleItemInf.get("priority").toString()     : "";
-		String location     = scheduleItemInf.get("location")     != null ? scheduleItemInf.get("location").toString()     : "";
-		String publicstatus = scheduleItemInf.get("publicstatus") != null ? scheduleItemInf.get("publicstatus").toString() : "";
-		String groupname    = scheduleItemInf.get("groupname")    != null ? scheduleItemInf.get("groupname").toString()    : "";
-		String attendant    = scheduleItemInf.get("attendant")    != null ? scheduleItemInf.get("attendant").toString()    : "";
-		String scheduletype = scheduleItemInf.get("scheduletype") != null ? scheduleItemInf.get("scheduletype").toString() : "";
-		String attach       = scheduleItemInf.get("attach")       != null ? scheduleItemInf.get("attach").toString()       : "";
-		String content      = scheduleItemInf.get("content")      != null ? scheduleItemInf.get("content").toString()      : "";
+		String serverName    = request.getHeader("host-name")       != null ? request.getHeader("host-name")                 : "";
+		String userId        = scheduleItemInf.get("userId")        != null ? scheduleItemInf.get("userId").toString()       : "";
+		String title         = scheduleItemInf.get("title")         != null ? scheduleItemInf.get("title").toString()        : "";
+		String summary       = scheduleItemInf.get("summary")       != null ? scheduleItemInf.get("summary").toString()      : "";
+		String mode          = scheduleItemInf.get("mode")          != null ? scheduleItemInf.get("mode").toString()         : "";
+		String cabinetId     = scheduleItemInf.get("cabinet")       != null ? scheduleItemInf.get("cabinet").toString()      : "";
+		String scheduleTitle = scheduleItemInf.get("scheduleTitle") != null ? scheduleItemInf.get("scheduleTitle").toString(): "";
+		String createUser    = scheduleItemInf.get("createUser")    != null ? scheduleItemInf.get("createUser").toString()   : "";
+		String createDate    = scheduleItemInf.get("createDate")    != null ? scheduleItemInf.get("createDate").toString()   : "";
+		String scheduleDate  = scheduleItemInf.get("scheduleDate")  != null ? scheduleItemInf.get("scheduleDate").toString() : "";
+		String priority      = scheduleItemInf.get("priority")      != null ? scheduleItemInf.get("priority").toString()     : "";
+		String location      = scheduleItemInf.get("location")      != null ? scheduleItemInf.get("location").toString()     : "";
+		String publicstatus  = scheduleItemInf.get("publicstatus")  != null ? scheduleItemInf.get("publicstatus").toString() : "";
+		String groupname     = scheduleItemInf.get("groupname")     != null ? scheduleItemInf.get("groupname").toString()    : "";
+		String attendant     = scheduleItemInf.get("attendant")     != null ? scheduleItemInf.get("attendant").toString()    : "";
+		String scheduletype  = scheduleItemInf.get("scheduletype")  != null ? scheduleItemInf.get("scheduletype").toString() : "";
+		String attach        = scheduleItemInf.get("attach")        != null ? scheduleItemInf.get("attach").toString()       : "";
+		String content       = scheduleItemInf.get("content")       != null ? scheduleItemInf.get("content").toString()      : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || scheduleDate: " + scheduleDate + " || priority: " + priority + " || location: " + location + " || publicstatus: " + publicstatus + " || groupname: " + groupname + " || attendant: " + attendant + " || scheduletype: " + scheduletype + " || attach: " + attach + " || content: " + content);
+		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || summary: " + summary + " || mode: " + mode + " || cabinetId: " + cabinetId + " || scheduleTitle: " + scheduleTitle +" || createUser: " + createUser + " || createDate: " + createDate + " || scheduleDate: " + scheduleDate + " || priority: " + priority + " || location: " + location + " || publicstatus: " + publicstatus + " || groupname: " + groupname + " || attendant: " + attendant + " || scheduletype: " + scheduletype + " || attach: " + attach + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || scheduleDate.equals("") || publicstatus.equals("") || scheduletype.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || scheduleTitle.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || scheduleDate.equals("") || publicstatus.equals("") || scheduletype.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1839,7 +1845,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.saveScheduleItem(dstCabinetId, realPath, title, mode, createUser, createDate, scheduleDate, priority, location, publicstatus, groupname, attendant, scheduletype, attach, content, locale, userInfo);
+			result           = cabinetService.saveScheduleItem(dstCabinetId, realPath, title, summary, mode, scheduleTitle, createUser, createDate, scheduleDate, priority, location, publicstatus, groupname, attendant, scheduletype, attach, content, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

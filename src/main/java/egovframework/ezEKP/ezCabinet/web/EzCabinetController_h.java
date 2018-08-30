@@ -346,6 +346,8 @@ public class EzCabinetController_h {
 		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
 		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
 		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary         = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
+		String optionTitle     = request.getParameter("optionTitle")!= null ? request.getParameter("optionTitle"): "";
 		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
 		String date            = request.getParameter("date")       != null ? request.getParameter("date")       : "";
 		String importance      = request.getParameter("importance") != null ? request.getParameter("importance") : "";
@@ -358,15 +360,15 @@ public class EzCabinetController_h {
 		String attach          = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + "date: " + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || optionTitle: " + optionTitle + " || writer: " + writer + "date: " + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
 		
-		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || optionTitle.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.saveRelatedOption(request, userInfo.getId(), mode, cabinetId, title, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach);
+		resultObj = cabinetRestService_h.saveRelatedOption(request, userInfo.getId(), mode, cabinetId, title, summary, optionTitle, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach);
 		
 		logger.debug("jsonSaveRelatedOption finishes!");
 		return resultObj.toString();
@@ -377,25 +379,27 @@ public class EzCabinetController_h {
 	public String jsonSaveRelatedCommunity(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedCommunity is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
-		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
-		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
-		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
-		String date            = request.getParameter("date")       != null ? request.getParameter("date")       : "";
-		String endDate         = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
-		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
-		String attach          = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")      : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")   : "";
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")     : "";
+		String summary         = request.getParameter("summary")    != null ? request.getParameter("summary")   : "";
+		String commuTitle      = request.getParameter("commuTitle") != null ? request.getParameter("commuTitle"): "";
+		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")    : "";
+		String date            = request.getParameter("date")       != null ? request.getParameter("date")      : "";
+		String endDate         = request.getParameter("endDate")    != null ? request.getParameter("endDate")   : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")   : "";
+		String attach          = request.getParameter("attach")     != null ? request.getParameter("attach")    : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + "date: " + date +" || endDate: " + endDate + " || content: " + content + " || attach: " + attach);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || commuTitle: " + commuTitle + " || writer: " + writer + "date: " + date +" || endDate: " + endDate + " || content: " + content + " || attach: " + attach);
 		
-		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || date.equals("") || endDate.equals("")) {
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || commuTitle.equals("") || writer.equals("") || date.equals("") || endDate.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.saveRelatedCommunity(request, userInfo.getId(), mode, cabinetId, title, writer, date, endDate, content, attach);
+		resultObj = cabinetRestService_h.saveRelatedCommunity(request, userInfo.getId(), mode, cabinetId, title, summary, commuTitle, writer, date, endDate, content, attach);
 		
 		logger.debug("jsonSaveRelatedCommunity finishes!");
 		return resultObj.toString();
@@ -409,19 +413,21 @@ public class EzCabinetController_h {
 		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
 		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
 		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary         = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
+		String commuTitle      = request.getParameter("commuTitle") != null ? request.getParameter("commuTitle") : "";
 		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
 		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || commuTitle: " + commuTitle + " || writer: " + writer);
 		
-		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("")) {
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || commuTitle.equals("") || writer.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.saveRelatedPhotoCommunity(request, userInfo.getId(), mode, cabinetId, title, writer, content);
+		resultObj = cabinetRestService_h.saveRelatedPhotoCommunity(request, userInfo.getId(), mode, cabinetId, title, summary, commuTitle, writer, content);
 		
 		logger.debug("jsonSaveRelatedPhotoCommunity finishes!");
 		return resultObj.toString();

@@ -214,23 +214,25 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception {
+	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String optionTitle, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/option";
 		JSONObject jsonBody       = new JSONObject();
-		jsonBody.put("userId",     userId);
-		jsonBody.put("mode",       mode);
-		jsonBody.put("cabinet",    cabinetId);
-		jsonBody.put("title",      title);
-		jsonBody.put("writer",     writer);
-		jsonBody.put("date",       date);
-		jsonBody.put("importance", importance);
-		jsonBody.put("option",     option);
-		jsonBody.put("statusNum",  statusNum);
-		jsonBody.put("status",     status);
-		jsonBody.put("confirm",    confirm);
-		jsonBody.put("endDate",    endDate);
-		jsonBody.put("content",    content);
-		jsonBody.put("attach",     attach);
+		jsonBody.put("userId",      userId);
+		jsonBody.put("mode",        mode);
+		jsonBody.put("cabinet",     cabinetId);
+		jsonBody.put("title",       title);
+		jsonBody.put("summary",     summary);
+		jsonBody.put("optionTitle", optionTitle);
+		jsonBody.put("writer",      writer);
+		jsonBody.put("date",        date);
+		jsonBody.put("importance",  importance);
+		jsonBody.put("option",      option);
+		jsonBody.put("statusNum",   statusNum);
+		jsonBody.put("status",      status);
+		jsonBody.put("confirm",     confirm);
+		jsonBody.put("endDate",     endDate);
+		jsonBody.put("content",     content);
+		jsonBody.put("attach",      attach);
 		
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
@@ -238,13 +240,15 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String endDate, String content, String attach) throws Exception {
+	public JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String commuTitle, String writer, String date, String endDate, String content, String attach) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/community";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
 		jsonBody.put("mode",       mode);
 		jsonBody.put("cabinet",    cabinetId);
 		jsonBody.put("title",      title);
+		jsonBody.put("summary",    summary);
+		jsonBody.put("commuTitle", commuTitle);
 		jsonBody.put("writer",     writer);
 		jsonBody.put("date",       date);
 		jsonBody.put("endDate",    endDate);
@@ -257,13 +261,15 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedPhotoCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String content) throws Exception {
+	public JSONObject saveRelatedPhotoCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary,  String commuTitle, String writer, String content) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/photo-community";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
 		jsonBody.put("mode",       mode);
 		jsonBody.put("cabinet",    cabinetId);
 		jsonBody.put("title",      title);
+		jsonBody.put("summary",    summary);
+		jsonBody.put("commuTitle", commuTitle);
 		jsonBody.put("writer",     writer);
 		jsonBody.put("content",    content);
 		

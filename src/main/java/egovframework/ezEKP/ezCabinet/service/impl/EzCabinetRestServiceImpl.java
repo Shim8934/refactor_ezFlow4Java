@@ -562,11 +562,13 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forward, String dateTime) throws Exception {
+	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String summary, String mailTitle, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forward, String dateTime) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/email";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",   userId);
 		jsonBody.put("title",    title);
+		jsonBody.put("summary",  summary);
+		jsonBody.put("mailTitle",mailTitle);
 		jsonBody.put("sender",   sender);
 		jsonBody.put("attach",   attach);
 		jsonBody.put("mode",     mode);
@@ -642,13 +644,15 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String resDate, String priority, String resItem) throws Exception {
+	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String resTitle, String content, String createUser, String resDate, String priority, String resItem) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/resource";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
 		jsonBody.put("title",      title);
+		jsonBody.put("summary",    summary);
 		jsonBody.put("mode",       mode);
 		jsonBody.put("cabinet",    cabinetId);
+		jsonBody.put("resTitle",   resTitle);
 		jsonBody.put("createUser", createUser);
 		jsonBody.put("resDate",    resDate);
 		jsonBody.put("priority",   priority);
@@ -661,24 +665,26 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception {
+	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/schedule";
 		JSONObject jsonBody       = new JSONObject();
-		jsonBody.put("userId",       userId);
-		jsonBody.put("title",        title);
-		jsonBody.put("mode",         mode);
-		jsonBody.put("cabinet",      cabinetId);
-		jsonBody.put("createUser",   createUser);
-		jsonBody.put("createDate",   createDate);
-		jsonBody.put("scheduleDate", scheduleDate);
-		jsonBody.put("priority",     priority);
-		jsonBody.put("location",     location);
-		jsonBody.put("publicstatus", publicstatus);
-		jsonBody.put("groupname",    groupname);
-		jsonBody.put("attendant",    attendant);
-		jsonBody.put("scheduletype", scheduletype);
-		jsonBody.put("attach",       attach);
-		jsonBody.put("content",      content);
+		jsonBody.put("userId",        userId);
+		jsonBody.put("title",         title);
+		jsonBody.put("summary",       summary);
+		jsonBody.put("mode",          mode);
+		jsonBody.put("cabinet",       cabinetId);
+		jsonBody.put("scheduleTitle", scheduleTitle);
+		jsonBody.put("createUser",    createUser);
+		jsonBody.put("createDate",    createDate);
+		jsonBody.put("scheduleDate",  scheduleDate);
+		jsonBody.put("priority",      priority);
+		jsonBody.put("location",      location);
+		jsonBody.put("publicstatus",  publicstatus);
+		jsonBody.put("groupname",     groupname);
+		jsonBody.put("attendant",     attendant);
+		jsonBody.put("scheduletype",  scheduletype);
+		jsonBody.put("attach",        attach);
+		jsonBody.put("content",       content);
 		
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;

@@ -23,12 +23,14 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,7 +41,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -1468,7 +1472,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveEmailItem(String realPath, int cabinetId, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveEmailItem(String realPath, int cabinetId, String title, String summary, String mailTitle, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		String userId          = userInfo.getId();
 		int tenantId           = userInfo.getTenantId();
@@ -1539,13 +1543,14 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add email item
 		int moduleType = 1; //mail module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save email columns information
 		List<String> receiverList      = (List<String>) jp.parse(receiver);
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("sender"   , itemId, "ezEmail.t161", sender  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("emailTime", itemId, dateColumn    , dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("mailTitle", itemId, "ezCabinet.t62",mailTitle, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("sender"   , itemId, "ezEmail.t161", sender   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("emailTime", itemId, dateColumn    , dateTime , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("receiver" , itemId, "ezEmail.t66" , String.join(";", receiverList), companyId, tenantId));
 		
 		if (!forward.equals("")) {
@@ -1813,7 +1818,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveResourceItem(int cabinetId, String content, String title, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception {
+	public JSONObject saveResourceItem(int cabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1825,10 +1830,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add resource item
 		int moduleType = 11; //resource module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save resource columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("resTitle"     , itemId, "ezCabinet.t62"  , resTitle  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("creator"      , itemId, "ezResource.t193", createUser, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("resourcedate" , itemId, "ezResource.t197", resDate   , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("priority"     , itemId, "ezResource.t213", priority  , companyId, tenantId));
@@ -1867,7 +1873,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String summary, String mode, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1889,17 +1895,18 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add schedule item
 		int moduleType = 4; //schedule module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save schedule columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("creator"     , itemId, "ezSchedule.t161", createUser  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("createdate"  , itemId, "ezSchedule.t306", createDate  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("priority"    , itemId, "ezSchedule.t310", priority    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("publicstatus", itemId, "ezSchedule.t309", publicstatus, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("scheduledate", itemId, "ezSchedule.t318", scheduleDate, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("location"    , itemId, "ezSchedule.t273", location    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("scheduletype", itemId, "ezCabinet.t143" , scheduletype, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("scheduleTitle", itemId, "ezCabinet.t62"  , scheduleTitle, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("creator"      , itemId, "ezSchedule.t161", createUser   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("createdate"   , itemId, "ezSchedule.t306", createDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("priority"     , itemId, "ezSchedule.t310", priority     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("publicstatus" , itemId, "ezSchedule.t309", publicstatus , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("scheduledate" , itemId, "ezSchedule.t318", scheduleDate , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("location"     , itemId, "ezSchedule.t273", location     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("scheduletype" , itemId, "ezCabinet.t143" , scheduletype , companyId, tenantId));
 		
 		if (!groupname.equals("")) {
 			listColm.add(createNewRelatedColumn("groupname"   , itemId, "ezSchedule.t159", groupname   , companyId, tenantId));
@@ -2042,7 +2049,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("boardTitle" , itemId, "ezCabinet.t62", boardTitle,  companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTitle" , itemId, "ezCabinet.t62", boardTitle , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223" , createUser , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224" , createDate , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardId"    , itemId, "ezBoard.t224" , boardId    , companyId, tenantId));

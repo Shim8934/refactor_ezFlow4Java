@@ -26,10 +26,10 @@ public interface EzCabinetService_h {
 	JSONObject saveBoardItem(String realPath, String mode, int parseInt, String title, String summary, String boardTitle, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 	public void modifyRelatedList(int itemId, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 	public void modifyAttachList(int itemId, JSONArray attacheFiles, String realPath, LoginVO userInfo) throws Exception;
-	JSONObject saveOptionItem(String realPath, String mode, int parseInt, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveOptionItem(String realPath, String mode, int parseInt, String title, String summary, String optionTitle, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;
 	public JSONObject copyRelatedItemAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, LoginVO userInfo, String modulePath, String uploadPath, List<CabinetAttachFileVO> attachFileList) throws Exception;
 	public JSONObject saveListAttachFiles(JSONArray attachList, int itemId, String realPath, String modulePath, String uploadPath, Locale locale, LoginVO userInfo) throws Exception;
-	JSONObject saveCommunityItem(String realPath, String mode, int parseInt, String title, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;
-	JSONObject savePhotoCommunityitem(String realPath, String mode, int parseInt, String title, String writer, String content, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveCommunityItem(String realPath, String mode, int parseInt, String title, String summary, String commuTitle, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject savePhotoCommunityitem(String realPath, String mode, int parseInt, String title, String summary, String commuTitle, String writer, String content, Locale locale, LoginVO userInfo) throws Exception;
 	List<SimpleUserVO> getAncestorShareUserList(String cabinetId, String userId, String primary, int tenantId) throws Exception;
 }

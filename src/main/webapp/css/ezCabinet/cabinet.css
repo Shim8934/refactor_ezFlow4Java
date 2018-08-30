@@ -324,7 +324,7 @@
 .cabDivFile .cabFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 
 .popup.cabFileDelon, .popup.cabFileDeloff {overflow: hidden; width: 450px; height: 183px; position: fixed; z-index: 2000; border-radius: 4px;}
-.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .popup.cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff, .popup.cabPhotooff {display: none;}
+.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff, .popup.cabPhotooff {display: none;}
 .popup .cabfdTop {margin: 0px; margin-top: 2px; padding-left: 0px;}
 .popup .delTxt {margin: 0px; height: 62px; border: 1px solid #ddd; padding: 15px; font-size: 12px;}
 .popup.cabFileMoveoff, .popup.cabFileMoveon {overflow: hidden; width: 320px; height: 380px; position: fixed; z-index: 2000; border-radius: 4px;}
@@ -334,7 +334,7 @@
 .popup.cabAddoff, .popup.cabAddon {overflow: hidden; width: 300px; height: 150px; position: fixed; z-index: 2000; border-radius: 4px;}
 .popup.cabMoveoff, .popup.cabMoveon {overflow: hidden; width: 320px; height: 395px; position: fixed; z-index: 2000; border-radius: 4px;}
 .popup .cabMoveTree {margin: 0px 3px; border: 1px solid #ddd; min-height: 293px; height: 293px; overflow: auto; padding-top: 5px;}
-.popup.cabDeloff, .popup.cabDelon {overflow: hidden; width: 350px; height: 162px; position: fixed; z-index: 2000;}
+.cabDeloff, .cabDelon {overflow: hidden; border-radius: 4px; width: 330px; height: 205px; position: fixed; z-index: 2000;}
 .popup .cabDelInf {height: 46px; border: 1px solid #ddd; font-size: 12px; padding: 10px;}
 .popup.cabRelatedFile, .popup.cabAddMain, .popup.cabShareFile, .popup.cabDetail {overflow: hidden;}
 .popup >h3 {font-size: 11pt; font-weight: bold; color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
@@ -397,7 +397,7 @@
 .cabtxtPrint .cabrltxt p {margin-top: 0px !important; margin-bottom: 0px !important;}
 .cabwrapPrintoff, .cabwrapPrinton {pointer-events: none;}
 .cabwrapPrintoff {display: none;}
-.cabdatetd {width: 150px;}
+/* .cabdatetd {width: 150px;} */
 .cabtaskTtl {display: flex; margin: 5px 0px;}
 .cabtaskTtl img {width: 14px; height: 14px; padding: 3px 5px 3px 0px;}
 

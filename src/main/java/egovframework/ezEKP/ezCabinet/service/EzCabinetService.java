@@ -90,7 +90,7 @@ public interface EzCabinetService {
 	List<CabinetColumnVO> getAllRelatedColumnsOfItem(int itemId, String primary, int tenantId) throws Exception;
 	
 	//Save related email item function
-	JSONObject saveEmailItem(String realPath, int parseInt, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveEmailItem(String realPath, int parseInt, String title, String summary, String mailTitle, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Get user information functions
 	List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception;
@@ -105,10 +105,10 @@ public interface EzCabinetService {
 	JSONObject saveNormalAddressItem(int dstCabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception;
 	
 	//Save related resource item function
-	JSONObject saveResourceItem(int dstCabinetId, String content, String title, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception;
+	JSONObject saveResourceItem(int dstCabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception;
 	
 	//Save related schedule item function
-	JSONObject saveScheduleItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveScheduleItem(int dstCabinetId, String realPath, String title, String summary, String mode, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Save related todo item function
 	JSONObject saveTodoItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;

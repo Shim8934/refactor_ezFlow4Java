@@ -319,7 +319,9 @@
 					var url  = "/ezCabinet/saveRelatedEmail.do";
 					var data = {
 						mode      : saveMode,
-						title     : mailSubject,
+						title     : moduleTitle,
+						summary   : moduleSummary,
+						mailTitle : mailSubject,
 						sender    : senderEmail,
 						receiver  : JSON.stringify(receiveList),
 						crdDate   : mailDate,
@@ -496,14 +498,14 @@
 					
 					var postdate = commuOpener.document.getElementById("PostDate");
 					if (postdate) {
-						saveNormalCommu(commuOpener, saveMode, cabinetId);
+						saveNormalCommu(commuOpener, moduleTitle, moduleSummary, saveMode, cabinetId);
 					}
 					else {
-						savePhotoCommu(commuOpener, saveMode, cabinetId);
+						savePhotoCommu(commuOpener, moduleTitle, moduleSummary, saveMode, cabinetId);
 					}
 				}
 				
-				function saveNormalCommu(commuOpener, saveMode, cabinetId) {
+				function saveNormalCommu(commuOpener, moduleTitle, moduleSummary,  saveMode, cabinetId) {
 					var title         = trimStr(commuOpener.document.getElementById("title").textContent);
 					var writerDiv     = commuOpener.document.getElementById("Div1");
 					var writer        = getUserIdFromInline(writerDiv, '"');
@@ -532,7 +534,9 @@
 					var url  = "/ezCabinet/saveRelatedCommunity.do";
 					var data = {
 							mode       : saveMode,
-							title      : title,
+							title      : moduleTitle,
+							summary    : moduleSummary,
+							commuTitle : title,
 							writer     : writer,
 							date       : date,
 							endDate    : endDate,
@@ -545,7 +549,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function savePhotoCommu(commuOpener, saveMode, cabinetId) {
+				function savePhotoCommu(commuOpener, moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var title         = trimStr(commuOpener.document.getElementById("Div1").textContent);
 					var writerDiv     = commuOpener.document.getElementById("title");
 					var writer        = getUserIdFromInline(writerDiv, '"');
@@ -557,7 +561,9 @@
 					var url  = "/ezCabinet/saveRelatedPhotoCommunity.do";
 					var data = {
 							mode       : saveMode,
-							title      : title,
+							title      : moduleTitle,
+							summary    : moduleSummary,
+							commuTitle : title,
 							writer     : writer,
 							content    : content
 					};
@@ -775,19 +781,21 @@
 					
 					var url  = "/ezCabinet/saveRelatedSchedule.do";
 					var data = {
-						mode         : saveMode,
-						creator      : scheduleCreator,
-						title        : scheduleTitle,
-						createdate   : createDate,
-						scheduledate : scheduleDate,
-						priority     : schedulePriority,
-						location     : scheduleLocation,
-						publicstatus : schedulePublic,
-						groupname    : scheduleGroup,
-						attendant    : JSON.stringify(scheduleAttList),
-						scheduletype : getScheduleTypeName(parseInt(scheduleType)),
-						attach       : JSON.stringify(attachList),
-						content      : scheduleContent
+						mode          : saveMode,
+						creator       : scheduleCreator,
+						title         : moduleTitle,
+						summary       : moduleSummary,
+						scheduleTitle : scheduleTitle,
+						createdate    : createDate,
+						scheduledate  : scheduleDate,
+						priority      : schedulePriority,
+						location      : scheduleLocation,
+						publicstatus  : schedulePublic,
+						groupname     : scheduleGroup,
+						attendant     : JSON.stringify(scheduleAttList),
+						scheduletype  : getScheduleTypeName(parseInt(scheduleType)),
+						attach        : JSON.stringify(attachList),
+						content       : scheduleContent
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
@@ -827,18 +835,20 @@
 					
 					var url  = "/ezCabinet/saveRelatedOption.do";
 					var data = {
-						mode       : saveMode,
-						title      : title,
-						writer     : writer,
-						date       : date,
-						importance : importance,
-						option     : option,
-						statusNum  : statusNum,
-						status     : status,
-						confirm    : confirm,
-						endDate    : endDate,
-						content    : content,
-						attach     : JSON.stringify(attachList)
+						mode        : saveMode,
+						title       : moduleTitle,
+						summary     : moduleSummary,
+						optionTitle : title,
+						writer      : writer,
+						date        : date,
+						importance  : importance,
+						option      : option,
+						statusNum   : statusNum,
+						status      : status,
+						confirm     : confirm,
+						endDate     : endDate,
+						content     : content,
+						attach      : JSON.stringify(attachList)
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
@@ -912,8 +922,10 @@
 					var url  = "/ezCabinet/saveRelatedResource.do";
 					var data = {
 						mode      : saveMode,
+						title     : moduleTitle,
+						summary   : moduleSummary,
 						writer    : resWriter,
-						title     : resTitle,
+						resTitle  : resTitle,
 						date      : resDate,
 						priority  : resPriority,
 						resItem   : resItem,

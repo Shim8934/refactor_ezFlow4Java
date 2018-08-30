@@ -52,7 +52,6 @@
 					
 					document.getElementById("cabMgClose").onclick   = function(e) {closeWindow();};
 					document.getElementById("cabMoveClose").onclick = function(e) {closeCabinetDialog("moveCab");};
-					document.getElementById("cabDelClose").onclick  = function(e) {closeCabinetDialog("delCab");};
 					document.getElementById("cabAddClose").onclick  = function(e) {closeCabinetDialog("addCab");};
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
@@ -326,7 +325,8 @@
 					var position          = getPosition(divWidth, divHeight);
 					cabAddDiv.style.top   = position[0] + "px";
 					cabAddDiv.style.right = position[1] + "px";
-					cabAddDiv.className   = "popup " + divInfo.cabDivClass;
+					
+					cabAddDiv.className = mode == "delCab"? divInfo.cabDivClass : "popup " + divInfo.cabDivClass;
 				}
 				
 				function addFogPanel() {

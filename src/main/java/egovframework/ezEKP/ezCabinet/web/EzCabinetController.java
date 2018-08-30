@@ -724,6 +724,8 @@ public class EzCabinetController {
 		logger.debug("jsonSaveRelatedEmail is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String summary         = request.getParameter("summary")   != null ? request.getParameter("summary")   : "";
+		String mailTitle       = request.getParameter("mailTitle") != null ? request.getParameter("mailTitle") : "";
 		String sender          = request.getParameter("sender")    != null ? request.getParameter("sender")    : "";
 		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
 		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
@@ -734,13 +736,13 @@ public class EzCabinetController {
 		String dateTime        = request.getParameter("crdDate")   != null ? request.getParameter("crdDate")   : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (title.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
+		if (title.equals("") || mailTitle.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, sender, attach, mode, cabinetId, content, receiver, forward, dateTime);
+		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, summary, mailTitle, sender, attach, mode, cabinetId, content, receiver, forward, dateTime);
 		
 		logger.debug("jsonSaveRelatedEmail finishes!");
 		return resultObj.toString();
@@ -845,8 +847,10 @@ public class EzCabinetController {
 		logger.debug("jsonSaveRelatedResource is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary         = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
 		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
 		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String resTitle        = request.getParameter("resTitle")   != null ? request.getParameter("resTitle")   : "";
 		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
 		String createUser      = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
 		String resDate         = request.getParameter("date")       != null ? request.getParameter("date")       : "";
@@ -854,15 +858,15 @@ public class EzCabinetController {
 		String resItem         = request.getParameter("resItem")    != null ? request.getParameter("resItem")    : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		logger.debug("Title: " + title + " || summary: " + summary + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || resTitle: "+ resTitle + " || content: " + content);
 		
-		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || resDate.equals("")  || priority.equals("") || resItem.equals("")) {
+		if (title.equals("") || resTitle.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || resDate.equals("")  || priority.equals("") || resItem.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedResource(request, userInfo.getId(), title, mode, cabinetId, content, createUser, resDate, priority, resItem);
+		resultObj = cabinetRestService.saveRelatedResource(request, userInfo.getId(), title, summary, mode, cabinetId, resTitle, content, createUser, resDate, priority, resItem);
 		
 		logger.debug("jsonSaveRelatedResource finishes!");
 		return resultObj.toString();
@@ -873,31 +877,33 @@ public class EzCabinetController {
 	public String jsonSaveRelatedSchedule(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedSchedule is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String title           = request.getParameter("title")        != null ? request.getParameter("title")        : "";
-		String mode            = request.getParameter("mode")         != null ? request.getParameter("mode")         : "";
-		String cabinetId       = request.getParameter("cabinet")      != null ? request.getParameter("cabinet")      : "";
-		String createUser      = request.getParameter("creator")      != null ? request.getParameter("creator")      : "";
-		String createDate      = request.getParameter("createdate")   != null ? request.getParameter("createdate")   : "";
-		String scheduleDate    = request.getParameter("scheduledate") != null ? request.getParameter("scheduledate") : "";
-		String priority        = request.getParameter("priority")     != null ? request.getParameter("priority")     : "";
-		String location        = request.getParameter("location")     != null ? request.getParameter("location")     : "";
-		String publicstatus    = request.getParameter("publicstatus") != null ? request.getParameter("publicstatus") : "";
-		String groupname       = request.getParameter("groupname")    != null ? request.getParameter("groupname")    : "";
-		String attendant       = request.getParameter("attendant")    != null ? request.getParameter("attendant")    : "";
-		String scheduletype    = request.getParameter("scheduletype") != null ? request.getParameter("scheduletype") : "";
-		String attach          = request.getParameter("attach")       != null ? request.getParameter("attach")       : "";
-		String content         = request.getParameter("content")      != null ? request.getParameter("content")      : "";
+		String title           = request.getParameter("title")         != null ? request.getParameter("title")         : "";
+		String summary         = request.getParameter("summary")       != null ? request.getParameter("summary")       : "";
+		String mode            = request.getParameter("mode")          != null ? request.getParameter("mode")          : "";
+		String cabinetId       = request.getParameter("cabinet")       != null ? request.getParameter("cabinet")       : "";
+		String scheduleTitle   = request.getParameter("scheduleTitle") != null ? request.getParameter("scheduleTitle") : "";
+		String createUser      = request.getParameter("creator")       != null ? request.getParameter("creator")       : "";
+		String createDate      = request.getParameter("createdate")    != null ? request.getParameter("createdate")    : "";
+		String scheduleDate    = request.getParameter("scheduledate")  != null ? request.getParameter("scheduledate")  : "";
+		String priority        = request.getParameter("priority")      != null ? request.getParameter("priority")      : "";
+		String location        = request.getParameter("location")      != null ? request.getParameter("location")      : "";
+		String publicstatus    = request.getParameter("publicstatus")  != null ? request.getParameter("publicstatus")  : "";
+		String groupname       = request.getParameter("groupname")     != null ? request.getParameter("groupname")     : "";
+		String attendant       = request.getParameter("attendant")     != null ? request.getParameter("attendant")     : "";
+		String scheduletype    = request.getParameter("scheduletype")  != null ? request.getParameter("scheduletype")  : "";
+		String attach          = request.getParameter("attach")        != null ? request.getParameter("attach")        : "";
+		String content         = request.getParameter("content")       != null ? request.getParameter("content")       : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || scheduleDate: " + scheduleDate + " || priority: " + priority + " || location: " + location + " || publicstatus: " + publicstatus + " || groupname: " + groupname + " || attendant: " + attendant + " || scheduletype: " + scheduletype + " || attach: " + attach + " || content: " + content);
+		logger.debug("Title: " + title + " || summary: " + summary +" || mode: " + mode + " || cabinetId: " + cabinetId + " || scheduleTitle: " + scheduleTitle +" || createUser: " + createUser + " || createDate: " + createDate + " || scheduleDate: " + scheduleDate + " || priority: " + priority + " || location: " + location + " || publicstatus: " + publicstatus + " || groupname: " + groupname + " || attendant: " + attendant + " || scheduletype: " + scheduletype + " || attach: " + attach + " || content: " + content);
 		
-		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || scheduleDate.equals("") || publicstatus.equals("") || scheduletype.equals("")) {
+		if (title.equals("") || scheduleTitle.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || scheduleDate.equals("") || publicstatus.equals("") || scheduletype.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedSchedule(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, scheduleDate, priority, location, publicstatus, groupname, attendant, scheduletype, attach, content);
+		resultObj = cabinetRestService.saveRelatedSchedule(request, userInfo.getId(), title, summary, mode, cabinetId, scheduleTitle, createUser, createDate, scheduleDate, priority, location, publicstatus, groupname, attendant, scheduletype, attach, content);
 		
 		logger.debug("jsonSaveRelatedSchedule finishes!");
 		return resultObj.toString();
