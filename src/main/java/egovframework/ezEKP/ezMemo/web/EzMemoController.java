@@ -324,7 +324,7 @@ public class EzMemoController {
 
 	@RequestMapping(value = "/ezMemo/setLayerArea.do")
 	public String setLayerArea(@CookieValue("loginCookie") String loginCookie,  String layerWidth, String layerHeight, HttpServletRequest request) throws Exception {
-		logger.debug("setLayerArea start");
+		logger.debug("setLayerArea started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -342,13 +342,13 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerArea/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("setLayerArea end");
+		logger.debug("setLayerArea ended");
 		return "json";
 	}
 	
 	@RequestMapping(value = "/ezMemo/setLayerPosition.do")
 	public String setLayerPosition(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request) throws Exception {
-		logger.debug("setLayerPosition start");
+		logger.debug("setLayerPosition started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -370,13 +370,13 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerPosition/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("setLayerPosition end");
+		logger.debug("setLayerPosition ended");
 		return "json";
 	}
 	
 	@RequestMapping(value = "/ezMemo/getMemoConfig.do")
 	public String getMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getMemoConfig start");
+		logger.debug("getMemoConfig started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -395,13 +395,13 @@ public class EzMemoController {
 			
 		} 
 		
-		logger.debug("getMemoConfig end");
+		logger.debug("getMemoConfig ended");
 		return "json";
 	}
 	
 	@RequestMapping(value = "/ezMemo/insertMemoConfig.do")
 	public String insertMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("insertMemoConfig start");
+		logger.debug("insertMemoConfig started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -426,7 +426,7 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/createMemoConfig/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("insertMemoConfig end");
+		logger.debug("insertMemoConfig ended");
 		return "json";
 	}
 	
@@ -463,6 +463,8 @@ public class EzMemoController {
 	@RequestMapping("/ezMemo/memo-display.do")
 	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, String memo_ids, String display, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoDisplay start");
+	/*public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setMemoDisplay started");*/
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -478,13 +480,13 @@ public class EzMemoController {
 			model.addAttribute("result", "ok");
 		}
 		
-		logger.debug("setMemoDisplay end");
+		logger.debug("setMemoDisplay ended");
 		return "json";
 	}
 
 	@RequestMapping(value = "/ezMemo/memoDetail.do")
 	public String getMemoDetail(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getMemoDetail start");
+		logger.debug("getMemoDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -502,7 +504,7 @@ public class EzMemoController {
 			model.addAttribute("memoList", resultBody.get("colorList").toString());
 		}
 		
-		logger.debug("getMemoDetail end");
+		logger.debug("getMemoDetail ended");
 		return "json";
 	}
 
@@ -560,7 +562,6 @@ public class EzMemoController {
 		return "json";
 	}
 	
-
 	/**
 	 * 다른 모듈에서 메모 추가
 	 * @param loginCookie
@@ -596,6 +597,7 @@ public class EzMemoController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		
 		param.put("memo_id", memoId);
 		param.put("userId", userInfo.getId());
 		param.put("color_id", colorId);
@@ -608,6 +610,31 @@ public class EzMemoController {
 		}
 		
 		logger.debug("setMemoColor end");
+		return "json";
+	}
+		
+	@RequestMapping("/ezMemo/reOrder.do")
+	public String reOrder(@CookieValue("loginCookie") String loginCookie, String draggedElId, String nextElId, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("reOrder started");
+		
+		logger.debug("아이디");
+		logger.debug("" + draggedElId);
+		logger.debug("" + nextElId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		param.put("draggedElId", draggedElId);
+		
+		param.put("nextElId", nextElId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/nextElId/" + nextElId + "/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("reOrder ended");
 		return "json";
 	}
 }

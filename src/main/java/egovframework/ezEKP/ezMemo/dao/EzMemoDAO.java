@@ -115,4 +115,13 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public void setDefaultColor(Map<String, Object> map) {
 		update("EzMemoDAO.setDefaultColor", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MemoVO> getMemoListForReOrder(Map<String, Object> map) {
+		return (List<MemoVO>)list("EzMemoDAO.getMemoListForReOrder", map);
+	}
+
+	public void setMemoOrders(Map<String, Object> map) {
+		update("EzMemoDAO.setMemoOrders", map);
+	}
 }
