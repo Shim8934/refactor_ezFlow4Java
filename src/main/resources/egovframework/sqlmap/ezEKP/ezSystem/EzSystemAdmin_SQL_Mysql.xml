@@ -138,7 +138,7 @@
 				ACCESS,
 				EXPLANATION
 			FROM 
-				TBL_IP_BAND
+				TBL_ACCESS_IP
 			WHERE 
 				TENANT_ID=#tenantID#
 		]]>
@@ -147,7 +147,7 @@
 	<insert id="EzSystemAdminDAO.insertIPBand" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
-				TBL_IP_BAND (TENANT_ID, IPADDRESS, ACCESS, EXPLANATION) 
+				TBL_ACCESS_IP (TENANT_ID, IPADDRESS, ACCESS, EXPLANATION) 
 			VALUES (#tenantID#, #ipAddress#, #access#, #explanation#)
 		]]>
 	</insert>
@@ -155,7 +155,7 @@
 	<update id="EzSystemAdminDAO.updateIPBand" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				TBL_IP_BAND
+				TBL_ACCESS_IP
 			SET 
 				IPADDRESS=#ipAddress#,
 				ACCESS=#access#,
@@ -172,7 +172,7 @@
 				ACCESS,
 				EXPLANATION
 			FROM 
-				TBL_IP_BAND
+				TBL_ACCESS_IP
 			WHERE 
 				IPNO=#ipNo#
 		]]>
@@ -181,7 +181,7 @@
 	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="String">
 		<![CDATA[
 			DELETE FROM
-				TBL_IP_BAND
+				TBL_ACCESS_IP
             WHERE
             	IPNO = #ipNo#
 		]]>
