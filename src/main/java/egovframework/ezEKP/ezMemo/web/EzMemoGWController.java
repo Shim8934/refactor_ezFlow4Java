@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezMemo.web;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -518,9 +519,11 @@ public class EzMemoGWController {
 		memo.setTenant_id(memoConfigVO.getTenant_id()); 
 		 
 		try { 
-			//ezMemoService.setMemoDisplay(memo); 
+
 			memo = ezMemoService.getMemo(memo); 
+			
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
+			
 			result.put("status", "ok"); 
 			result.put("code", 0); 
 			result.put("data", memo); 
@@ -672,8 +675,64 @@ public class EzMemoGWController {
 			memoVO.setColor_id(colorId);
 			
 			ezMemoService.setMemoColor(memoVO);
-
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		} 
 		
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId}] ended.");
+		return result;
+	}
+		
+	@RequestMapping(value = "/rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoOrder(@PathVariable String draggedElId, @PathVariable String nextElId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId}] started.");
+		LOGGER.debug("===========================");
+		LOGGER.debug("" + draggedElId);
+		LOGGER.debug("" + nextElId);
+		LOGGER.debug("===========================");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			Map<String, Object> compareResult = ezMemoService.comparOrders(draggedElId, nextElId, userId, memoConfigVO);
+			
+			int draggedMemoOrder = (int)compareResult.get("draggedMemoOrder");
+			int nextMemoOrder = (int)compareResult.get("nextMemoOrder");
+			
+			if ((int) compareResult.get("result") == 0) {
+				List<MemoVO> memoList = ezMemoService.getMemoListForReOrder(draggedMemoOrder, nextMemoOrder, memoConfigVO);
+				LOGGER.debug("==============================");
+				LOGGER.debug("gw 메모 리스트: " + memoList);
+				LOGGER.debug("==============================");
+				for (int i = 0; i < memoList.size(); i++) {
+					if (i == 0) {
+						memoList.get(i).setOrders(nextMemoOrder);
+						MemoVO memo = memoList.get(i);
+						ezMemoService.setMemoOrders(memo);
+						LOGGER.debug("이동된 메모: " + memo);
+					} else {
+						int beforeOrder = memoList.get(i).getOrders();
+						LOGGER.debug("순서 바뀌기 전 메모: " + memoList.get(i));
+						memoList.get(i).setOrders(beforeOrder - 1);
+						MemoVO memo = memoList.get(i);
+						LOGGER.debug("순서 바뀐 후 메모: " + memo);
+						ezMemoService.setMemoOrders(memo);
+					}
+				}
+				
+			} else if ((int) compareResult.get("result") == 1) {
+				
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
@@ -685,7 +744,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userId + "] ended.");
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId}] ended.");
 		return result;
 	}
 }
