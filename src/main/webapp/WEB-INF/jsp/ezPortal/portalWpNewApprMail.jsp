@@ -579,6 +579,41 @@
 		            apprChangeTab(document.getElementById("draftTab"));
 		        }
 		    }
+		    
+		    function openDraftUI(formURL, formDocType) {		       
+
+		        var pArgument = new Array();
+		        pArgument[0] = arr_userinfo[1];
+		        pArgument[1] = formURL;
+		        pArgument[2] = 'DRAFT';
+		        pArgument[3] = formDocType;
+	            pArgument[4] = "0";
+	            pArgument[5] = "";
+	            pArgument[6] = "";
+	            pArgument[7] = "";
+
+		        var openLocation = "";
+		      
+		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+		        	openLocation = "/ezApprovalG/draftui.do?formURL=";
+		            openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+		            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+		            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+		        }
+		        else {
+		        	if (!isIE()) {
+		                alert(strLang1103);
+		                return;
+		            }
+		            else {
+		                openLocation = "/ezApprovalG/ezDraftUI_HWP.do?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+		                openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&DocState=" + encodeURI(pArgument[5]) + "&ListType=" + encodeURI(pListTypeValue) + "&AprState=" + encodeURI(pArgument[6]);
+		                openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7])
+		            }
+		        }
+
+		        openwindow(openLocation, "", 890, 560);
+		    }
 		</script>
 	</head>
 	<body>
@@ -613,11 +648,14 @@
 	                <dd class="portletPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
 	            </dl>
 	             <ul class="bookmark">
-	            	<li class="bookmarkLi"><span>경조,휴가<br>교육 신청서</span></li>
+	             	<c:forEach var="form" items="${result}">
+	             		<li class="bookmarkLi" ondblclick="openDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
+					</c:forEach>
+	            	<!-- <li class="bookmarkLi"><span>가나다라경조,휴가<br>교육 신청서</span></li>
 	                <li class="bookmarkLi"><span>출장<br>보고서</span></li>
 	                <li class="bookmarkLi"><span>기안지<br>샘플양식</span></li>
 	                <li class="bookmarkLi"><span>폼빌더<br>양식</span></li>
-	                <li class="bookmarkLi"><span>신청서<br>샘플양식</span></li>
+	                <li class="bookmarkLi"><span>신청서<br>샘플양식</span></li> -->
 	            </ul>
 	            <div class="apprgraph">
 	                <div class="apprgraph_area">

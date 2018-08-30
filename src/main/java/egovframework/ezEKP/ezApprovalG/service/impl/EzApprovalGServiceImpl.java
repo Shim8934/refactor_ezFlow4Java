@@ -17907,6 +17907,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
 		
+		logger.debug("========처음이랑 두번째 차이가 뭘까 시작========");
+		logger.debug("formContID : " + formContID);
+		logger.debug("userID : " + userID);
+		logger.debug("kind : " + kind);
+		logger.debug("strMultiData : " + strMultiData);
+		logger.debug("searchType : " + searchType);
+		logger.debug("========처음이랑 두번째 차이가 뭘까 끝========");
+		
+		
+		//구해안 잠시 결과물 로그 찍어봄
+		int count1 =0;
+		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
+		for (ApprGFormVO fL : apprGFormVOlist) {
+			count1++;
+			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
+			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
+			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
+		}
+		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
 		
@@ -17917,6 +17937,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb.append("</DATA>");
 
 		logger.debug("getFormInfoDB ended");
+		
+		logger.debug("sb.toString() : " + sb.toString()); 
 		
 		return sb.toString();
 	}
@@ -25492,5 +25514,50 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} 
 		return cabinetSN;
 
+	}
+	
+	@Override
+	public List<ApprGFormVO> getFormInfoByPortal(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getFormInfo started.");
+
+		String listString = "";
+		
+		listString = getListHeader("109", companyID, lang, tenantID);
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMCONTID", formContID);
+		map.put("v_USERID", userID);
+		map.put("v_FORMKIND", kind);
+		map.put("v_LANGTYPE", strMultiData);
+		map.put("v_SEARCHTYPE", searchType);
+		
+		if(globals.getProperty("Globals.DbType").equals("mysql")){
+			if (searchName.equals("_")) {
+				map.put("v_SEARCHNAME", "\"" + searchName);
+			} else {
+				map.put("v_SEARCHNAME", searchName);
+			}
+		} else { 
+			map.put("v_SEARCHNAME", searchName);
+		}
+		
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		
+		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
+		
+		//구해안 잠시 결과물 로그 찍어봄
+		int count1 =0;
+		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
+		for (ApprGFormVO fL : apprGFormVOlist) {
+			count1++;
+			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
+			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
+			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
+		}
+		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
+	
+		return apprGFormVOlist;
 	}
 }
