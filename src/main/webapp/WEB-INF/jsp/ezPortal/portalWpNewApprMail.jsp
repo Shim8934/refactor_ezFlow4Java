@@ -42,7 +42,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        if ("${type}" == "appr") {
+		        if ("${type}" != "mail") {
 		        	getApprGraph();
 		        } else {		        		        
 		        	getMailGraph();
@@ -95,36 +95,39 @@
 		    function getDocList_after(xml) {
 		        if (xml == null) return;
 	
-		        try {
-		            document.getElementById("ApprList").innerHTML = "";
-		          
-		            var xmldom = createXmlDom();
-		            
+		        try {		          
+		            var xmldom = createXmlDom();		            
 		            xmldom = xml;
 	
-		                var listHTML = "";
+		            var listHTML = "";
 		                
-		                if (pListTypeValue == "1") {
+		                /* if (pListTypeValue == "1") { */
 		                    /* document.getElementById("doingCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT1").item(0)) + ")";
 		                    document.getElementById("draftCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT2").item(0)) + ")";
 		                    document.getElementById("rejectCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT3").item(0)) + ")"; */
-		                    
-							var sixhgap = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
-		                    document.getElementById("SIXHGAP").innerHTML = (sixhgap > 99 ? '99' : sixhgap);
-		                    
-		                    var onedgap = getNodeText(xmldom.getElementsByTagName("ONEDGAP").item(0));
-		                    document.getElementById("ONEDGAP").innerHTML = (onedgap > 99 ? '99' : onedgap);
-		                    
-		                    var sevendgap = getNodeText(xmldom.getElementsByTagName("SEVENDGAP").item(0));
-		                    document.getElementById("SEVENDGAP").innerHTML = (sevendgap > 99 ? '99' : sevendgap);
-		                    
-		                    var onemgap = getNodeText(xmldom.getElementsByTagName("ONEMGAP").item(0));
-		                    document.getElementById("ONEMGAP").innerHTML = (onemgap > 99 ? '99' : onemgap);
-		                    
-		                    var other = getNodeText(xmldom.getElementsByTagName("OTHER").item(0));
-		                    document.getElementById("OTHER").innerHTML = (other > 99 ? '99' : other);
-		                }
-	
+		                
+					if ("${type}" == "favo") {		                    
+						var sixhgap = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
+	                    document.getElementById("SIXHGAP").innerHTML = (sixhgap > 99 ? '99' : sixhgap);
+	                    
+	                    var onedgap = getNodeText(xmldom.getElementsByTagName("ONEDGAP").item(0));
+	                    document.getElementById("ONEDGAP").innerHTML = (onedgap > 99 ? '99' : onedgap);
+	                    
+	                    var sevendgap = getNodeText(xmldom.getElementsByTagName("SEVENDGAP").item(0));
+	                    document.getElementById("SEVENDGAP").innerHTML = (sevendgap > 99 ? '99' : sevendgap);
+	                    
+	                    var onemgap = getNodeText(xmldom.getElementsByTagName("ONEMGAP").item(0));
+	                    document.getElementById("ONEMGAP").innerHTML = (onemgap > 99 ? '99' : onemgap);
+	                    
+	                    var other = getNodeText(xmldom.getElementsByTagName("OTHER").item(0));
+	                    document.getElementById("OTHER").innerHTML = (other > 99 ? '99' : other);
+					}
+                    
+	                /* } */
+
+	                if ("${type}" == "appr") {
+	                	document.getElementById("ApprList").innerHTML = "";
+	                	
 		                if (xmldom.getElementsByTagName("CELL").length > 0) {
 		                    //listHTML = "<ul class=\"listtype_txt \">";
              
@@ -148,9 +151,7 @@
 		                        } else {
 			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        }
-		                     }                                 
-	
-	
+		                     }
 		                    //listHTML += "</ul>";
 		                } else {
 		                    listHTML = "<div class='nodata_portlet '>";
@@ -159,6 +160,7 @@
 		                }
 		                
 		                document.getElementById("ApprList").innerHTML = listHTML;
+	                }
 		        } catch (e) {
 		        }
 		    }
@@ -500,8 +502,15 @@
 		            var listHTML = "";
 		            if (xmldom.getElementsByTagName("NODE").length > 0) {
 		                /* var listHTML = "<ul class=\"listtype_txt \">"; */		                
+		                var mailCnt = 0;
 		                
-		                for (var i = 0; i < xmldom.getElementsByTagName("NODE").length; i++) {
+		                if (xmldom.getElementsByTagName("NODE").length > 5) {
+		                	mailCnt = 5;	
+		                } else {
+		                	mailCnt = xmldom.getElementsByTagName("NODE").length;
+		                }
+		                
+		                for (var i = 0; i < mailCnt; i++) {
 		                	var _SubjectColumSpan = document.createElement("span");
 		                	var SUBJECT = getNodeText(xmldom.getElementsByTagName("SUBJECT").item(i));
 		                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
@@ -574,7 +583,7 @@
 	</head>
 	<body>
 		<c:if test="${type == 'mail'}">
-			<article class="mail box_shadow">
+			<div class="layDIV">			
 	            <dl class="portlet_title">
 	                <dt class="portletText"><spring:message code='main.t00038' /></dt>
 	                <dd class="portletPlus" onclick="Mailmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
@@ -584,10 +593,10 @@
 	                </dd>
 	            </dl>
 	            <ul id="MailList" class="portlet_list"></ul>
-	        </article>
+	        </div>
         </c:if>
         <c:if test="${type == 'appr'}">
-        	<article class="approval box_shadow">
+        	<div class="layDIV">
 	            <dl class="portlet_tab">
 	                <dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
 	                <dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
@@ -595,9 +604,10 @@
 	                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
 	            </dl>
 	            <ul id ="ApprList" class="portlet_list"></ul>
-	        </article>
-	        
-	        <article class="bookmark_approval box_shadow">
+	        </div>
+		</c:if>
+		<c:if test="${type == 'favo'}">
+	        <div class="layDIV">
 	        	<dl class="portlet_title">
 	                <dt class="portletText">즐겨찾기양식</dt>
 	                <dd class="portletPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
@@ -633,7 +643,7 @@
 	                    </dl>
 	                </div>
 	            </div>
-	        </article>
+	        </div>
         </c:if>
 		<!-- 2018-08-24 장진혁 - 새로운 포탈 -->
 		<%-- <section  class="body_bg1">

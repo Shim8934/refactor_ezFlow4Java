@@ -19,7 +19,7 @@
 		</script>
 	</head>
 	<body>
-		<article class="stats_graph box_shadow">
+		<div class="layDIV">
 	    	<dl class="portlet_title">
 	            <dt class="portletText"><spring:message code='main.t00002' /></dt>
 	            <dd class="portletPlus"></dd>
@@ -45,7 +45,7 @@
       				</div> --%>
       			</c:otherwise>
       		</c:choose>			
-		</article>
+		</div>
 		
 		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
 		<%-- <section  class="body_bg1">

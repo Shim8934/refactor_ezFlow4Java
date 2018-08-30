@@ -54,7 +54,7 @@
 		</script>
 	</head>
 	<body>
-		<article class="vote box_shadow">
+		<div class="layDIV">
 	        <dl class="portlet_title">
 	            <dt class="portletText"><spring:message code='main.t2000' /></dt>
 	            <dd class="portletPlus" onclick="viewquicklist()"><img src="/images/kr/main/portlet_Plus.png"></dd>
@@ -64,7 +64,7 @@
 	        <ul class="voteList">
 	            ${pPollResultContent}
 	        </ul>
-	    </article>
+	    </div>
 		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
 		<%-- <section  class="body_bg1">
 			<article class="portletbox pollbox">

@@ -48,7 +48,7 @@ function CalendarMiniView(pTagetID) {
         //mSpan.style.marginLeft = "6px";
         //mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/kr/main/btn_calendar_prev.gif");
+        mImg.setAttribute("src", "/images/kr/main/calender_pre.png");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
@@ -57,7 +57,8 @@ function CalendarMiniView(pTagetID) {
 
         var mTd = document.createElement("TD");
         mTd.className = "calendar_mini_day"
-        var mSel = document.createElement("SELECT");
+        	
+        /*var mSel = document.createElement("SELECT");
         mSel.setAttribute("name", "iYear");
         mSel.setAttribute("id", "iYear");
         mSel.setAttribute("onchange", "changeYear()");
@@ -73,11 +74,17 @@ function CalendarMiniView(pTagetID) {
             var mText = document.createTextNode(i);
             mOpt.appendChild(mText);
             mSel.appendChild(mOpt);
-        }
+        }*/
+       	curYear = sDate.getFullYear();
+       	curMonth = sDate.getMonth()+1;
+       	
+       	curMonth = (curMonth < 10 ? "0"+curMonth : curMonth);
 
-        mTd.appendChild(mSel);
+        var dateSpan = "<span id='iYear'>" + curYear +"</span>.<span id='iMon'>" + curMonth + "</span>";
 
-        var mSel = document.createElement("SELECT");
+        mTd.innerHTML = dateSpan;
+
+        /*var mSel = document.createElement("SELECT");
         mSel.style.marginLeft = "10px";
         mSel.setAttribute("name", "iMon");
         mSel.setAttribute("id", "iMon");
@@ -97,7 +104,7 @@ function CalendarMiniView(pTagetID) {
             mSel.appendChild(mOpt);
         }
         mTd.appendChild(mSel);
-
+*/
         mTr.appendChild(mTd);
 
         var mTd = document.createElement("TD");
@@ -107,7 +114,7 @@ function CalendarMiniView(pTagetID) {
         //mSpan.style.marginRight = "6px";
         //mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/kr/main/btn_calendar_next.gif");
+        mImg.setAttribute("src", "/images/kr/main/calender_next.png");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
@@ -134,8 +141,8 @@ function CalendarMiniView(pTagetID) {
 }
 
 function GetTableMiniBodyObj() {
-    var year = document.getElementById("iYear").value;
-    var month = parseInt(document.getElementById("iMon").value);
+	var year = document.getElementById("iYear").innerHTML;
+    var month = parseInt(document.getElementById("iMon").innerHTML);
 
     if (DefaultView == 0)
         dayOfWeeks = strLang5_1; // 일>토
@@ -434,8 +441,11 @@ function mfFormatTime(iMin) {
 
 //이전월 이동
 function preMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) - 1;
-    var iYear = document.getElementById("iYear").value;
+    /*var iMonth = parseInt(document.getElementById("iMon").value, 10) - 1;
+    var iYear = document.getElementById("iYear").value;*/
+	
+	var iMonth = parseInt(document.getElementById("iMon").innerHTML, 10) - 1;
+    var iYear = document.getElementById("iYear").innerHTML;
 
     if (iMonth < 1) {
         iYear--;
@@ -446,8 +456,8 @@ function preMonth() {
         iMonth = 1;
     }
 
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    document.getElementById("iYear").innerHTML = iYear;
+    document.getElementById("iMon").innerHTML = iMonth;
     sDate.setFullYear(iYear, iMonth - 1, 14);
         
 
@@ -459,8 +469,8 @@ function preMonth() {
 
 //다음월 이동
 function nextMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) + 1;
-    var iYear = document.getElementById("iYear").value;
+    var iMonth = parseInt(document.getElementById("iMon").innerHTML, 10) + 1;
+    var iYear = document.getElementById("iYear").innerHTML;
 
     if (iMonth < 1) {
         iYear--;
@@ -472,8 +482,8 @@ function nextMonth() {
     }
 
     sDate.setFullYear(iYear, iMonth - 1, 14);
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    document.getElementById("iYear").innerHTML = iYear;
+    document.getElementById("iMon").innerHTML = iMonth;
 
    
     CalendarMiniView("CalendarMini");

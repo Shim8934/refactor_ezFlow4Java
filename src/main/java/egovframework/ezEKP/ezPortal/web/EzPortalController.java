@@ -1104,11 +1104,13 @@ System.out.println(strHTML);
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
-			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=36 height=36>";
 		} else {
 			userPhoto = "";
 		}
 		logger.debug("userPhoto="+userPhoto);
+		//2018-08-29 장진혁 - 이미지 슬라이더
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 		
 		//새로고침 시간 컨피그화
 		String refreshSecond = config.getProperty("refreshSecond");
@@ -1173,6 +1175,7 @@ System.out.println(strHTML);
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("type", req.getParameter("type"));
+		model.addAttribute("sliderList", sliderList);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
@@ -1907,9 +1910,13 @@ System.out.println(strHTML);
 		
 		int noViewCnt = 0;
 		int cnt = 0;
+		int page = Integer.parseInt(req.getParameter("page"));
+		
 		String[] noViewArrayID = new String[1000];
 		String[] arrayID = new String[1000];
 		StringBuilder result = new StringBuilder("<DATA>");
+		
+		List<PersonalGetQuickLinkMenuVO> realList = new ArrayList<PersonalGetQuickLinkMenuVO>();
 		
 		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
 		
@@ -1947,16 +1954,31 @@ System.out.println(strHTML);
 					
 					if (TF) {
 						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
+						realList.add(getQuickLinkMenu.get(k));						
 						cnt ++;
-						result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
+						//result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
 					}
 				}
 			}
 		}
-		result.append("</DATA>");
-		logger.debug("quickLinkXML="+result.toString());
+		
+		int lastSize = 0;
+		
+		if (page+5 >= realList.size()) {
+			lastSize = realList.size();
+		} else {
+			lastSize = page+5;
+		}
+		
+		for (int z=page; z < lastSize; z++) {
+			result.append(commonUtil.getQueryResult(realList.get(z)));
+		}
+		
+		result.append("<SIZE>" + realList.size() + "</SIZE></DATA>");
 
+		logger.debug("quickLinkXML="+result.toString());
 		logger.debug("getQuickLink ended");
+		
 		return result.toString();
 	}
 	
@@ -3977,5 +3999,19 @@ System.out.println(strHTML);
 			resp.getWriter().close();
 		}
 		logger.debug("boardPortlet ended");
+	}
+	
+	@RequestMapping(value = "/ezPortal/wpNewSchedule.do")
+	public String wpNewSchedule(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("wpNewSchedule started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
+		model.addAttribute("sliderList", sliderList);
+		
+		logger.debug("wpNewSchedule ended");
+		
+		return "/ezPortal/portalWpNewSchedule";
 	}	
 }

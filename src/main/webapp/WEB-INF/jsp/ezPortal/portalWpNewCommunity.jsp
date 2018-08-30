@@ -114,7 +114,7 @@
     	</article>
 	</body>	 --%>
 	<body>
-		<article class="community box_shadow">
+		<div class="layDIV">
 	        <dl class="portlet_title">
 	            <dt class="portletText"><spring:message code='main.t1006' /></dt>
 	            <dd class="portletPlus" onclick="Copmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
@@ -128,6 +128,6 @@
 					</div>
         		</c:if>
 	        </div>
-	    </article>
+	    </div>
 	</body>
 </html>

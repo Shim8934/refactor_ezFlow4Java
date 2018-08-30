@@ -359,10 +359,10 @@
 		</script>
 	</head>
 	<body>
-		<article class="board box_shadow">
+		<div class="layDIV">
             <dl class="portlet_tab" id="BoardTab"></dl>
             <ul class="portlet_list" id="BoardList"></ul>
-        </article>
+        </div>
 		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
 		<!-- <section  class="body_bg1">
       		<article class="portletbox boardbox ">
