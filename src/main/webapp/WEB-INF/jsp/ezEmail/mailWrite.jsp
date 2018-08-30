@@ -158,7 +158,6 @@
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    var folderPath = "${drafts}";
-	    var multipartFirstIdx = "${multipartFirstIdx}";
 
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
@@ -909,7 +908,7 @@
 		                					+ "&tid=" + tid;
 		                } else {
 		                	// 일반파일 첨부시
-			                aitem = "/ezEmail/downloadAttach.do?" 
+			                aitem = "/ezEmail/downloadAttachInWriter.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
 			                				+ "&filename=" + encodeURIComponent(filename);

@@ -110,6 +110,7 @@
 				spanFolderName.setAttribute("level", list["folderLevel"]);
 				spanFolderName.setAttribute("fldName1", list["folderName"]);
 				spanFolderName.setAttribute("fldName2", list["folderName2"]);
+				spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
 				spanFolderName.onclick = function() {getSelected(this);};
 				
 				divElmt.appendChild(imgElmt);

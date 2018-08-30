@@ -5,7 +5,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title><spring:message code='ezApprovalG.t30'/></title>
+	    <title>
+	    <c:choose>
+			<c:when test="${nonElecRec eq 'Y'}">
+            	비전자문서 등록
+			</c:when>
+			<c:otherwise>
+            	<spring:message code='ezApprovalG.t30'/>
+			</c:otherwise>
+		</c:choose>
+	    </title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
@@ -1361,13 +1370,17 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li id="btnSelForm"><span onclick="return btnSelForm_onclick()"><spring:message code='ezApprovalG.t152'/></span></li>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
-	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
+	                        <%-- <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li> --%>
 							<c:choose>
 								<c:when test="${nonElecRec eq 'Y'}">
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()">문서정보</span></li>
+	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
 								</c:when>
 								<c:otherwise>
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 								</c:otherwise>
 							</c:choose>
