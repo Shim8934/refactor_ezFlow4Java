@@ -203,9 +203,22 @@
 			
 		}
 		
+		var tdChk = false;
 		function event_listclick(obj) {
 			if (obj.tagName == "TD") {
 		        obj = obj.parentElement;
+		        tdChk = true;
+		    } else {
+		    	if (!tdChk) {
+		    		var selectedList = $("#tblIP tbody tr[selected=true]");
+			    	
+			    	for (var i = 0; i < selectedList.length; i++) {
+			    		selectedList[i].style.backgroundColor = m_strColorDefault;
+			    		selectedList[i].childNodes.item(0).childNodes.item(0).checked = false;
+			    		selectedList[i].setAttribute("selected", false);
+			    	}
+		    	}
+		    	tdChk = false;
 		    }
 			
 			if (obj.childNodes.item(0).childNodes.item(0).checked) {
