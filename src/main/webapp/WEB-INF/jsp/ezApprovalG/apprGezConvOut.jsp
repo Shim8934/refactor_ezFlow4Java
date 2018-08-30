@@ -231,7 +231,6 @@
 		    		data : {
 		    			docID : pDocID,
 		    			deptID : "Address",
-		    			recDate  : "",
 		    			mode : "send"
 		    		},
 		    		success: function(text){
