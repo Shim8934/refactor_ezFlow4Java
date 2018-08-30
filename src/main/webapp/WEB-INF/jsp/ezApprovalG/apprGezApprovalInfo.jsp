@@ -402,6 +402,11 @@
 	            	g_SepAttachLVXml = RetValue[49];
 	            	g_szSCListXml = RetValue[50];
 	            	sepAttachCheckYN = RetValue[51];
+	            	
+	            	if (pIniGubun == "1") {
+		        		document.title = "문서정보";
+	                    document.getElementById("h1_header").innerHTML = "문서정보";
+		        	}
 	            }
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
@@ -1757,13 +1762,13 @@
 	    </style>
 	</head>
 	<body id="bodytag" class="popup" style="background-color: #ffffff; overflow: hidden">
-	    <h1>
-	    	<spring:message code='ezApprovalG.t1742'/>
+		<div>
+	    	<h1 id="h1_header"><spring:message code='ezApprovalG.t1742'/></h1>
 	        <div id="btnArea" style="display:none;float:right;">
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
 	        </div>	        
-	    </h1>
+		</div>
 	    <div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
