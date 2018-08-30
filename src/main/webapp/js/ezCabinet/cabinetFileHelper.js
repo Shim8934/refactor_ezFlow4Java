@@ -265,10 +265,10 @@ var CabinetFileHelper = function() {
 			titleTdElmt.appendChild(inputElmt1);
 			
 			//Set SummaryInputBox
-			var SummTdElmt       = document.getElementById("summary");
+			var SummTdElmt        = document.getElementById("summary");
 			var inputElmt2        = document.createElement("input"); 
 			inputElmt2.value      = SummTdElmt.textContent;
-			titleTdElmt.innerHTML = "";
+			SummTdElmt.innerHTML = "";
 			inputElmt2.className  = "tblFileInput";
 			inputElmt2.setAttribute("id", "itemSumm");
 			inputElmt2.setAttribute("maxlength", "250");
@@ -409,12 +409,21 @@ var CabinetFileHelper = function() {
 				return;
 			}
 			
+			if (summary.length > 250) {
+				alert(CabinetMessages.strSummLen);
+				var inputTt2   = document.getElementById("itemSumm");
+				inputTt2.value = "";
+				inputTt2.focus();
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezCabinet/modifyRelatedItem.do",
 				data: {
 					"itemId"      : itemId,
 					"title"       : title,
+					"summary"     : summary,
 					"relatedList" : JSON.stringify(relatedArr)
 				},
 				dataType: "JSON",

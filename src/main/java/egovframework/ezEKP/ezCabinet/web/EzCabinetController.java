@@ -755,6 +755,7 @@ public class EzCabinetController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
 		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String summary         = request.getParameter("summary")     != null ? request.getParameter("summary")     : "";
 		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
 		JSONObject resultObj   = new JSONObject();
 		
@@ -764,7 +765,7 @@ public class EzCabinetController {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.modifyRelatedItem(request, userInfo.getId(), itemId, title, relatedList);
+		resultObj = cabinetRestService.modifyRelatedItem(request, userInfo.getId(), itemId, title, summary, relatedList);
 		
 		logger.debug("jsonModifyRelatedItem finishes!");
 		return resultObj.toString();

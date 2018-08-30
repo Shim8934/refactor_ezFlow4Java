@@ -583,12 +583,13 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception {
+	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String summary, String relatedList) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/modify/id/" + itemId;
 		JSONObject jsonBody       = new JSONObject();
-		jsonBody.put("userId", userId);
-		jsonBody.put("title",  title);
-		jsonBody.put("relate", relatedList);
+		jsonBody.put("userId",  userId);
+		jsonBody.put("title",   title);
+		jsonBody.put("summary", summary);
+		jsonBody.put("relate",  relatedList);
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}

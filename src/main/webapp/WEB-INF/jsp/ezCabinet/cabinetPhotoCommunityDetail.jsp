@@ -18,9 +18,9 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="fileCreator" class="cursor overfl"><c:out value="${item.creatorName}"/></td>
+					<td id="fileCreator" class="cursor overfl wide"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -39,7 +39,7 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><c:out value="${commuWriter.columnName}"/></th>
-					<td colspan="3" id="commuCreator" class="cursor overfl"></td>
+					<td colspan="3" id="commuCreator" class="cursor overfl wide"></td>
 				</tr>
 				<tr>
 					<th><c:out value="${commuTitle.columnName}"/></th>

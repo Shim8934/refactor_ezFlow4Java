@@ -1641,12 +1641,13 @@ public class EzCabinetGWController {
 	public JSONObject modifyEmailItem(@RequestBody JSONObject emailItemInf, @PathVariable(value="itemid") String itemId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")        : "";
 		String title       = emailItemInf.get("title")      != null ? emailItemInf.get("title").toString()  : "";
+		String summary     = emailItemInf.get("summary")    != null ? emailItemInf.get("summary").toString(): "";
 		String relatedList = emailItemInf.get("relate")     != null ? emailItemInf.get("relate").toString() : "";
 		String userId      = emailItemInf.get("userId")     != null ? emailItemInf.get("userId").toString() : "";
 		JSONObject result  = new JSONObject();
 		JSONParser jp      = new JSONParser();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || userId: " + userId + " || itemId: " + itemId + " || relatedList: " + relatedList);
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || summary: " + summary +" || userId: " + userId + " || itemId: " + itemId + " || relatedList: " + relatedList);
 		
 		if (serverName.equals("") || userId.equals("") || title.equals("") || itemId.equals("") ) {
 			logger.debug("Parameter error!");
@@ -1670,7 +1671,7 @@ public class EzCabinetGWController {
 			}
 			
 			JSONArray relatedFiles = (JSONArray) jp.parse(relatedList);
-			result                 = cabinetService.modifyRelatedItem(currentItemId, title, relatedFiles, userInfo);
+			result                 = cabinetService.modifyRelatedItem(currentItemId, title, summary, relatedFiles, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
