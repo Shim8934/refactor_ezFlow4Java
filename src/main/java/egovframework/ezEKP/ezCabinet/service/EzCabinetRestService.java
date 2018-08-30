@@ -78,8 +78,8 @@ public interface EzCabinetRestService {
 	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String summary, String mailTitle, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forwarder, String dateTime) throws Exception;
 	
 	//Save related address document
-	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String createDate, String changeUser, String changeDate) throws Exception;
-	public JSONObject saveRelatedNormalAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo) throws Exception;
+	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String groupName, String content, String createUser, String createDate, String changeUser, String changeDate) throws Exception;
+	public JSONObject saveRelatedNormalAdress(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo) throws Exception;
 	
 	//Modify related item
 	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception;

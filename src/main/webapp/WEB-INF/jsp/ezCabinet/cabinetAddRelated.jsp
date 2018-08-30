@@ -378,7 +378,8 @@
 						type    : moduleType, 
 						mode    : saveMode, 
 						content : divContent,
-						title   : doctitle,
+						title   : moduleTitle,
+						summary : moduleSummary,
 						attach  : JSON.stringify(attachList),
 						other   : JSON.stringify(otherList)
 					};
@@ -481,10 +482,10 @@
 					var addressType = listMembers ? "group" : "normal";
 					
 					if (listMembers) {
-						saveGroupAddress(addressOpener, saveMode, cabinetId);
+						saveGroupAddress(addressOpener, moduleTitle, moduleSummary, saveMode, cabinetId);
 					}
 					else {
-						saveNormalAddress(addressOpener, saveMode, cabinetId);
+						saveNormalAddress(addressOpener, moduleTitle, moduleSummary, saveMode, cabinetId);
 					}
 				}
 				
@@ -937,7 +938,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveGroupAddress(addressOpener, saveMode, cabinetId) {
+				function saveGroupAddress(addressOpener, moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var addressDocument = addressOpener.document;
 					var title           = addressDocument.getElementById("TextName").textContent;
 					var createUser      = addressOpener.creatorid;
@@ -950,7 +951,9 @@
 					var url  = "/ezCabinet/saveRelatedGroupAddress.do";
 					var data = {
 						mode       : saveMode,
-						title      : title,
+						title      : moduleTitle,
+						summary    : moduleSummary,
+						groupName  : title,
 						createDate : createDate,
 						createUser : createUser,
 						changeUser : changeUser,
@@ -963,7 +966,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveNormalAddress(addressOpener, saveMode, cabinetId) {
+				function saveNormalAddress(addressOpener, moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var addressDocument = addressOpener.document;
 					var title           = addressDocument.getElementById("TextName").textContent;
 					var createUser      = addressOpener.creatorid;
@@ -987,7 +990,8 @@
 					var url  = "/ezCabinet/saveRelatedNormalAddress.do";
 					var data = {
 						mode       : saveMode,
-						title      : title,
+						title      : moduleTitle,
+						summary    : moduleSummary,
 						createDate : createDate,
 						createUser : createUser,
 						changeUser : changeUser,

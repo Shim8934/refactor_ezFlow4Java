@@ -101,8 +101,8 @@ public interface EzCabinetService {
 	JSONObject modifyRelatedItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 	
 	//Save related address item functions
-	JSONObject saveGroupAddressItem(int dstCabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception;
-	JSONObject saveNormalAddressItem(int dstCabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception;
+	JSONObject saveGroupAddressItem(int dstCabinetId, String title, String summary, String mode, String groupName, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception;
+	JSONObject saveNormalAddressItem(int dstCabinetId, String title, String summary, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception;
 	
 	//Save related resource item function
 	JSONObject saveResourceItem(int dstCabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception;

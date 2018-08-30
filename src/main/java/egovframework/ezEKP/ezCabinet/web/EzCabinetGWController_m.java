@@ -41,12 +41,13 @@ public class EzCabinetGWController_m {
 		String userId          = apprContent.get("userId").toString()    != null ? apprContent.get("userId").toString()    : "";
 		String mode            = apprContent.get("mode").toString()      != null ? apprContent.get("mode").toString()      : "";
 		String title           = apprContent.get("title").toString()     != null ? apprContent.get("title").toString()     : "";
+		String summary         = apprContent.get("summary").toString()   != null ? apprContent.get("summary").toString()   : "";
 		String attach          = apprContent.get("attach").toString()    != null ? apprContent.get("attach").toString()    : "";
 		String other           = apprContent.get("other").toString()     != null ? apprContent.get("other").toString()     : "";
 		String cabinetId       = apprContent.get("cabinetId").toString() != null ? apprContent.get("cabinetId").toString() : "";
 		JSONObject result      = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId + " || mode: " + mode+ " ||  cabinetId: " + cabinetId + " || doctitle: " + title + " || lstAttachLink: " + attach + " || otherAttachLk: " + other);
+		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId + " || mode: " + mode+ " ||  cabinetId: " + cabinetId + " || doctitle: " + title + " || summary: " + summary + " || lstAttachLink: " + attach + " || otherAttachLk: " + other);
 		
 		if (serverName.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || approvalContent.equals("") || userId.equals("") || mode.equals("") || title.equals("")) {
 			logger.debug("Parameter error!");
@@ -61,7 +62,7 @@ public class EzCabinetGWController_m {
 			String realPath        = request.getServletContext().getRealPath("");
 			
 			//Save approval item
-			result                 = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, title, attach, other, locale, userInfo);
+			result                 = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, title, summary, attach, other, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -1711,7 +1711,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveGroupAddressItem(int cabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception {
+	public JSONObject saveGroupAddressItem(int cabinetId, String title, String summary, String mode, String groupName, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1723,15 +1723,16 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add group address item
 		int moduleType = 8; //address module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, content, mode, userInfo);
 		
 		//Save group columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("groupName"  , itemId, "ezAddress.t304", groupName , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("creator"    , itemId, "ezAddress.t286", createUser, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("createdate" , itemId, "ezAddress.t288", createDate, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("modifier"   , itemId, "ezAddress.t289", changeUser, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("modifydate" , itemId, "ezAddress.t290", changeDate, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("addresstype", itemId, "ezAddress.t290", "group"  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("addresstype", itemId, "ezAddress.t290", "group"   , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -1774,7 +1775,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveNormalAddressItem(int cabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
+	public JSONObject saveNormalAddressItem(int cabinetId, String title, String summary, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1786,7 +1787,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add normal address item
 		int moduleType = 8; //address module
-		addRelatedItem(itemId, moduleType, cabinetId, title, "", null, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, summary, null, mode, userInfo);
 		
 		//Save normal columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();

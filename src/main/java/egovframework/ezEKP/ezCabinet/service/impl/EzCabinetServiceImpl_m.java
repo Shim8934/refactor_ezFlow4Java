@@ -56,7 +56,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveApprovalItem(String realPath, int cabinetId, String approvalContent, String mode, String doctitle, String lstAttachLink, String otherAttachLk, Locale locale, LoginVO userInfo)throws Exception {
+	public JSONObject saveApprovalItem(String realPath, int cabinetId, String approvalContent, String mode, String doctitle, String summary, String lstAttachLink, String otherAttachLk, Locale locale, LoginVO userInfo)throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -93,7 +93,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		
 		//Save Item
 		int moduleType = 2; //Approval module
-		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, doctitle, approvalContent, "", mode, userInfo);
+		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, doctitle, summary, approvalContent, mode, userInfo);
 		
 		result.put("status", "ok");
 		result.put("code", 0);

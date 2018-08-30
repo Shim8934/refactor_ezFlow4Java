@@ -18,12 +18,25 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="creator" colspan="3" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
+					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
+					<th><spring:message code='ezCabinet.t110'/></th>
+					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" colspan="3" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<th><spring:message code='ezCabinet.t51'/></th>
+					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t52'/></th>
+					<td class="overfl" colspan="3"><c:out value="${item.summary}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t94'/></th>
+					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
+				</tr>
+			</table>
+			
+			<table class="tblEmailInf">
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>
 					<td id="addrCreator" colspan="3" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
@@ -48,15 +61,8 @@
 					<th><c:out value="${department.columnName}"/></th>
 					<td class="nowrap overfl cabdatetd" colspan="3" title="<c:out value="${department.columnValue}"/>"><c:out value="${department.columnValue}"/></td>
 				</tr>
-				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezCabinet.t94'/></th>
-					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
-				</tr>
 			</table>
+			
 			<table class="tblEmailInf">
 				<tr>
 					<th><c:out value="${compnumber.columnName}"/></th>

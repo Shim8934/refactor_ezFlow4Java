@@ -1685,8 +1685,10 @@ public class EzCabinetGWController {
 	public JSONObject saveGroupAddressItem(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")              : "";
 		String title      = addressItemInf.get("title")      != null ? addressItemInf.get("title").toString()      : "";
+		String summary    = addressItemInf.get("summary")    != null ? addressItemInf.get("summary").toString()    : "";
 		String mode       = addressItemInf.get("mode")       != null ? addressItemInf.get("mode").toString()       : "";
 		String cabinetId  = addressItemInf.get("cabinet")    != null ? addressItemInf.get("cabinet").toString()    : "";
+		String groupName  = addressItemInf.get("groupName")  != null ? addressItemInf.get("groupName").toString()    : "";
 		String content    = addressItemInf.get("content")    != null ? addressItemInf.get("content").toString()    : "";
 		String createUser = addressItemInf.get("createUser") != null ? addressItemInf.get("createUser").toString() : "";
 		String createDate = addressItemInf.get("createDate") != null ? addressItemInf.get("createDate").toString() : "";
@@ -1696,9 +1698,9 @@ public class EzCabinetGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || summary: " + summary + " || groupName: " + groupName + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || groupName.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1708,7 +1710,7 @@ public class EzCabinetGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			result           = cabinetService.saveGroupAddressItem(dstCabinetId, title, mode, content, createUser, createDate, changeUser, changeDate, userInfo);
+			result           = cabinetService.saveGroupAddressItem(dstCabinetId, title, summary, mode, groupName, content, createUser, createDate, changeUser, changeDate, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1723,6 +1725,7 @@ public class EzCabinetGWController {
 	public JSONObject saveNormalAddressItem(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")              : "";
 		String title      = addressItemInf.get("title")      != null ? addressItemInf.get("title").toString()      : "";
+		String summary    = addressItemInf.get("summary")    != null ? addressItemInf.get("summary").toString()    : "";
 		String mode       = addressItemInf.get("mode")       != null ? addressItemInf.get("mode").toString()       : "";
 		String cabinetId  = addressItemInf.get("cabinet")    != null ? addressItemInf.get("cabinet").toString()    : "";
 		String createUser = addressItemInf.get("createUser") != null ? addressItemInf.get("createUser").toString() : "";
@@ -1746,7 +1749,7 @@ public class EzCabinetGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || company: " + company + " || department: " + department + " || position: " + position + " || email: " + email + " || compNumber: " + compNumber + " || userNumber: " + userNumber + " || faxNumber: " + faxNumber + " || homePage: " + homePage + " || companyZip: " + companyZip + " || compAddr: " + compAddr + " || homeZip: " + homeZip + " || homeAddr: " + homeAddr + " || memo: " + memo);
+		logger.debug("ServerName: " + serverName + " || title: " + title + "|| summary: " + summary + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || company: " + company + " || department: " + department + " || position: " + position + " || email: " + email + " || compNumber: " + compNumber + " || userNumber: " + userNumber + " || faxNumber: " + faxNumber + " || homePage: " + homePage + " || companyZip: " + companyZip + " || compAddr: " + compAddr + " || homeZip: " + homeZip + " || homeAddr: " + homeAddr + " || memo: " + memo);
 		
 		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
 			logger.debug("Parameter error!");
@@ -1758,7 +1761,7 @@ public class EzCabinetGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			result           = cabinetService.saveNormalAddressItem(dstCabinetId, title, mode, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo, userInfo);
+			result           = cabinetService.saveNormalAddressItem(dstCabinetId, title, summary, mode, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

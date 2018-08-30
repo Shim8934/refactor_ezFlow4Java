@@ -776,8 +776,10 @@ public class EzCabinetController {
 		logger.debug("jsonSaveRelatedGroupAddress is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary         = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
 		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
 		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String groupName       = request.getParameter("groupName")  != null ? request.getParameter("groupName")  : "";
 		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
 		String createUser      = request.getParameter("createUser") != null ? request.getParameter("createUser") : "";
 		String createDate      = request.getParameter("createDate") != null ? request.getParameter("createDate") : "";
@@ -785,15 +787,15 @@ public class EzCabinetController {
 		String changeDate      = request.getParameter("changeDate") != null ? request.getParameter("changeDate") : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		logger.debug("Title: " + title + " || summary: "+ summary + " || groupName: "+ groupName +" || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
 		
-		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createUser.equals("") || createDate.equals("")  || changeUser.equals("") || changeDate.equals("")) {
+		if (title.equals("") || groupName.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createUser.equals("") || createDate.equals("")  || changeUser.equals("") || changeDate.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedGroupAdress(request, userInfo.getId(), title, mode, cabinetId, content, createUser, createDate, changeUser, changeDate);
+		resultObj = cabinetRestService.saveRelatedGroupAdress(request, userInfo.getId(), title, summary, mode, cabinetId, groupName, content, createUser, createDate, changeUser, changeDate);
 		
 		logger.debug("jsonSaveRelatedGroupAddress finishes!");
 		return resultObj.toString();
@@ -805,6 +807,7 @@ public class EzCabinetController {
 		logger.debug("jsonSaveRelatedNormalAddress is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary         = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
 		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
 		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
 		String createUser      = request.getParameter("createUser") != null ? request.getParameter("createUser") : "";
@@ -827,7 +830,7 @@ public class EzCabinetController {
 		
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId);
+		logger.debug("Title: " + title + "|| summary: "+ summary + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId);
 		
 		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("")  || changeUser.equals("") || changeDate.equals("")) {
 			resultObj.put("code", 1);
@@ -835,7 +838,7 @@ public class EzCabinetController {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedNormalAdress(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo);
+		resultObj = cabinetRestService.saveRelatedNormalAdress(request, userInfo.getId(), title, summary, mode, cabinetId, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo);
 		
 		logger.debug("jsonSaveRelatedNormalAddress finishes!");
 		return resultObj.toString();

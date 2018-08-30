@@ -38,11 +38,12 @@ public class EzCabinetController_m {
 		String cabinetId       = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
 		String content         = request.getParameter("content")   != null ? request.getParameter("content")   : "";
 		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String summary         = request.getParameter("summary")   != null ? request.getParameter("summary")   : "";
 		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
 		String other           = request.getParameter("other")     != null ? request.getParameter("other")     : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || mode : " + mode + " || Content: " + content + " || Cabinet Id: " + cabinetId + " || Attach: " + attach + " || Other: " + other);
+		logger.debug("Title: " + title + " || summary: " + summary + " || mode : " + mode + " || Content: " + content + " || Cabinet Id: " + cabinetId + " || Attach: " + attach + " || Other: " + other);
 		
 		if (content.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("")) {
 			logger.debug("Invalid parameter!");
@@ -51,7 +52,7 @@ public class EzCabinetController_m {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, content, title, attach, other);
+		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, content, title, summary, attach, other);
 		
 		logger.debug("jsonSaveRelatedApproval finishes!");
 		return resultObj.toString();

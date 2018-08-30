@@ -30,7 +30,7 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedApproval(HttpServletRequest request, String userId, String mode, String cabinetId, String divContent, String doctitle, String lstAttachLink, String otherAttachLk) {
+	public JSONObject saveRelatedApproval(HttpServletRequest request, String userId, String mode, String cabinetId, String divContent, String doctitle, String summary, String lstAttachLink, String otherAttachLk) {
 		String url                = "/rest/ezcabinet/relate-item/save/apprv";
 		JSONObject jsonParam      = new JSONObject();
 		jsonParam.put("content",   divContent);
@@ -38,6 +38,7 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 		jsonParam.put("mode",      mode);
 		jsonParam.put("cabinetId", cabinetId);
 		jsonParam.put("title",     doctitle);
+		jsonParam.put("summary",   summary);
 		jsonParam.put("attach",    lstAttachLink);
 		jsonParam.put("other",     otherAttachLk);
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonParam);
