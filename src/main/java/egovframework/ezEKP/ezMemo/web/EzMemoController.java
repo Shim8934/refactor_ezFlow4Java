@@ -461,28 +461,26 @@ public class EzMemoController {
 	}
 	
 	@RequestMapping("/ezMemo/memo-display.do")
-	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception{
+	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, String memo_ids, String display, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoDisplay start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_id",userInfo.getId());
-		param.put("memoId", memoId);
-		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-display/memo/" + memoId + "/users/" + userInfo.getId(), param, request, "post", null);
+		param.put("memo_ids", memo_ids);
+		param.put("userId", userInfo.getId());
+		param.put("display", display);
+	
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-display/memo/" + memo_ids + "/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
 		
-		if ("ok".equals(status)) {
+		if (status.equals("ok")) {
 			model.addAttribute("result", "ok");
 		}
 		
 		logger.debug("setMemoDisplay end");
 		return "json";
 	}
-	
 
 	@RequestMapping(value = "/ezMemo/memoDetail.do")
 	public String getMemoDetail(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception {

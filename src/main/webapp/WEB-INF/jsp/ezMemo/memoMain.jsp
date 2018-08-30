@@ -372,6 +372,74 @@
 	    	}
 	    }
 	    
+	    function memoDisplayChange() {		// 숨김 처리
+			var memo_ids = [];
+	    	var checkList = [];
+			
+			$(":checkbox[name=memo]:checked").each(function(){
+				checkList.push($(this).val());
+				if($(this).attr("display") == 0){
+					memo_ids.push($(this).val());
+				} 
+			});
+			
+			if (checkList.length == 0) {
+	        	alert("<spring:message code='ezMemo.t0043' />");
+	            return;
+	        }
+			
+	    	$.ajax ({
+	 			  url : '/ezMemo/memo-display.do',
+	 			  type : 'POST',
+	              dataType : 'json',
+	              data : { 
+	                memo_ids : memo_ids.join(),
+	                display : 1
+	              },  
+	              cache: false,
+	              success: function(result) {
+	                getMemoList();
+	              },
+	              error : function() {
+	                	
+	              }
+			}); 
+	    }
+	    
+		function memoDisplayChange2() {		// 나타내기 처리
+			var memo_ids = [];
+			var checkList = [];
+			
+			$(":checkbox[name=memo]:checked").each(function(){
+				checkList.push($(this).val());
+				if($(this).attr("display") == 1){
+					memo_ids.push($(this).val());
+				} 
+			});
+			
+			if (checkList.length == 0) {
+	        	alert("<spring:message code='ezMemo.t0043' />");
+	            return;
+	        }
+			
+	    	$.ajax ({
+	 			  url : '/ezMemo/memo-display.do',
+	 			  type : 'POST',
+	              dataType : 'json',
+	              data : { 
+	                memo_ids : memo_ids.join(),
+	                display : 0
+	              },  
+	              cache: false,
+	              success: function(result) {
+	                getMemoList();
+	              },
+	              error : function() {
+	                	
+	              }
+			}); 
+	    }
+	    
 	  // 상세검색 레이어팝업
 		function doLayerPopup() {
 			btn_PostDate_Clear();
@@ -476,8 +544,8 @@
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
 		        <li id="moveMemo"><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
-		        <li><span onClick=""><spring:message code='ezMemo.t0017'/></span></li>
-		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
+		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
+		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
 		        <li><select id="memoType" style="height: 20px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">

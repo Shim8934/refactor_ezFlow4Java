@@ -20,7 +20,7 @@ public interface EzMemoService {
 	public int hasMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
 	public int getMemoDefaultFolder(MemoFolderVO memoFolderVO);
-	public void setMemoDisplay(MemoVO memo);
+	public void setMemoDisplay(MemoVO memo, String memo_ids);
 	public void setMemoContents(MemoVO memoVO);
 	public MemoVO getMemo(MemoVO memoVO);
 	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids);

@@ -293,7 +293,8 @@
 		        	$.ajax({
 		        		type: "POST",
 		        		data : {
-		        			memoId: memoId
+		        			memo_ids : memoId,
+		        			display : 1
 		        		},
 		        		dataType: "JSON",
 		        		url : "/ezMemo/memo-display.do",
