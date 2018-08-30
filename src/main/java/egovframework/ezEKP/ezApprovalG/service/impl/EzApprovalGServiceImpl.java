@@ -26137,7 +26137,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				strRecDate = sdf.format(sdf.parse(strRecDate));
 				
-				strRecDate = commonUtil.getDateStringInUTC(strRecDate, "235|+09:00", false);
+				strRecDate = commonUtil.getDateStringInUTC(strRecDate, "235|+09:00", true);
 			}
 
 			switch( strMode.trim()) {
