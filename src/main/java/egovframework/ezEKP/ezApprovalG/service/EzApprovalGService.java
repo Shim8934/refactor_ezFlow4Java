@@ -529,7 +529,7 @@ public interface EzApprovalGService {
 
 	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
 
-	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
+	public String updateSusinState(String docID, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
 	

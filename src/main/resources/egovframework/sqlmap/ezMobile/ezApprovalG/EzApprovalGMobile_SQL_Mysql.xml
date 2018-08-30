@@ -594,8 +594,7 @@
 		</isEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
-				COUNT(DISTINCT A.DOCID,
-					  		   B.APRTYPE)
+				COUNT(DISTINCT A.DOCID)
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN

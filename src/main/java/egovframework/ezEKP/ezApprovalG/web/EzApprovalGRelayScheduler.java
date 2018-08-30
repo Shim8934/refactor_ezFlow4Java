@@ -364,42 +364,42 @@ public class EzApprovalGRelayScheduler {
         								 ezApprovalGService.fieldUpdate("xmlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
         								 break;
         							 case "attach":
-        								 boolean WriteAttache = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        								 boolean WriteAttache = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#attach생성=" + WriteAttache);
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
         								 break;
         							 case "attach_body":
-        								 boolean WriteBodyAttach = WriteXMLFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        								 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#attach_body생성=" + WriteBodyAttach);
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
         								 break;
         							 case "attach_xml":
-        								 boolean WriteXMLFile = WriteXMLFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        								 boolean WriteXMLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#attach_xml생성=" + WriteXMLFile, "");
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "XML", strCompanyID, tenantID);
         								 break;
         							 case "attach_xsl":
-        								 boolean WriteXSLFile = WriteXMLFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strCont_Name);
+        								 boolean WriteXSLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strCont_Name);
         								 logger.debug("#attach_xsl생성=" + WriteXSLFile, "");
         								 ezApprovalGService.addAttachInfo(strCont_Name, strCont_Name, strXDocID, Integer.toString(count), "XSL", strCompanyID, tenantID);
         								 break;
         							 case "seal":
-        								 boolean WriteSealFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
+        								 boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
         								 logger.debug("#seal생성=" + WriteSealFile, "");
         								 ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, tenantID);
         								 break;
         							 case "sign":
-        								 boolean WriteSignFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        								 boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#sign생성=" + WriteSignFile, "");
         								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
         								 break;
         							 case "logo":
-        								 boolean WritetLogoFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        								 boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#logo생성=" + WritetLogoFile, "");
         								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
         								 break;
         							 case "symbol":
-        								 boolean WriteSymbolFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        								 boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#symbol생성=" + WriteSymbolFile, "");
         								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
         								 break;
@@ -665,7 +665,7 @@ public class EzApprovalGRelayScheduler {
 		return body;
 	}
 
-	private boolean WriteFileFromBase64(String realPath, String strCont, String pFilePath, String fileName) {
+	private boolean WriteFileFromBase64(String strCont, String pFilePath, String fileName) {
 		boolean result = false;
 		byte[] content = Base64.decodeBase64(strCont);
 		try {
@@ -681,6 +681,7 @@ public class EzApprovalGRelayScheduler {
 
 	        result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
@@ -712,6 +713,7 @@ public class EzApprovalGRelayScheduler {
              }
 
          } catch (Exception ex) {
+        	 ex.printStackTrace();
              logger.debug("ezReceiverMain", "pubdocUpdate", ex.getMessage());
          }
 	}
@@ -747,6 +749,7 @@ public class EzApprovalGRelayScheduler {
 			
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		
@@ -782,6 +785,7 @@ public class EzApprovalGRelayScheduler {
 
 			result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
@@ -816,6 +820,7 @@ public class EzApprovalGRelayScheduler {
 	    	
 	    	result = "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = e.getMessage();
 		}
 		return result;
@@ -919,6 +924,7 @@ public class EzApprovalGRelayScheduler {
             return pOrgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("%", "");
         }
         catch (Exception Ex){
+        	Ex.printStackTrace();
             return null;
         }
     }
