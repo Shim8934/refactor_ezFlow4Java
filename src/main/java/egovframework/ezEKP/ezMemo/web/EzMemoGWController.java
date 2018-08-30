@@ -393,6 +393,15 @@ public class EzMemoGWController {
 			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
 			memo.setColor_id(configVO.getDefault_color());
 			
+			if(folderId.equals("0")) {
+				MemoFolderVO memoFolderVO = new MemoFolderVO();
+				memoFolderVO.setCompany_id(info.getCompanyId());
+				memoFolderVO.setTenant_id(info.getTenantId());
+				memoFolderVO.setUser_id(info.getUserId());
+				
+				memo.setFolder_id(ezMemoService.getMemoDefaultFolder(memoFolderVO));
+			}
+			
 			int memoId = ezMemoService.memoWrite(memo);
 			
 			result.put("status", "ok");

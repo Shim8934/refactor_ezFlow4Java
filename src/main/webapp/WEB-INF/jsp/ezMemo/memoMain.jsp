@@ -180,7 +180,7 @@
 				
 				BoardSearchOptionHidden();
 			}
-			else if(type=="folder") {
+			else if(type=="folder" || type=="new") {
 				searchInput = "";
 				startDate = "";
 				endDate = "";
@@ -245,6 +245,7 @@
 			}
 		}
 		
+		// 새 메모
 		function newMemo() {
 			$.ajax ({
  			   	url : '/ezMemo/memoWrite.do',
@@ -257,8 +258,9 @@
                 success: function(result) {
                 	var memoId = result["memoId"];
                 	
-                	insertMemo(headerColor, bodyColor, memoId);
-        	    	addremove();
+                	getMemoList("new");
+                	/* insertMemo(headerColor, bodyColor, memoId);
+        	    	addremove(); */
                 },
                 error : function() {
                 	
@@ -392,7 +394,8 @@
 	    	}
 	    }
 	    
-	    function memoDisplayChange() {		// 숨김 처리
+	    // 메모 숨기기
+	    function memoDisplayChange() {	
 			var memo_ids = [];
 	    	var checkList = [];
 			
@@ -408,25 +411,31 @@
 	            return;
 	        }
 			
-	    	$.ajax ({
-	 			  url : '/ezMemo/memo-display.do',
-	 			  type : 'POST',
-	              dataType : 'json',
-	              data : { 
-	                memo_ids : memo_ids.join(),
-	                display : 1
-	              },  
-	              cache: false,
-	              success: function(result) {
-	                getMemoList();
-	              },
-	              error : function() {
-	                	
-	              }
-			}); 
+			if(memo_ids.length != 0) {
+		    	$.ajax ({
+		 			  url : '/ezMemo/memo-display.do',
+		 			  type : 'POST',
+		              dataType : 'json',
+		              data : { 
+		                memo_ids : memo_ids.join(),
+		                display : 1
+		              },  
+		              cache: false,
+		              success: function(result) {
+		                getMemoList();
+		              },
+		              error : function() {
+		                	
+		              }
+				}); 
+			}
+	    	
+	    	checkOpt = "true";
+            allClick();
 	    }
 	    
-		function memoDisplayChange2() {		// 나타내기 처리
+	 // 메모 나타내기
+		function memoDisplayChange2() {		
 			var memo_ids = [];
 			var checkList = [];
 			
@@ -442,22 +451,27 @@
 	            return;
 	        }
 			
-	    	$.ajax ({
-	 			  url : '/ezMemo/memo-display.do',
-	 			  type : 'POST',
-	              dataType : 'json',
-	              data : { 
-	                memo_ids : memo_ids.join(),
-	                display : 0
-	              },  
-	              cache: false,
-	              success: function(result) {
-	                getMemoList();
-	              },
-	              error : function() {
-	                	
-	              }
-			}); 
+			if(memo_ids.length != 0) {
+		    	$.ajax ({
+		 			  url : '/ezMemo/memo-display.do',
+		 			  type : 'POST',
+		              dataType : 'json',
+		              data : { 
+		                memo_ids : memo_ids.join(),
+		                display : 0
+		              },  
+		              cache: false,
+		              success: function(result) {
+		                getMemoList();
+		              },
+		              error : function() {
+		                	
+		              }
+				}); 
+			}
+			
+			checkOpt = "true";
+            allClick();
 	    }
 	    
 	  // 상세검색 레이어팝업
