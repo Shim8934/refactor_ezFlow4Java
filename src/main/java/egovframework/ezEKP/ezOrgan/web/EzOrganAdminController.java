@@ -124,6 +124,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
 
     	ezCommonService.createTblCompanyConfig();
+    	ezCommonService.addAddJobMasterOrderBy();
     	
     	logger.debug("init ended.");
     }
