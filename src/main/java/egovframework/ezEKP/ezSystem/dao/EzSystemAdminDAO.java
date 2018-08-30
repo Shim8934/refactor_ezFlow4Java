@@ -52,16 +52,16 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertIPBand", map);
 	}
 	
-	public IPBandVO getSystemIPBand(Map<String, Object> map) throws Exception {
-		return (IPBandVO) select("EzSystemAdminDAO.getSystemIPBand", map);
+	public IPBandVO getSystemIPBand(String ipNo) throws Exception {
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemIPBand", ipNo);
 	}
 	
 	public void updateIPBand(Map<String, Object> map) throws Exception {
 		update("EzSystemAdminDAO.updateIPBand", map);
 	}
 	
-	public void deleteIPBand(Map<String, Object> map) throws Exception {
-		delete ("EzSystemAdminDAO.deleteIPBand", map);
+	public void deleteIPBand(String ipNo) throws Exception {
+		delete ("EzSystemAdminDAO.deleteIPBand", ipNo);
 	}
 	
 }

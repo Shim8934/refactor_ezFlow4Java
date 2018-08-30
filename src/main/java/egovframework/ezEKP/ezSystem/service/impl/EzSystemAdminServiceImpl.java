@@ -354,15 +354,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
-	public IPBandVO getSystemIPBand(int tenantID, String ipAddress) throws Exception {
+	public IPBandVO getSystemIPBand(String ipNo) throws Exception {
 		logger.debug("getSystemIPBand started.");
-		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress);
+		logger.debug("ipNo=" + ipNo);
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("tenantID", tenantID);
-		params.put("ipAddress", ipAddress);
-		
-		IPBandVO ipBand = ezSystemAdminDAO.getSystemIPBand(params);
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemIPBand(ipNo);
 		
 		logger.debug("getSystemIPBand ended.");
 		
@@ -370,12 +366,12 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
-	public void updateIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception {
+	public void updateIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
 		logger.debug("updateIPBand started.");
-		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("tenantID", tenantID);
+		params.put("ipNo", ipNo);
 		params.put("ipAddress", ipAddress);
 		params.put("access", access);
 		params.put("explanation", explanation);
@@ -386,15 +382,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
-	public void deleteIPBand(int tenantID, String ipAddress) throws Exception {
+	public void deleteIPBand(String ipNo) throws Exception {
 		logger.debug("deleteIPBand started.");
-		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress);
+		logger.debug("ipNo=" + ipNo);
 		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("tenantID", tenantID);
-		params.put("ipAddress", ipAddress);
-		
-		ezSystemAdminDAO.deleteIPBand(params);
+		ezSystemAdminDAO.deleteIPBand(ipNo);
 		
 		logger.debug("deleteIPBand ended.");
 	}

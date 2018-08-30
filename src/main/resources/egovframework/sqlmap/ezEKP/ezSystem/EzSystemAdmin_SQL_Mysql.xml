@@ -132,7 +132,8 @@
 	
 	<select id="EzSystemAdminDAO.getSystemAllIPBand" parameterClass="Integer" resultClass="IPBandVO">
 		<![CDATA[
-			SELECT 
+			SELECT
+				IPNO, 
 				IPADDRESS,
 				ACCESS,
 				EXPLANATION
@@ -160,13 +161,11 @@
 				ACCESS=#access#,
 				EXPLANATION=#explanation#
 			WHERE 
-				TENANT_ID=#tenantID#
-			AND
-				IPADDRESS=#ipAddress#
+				IPNO=#ipNo#
 		]]>
 	</update>
 	
-	<select id="EzSystemAdminDAO.getSystemIPBand" parameterClass="Map" resultClass="IPBandVO">
+	<select id="EzSystemAdminDAO.getSystemIPBand" parameterClass="String" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT 
 				IPADDRESS,
@@ -175,20 +174,16 @@
 			FROM 
 				TBL_IP_BAND
 			WHERE 
-				TENANT_ID=#tenantID#
-			AND
-				IPADDRESS=#ipAddress#
+				IPNO=#ipNo#
 		]]>
 	</select>
 	
-	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="Map">
+	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="String">
 		<![CDATA[
 			DELETE FROM
 				TBL_IP_BAND
             WHERE
-            	TENANT_ID = #tenantID#	
-            AND
-            	IPADDRESS = #ipAddress#
+            	IPNO = #ipNo#
 		]]>
 	</delete>
 		

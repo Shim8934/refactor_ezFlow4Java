@@ -93,6 +93,7 @@
 			for (var Cnt = 0; Cnt < json.length; Cnt++) {
 				var _TR = document.createElement("TR");
 				_TR.setAttribute("id", "IPBand_" + Cnt);
+				_TR.setAttribute("ipno", json[Cnt].ipNo);
 				_TR.onclick = function() { event_listclick(this); };
 				_TR.onmouseover = function () { event_listMover(this); };
 				_TR.onmouseout = function () { event_listMout(this); };
@@ -163,12 +164,13 @@
 		}
 		
 		function ipBandUpdateInfo(obj) {
+			var ipNo = obj.getAttribute("ipNo");
 			var ipAddress = obj.childNodes[1].innerText;
 			var access = obj.childNodes[2].innerText == "허용" ? "YES" : "NO";
 			var explanation = obj.childNodes[3].innerText;
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			
-			url += "?type=modify&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+			url += "?type=modify&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
 			
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 		}
@@ -180,16 +182,15 @@
 				alert("삭제할 IP대역 리스트를 선택해주세요.");
 				return;
 			}
-			var ipAddress = selectedList[0].childNodes[1].innerText;
+			var ipNo = selectedList[0].getAttribute("ipno");
 			var con = confirm("삭제하시겠습니까?");
 			
 			if (con) {
 				$.ajax({
 					type : "POST",
 					url : "/ezSystem/deleteIPBand.do",
-					data : "ipAddress=" + ipAddress,
+					data : "ipNo=" + ipNo,
 					error : function(data) {
-						console.log("error");
 						alert("삭제 실패");
 					},
 					complete : function(data) {

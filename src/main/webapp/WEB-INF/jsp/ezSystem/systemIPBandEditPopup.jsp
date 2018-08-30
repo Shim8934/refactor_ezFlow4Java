@@ -16,6 +16,7 @@
 	</head>
 	<script>
 		var _type = "${type}";
+		var _ipNo = "${ipNo}";
 		var _ipAddress = "${ipAddress}";
 		var _access = "${access}";
 		var _explanation = "${explanation}";
@@ -44,20 +45,13 @@
 			
 			var formData = $("#myForm").serialize();
 			var formUrl = "/ezSystem/insertIPBand.do";
-			
-			if (_type == "modify") {
-				formUrl = "/ezSystem/updateIPBand.do";
-			}
-			
 			// 먼저 &!@#$%^ 이런거 체크 후, 아이피 중복되는지 체크
 			// 메서드 만들어서 하기
-			
 			
 			formData = formData.split("ipBand=");
 			var ipAddress = "";
 			var access = "YES";
 			var explanation = "";
-			
 			
 			for (var i = 1; i < formData.length; i++) {
 				ipAddress += formData[i];
@@ -71,6 +65,11 @@
 			
 			explanation = document.getElementById("explanText").value;
 			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+			
+			if (_type == "modify") {
+				formUrl = "/ezSystem/updateIPBand.do";
+				formData = "ipNo=" + _ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+			}
 			
 			$.ajax({
 				type : "POST",

@@ -665,13 +665,11 @@ public class EzSystemAdminController {
 		
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
+			obj.put("ipNo", list.get(i).getIpNo());
 			obj.put("ipAddress", list.get(i).getIpAddress());
 			obj.put("access", list.get(i).getAccess());
 			obj.put("explanation", list.get(i).getExplanation());
-			
 			returnJsonArr.add(obj);
-		
-		
 		}
 		
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
@@ -695,19 +693,18 @@ public class EzSystemAdminController {
 	public void updateIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
 		logger.debug("updateIPBand started");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		ezSystemAdminService.updateIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
+		ezSystemAdminService.updateIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
 		
 		logger.debug("updateIPBand ended");
 	}
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/deleteIPBand.do")
-	public void deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipAddress) throws Exception {
+	public void deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
 		logger.debug("deleteIPBand started");
+		logger.debug("ipNo=" + ipNo);
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		ezSystemAdminService.deleteIPBand(userInfo.getTenantId(), ipAddress);
+		ezSystemAdminService.deleteIPBand(ipNo);
 		
 		logger.debug("deleteIPBand ended");
 	}
@@ -717,20 +714,19 @@ public class EzSystemAdminController {
 	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model, String type, @ModelAttribute IPBandVO ipBand) throws Exception {
 		logger.debug("systemIPBandEditPopup started");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String ipAddress = "";
 		String access = "";
 		String explanation = "";
 		
 		if (type.equals("modify")) {
-			//ezSystemAdminService.updateIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
-			IPBandVO getIPBand = ezSystemAdminService.getSystemIPBand(userInfo.getTenantId(), ipBand.getIpAddress());
+			IPBandVO getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
 			
 			ipAddress = getIPBand.getIpAddress();
 			access = getIPBand.getAccess();
 			explanation = getIPBand.getExplanation();
 		}
 		
+		model.addAttribute("ipNo", ipBand.getIpNo() == null ? "" : ipBand.getIpNo());
 		model.addAttribute("ipAddress", ipAddress);
 		model.addAttribute("access", access);
 		model.addAttribute("explanation", explanation);
