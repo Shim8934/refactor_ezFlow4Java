@@ -49,7 +49,7 @@
 			});
 		}
 		
-		// 설정된 IP 대역 리스트 뿌리기
+		// 설정된 IP 대역 리스트 가져오기
 		function getIPList_http() {
 			$.ajax({
 				type : "POST",
@@ -62,6 +62,15 @@
 					makeIPBands(data.responseJSON);
 			    }
 			});
+		}
+		
+		// 설정된 IP 대역 리스트 삭제하기 (refresh할때 사용)
+		function IPBandListRemove() {
+			var ipListElement = $("#tblIP tbody tr[id^=IPBand]");
+			
+			for (var i = 0; i < ipListElement.length; i++) {
+				document.getElementById("tblIP").childNodes[1].removeChild(ipListElement[i]);
+			}
 		}
 		
 		function makeIPBands(json) {
@@ -178,6 +187,8 @@
 					},
 					complete : function(data) {
 						alert("삭제하였습니다.");
+						IPBandListRemove();
+						getIPList_http();
 				    }
 				});
 			}

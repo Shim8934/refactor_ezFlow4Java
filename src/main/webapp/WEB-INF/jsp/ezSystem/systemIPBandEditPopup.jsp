@@ -84,7 +84,8 @@
 				complete : function(data) {
 					alert("저장하였습니다.");
 					window.close();
-					//window.opener.refresh(); 이런거
+					window.opener.IPBandListRemove(); // 리스트 삭제 후 다시 refresh -> 삭제 안하면 이어서 붙여짐
+					window.opener.getIPList_http();
 					
 				}
 			});
