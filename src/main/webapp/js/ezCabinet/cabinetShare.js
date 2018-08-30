@@ -470,7 +470,7 @@ var CabinetShareItem = function() {
 	function closeAllPopUp() {
 		if (userPopup)  {userPopup.close() ;}
 		if (sharePopup) {sharePopup.close();}
-		if (ancesPopup) {userPopup.close() ;}
+		if (ancesPopup) {ancesPopup.close();}
 	}
 	
 	function saveShareUsers() {

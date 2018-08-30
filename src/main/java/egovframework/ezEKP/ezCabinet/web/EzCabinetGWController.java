@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCabinet.web;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -418,6 +419,8 @@ public class EzCabinetGWController {
 		try {
 			int tenantId                  = loginService.getTenantId(serverName);
 			List<CabinetModuleVO> modules = cabinetAdminService.getModuleListForAdmin(companyId, tenantId);
+			Collections.sort(modules, (CabinetModuleVO module1, CabinetModuleVO module2) -> Integer.compare(module1.getOrderFromType(), module2.getOrderFromType()));
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("modules", modules);
@@ -480,6 +483,7 @@ public class EzCabinetGWController {
 		try {
 			LoginVO userInfo              = commonUtil.getUserForGw(userId, serverName);
 			List<CabinetModuleVO> modules = cabinetService.getModuleListForUser(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			Collections.sort(modules, (CabinetModuleVO module1, CabinetModuleVO module2) -> Integer.compare(module1.getOrderFromType(), module2.getOrderFromType()));
 			
 			result.put("status", "ok");
 			result.put("code", 0);

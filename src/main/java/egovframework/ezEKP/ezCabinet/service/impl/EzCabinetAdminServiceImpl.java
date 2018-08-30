@@ -103,7 +103,6 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			//Auto insert data
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-			result.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
@@ -168,7 +167,6 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			//Auto insert data
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-			result.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));

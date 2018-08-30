@@ -26,7 +26,7 @@
 					<c:choose>
 						<c:when test="${fn:length(listUsers) gt 0}">
 							<c:forEach items="${listUsers}" var="sharedUser">
-								<tr class="bnkCabNormal" role="${sharedUser.userId}" deptname="${sharedUser.deptName}" usertype="${sharedUser.userType}">
+								<tr class="bnkCabNormal">
 									<td title="<c:out value='${sharedUser.deptName}'/>"><c:out value='${sharedUser.deptName}'/></td>
 									<td title="<c:out value='${sharedUser.userName}'/>"><c:out value='${sharedUser.userName}'/></td>
 									<td>

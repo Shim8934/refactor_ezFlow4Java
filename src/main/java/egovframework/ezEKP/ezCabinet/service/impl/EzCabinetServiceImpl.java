@@ -23,14 +23,12 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,9 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.sun.mail.imap.IMAPFolder;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -178,7 +174,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		if (listAllModule == null  || listAllModule.size() == 0) {
 			//Auto insert data
 			listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-			listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
 			listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
 			listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
 			listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));

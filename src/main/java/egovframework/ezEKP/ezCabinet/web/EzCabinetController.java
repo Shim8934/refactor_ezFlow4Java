@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -19,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;

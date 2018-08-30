@@ -51,11 +51,11 @@ public class CabinetModuleVO {
 	public int getActiveStatus() {
 		return activeStatus;
 	}
-
+	
 	public void setActiveStatus(int activeStatus) {
 		this.activeStatus = activeStatus;
 	}
-
+	
 	public int getTenantId() {
 		return tenantId;
 	}
@@ -81,6 +81,23 @@ public class CabinetModuleVO {
 		}
 		
 		return mdlType;
+	}
+	
+	public int getOrderFromType() {
+		int mdlOrder = -1;
+		switch(moduleType) {
+			case "email" : mdlOrder = 1; break;
+			case "addrs" : mdlOrder = 2; break;
+			case "apprv" : mdlOrder = 3; break;
+			case "board" : mdlOrder = 4; break;
+			case "schedl": mdlOrder = 5; break;
+			case "commu" : mdlOrder = 6; break;
+			case "resrc" : mdlOrder = 7; break;
+			case "option": mdlOrder = 8; break;
+			case "jounl" : mdlOrder = 9; break;
+		}
+		
+		return mdlOrder;
 	}
 	
 	@Override

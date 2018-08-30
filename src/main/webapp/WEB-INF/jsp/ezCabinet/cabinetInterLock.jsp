@@ -12,12 +12,14 @@
 	</head>
 	<body class="cabGeneral">
 		<br>
+		<script type="text/javascript">
+			console.log(JSON.stringify(${modules}));
+		</script>
 		<table class="cabTable2">
 			<tr>
 				<th><spring:message code="ezCabinet.t32"/></th>
 				<th><spring:message code="ezCabinet.t152"/></th>
 			</tr>
-			
 			<c:choose>
 				<c:when test="${fn:length(modules) > 0}">
 					<c:forEach items="${modules}" var="module">
