@@ -90,6 +90,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 		map.put("use_date", memoConfigVO.getUse_date());
 		map.put("use_gadget", memoConfigVO.getUse_gadget());
+		map.put("font_size", memoConfigVO.getFont_size());
 		
 		if (memoConfigVO.getLayer_width() > 0 && memoConfigVO.getLayer_height() > 0) {
 
@@ -353,10 +354,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		
 		logger.debug("memoDelete ended.");
 	}
+
+	@Override
+	public void otherModuleCopy(MemoVO memoVO) throws Exception {
+		logger.debug("otherModuleCopy started.");
+
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("folder_id", ezMemoDAO.getMemoDefaultFolder(map));
+		map.put("contents", memoVO.getContents());
+		map.put("write_date", commonUtil.getTodayUTCTime(""));
+		map.put("color_id", memoVO.getColor_id());
+		map.put("orders", ezMemoDAO.getMaxOrder(map));
+		ezMemoDAO.otherModuleCopy(map);
+		
+		logger.debug("otherModuleCopy ended.");
+	}
 	
 	public void setMemoColor(MemoVO memoVO) throws Exception {
 		logger.debug("setMemoColor started.");
-		
+
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoVO.getUser_id());
 		map.put("tenant_id", memoVO.getTenant_id());

@@ -6,8 +6,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import kr.dogfoot.hwplib.object.bodytext.paragraph.memo.Memo;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
@@ -618,23 +615,64 @@ public class EzMemoGWController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/rest/ezMemo/moduleCopy/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwOtherModuleCopy(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		String contents = request.getParameter("contents");
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			
+			MemoVO memoVO = new MemoVO();
+			memoVO.setUser_id(userId);
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setContents(contents);
+			
+			MemoConfigVO memoConfigVO = new MemoConfigVO(); 
+			memoConfigVO.setUser_id(userId);
+			memoConfigVO.setTenant_id(info.getTenantId());
+			memoConfigVO.setCompany_id(info.getCompanyId());
+			memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
+			memoVO.setColor_id(memoConfigVO.getDefault_color());
+			
+			ezMemoService.otherModuleCopy(memoVO);
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] ended.");
+		return result;
+	}
+
 	@RequestMapping(value = "/rest/ezMemo/memo-color/memo/{memoId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetMemoColor(@PathVariable String memoId, @PathVariable String userId, MemoVO memoVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		int colorId = Integer.parseInt(request.getParameter("color_id"));
+
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
-			
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);		
 			memoVO.setUser_id(info.getUserId());
 			memoVO.setCompany_id(info.getCompanyId());
 			memoVO.setTenant_id(info.getTenantId());
 			memoVO.setColor_id(colorId);
 			
 			ezMemoService.setMemoColor(memoVO);
+
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -648,7 +686,6 @@ public class EzMemoGWController {
 		}
 		
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userId + "] ended.");
-
 		return result;
 	}
 }

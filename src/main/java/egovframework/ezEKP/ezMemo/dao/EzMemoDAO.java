@@ -104,6 +104,10 @@ public class EzMemoDAO extends EgovAbstractDAO {
 		update("EzMemoDAO.memoDelete", map);
 	}
 
+	public void otherModuleCopy(Map<String, Object> map) {
+		insert("EzMemoDAO.otherModuleCopy", map);
+	}
+
 	public void setMemoColor(Map<String, Object> map) {
 		update("EzMemoDAO.setMemoColor", map);
 	}

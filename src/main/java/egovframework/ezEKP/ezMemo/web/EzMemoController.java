@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
@@ -19,10 +20,11 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -560,6 +562,35 @@ public class EzMemoController {
 		return "json";
 	}
 	
+
+	/**
+	 * 다른 모듈에서 메모 추가
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @param contents
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/ezMemo/otherModuleCopy.do")
+	public String otherModuleCopy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String contents) throws Exception {
+		logger.debug("otherModuleCopy started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("contents", contents);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/moduleCopy/users/" + userInfo.getId(), param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")){
+			model.addAttribute("result", "ok");
+		}
+		
+		logger.debug("otherModuleCopy ended");
+		return "json";
+	}
+
 	@RequestMapping("/ezMemo/memoColorModify.do")
 	public String setMemoColor(@CookieValue("loginCookie") String loginCookie, String memoId, String colorId, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoColor start");

@@ -412,6 +412,18 @@
 		]]>
 	</update>
 	
+	<insert id="EzMemoDAO.otherModuleCopy" parameterClass="Map">
+		<![CDATA[
+		 	INSERT INTO TBL_MEMO
+                (USER_ID, WRITE_DATE, FOLDER_ID, ORDERS, COMPANY_ID, TENANT_ID, COLOR_ID, CONTENTS)
+            VALUES
+                (#user_id#, #write_date#, #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#, #contents#)
+         ]]>
+         <selectKey resultClass="int" keyProperty="memo_id">
+		    SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
 	<update id="EzMemoDAO.setMemoColor">
 		UPDATE
 			TBL_MEMO

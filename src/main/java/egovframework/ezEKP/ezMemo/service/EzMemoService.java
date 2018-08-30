@@ -25,5 +25,6 @@ public interface EzMemoService {
 	public MemoVO getMemo(MemoVO memoVO) throws Exception;
 	public void memoMove(MemoFolderVO memoFolderVO, String memo_ids) throws Exception;
 	public void memoDelete(MemoVO memoVO, String memo_ids) throws Exception;
+	public void otherModuleCopy(MemoVO memoVO) throws Exception;
 	public void setMemoColor(MemoVO memoVO) throws Exception;
 }
