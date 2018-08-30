@@ -59,6 +59,7 @@
 					console.log("error");
 				},
 				complete : function(data) {
+					document.getElementById("HeaderAllCheckBox").checked = false;
 					makeIPBands(data.responseJSON);
 			    }
 			});
