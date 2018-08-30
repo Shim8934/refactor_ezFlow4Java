@@ -293,7 +293,8 @@
 		        	$.ajax({
 		        		type: "POST",
 		        		data : {
-		        			memoId: memoId
+		        			memo_ids : memoId,
+		        			display : 1
 		        		},
 		        		dataType: "JSON",
 		        		url : "/ezMemo/memo-display.do",
@@ -588,7 +589,7 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-		        			console.log(result.memo);
+		        			
 		        			var $textarea = $("#textarea");
 		        			var $memoDetail = $(".detailMemo");
 		        			

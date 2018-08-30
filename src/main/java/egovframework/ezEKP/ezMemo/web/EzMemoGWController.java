@@ -466,19 +466,23 @@ public class EzMemoGWController {
 	}
 	
 	@RequestMapping(value = "/rest/ezMemo/memo-display/memo/{memoId}/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject memoDisplay(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-display/memo/" + memoId + "/memo/" +userId + "] started.");
+	public JSONObject memoDisplay(@PathVariable String userId, MemoVO memoVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-display/memo/memoId/memo/" +userId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		
-		MemoVO memo = new MemoVO();
-		memo.setUser_id(userId);
-		memo.setMemo_id(Integer.parseInt(memoId));
-		memo.setCompany_id(memoConfigVO.getCompany_id());
-		memo.setTenant_id(memoConfigVO.getTenant_id());
+		String memo_ids = request.getParameter("memo_ids");
+		int display = Integer.parseInt(request.getParameter("display"));
 
 		try {
-			ezMemoService.setMemoDisplay(memo);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			
+			memoVO.setUser_id(info.getUserId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setDisplay_flag(display);
+			
+			ezMemoService.setMemoDisplay(memoVO, memo_ids);
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -491,11 +495,11 @@ public class EzMemoGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-display/memo/" + memoId + "/memo/" +userId + "] ended.");
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-display/memo/memoId/memo/" +userId + "] ended.");
 		return result;
 	}
 	
-	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/user/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
 	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception { 
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started."); 
 	 
@@ -567,6 +571,41 @@ public class EzMemoGWController {
 		
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/move/folder/" + folder_id + "/users/" +userId + "] ended.");
 
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezMemo/memo-list/memo/{memo_ids}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoDelete(MemoVO memoVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [DELETE /rest/ezMemo/memo-list/memo/memoId] started.");
+		
+		JSONObject result = new JSONObject();
+		String memo_ids = request.getParameter("memo_ids");
+		String userId = request.getParameter("userId");
+		String deleteDate = request.getParameter("delete_date");
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			
+			memoVO.setUser_id(info.getUserId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setDelete_date(deleteDate);
+			
+			ezMemoService.memoDelete(memoVO, memo_ids);
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [DELETE /rest/ezMemo/memo-list/memo/memoId] ended.");
 		return result;
 	}
 }

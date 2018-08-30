@@ -4,11 +4,17 @@ function createMemo(hColor, bColor, memoId, contents, flag) {
 	div.setAttribute("class", "individual-memo");
 	div.style.backgroundColor = hColor;
 	div.id  = "memo" + memoId;
+	if(flag == 1) {
+		div.style.opacity = 0.5;
+	}
 	
 	var input = document.createElement("input");
 	input.setAttribute("name", "memo");
 	input.setAttribute("type", "checkbox");
 	input.setAttribute("value", memoId);
+	if ('layer' != flag) {
+		input.setAttribute("display", flag);
+	}
 	
 	var div2 = document.createElement("div");
 	div2.setAttribute("class", "memo-color");
@@ -85,7 +91,7 @@ function loadMemoList(flag) {
 		if ('layer' != flag) {
 			var hColor = memoColor[memoList[i].color_id-1];
 			var bColor = memoColor[memoList[i].color_id+5];
-			var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag);
+			var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, memoList[i].display_flag);
 			
 			$("#boardMemoList").prepend(div);
 		} else {

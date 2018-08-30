@@ -267,28 +267,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void setMemoDisplay(MemoVO memo) {
+	public void setMemoDisplay(MemoVO memo, String memo_ids) {
 		logger.debug("setMemoDisplay start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memo.getUser_id());
 		map.put("tenant_id", memo.getTenant_id());
 		map.put("company_id", memo.getCompany_id());
-		map.put("memo_id", memo.getMemo_id());
+		map.put("display_flag", memo.getDisplay_flag());
 		
-		memo = ezMemoDAO.getMemo(map);
-		
-		int displayFlag = memo.getDisplay_flag();
-		
-		if (displayFlag == 0) {
-			map.put("display_flag", 1);
-			
-		} else if (displayFlag == 1) {
-			map.put("display_flag", 0);
-			
+		for (String memo_id : memo_ids.split(",")) {
+			logger.debug("memo_id = " + memo_id);
+			map.put("memo_id", memo_id);
+			ezMemoDAO.setMemoDisplay(map);
 		}
-		
-		ezMemoDAO.setMemoDisplay(map);
 		
 		logger.debug("setMemoDisplay end");
 	}
@@ -342,6 +334,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			map.put("memo_id", memo_id);
 			ezMemoDAO.memoMove(map);
 		}
-		logger.debug("memoMove ended.");
+		logger.debug("memoDelete ended.");
+	}
+	
+	public void memoDelete(MemoVO memoVO, String memo_ids) throws Exception {
+		logger.debug("memoDelete started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoVO.getUser_id());
+		map.put("tenant_id", memoVO.getTenant_id());
+		map.put("company_id", memoVO.getCompany_id());
+		map.put("delete_date", memoVO.getDelete_date());
+		
+		for (String memo_id : memo_ids.split(",")) {
+			map.put("memo_id", memo_id);
+			ezMemoDAO.memoDelete(map);
+		}
+		
+		logger.debug("memoDelete ended.");
 	}
 }
