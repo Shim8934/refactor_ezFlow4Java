@@ -385,12 +385,38 @@
 		        }
 		        
 		        function copyToClip() {
+		        	if(content === "") {
+		        		alert("<spring:message code='ezMemo.t0051' />");
+		        		return;
+		        	}
 			      	var tempTextArea = document.createElement('textarea');
 			      	tempTextArea.value = content;
 			      	document.body.appendChild(tempTextArea);
 			      	tempTextArea.select();
 	  				document.execCommand('copy');
 	  				document.body.removeChild(tempTextArea);
+		        }
+		        
+		        function copyToMemo() {
+		        	if(content === "") {
+		        		alert("<spring:message code='ezMemo.t0051' />");
+		        		return;
+		        	}
+		        	
+		        	$.ajax({
+			    		type : "POST",
+			    		dataType : "json",
+			    		async : false,
+			    		url : "/ezMemo/otherModuleCopy.do",
+			    		data : {
+			    			"contents" : content
+			    		}, success: function() {
+			    			alert("<spring:message code='ezMemo.t0052' />");
+			    		}, error: function(err) {
+			    			alert("<spring:message code='ezMemo.t0053' />");
+			    		}
+			        });		
+		        	
 		        }
 			</script> 
 	</head>
@@ -470,12 +496,13 @@
 	  	
 	  		  	switch(rightId) {
 				case "menu1":
-					copyToClip(selected);
+					copyToClip();
 					break;
 				case "menu2":
 					btnPrint_onClick();
 					break;
 				case "menu3":
+					copyToMemo();
 					break;
 				}
 			});

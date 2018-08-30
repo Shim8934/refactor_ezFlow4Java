@@ -608,4 +608,44 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [DELETE /rest/ezMemo/memo-list/memo/memoId] ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/rest/ezMemo/moduleCopy/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwOtherModuleCopy(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		String contents = request.getParameter("contents");
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			MemoVO memoVO = new MemoVO();
+			memoVO.setUser_id(userId);
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setContents(contents);
+			
+			MemoConfigVO memoConfigVO = new MemoConfigVO(); 
+			memoConfigVO.setUser_id(userId);
+			memoConfigVO.setTenant_id(info.getTenantId());
+			memoConfigVO.setCompany_id(info.getCompanyId());
+			memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
+			memoVO.setColor_id(memoConfigVO.getDefault_color());
+			
+			ezMemoService.otherModuleCopy(memoVO);
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] ended.");
+		return result;
+	}
 }
