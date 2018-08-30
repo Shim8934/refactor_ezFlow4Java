@@ -26,7 +26,7 @@
     	</article>
 	</body> --%>
 	<body>
-		<article class="groupware_banner box_shadow">
+		<div class="layDIV">
         	<span class="leftImg"><img src="/images/kr/main/bannerImg_left.png"></span>
             <dl class="bannerText">
             	<dt class="bText">그룹웨어 쉽게 활용하기</dt>
@@ -34,6 +34,6 @@
                 <dd class="bannerBtn" onclick="Img_OnClick()">자세히보기</dd>
             </dl>
             <span class="rightImg"><img src="/images/kr/main/bannerImg_right.png"></span>
-        </article>
+        </div>
 	</body>
 </html>

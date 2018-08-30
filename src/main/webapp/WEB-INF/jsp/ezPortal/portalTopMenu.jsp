@@ -1201,12 +1201,12 @@
 				});
 				
 				if (cnt > 0) {
-					$(".countBox").css("display", "");
+					$("nav > .countBox").css("display", "block");
 					$("#topNav").css("max-width", "1212px");
 					$(".hidden_nav_count").html("+" + cnt);
 				} else {
-					$("#topNav").css("max-width", "1160px");
-					$(".countBox").css("display", "none");					
+					$("#topNav").css("max-width", "1102px");
+					$("nav > .countBox").css("display", "none");					
 				}
 			}
 			
@@ -1566,14 +1566,28 @@
 				        break; 
 	        	}
 	        }
+	        
+	        function viewQuick() {
+	        	var pFrame = parent.document.getElementById("mainFrame");
+
+	        	if (pFrame != null) {
+	        		if (pFrame.contentWindow.document.getElementById("quickSide")) {
+	        			if (pFrame.contentWindow.document.getElementById("quickSide").style.width == "0px") {
+	        				$(pFrame.contentWindow.document.getElementById("quickSide")).animate({width: '100px'})
+	        			} else {
+	        				$(pFrame.contentWindow.document.getElementById("quickSide")).animate({width: '0px'})
+	        			}
+	        		}
+	        	}
+	        }
 		</script>
 	</head>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<body class="mainbody">
+				<body class="mainbody" style="background-color: transparent;overflow:hidden;min-width:1280px">
 			</c:when>
 			<c:otherwise>
-				<body>
+				<body style="background-color: transparent;overflow:hidden;min-width:1280px">
 			</c:otherwise>
 		</c:choose>
 		<c:if test="${isCrossBrowser != true}">

@@ -31,7 +31,7 @@
 		<script type="text/javascript">
 			var xmlhttp;
 			var QuickcurNum = 0;
-			var QuickBlockNum = 8;
+			var QuickBlockNum = 5;
 			var selectedCell = "";
 			var selectedSubCell = "";
 			var previousSubCell = null;
@@ -174,36 +174,51 @@
 
 		        xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do", true);
+		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do?page="+QuickcurNum * QuickBlockNum, true);
 		        xmlhttp.onreadystatechange = event_GetQuickLink;
 		        xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 		        xmlhttp.send(xmlpara);
 		    }
 		    
+		    var listSize = 0;
+		    
 		    function event_GetQuickLink() {
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
 		            if (xmlhttp.statusText == "OK") {
+		            	document.getElementById("QuickUl").innerHTML = "";
+		            	
 		                var xmldomNode = SelectNodes(xmlhttp.responseXML, "DATA/ROW");
 		                
+		                if (xmldomNode.length > 0) {
+		                	listSize = SelectNodes(xmlhttp.responseXML, "DATA/SIZE")[0].innerHTML;
+		                	
+		                	if (listSize > (QuickcurNum+1) * 5) {
+		                		$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn.png' />");
+		                	}
+		                }
+             
 		                for (i = 0; i < xmldomNode.length; i++) {
 		                    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
 		                    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
 
 		                    var _li = document.createElement("li");
-		                    _li.style.display = "none";
+		                    _li.className = "linkText";
 		                    
 		                    if (trim_Cross(URL) != "") {
 		                        _li.onclick = new Function("openURL('" + URL + "', '"+ SIZE +"');");
 		                    }
 		                    
-		                    var _span1 = document.createElement("span");
+		                    var QuickLang = lang == "1" ? "" : lang;
+		                    
+		                    _li.innerHTML = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
+/* 		                    var _span1 = document.createElement("span");
 		                    _span1.className = "icon";
 
 		                    var linktype = SelectSingleNodeValue(xmldomNode[i], "LINKTYPE");
-		                    _span1.innerHTML = "<img src=\"" + SelectSingleNodeValue(xmldomNode[i], "LINKTYPEURL") + "\" >";
+		                    _span1.innerHTML = "<img src=\"" + SelectSingleNodeValue(xmldomNode[i], "LINKTYPEURL") + "\" >"; */
 		                                                
 
-		                    var _span2 = document.createElement("span");
+		                    /* var _span2 = document.createElement("span");
 		                    _span2.className = "txt";
 		                    var QuickLang = lang == "1" ? "" : lang;
 		                    
@@ -213,35 +228,45 @@
                                 _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang); 
                             
 		                    _li.appendChild(_span1);
-		                    _li.appendChild(_span2);
+		                    _li.appendChild(_span2); */
 		                    
 		                    document.getElementById("QuickUl").appendChild(_li);
 
-		                    if (i < QuickBlockNum) {
+		                    /* if (i < QuickBlockNum) {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'block';
 		                    } else {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'none';
-		                    }
+		                    } */
 		                }
 		            }
 		        }
 		    }
 		    
 		    function QuickMove(value) {
-		        var totalcnt = document.getElementById('QuickUl').getElementsByTagName('li').length;
-		        
-		        if (value == "DOWN") {
-		            if (totalcnt > QuickcurNum + QuickBlockNum) {
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum].style.display = "none";
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum + QuickBlockNum].style.display = "block";
-		                QuickcurNum++;
-		            }
+		        if (value == "1") {
+		        	if (QuickcurNum != 0) {
+		        		QuickcurNum--;
+		        		QuickLinkCheck();
+		        		
+		        		if (QuickcurNum > 0) {
+		        			$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn.png' />");	                		
+	                	} else if (QuickcurNum == 0) {
+	                		$("#preBtn").html("<img src='/images/kr/main/link_preBtn_dis.png' />");
+	                	}
+		        	}
 		        } else {
-		            if (QuickcurNum > 0) {
-		                QuickcurNum--;
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum].style.display = "block";
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum + QuickBlockNum].style.display = "none";
-		            }
+		        	if (listSize <= (QuickcurNum+1) * 5) {
+		        		return;
+		        	}
+		        	QuickcurNum++;
+		        	QuickLinkCheck();
+		        	
+		        	if (QuickcurNum > 0) {
+		        		$("#preBtn").html("<img src='/images/kr/main/link_preBtn.png' />");
+		        	}
+		        	if (listSize < (QuickcurNum+1) * 5) {
+                		$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn_dis.png' />");
+                	}
 		        }
 		    }
 		    
@@ -1621,6 +1646,15 @@
 			        OpenFlag = false;
 			    }
 			}
+			
+			function leftResize() {
+				var wwh = $('.section_main').prop("scrollHeight") + 30;
+				$(".section_left").css("height", wwh +"px");
+			}
+			
+			window.onresize = function() {
+				leftResize();
+			}
 		</script>
 	</head>
 	
@@ -1773,4 +1807,7 @@
 			<p class="btn_quick" id="btn_quick_Down" onclick="QuickMove('DOWN')"><img src="/images/kr/main/quickmenu_btn_down.gif" ></p>
     	</aside>
 	</c:if>
+	<script>
+		leftResize();
+	</script>
 </html>

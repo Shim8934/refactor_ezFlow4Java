@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="refresh" content="${refreshSecond}">
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -22,7 +23,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
@@ -35,8 +38,7 @@
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>		
 		<script type="text/javascript">
 		    var pMode = "P";
 		    var date = "";
@@ -46,6 +48,8 @@
 			var isCircularUsed = "${isCircularUsed}";
 		    
 			$(document).ready(function(){
+				$('#featured').orbit();
+				
 				window_onload_total();
 				
 				if (isCircularUsed != 'Y') {
@@ -167,126 +171,24 @@
 			}
 
 			function getScheduleList_after(text, mode, date) {
-			    try {
-			       /*  var listHTML = "<ul class=\"schedule_list \">";
-			        var xmldom = createXmlDom();
+		        if (date == nowDay) {
+		        	var xmldom = createXmlDom();
 			        xmldom = loadXMLString(text);
 			        
-			        var count = 0;
-			        var mType;
-			        //2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
-		            var pageFrom = 'Portal';
-			        if (mode == "P") {
-			        	//2018.02.05 김기하 #11421
-			        	mType = "16";
-			        } else {
-			        	mType = "2345789";
-			        }			        
+		        	var cnt = xmldom.getElementsByTagName("ROW").length;
 
-			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
-		        		var SCHEDULETYPE = getNodeText(xmldom.getElementsByTagName("SCHEDULETYPE").item(i));
-		        		
-		        		if (mType.indexOf(SCHEDULETYPE) > -1) {		        		
-				            var SCHEDULEID = getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i));			            
-				            var DATETYPE = getNodeText(xmldom.getElementsByTagName("DATETYPE").item(i));
-				            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
-				            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
-				            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
-				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
-				            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
-				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
-				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
-			                
-			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
-			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + TITLE + "'>";
-			                listHTML += "&nbsp;"
-			                if(SCHEDULETYPE == 1) {
-			                	listHTML += "";
-			                } else if (SCHEDULETYPE == 2) {
-			                	listHTML += "(<spring:message code='ezSchedule.t12' />)&nbsp;";
-			                } else if (SCHEDULETYPE == 3) {
-			                	listHTML += "(<spring:message code='ezSchedule.t11' />)&nbsp;";
-			                } else if (SCHEDULETYPE == 7) {
-			                	listHTML += "(<spring:message code='ezSchedule.t282' />)&nbsp;";
-			                } else {
-			                	listHTML += "";
-			                }
-			                
-			                listHTML += MakeXMLString(TITLE)+"</span></li>";
-			                count++;
-			        	}
-			        }
-			        
-			        listHTML += "</ul>"; */
-
-			        if (date == nowDay) {
-			        	var cnt = xmldom.getElementsByTagName("ROW").length;
-	
-			        	if (cnt > 99) {
-			        		cnt = "99+";	
-			        	}			        	
-			        	document.getElementById("schedulenum").innerHTML = cnt;
-			        	
-			        	if (cnt == "0") {
-		                	$("#schedulenum").attr("class", "iconCount_none");
-		                } else {
-		                	$("#schedulenum").attr("class", "iconCount");
-		                }
-			        }
-
-			        /* if (count > 0)
-			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
-			        else {
-			            var nodata = "<div class='nodata_schedule'>";
-			            nodata += "<p style='margin-left:10px'><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin:10px 0px 0px'></p>";
-			            nodata += "<p style='margin-left:10px'>" + strLang2_total + "</p></div>";
-
-			            var scrollbox = {};
-			            scrollbox.content1 = new Scrollbox();
-			            scrollbox.best = new Scrollbox();
-			            scrollbox.player = new Scrollbox();
-
-			            var pulldown = {};
-			            pulldown.choose = new Pulldown();
-			            document.onselectstart = function () { return false; };
-			          	//scroll 초기화
-			            document.getElementById("ScheduleList").style.top = "0px";
-
-			            scrollbox.content1.touch("content1-scrbox", {
-			                overflowY: "auto" // auto, scroll 
-			            });
-			            scrollbox.best.touch("best-scrbox", {
-			                overflowY: "scroll" // auto, scroll 
-			            });
-			            scrollbox.player.touch("player-scrbox", {
-			                overflowY: "scroll" // auto, scroll 
-			            });
-			            
-			            document.getElementById("ScheduleList").innerHTML = nodata;
-			            return;
-			        }
-
-			        var scrollbox = {};
-			        scrollbox.content1 = new Scrollbox();
-			        scrollbox.best = new Scrollbox();
-			        scrollbox.player = new Scrollbox();
-
-			        var pulldown = {};
-			        pulldown.choose = new Pulldown();
-			        document.onselectstart = function () { return false; };
-			        //scroll 초기화
-			        document.getElementById("ScheduleList").style.top = "0px";
-
-			        scrollbox.content1.touch("content1-scrbox", {
-			            overflowY: "auto" // auto, scroll 
-			        });
-			        scrollbox.best.touch("best-scrbox", {
-			            overflowY: "scroll" // auto, scroll 
-			        });
-			        scrollbox.player.touch("player-scrbox", {
-			            overflowY: "scroll" // auto, scroll 
-			        }); */
-			    } catch (e) {}
+		        	if (cnt > 99) {
+		        		cnt = "99+";	
+		        	}
+		        	
+		        	document.getElementById("schedulenum").innerHTML = cnt;
+		        	
+		        	if (cnt == "0") {
+	                	$("#schedulenum").attr("class", "iconCount_none");
+	                } else {
+	                	$("#schedulenum").attr("class", "iconCount");
+	                }
+		        }
 			}
 			
 			//회람판 신규 갯수 가져오기 2018-03-05 강민수92
@@ -969,63 +871,93 @@
 		        gizmo = setTimeout("attiClock()", 1000);
 		        
 		    }
+		    
+		    function goEnv() {
+		    	window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
+		    }
 		</script>
 	</head>
-	<body>
-		<c:if test="${type != 'schd'}">
-			<article class="time_check">
-	           	<div id="timeinput" class="presentTime">
-	               	<p class="timeTit" id="todayTime"><spring:message code="main.t00023" /></p>
-					<div id="timeFlow" class="timeText"></div>
-			    </div>
-	            <div id="atti_area" class="main_time">
-	            	<dl class="timeCheckIn">
-	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">출근</dd>
-	                </dl>
-	                <dl class="timeCheckOut">
-	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)">퇴근</dd>
-	                </dl>
-		    	</div>
-			</article>
-	        <!-- //time_check -->
-	        <!-- countingIcon -->
-	        <article class="countingIcon">
-	          	<div class="countingIcon01">
-					<dl id="NewMail" onClick="btnSumming_click(this)">
-	                	<dt class="iconImg"><img src="/images/kr/main/countingIcon01.png"></dt>
-	                    <dd class="iconText"><spring:message code="main.t00017" /></dd>
-	                    <dd class="iconCount_none" id="mailnum">0</dd>
-	                </dl>
-	                <dl id="AprSign" onClick="btnSumming_click(this)">
-	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon03.png"></dt>
-	                    <dd class="iconText"><spring:message code="main.t00018" /></dd>
-	                    <dd class="iconCount_none" id="aprnum">0</dd>
-	                </dl>
-	                <dl id="Schedule" onClick="btnSumming_click(this)">
-	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon02.png"></dt>
-	                    <dd class="iconText"><spring:message code="main.t00019" /></dd>
-	                    <dd class="iconCount_none" id="schedulenum">0</dd>
-	                </dl>
-				</div>
-	            <div class="countingIcon02">
-	            	<dl id="Poll" onClick="btnSumming_click(this)">
-	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon05.png"></dt>
-	                    <dd class="iconText"><spring:message code="main.t00020" /></dd>                        
-	                    <dd class="${pollNum == 0 ? 'iconCount_none' : 'iconCount' }"><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></dd>
-	                </dl>
-	            	<c:if test="${isCircularUsed == 'Y'}">
-	                <dl id="Circular" onClick="btnSumming_click(this)"> 
-	                    <dt class="iconImg"><img src="/images/kr/main/countingIcon04.png"></dt>
-	                    <dd class="iconText"><spring:message code="ezCircular.t1" /></dd>
-	                    <dd class="iconCount_none" id="circularCnt">0</dd>
-	                </dl>
-	                </c:if>                    
-	            </div>    
-	        </article>
-        </c:if>
-        <c:if test="${type == 'schd'}">
-        	
-        </c:if>
+	<body>	
+		<article class="rolling_info">
+        	<div class="rolling" id="featured">
+            	<c:choose>
+	            	<c:when test="${not empty sliderList}">
+	            		<c:forEach items="${sliderList}" var="slider">
+		            		<c:choose>
+		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
+		            				<img src="${slider.imagePath}" style="width:280px;height:515px;cursor:pointer;" onclick="window.open('${slider.url }')" />
+		            			</c:when>
+		            			<c:otherwise> 
+									<img src="${slider.imagePath}" style="width:280px;height:515px;cursor:pointer;" onclick="window.open('http://${slider.url }')" />
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+	            	</c:when>
+	            	<c:otherwise>
+		            	<img src="/images/WebPartSliderCI/rolling01.png" />
+			    		<img src="/images/WebPartSliderCI/rolling01.png" />
+			    		<img src="/images/WebPartSliderCI/rolling01.png" />
+	            	</c:otherwise>
+	            </c:choose>
+            </div>
+            <dl class="info">
+            	<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></dt>
+                <dd class="infoName">${displayName} ${title}</dd>
+                <dd class="infoTeam">${department}</dd>
+                <%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
+                <dd class="infoSet" onclick='goEnv();'><img src="/images/kr/main/info_set.png"></dd>
+            </dl>
+        </article>
+		<article class="time_check">
+           	<div id="timeinput" class="presentTime">
+               	<p class="timeTit" id="todayTime"><spring:message code="main.t00023" /></p>
+				<div id="timeFlow" class="timeText"></div>
+		    </div>
+            <div id="atti_area" class="main_time">
+            	<dl class="timeCheckIn">
+                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">출근</dd>
+                </dl>
+                <dl class="timeCheckOut">
+                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)">퇴근</dd>
+                </dl>
+	    	</div>
+		</article>
+        <!-- //time_check -->
+        <!-- countingIcon -->
+        <article class="countingIcon">
+          	<div class="countingIcon01">
+				<dl id="NewMail" onClick="btnSumming_click(this)">
+                	<dt class="iconImg"><img src="/images/kr/main/countingIcon01.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00017" /></dd>
+                    <dd class="iconCount_none" id="mailnum">0</dd>
+                </dl>
+                <dl id="AprSign" onClick="btnSumming_click(this)">
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon03.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00018" /></dd>
+                    <dd class="iconCount_none" id="aprnum">0</dd>
+                </dl>
+                <dl id="Schedule" onClick="btnSumming_click(this)">
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon02.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00019" /></dd>
+                    <dd class="iconCount_none" id="schedulenum">0</dd>
+                </dl>
+			</div>
+            <div class="countingIcon02">
+            	<dl id="Poll" onClick="btnSumming_click(this)">
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon05.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00020" /></dd>                        
+                    <dd class="${pollNum == 0 ? 'iconCount_none' : 'iconCount' }"><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></dd>
+                </dl>
+            	<c:if test="${isCircularUsed == 'Y'}">
+                <dl id="Circular" onClick="btnSumming_click(this)"> 
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon04.png"></dt>
+                    <dd class="iconText"><spring:message code="ezCircular.t1" /></dd>
+                    <dd class="iconCount_none" id="circularCnt">0</dd>
+                </dl>
+                </c:if>                    
+            </div>    
+        </article>
+        
 		<!-- 2018-08-23 장진혁 신규포탈페이지 개발 -->
 		<%-- <section class="body_bg2">
 			<article  class="personal">
@@ -1034,7 +966,7 @@
 						<span id="ModInfo" onClick="btnSumming_click(this)"></span>
 					</span>
 				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
-				 </p>
+				</p>
 				<div class="info">
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">

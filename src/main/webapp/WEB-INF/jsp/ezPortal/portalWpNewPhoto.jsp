@@ -189,7 +189,7 @@
 		</script>
 	</head>
 	<body>
-		<article class="photo_board box_shadow">
+		<div class="layDIV">
         	<dl class="portlet_title">
                 <dt class="portletText"><spring:message code='main.t1007' /></dt>
                 <dd class="portletPlus" onclick="Boardmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
@@ -207,7 +207,7 @@
           			</div> --%>
  				</c:otherwise>
  			</c:choose>
-        </article>
+        </div>
 		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
 		<%-- <section  class="body_bg1">
 			 <article class="portletbox photobox ">

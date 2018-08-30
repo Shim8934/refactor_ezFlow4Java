@@ -79,11 +79,11 @@
 		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
 	                    
 		                var birthType = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTHTYPE");
-	                    
 	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
-	                    
 	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
-
+	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+	        	        var userPic = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
+	        	        
 	            	    if (userPrimary != "1")
 	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
 
@@ -104,12 +104,16 @@
 	                        <dd class="birthTeam">오픈솔루션팀</dd>
 	                    </dl>
 	                </li> */
-	                    
 		                var _li = document.createElement("li");
 		                _li.style.display = "none";
 	    	            _li.style.cursor = "pointer";
 	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
-	                    _li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/kr/main/birth01.png'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        
+	        	        if (userPic == "") {
+	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/no_image.jpg' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        } else {
+	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        }
 	            	    
 	                	document.getElementById("userlist").appendChild(_li);
 

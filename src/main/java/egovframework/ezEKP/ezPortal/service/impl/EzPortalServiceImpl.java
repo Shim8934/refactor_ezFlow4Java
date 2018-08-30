@@ -2948,9 +2948,9 @@ System.out.println("result : " + result);
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
 						sb.append("<section class='section_left'>\n");
-						sb.append("<iframe width='100%' border=0 src='/ezPortal/urlPortlet.do?uID=0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3' frameborder=0 scrolling=no></iframe>\n");
-						sb.append("<iframe width='100%' height='300px' border=0 src='/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c' frameborder=0 scrolling=no></iframe>\n");
-						sb.append("<iframe width='100%' height='197px' border=0 src='/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4' frameborder=0 scrolling=no></iframe>\n");							
+						sb.append("<iframe width='100%' height='815px' border=0 src='/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c' frameborder=0 scrolling=no></iframe>\n");
+						sb.append("<iframe width='100%' height='197px' border=0 src='/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4' frameborder=0 scrolling=no></iframe>\n");
+						sb.append("<iframe width='100%' height='110px' border=0 src='/ezPortal/urlPortlet.do?uID=c1479aa0-824d-43ff-a7f6-999ad660378a' frameborder=0 scrolling=no></iframe>\n");
 					} else {
 						logger.debug("userInfo getTheme="+userInfo.getTheme());
 						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
@@ -2959,35 +2959,36 @@ System.out.println("result : " + result);
 						}
 						
 						if (i == 1) {
-							sb.append("<aside><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
+							sb.append("<aside id='quickSide'><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
 							sb.append("<li><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
 							sb.append("<li><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
-							sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>일정작성</span></li>");
-							sb.append("<li><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>조직도</span></li></ul></div>");
-							sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu'></ul>");
-							sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre'><img src='/images/kr/main/link_preBtn.png'></span><span class='linkBtn_next'><img src='/images/kr/main/link_nextBtn.png'></span></p></div></div></aside>");
+							sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");
+							sb.append("<li><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezAddress.t351", userInfo.getLocale())+"</span></li></ul></div>");
+							sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu' id='QuickUl'></ul>");
+							sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre' id='preBtn' onclick='QuickMove(1)'><img src='/images/kr/main/link_preBtn_dis.png'></span><span class='linkBtn_next' id='nextBtn' onclick='QuickMove(2)'><img src='/images/kr/main/link_nextBtn_dis.png'></span></p></div></div></aside>");
 						} else {
 							sb.append("<section class='section_main'>\n");
 							
 							for (int j=0; j < 3; j++) {
 								if (j==0) {
 									sb.append("<div class='mainLayout_left'>");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683&companyBoardID={67d0a0e4-ad24-1be6-9b5f-64a16cf6dca2}&deptBoardID={80ef430a-39cd-ee7f-cd81-157faa4979aa}' frameborder=0 scrolling=no></iframe>\n");
-									sb.append("<iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=1a36d14a-cea3-4126-9ae0-4f9989f52d27' frameborder=0 scrolling=no></iframe>\n");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e&ffdgdfg=dfgdfgdfg' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<article class='notice box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683&companyBoardID={67d0a0e4-ad24-1be6-9b5f-64a16cf6dca2}&deptBoardID={80ef430a-39cd-ee7f-cd81-157faa4979aa}' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='schedule box_shadow'><iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=1a36d14a-cea3-4126-9ae0-4f9989f52d27' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='board box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e&ffdgdfg=dfgdfgdfg' frameborder=0 scrolling=no></iframe></article>\n");
 									sb.append("</div>");
 								} else if (j==1) {
 									sb.append("<div class='mainLayout_middle'>");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=mail' frameborder=0 scrolling=no></iframe>\n");
-									sb.append("<iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=appr' frameborder=0 scrolling=no></iframe>\n");									
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<article class='mail box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=mail' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='approval box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=appr' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='bookmark_approval box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=favo' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='community box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1' frameborder=0 scrolling=no></iframe></article>\n");
 									sb.append("</div>");
 								} else if (j==2) {
 									sb.append("<div class='mainLayout_right'>");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d' frameborder=0 scrolling=no></iframe>\n");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6' frameborder=0 scrolling=no></iframe>\n");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac&photoGalleryID={9d5dfc7f-5f5e-ec24-1009-6c47991926cc}' frameborder=0 scrolling=no></iframe>\n");
-									sb.append("<iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b&boardID1={8beb7d4d-3f07-c739-859d-762af6a6b61a}' frameborder=0 scrolling=no></iframe>\n");
+									sb.append("<article class='vote box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d' frameborder=0 scrolling=no></iframe></article>\n");									
+									sb.append("<article class='photo_board box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac&photoGalleryID={9d5dfc7f-5f5e-ec24-1009-6c47991926cc}' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='stats_graph box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='groupware_banner box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b&boardID1={8beb7d4d-3f07-c739-859d-762af6a6b61a}' frameborder=0 scrolling=no></iframe></article>\n");
 									sb.append("</div>");
 								}
 							}
