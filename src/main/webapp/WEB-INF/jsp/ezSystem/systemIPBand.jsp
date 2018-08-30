@@ -78,7 +78,7 @@
 			
 			if (json.length == 0) {
 				var _TR = document.createElement("TR");
-				_TR.setAttribute("id", "noData");
+				_TR.setAttribute("id", "IPBandNoData");
 				
 				var _NODATA = document.createElement("TD");
                 _NODATA.colSpan = "4";
