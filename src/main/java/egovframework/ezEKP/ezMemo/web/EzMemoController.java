@@ -118,7 +118,7 @@ public class EzMemoController {
 				
 				model.addAttribute("memoList", memoList);
 				model.addAttribute("colorList", colorList);
-				model.addAttribute("defaultColor", defaultColor);
+				//model.addAttribute("defaultColor", defaultColor);
 				model.addAttribute("folderId", folderId);
 				
 				if (layerFlag != null) {

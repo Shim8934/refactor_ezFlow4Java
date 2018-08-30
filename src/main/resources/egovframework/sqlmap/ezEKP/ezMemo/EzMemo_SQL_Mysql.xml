@@ -426,4 +426,17 @@
 		AND 
 			MEMO_ID = #memo_id#
 	</update>
+	
+	<update id="EzMemoDAO.setDefaultColor">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			DEFAULT_COLOR = #color_id#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
 </sqlMap>

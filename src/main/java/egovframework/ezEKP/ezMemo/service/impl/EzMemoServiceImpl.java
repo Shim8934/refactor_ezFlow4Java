@@ -366,6 +366,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		
 		ezMemoDAO.setMemoColor(map);
 		
+		ezMemoDAO.setDefaultColor(map);
+		
 		logger.debug("setMemoColor ended.");
 	}
 }

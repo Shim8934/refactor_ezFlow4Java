@@ -34,7 +34,7 @@
 	
 	<style>
 		h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 		}
 		.individual-memo { 
 			width:230px; height:230px; 
@@ -70,6 +70,8 @@
 		var memoList;
 		var folderId =  "<c:out value='${folderId}' />";
 		var topHeight = "100";
+		var useDate;
+		var fontSize;
 		var memoColor;
 		var defaultColor;
 		var headerColor;
@@ -115,6 +117,7 @@
 	        	 containment: '#bodyFrame'
 	        });
 			
+			getMemoConfig();
 			getFolderList();
 			getMemoList();
 			
@@ -129,6 +132,22 @@
 	    	$(document).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);
 	    	});
+	    	
+	    	console.log('기본설정 - font size : ' + fontSize + ', use date : ' + useDate + ', defaultColor : ' + defaultColor);
+		}
+		
+		function getMemoConfig() {
+			$.ajax({
+				type : "GET",
+				dataType : "json",
+				async : false,
+   				url : '/ezMemo/getMemoConfig.do',
+   				success : function(result){
+					fontSize = result.memoConfigVO.font_size;
+					useDate = result.memoConfigVO.use_date;
+					defaultColor = result.memoConfigVO.default_color;
+				}
+   			});
 		}
 		
 		function getFolderList() {
@@ -200,7 +219,7 @@
                 cache: false,
                 success: function(result) {
                 	memoColor = result["colorList"].split(";");
-                	defaultColor = result["defaultColor"];
+                	//defaultColor = result["defaultColor"];
                 	memoList = result["memoList"];
                 	headerColor = memoColor[defaultColor];
                 	bodyColor = memoColor[defaultColor+6]; 
@@ -292,12 +311,6 @@
 	        
 	        $(".memo-color-list").click(function(){
 	        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-	        	
-	        	/* headerColor = $(this).css("background-color");
-	        	bodyColor = memoColor[$(this).index()];
-	        	$(this).parent().parent().css("background-color", headerColor);
-	        	$(this).parent().nextAll("textarea").css("background-color", bodyColor);
-	        	$(this).parent().css("visibility", "hidden"); */
 	        })
 	        
 	        $(".memo-color").mouseleave(function(){
@@ -325,6 +338,7 @@
                 },  
                 cache: false,
                 success: function(result) {
+                	defaultColor = idx;
                 	getMemoList();
                 },
                 error : function() {
