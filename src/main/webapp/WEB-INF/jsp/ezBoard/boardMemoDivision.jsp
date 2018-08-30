@@ -161,11 +161,31 @@
 				// 빈 메모함이 아니라면
 				var deleted ="off";
 				if(hasMemo === "off" ) {
-					deleted = confirm("메모분류함에 메모가 있습니다. 삭제를 진행하겠습니까?");
+					deleted = confirm("<spring:message code='ezMemo.t0054' />");
 				}
+				
 				
 				// 메모함이 차 있고 삭제를 원하지 않을 때
 				if(deleted == false) {
+					return;
+				}
+				
+				// 메모함이 차 있고 삭제를 원할 때
+				if(deleted == true) {
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "json",
+			    		async : false,
+			    		url : "/ezMemo/memoFolderAction.do",
+			    		data : {
+			    			"methodType" : "delete",
+			    			"folder_ids" : deleteList.join()
+			    		}, success: function() {
+			    			memoFoldersInfo();
+			    		}, error: function(err) {
+			    			alert("<spring:message code='ezMemo.t0045' />");
+			    		}
+			        });	
 					return;
 				}
 				
