@@ -11,30 +11,13 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
-	    	var companyID = "";
 	    	
 	        window.onload = function () {
-	        	companyID = document.getElementById("ListCompany").value;
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 	        };
 	        
-	        function selectCompanyID() {
-	        	var company = document.getElementById("ListCompany").value;
-	        	if (companyID != company) {
-	        		companyID = company;
-	        		
-	        		var ipManagerIfr = document.getElementById("ipManager_ifrm");
-	        		if (Tab1_SelectID == 'tagsub1') {
-	        			ipManagerIfr.src = "/ezSystem/systemIPBand.do";
-	        		} else {
-	        			ipManagerIfr.src = "/ezSystem/systemIPAccessList.do";
-	        		}
-	        		
-	        	}
-	        }
-	        
-	        function Tab_init_select(obj) {
+	       function Tab_init_select(obj) {
 	        	obj.setAttribute("class", "tabon");
                 Tab1_SelectID = obj.id;
                 ChangeTab(obj);
@@ -156,13 +139,6 @@
 	</head>
 	<body class="mainbody" style="height: 95%;">
 	    <h1>접속 IP 관리</h1>
-		    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
-			    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
-		        	<c:forEach var="item" items="${list}">
-		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select>
-		    </span><br>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        	<p><span id="tagsub1">접속 IP 관리</span></p>

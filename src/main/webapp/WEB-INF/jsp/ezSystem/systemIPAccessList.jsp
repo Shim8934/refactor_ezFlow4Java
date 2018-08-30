@@ -16,6 +16,13 @@
 	</script>
 </head>
 <body class="mainbody">
+	<br><span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+	    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
+        	<c:forEach var="item" items="${list}">
+        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+           	</c:forEach>
+	    </select>
+    </span><br>
 	<br><span class="txt">▒ 거부된 IP(IP대역)에서도 접속 가능한 사용자 및 부서 리스트</span><br><br>
 	<div id="mainmenu">
 	    <ul class="on">

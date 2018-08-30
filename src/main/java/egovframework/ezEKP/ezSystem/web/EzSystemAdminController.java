@@ -591,23 +591,6 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		logger.debug("tenantID=" + userInfo.getTenantId() + ", companyID=" + userInfo.getCompanyID());
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-
-			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-
-		}
-
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("list", resultList);
-		
 		logger.debug("systemIPManager ended");
 		 
 		return "/ezSystem/systemIPManager";
@@ -741,6 +724,22 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/ezSystem/systemIPAccessList.do")
 	public String systemIPAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPAccessList started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
 				
 		logger.debug("systemIPAccessList ended");
 		return "/ezSystem/systemIPAccessList";
