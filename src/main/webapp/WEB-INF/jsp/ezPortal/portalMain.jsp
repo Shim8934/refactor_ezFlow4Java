@@ -588,7 +588,7 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-		        			console.log(result.memo);
+		        			
 		        			var $textarea = $("#textarea");
 		        			var $memoDetail = $(".detailMemo");
 		        			
