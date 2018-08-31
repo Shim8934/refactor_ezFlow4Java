@@ -617,10 +617,6 @@ public class EzMemoController {
 	public String reOrder(@CookieValue("loginCookie") String loginCookie, String draggedElId, String compareElId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("reOrder started");
 		
-		logger.debug("아이디");
-		logger.debug("" + draggedElId);
-		logger.debug("" + compareElId);
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -632,7 +628,9 @@ public class EzMemoController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/compareElId/" + compareElId + "/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
-		
+		if ("ok".equals(status)) {
+			model.addAttribute("status", 1);
+		}
 		logger.debug("reOrder ended");
 		return "json";
 	}

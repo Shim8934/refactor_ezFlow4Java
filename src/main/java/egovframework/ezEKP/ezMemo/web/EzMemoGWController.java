@@ -694,10 +694,6 @@ public class EzMemoGWController {
 	@RequestMapping(value = "/rest/ezMemo/memo-order/draggedElId/{draggedElId}/compareElId/{compareElId}/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoOrder(@PathVariable String draggedElId, @PathVariable String compareElId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-order/draggedElId/{draggedElId}/compareElId/{compareElId}/users/{userId}] started.");
-		LOGGER.debug("===========================");
-		LOGGER.debug("" + draggedElId);
-		LOGGER.debug("" + compareElId);
-		LOGGER.debug("===========================");
 		
 		JSONObject result = new JSONObject();
 		
@@ -709,22 +705,22 @@ public class EzMemoGWController {
 			int compareMemoOrder = (int)compareResult.get("compareMemoOrder");
 			
 			if ((int) compareResult.get("result") == 0) {
+				
 				List<MemoVO> memoList = ezMemoService.getMemoListForReOrder(draggedMemoOrder, compareMemoOrder, memoConfigVO);
-				LOGGER.debug("==============================");
-				LOGGER.debug("gw 메모 리스트: " + memoList);
-				LOGGER.debug("==============================");
+
 				for (int i = 0; i < memoList.size(); i++) {
+					
 					if (i == 0) {
+						
 						memoList.get(i).setOrders(compareMemoOrder);
 						MemoVO memo = memoList.get(i);
 						ezMemoService.setMemoOrders(memo);
-						LOGGER.debug("이동된 메모: " + memo);
+						
 					} else {
+						
 						int beforeOrder = memoList.get(i).getOrders();
-						LOGGER.debug("순서 바뀌기 전 메모: " + memoList.get(i));
 						memoList.get(i).setOrders(beforeOrder - 1);
 						MemoVO memo = memoList.get(i);
-						LOGGER.debug("순서 바뀐 후 메모: " + memo);
 						ezMemoService.setMemoOrders(memo);
 					}
 				}
@@ -732,21 +728,20 @@ public class EzMemoGWController {
 			} else if ((int) compareResult.get("result") == 1) {
 				
 				List<MemoVO> memoList = ezMemoService.getMemoListForReOrder(draggedMemoOrder, compareMemoOrder, memoConfigVO);
-				LOGGER.debug("==============================");
-				LOGGER.debug("gw 메모 리스트: " + memoList);
-				LOGGER.debug("==============================");
+
 				for (int i = 0; i < memoList.size(); i++) {
+					
 					if (i == memoList.size()-1) {
+						
 						memoList.get(i).setOrders(compareMemoOrder);
 						MemoVO memo = memoList.get(i);
 						ezMemoService.setMemoOrders(memo);
-						LOGGER.debug("이동된 메모: " + memo);
+						
 					} else {
+						
 						int beforeOrder = memoList.get(i).getOrders();
-						LOGGER.debug("순서 바뀌기 전 메모: " + memoList.get(i));
 						memoList.get(i).setOrders(beforeOrder + 1);
 						MemoVO memo = memoList.get(i);
-						LOGGER.debug("순서 바뀐 후 메모: " + memo);
 						ezMemoService.setMemoOrders(memo);
 					}
 				}

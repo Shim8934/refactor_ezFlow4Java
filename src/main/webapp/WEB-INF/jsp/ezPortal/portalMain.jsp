@@ -122,7 +122,6 @@
 		        $("#memoList").sortable({
 		        	 containment: '.memoListBox',
 		        	 opacity : 0.5,
-		        	 revert : true,
 		        	 stop : function (event, ui) {
 		        		 
 	        			 var compareElId; 
@@ -132,7 +131,7 @@
 		        		 var draggedElId = clickedItemId.replace("memo", "");
 		        		 
 		        		 if (clickedItem.prev().attr("id") != undefined) {
-		        			 if (parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.next().attr("orders"))) {
+		        			 if (clickedItem.next().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.next().attr("orders"))) {
 		        				 
 								compareElId = clickedItem.prev().attr("id").replace("memo", "");
 		        			 } else {
@@ -142,8 +141,7 @@
 		        			
 		        		 	
 		        		 } else if (clickedItem.next().attr("id") != undefined) {
-		        			
-		        			 if (parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.next().attr("orders"))) {
+		        			 if (clickedItem.prev().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.next().attr("orders"))) {
 		        				 
 									compareElId = clickedItem.next().attr("id").replace("memo", "");
 			        			 } else {
@@ -161,8 +159,12 @@
 		        			dataType : "JSON",
 		        			url : "/ezMemo/reOrder.do",
 		        			success : function(result) {
-		        				console.log(result);
 		        				
+		        				if (result.status == 1) {
+		        					
+			        				console.log("자리값 세팅 - 리스트 출력");
+			        				getMemoList();
+		        				}
 		        			}
 		        		 });
 		        		 
@@ -647,16 +649,13 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-		        			console.log(result);
+
 		        			var $textarea = $("#textarea");
 		        			var $memoDetail = $(".detailMemo");
 		        			
 		                	var memoColor = result.memoList.split(";");
 		                	var headerColor = memoColor[defaultColor-1];
 		                	var bodyColor = memoColor[defaultColor+5]; 
-		                	console.log("메모지 색상");
-		        			console.log(defaultColor);
-		        			console.log(memoColor);
 		        			
 		        			$textarea.val(result.memo.contents);
 		        			$textarea.css("background-color", bodyColor);
@@ -684,8 +683,6 @@
 	                },
 	                cache: false,
 	                success: function(result) {
-	                	console.log("메모 리스트");
-	                	console.log(result["memoList"]);
 	                	memoColor = result["colorList"].split(";");
 	                	//defaultColor = result["defaultColor"];
 	                	memoList = result["memoList"];
