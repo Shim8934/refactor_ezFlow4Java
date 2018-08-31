@@ -11,7 +11,6 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
 		var useIPAccess = "${useIPAccess}";
-		var httpRequest;
 		
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";

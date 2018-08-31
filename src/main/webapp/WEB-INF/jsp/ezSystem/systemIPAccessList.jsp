@@ -10,6 +10,11 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
+	
+		var m_strColorSelect = "#edf4fd";
+		var m_strColorOver = "#f4f5f5";
+		var m_strColorDefault = "#ffffff";
+		var m_strColorOpened = "#fafafa";
 		
 		window.onload = function() {
 			getAccessList_http(document.getElementById("ListCompany").value);
@@ -61,14 +66,13 @@
 				var _TR = document.createElement("TR");
 				_TR.setAttribute("id", "AccessId_" + Cnt);
 				_TR.setAttribute("accessno", json[Cnt].accessNo);
-				/* _TR.onclick = function() { event_listclick(this); };
+				_TR.onclick = function() { event_listclick(this); };
 				_TR.onmouseover = function () { event_listMover(this); };
 				_TR.onmouseout = function () { event_listMout(this); };
-				_TR.ondblclick = function () { ipBandUpdateInfo(this); }; */
 				_TR.style.cursor = "pointer";
 				
 				var _TDCheckBox = document.createElement("TD");
-				//_TDCheckBox.onclick = function() { event_listclick(this); };
+				_TDCheckBox.onclick = function() { event_listclick(this); };
                 _TDCheckBox.style.width = "22px";
                 _TDCheckBox.style.textAlign = "center";
                 _TDCheckBox.style.cursor = "default";
@@ -102,6 +106,71 @@
 			getAccessList_http(document.getElementById("ListCompany").value);
 		}
 		
+		var tdChk = false;
+		function event_listclick(obj) {
+			if (obj.tagName == "TD") {
+		        obj = obj.parentElement;
+		        tdChk = true;
+		    } else {
+		    	if (!tdChk) {
+		    		var selectedList = $("#tblIP tbody tr[selected=true]");
+			    	
+			    	for (var i = 0; i < selectedList.length; i++) {
+			    		selectedList[i].style.backgroundColor = m_strColorDefault;
+			    		selectedList[i].childNodes.item(0).childNodes.item(0).checked = false;
+			    		selectedList[i].setAttribute("selected", false);
+			    	}
+		    	}
+		    	tdChk = false;
+		    }
+			
+			if (obj.childNodes.item(0).childNodes.item(0).checked) {
+				obj.style.backgroundColor = m_strColorDefault;
+				obj.childNodes.item(0).childNodes.item(0).checked = false;
+				obj.setAttribute("selected", false);
+			} else {
+				obj.style.backgroundColor = m_strColorSelect;
+				obj.childNodes.item(0).childNodes.item(0).checked = true;
+				obj.setAttribute("selected", true);
+			}
+		}
+		
+		function event_HeaderCheckBoxClick(obj) {
+			var accessListElement = $("#tblIP tbody tr[id^=AccessId]");
+			
+			if (accessListElement.length == 0) {
+				return;
+			}
+			
+			if (obj.checked) {
+				for (var i = 0; i < accessListElement.length; i++) {
+		        	var accessNode = accessListElement[i];
+		        	accessNode.style.backgroundColor = m_strColorSelect;
+		        	accessNode.childNodes[0].childNodes[0].checked = true;
+		        	accessNode.setAttribute("selected", true);
+		        }
+			} else {
+				for (var i = 0; i < accessListElement.length; i++) {
+		        	var accessNode = accessListElement[i];
+		        	accessNode.style.backgroundColor = m_strColorDefault;
+		        	accessNode.childNodes[0].childNodes[0].checked = false;
+		        	accessNode.setAttribute("selected", false);
+		        }
+			}
+		}
+		
+		function event_listMover(obj) {
+		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+		        obj.style.backgroundColor = m_strColorOver;
+		    }
+		}
+		
+		function event_listMout(obj) {
+		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+		        obj.style.backgroundColor = m_strColorDefault;
+		    }
+		}
+		
 		function ipListAddPopUp() {
 			var url = "/ezSystem/systemAddAccessList.do";
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(970, 600));
@@ -126,7 +195,7 @@
 	
 	<table id="tblIP" class="mainlist" style="width:50%;">	
 		<tr>
- 			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+ 			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
  			<th width="45%;">이름(ID)</th>
  			<th>부서</th>
 		</tr>
