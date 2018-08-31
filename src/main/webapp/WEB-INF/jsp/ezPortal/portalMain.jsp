@@ -70,19 +70,16 @@
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
 		        chagePosition();
-		        setSizeOfLayer();
+		        //setSizeOfLayer();
 		 	}
 		 	
-		    function Div_Close() {
+		    /* function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
-		    }
+		    } */
 
 		    window.onload = function() {
 		    	$("#open-memo").css("display", "");
-		    	
-		    	
 		    }
-		    
 		
 		    function chagePosition() {
 		    	
@@ -115,11 +112,10 @@
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
-		        })
-		        
-		        
+		        });
 		        
 		        $("#memoList").sortable({
+		        	
 		        	 containment: '.memoListBox',
 		        	 opacity : 0.5,
 		        	 stop : function (event, ui) {
@@ -216,6 +212,7 @@
 		        });
 		        
 		        $("#font-down").click(function() {
+		        	
 		        	var textarea = $("#font-down").parent().parent().find("textarea");
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
@@ -255,9 +252,9 @@
 	        		}
 		        	
 		        });
-
 		        
 		        $(".layer-half").resizable({
+		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
 		        	stop : function () {
@@ -274,16 +271,15 @@
 		        			dataType: "JSON",
 		        			url :  "/ezMemo/setLayerArea.do", 
 		        			success : function (result) {
-		        				
 		        			},
 		        			error : function() {
-		        				console.log("에러");
 		        			}
 		        		});
 		        	}
 		        });
 		        
 		        $(".detailMemo").resizable({
+		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
 		        	minWidth: 310,
@@ -298,9 +294,10 @@
 			        
 			        var textareaHeight = detailMemoHeight - (memoBtnHeight + fontBtnHeight + 5);
 			        $("#textarea").css("height", parseInt(textareaHeight) +"px");
+			        
 				    }
 		        });
-		        /* 변경 */
+		        
 		        $(".layer-half").resize(function(e) {
 		        	
 		        	var layerHeight = $(this).height();
@@ -336,14 +333,14 @@
 		        });
 		        
 		        getMemoConfig();
-		        /* 새 메모 추가 */
+		        // 새 메모 추가 
 		        $("#newMemo").click(function() {
 		        	newMemo();
 		        });
 				
 		        getMemoList();
 		        
-		        /* 메모 숨김 상태 변경 */
+		        // 메모 숨김 상태 변경 
 		        $("#memoList").on("click", ".individual-memo img", function() {
 		        	var memoId = $(this).attr("id").replace("memoId", "");
 		        	
@@ -369,7 +366,6 @@
 		        });
 		        
 		        $("#btn-bundle").on("change", "select[name=memoFolderList]", function() {
-
 		        	getMemoList();
 		        });
 		        
@@ -420,7 +416,8 @@
 					}); 
 				}
 		    }
-		    
+		 	
+		    // 레이어 넓이 값 저장
 		    function setLayerSize() {
 		    	var layerClass = $("#layer-popup").attr("class");
 		    	
@@ -432,13 +429,14 @@
 		    		$(".layer-all").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
 		    		$(".memoListBox").css({"width" : winWidth+25, "height" : winHeight-56-16});
 		    		$("#memoList").css({"width" : winWidth+25, "height" : winHeight-56-16});
-		    		
+
 		    	} else if (layerClass.indexOf("layer-half") != -1) {
 		    		getMemoConfig();
 		    		setMemoListSize();
 		    	}
 		    }
-		    /* 메모 컨피그 DB 확인 후 없으면 insert */
+		    
+		    // 메모 컨피그 DB 확인 후 없으면 insert
 		    function getMemoConfig() {
 	        	
 		        $.ajax({
@@ -449,10 +447,12 @@
 		        	success : function(result) {
 		        		
 		        		if (result.memoConfigVO != null) {
+		        		
 		        			fontSize = result.memoConfigVO.font_size;
 							useDate = result.memoConfigVO.use_date;
 							defaultColor = result.memoConfigVO.default_color;
 		        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
+		        		
 		        		} else {
 		        			
 		        			$.ajax({
@@ -467,8 +467,9 @@
 		        	}
 		        });
 	        }
-		    
+		    // 메모 디테일 default값 세팅
 		    function setDetailMemoPosition () {
+		    	
 		    	var winWidth = $(window).width();
 		    	var winHeight = $(window).height();
 		    	
@@ -483,6 +484,7 @@
 		    
 		    // 초기 pointet-event set
 		    function defaultPointer() {
+		    	
 		    	$(".noteBlock").css("pointer-events", "none");
 	        	$("#open-memo").css("pointer-events", "auto");
 		    }
@@ -581,13 +583,6 @@
 		        });
 		    }
 		    
-		    /* function detailMemoSave() {
-		    	$(".individual-memo:nth-child("+memoIndex+") > .memo-text").val($("#textarea").val());
-		    	$("#textarea").val('');
-		    	$(".detailMemo").css("display", "none");
-		    	memoIndex = -1;
-		    } */
-		    
 		    function checkDefaultFolder() {
 		    	$.ajax({
 					type : "GET",
@@ -597,9 +592,9 @@
 				});
 		    }
 		    
-		    function newMemo() {
-		    	
-		    	var folderId = $("select option:selected").val();
+			function newMemo() {
+				
+				var folderId = $("select option:selected").val();
 		    	var layerFlag = $("#layerFlag").val();
 		    	
 				$.ajax ({
@@ -613,10 +608,9 @@
 	                cache: false,
 	                success: function(result) {
 	                	var memoId = result["memoId"];
-	                	var layerFlag = result["layerFlag"];
 	                	
-	                	insertMemo(headerColor, bodyColor, memoId, layerFlag);
-	        	    	addremove();
+	                	getMemoList("new");
+	                	parent.parent.getMemoList();
 	                },
 	                error : function() {
 	                	
@@ -678,6 +672,7 @@
 		    
 		 	// 메모 색상 변경
 		    function modifyMemoColor(obj, idx) {
+		 		
 		    	var memoId = obj.attr("id").replace("memo", "");
 		    	
 		    	$.ajax ({
@@ -701,6 +696,7 @@
 		    }
 		    
 		    function getMemoList(type) {
+		    	
 		    	var folderId = $("select option:selected").val();
 		    	var layerFlag = $("#layerFlag").val();
 				
@@ -715,11 +711,7 @@
 	                cache: false,
 	                success: function(result) {
 	                	memoColor = result["colorList"].split(";");
-	                	//defaultColor = result["defaultColor"];
 	                	memoList = result["memoList"];
-	                	//headerColor = memoColor[defaultColor];
-	                	//bodyColor = memoColor[defaultColor+6]; 
-	                	//folderId = result["folderId"];
 	                	layer = result["layerFlag"];
 	                	
 						loadMemoList(layer);
@@ -738,8 +730,8 @@
 			    var layerWidth = $("#layer-popup").width();
 			    var memoListHeight = layerHeight - btnBundlHeight;
 			    
-			    $(".memoListBox").css({"height" : memoListHeight});
-			    $("#memoList").css({"width" : "", "height" : memoListHeight});
+			    $(".memoListBox").css({"height" : memoListHeight+25, "width" : layerWidth});
+			    $("#memoList").css({"width" : layerWidth+25, "height" : memoListHeight});
 			    
 		    }
 		    

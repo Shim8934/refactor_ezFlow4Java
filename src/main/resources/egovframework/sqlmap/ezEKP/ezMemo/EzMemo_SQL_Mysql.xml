@@ -191,9 +191,9 @@
 			<dynamic>
 				USE_DATE = #use_date#
 				, USE_GADGET = #use_gadget#
-				<isNotEqual property="font_size" compareValue="0">
+				<isNotNull property="font_size">
 				, FONT_SIZE = #font_size#
-				</isNotEqual>
+				</isNotNull>
 				<isNotNull property="layer_width">
 				, layer_width = #layer_width#
 				</isNotNull>
@@ -206,7 +206,6 @@
 				<isNotNull property="layer_left">
 				, layer_left = #layer_left#
 				</isNotNull>
-				
 			</dynamic>
 			WHERE 
 				TENANT_ID = #tenant_id# 

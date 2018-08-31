@@ -169,8 +169,9 @@ public class EzMemoGWController {
 	@RequestMapping(value = "/rest/ezMemo/setLayerArea/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject setLayerArea(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerArea/users/" +userId + "] started.");
-		
-		
+		LOGGER.debug("=============================");
+		LOGGER.debug("gw컨트롤러: " + memoConfig);
+		LOGGER.debug("=============================");
 		JSONObject result = new JSONObject();
 		
 		try {
