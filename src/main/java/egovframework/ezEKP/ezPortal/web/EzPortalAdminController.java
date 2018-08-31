@@ -1,14 +1,17 @@
 package egovframework.ezEKP.ezPortal.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLConnection;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -405,12 +408,43 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 					nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
 				}
 				
+				/* 2018-08-30 홍승비 - 포탈테마 이미지 등록 시 원래 인코딩(content-type)으로 수정 */
 				if (mode.equals("Theme")) {
-					String pSaveName = UUID.randomUUID().toString() + ".jpg";
-					BufferedImage bufferedImage = new BufferedImage(170, 140, bi.getType());
+					String contentType = null;
+        			String extension = null;
+        	        BufferedInputStream bis = null;
+        	        
+        	        try {
+        		        bis = new BufferedInputStream(new FileInputStream(imageFile));
+        		        contentType = URLConnection.guessContentTypeFromStream(bis);
+        	        } catch(Exception e) {
+        	        } finally {
+        	        	if (bis != null) {
+        	        		bis.close();
+        	        	}
+        	        }
+        	        
+        	        if (contentType == null) {
+        	        	contentType = "application/octet-stream";
+        	        	extension = ".jpg"; // 기존 확장자가 .jpg로 고정되어 있었으므로, 디폴트로 사용함
+        	        } else {
+        	        	contentType = contentType.replace("image", "Image");
+        	        	extension = "." + contentType.split("/")[1];
+        	        }
+        	        
+        	        BufferedImage bufferedImage = null;
+					String pSaveName = UUID.randomUUID().toString() + extension;
+
+					// png 파일 등록 시 발생하는 이미지타입 오류 수정
+					if (bi.getType() == 0) {
+						bufferedImage= new BufferedImage(170, 170, BufferedImage.TYPE_INT_RGB);
+					} else {
+						bufferedImage = new BufferedImage(170, 140, bi.getType());
+					}
+					
 					bufferedImage.createGraphics().drawImage(bi, 0, 0, 170, 140, null);
 					
-					ImageIO.write(bufferedImage, "jpg", new File(pServerPath + commonUtil.separator + pSaveName));
+					ImageIO.write(bufferedImage, extension.replace(".", ""), new File(pServerPath + commonUtil.separator + pSaveName));
 					//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
 					
 					File file1 = new File(pAttachPath);

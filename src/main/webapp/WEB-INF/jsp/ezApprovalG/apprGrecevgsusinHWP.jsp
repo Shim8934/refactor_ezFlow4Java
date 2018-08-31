@@ -1313,7 +1313,7 @@
 			    parameter[2] = SignCount;
 			    parameter[3] = SignInfo;
 			    parameter[4] = hapyuiCount;
-			    parameter[5] = pDraftFlag;
+			    parameter[5] = g_DraftFlag;
 			    parameter[6] = pSuSinFlag;
 			    parameter[7] = pChamJoFlag;
 			    parameter[8] = gongramCount;

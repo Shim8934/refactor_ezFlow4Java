@@ -5953,6 +5953,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDeptID = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		
 		String currentAprType = "";
@@ -6337,14 +6338,52 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("enforcedate", hwpFile)) {
-							setHwpText("enforcedate", commonUtil.getTodayUTCTime("yyyy").replace("-", "."), hwpFile);
+							setHwpText("enforcedate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
 						}
-						
 						
 						retNum = getNDigitNum(cabinetSN, 6);
 						
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
+								return "Link ERROR";
+							}
+						}
+					}
+				}
+				
+				/** 수신 일괄결재시 채번 */
+				if (useReceiveDocNo.equals("NO") && totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+					strDeptID = receiveDept;
+					
+					String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
+					
+					logger.debug("serialNum = " + ret);
+					
+					docNumFlag = true;
+					
+					Document docXML = commonUtil.convertStringToDocument(ret);
+					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
+					//0박아주는거 하면된다
+					if (!ret.equals("")) {
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
+								return "Link ERROR";
+							}
+						}
+						
+						if (findHwpField("receiptnumber", hwpFile)) {
+							docNO = getRecRegSNToName(userInfo.getDeptName(), createDocNO(cabinetSN , docNumZeroCnt), userInfo.getDeptID(), userInfo.getTenantId());
+							setHwpText("receiptnumber", docNO, hwpFile);
+						}
+						
+						if (findHwpField("receiptdate", hwpFile)) {
+							setHwpText("receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
+						}
+						
+						retNum = getNDigitNum(cabinetSN, 6);
+						
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							if (!excuteInfoHwp("DOCNUM_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
 								return "Link ERROR";
 							}
 						}
@@ -6416,6 +6455,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
 					paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
 				} else {
+					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
+				}
+				
+				if (useReceiveDocNo.equals("NO") && aprStateSign.equals("011")) {
 					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
 				}
 				
@@ -12329,6 +12372,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SWRITERDEPTNAME", "");
 		}
 		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
+		
 		List<ApprGReceiveDocVO> apprGReceiveDocVOList = ezApprovalGDAO.getReceiveDocList(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -12377,6 +12423,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			map.put("v_SWRITERDEPTNAME", "");
 		}
+		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
 		
 		int totalCnt = ezApprovalGDAO.getReceiveDocListCount(map);
 
@@ -13867,15 +13916,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (!autoDeptID.equals("")) {
 						int addressCount = ezApprovalGDAO.doDocCompleteReceiptCnt(map);
-						// 수신처 아이디가 존재하는 경우
+						// 민원인 외부 수신처 아이디가 존재하는 경우
 						if (addressCount > 0) {
 							map.put("v_DOCID", docID);
 							map.put("v_TENANTID", userInfo.getTenantId());
-							// ProcessYN(진행여부)를 0으로 변경
+							// ProcessYN(진행여부)를 O으로 변경
 							ezApprovalGDAO.updateReceiptPointInfo(map);
-							
-							sendFlag = true;
 						}
+					}
+					//시행문일때만 발신함
+					if (realDocType.equals("001")) {
+						sendFlag = true;
 					}
 				}
 			} else { // 일반버젼
@@ -19173,6 +19224,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
 		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
 		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
 		
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		
@@ -26022,7 +26076,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
@@ -26123,10 +26177,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String strRecStates = "";
         	
 			if (strRecDate == null || strRecDate.equals("")) {
-				strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+				strRecDate = commonUtil.getTodayUTCTime("");
 			} else {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				strRecDate = sdf.format(sdf.parse(strRecDate));
+				
+				strRecDate = commonUtil.getDateStringInUTC(strRecDate, "235|+09:00", true);
 			}
 
 			switch( strMode.trim()) {
@@ -26629,16 +26685,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception {
+	public String updateSusinState(String docID, String mode, String deptID, String companyID, int tenantID) throws Exception {
 		String recStates = "";
 
-		if (recDate == null || recDate.equals("")) {
-			recDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			recDate = sdf.format(sdf.parse(recDate));
-		}
-		
 		switch(mode.trim()) {
 			case "send":
 				recStates = "S";
@@ -26676,7 +26725,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
 		map.put("receiptPointID", deptID);
-		map.put("processDate", recDate);
+		map.put("processDate", commonUtil.getTodayUTCTime(""));
 		map.put("processYN", recStates);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
@@ -26719,7 +26768,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String href = ezApprovalGDAO.getDocExt(map);
 		
-		ext = href.substring(href.length()-3, href.length());
+		logger.debug("@@@@@@@@@@@@getDocExt error@@@@@@@@@@@");
+		logger.debug("docID :" + docID + ", companyID : " + companyID + ", tenantID : " + tenantID );
+		
+		//2018-08-29 강민수92 건설관리공사 기안할 때 null인 경우가 발생해서 임시로 넣어줌
+		if (href == null) {
+			ext = "hwp";
+		} else {
+			ext = href.substring(href.length()-3, href.length());
+		}
 		ext = ext.toLowerCase();
 		
 		logger.debug("ext : " + ext);

@@ -376,9 +376,6 @@
 		                    	var msgId = $(this).closest('tr').attr('_uid');
 		                    	var isBig = $(this).closest('tr').attr('_big');
 		                    	
-		                    	var firstIdx = window.parent.multipartFirstIdx;
-		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
-	                    		
 		                    	FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
 		                    };
 		                }
