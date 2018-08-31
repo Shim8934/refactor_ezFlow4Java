@@ -11,36 +11,69 @@
 <link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-<title></title>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<title><spring:message code='ezMemo.t0055'/></title>
 </head>
 <script>
-			function close_onclick() {
-				// delete_flag 변경 후 창 닫기
-				   window.close();
+			var memoId = "<c:out value='${memo.memo_id}' />";
+			
+			window.onload = function() {
+				var MainHeight = document.documentElement.clientHeight - 80;
+		        var MainWidth = document.documentElement.clientWidth - 32;
+		        $("textarea").css("height", parseInt(MainHeight) +"px");
+		        $("textarea").css("width", parseInt(MainWidth) +"px");
 			}
 			
-			window.onbeforeunload = function() {
-				// 창 닫을 때 값 저장
+			window.onresize = function() {
+				var MainHeight = document.documentElement.clientHeight - 80;
+		        var MainWidth = document.documentElement.clientWidth - 32;
+		        $("textarea").css("height", parseInt(MainHeight) +"px");
+		        $("textarea").css("width", parseInt(MainWidth) +"px");
 			};
+			
+			window.onbeforeunload = function() {
+				modifyMemo();
+			};
+
+			function close_onclick() {
+				modifyMemo();
+				//window.close();
+			}
+			
+			function modifyMemo() {
+				var beforeContents = $("textarea").html();
+				var afterContents = $("textarea").val();
+				
+				if(beforeContents != afterContents) {
+			    	$.ajax ({
+		 			   	url : '/ezMemo/memoModify.do',
+		 			   	type : 'POST',
+		                dataType : 'json',
+		                data : { 
+		                	memoId : memoId,
+		                	contents : afterContents
+		                },  
+		                cache: false,
+		                success: function(result) {
+		                	//parent.opener.refresh_onclick();							// 메모 게시판의 리스트 새로고침()				
+		                	//parent.opener.parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+		                },
+		                error : function() {
+		                	
+		                }
+					}); 
+				}
+		    }
 </script>
 <body class="popup" style="overflow:hidden">
-		<div id="menu">
-			<ul>
-		      <li>
-		      	<span onClick="close_onclick()"><spring:message code='ezMemo.t0015'/></span>
-		      </li>
-		    </ul>
-		 </div>
+		<h1><spring:message code='ezMemo.t0055'/></h1>
 		 <div id="close">
 		    <ul>
 		      <li><span onClick="close_onclick()"></span></li>
 		    </ul>
 		 </div>
-		  <script type="text/javascript">
-			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		  </script>
-		<table class="content">
-			<textarea style="margin: 0px; width: 100%; height: 100%; resize: none;"></textarea>
-		</table>
+		<div>
+			<textarea id="content" style="margin: 0px; resize: none;"><c:out value='${memo.contents}' /></textarea>
+		</div>
 </body>
 </html>

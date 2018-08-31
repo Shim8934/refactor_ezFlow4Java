@@ -96,6 +96,10 @@
 			MailOptionHidden();
 	 	}
 	 	
+	 	window.onbeforeunload = function() {
+			
+		};
+	 	
 		window.onload = function() {
 			var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 	        document.getElementById("bodyFrame").style.height = MainHeight + "px";
@@ -337,11 +341,13 @@
 		    	})
 	        });
 		    
-		    $(".individual-memo").dblclick(function(){
+		    $(".memo-text").dblclick(function(){
 		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
 		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
 		        
-		    	window.open("/ezMemo/memoRead.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
+		        var memoId = $(this).attr("memoid");
+
+		    	window.open("/ezMemo/memoRead.do?memoId=" + memoId, "",  "height=480px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
 		    });
 	        
 	        $(".individual-memo").mouseleave(function(){
