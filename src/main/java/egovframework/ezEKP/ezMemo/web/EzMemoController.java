@@ -276,8 +276,23 @@ public class EzMemoController {
 	}
 	
 	@RequestMapping(value = "/ezMemo/memoRead.do")
-	public String memoRead(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String memoRead(String memoId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoRead started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("tenant_id", userInfo.getTenantId());
+		param.put("user_id",userInfo.getId());
+		param.put("memoId", memoId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-detail/memo/" + memoId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+
+		if ("ok".equals(status)) {
+			model.addAttribute("memo", resultBody.get("data"));
+		}
 		
 		logger.debug("memoRead ended.");
 		return "ezMemo/memoRead";
@@ -463,8 +478,6 @@ public class EzMemoController {
 	@RequestMapping("/ezMemo/memo-display.do")
 	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, String memo_ids, String display, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoDisplay start");
-	/*public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("setMemoDisplay started");*/
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
