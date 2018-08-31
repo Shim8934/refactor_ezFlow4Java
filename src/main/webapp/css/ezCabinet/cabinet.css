@@ -106,7 +106,7 @@
 .cabDivPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .cabMainPrevH >div {height: 100%; display: flex; flex-flow: column;}
-.cabinetTree {padding: 5px; min-height: 100px; width: 197px; white-space: nowrap; overflow-x: auto;}
+.cabinetTree {margin-left: 12px; padding: 5px; min-height: 100px; width: 197px; white-space: nowrap; overflow-x: auto;}
 .cabinetTree2:empty {padding: 0px !important;}
 .cabinetTree2 {padding: 5px; white-space: nowrap; overflow-x: auto;}
 .cabinetImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
