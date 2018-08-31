@@ -284,7 +284,7 @@
 .rlDocDiv span:hover {text-decoration:none; text-shadow: 1px 1px 1px #555;}
 .rlDocDiv em, .cabemailDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
 
-.wide {width: 55%;}
+.wide {width: 52%;}
 .nowrap {white-space:nowrap; min-width: 135px;}
 
 .cabemailDiv {border: none; max-height: 30px; height: 20px; overflow-y: auto;}
