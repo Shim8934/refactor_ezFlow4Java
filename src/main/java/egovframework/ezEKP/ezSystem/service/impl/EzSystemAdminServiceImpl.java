@@ -438,4 +438,27 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		logger.debug("deleteAccessId ended.");
 	}
+	
+	@Override
+	public List<AccessIdVO> getAllAccessListDept(String primaryLang, int tenantID, String companyID) throws Exception {
+		logger.debug("getAllAccessListDept started.");
+		logger.debug("primaryLang=" + primaryLang + ", tenantID=" + tenantID + ", companyID=" + companyID);
+		
+		if (!primaryLang.equals("1")) {
+			primaryLang = "2";
+		}
+		List<AccessIdVO> list;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("companyID", companyID);
+		
+		if (primaryLang.equals("1")) {
+			list = ezSystemAdminDAO.getAllAccessListDept(params);
+		} else {
+			list = ezSystemAdminDAO.getAllAccessListDept2(params);
+		}
+		
+		logger.debug("getAllAccessListDept ended.");
+		return list;
+	}
 }

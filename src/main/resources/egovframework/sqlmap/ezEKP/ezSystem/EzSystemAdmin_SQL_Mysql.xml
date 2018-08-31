@@ -219,6 +219,38 @@
 		]]>
 	</select>
 	
+	<select id="EzSystemAdminDAO.getAllAccessListDept" parameterClass="Map" resultClass="AccessIdVO">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.ACCESSNO, 
+				CONCAT(TBL_DEPTMASTER.DISPLAYNAME, '(', TBL_ACCESS_ID.CN, ')') CN, TBL_DEPTMASTER.DISPLAYNAME DEPARTMENT 
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE1=#companyID# 
+			AND	
+				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAllAccessListDept2" parameterClass="Map" resultClass="AccessIdVO">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.ACCESSNO, 
+				CONCAT(TBL_DEPTMASTER.DISPLAYNAME2, '(', TBL_ACCESS_ID.CN, ')') CN, TBL_DEPTMASTER.DISPLAYNAME2 DEPARTMENT 
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE1=#companyID# 
+			AND	
+				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
 	<delete id="EzSystemAdminDAO.deleteAccessId" parameterClass="java.util.List">
 		<![CDATA[
 			DELETE FROM

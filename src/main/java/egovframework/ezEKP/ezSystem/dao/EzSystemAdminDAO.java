@@ -75,6 +75,16 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList2", map);
     }
 	
+	@SuppressWarnings("unchecked")
+	public List<AccessIdVO> getAllAccessListDept(Map<String, Object> map) throws Exception {
+		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessListDept", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<AccessIdVO> getAllAccessListDept2(Map<String, Object> map) throws Exception {
+		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessListDept2", map);
+    }
+	
 	public void deleteAccessId(List<String> accessNoList) throws Exception {
 		delete ("EzSystemAdminDAO.deleteAccessId", accessNoList);
 	}

@@ -754,17 +754,26 @@ public class EzSystemAdminController {
 		logger.debug("getAllAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		List<AccessIdVO> list = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
-	
+		List<AccessIdVO> userList = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
+		List<AccessIdVO> deptList = ezSystemAdminService.getAllAccessListDept(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
 		JSONArray returnJsonArr = new JSONArray();
 		
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < userList.size(); i++) {
 			JSONObject obj = new JSONObject();
-			obj.put("accessNo", list.get(i).getAccessNo());
-			obj.put("cn", list.get(i).getCn());
-			obj.put("department", list.get(i).getDepartment());
+			obj.put("accessNo", userList.get(i).getAccessNo());
+			obj.put("cn", userList.get(i).getCn());
+			obj.put("department", userList.get(i).getDepartment());
 			returnJsonArr.add(obj);
 		}
+		
+		for (int i = 0; i < deptList.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("accessNo", deptList.get(i).getAccessNo());
+			obj.put("cn", deptList.get(i).getCn());
+			obj.put("department", deptList.get(i).getDepartment());
+			returnJsonArr.add(obj);
+		}
+		
 		
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAllAccessList ended");
