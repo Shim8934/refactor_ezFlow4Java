@@ -26076,7 +26076,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
