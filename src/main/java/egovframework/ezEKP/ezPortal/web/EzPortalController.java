@@ -1383,8 +1383,13 @@ System.out.println(strHTML);
 		String kind = "000"; // 양식종류 전체에 해당하는 value 값, Portal에 양식종류 선택하는 셀렉트 박스 제작시 "000" 하드코딩을 빼고 req로 값 불러올 것
 		String searchType = "";
 		String searchName = "";
+		String type = req.getParameter("type");
 		
-		List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		if (type.equals("favo")) {
+			List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+			
+			model.addAttribute("result", result);
+		}
 		
 //		//구해안 잠시 결과물 로그 찍어봄
 //		int count1 =0;
@@ -1398,12 +1403,11 @@ System.out.println(strHTML);
 //		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
 		
 		/* 2018-08-24 새로운 포틀릿 */
-		model.addAttribute("type", req.getParameter("type"));
+		model.addAttribute("type", type);
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("host", userInfo.getServerName());
-		model.addAttribute("result", result);
 
 		logger.debug("wpNewApprMail ended");
 		return "/ezPortal/portalWpNewApprMail";
@@ -1994,7 +1998,7 @@ System.out.println(strHTML);
 			result.append(commonUtil.getQueryResult(realList.get(z)));
 		}
 		
-		result.append("<SIZE>" + realList.size() + "</SIZE></DATA>");
+		result.append("<SIZE><PAGE>" + realList.size() + "</PAGE></SIZE></DATA>");
 
 		logger.debug("quickLinkXML="+result.toString());
 		logger.debug("getQuickLink ended");

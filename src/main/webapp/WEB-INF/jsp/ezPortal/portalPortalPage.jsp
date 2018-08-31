@@ -190,7 +190,8 @@
 		                var xmldomNode = SelectNodes(xmlhttp.responseXML, "DATA/ROW");
 		                
 		                if (xmldomNode.length > 0) {
-		                	listSize = SelectNodes(xmlhttp.responseXML, "DATA/SIZE")[0].innerHTML;
+		                	var sizeNode = SelectNodes(xmlhttp.responseXML, "DATA/SIZE");
+		                	listSize = SelectSingleNodeValue(sizeNode[0], "PAGE");
 		                	
 		                	if (listSize > (QuickcurNum+1) * 5) {
 		                		$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn.png' />");

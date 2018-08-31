@@ -3134,7 +3134,10 @@
          			COMPANYID = #companyID#
 		</isNotEqual>
 		</isNotEqual>
-		ORDER BY FORMORDER
+		ORDER BY FORMORDER 
+		<isEqual property="isPortal" compareValue="Y">
+			LIMIT 0, 5
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormContainerInfo" parameterClass="Map" resultClass="ApprGFormVO"> -->

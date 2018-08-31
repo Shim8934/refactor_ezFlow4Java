@@ -568,16 +568,8 @@
 		        change_article('mail');
 		    }
 		    
-		    function openergetDocInfo() {
-		        if (document.getElementById("doingTab").className == "on") {
-		            apprChangeTab(document.getElementById("doingTab"));
-		        }
-		        else if (document.getElementById("rejectTab").className == "on") {
-		            apprChangeTab(document.getElementById("rejectTab"));
-		        }
-		        else {
-		            apprChangeTab(document.getElementById("draftTab"));
-		        }
+		    function openergetDocInfo() { 
+		    	/* 장진혁 - 지우면 스크립트 오류남 공통호출됨 */
 		    }
 		    
 		    function openDraftUI(formURL, formDocType) {		       
@@ -649,13 +641,8 @@
 	            </dl>
 	             <ul class="bookmark">
 	             	<c:forEach var="form" items="${result}">
-	             		<li class="bookmarkLi" ondblclick="openDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
+	             		<li class="bookmarkLi" onclick="openDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
 					</c:forEach>
-	            	<!-- <li class="bookmarkLi"><span>가나다라경조,휴가<br>교육 신청서</span></li>
-	                <li class="bookmarkLi"><span>출장<br>보고서</span></li>
-	                <li class="bookmarkLi"><span>기안지<br>샘플양식</span></li>
-	                <li class="bookmarkLi"><span>폼빌더<br>양식</span></li>
-	                <li class="bookmarkLi"><span>신청서<br>샘플양식</span></li> -->
 	            </ul>
 	            <div class="apprgraph">
 	                <div class="apprgraph_area">

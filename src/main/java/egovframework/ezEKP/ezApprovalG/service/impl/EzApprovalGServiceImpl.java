@@ -25519,31 +25519,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public List<ApprGFormVO> getFormInfoByPortal(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getFormInfo started.");
-
-		String listString = "";
-		
-		listString = getListHeader("109", companyID, lang, tenantID);
-		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMCONTID", formContID);
 		map.put("v_USERID", userID);
 		map.put("v_FORMKIND", kind);
-		map.put("v_LANGTYPE", strMultiData);
-		map.put("v_SEARCHTYPE", searchType);
-		
-		if(globals.getProperty("Globals.DbType").equals("mysql")){
-			if (searchName.equals("_")) {
-				map.put("v_SEARCHNAME", "\"" + searchName);
-			} else {
-				map.put("v_SEARCHNAME", searchName);
-			}
-		} else { 
-			map.put("v_SEARCHNAME", searchName);
-		}
-		
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+		map.put("isPortal", "Y");
 		
 		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
 		
