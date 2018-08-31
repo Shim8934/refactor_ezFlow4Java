@@ -255,7 +255,7 @@
 					addFogPanel();
 					changeCabinetTitle("add", "addCabinet");
 					document.getElementById("cabNameTxt1").value = "";
-					showCabinetPopup("addCab", 300, 162);
+					showCabinetPopup("addCab", 320, 165);
 				}
 				
 				function changeCabinetDialog() {
@@ -267,7 +267,7 @@
 					document.getElementById("cabNameTxt1").value = selectedNode.getAttribute("name1");
 					addFogPanel();
 					changeCabinetTitle("change", "addCabinet");
-					showCabinetPopup("addCab", 300, 162);
+					showCabinetPopup("addCab", 320, 165);
 				}
 				
 				function deleteCabinetDialog() {
@@ -277,7 +277,7 @@
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
 					addFogPanel();
-					showCabinetPopup("delCab", 350, 180);
+					showCabinetPopup("delCab", 330, 200);
 				}
 				
 				function moveCabinetDialog(mode) {
@@ -304,7 +304,7 @@
 					subTree.makeTree();
 					
 					changeCabinetTitle(mode, "moveCabinet");
-					showCabinetPopup("moveCab", 320, 400);
+					showCabinetPopup("moveCab", 340, 410);
 				}
 				
 				function getDivInfo(mode, type) {

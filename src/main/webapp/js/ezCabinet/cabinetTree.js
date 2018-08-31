@@ -42,7 +42,7 @@ function CabinetTree() {
 		_transImg    = data["transImg"] ? data["transImg"] : "/images/OrganTree_cross/dot_continue.gif";
 		_plusImg     = data["plus"]     ? data["plus"]     : "/images/OrganTree_cross/plus.gif";
 		_minusImg    = data["minus"]    ? data["minus"]    : "/images/OrganTree_cross/minus.gif";
-		_userIcon    = "/images/OrganTree_cross/ic-open.gif";
+		_userIcon    = "/images/cabinet/icon_user.png";
 		
 		switch(_treeType) {
 			case "organ": 

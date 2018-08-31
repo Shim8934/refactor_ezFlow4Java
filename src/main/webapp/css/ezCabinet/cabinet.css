@@ -1,4 +1,4 @@
-.left_cabinet span {background: url(/images/webfolder/left_webfolder.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
+.left_cabinet span {background: url(/images/cabinet/left_cabinet.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
 .left_cabinet {height: 52px; background: #0470e4;}
 #left {overflow: hidden;}
 #left h3 {border-top: none; border-bottom: none;}
@@ -106,9 +106,9 @@
 .cabDivPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .cabMainPrevH >div {height: 100%; display: flex; flex-flow: column;}
-.cabinetTree {margin-left: 12px; padding: 5px; min-height: 100px; width: 197px; white-space: nowrap; overflow-x: auto;}
+.cabinetTree {padding: 5px; min-height: 100px; white-space: nowrap; overflow-x: auto;}
 .cabinetTree2:empty {padding: 0px !important;}
-.cabinetTree2 {padding: 5px; white-space: nowrap; overflow-x: auto;}
+.cabinetTree2 {padding: 5px; white-space: nowrap; overflow-x: auto; min-height: 100px;}
 .cabinetImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
 .cabSpanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
 .overY {overflow-y: hidden !important;}
@@ -427,5 +427,6 @@
 .cabphotoprevmain {display: flex; flex: 1; align-items: center; justify-content: center;}
 .cabphotooff {display: none;}
 .scrollPrint {padding: 7px 0px;}
+.popup_noti_btnarea.cabdelpp {border-radius: 0px 0px 4px 4px !important;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .overfl {white-space: normal !important;}}

@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		
-		<div class="popup_noti_btnarea">
+		<div class="popup_noti_btnarea cabdelpp">
 			<div class="btnposition" id="cabDelBttn">
 				<input type="button" value="<spring:message code='ezCabinet.t46'/>">
 				<input type="button" value="<spring:message code='ezCabinet.t15'/>">

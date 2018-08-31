@@ -270,22 +270,22 @@
 						case "gif"  :
 						case "bmp"  :
 						case "png"  :
-						case "jpeg" : imgCheck = true                               ; break;
-						case "pdf"  : urlImg   = "/images/cabinet/pdf.png"          ; break;
-						case "ppt"  : urlImg   = "/images/cabinet/msPowerpoint.png" ; break;
-						case "pptx" : urlImg   = "/images/cabinet/pptx.png"         ; break;
-						case "doc"  : urlImg   = "/images/cabinet/msWord.png"       ; break;
-						case "docx" : urlImg   = "/images/cabinet/docx.png"         ; break;
-						case "xls"  : urlImg   = "/images/cabinet/msExcel.png"      ; break;
-						case "xlsx" : urlImg   = "/images/cabinet/xlsx.png"         ; break;
-						case "hwp"  : urlImg   = "/images/cabinet/hwp.png"          ; break;
-						case "txt"  : urlImg   = "/images/cabinet/txt.png"          ; break;
-						case "mp4"  : urlImg   = "/images/cabinet/mp4.png"          ; break;
-						case "flv"  : urlImg   = "/images/cabinet/flv.png"          ; break;
-						case "mkv"  : urlImg   = "/images/cabinet/mkv.png"          ; break;
-						case "iso"  : urlImg   = "/images/cabinet/iso.png"          ; break;
-						case "rar"  : urlImg   = "/images/cabinet/rar.png"          ; break;
-						default     : urlImg   = "/images/cabinet/unknown.png"      ; break;
+						case "jpeg" : imgCheck = true                       ; break;
+						case "pdf"  : urlImg   = "/images/cabinet/pdf.png"  ; break;
+						case "ppt"  : urlImg   = "/images/cabinet/ppt.png"  ; break;
+						case "pptx" : urlImg   = "/images/cabinet/pptx.png" ; break;
+						case "doc"  : urlImg   = "/images/cabinet/doc.png"  ; break;
+						case "docx" : urlImg   = "/images/cabinet/docx.png" ; break;
+						case "xls"  : urlImg   = "/images/cabinet/xls.png"  ; break;
+						case "xlsx" : urlImg   = "/images/cabinet/xlsx.png" ; break;
+						case "hwp"  : urlImg   = "/images/cabinet/hwp.png"  ; break;
+						case "txt"  : urlImg   = "/images/cabinet/txt.png"  ; break;
+						case "mp4"  : urlImg   = "/images/cabinet/mp4.png"  ; break;
+						case "flv"  : urlImg   = "/images/cabinet/flv.png"  ; break;
+						case "mkv"  : urlImg   = "/images/cabinet/mkv.png"  ; break;
+						case "iso"  : urlImg   = "/images/cabinet/iso.png"  ; break;
+						case "rar"  : urlImg   = "/images/cabinet/rar.png"  ; break;
+						default     : urlImg   = "/images/cabinet/none.png" ; break;
 					}
 					
 					return {
