@@ -59,11 +59,13 @@
 	            <dt class="portletText"><spring:message code='main.t2000' /></dt>
 	            <dd class="portletPlus" onclick="viewquicklist()"><img src="/images/kr/main/portlet_Plus.png"></dd>
 	        </dl>
-	        <p class="voteTitle">“${pPollTitle }”</p>
-	        <p class="voteBtn" onclick="vote_poll()"><spring:message code='main.t2001' /></p>
-	        <ul class="voteList">
-	            ${pPollResultContent}
-	        </ul>
+	        <c:if test="${pPollTitle != ''}">
+		        <p class="voteTitle">“${pPollTitle }”</p>
+		        <p class="voteBtn" onclick="vote_poll()"><spring:message code='main.t2001' /></p>
+		        <ul class="voteList">
+		            ${pPollResultContent}
+		        </ul>
+		    </c:if>    
 	    </div>
 		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
 		<%-- <section  class="body_bg1">

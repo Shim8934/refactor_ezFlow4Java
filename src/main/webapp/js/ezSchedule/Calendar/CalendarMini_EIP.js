@@ -264,7 +264,7 @@ function DayOnMouseClick(event) {
 
    
  
-        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#c3c3c3";
+        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
         g_selTRID = event.parentNode.parentNode.getAttribute("id");
         g_selTDID = event.getAttribute("id");
 

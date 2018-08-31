@@ -1910,7 +1910,7 @@ System.out.println(strHTML);
 	 */
 	@RequestMapping(value = "/ezPortal/wpTotalSection5.do")
 	public String wpTotalSection5(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		/*userInfo = commonUtil.userInfo(loginCookie);
 		
 		Calendar cal = Calendar.getInstance();
 		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
@@ -1924,7 +1924,18 @@ System.out.println(strHTML);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
 		
-		return "/ezPortal/portalWpTotalSection5";
+		return "/ezPortal/portalWpTotalSection5";*/
+		
+		logger.debug("wpNewSchedule started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
+		model.addAttribute("sliderList", sliderList);
+		
+		logger.debug("wpNewSchedule ended");
+		
+		return "/ezPortal/portalWpNewSchedule";
 	}
 	
 	/**

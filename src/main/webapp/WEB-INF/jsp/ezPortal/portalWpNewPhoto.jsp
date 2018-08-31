@@ -193,8 +193,8 @@
         	<dl class="portlet_title">
                 <dt class="portletText"><spring:message code='main.t1007' /></dt>
                 <dd class="portletPlus" onclick="Boardmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
-                <dd class="nextBtn" onclick="Pagenationimage('NEXT')"><img src="/images/kr/main/photo_next.png"></dd>
-                <dd class="preBtn" onclick="Pagenationimage('PREV')"><img src="/images/kr/main/photo_pre.png"></dd>
+                <dd class="photoNextBtn" onclick="Pagenationimage('NEXT')"><img src="/images/kr/main/photo_next.png"></dd>
+                <dd class="photoPreBtn" onclick="Pagenationimage('PREV')"><img src="/images/kr/main/photo_pre.png"></dd>
             </dl>            
            	<c:choose>
  				<c:when test="${pExist == 'true'}">

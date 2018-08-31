@@ -2973,7 +2973,7 @@ System.out.println("result : " + result);
 								if (j==0) {
 									sb.append("<div class='mainLayout_left'>");
 									sb.append("<article class='notice box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683&companyBoardID={67d0a0e4-ad24-1be6-9b5f-64a16cf6dca2}&deptBoardID={80ef430a-39cd-ee7f-cd81-157faa4979aa}' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='schedule box_shadow'><iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=1a36d14a-cea3-4126-9ae0-4f9989f52d27' frameborder=0 scrolling=no></iframe></article>\n");
+									sb.append("<article class='schedule box_shadow'><iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=69f68282-5617-45ca-9118-27b6170df5c3' frameborder=0 scrolling=no></iframe></article>\n");
 									sb.append("<article class='board box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e&ffdgdfg=dfgdfgdfg' frameborder=0 scrolling=no></iframe></article>\n");
 									sb.append("</div>");
 								} else if (j==1) {
