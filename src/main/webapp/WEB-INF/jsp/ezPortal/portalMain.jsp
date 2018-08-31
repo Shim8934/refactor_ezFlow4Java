@@ -257,6 +257,9 @@
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
+		        	resize : function() {
+		        		setMemoListSize();
+		        	},
 		        	stop : function () {
 		        		
 		        		var layerWidth = $(".layerControl").width();
