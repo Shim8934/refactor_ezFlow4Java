@@ -648,7 +648,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String resTitle, String content, String createUser, String resDate, String priority, String resItem) throws Exception {
+	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String resTitle, String content, String createUser, String resDate, String resItem) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/resource";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
@@ -659,7 +659,6 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		jsonBody.put("resTitle",   resTitle);
 		jsonBody.put("createUser", createUser);
 		jsonBody.put("resDate",    resDate);
-		jsonBody.put("priority",   priority);
 		jsonBody.put("resItem",    resItem);
 		jsonBody.put("content",    content);
 		
@@ -669,7 +668,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception {
+	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String scheduleTitle, String createUser, String createDate, String scheduleDate, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/schedule";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",        userId);
@@ -681,7 +680,6 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		jsonBody.put("createUser",    createUser);
 		jsonBody.put("createDate",    createDate);
 		jsonBody.put("scheduleDate",  scheduleDate);
-		jsonBody.put("priority",      priority);
 		jsonBody.put("location",      location);
 		jsonBody.put("publicstatus",  publicstatus);
 		jsonBody.put("groupname",     groupname);

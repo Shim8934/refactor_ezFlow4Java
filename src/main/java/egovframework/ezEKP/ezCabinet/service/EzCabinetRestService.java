@@ -85,10 +85,10 @@ public interface EzCabinetRestService {
 	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String summary, String relatedList) throws Exception;
 	
 	//Save related resource document
-	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String resTitle,String content, String createUser, String resDate, String priority, String resItem) throws Exception;
+	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String resTitle,String content, String createUser, String resDate, String resItem) throws Exception;
 	
 	//Save related schedule document
-	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception;
+	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String scheduleTitle, String createUser, String createDate, String scheduleDate, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception;
 	
 	//Save related todo document
 	public JSONObject saveRelatedTodo(HttpServletRequest request, String id, String title, String mode, String cabinetId, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content) throws Exception;

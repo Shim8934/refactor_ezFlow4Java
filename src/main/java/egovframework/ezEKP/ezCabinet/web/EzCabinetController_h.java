@@ -350,25 +350,19 @@ public class EzCabinetController_h {
 		String optionTitle     = request.getParameter("optionTitle")!= null ? request.getParameter("optionTitle"): "";
 		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
 		String date            = request.getParameter("date")       != null ? request.getParameter("date")       : "";
-		String importance      = request.getParameter("importance") != null ? request.getParameter("importance") : "";
-		String option          = request.getParameter("option")     != null ? request.getParameter("option")     : "";
-		String statusNum       = request.getParameter("statusNum")  != null ? request.getParameter("statusNum")  : "";
-		String status          = request.getParameter("status")     != null ? request.getParameter("status")     : "";
-		String confirm         = request.getParameter("confirm")    != null ? request.getParameter("confirm")    : "";
-		String endDate         = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
 		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
 		String attach          = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || optionTitle: " + optionTitle + " || writer: " + writer + "date: " + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || optionTitle: " + optionTitle + " || writer: " + writer + "date: " + date + " || content : " + content +  " || attach: " + attach);
 		
-		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || optionTitle.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || optionTitle.equals("") || writer.equals("") || date.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.saveRelatedOption(request, userInfo.getId(), mode, cabinetId, title, summary, optionTitle, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach);
+		resultObj = cabinetRestService_h.saveRelatedOption(request, userInfo.getId(), mode, cabinetId, title, summary, optionTitle, writer, date, content, attach);
 		
 		logger.debug("jsonSaveRelatedOption finishes!");
 		return resultObj.toString();

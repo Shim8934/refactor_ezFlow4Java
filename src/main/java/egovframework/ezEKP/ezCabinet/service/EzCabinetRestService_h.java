@@ -33,7 +33,7 @@ public interface EzCabinetRestService_h {
 	JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String boardTitle, String writer, String dateTime, String attach, String content) throws Exception;
 	
 	//Save optionModules
-	JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String optionTitle, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception;
+	JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String optionTitle, String writer, String date, String content, String attach) throws Exception;
 	
 	//Save communityModules
 	JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String commuTitle, String writer, String date, String endDate, String content, String attach) throws Exception;

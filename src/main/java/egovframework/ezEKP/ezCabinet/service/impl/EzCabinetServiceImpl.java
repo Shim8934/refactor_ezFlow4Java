@@ -1816,7 +1816,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveResourceItem(int cabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception {
+	public JSONObject saveResourceItem(int cabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String resItem, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1835,7 +1835,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		listColm.add(createNewRelatedColumn("resTitle"     , itemId, "ezCabinet.t62"  , resTitle  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("creator"      , itemId, "ezResource.t193", createUser, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("resourcedate" , itemId, "ezResource.t197", resDate   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("priority"     , itemId, "ezResource.t213", priority  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("resourceitem" , itemId, "ezResource.t374", resItem   , companyId, tenantId));
 		
 		saveAllColumns(listColm);
@@ -1871,7 +1870,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String summary, String mode, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String summary, String mode, String scheduleTitle, String createUser, String createDate, String scheduleDate, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1900,7 +1899,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		listColm.add(createNewRelatedColumn("scheduleTitle", itemId, "ezCabinet.t62"  , scheduleTitle, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("creator"      , itemId, "ezSchedule.t161", createUser   , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("createdate"   , itemId, "ezSchedule.t306", createDate   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("priority"     , itemId, "ezSchedule.t310", priority     , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("publicstatus" , itemId, "ezSchedule.t309", publicstatus , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("scheduledate" , itemId, "ezSchedule.t318", scheduleDate , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("location"     , itemId, "ezSchedule.t273", location     , companyId, tenantId));

@@ -105,10 +105,10 @@ public interface EzCabinetService {
 	JSONObject saveNormalAddressItem(int dstCabinetId, String title, String summary, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception;
 	
 	//Save related resource item function
-	JSONObject saveResourceItem(int dstCabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception;
+	JSONObject saveResourceItem(int dstCabinetId, String resTitle, String content, String title, String summary, String mode, String createUser, String resDate, String resItem, LoginVO userInfo) throws Exception;
 	
 	//Save related schedule item function
-	JSONObject saveScheduleItem(int dstCabinetId, String realPath, String title, String summary, String mode, String scheduleTitle, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveScheduleItem(int dstCabinetId, String realPath, String title, String summary, String mode, String scheduleTitle, String createUser, String createDate, String scheduleDate, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Save related todo item function
 	JSONObject saveTodoItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;

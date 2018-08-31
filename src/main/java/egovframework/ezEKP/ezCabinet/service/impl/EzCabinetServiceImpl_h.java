@@ -442,7 +442,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String summary, String optionTitle, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String summary, String optionTitle, String writer, String date, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -471,12 +471,6 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		listColm.add(createNewRelatedColumn("optionTitle" , itemId, "ezCabinet.t62"  , optionTitle, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezCircular.t122", writer     , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date       , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option     , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("statusNum"   , itemId, "ezCircular.t74" , statusNum  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("status"      , itemId, "ezCircular.t124", status     , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("confirm"     , itemId, "ezCircular.t86" , confirm    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate    , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		result.put("status", "ok");

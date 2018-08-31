@@ -45,9 +45,7 @@
 				</tr>
 				<tr>
 					<th><c:out value="${publicstatus.columnName}"/></th>
-					<td class="overfl" title="<c:out value="${publicstatus.columnValue}"/>"><c:out value="${publicstatus.columnValue}"/></td>
-					<th><c:out value="${priority.columnName}"/></th>
-					<td class="nowrap"><c:out value="${priority.columnValue}"/></td>
+					<td class="overfl" colspan="3" title="<c:out value="${publicstatus.columnValue}"/>"><c:out value="${publicstatus.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${scheduletype.columnName}"/></th>

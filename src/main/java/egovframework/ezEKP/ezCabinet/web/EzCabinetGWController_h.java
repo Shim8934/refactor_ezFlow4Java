@@ -778,20 +778,14 @@ public class EzCabinetGWController_h {
 		String optionTitle = optionItemInf.get("optionTitle")!= null ? optionItemInf.get("optionTitle").toString(): "";
 		String writer      = optionItemInf.get("writer")     != null ? optionItemInf.get("writer").toString()     : "";
 		String date        = optionItemInf.get("date")       != null ? optionItemInf.get("date").toString()       : "";
-		String importance  = optionItemInf.get("importance") != null ? optionItemInf.get("importance").toString() : "";
-		String option      = optionItemInf.get("option")     != null ? optionItemInf.get("option").toString()     : "";
-		String statusNum   = optionItemInf.get("statusNum")  != null ? optionItemInf.get("statusNum").toString()  : "";
-		String status      = optionItemInf.get("status")     != null ? optionItemInf.get("status").toString()     : "";
-		String confirm     = optionItemInf.get("confirm")    != null ? optionItemInf.get("confirm").toString()    : "";
-		String endDate     = optionItemInf.get("endDate")    != null ? optionItemInf.get("endDate").toString()    : "";
 		String content     = optionItemInf.get("content")    != null ? optionItemInf.get("content").toString()    : "";
 		String attach      = optionItemInf.get("attach")     != null ? optionItemInf.get("attach").toString()     : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || optionTitle: " + optionTitle + " || writer: " + writer + " || date: "  + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || summary: " + summary + " || optionTitle: " + optionTitle + " || writer: " + writer + " || date: "  + date + " || content : " + content +  " || attach: " + attach);
 		
-		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || optionTitle.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || optionTitle.equals("") || writer.equals("") || date.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -802,7 +796,7 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService_h.saveOptionItem(realPath, mode, dstCabinetId, title, summary, optionTitle, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach, locale, userInfo);
+			result           = cabinetService_h.saveOptionItem(realPath, mode, dstCabinetId, title, summary, optionTitle, writer, date, content, attach, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

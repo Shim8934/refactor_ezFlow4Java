@@ -140,7 +140,7 @@
 					var messageFrame   =  boardOpener.document.getElementById("message");
 					if (messageFrame) {
 						var titleTd    = boardOpener.document.getElementById("cTitle");
-						return  titleTd.getElementsByTagName("div")[0].textContent;
+						return titleTd.getElementsByTagName("div")[0].textContent;
 					}
 					else {
 						return boardOpener.document.getElementById("title").textContent;
@@ -564,7 +564,6 @@
 					var scheduleCreator  = scheduleOpener.creatorid;
 					var createDate       = trimStr(scheduleOpener.document.getElementById("LabelCreateDate").textContent);
 					var schedulePublic   = trimStr(scheduleOpener.document.getElementById("LabelPublic").textContent);
-					var schedulePriority = trimStr(scheduleOpener.document.getElementById("LabelImportance").textContent);
 					var scheduleDate     = trimStr(scheduleOpener.document.getElementById("LabelDate").textContent);
 					var scheduleLocation = trimStr(scheduleOpener.document.getElementById("LabelLocation").textContent);
 					var scheduleTitle    = trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent);
@@ -613,7 +612,6 @@
 						scheduleTitle : scheduleTitle,
 						createdate    : createDate,
 						scheduledate  : scheduleDate,
-						priority      : schedulePriority,
 						location      : scheduleLocation,
 						publicstatus  : schedulePublic,
 						groupname     : scheduleGroup,
@@ -635,13 +633,6 @@
 					var title        = trimStr(optionOpener.document.getElementById("titleTd").textContent);
 					var writer       = trimStr(optionOpener.circularUserID);
 					var date         = trimStr(optionOpener.document.getElementById("printStatus").textContent);
-					var importanceTd = optionOpener.document.getElementById("Td_Importance");
-					var importance   = trimStr(importanceTd.querySelector("span").textContent);
-					var option       = trimStr(optionOpener.document.getElementById("option").textContent);
-					var statusNum    = trimStr(optionOpener.document.getElementById("statusNum").textContent);
-					var status       = trimStr(optionOpener.document.getElementById("status").textContent);
-					var confirm      = trimStr(optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML);
-					var endDate      = trimStr(optionOpener.document.getElementById("endDate").textContent);
 					var content      = trimStr(optionOpener.document.getElementById("divCross").innerHTML);
 					var attach       = optionOpener.document.getElementById("attachedfileDIV");
 					var attachList   = [];
@@ -663,12 +654,6 @@
 						optionTitle : title,
 						writer      : writer,
 						date        : date,
-						importance  : importance,
-						option      : option,
-						statusNum   : statusNum,
-						status      : status,
-						confirm     : confirm,
-						endDate     : endDate,
 						content     : content,
 						attach      : JSON.stringify(attachList)
 					};
@@ -731,7 +716,6 @@
 					
 					var resWriter    = resourceOpener.writerIDVal;
 					var resDate      = resourceOpener.document.getElementById("AllDayDisplay").textContent;
-					var resPriority  = trimStr(resourceOpener.document.getElementById("importanceDIV").textContent);
 					var resItem      = resourceOpener.document.getElementById("itemList").textContent;
 					var resTitle     = resourceOpener.document.getElementById("titleDIV").textContent;
 					var messageFrame = resourceOpener.document.getElementById("message");
@@ -746,7 +730,6 @@
 						writer    : resWriter,
 						resTitle  : resTitle,
 						date      : resDate,
-						priority  : resPriority,
 						resItem   : resItem,
 						content   : resContent
 					};

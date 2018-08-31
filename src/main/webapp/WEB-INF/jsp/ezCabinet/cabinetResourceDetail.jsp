@@ -39,9 +39,7 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><c:out value="${resourceitem.columnName}"/></th>
-					<td class="overfl wide" title="<c:out value="${resourceitem.columnValue}"/>"><c:out value="${resourceitem.columnValue}"/></td>
-					<th><c:out value="${priority.columnName}"/></th>
-					<td class="nowrap"><c:out value="${priority.columnValue}"/></td>
+					<td class="overfl wide" colspan="3" title="<c:out value="${resourceitem.columnValue}"/>"><c:out value="${resourceitem.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>

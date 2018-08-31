@@ -1784,15 +1784,14 @@ public class EzCabinetGWController {
 		String createUser = resourceItemInf.get("createUser") != null ? resourceItemInf.get("createUser").toString() : "";
 		String resDate    = resourceItemInf.get("resDate")    != null ? resourceItemInf.get("resDate").toString()    : "";
 		String userId     = resourceItemInf.get("userId")     != null ? resourceItemInf.get("userId").toString()     : "";
-		String priority   = resourceItemInf.get("priority")   != null ? resourceItemInf.get("priority").toString()   : "";
 		String resItem    = resourceItemInf.get("resItem")    != null ? resourceItemInf.get("resItem").toString()    : "";
 		String content    = resourceItemInf.get("content")    != null ? resourceItemInf.get("content").toString()    : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + "|| summary: " + summary + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || userId: " + userId + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || resTitle: " + resTitle + " || content: " + content);
+		logger.debug("ServerName: " + serverName + " || title: " + title + "|| summary: " + summary + " || createUser: " + createUser + " || Resource Date: " + resDate + " || userId: " + userId + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || resTitle: " + resTitle + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || resTitle.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || resDate.equals("") || priority.equals("") || resItem.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || resTitle.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || resDate.equals("") || resItem.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1802,7 +1801,7 @@ public class EzCabinetGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			result           = cabinetService.saveResourceItem(dstCabinetId, resTitle, content, title, summary, mode, createUser, resDate, priority, resItem, userInfo);
+			result           = cabinetService.saveResourceItem(dstCabinetId, resTitle, content, title, summary, mode, createUser, resDate, resItem, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1825,7 +1824,6 @@ public class EzCabinetGWController {
 		String createUser    = scheduleItemInf.get("createUser")    != null ? scheduleItemInf.get("createUser").toString()   : "";
 		String createDate    = scheduleItemInf.get("createDate")    != null ? scheduleItemInf.get("createDate").toString()   : "";
 		String scheduleDate  = scheduleItemInf.get("scheduleDate")  != null ? scheduleItemInf.get("scheduleDate").toString() : "";
-		String priority      = scheduleItemInf.get("priority")      != null ? scheduleItemInf.get("priority").toString()     : "";
 		String location      = scheduleItemInf.get("location")      != null ? scheduleItemInf.get("location").toString()     : "";
 		String publicstatus  = scheduleItemInf.get("publicstatus")  != null ? scheduleItemInf.get("publicstatus").toString() : "";
 		String groupname     = scheduleItemInf.get("groupname")     != null ? scheduleItemInf.get("groupname").toString()    : "";
@@ -1836,9 +1834,9 @@ public class EzCabinetGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || summary: " + summary + " || mode: " + mode + " || cabinetId: " + cabinetId + " || scheduleTitle: " + scheduleTitle +" || createUser: " + createUser + " || createDate: " + createDate + " || scheduleDate: " + scheduleDate + " || priority: " + priority + " || location: " + location + " || publicstatus: " + publicstatus + " || groupname: " + groupname + " || attendant: " + attendant + " || scheduletype: " + scheduletype + " || attach: " + attach + " || content: " + content);
+		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || summary: " + summary + " || mode: " + mode + " || cabinetId: " + cabinetId + " || scheduleTitle: " + scheduleTitle +" || createUser: " + createUser + " || createDate: " + createDate + " || scheduleDate: " + scheduleDate + " || location: " + location + " || publicstatus: " + publicstatus + " || groupname: " + groupname + " || attendant: " + attendant + " || scheduletype: " + scheduletype + " || attach: " + attach + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || scheduleTitle.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || scheduleDate.equals("") || publicstatus.equals("") || scheduletype.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || scheduleTitle.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || scheduleDate.equals("") || publicstatus.equals("") || scheduletype.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1849,7 +1847,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.saveScheduleItem(dstCabinetId, realPath, title, summary, mode, scheduleTitle, createUser, createDate, scheduleDate, priority, location, publicstatus, groupname, attendant, scheduletype, attach, content, locale, userInfo);
+			result           = cabinetService.saveScheduleItem(dstCabinetId, realPath, title, summary, mode, scheduleTitle, createUser, createDate, scheduleDate, location, publicstatus, groupname, attendant, scheduletype, attach, content, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
