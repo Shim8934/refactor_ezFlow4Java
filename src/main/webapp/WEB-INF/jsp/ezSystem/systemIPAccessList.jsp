@@ -10,15 +10,12 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
-		var companyId = '';
 		
 		window.onload = function() {
-			companyId = document.getElementById("ListCompany").value;
-			
-			getAccessList_http();
+			getAccessList_http(document.getElementById("ListCompany").value);
 		}
 		
-		function getAccessList_http() {
+		function getAccessList_http(companyId) {
 			$.ajax({
 				type : "POST",
 				url : "/ezSystem/getAllAccessList.do?companyID=" + companyId,
@@ -28,9 +25,19 @@
 				},
 				complete : function(data) {
 					document.getElementById("HeaderAllCheckBox").checked = false;
+					IPBandListRemove();
 					makeAccessIdList(data.responseJSON);
 			    }
 			});
+		}
+		
+		// 접속 허용 리스트들 지우기 (refresh)
+		function IPBandListRemove() {
+			var ipListElement = $("#tblIP tbody tr[id^=AccessId]");
+			
+			for (var i = 0; i < ipListElement.length; i++) {
+				document.getElementById("tblIP").childNodes[1].removeChild(ipListElement[i]);
+			}
 		}
 		
 		function makeAccessIdList(json) {
@@ -92,7 +99,7 @@
 		}
 		
 		function selectCompanyID() {
-			companyId = document.getElementById("ListCompany").value;
+			getAccessList_http(document.getElementById("ListCompany").value);
 		}
 		
 		function ipListAddPopUp() {

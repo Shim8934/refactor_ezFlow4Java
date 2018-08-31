@@ -754,7 +754,7 @@ public class EzSystemAdminController {
 		logger.debug("getAllAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		List<AccessIdVO> list = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
+		List<AccessIdVO> list = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
 	
 		JSONArray returnJsonArr = new JSONArray();
 		
