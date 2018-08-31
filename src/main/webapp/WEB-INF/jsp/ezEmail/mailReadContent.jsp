@@ -5,6 +5,7 @@
 <html>
 	<head>
 	    <title></title>
+	    	<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
@@ -13,27 +14,20 @@
 	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 	    	<style>
 	    		
-.context-menus {
-  position: absolute;
-  display: none;
-  border: 1px solid black;
-  width: 100px;
-  text-align: center;
-}
+			.context-menus {
+			  position: absolute;
+			  display: none;
+			  text-align: center;
+			  cursor:pointer;
+			  z-index:6000;
+			}
+			
+			.context-menus.active {
+			  display: block;
+			  background-color: white;
+			}
 
-.context-menus.active {
-  display: block;
-  background-color: white;
-}
 
-.context-menus.active>.rightBox>li {
-  list-style: none;
-  padding: 10px;
-}
-
-.context-menus.active>.rightBox>li:hover {
-  background-color: lightgreen;
-}
 	    	</style>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
@@ -440,11 +434,17 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 		<!-- 마우스 오른쪽 메뉴 -->
 	  	<div id="context-menus" class="context-menus">
-	   		<ul class="rightBox">
-	      		<li class="menus" id="menu1">복사</li>
-	      		<li class="menus" id="menu2">인쇄</li>
-	      		<li class="menus" id="menu3">메모 추가</li>
-	    	</ul>	
+	   		<table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
+	   			<tr>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">복사</span></td>
+	      		</tr>
+	      		<tr>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu2" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">인쇄</span></td>
+	      		</tr>
+	      		<tr>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">메모 추가</span></td>
+	      		</tr>
+	    	</table>	
 	  	</div>
 	  	<script type="text/javascript">
 	  	(function() {
