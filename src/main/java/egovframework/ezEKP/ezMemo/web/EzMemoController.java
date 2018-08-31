@@ -463,8 +463,6 @@ public class EzMemoController {
 	@RequestMapping("/ezMemo/memo-display.do")
 	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, String memo_ids, String display, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoDisplay start");
-	/*public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("setMemoDisplay started");*/
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
