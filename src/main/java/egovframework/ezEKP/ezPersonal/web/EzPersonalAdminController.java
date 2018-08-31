@@ -3,8 +3,11 @@ package egovframework.ezEKP.ezPersonal.web;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1188,15 +1191,43 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
    			dir.mkdirs();
    		}
    		
+   		/* 2018-08-30 홍승비 - 퀵링크 이미지 등록 시 원래 인코딩(content-type)으로 수정 */
+		String contentType = null;
+		String extension = null;
+        BufferedInputStream bis = null;
+   		
         File file = new File(realPath + pAttachPath);
     
-        String pSaveName = qID + ".jpg";
+        try {
+	        bis = new BufferedInputStream(new FileInputStream(file));
+	        contentType = URLConnection.guessContentTypeFromStream(bis);
+        } catch(Exception e) {
+        } finally {
+        	if (bis != null) {
+        		bis.close();
+        	}
+        }
+        
+        if (contentType == null) {
+        	contentType = "application/octet-stream";
+        	extension = ".jpg"; // 기존 확장자가 .jpg로 고정되어 있었으므로, 디폴트로 사용함
+        } else {
+        	contentType = contentType.replace("image", "Image");
+        	extension = "." + contentType.split("/")[1];
+        }
+        
+        String pSaveName = qID + extension;
         BufferedImage inputImage = ImageIO.read(file);
 		BufferedImage outputImage = null;
 		Graphics2D saveImage = null;
 		
-		outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
-         
+		// png파일의 배경을 검게 만들지 않도록 수정
+		if (inputImage.getType() == 0) {
+			outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
+		} else {
+			outputImage= new BufferedImage(40, 39, inputImage.getType());
+		}
+		
 		saveImage = outputImage.createGraphics();
 		saveImage.drawImage(inputImage, 0, 0, 40, 39, null);
 		
@@ -1210,15 +1241,15 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		File newFile = new File(realPath + serverPath + pSaveName);
 		
-		ImageIO.write(outputImage, "png" , newFile);
+		ImageIO.write(outputImage, extension.replace(".", "") , newFile);
 		//deleteFile(dirPath + serverPath + fileName);
 		
 		String fileLocation = serverPath  + pSaveName;
 	
 		strXML.append("<ROOT><NODES>");
-		strXML.append("<NODE><PUPLOADSN><![CDATA[" + qID + ".jpg" + "]]></PUPLOADSN>");
+		strXML.append("<NODE><PUPLOADSN><![CDATA[" + qID + extension + "]]></PUPLOADSN>");
 		strXML.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
-		strXML.append( "<PFILENAME><![CDATA[" + qID + ".jpg" + "]]></PFILENAME>");
+		strXML.append( "<PFILENAME><![CDATA[" + qID + extension + "]]></PFILENAME>");
 		strXML.append( "<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
 		strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
 		strXML.append( "</NODE>");

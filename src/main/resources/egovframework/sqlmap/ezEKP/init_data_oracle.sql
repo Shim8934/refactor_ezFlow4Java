@@ -139,7 +139,7 @@ INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTIO
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useZipCodeSearchInApr','NO','민원인 주소의 우편번호 검색 기능 유무 (default : NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailWriteSenderClick','YES','메일 보낸사람 클릭시 보낸사람에게 메일 작성(no : 클릭 -> 행선택, yes : 클릭 -> 메일작성 팝업)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useImapMoveCommand','YES','메일 이동 시 IMAP MOVE 커맨드를 이용함');
-INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useSearchContent','NO','메일 간단검색시 내용검색 사용여부');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useSearchContent','YES','메일 간단검색시 내용검색 사용여부');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailAddrAutoComplete','NO','메일 쓰기창의 받는사람,참조,숨은참조에 수신인의 이름이 자동완성 되어지는 기능(default : NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useApprovalKlib','NO','전자결재완료시 문서, 첨부파일을 KLIB 으로 암호화할 것인지의 여부(default : NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useApprovalKlibBackup','NO','전자결재 관련 파일을 KLIB 으로 암호화할 때 원본 파일을 백업할지에 대한 여부(default : NO)');

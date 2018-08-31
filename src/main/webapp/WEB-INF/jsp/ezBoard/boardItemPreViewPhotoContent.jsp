@@ -751,6 +751,7 @@
 		  		else{
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
 		  			$imgPopup.css("width", "");
+		  			$imgPopupDiv.css("overflow", "");
 		  		}
 		  		$imgPopup.attr("zoom","1")
 		  		

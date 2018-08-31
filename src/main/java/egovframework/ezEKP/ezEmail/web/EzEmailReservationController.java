@@ -389,7 +389,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
   				+ ",postType=" + postType);
   		
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
-		String multipartFirstIdx = "0";
 		
 		//set cmdOwn
 		if (request.getParameter("cmd") != null) {
@@ -439,9 +438,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			if (attachedFileList.size() > 0) {
                 StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
                 
-                multipartFirstIdx = attachedFileList.get(0).get("index");
-                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
-
                 for (int i = 0; i < attachedFileList.size(); i++) {
 					Map<String, String> fileInfo = attachedFileList.get(i);
 					
@@ -631,7 +627,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("draftsFolderName", draftsFolderName);
-		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
 		
         logger.debug("mailEdit ended.");
         

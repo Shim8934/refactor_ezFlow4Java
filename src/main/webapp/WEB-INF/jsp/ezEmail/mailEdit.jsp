@@ -110,7 +110,6 @@
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
 		    var folderPath = "${draftsFolderName}";
-		    var multipartFirstIdx = "${multipartFirstIdx}";
 		    
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -671,7 +670,7 @@
 			                					+ "&tid=" + tid;
 			                } else {
 			                	// 일반파일 첨부시
-				                aitem = "/ezEmail/downloadAttach.do?" 
+				                aitem = "/ezEmail/downloadAttachInWriter.do?" 
 				                				+ "mode=Attach"
 				                				+ "&folderPath=" + encodeURIComponent(folderPath)
 				                				+ "&filename=" + encodeURIComponent(filename);
