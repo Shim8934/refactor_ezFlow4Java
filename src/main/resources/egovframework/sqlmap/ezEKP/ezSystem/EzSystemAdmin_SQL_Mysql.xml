@@ -202,5 +202,13 @@
 				TBL_USERMASTER.TENANT_ID=#tenantID#
 		]]>
 	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteAccessId" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_ACCESS_ID
+            ]]> <iterate prepend="WHERE ACCESSNO IN" open="(" close=")" conjunction=",">#accessNoList[]#</iterate>
+       
+	</delete>
 		
 </sqlMap>

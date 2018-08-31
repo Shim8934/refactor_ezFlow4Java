@@ -45,6 +45,43 @@
 			}
 		}
 		
+		function deleteAccessList() {
+			var selectedList = $("#tblIP tbody tr[selected=true]");
+			var accessNo = "";
+			
+			if (selectedList.length == 0) {
+				alert("삭제할 IP대역 리스트를 선택해주세요.");
+				return;
+			} else if (selectedList.length == 1) {
+				accessNo = selectedList[0].getAttribute("accessno");
+			} else {
+				for (var i = 0; i < selectedList.length; i++) {
+					accessNo += selectedList[i].getAttribute("accessno");
+					
+					if (i < selectedList.length - 1) {
+						accessNo += ",";
+					}
+				}
+			}
+			
+			var con = confirm("삭제하시겠습니까?");
+			
+			if (con) {
+				$.ajax({
+					type : "POST",
+					url : "/ezSystem/deleteAccessList.do?accessNo=" + accessNo,
+					error : function(data) {
+						alert("삭제 실패");
+					},
+					complete : function(data) {
+						alert("삭제하였습니다.");
+						IPBandListRemove();
+						getAccessList_http(document.getElementById("ListCompany").value);
+				    }
+				});
+			}
+		}
+		
 		function makeAccessIdList(json) {
 			var _TBODY = document.getElementById("tblIP").childNodes[1];
 			
@@ -189,7 +226,7 @@
 	<div id="mainmenu">
 	    <ul class="on">
 	        <li><span onclick="ipListAddPopUp()">추가</span></li>
-	        <li><span onclick="alert('삭제')">삭제</span></li>
+	        <li><span onclick="deleteAccessList()">삭제</span></li>
 	    </ul>
 	</div>
 	

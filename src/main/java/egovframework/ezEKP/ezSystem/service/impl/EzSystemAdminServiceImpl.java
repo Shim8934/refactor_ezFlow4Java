@@ -418,4 +418,21 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAllAccessList ended.");
 		return list;
 	}
+	
+	@Override
+	public void deleteAccessId(String accessNo) throws Exception {
+		logger.debug("deleteAccessId started.");
+		logger.debug("accessNo=" + accessNo);
+		
+		String[] accessNoList = accessNo.split(",");
+		List<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < accessNoList.length; i++) {
+			list.add(accessNoList[i]);
+		}
+		
+		ezSystemAdminDAO.deleteAccessId(list);
+		
+		logger.debug("deleteAccessId ended.");
+	}
 }

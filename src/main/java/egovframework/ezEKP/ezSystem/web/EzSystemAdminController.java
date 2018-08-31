@@ -772,6 +772,16 @@ public class EzSystemAdminController {
 		return returnJsonArr;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteAccessList.do")
+	public void deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
+		logger.debug("deleteAccessList started. accessNo=" + accessNo);
+		
+		ezSystemAdminService.deleteAccessId(accessNo);
+		
+		logger.debug("deleteAccessList ended");
+	}
+	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do")
 	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemAddAccessList started");

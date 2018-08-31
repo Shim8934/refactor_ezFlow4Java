@@ -70,4 +70,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	    return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList", map);
     }
 	
+	public void deleteAccessId(List<String> accessNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteAccessId", accessNoList);
+	}
+	
 }

@@ -31,4 +31,5 @@ public interface EzSystemAdminService {
 	public void updateIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
 	public void deleteIPBand(String ipNo) throws Exception;
 	public List<AccessIdVO> getAllAccessList(String primaryLang, int tenantID, String companyID) throws Exception;
+	public void deleteAccessId(String accessNo) throws Exception;
 }
