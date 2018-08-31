@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -51,7 +52,7 @@ public interface EzApprovalGService {
 	
 	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag, String isUsed) throws Exception;
+	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag, String isUsed, Locale locale) throws Exception;
 	
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -109,9 +110,9 @@ public interface EzApprovalGService {
 	
 	public String getTempList3(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getListXML(String groupID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception;
+	public String getListXML(String groupID, String lang, String companyID, int tenantID, Locale locale, String approvalFlag) throws Exception;
 	
-	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
+	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, Locale locale, String approvalFlag) throws Exception;
 	
 	public String deleteReceiptTempletDetailInfo(String formID, String userID, String aprDeptSN, String companyID, int tenantID) throws Exception;
 	
@@ -236,7 +237,7 @@ public interface EzApprovalGService {
 	
 	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID, int tenantID) throws Exception;
 	
-	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getNextDocInfo(String docID, String userID, String userDeptID, String isIEFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String registerCabinet(Document xmlDom, String strLang, int tenantID) throws Exception;
 	
@@ -297,6 +298,8 @@ public interface EzApprovalGService {
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+	
+	public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 	
@@ -394,8 +397,6 @@ public interface EzApprovalGService {
 
 	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
 
-	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception;
-
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
 	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception;
@@ -471,7 +472,7 @@ public interface EzApprovalGService {
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
@@ -498,7 +499,7 @@ public interface EzApprovalGService {
 
 	public void addSignInfo(String strFileName, String strRealFileName, String strDocID, String strCompanyID, int tenantID) throws Exception;
 
-	public boolean createRelayDocInfo(String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
+	public boolean createRelayDocInfo(String strWriterName, String strWriterDept, String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
 
 	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
 
@@ -530,9 +531,19 @@ public interface EzApprovalGService {
 
 	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
 
-	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
+	public String updateSusinState(String docID, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
+	
+	public String getDocExt(String docID, String companyID, int tenantID) throws Exception;
+	
+	public void setNonElecRecSusinInit(String docID, String deptID, String deptName, String deptName2, String companyID, int tenantID) throws Exception;
+	
+	public String checkNonElecRec(String orgDocID, String companyID, int tenantID) throws Exception;
+	
+	public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
+	
+	public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception;
 	
 	/**
 	 * 결재완료문서에서 첨부파일로 쓰이는지 여부를 반환
@@ -550,5 +561,14 @@ public interface EzApprovalGService {
 	 *            TBL_ENDATTACHINFO 테이블의 ATTACHFILEHREF 컬럼의 값
 	 * */
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
+	
+/*	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
 
+	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
+*/	
+	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
+	
+	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
+	
+	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 }

@@ -1061,7 +1061,7 @@ function DupCheck(resItemID) {
 	// 하루종일
 	if (document.getElementById("AllDay").checked == true) {
 	    STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-	    ETime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+	    ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 	} else {
 	    STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	    ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();

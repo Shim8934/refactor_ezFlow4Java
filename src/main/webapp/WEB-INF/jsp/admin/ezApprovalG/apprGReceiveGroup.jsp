@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js')}" type="text/javascript"></script>
 		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
@@ -39,6 +39,8 @@
 	        	InitlvtDeptSelectListView();
 
 	        	getAdminReceivGroup();
+	        	// 페이지가 열리자마자 최상위 수신자 그룹 선택처리.
+	        	lvtDept_SelChange();
 		    });
 		    
 		    function Tree_setconfig() {
@@ -91,7 +93,7 @@
 		        lvtDept.LoadFromID("lvtDeptForm");
 		        var selRow = lvtDept.GetSelectedRows();
 
-		        if (selRow) {
+		        if (selRow.length > 0) {
 		            getAdminReceivItem(selRow[0].getAttribute("DATA1"));
 		            p_groupid = selRow[0].getAttribute("DATA1");
 		            //pGroupID.innerText = selRow[0].getAttribute("DATA1");
@@ -268,7 +270,7 @@
 		    function deleteAllCont_onclick() {
 
 		        var selRow = lvtDeptSelect.GetDataRows()
-		        if (selRow.length > 0) {
+		        if (selRow.length > 0 && selRow[0].id != "lvtDeptSelForm_TR_noItems") {
 		            for (i = selRow.length - 1; i >= 0; i--) {
 		                var rtn = deleteGroupSubiteminfo(selRow[i]);
 		                if (rtn == "TRUE") {
@@ -355,41 +357,49 @@
 		    }
 		    
 		    function Deletegroupmaininfo() {
+		    	var chkDel = false;
+		    	
 		        if (p_groupid == "") {		            
 		            //2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
 		            //OpenAlertUI("<spring:message code='ezApprovalG.t1563'/>");
 		            alert("<spring:message code='ezApprovalG.t1563'/>");
 		            return;
 		        }
+		        
+		        if (confirm("<spring:message code='ezApprovalG.t999933'/>")) {
+					chkDel = true;  	
+		        }
 
-		        $.ajax({
-		        	type : "POST",
-		        	dataType : "html",
-		        	url : "/admin/ezApprovalG/deleteGroupMainInfo.do",
-		        	async : false,
-		        	data : { 
-		        		node1 : p_groupid, node2 : document.getElementById("SCompID").value
-		        	},
-		        	success : function(result) {
-		        		if (result == "TRUE") {
-		        			getAdminReceivGroup();
-				            p_groupid = "";
-				            //pGroupID.innerText = "";
-				            pGroupName2.innerText = "";
-				            pGroupName.value = "";
-				            lvtDeptSelect.DataSource("");
-				        } else {
-				        	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
+		        if (chkDel) {
+			        $.ajax({
+			        	type : "POST",
+			        	dataType : "html",
+			        	url : "/admin/ezApprovalG/deleteGroupMainInfo.do",
+			        	async : false,
+			        	data : { 
+			        		node1 : p_groupid, node2 : document.getElementById("SCompID").value
+			        	},
+			        	success : function(result) {
+			        		if (result == "TRUE") {
+			        			getAdminReceivGroup();
+					            p_groupid = "";
+					            //pGroupID.innerText = "";
+					            pGroupName2.innerText = "";
+					            pGroupName.value = "";
+					            lvtDeptSelect.DataSource("");
+					        } else {
+					        	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
+					            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");
+					            alert("<spring:message code='ezApprovalG.t1564'/>");
+					        }
+			        	}, 
+			        	error : function() {
+			        		//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
 				            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");
 				            alert("<spring:message code='ezApprovalG.t1564'/>");
-				        }
-		        	}, 
-		        	error : function() {
-		        		//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
-			            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");
-			            alert("<spring:message code='ezApprovalG.t1564'/>");
-		        	}
-		        });
+			        	}
+			        });
+		        }
 			}
 		    
 		    var ezapropinion_cross_dialogArguments = new Array();
@@ -397,6 +407,7 @@
 	            if (CrossYN()) {
 	                ezapropinion_cross_dialogArguments[0] = pInformationContent;
 	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	                ezapropinion_cross_dialogArguments[2] = true;
 	                var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
 	                try { ezAPROPINION_Cross.focus(); } catch (e) {
 	                }

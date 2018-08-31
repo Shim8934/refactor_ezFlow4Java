@@ -3,7 +3,6 @@ package egovframework.ezMobile.ezApprovalG.web;
 import java.security.PrivateKey;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
@@ -70,6 +70,9 @@ public class MApprovalGGWController {
 	
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	/**
 	 * 모바일 G/W 전자결재 [GET] 결재문서 메인 리스트
@@ -234,11 +237,15 @@ public class MApprovalGGWController {
 			//회수 가능여부
 			String callBackYN = ezApprovalGService.getCallBackYN(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 			
+			// 20180824 조진호 - 모바일 viewerflag 값 추가
+        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", userInfo.getTenantId());
+        	
 			JSONObject totalData = new JSONObject();
 			
 			totalData.put("bodyHTML", bodyHTML);
 			totalData.put("docInfo", approvalGDocInfoVO);
 			totalData.put("callBackYN", callBackYN);
+			totalData.put("useMobileViewer", useMobileViewer);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -788,7 +795,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("CHECK")) {
-				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "017");
+				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "017", "");
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");

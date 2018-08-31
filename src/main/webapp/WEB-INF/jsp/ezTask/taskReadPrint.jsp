@@ -28,7 +28,7 @@
 			}
 			 
 			u {
-				text-decoration: underline;
+				text-decoration: none;
 			}
 	   		
 			.percentCount {
@@ -73,6 +73,10 @@
 			
 			.popup_title_txt {
 				padding-top: 15px;
+			}
+			
+			#repCount {
+			    width: 50px;
 			}
 		</style>
 		

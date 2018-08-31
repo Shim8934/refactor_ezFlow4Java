@@ -53,13 +53,11 @@
 		var g_timezone 		  = "${userTimeSet}";
 		var adminFlag		  = "${adminFlag}";
 		var offsetMin 		  = "${offsetMin}";
-		var type 			  = "all";
+		var type 			  = "0";
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
-		var adminFlag = "${adminFlag}";
-		var checkAdmin = "${checkAdmin}";
-		var authFlag = "${authFlag}";
+		var authFlag = 'M';
 		var usepostDate = false;
 		var searchAppr = ""; //#appr_search
 		var searchWriter = ""; //#writer_search
@@ -92,30 +90,6 @@
 	    			get_att_list();
 				}
 			});
-			
-			/* if (document.getElementById("ListCompany").length == 0) {
-	            alert("<spring:message code = 'ezAttitude.t32' />");
-	        } else {
-	    		if (adminCompany != null) {
-	    			$('#ListCompany').val(adminCompany);
-	    		} else {
-		            document.getElementById("ListCompany").selectedIndex = 0;
-	    		}
-	    		
-	            company_change();
-	        } */
-
-			if (checkAdmin == 'true' || adminFlag == 'true') {
-				authFlag = 'M';
-			}
-// 			if (authFlag == 'M') {
-				
-// 			} else {
-// 				if (adminFlag == "true"){
-// 					$("#appr").hide();
-// 					$("#ret").hide();
-// 				}
-// 			}
 		})
 		
 		$(function () {
@@ -140,11 +114,6 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
-			if (checkAdmin == 'true') {
-				$("#Sdatepicker").val("${startDate}");
-	    		$("#Edatepicker").val("${endDate}");
-	    		usepostDate = true;
-			}
 	    });
 	    
 	    $(function () {
@@ -182,19 +151,39 @@
 	    });
 
 		window.onload = function() {
-			if (adminFlag == 'true') {
-				type = '0';
-			}
-			
 			att_search();
 			
 			var obj = $("#search").offset();
 			
-			if (checkAdmin != 'true') {
-				$("#Sdatepicker").datepicker('disable');
-		        $("#Edatepicker").datepicker('disable');	
-			}
+			$("#Sdatepicker").datepicker('disable');
+	        $("#Edatepicker").datepicker('disable');	
 		}
+		
+        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+        window.onunload = function () {
+        	if (parent.frames["left"]) {
+        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+        			$(parent.frames["left"].document.body).css("overflow", "");
+        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+        		}
+        	} else if (parent.frames["attitude_menu"]) {
+        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+        		}
+        	}
+        	      
+        	if (parent.parent.frames["left"]) {
+        		if (parent.parent.frames["board_menu"]) {  		  
+        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+        		}
+        	}
+        }
 		
 		$(window).on("resize", function(){
 			var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
@@ -327,27 +316,21 @@
 	    function att_search(r) {
 			if (r == "refresh") { //새로고침
 				$("#writer_search").val("");
-				if (checkAdmin != 'true' && adminFlag == true) {
-										
-				} else if (checkAdmin == 'true') {
-	    			$("#writerDept_search").val("");
-				}
     			$("#appr_search").val("");
+    			
     			if (usepostDate) {
     				date_reset();
     			}
-//     			$(Radio2).prop("checked", true);
     			type_set();
 			}
 			else if (r == "deptChange") { //부서변경
 				$("#writer_search").val("");
-				if (checkAdmin == 'true') {
-	    			$("#writerDept_search").val("");
-				}
     			$("#appr_search").val("");
+    			
     			if (usepostDate) {
     				date_reset();
     			}
+    			
     			$("input[name=searchCheck][value=" + type + "]").prop("checked", true);
     			type_set();
 			}
@@ -365,38 +348,24 @@
 	    	
  	    	searchAppr = $("#appr_search").val();
  	    	searchWriter = $('#writer_search').val();
- 	    	if (checkAdmin != 'true') {
- 	    		$("#appr_search").val("");
-	 	    	if (adminFlag == 'true'){
-		 	    	$("#writer_search").val("");
-	 	    	}
-	 	    	if (usepostDate) {
-	 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		            if (searchStartDate > searchEndDate) {
-		                alert("<spring:message code='ezAttitude.t55'/>");
-		                return;
-		            } else {
-		            	date_reset();
-		            }
-		        } else {
-		        	searchStartDate = "";
-		        	searchEndDate = "";
-		        }
- 	    	} else {////////여기서 if문써서 부서변경시는 아무값안들어가게?????????
- 	    		if (r == "deptChange") {
-	 	    		searchStartDate = "";
-	 	    		searchEndDate = "";
- 	    		} else {
-	 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
- 	    		}
+	    	
+ 	    	$("#appr_search").val("");
+	 	    $("#writer_search").val("");
+ 	    	
+ 	    	if (usepostDate) {
+ 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    		
 	            if (searchStartDate > searchEndDate) {
 	                alert("<spring:message code='ezAttitude.t55'/>");
 	                return;
+	            } else {
+	            	date_reset();
 	            }
- 	    	}
- 	    	
+	        } else {
+	        	searchStartDate = "";
+	        	searchEndDate = "";
+	        }
  	    	
 			popup_close();
 			goToPageByNum("1");
@@ -412,15 +381,9 @@
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = searchAppr;
-		    if (adminFlag == 'true') {
-		    	if (checkAdmin == 'true') {
-		    		obj.writerDeptName = writerDept_search.value;
-		    	} else {
-		    		obj.writerDeptId = writerDept_search.value;
-			    	obj.writerDeptName = "";	
-		    	}
-		    	obj.writerName = searchWriter;
-		    }
+    		obj.writerDeptId = writerDept_search.value;
+	    	obj.writerDeptName = "";
+	    	obj.writerName = searchWriter;
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
 			obj.pageNum = pageNum;
@@ -430,7 +393,6 @@
 			obj.orderCell = orderCell;
 			obj.orderOption = orderOption;
 			obj.adminFlag = adminFlag;
-			obj.checkAdmin = checkAdmin;
 			
 		    $.ajax({
 				type : 'get',
@@ -460,15 +422,9 @@
 	    	var obj = new Object();
 			
 		    obj.apprUserName = searchAppr;
-		    if (adminFlag == 'true') {
-		    	if (checkAdmin == 'true') {
-		    		obj.writerDeptName = writerDept_search.value;
-		    	} else {
-		    		obj.writerDeptId = writerDept_search.value;
-			    	obj.writerDeptName = "";	
-		    	}
-		    	obj.writerName = $('#writer_search').val();
-		    }
+    		obj.writerDeptId = writerDept_search.value;
+	    	obj.writerDeptName = "";
+	    	obj.writerName = $('#writer_search').val();
 		    obj.startDate = searchStartDate;
 		    obj.endDate = searchEndDate;
 			obj.totalPages = totalPages;
@@ -478,7 +434,6 @@
 			obj.orderOption = orderOption;
 			obj.excelReq = "true";
 			obj.adminFlag = adminFlag;
-			obj.checkAdmin = checkAdmin;
 		    
 		    $.ajax({
 				type : 'get',
@@ -505,13 +460,7 @@
 	    	if (excel == true) {
 	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
 	    	} else {
-	    		if (adminFlag == "true"){
-	    			authFlag = 'M';
-	    			
-	    			if(checkAdmin == 'true') {
-		    			authFlag = 'M'; 
-		    		}
-	    		}	
+	    		authFlag = 'M';
 	    		
 	    		totalAtt = data.totalAtt;
 		    	totalPages = data.totalPages;
@@ -521,16 +470,12 @@
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
 		    		infoStr += "</span> <spring:message code='ezAttitude.t78'/>";
-		    		if (checkAdmin != 'true') {
-		    			infoStr += ' - ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
-				    	data.startDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
-				    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>~";
-				    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
-				    	data.endDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
-				    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>]</span>";	
-		    		} else {
-		    			infoStr += ']</span>'
-		    		}
+	    			infoStr += ' - ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
+			    	data.startDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
+			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>~";
+			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
+			    	data.endDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
+			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>]</span>";	
 		    	} else {
 		    		infoStr += "</span> <spring:message code='ezAttitude.t78'/>]";
 		    	}
@@ -541,11 +486,7 @@
 	    	
 	    	if (excel != true) {
 		    	if (attList.length == 0) {
-		    		if (adminFlag != "true") {
-		    			$('#AttList tbody').append("<tr><td colspan='9' align='center'  bgcolor='#FFFFFF'><spring:message code='ezAttitude.t96'/></td></tr>");
-		    		} else {
-		    			$('#AttList tbody').append("<tr><td colspan='11' align='center'  bgcolor='#FFFFFF'><spring:message code='ezAttitude.t96'/></td></tr>");	
-		    		}
+		    		$('#AttList tbody').append("<tr><td colspan='11' align='center'  bgcolor='#FFFFFF'><spring:message code='ezAttitude.t96'/></td></tr>");	
 		    	}
 	    	}
 	    	
@@ -570,11 +511,8 @@
 	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
 	    		}
     			
-    			if (adminFlag == 'true') {
-    				htmlStr += '<td>' + attList[i].writerName + '</td>';
-    				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
-    			}
-    			
+   				htmlStr += '<td>' + attList[i].writerName + '</td>';
+   				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
     			htmlStr += '<td>' + attList[i].originDate.substring(11,16) + '</td>';
     			htmlStr += '<td>' + attList[i].changeDate.substring(11,16) + '</td>';
     			
@@ -639,17 +577,12 @@
 	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        
-	        if (checkAdmin == 'true') {
-	        	$("#Sdatepicker").val("${startDate}");
-	    		$("#Edatepicker").val("${endDate}");
-	        } else {
-	        	$(usepostdate).prop('checked', false);
-		        usepostDate = false;
-		        $("#Sdatepicker").datepicker('setDate', NowDate);
-		        $("#Edatepicker").datepicker('setDate', NowDate);
-	            $("#Sdatepicker").datepicker('disable');
-	            $("#Edatepicker").datepicker('disable');
-	        }
+        	$(usepostdate).prop('checked', false);
+	        usepostDate = false;
+	        $("#Sdatepicker").datepicker('setDate', NowDate);
+	        $("#Edatepicker").datepicker('setDate', NowDate);
+            $("#Sdatepicker").datepicker('disable');
+            $("#Edatepicker").datepicker('disable');
 	    }
 	    
 	    function search_keypress(evt)
@@ -1111,13 +1044,8 @@
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			
-			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
-			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt + "&pageInfo=" + pageInfo, "",
-			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
-			}
+			window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
+		 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 	    
 	    function getHistory(t) {
@@ -1133,76 +1061,14 @@
 		</script>
 </head>
 	<body id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
-	</c:if>
-	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t166' /><span id="mailBoxInfo"></span></h1>
-	</c:if>
-	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
-	</c:if>
         <div id="mainmenu">
-        <c:if test="${checkAdmin == 'true'}">
-        	<%-- <ul>
-	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
-				<li>
-					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-						<c:forEach var = "companyItem" items="${list }">
-							<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
-						</c:forEach>
-		      		</select>
-	      		</li>
-	      	</ul> --%>
-	        <table id="searchTable" style="width:100%; margin-bottom:10px;">
-				<tbody>
-					<tr>
-						<td style="width: 3%;"><spring:message code='ezAttitude.t103'/></td>
-						<td style="width: 12%;"><input type="text" id="writer_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
-						<td style="width: 3%;"><spring:message code='ezAttitude.t148'/></td>
-						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
-						<td style="width: 3%;"><spring:message code='ezAttitude.t13'/></td>
-						<td style="width: 11%;">
-							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
-							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
-							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
-							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
-						</td>
-					</tr>
-					<tr>
-						<td style="width: 3%;"><spring:message code='ezAttitude.t104'/></td>
-						<td style="width: 12%;"><input type="text" id="appr_search" style="width: 90%;" maxlength="50" onkeyup="search_keypress(event);"></td>
-						<td style="width: 3%;"><spring:message code='ezAttitude.t136'/></td>
-						<td style="width: 9%;">
-<!-- 							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()" style="float:left; margin-left:0px;"><label for="usepostdate" style="float:left; margin:3px;">검색기간 사용</label> -->
-	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
-						</td>
-						<td colspan="2">
-							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t121'/></span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span><spring:message code='ezAttitude.t122'/></span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t145'/></span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t210'/></span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t211'/></span></a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</c:if>
         <ul id="tb_Parent">
-		<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
         	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
-		</c:if>
-		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
-			<li><span onClick="attList_del()"><spring:message code='ezAttitude.t164'/></span></li>
-		</c:if>
-        <c:if test="${checkAdmin != 'true'}">
 	        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
         	<li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.t122'/></span></li>
         	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
-		</c:if>
-		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
-			<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="height:28px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
@@ -1213,68 +1079,51 @@
 					</c:forEach>
 				</select>
 			</li>
-		</c:if>
 
-
-		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
-			<li id="right">
-				<span style="float:right;font-weight:normal;color:black;border: none; box-shadow:none;">
-					<input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
-					<input name="searchCheck" id="Radio2" type="radio" value="0" <c:if test="${adminFlag == 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
-					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
-					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
-				</span>
-			</li> 
-		</c:if>
         </ul>
         </div>
-        <c:if test="${checkAdmin != 'true'}">
-	        <div id="popup2" class="popupwrap1" style="display:none;margin-bottom:50px;">
-	            <div class="popupJQLayer">
-					<div class="title"><spring:message code='ezAttitude.t121'/></div>
-					<div id="close">
-			            <ul>
-			                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
-			            </ul>
-			        </div>
-					<table style="display:block; width:478px; margin:10px 0px 0px 1px;"  class="popuplist">
-						<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
-							<tr>
-								<th nowrap><spring:message code='ezAttitude.t103'/></th>
-								<td style="width:100%;"> 
-									<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
-								</td>
-							</tr>
-						</c:if>
-						<tr>
-							<th nowrap><spring:message code='ezAttitude.t104'/></th>
-							<td style="width:100%;"> 
-								<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
-							</td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezAttitude.t137'/></th>
-							<td>
-								<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezAttitude.t105'/></label>
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
-							</td>
-						</tr>
-					</table>
-	             	<div class="btnpositionLayer">
-				        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
-				        <a class="imgbtn" id="cancelBtn" onclick="att_search('search')"><span><spring:message code='ezAttitude.t121'/></span></a>
-			     	</div>
-	            </div>
-	        </div>
-        </c:if>
-       	<c:choose>
-			<c:when test="${checkAdmin == 'true'}">
-				<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;" onblur>
-			</c:when>
-			<c:otherwise>
-				<div id="contentlist" name="contentlist" style="border:0px solid blue;height:680px;width:100%;overflow-y:auto;" onblur>
-			</c:otherwise>
-		</c:choose>
+        
+        <!-- 검색 레이어 팝업 -->
+        <div id="popup2" class="popupwrap1" style="display:none;margin-bottom:50px;">
+            <div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAttitude.t121'/></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
+		            </ul>
+		        </div>
+				<table style="display:block; width:478px; margin:10px 0px 0px 1px;"  class="popuplist">
+					<tr>
+						<th nowrap><spring:message code='ezAttitude.t103'/></th>
+						<td style="width:100%;"> 
+							<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+						</td>
+					</tr>
+					<tr>
+						<th nowrap><spring:message code='ezAttitude.t104'/></th>
+						<td style="width:100%;"> 
+							<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+						</td>
+					</tr>
+					<tr>
+						<th><spring:message code='ezAttitude.t137'/></th>
+						<td>
+							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">
+							<spring:message code='ezAttitude.t105'/></label>&nbsp;
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> 
+							~ 
+							<input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+						</td>
+					</tr>
+				</table>
+             	<div class="btnpositionLayer">
+			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="att_search('search')"><span><spring:message code='ezAttitude.t121'/></span></a>
+		     	</div>
+            </div>
+        </div>
+	        
+		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:680px;width:100%;overflow-y:auto;" onblur>
 		<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 			<tr>
 				<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
@@ -1294,8 +1143,7 @@
 		    
 		    <c:if test="${list.size() == 0}"> 
 		        <tr>
-		        	<c:if test="${adminFlag == 'true'}"><td colspan="11" align="center"  bgcolor="#FFFFFF"><spring:message code='ezAttitude.t96'/></td></c:if>
-					<c:if test="${adminFlag != 'true'}"><td colspan="9" align="center"  bgcolor="#FFFFFF"><spring:message code='ezAttitude.t96'/></td></c:if>
+		        	<td colspan="11" align="center"  bgcolor="#FFFFFF"><spring:message code='ezAttitude.t96'/></td>
 	       		</tr>
 	        </c:if>
 		</table>
@@ -1312,10 +1160,8 @@
 	       	<tr>
 				<th>NO.</th>
 				<th><spring:message code='ezAttitude.t107'/></th>
-				<c:if test="${adminFlag == true}">
-					<th><spring:message code='ezAttitude.t147'/></th>
-					<th><spring:message code='ezAttitude.t148'/></th>
-				</c:if>
+				<th><spring:message code='ezAttitude.t147'/></th>
+				<th><spring:message code='ezAttitude.t148'/></th>
 				<th><spring:message code='ezAttitude.t206'/></th>
 				<th><spring:message code='ezAttitude.t207'/></th>
 				<th><spring:message code='ezAttitude.t208'/></th>
@@ -1323,6 +1169,7 @@
 				<th><spring:message code='ezAttitude.t108'/></th>
 			</tr>
 		</table>
+		
 <!-- 		팝업 -->
 		<div id="popup" class="popupwrap1" style="display:none;margin-bottom:50px;max-width:545px;">
 			<div class="popupJQLayer">

@@ -87,20 +87,56 @@
 	        $(document).bind("selectstart", function(event){event.preventDefault();});
 	        //드래그 방지
 	        $(document).bind("dragstart", function(event){event.preventDefault();});
+	        
+	        //페이징 위치 조정
+	        windowResize();
 	    }
 	    
 		// 검색값 입력 후 엔터키 입력 시 검색 호출
 	    function search_keypress(evt) {
 	        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
-	
-	        
-	        if (evtKeyCode == "13") {
+	     if (evtKeyCode == "13") {
 	            search(1);
 	        }
 	    }
-		
-		
-	    
+
+	        function lvSDoc_onSel_DBclick() {
+	            listview.LoadFromID("lvSDocForm");
+	            listview2.LoadFromID("lvTDocForm");
+	            var openLocation = "";
+	            var oArrRows = listview.GetSelectedRows();
+	            var length = listview.GetSelectedIndexes();
+	            var DocID = GetAttribute(oArrRows[0], "DATA1");
+	            var pURL = GetAttribute(oArrRows[0], "DATA2");
+	            var formID = GetAttribute(oArrRows[0], "DATA6");
+	            var orgDocid = GetAttribute(oArrRows[0], "DATA5");
+	            if (trim_Cross(GetAttribute(oArrRows[0], "DATA5")) == "" || escape(orgDocid.replace(/ /gi, "")) == "%0A")
+	                orgDocid = "";
+	            else
+	                orgDocid = GetAttribute(oArrRows[0], "DATA5");
+	
+	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+	            	if (isIE()) {
+		            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                } else {
+	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                	alert(pAlertContent);
+	                    
+	                    return;
+	                }
+	            }
+	            else {
+	                if (CrossYN()) {
+	                    openLocation = "/ezApprovalG/contDocView.do";
+	                } else {
+                        openLocation = "/ezApprovalG/contDocView.do";
+	                }
+	            }
+	            openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
+	            var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+	        }
+
+    
 	    // 날짜 아이콘 적용 및 날짜 검색
 		 function getTime() {
 			
@@ -740,6 +776,18 @@
 		        }
 		    }
 			
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 213 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	    </script>
 	</head>
 	
@@ -906,24 +954,27 @@
 			</tr>
 		</table>
 		
-		<table class="mainlist" style="width:100%; height:100%;">
-			<thead>
-				<tr id = "doclist">
-					<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
-					<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
-					<th style="width:3%;"><img src="/images/newAttach.gif"></th>
-					<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="DocCompleteListBody" style="overflow: auto;">
-			<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
-		</table>
+		<div id="contentlist" style="width: 100%; height: 610px; overflow: auto;">
+			<table class="mainlist" style="width:100%;">
+				<thead>
+					<tr id = "doclist">
+						<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
+						<th style="width:3%;"><img src="/images/newAttach.gif"></th>
+						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="DocCompleteListBody" style="overflow: auto;">
+				<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
+			</table>
+		</div>
+		
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 </html>

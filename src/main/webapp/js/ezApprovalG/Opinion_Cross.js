@@ -511,7 +511,7 @@ function deleteOpinionInfo() {
             if (pOrgDocID == "REDRAFT") {
                 var pInformationContent = strLang406;
                 var Rtnval = OpenInformationUI(pInformationContent, deleteOpinionInfo_Complete);
-                if (!CrossYN() && Rtnval) {
+                //if (!CrossYN() && Rtnval) {
                     var selIdx = GetAttribute(pSelectedRow[0], "id");
 
                     OpinionList.DeleteRow(selIdx);
@@ -519,7 +519,7 @@ function deleteOpinionInfo() {
                     setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
                     setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
                     OpinionAddFlag = 0;
-                }
+                //}
             }
             else {
                 deleteOpinion(pSelectedRow);
@@ -561,8 +561,8 @@ function deleteOpinion(pSelectedRow) {
             }
             else {
                 var pInformationContent = "" + strLang406 + "";
-                var Rtnval = OpenInformationUI(pInformationContent, deleteOpinion_Complete);
-                if (!CrossYN() && Rtnval) {
+                var Rtnval = OpenInformationUI2(pInformationContent, deleteOpinion_Complete);
+                if (Rtnval) {
                     var selIdx = GetAttribute(tr, "id");
                     OpinionList.DeleteRow(selIdx);
                     document.getElementById("txt_OpinionContent").value = "";
@@ -953,16 +953,14 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1045,4 +1043,23 @@ function GetOpinionTypeName(strOType) {
             return strLangOpinionType1;
             break;
     }
+}
+// 2018-08-02 강민수92 다른곳에서  OpenInformationUI 를 쓸 수 있을 수도 있기때문에 OpenInformationUI2를 새로추가
+function OpenInformationUI2(pInformationContent, CompleteFunction) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/ezAprOpinion.do";
+
+    if (CrossYN() && ext != 'hwp') {
+        ezapropinion_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        DivPopUpShow(330, 205, url);
+    } else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+    return RtnVal;
 }

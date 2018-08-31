@@ -565,10 +565,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		//HWP사용유무
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		
-		if (useHWP.equals("")) {
-			useHWP = "NO";
-		}
-
 		//브라우저체크
 		String browser = ClientUtil.getClientInfo(req, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
@@ -1071,6 +1067,7 @@ System.out.println(strHTML);
 		String title = "";
 		String companyNm = "";
 		String lastLogin = "";
+		String loginIP = "";
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
@@ -1095,8 +1092,15 @@ System.out.println(strHTML);
 		}
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+		
+		if (lastLogin != null) {
+			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+			lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+			loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+		} else {
+			lastLogin = "";
+			loginIP = "";
+		}
 		
 		//전자설문
 		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
@@ -1175,8 +1179,12 @@ System.out.println(strHTML);
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+<<<<<<< HEAD
 		model.addAttribute("type", req.getParameter("type"));
 		model.addAttribute("sliderList", sliderList);
+=======
+		model.addAttribute("loginIP", loginIP);
+>>>>>>> master
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
@@ -3532,6 +3540,7 @@ System.out.println(strHTML);
 		moduleList.put("/ezResource/resMain.do", "res");
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
+		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
 		
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
 		
@@ -3547,6 +3556,7 @@ System.out.println(strHTML);
 		model.addAttribute("isResUsed", usedList.get("res"));
 		model.addAttribute("isCircularUsed", usedList.get("circular"));
 		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
 
 		model.addAttribute("topMenuID", topMenuID);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -3808,6 +3818,18 @@ System.out.println(strHTML);
 		return "/ezPortal/help/leftSchedule";
 	}
 	
+	@RequestMapping(value = "/ezPortal/help/leftTask.do")
+	public String leftTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftTask started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftTask ended");
+		return "/ezPortal/help/leftTask";
+	}
+	
 	/**
 	 * 포탈 - 도움말 leftCircular 화면 호출 함수
 	 */
@@ -3821,6 +3843,21 @@ System.out.println(strHTML);
 
 		logger.debug("leftCircular ended");
 		return "/ezPortal/help/leftCircular";
+	}
+
+	/**
+	 * 포탈 - 도움말 leftleftWebfolder 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftWebfolder.do")
+	public String leftWebfolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftWebfolder started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftWebfolder ended");
+		return "/ezPortal/help/leftWebfolder";
 	}
 	
 	/**

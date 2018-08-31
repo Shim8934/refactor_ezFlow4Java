@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2753,9 +2757,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				return returnValue;
 			}
 			
-			ezOrganAdminService.syncWithBizmekaTalkAccounts(userInfo.getTenantId());
+			String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrl", userInfo.getTenantId());
+			String queryString = "/ezTalkSyncServer/syncAccounts";
+			String inputParams = "tenantId=" + userInfo.getTenantId();
 			
-			returnValue = "OK";
+			String resultCode = ezEmailUtil.getWebServiceResult(ezTalkServerUrl + queryString, inputParams);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject obj = (JSONObject) parser.parse(resultCode);
+			logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
+			
+			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
+				returnValue = "OK";
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -60,6 +60,8 @@
     var pDeptName		= arr_userinfo[5];
     var pDocID =""; 
     var pDocSN = "0";
+    var ext = "mht";
+    
     window.onload = function () {
         if (window.dialogArguments != null) {
             var objWinDlgArgs = window.dialogArguments;
@@ -358,7 +360,7 @@
                 if (CrossYN())
                     //window.resizeTo(1030, 710);
 
-                trDeliveryNo.style.display = "";
+                //trDeliveryNo.style.display = ""; //2018-07-19 천성준 - 문서과배부번호 안보이게 주석처리
                 trOriginSN.style.display = "";
                 trAprMemberTitle.style.display = "none";
                 
@@ -369,7 +371,7 @@
                 if (CrossYN())
                     //window.resizeTo(1030, 750);
 
-                trDeliveryNo.style.display = "";
+                //trDeliveryNo.style.display = ""; //2018-07-19 천성준 - 문서과배부번호 안보이게 주석처리
                 trOriginSN.style.display = "";
                 trAprMemberTitle.style.display = "";
                 
@@ -385,7 +387,8 @@
             var para = new Array();
             para[0] = g_SepAttachLVXml;
             para[1] = g_CabID;
-
+			para[3] = ext;
+			
             var url = "/ezApprovalG/insSepAttach.do";
 
             inssepattach_cross_dialogArguments[0] = para;
@@ -611,7 +614,7 @@
               </tr>
               <tr  id="trOriginSN">
                 <th ><spring:message code='ezApprovalG.t866'/></th>
-                <td><input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="13">
+                <td><input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
                 </td>
               </tr>
               <tr>

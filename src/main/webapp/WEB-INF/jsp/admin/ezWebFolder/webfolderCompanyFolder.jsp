@@ -110,6 +110,7 @@
 				spanFolderName.setAttribute("level", list["folderLevel"]);
 				spanFolderName.setAttribute("fldName1", list["folderName"]);
 				spanFolderName.setAttribute("fldName2", list["folderName2"]);
+				spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
 				spanFolderName.onclick = function() {getSelected(this);};
 				
 				divElmt.appendChild(imgElmt);
@@ -342,13 +343,13 @@
 				}
 				
 				document.getElementById("usersSelect").style.display  = (compFolderId == selectedFolder) ? ""             : "none";
-				document.getElementById("displayUsers").style.display = (compFolderId == selectedFolder) ? "inline-block" : "none";
+// 				document.getElementById("displayUsers").style.display = (compFolderId == selectedFolder) ? "inline-block" : "none";
 				document.getElementById("listBttn1").style.display    = "none";
 				document.getElementById("listBttn2").style.display    = "";
 				document.getElementById("fldName").value              = "";
 				document.getElementById("fldName2").value             = "";
 				document.getElementById("rangeStr").value             = "";
-				updateTarget("");
+// 				updateTarget("");
 			}
 			
 			function cancelAdd() {

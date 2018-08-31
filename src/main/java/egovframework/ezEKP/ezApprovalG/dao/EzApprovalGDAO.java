@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
@@ -1024,6 +1025,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public String lastHabYuiSN(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.lastHabYuiSN", map);
+	}
+	
+	public String getDeptSymbol(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDeptSymbol", map);
 	}
 	
 	public int checkReceivedDoc(Map<String, Object> map) throws Exception {
@@ -2975,16 +2980,91 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getCountDoingDocInfo(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getCountDoingDocInfo", map);
 	}
-
+	
+	public String getDocExt(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocExt", map);
+	}
+	
+	public void deleteInitReceiptPonit(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteInitReceiptPonit", map);
+	}
+	public void setInitReceiptPonit(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.setInitReceiptPonit", map);
+	}
+	public int checkNonElecRec(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkNonElecRec", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordTempVO> getNonElecInfoSusinInit(Map<String, Object> map) throws Exception {
+		return (List<ApprGRecordTempVO>) list("EzApprovalG.getNonElecInfoSusinInit", map);
+	}
+	
+	public void setNonElecRecCabID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setNonElecRecCabID", map);
+	}
+	public void setEndNonElecRecDocDel(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setEndNonElecRecDocDel", map);
+	}
+	public String getOrgDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOrgDocID", map);
+	}
+	public String getRecordID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getRecordID", map);
+	}
+	public void updateNonElecRecInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateNonElecRecInfo", map);
+	}
+	public void updateNonElecRecInfo2(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateNonElecRecInfo2", map);
+	}
+	public void updateNonElecRecInfo3(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateNonElecRecInfo3", map);
+	}
 	public String getDocHrefInfoHref(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
 	}
-	
+	public void deleteSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteSpecialInfoNonElecRec", map);
+	}
+	public void insertSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertSpecialInfoNonElecRec", map);
+	}
+	public void insertSpecialInfoNonElecRec2(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertSpecialInfoNonElecRec2", map);
+	}
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordTempVO> selectSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
+		return (List<ApprGRecordTempVO>) list("EzApprovalG.selectSpecialInfoNonElecRec", map);
+	}
 	public int getLinkedAttachFileCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
 	}
-
+	public void susinNonElecRecDocDel1(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel1", map);
+	}
+	public void susinNonElecRecDocDel2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel2", map);
+	}
+	public void susinNonElecRecDocDel3(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel3", map);
+	}
+	public void susinNonElecRecDocDel4(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel4", map);
+	}
+	public void susinNonElecRecDocDel5(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel5", map);
+	}
+	public void susinNonElecRecDocDel6(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel6", map);
+	}
+	public void susinNonElecRecDocDel7(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel7", map);
+	}
 	public String getExtAttr1(Map<String, Object> map) throws Exception{
 		return (String)select("EzApprovalG.getExtAttr1", map);
+	}
+	public ApprGDocInfoWebSrvVO getHWPdownload(Map<String, Object> map) throws Exception{
+		return (ApprGDocInfoWebSrvVO)select("EzApprovalG.getHWPdownload", map);
 	}
 }

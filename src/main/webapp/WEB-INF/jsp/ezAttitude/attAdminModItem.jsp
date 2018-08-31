@@ -355,7 +355,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
@@ -448,7 +450,7 @@
 			function setTypeName() {
 				$('#subSelectAtti option').each(function(){
 					var typeName = $(this).text();
-					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&#039", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 					$(this).text(typeName);
 				})
 			}

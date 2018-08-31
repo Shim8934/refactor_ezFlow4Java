@@ -15,10 +15,13 @@
 				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
 		</c:choose>	
+
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+
 		<script type="text/javascript">
 			var skinnum = "${skinNum}";
 			var selectedCell = "";
@@ -84,33 +87,24 @@
 		
 				// 보기모드에서 미리보기가 아닌 경우 실행
 				if (mode == "view" && viewmode != "preview") {
-				    var agentObj;
-				    
-				    if (!CrossYN()) {
-				    	 //브라우저 정보 가져오기
-				    	var userAgent = window.navigator.userAgent;
-						
+					//브라우저 정보 가져오기
+					var userAgent = window.navigator.userAgent;
+					
+					//좀 더러운데 다하고 정리
+				    if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
 				    	if (useHWP == "YES") {
 				    		//한글기안기 사용일때는 ie9,10,11 전부 activeX 설치
 							if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0 || userAgent.indexOf("Trident/7.0") > 0) {
 						    	 GetObject();
-						    	 ezNotieSetting();
-							}
-				    	} else {
-				    		//IE9 일때만 ActiveX 설치하게 설정
-							if (userAgent.indexOf("Trident/5.0") > 0) {
-								//var objectNode = document.getElementById("objectDiv");
-						    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
-						    	 //var objectProgressNode = document.getElementById("objectProgressDiv");
-						    	 //objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
-						    	 GetObject();
-						    	 ezNotieSetting();
-						    	 
-						    	 /* var objectProgressNode = document.getElementById("objectProgressDiv");
-						    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>"; */
-						    	 
 							}
 				    	}
+				    	/* } else {
+				    		//IE9 일때만 ActiveX 설치하게 설정
+							if (userAgent.indexOf("Trident/5.0") > 0) {
+						    	 GetObject();
+						    	 ezNotieSetting();
+							}
+				    	} */
 				    } 
 	//				window.setInterval("update_connectinfo()", 30000);	
 				}
@@ -130,7 +124,18 @@
 	        }
 			
 			function GetObject() {
-			    var agentObj;
+				i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                } else {
+                    finish_download();
+                }
+                
+			    /* var agentObj;
 			    
 			    i_icd2.SetDocumentDisp(window.document);
 			    
@@ -152,12 +157,11 @@
 		    		} else {
 		        		finish_download();
 		    		}
-				}
+				} */
 			}
 	
 			function finish_download() {
 				OfficeBugPatch();	
-				popupNotice();
 			}
 	
 			function OfficeBugPatch() {
@@ -180,10 +184,6 @@
                 return strPwd;
 	        }
 			
-			function popupNotice() {
-				//document.all.ifmpopup.src ="popup_menu.aspx";
-			}
-	
 			var xmlHTTP = null;
 			var blogout = false;
 		
@@ -1591,7 +1591,9 @@
 			</c:otherwise>
 		</c:choose>
 		<c:if test="${isCrossBrowser != true}">
-			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
 		</c:if>  
 		<div id="objectDiv"></div>
 		<c:choose>

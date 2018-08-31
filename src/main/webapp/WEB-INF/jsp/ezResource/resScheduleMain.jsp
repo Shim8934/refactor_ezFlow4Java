@@ -65,6 +65,7 @@
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
+	    var getLang = "<c:out value='${userInfo.lang}'/>";
 	    var ApproveFlag     = "${approveFlag}";
 	    var brd_NM = "<c:out value='${brdNm}' />";
 	    var ResID = "${resID}";
@@ -82,7 +83,7 @@
 	    var LunarUse = false;
 	    
 	    document.onselectstart = function () { return false; };
-		
+	    
 	    select_memorialDays("${userInfo.lang}");
 	    
 	    var xmlhttp2 = createXMLHttpRequest();
@@ -187,6 +188,11 @@
 	            LunarUse = true;
 	        else
 	            LunarUse = false;
+	        
+	     	// #13470 uselang이 3인 경우 음력사용 금지
+			if(getLang == "3") {
+				LunarUse = false;
+			}
 
 	        schedule_get_holiday();
 	    }
@@ -242,6 +248,32 @@
 	        Window_resize();
 	    }
 	    window.onresize = Window_resize;
+	    
+        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+        window.onunload = function () {
+        	if (parent.frames["left"]) {
+        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+        			$(parent.frames["left"].document.body).css("overflow", "");
+        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+        		}
+        	} else if (parent.frames["attitude_menu"]) {
+        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+        		}
+        	}
+        	      
+        	if (parent.parent.frames["left"]) {
+        		if (parent.parent.frames["board_menu"]) {  		  
+        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+        		}
+        	}
+        }
 	    
 	    function Window_resize() {
 	        if (typeCal == "2") {

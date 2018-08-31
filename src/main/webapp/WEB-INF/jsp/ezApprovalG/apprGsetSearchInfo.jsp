@@ -694,7 +694,7 @@
 			        if (Type == "APR") {
 			            RtnVal[3] = sYear;
 			            RtnVal[4] = sMonth;
-			            RtnVal[5] = "01";
+			            RtnVal[5] = sDay;
 			            RtnVal[6] = sYear2;
 			            RtnVal[7] = sMonth2;
 			            RtnVal[8] = sDay2;
@@ -714,7 +714,7 @@
 			            RtnVal[8] = "";
 			            RtnVal[9] = sYear;
 			            RtnVal[10] = sMonth;
-			            RtnVal[11] = "01";
+			            RtnVal[11] = sDay;
 			            RtnVal[12] = sYear2;
 			            RtnVal[13] = sMonth2;
 			            RtnVal[14] = sDay2;

@@ -109,11 +109,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGLeft started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
+		String useAdminBujae = "";
+        if (ezCommonService.getTenantConfig("useAdminBujae", tenantID).equalsIgnoreCase("YES")) {
+        	useAdminBujae = "YES";
+        }
+        else {
+        	useAdminBujae = "NO";
+        }
+		
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useAdminBujae", useAdminBujae);
 		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
+		logger.debug("apprGLeft ended. useAdminBujae = " + useAdminBujae);
 		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
@@ -137,6 +149,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String multiData = userInfo.getPrimary();
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 //		폼프로세서 사용하려면 useEditor "" 으로 세팅
+		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -154,6 +167,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("multiData", multiData);
 		model.addAttribute("list", resultList);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useHWP", useHWP);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("formAdmin ended.");
@@ -509,6 +523,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyID", companyID);
 		if (type != null && type.equals("HWP")) {
 			model.addAttribute("useEditor", "HWP");
+			model.addAttribute("ext", "hwp");
 			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
 		} else {
 			model.addAttribute("useEditor", useEditor);
@@ -2872,7 +2887,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "");
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "", userInfo.getLocale());
 		
 		logger.debug("getStatReceiptList ended.");
 
@@ -3479,7 +3494,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G 관리자 HWP양식작성기 연동정보 저장 실행함수
 	 * 전자결재 관리자 HWP양식작성기 연동정보 저장 실행함수
 	 */
-	/* HWP연동정보 xml파일로 저장, HWP문서 내부에 저장된 연동정보 사용중이라 주석처리
+	/*HWP연동정보 xml파일로 저장, HWP문서 내부에 저장된 연동정보 사용중이라 주석처리*/
 	@RequestMapping(value = "/admin/ezApprovalG/formConnSave.do")
 	public String formConnSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("formConnSave started.");
@@ -3502,7 +3517,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("formConnSave ended.");
 		
 		return "json";
-	}*/
+	}
 	
 	@RequestMapping(value="/admin/ezApprovalG/approvGAdminPopupChoiceDept.do")
 	public String  scheduleAdminPopupShareDept(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
@@ -3523,6 +3538,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("adminBujae started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String userID = "";
 		String deptID = "";
 		String startDate = "";
@@ -3534,7 +3555,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String proxyUserName = "";
 		String textProxyName = "";
 		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		/*String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());*/
 		String cDate = "";
@@ -3662,6 +3682,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectPerson started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String type = request.getParameter("type");
 		
@@ -3683,6 +3708,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectPerson started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String type = request.getParameter("type");
 		String buJaeId = request.getParameter("buJaeId");

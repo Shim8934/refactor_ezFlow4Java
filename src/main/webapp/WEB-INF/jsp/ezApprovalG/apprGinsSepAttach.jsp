@@ -22,7 +22,7 @@
 		    }
 		    var OrderCell = "";
 		    var rtnVal = new Array();
-		    var g_SepAttchLVXml="";
+		    var g_SepAttachLVXml="";
 		    var g_CabinetID;
 		    var g_InitFlag="";
 		    var g_TaskCode;
@@ -30,6 +30,9 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
+		    var ext = "";
+		    var nonElecRec = "";
+		    
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.inssepattach_cross_dialogArguments[0];
@@ -46,8 +49,10 @@
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
-		        g_SepAttchLVXml = RetValue[0];
+  	 			ext = RetValue[3];
+		        g_SepAttachLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
+		        nonElecRec = RetValue[4];
 		        if (RetValue[2])
 		            g_InitFlag = RetValue[2];
 		        if (g_InitFlag == "1") {
@@ -55,12 +60,17 @@
 		            document.getElementById("trModify").style.display = "none";
 		
 		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
+		        } else if (g_InitFlag == "2") {
+		        	document.getElementById("trChangeCabinet").style.display = "none";
+		            document.getElementById("trModify").style.display = "none";
+		            
+		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
 		        }
 		        else {
 		            document.getElementById("trModify").style.display = "";
 		            document.getElementById("trChangeCabinet").style.display = "none";
 		        }
-		        InitListView(g_SepAttchLVXml);
+		        InitListView(g_SepAttachLVXml);
 		        if (!CrossYN()) {
 		            rtnVal[0] = "FALSE";
 		            window.dialogHeight = "380px";
@@ -73,7 +83,14 @@
 		    function InitListView(lvXml) {
 		        if (lvXml == "") {
 		            lvXml = GetLVHearderXml();
+		        } else {
+		        	lvXml = ReplaceText(ReplaceText(ReplaceText(ReplaceText(lvXml, "&nbsp;", " "), "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
 		        }
+		        /* if (nonElecRec == "Y" && g_CabinetID != "") { // 기록물철명 자동세팅 주석
+		        	var CabInfo = createXmlDom();
+		        	CabInfo = GetCabinetClassInfo(g_CabinetID);
+		        	lvXml = lvXml.replace(/nonElecRecTempCabinetName/gi, SelectSingleNodeValue(CabInfo.documentElement, "TITLE"));
+		        }  */
 		        oList = createXmlDom();
 		        oList = loadXMLString(lvXml);
 		
@@ -132,19 +149,21 @@
 		        para[2] = g_CabinetID;	
 		        para[3] = "";
 		        para[4] = g_CabinetID;	
+		        para[5] = nonElecRec;	
 		
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != "hwp") {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		            
 		            DivPopUpShow(880, 615, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
-		            feature = feature + GetShowModalPosition(410, 555);
-		
+		            var feature = "dialogWidth:830px;dialogHeight:615px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            //한글기안에서 분리첨부>추가창이 잘리는현상때문에 주석처리 2018-07-27 강민수92
+// 		            feature = feature + GetShowModalPosition(410, 555);
+					
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
 		
@@ -221,7 +240,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");    
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "450");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
 		
 		        Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
 		        Row = createNodeAndAppandNode(oList, Rows, Row, "ROW");
@@ -301,18 +320,19 @@
 		            para[2] = GetAttribute(selnode[0], "DATA1");	
 		            para[3] = GetSelAttachInfoXml(selnode);
 		            para[4] = g_CabinetID;	
+		            para[5] = nonElecRec;
 		
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
-		            if (CrossYN()) {
+		            if (CrossYN() && ext != "hwp") {
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
 		                DivPopUpShow(880, 615, url);
 		            }
 		            else {
-		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
-		                feature = feature + GetShowModalPosition(410, 555);
+		                var feature = "dialogWidth:840px;dialogHeight:580px;scroll:no;resizable:no;status:no; help:no ";
+// 		                feature = feature + GetShowModalPosition(410, 555);
 		
 		                if (url != "")
 		                    var rtn = window.showModalDialog(url, para, feature);
@@ -347,20 +367,23 @@
 		            var para = new Array();
 		            para[0] = g_TaskCode;
 		            para[1] = GetAttribute(selnode[0], "DATA1");
+		            para[2] = RetValue[3];
 
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
 		            var feature = "dialogWidth:800px;dialogHeight:550px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
         			feature = feature + GetShowModalPosition(800, 550);
 		            if (CrossYN()) {
+
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
 		                 DivPopUpShow(800, 550, url);
 		            }
 		            else {
+
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
-		
+
 		            if (rtn[0] == "TRUE") {
 		                var CabXml = createXmlDom();
 		                CabXml = loadXMLString(rtn[1]);
@@ -407,17 +430,15 @@
 		    }
 		    function GetListXml() {
 		        var InfoXml = loadXMLString(GetLVHearderXml());
-		
 		        var Rows = InfoXml.childNodes[0].childNodes[1];
 		
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		
 		        var totalRows = pLvList.GetDataRows();
-		
 		        var selRow, Row, Cell, Value, Data, node, i;
 		        for (i = 0; i < totalRows.length; i++) {
-		            selRow = totalRows[i];
+		            selRow = totalRows[i];        
 		            Row = createNodeAndAppandNode(InfoXml, Rows, Row, "ROW");
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[0].innerHTML);
@@ -429,7 +450,7 @@
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", GetAttribute(selRow, "DATA3"));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[1].innerHTML);
+		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", ""));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);
@@ -462,31 +483,38 @@
 		
 		        var totalRows = pLvList.GetDataRows();
 		        var pAttachCurSel = pLvList.GetSelectedRows();
-			    if (pAttachCurSel.length > 0)
-			    	{
-		        var i;
-		        for (i = 0; i < totalRows.length; i++) {
-		            totalRows[i].cells[0].innerHTML = i + 1;
-		        }
-			    	} 
+			    if (pAttachCurSel.length > 0) {
+			        var i;
+			        for (i = 0; i < totalRows.length; i++) {
+			            totalRows[i].cells[0].innerHTML = i + 1;
+			        }
+			    } 
 		    }
 		    
 		    function btnOK_onclick() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
-		
+		        
 		        var totalRows = pLvList.GetDataRows();
 		        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
 		            alert("<spring:message code='ezApprovalG.t1031'/>");
 		            return;
 		        }
+		        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
+			        if (!CheckSepAttParamXmlNull()) {
+			            alert("<spring:message code='ezApprovalG.t1411'/>");
+			            return;
+		        	}
+		        }
+		        
 		        rtnVal[0] = "TRUE";
 		        rtnVal[1] = GetListXml();
-		
+
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
 		        }
 		        else {
+		        	window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
@@ -496,12 +524,28 @@
 		        }
 		        else {
 		            rtnVal[0] = "FALSE";
+		            window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
 		    window.onbeforeunload = function () {
-		        if (!CrossYN())
-		            window.returnValue = rtnVal;
+	            window.returnValue = rtnVal;
+		    }
+		    
+		    function CheckSepAttParamXmlNull() {
+		        var rtnVal = true;
+		        var List = new ListView();
+		    	List.LoadFromID("pLvList");
+		    	
+		    	var rows = List.GetDataRows();
+		    	var i;
+	    		for (i = 0; i < rows.length; i++) {
+	    			if (GetAttribute(rows[i], "DATA1") == "" || GetAttribute(rows[i], "DATA1") == "nonElecRecTempCabinet") {
+	    				rtnVal = false;
+	    			}
+	    		}
+		    	
+		        return rtnVal;
 		    }
 		</script>
 		<style>
@@ -531,7 +575,7 @@
 		</div>
 		
 		<div class="btnposition btnpositionNew" >
-			<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+			<a id="btnOK" class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -7,8 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}"   type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
-		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -162,30 +162,26 @@
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "dept", "", "<c:out value='${level}'/>");
 		</script>
 		
-		<div id="searchPanel" class="wfSearchPanel" style="display:none;">
-			<div style="margin: 20px;">
+		<div id="searchPanel" class="popup wfSearchPanel" style="display:none;">
+			<h1><spring:message code='ezWebFolder.t21'/></h1> 
+			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
+			<div style="margin: 10px 0px 15px;">
 				<table class="content wftable">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t22'/></th>
-					</tr>
-					<tr>
-						<td class="wfSearchTh2" colspan="2"></td>
-					</tr>
-					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
-						<td class="wfSearchTd"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
+						<td class="wfSearchTd"><input type="text" id="Sdatepicker" style="width:80px; text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px; text-align:center" readonly="readonly"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
-						<td class="wfSearchTd"><input id="fileExtVal" type="text" style="height: 23px; width: 200px;"></td>
+						<td class="wfSearchTd"><input id="fileExtVal" type="text" style="height: 23px;"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t153'/></th>
-						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px; width: 200px;"></td>
+						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px;"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
-						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;"></td>
+						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px;"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t188'/></th>
@@ -202,33 +198,40 @@
 						</td>
 					</tr>
 				</table>
-				<div class="wfdivBttn">
-					<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-					<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
-				</div>
 			</div>
-			<span class="wfCloseBttn"></span>
+			<div class="wfdivBttn">
+				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
+				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+			</div>
 		</div>
 		
 		<div id="progress-wrp" style="display: none; margin-left: 5px;">
 			<div class="progress-bar"></div ><div class="status">0%</div>
 		</div>
 		
-		<div id="dragDropArea" style="margin-left: 5px;">
-			<table class="mainlist wftablefile" style="width: 100%; text-algin: center;" id="tblFileList">
-				<tr>
-					<th width="20px" ><input type="checkbox"></th>
-					<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" style="text-align: center; width: 6%;" ><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
-					<th headers="cd" style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
-					<th headers="ud" style="width: 10%;"><spring:message code='ezWebFolder.t198'/></th>
-					<th              style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th>
-					<th headers="dt" width="70px" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
-				</tr>
+		<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th class="wfFilecheck" style="text-align: center; "><input type="checkbox"></th>
+							<th headers="ft" class="wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileSize" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
+							<th headers="cd" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t190'/></th>
+							<th headers="ud" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t198'/></th>
+							<th              class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
+							<th headers="dt" class="wfFileDownload" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
+						</tr>
+					</thead>
+				</table>
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
 				
-			</table>
+					</table>
+				</div>
+			</div>
 		</div>
 		
 		<input id="file" type="file" multiple="multiple"/>

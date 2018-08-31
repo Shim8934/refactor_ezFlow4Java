@@ -274,6 +274,32 @@
 				scheduleGetLunarUse();
 			}
 			
+	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+	        window.onunload = function () {
+	        	if (parent.frames["left"]) {
+	        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+	        			$(parent.frames["left"].document.body).css("overflow", "");
+	        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	} else if (parent.frames["attitude_menu"]) {
+	        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+	        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	}
+	        	      
+	        	if (parent.parent.frames["left"]) {
+	        		if (parent.parent.frames["board_menu"]) {  		  
+	        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+	        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+	        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+	        		}
+	        	}
+	        }
+			
 			//datepicker
 	    	$(function () {
 			    $("#Sdatepicker").datepicker({
@@ -442,7 +468,7 @@
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
 					data : {
-						
+						isRest : "all"
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
@@ -938,7 +964,7 @@
 				    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "<spring:message code='ezAttitude.t47'/> : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
 				    		
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:35px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
-				    		objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(vo.typeName)));
+				    		objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:75px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(vo.typeName)));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + vo.writerDeptName + "'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerDeptName)));
 			    			

@@ -1468,7 +1468,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSealName()) + "</VALUE>");
 			sb.append("<DATA1>" + vo.getSealNum() + "</DATA1>");
 			sb.append("<DATA2>" + vo.getSealPath() + "</DATA2>");
-			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3></CELL>");
+			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3>");
+			File file = new File(realPath + vo.getSealPath());
+			if ( !file.exists() ) {
+				sb.append("<DATA4>false</DATA4></CELL>");
+			} else {
+				sb.append("</CELL>");
+			}
 			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
 			// bug.kaoni.com(#11758) 요청에 의해 날짜까지만 표현하게 편경, substring(0, 19) -> substring(0, 10)
@@ -1479,8 +1485,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			} else {
 				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate().substring(0, 10), offset, false) + "</VALUE></CELL>");
 			}
-			
-			File file = new File(realPath + vo.getSealPath());
 			
 			if (!file.exists()) {
 				sb.insert(sb.indexOf("</DATA3>") + 8, "<DATA4>false</DATA4>");
@@ -2951,6 +2955,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
+				map.put("v_PFORMID", formID);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
 				map.put("approvalFlag", approvalFlag);
@@ -3399,14 +3404,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getEtcName(String code1, String selected, String primary, String companyID, int tenantID) throws Exception {
+	public String getEtcName(String code1, String selected, String primary, String lang, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code1", code1);
 		map.put("primary", primary);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("lang", lang);
 		
-		logger.debug("getEtcName started. code1=" + code1 + " primary=" + primary + "companyID=" + companyID + "tenantID=" + tenantID);
+		logger.debug("getEtcName started. code1=" + code1 + " primary=" + primary + " lang=" + lang + "companyID=" + companyID + "tenantID=" + tenantID);
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		

@@ -118,6 +118,13 @@
                 }
 			    
 			    var message = document.loginForm.message.value;
+			    if(message == "oldBrowser"){
+			    	alert("<spring:message code='main.t0631'/>"
+			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
+			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
+			    	return false;
+			    }
+			    
 			    if ("${isWrongPass}" == "Y") {
 			    	$("#imgMnt").html("<img src='/images/warning2.png'>");
 			    	$("#exDiv2").modal();

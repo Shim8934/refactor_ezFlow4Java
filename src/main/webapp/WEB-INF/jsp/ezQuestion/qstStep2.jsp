@@ -286,7 +286,9 @@
         		for(jk = index;jk < curidxno - 1 ; jk++){
             		var tmpValue = frmCreate.selQues[jk+1].text.split(".");
             		frmCreate.selQues[jk].value = frmCreate.selQues[jk+1].value;
-            		frmCreate.selQues[jk].text = jk+1 + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
+            		//2018-08-08 김보미 - 유형 질문 표시
+             		//frmCreate.selQues[jk].text = jk+1 + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
+            		frmCreate.selQues[jk].text = tmpValue[0].split("]")[0] + "]" + (jk + 1) + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
         		}
         		frmCreate.selQues.remove(curidxno-1);
     		}
@@ -462,7 +464,6 @@
 		        		}
 		        		var TmpOption = new Option("[" + typeName + "]" + (i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
 		        		frmCreate.selQues.options[i] = TmpOption;
-		        		
 		    		}
 		    		AttachFile.innerHTML = AttachFile.innerHTML;
 				}

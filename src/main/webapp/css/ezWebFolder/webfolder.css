@@ -1,10 +1,10 @@
-.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 80px;}
-.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 5px;}
+.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:200px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
 .webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#edf4fd; cursor: pointer;}
-.wfdivBttn {margin: 12px 0px; text-align: center;}
+.wfdivBttn {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
 
 .bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
 .bnkWebFolder2 {background-color: #edf4fd; cursor: pointer;}
@@ -14,22 +14,22 @@
 
 .webFolderImg {height: 16px; width: 16px;}
 
-#progress-wrp {border: 1px solid rgb(195, 245, 235); padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff;}
-#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: rgb(235, 255, 255); width: 0;}
+#progress-wrp {border: 1px solid rgb(160,230,243); padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff;}
+#progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: rgb(160,230,243); width: 0;}
 #progress-wrp .status {top:4px; left:48%; position:absolute; display:inline-block; color: #333; font-weight: bold; font-family: monospace;}
 
-.webfolderBttn {white-space:nowrap; display:inline-block; cursor: pointer; height:30px; vertical-align:top; padding: 0px;}
-.webfolderBttn span {display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding: 6px 10px 5px 10px; font:12px gulim; letter-spacing:-1; vertical-align:top; text-align: center;}
+.webfolderBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.webfolderBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
 .webfolderBttn span:hover, .webfolderBttn2 span:hover, #mainmenu2 > ul > li > a > span:hover {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
 
 .webfolderBttn2{cursor: pointer; line-height: 30px;}
-.webfolderBttn2 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 4px; height:27px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
+.webfolderBttn2 span {color: #393939; display:inline-block; border:1px solid #d2d2d2; border-radius:2px; padding:0px 4px; height:27px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center; box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);}
 
 .webfolderBttn3 {cursor: pointer; line-height: 30px;}
 .webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
 
 .webfolderImg {width: 18px; height: 18px;}
-.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:80%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 .webfolderMinus {width: 18px; height: 18px; cursor: pointer;}
 .webfolderPlus {width: 18px; height: 18px; cursor: pointer;}
@@ -46,7 +46,7 @@
 .list_element, .list_element th, .list_element td {border:0;}
 .list_element {width:100%; font-size:12px; table-layout:fixed;}
 .list_element caption {display:none}
-.list_element th {padding:5px 0 5px 8px; background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; color:#666; text-align:left; vertical-align:top; line-height:20px; font-weight:normal;}
+.list_element th {padding:5px 0px 5px 5px; background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; color:#666; text-align:left; vertical-align:top; line-height:20px; font-weight:normal;}
 .list_element td {padding:5px 0px 5px 5px; line-height:16px; vertical-align:top; color:#666; text-align:left;}
 
 .btnSearch {border:1px solid #ccc; height:18px; line-height:16px;}
@@ -71,14 +71,13 @@
 .selectedUser2 {cursor:pointer; background-color:#edf4fd;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
-.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 32px;}
+.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 20px;}
 .aName div:hover {color: #e04343;}
 .aName div{white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
 
 .mainPath {white-space: nowrap; display: flex; flex-wrap: nowrap;}
-.mainPath >div:last-child {flex: 1 1 auto; min-width: initial; width: auto;}
+.mainPath >div:last-child {min-width: initial; width: auto;}
 
-.wfCloseBttn {position: absolute; top: -12.5px; right: -12.5px; display: block; width: 30px; height: 30px; text-indent: -9999px; background: url("data:image/png;base64,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") no-repeat 0 0; cursor: pointer;}
 .wfListCnt {height: 20px; width: 40px;}
 
 .myBar_red    {height: 7px; background-color: #ff4040;}
@@ -86,10 +85,10 @@
 .myBar_green  {height: 7px; background-color: #4faaff;}
 
 .jstree-default a { white-space:normal ; height: auto; }
-.jstree-anchor { height: auto !important; }
+.jstree-anchor { height: 21px !important; }
 .jstree-default li > ins { vertical-align:top; }
 .jstree-leaf { height: auto; }
-.jstree-leaf a { height: auto !important; }
+.jstree-leaf a { height: 21px !important; }
 
 .mainbody {overflow: hidden;}
 
@@ -97,7 +96,7 @@
 #mainmenu2 > ul{width:100%; padding:0; margin:0; margin-bottom:3px !important; height:30px;}
 #mainmenu2 > ul > li img {vertical-align:middle;}
 #mainmenu2 > ul > li, #mainmenu2 li.off {display:block; float:left; margin:0 1px 0 1px; cursor:pointer; line-height:27px; padding-right:3px;}
-#mainmenu2 > ul > li > a > span, #mainmenu2 > ul > li > a > span.off {display:block; float:left; padding:5px 4px; font:12px gulim; letter-spacing:-1; padding-top:7px; border:1px solid #ddd; color:#666; border-radius:3px;}
+#mainmenu2 > ul > li > a > span, #mainmenu2 > ul > li > a > span.off {display:block; float:left; padding:5px 4px; font:12px gulim; letter-spacing:-1; padding-top:7px; border:1px solid #d2d2d2; color:#666; border-radius: 2px; box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);}
 #mainmenu2 li span img, #mainmenu2 li span.off img {vertical-align:middle;}
 #mainmenu2 li.on {}
 #mainmenu2 li.on > a > span {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
@@ -108,30 +107,68 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
 #mainmenu2 > ul #right {float: right; cursor: default;}
 #mainmenu2 > ul #right span {padding-right: 5px;}
-#mainmenu .select {height: 29px; padding: 1px 0px 0px 4px; width: 80px;} 
+#mainmenu .select {height: 29px; padding: 1px 0px 0px 4px; width: 80px;}
 
 #fileTypeSelect {height:29px; width:95px;}
 #companySelect {margin: 10px 0px;}
 #companySelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 #companySelect >select {font-size:12px; height:20px; display:inline-block;}
-#dragDropArea {margin:10px 0px 0px !important; overflow-y:auto;}
+#dragDropArea {margin:0px 0px 0px !important; }
 #fileTypeVal {height: 25px; padding: 0px; width: 85px;}
 #file {width:1px; height:1px; display:none;}
 #AttachDownFrame {width:0px; height:0px; display:none;}
 
-.wfSearchPanel {z-index:2000; position:fixed; height:auto; width:534px; border:1px solid #666666; background-color: #fff;; border-radius:8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;}
+.wfSearchPanel, .wfpersonal {z-index:2000; position:fixed; height:auto; border:1px solid #666666; background-color: #fff;; border-radius: 5px;}
+.wfSearchPanel, .wfpersonal {width: 478px;}
 .wftable {border-collapse:collapse; width:100%;}
 .wftablefile {width:100%; text-algin:center;}
-.wfSearchTh {width:100px; min-width:100px;}
+.wfSearchTh {text-align: center;}
 .wfSearchTh2 {border-left-color:white !important;border-right-color:white !important;height:10px !important;}
 .wfSearchTd {border:1px solid #b6b6b6; background-color:#fff; min-width:367px; width:367px;}
+.wfSearchTd input[type='text'] { width: 100%;}
 .wfFogPanel {width:100%; height:100%; position:absolute; top:0px; left:0px; z-index:1000; background:none rgba(0,0,0,0.5);}
 .wfPopup {z-index:2000; position:absolute;}
 
 #left ol.on {padding : 0px 0px 0px 5px;}
 #left ol li {padding : 1px 0px 0px 5px;}
-.webfolderTree {width: 210px; min-height:200px; font-size: 20px; overflow-x: auto; padding-bottom:3px;padding-top:5px;}
+/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
+.webfolderTree {min-height:200px; font-size: 20px; overflow-x: hidden; padding-bottom:3px;padding-top:5px;}
 
 .spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 1px solid #aeaeae; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px;}
 .spanDown:before {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
 .spanUp:before {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+.ui-datepicker .ui-datepicker-title select {height:22px; }
+
+.wfClose {position: absolute; right: 10px; top: 10px;}
+.wfClose >ul {margin: 0px; padding: 0px; list-style: none;}
+.wfClose >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.wfClose >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+
+.wfSearchPanel h1, .wfpersonal h1 {margin-top: 0px !important;}
+.wfcompstdiv {width: 400px; text-align: center;}
+#forScroll			{width: 6px; padding:0px;}
+.wfFilecheck 		{width: 2%; min-width:35px; text-align: center;}
+.wfFileFavorite		{width: 3%; text-align: center; min-width:35px;}
+.wfFileType 		{width: 3%; text-align: center;}
+.wfFileName			{width: 30%;}
+.wfFileSize 		{width: 7%; text-align: center;}
+.wfFileCreator 		{width: 6.5%;}
+.wfFileUploadDate 	{width: 9%;}
+.wfFileUpdateDate 	{width: 9%;}
+.wfFilePath 		{width: 25%}
+.wfFileShare 		{width: 5.5%; text-align: center;}
+.wfFileShareDate	{width: 7%;}
+.wfFileShareDate2	{width: 7%;}
+.wfFileShareMember	{min-width:10px; width:6.5%;}
+.wfFileShareMember2	{min-width:10px; width:6.5%;}
+.wfFileSharedDate	{min-width:10px; width:7%;}
+.wfFileFavoriteSize		{min-width:10px; width:11%;}
+.wfFileFavoriteDate		{min-width:10px; width:13%;}
+.wfFileAdminDate		{min-width:10px; width:9%;}
+.wfFileDownload		{min-width:10px; width:10%;}
+.wfActive			{min-width:10px; width:10%;}
+.wfFileLogDate		{min-width:10px; width:24%;}
+.wfFileLogName		{min-width:10px; width:35%;}
+.wfFileLogMember	{min-width:10px; width:17%;}
+.wfConfigCompany	{min-width:10px; width:18%;}
+.wfConfigCapacity	{min-width:10px; width:12%;}

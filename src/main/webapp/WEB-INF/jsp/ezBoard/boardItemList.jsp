@@ -250,6 +250,30 @@
 					});
 		            
 				    Save_unloadSave = true;
+				    
+	    		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+    	        	if (parent.frames["left"]) {
+    	        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+    	        			$(parent.frames["left"].document.body).css("overflow", "");
+    	        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+    	        		}
+    	        	} else if (parent.frames["attitude_menu"]) {
+    	        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+    	        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+    	        		}
+    	        	}
+    	        	      
+    	        	if (parent.parent.frames["left"]) {
+    	        		if (parent.parent.frames["board_menu"]) {  		  
+    	        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+    	        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+    	        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+    	        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+    	        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+    	        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+    	        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+    	        		}
+    	        	}
 		        }
 		    }
 		    $(function () {
@@ -1012,11 +1036,15 @@
 		    }
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        //2018-08-24 김보미 - 팝업창 가운데로 위치하게끔 조정
+ 		        //var heigth = window.screen.availHeight;
+ 		        //var width = window.screen.availWidth;
+ 		        //var left = (width - 500) / 2;
+ 		        //var top = (heigth - 400) / 2;
+ 		        //window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		        feature = feature + GetOpenPosition(420, 450);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;

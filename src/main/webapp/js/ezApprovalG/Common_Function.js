@@ -64,7 +64,9 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
         apropinion_cross_dialogArgument[0] = parameter;
         apropinion_cross_dialogArgument[1] = openOpinionUI_Complete;
@@ -109,7 +111,9 @@ function OpenInformationUI(pInformationContent, FunctionName, Type) {
             DivPopUpShow(330, 205, url);
         }
         else {
-            GetOpenWindow(url + "?type=open", "ezAPROPINION_Cross", 325, 200, "NO");
+        	//2018-08-21 배현상, type에 대한 처리를 controller에서 하지않고 opener의 변수를 가지고 사용하기에 로직 수정
+        	ezapropinion_cross_dialogArguments[2] = true;
+            GetOpenWindow(url, "ezAPROPINION_Cross", 325, 200, "NO");
         }
     }
     else {

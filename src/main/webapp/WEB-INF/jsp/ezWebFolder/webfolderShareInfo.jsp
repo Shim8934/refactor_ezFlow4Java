@@ -98,9 +98,11 @@
 					tdElmt1.setAttribute("style", "width:85%; text-align:center;");
 					
 					if (userList[i]["userType"] == "U") {
-						tdElmt2.textContent = "<spring:message code='main.t10100' />";
+						tdElmt2.textContent = "<spring:message code='main.t10100' />";		// 개인
+					} else if (userList[i]["userType"] == "C") {
+						tdElmt2.textContent = "<spring:message code='main.t74' />";			// 회사
 					} else {
-						tdElmt2.textContent = "<spring:message code='main.t75' />";
+						tdElmt2.textContent = "<spring:message code='main.t75' />";			// 부서
 					}
 					
 					tdElmt2.setAttribute("style", "width:15%; text-align:center;");
@@ -113,7 +115,11 @@
 			}
 			
 			function show_personinfo(id) {
-				window.open("/ezCommon/showPersonInfo.do?id=" + id, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				var heigth = window.screen.availHeight;
+				var width  = window.screen.availWidth;
+				var left   = (width - 420) / 2;
+				var top    = (heigth - 500) / 2;
+				window.open("/ezCommon/showPersonInfo.do?id=" + id, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 		</script>
 	</head>

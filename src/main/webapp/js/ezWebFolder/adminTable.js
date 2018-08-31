@@ -3,6 +3,7 @@
 function TableView() {
 	//set public functions
 	this.setTableId       = setTableId;
+	this.setTabledHeader  = setTabledHeader;
 	this.setSelectedClass = setSelectedClass;
 	this.setUnselectClass = setUnselectClass;
 	this.setDataSource    = setDataSource;
@@ -14,6 +15,7 @@ function TableView() {
 	
 	//private variables
 	var _tableId         = null;
+	var _tableheader     = null;
 	var _selectedClass   = "";
 	var _unselectClass   = "";
 	var _lastSelectedRow = null;
@@ -25,7 +27,7 @@ function TableView() {
 	
 	//privileged functions
 	function setCallBack(callBackName) {_callBackSearch = callBackName;}
-	
+	function setTabledHeader(headerId) {_tableheader    = headerId;}
 	function getOrderInfo() {return _cellInfo;}
 	
 	function clearHeaders() {
@@ -213,8 +215,8 @@ function TableView() {
 	function setFileLogTable() {
 		var tableList = document.getElementById(_tableId);
 		
-		while (tableList.rows.length > 1) {
-			tableList.deleteRow(1);
+		while (tableList.rows.length > 0) {
+			tableList.deleteRow(0);
 		}
 		
 		if (_dataSource == null || _dataSource.length == 0) {
@@ -240,6 +242,13 @@ function TableView() {
 				var tdElmt5 = document.createElement("td");
 				var tdElmt6 = document.createElement("td");
 				
+				tdElmt1.setAttribute("class", "wfFileType");
+				tdElmt2.setAttribute("class", "wfFileLogName");
+				tdElmt3.setAttribute("class", "wfFileFavoriteSize");
+				tdElmt4.setAttribute("class", "wfFileLogMember");
+				tdElmt5.setAttribute("class", "wfActive");
+				tdElmt6.setAttribute("class", "wfFileLogDate");
+				
 				trElmt.setAttribute("class", _unselectClass);
 				var fileIconElmt = document.createElement("img");
 				fileIconElmt.setAttribute("class", "webFolderImg");
@@ -264,6 +273,8 @@ function TableView() {
 					case "R" : tdElmt5.textContent = strActType4; break;
 					case "P" : tdElmt5.textContent = strActType5; break;
 					case "RE": tdElmt5.textContent = strActType6; break;
+					case "MV": tdElmt5.textContent = strActType7; break;
+					case "CP": tdElmt5.textContent = strActType8; break;
 				}
 				
 				tdElmt6.setAttribute("style", "text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
@@ -282,13 +293,14 @@ function TableView() {
 	}
 	
 	function setConfigTable() {
-		var tableList               = document.getElementById(_tableId);
-		var firstInputCheckBox      = tableList.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked  = false; //Clear first input check box
-		firstInputCheckBox.onclick  = function(e) {toggleAllRow(this.checked);};
+		var tableList              = document.getElementById(_tableId);
+		var tableHeader            = document.getElementById(_tableheader);
+		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		firstInputCheckBox.checked = false;
+		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
 		
-		while (tableList.rows.length > 1) {
-			tableList.deleteRow(1);
+		while (tableList.rows.length > 0) {
+			tableList.deleteRow(0);
 		}
 		
 		if (_dataSource == null || _dataSource.length == 0) {
@@ -314,6 +326,15 @@ function TableView() {
 				var tdElmt6 = document.createElement("td");
 				var tdElmt7 = document.createElement("td");
 				var tdElmt8 = document.createElement("td");
+				
+				tdElmt1.setAttribute("class", "wfFilecheck");
+				tdElmt2.setAttribute("class", "wfConfigCompany");
+				tdElmt3.setAttribute("class", "wfConfigCompany");
+				tdElmt4.setAttribute("class", "wfActive");
+				tdElmt5.setAttribute("class", "wfActive");
+				tdElmt6.setAttribute("class", "wfConfigCapacity");
+				tdElmt7.setAttribute("class", "wfConfigCapacity");
+				tdElmt8.setAttribute("class", "wfConfigCompany");
 				
 				trElmt.setAttribute("class", _unselectClass);
 				trElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
@@ -379,13 +400,14 @@ function TableView() {
 	}
 	
 	function setFileListTable() {
-		var tableList               = document.getElementById(_tableId);
-		var firstInputCheckBox      = tableList.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked  = false; //Clear first input check box
-		firstInputCheckBox.onclick  = function(e) {toggleAllRow(this.checked);};
+		var tableList              = document.getElementById(_tableId);
+		var tableHeader            = document.getElementById(_tableheader);
+		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		firstInputCheckBox.checked = false;
+		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
 		
-		while (tableList.rows.length > 1) {
-			tableList.deleteRow(1);
+		while (tableList.rows.length > 0) {
+			tableList.deleteRow(0);
 		}
 		
 		if (_dataSource == null || _dataSource.length == 0) {
@@ -413,6 +435,16 @@ function TableView() {
 				var tdElmt7 = document.createElement("td");	
 				var tdElmt8 = document.createElement("td");	
 				var tdElmt9 = document.createElement("td");
+				
+				tdElmt1.setAttribute("class", "wfFilecheck");
+				tdElmt2.setAttribute("class", "wfFileType");
+				tdElmt3.setAttribute("class", "wfFileName");
+				tdElmt4.setAttribute("class", "wfFileSize");
+				tdElmt5.setAttribute("class", "wfFileCreator");
+				tdElmt6.setAttribute("class", "wfFileAdminDate");
+				tdElmt7.setAttribute("class", "wfFileAdminDate");
+				tdElmt8.setAttribute("class", "wfFilePath");
+				tdElmt9.setAttribute("class", "wfFileDownload");
 				
 				trElmt.setAttribute("class", _unselectClass);
 				trElmt.setAttribute("_fileId", _dataSource[i]["fileId"]);
@@ -462,12 +494,13 @@ function TableView() {
 	
 	function setDeletedFileTable() {
 		var tableList               = document.getElementById(_tableId);
-		var firstInputCheckBox      = tableList.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked  = false; //Clear first input check box
-		firstInputCheckBox.onclick  = function(e) {toggleAllRow(this.checked);};
-		
-		while (tableList.rows.length > 1) {
-			tableList.deleteRow(1);
+		var tableHeader            = document.getElementById(_tableheader);
+		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		firstInputCheckBox.checked = false;
+		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+
+		while (tableList.rows.length > 0) {
+			tableList.deleteRow(0);
 		}
 		
 		if (_dataSource == null || _dataSource.length == 0) {
@@ -501,6 +534,16 @@ function TableView() {
 				var tdCreateDate	= document.createElement("td");	
 				var tdUpdateDate	= document.createElement("td");	
 				var tdAbsolutePath	= document.createElement("td");	
+				
+				tdCheckbox.setAttribute("class", "wfFilecheck");
+				tdFavoriteIcon.setAttribute("class", "wfFileFavorite");
+				tdFileIcon.setAttribute("class", "wfFileType");
+				tdName.setAttribute("class", "wfFileName");
+				tdSize.setAttribute("class", "wfFileSize");
+				tdCreator.setAttribute("class", "wfFileCreator");
+				tdCreateDate.setAttribute("class", "wfFileFavoriteDate");
+				tdUpdateDate.setAttribute("class", "wfFileFavoriteDate");
+				tdAbsolutePath.setAttribute("class", "wfFilePath");
 				
 				trElement.setAttribute("class", "bnkWebFolder");
 				trElement.setAttribute("targetid", resultElement["trashCanId"]);
@@ -560,5 +603,30 @@ function TableView() {
 		
 		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 		AttachDownFrame.location.href = downloadUrl;
+	}
+	function scroll() {
+		var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+		var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+		
+		 if (BoardList_BODYHeight > BoardListDivHeight) {
+			if ($("#tblFileList1 tr th#forScroll").length > 0) {
+				$("#tblFileList1 tr th#forScroll").remove();
+			}
+		} else {
+			if ($("#tblFileList1 tr th#forScroll").length < 1) {
+				$("#tblFileList1 tr th#forScroll").remove();
+				$("#tblFileList1 tr").append("<th></th>");
+				
+					var lastTh = $("#tblFileList1 tr th").last();
+					lastTh.attr("id", "forScroll");
+					lastTh.css("width", "15px");
+					
+			}
+		}
+		 
+		/*var lastTh = $("#BoardList_TH th").last();
+		if (lastTh.attr("id") == null) {
+			lastTh.css("display", "none");
+		}*/
 	}
 }

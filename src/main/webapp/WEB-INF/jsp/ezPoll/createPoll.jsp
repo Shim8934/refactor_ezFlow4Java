@@ -641,8 +641,8 @@
 	                        g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
 	                    } 
 	                    else {
-	                        var feature = GetOpenPosition(730, 708);
-	                        g_windowReference = window.open(szUrl, "SelectRange", "height=708,width=560,resizable=no,center=yes" + feature);
+	                        var feature = GetOpenPosition(614, 720);
+	                        g_windowReference = window.open(szUrl, "SelectRange", "height=720,width=614,resizable=no,center=yes" + feature);
 	                    }
 	                }
 	                

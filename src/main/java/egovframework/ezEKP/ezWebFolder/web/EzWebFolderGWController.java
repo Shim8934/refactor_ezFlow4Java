@@ -776,8 +776,7 @@ public class EzWebFolderGWController {
 			
 			String realPath = request.getServletContext().getRealPath("");
 			result          = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
@@ -1391,7 +1390,7 @@ public class EzWebFolderGWController {
 			int tenantId          = userInfo.getTenantId();
 			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, tenantId);
 			if (mode.equals("1") && folder.getFolderLevel() == 0) {
-				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), tenantId);
+				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), userInfo.getCompanyID(), tenantId);
 				folder.setListSubFolders(listCompSubFolders);
 			}
 			else {
@@ -1873,10 +1872,18 @@ public class EzWebFolderGWController {
 			Date date                  = new Date();
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
+			// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+			SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+		    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
+		
+		    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
+		    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
+			
 			folder.setFolderName1(folderName);
 			folder.setFolderName2(folderName2);
 			folder.setUpdateId(userId);
 			folder.setUpdateDate(timeUTC);
+			folder.setCreateDate(timeUTCCreate);
 			
 			ezWebFolderAdminService.insertFolder(folder);
 			
@@ -2026,7 +2033,7 @@ public class EzWebFolderGWController {
 					}
 					else {
 						company                                 = ezWebFolderService.getCompanySimpleFolder(userInfo.getCompanyID(), userInfo);
-						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), tenantId);
+						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), userInfo.getCompanyID(), tenantId);
 						
 						if (listCompSubFolders != null && listCompSubFolders.size() > 0) {
 							company.setHasSubFolder(1);

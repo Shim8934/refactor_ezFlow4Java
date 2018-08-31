@@ -704,6 +704,9 @@ function openUserInfo() {
 }
 
 function openDraftUI(pDraftFlag, pCurSelRow) {
+	// 2018.08.27 재기안은 윈도우 하나만 열리도록 수정
+	var windowName = "";
+	
     if (pDraftFlag.toUpperCase() == "REDRAFT") {
         if (pCurSelRow) {
             var ret = CheckAprLineInfo(pCurSelRow);
@@ -714,6 +717,8 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
                 return;
             }
         }
+        
+        windowName = "openDraftUI_REDRAFT";
     }
 
     var pArgument = new Array();
@@ -721,7 +726,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
     pArgument[3] = formDocType;
-
+    
     var openLocation = "";
     if (pCurSelRow) {
         if (pListTypeValue != "5") {
@@ -744,25 +749,23 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[7] = "";
     }
   
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
-    }
-    else {
+    } else {
     	if (!isIE()) {
-            alert(strLang1103);
+            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
             return;
-        }
-        else {
-            openLocation = "/ezApprovalG/ezDraftUI_HWP.do?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&DocState=" + encodeURI(pArgument[5]) + "&ListType=" + encodeURI(pListTypeValue) + "&AprState=" + encodeURI(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7])
+        } else {
+        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
         }
     }
 
-    openwindow(openLocation, "", 890, 560);
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function openApprovUI(allFlag) {
@@ -798,31 +801,28 @@ function openApprovUI(allFlag) {
             openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
-        }
-        else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-                var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?docID=" + encodeURI(pArgument[0]);
-                openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-                openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
-            }
-            else {
-                var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP.aspx?DocID=" + encodeURI(pArgument[0]);
-                openLocation = openLocation + "&uID=" + encodeURI(pArgument[1]) + "&uName=" + encodeURI(pArgument[2]);
-                openLocation = openLocation + "&uDeptID=" + encodeURI(pArgument[3]) + "&AllFlag=" + encodeURI(allFlag);
-            }
-        }
-        else {
+        } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+        	if (isIE()) {
+        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
+        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+        	} else {
+        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+        		alert(pAlertContent);
+                
+                return;
+        	}
+        } else {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
     else {
         var pAlertContent = strLang870;
-        OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
     }
 }
 
@@ -924,7 +924,6 @@ function openForm_Complete(ret) {
     getformcont_Cross_OpenWin.close();
     formURL = ret[0];
     formDocType = ret[1];
-    formExt = ret[2];
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -952,16 +951,18 @@ function openViewDocInfo(type) {
         pArgument[5] = GetAttribute(tr, "DATA7");
         pArgument[6] = "OPINION_SHOW";
         pArgument[7] = pListTypeValue;
-    }
-    else if (pListTypeValue != "7" && pListTypeValue != "8" && pListTypeValue != "9") {
+    } else if (pListTypeValue != "7" && pListTypeValue != "8" && pListTypeValue != "9") {
         pArgument[2] = GetAttribute(tr, "DATA11").trim();
         pArgument[3] = GetAttribute(tr, "DATA12").trim();
         pArgument[4] = GetAttribute(tr, "DATA4").trim();
         pArgument[5] = GetAttribute(tr, "DATA2").trim();
-        if (pListTypeValue != "5")
+        
+        if (pListTypeValue != "5") {
             pArgument[6] = "OPINION_SHOW";
-        else
+        } else {
             pArgument[6] = "OPINION_HIDE";
+        }
+        
         pArgument[7] = pListTypeValue;
     }
 
@@ -969,12 +970,13 @@ function openViewDocInfo(type) {
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-            }
-            else {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
+            if (CrossYN() && isIE()) {
+            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+            } else {
+            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                
+                return;
             }
         }
         else {
@@ -984,12 +986,13 @@ function openViewDocInfo(type) {
     }
     else {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
-            }
-            else {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx";
+            if (CrossYN() && isIE()) {
+            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
+            } else {
+            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                
+                return;
             }
         }
         else {
@@ -1000,6 +1003,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&isOpinion=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
+        openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -1032,24 +1036,31 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
-            }
-            else {
-                alert(strLang1103);
-                return;
+            } else {
+                if (/chrome/i.test(navigator.userAgent)) {
+                     alert(strLang1103);
+                     return;
+            	 } else {
+            		if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+                    }
+            	 }
             }
             openwindow(openLocation, "receive", 880, 550);
-        }
-        else {
+        } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                alert(strLang1103);
-                return;
-            }
-            else {
+            	if (/chrome/i.test(navigator.userAgent)) {
+            		alert(strLang1103);
+            		return;
+            	} else {
+            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+            	}
+            } else {
                 openLocation = "/ezApprovalG/recev.do";
-                openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             }
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {
@@ -1080,8 +1091,9 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         var pURL = GetAttribute(pCurSelRow, "DATA3");
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            alert(strLang1103);
-            return;
+        	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
+
+            openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
             openLocation = "/ezApprovalG/recevGSusin.do";
@@ -1123,6 +1135,9 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = "";
         temppSelectedRow = pSelectedRow;
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
 
         apropinion_cross_dialogArguments[0] = parameter;
@@ -1456,11 +1471,12 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
         }
         else if (type != undefined && CompleteFunction != "") {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            ezapralert_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+        	ezapralert_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -1478,10 +1494,9 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
-    var parameter = pInformationContent;
+	var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+    if (CrossYN() && (ext != 'hwp' || CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1493,11 +1508,12 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
         }
         else if (type != undefined && CompleteFunction != "") {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
-            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        	ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -1601,7 +1617,8 @@ function makePageSelPage() {
         var nowday = parseInt(nowDate.substring(8,10));
         
     	if (SearchCond[5] != null && SearchCond[5] != "" ) {
-    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
+//    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
+    		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
     	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
     		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
     	} else {
@@ -1790,6 +1807,7 @@ function setbuttonenable() {
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
+        document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnSimsa").style.display = "none";
         document.getElementById("tbtnGongRam").style.display = "none";
 
@@ -1818,6 +1836,7 @@ function setbuttonenable() {
             }
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
         }
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -1869,6 +1888,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (GetAttribute(tr, "DATA12") == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
@@ -1883,6 +1903,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
                 if (pFunctionType == "004")
@@ -1905,6 +1926,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
 
                 if (GetAttribute(tr, "DATA9") != "0") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -1934,6 +1956,7 @@ function setbuttonenable() {
 
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
                 document.getElementById("tbtnLinkDraft").style.display = "none";
             }
@@ -1949,6 +1972,7 @@ function setbuttonenable() {
             document.getElementById("tbtnApprove2").style.display = "none";
             document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnReceipt").style.display = "none";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
             document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
@@ -1958,6 +1982,13 @@ function setbuttonenable() {
         }
     } else {
         document.getElementById("tbtnSimsa").style.display = "none";
+        
+		if (approvalFlag == "G") {
+			if(pListTypeValue == "4") {
+				document.getElementById("tbtnNonElecRec").style.display = "";
+			}
+		}
+        
         //20130311 cpno.64
         document.getElementById("tbtnGongRam").style.display = "none";
         if (oArrRows.length != 0) {
@@ -1996,6 +2027,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                //document.getElementById("tbtnNonElecRec").style.display = "";
                 
                 if(approvalFlag == "G") {
                 	document.getElementById("tbtnRegList").style.display = "";
@@ -2053,6 +2085,7 @@ function setbuttonenable() {
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
+        document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtncallback").style.display = "none";
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -2487,7 +2520,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 			flag : FLAG,
 			deptName2 : arr_userinfo[16]
 		},
-	success: function(xml){
+		success: function(xml){
 			result = xml;
 		}
 	});
@@ -2503,10 +2536,17 @@ function RemoveDocCabinet(tempDocID, FLAG) {
         return;
     }
     else {
-        if (FLAG == "")
-            var pAlertContent = strLang901;
-        else
-            var pAlertContent = strLang902;
+        if (FLAG == "") {
+        	if (RtnVal == "RESETLINE") {
+        		var pAlertContent = strLangBae1;
+        	} else {
+        		var pAlertContent = strLang901;
+        	}
+        	
+        }
+        else {
+        	var pAlertContent = strLang902;
+        }
         OpenAlertUI(pAlertContent, "", "OPEN");
         return;
     }
@@ -2678,8 +2718,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
     
+    // 2018.08.27 재기안은 윈도우 하나면 열리게 수정
+    var windowName =  "";
+    
     if (pDraftFlag == "REDRAFT") {
     	pArgument[3] = pCurSelRow.getAttribute("DATA15");
+    	windowName = "openServerDraftUI_REDRAFT";
     } else {
     	pArgument[3] = formDocType;
     }  
@@ -2703,13 +2747,24 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
 
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
-    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-
-    openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
-
-
-    openwindow(openLocation, "", 890, 560);
+    
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
+    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+    	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
+    } else {
+    	if (!isIE()) {
+    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
+            alert(strLang1103);
+            return;
+        } else {
+        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
+        }
+    }
+    
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function RemoveTmpDoc(pDocID) {

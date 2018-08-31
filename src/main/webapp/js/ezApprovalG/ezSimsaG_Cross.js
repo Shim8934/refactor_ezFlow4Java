@@ -612,10 +612,7 @@ function makeXML(newDocID) {
 	            return false;
 	        } else {
 	            var rtnXML = makeExtinfo(sihangXML, newDocID, "SEND");
-	            var resultXml = encodeDN(rtnXML);
-	            ContentXML = resultXml.split('::')[1];
-	            ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-	            result = sendExtDoc(ContentXML);
+	            result = sendExtDoc(rtnXML);
 	            if (result) {
 	            	return true;
 	            } else {
@@ -960,12 +957,12 @@ function sendExtDoc(ExtXML) {
 			async : false,
 			url : "/ezApprovalG/sendMsg.do",
 			data : {
-				xmlData : "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">" + ExtXML ,
+				extXML : getXmlString(ExtXML),
 				xmlPath : pDocID + i + "pack.xml"
 			},
 			success: function(xml){
 				result = xml;
-			} ,
+			},
 			error : function () {
 				return false;
 			}       			
@@ -1084,6 +1081,7 @@ function encodeUP(emlName)
 				var GPKIContent = objSave.DownloadToBase64("C:\\upload.p7m");
 				
 				var NewContents = makePKIHeader(GPKIContent);
+				// 2018-08-25 sendExtDoc 함수 변경됨(클라이언트에서 Content를 넘겨주지 않고 서버에서 읽어서 처리). GPKI쪽 개발 시 참고!
 				rtnVal = sendExtDoc(NewContents);
 			}
 			else
@@ -1160,6 +1158,7 @@ function encodeUP(emlName)
 				arrDelFiles[arrDelFiles.length] = "C:\\upload.p7m";
 				
 				var NewContents = makePKIHeader(GPKIContent);
+				// 2018-08-25 sendExtDoc 함수 변경됨(클라이언트에서 Content를 넘겨주지 않고 서버에서 읽어서 처리). GPKI쪽 개발 시 참고!
 				rtnVal = sendExtDoc(NewContents);
 			}
 			else

@@ -482,7 +482,8 @@ function InitListView() {
         	
         	var curaprline = 1;
         	for (var i = 0; i < NodeList.length; i++) {
-        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2 
+        				|| SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState5) { //2018-08-25 강민수92 보류일때 결재선나오게하기위해 추가
         			curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
         			break;
         		}
@@ -541,6 +542,15 @@ function InitListView() {
         			pAPRLINE.DataSource(Resultxml);
         			pAPRLINE.DataBind("APRLINE");
         		}
+        	}
+        	// 비전자문서 기안 시, 마지막 결재선이 그대로 나오는 에러 수정
+        	if (nonElecRec == "Y" && pIniGubun == "1") {
+        		var DraftXml;
+        		document.getElementById("APRLINE").innerHTML = "";
+        		DraftXml = AddDraftUserFirst();
+        		Resultxml = loadXMLString(DraftXml);
+        		pAPRLINE.DataSource(Resultxml);
+        		pAPRLINE.DataBind("APRLINE");
         	}
         	
         	LineAprTyepSetAll();
@@ -1085,7 +1095,11 @@ function AddDraftUserFirst() {
     if (approvalFlag == "S") {
     	pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
     } else {
-    	pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    	if (approvalFlag == "G" && nonElecRec == "Y") {
+    		pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
+    	} else {
+    		pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    	}
     }
     pparsingXML += "<DATA12>" + strAprState1 + "</DATA12>";
     pparsingXML += "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
@@ -1105,7 +1119,11 @@ function AddDraftUserFirst() {
     if (approvalFlag == "S") {
     	pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
     } else {
-    	pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    	if (approvalFlag == "G" && nonElecRec == "Y") {
+    		pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
+    	} else {
+    		pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    	}
     }
     pparsingXML += "</CELL><CELL>";
     pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";

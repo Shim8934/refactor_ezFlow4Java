@@ -158,7 +158,6 @@
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    var folderPath = "${drafts}";
-	    var multipartFirstIdx = "${multipartFirstIdx}";
 
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
@@ -895,7 +894,7 @@
 		                					+ "&tid=" + tid;
 		                } else {
 		                	// 일반파일 첨부시
-			                aitem = "/ezEmail/downloadAttach.do?" 
+			                aitem = "/ezEmail/downloadAttachInWriter.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
 			                				+ "&filename=" + encodeURIComponent(filename);
@@ -962,7 +961,7 @@
 	        }
 	        Rebody();
 	        
-	        document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+	        document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
@@ -1091,18 +1090,8 @@
 		
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
-	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, ""));
-	  	        	
-                    if (pUse_Editor == "NAMO") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    } else if (pUse_Editor == "CK") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    } else {
-                    	document.getElementById("plainTextArea").value =  message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    }	
-                    
+	        	if (confirm("<spring:message code='ezEmail.lhm28' />")) {
+	  	        	document.getElementById("plainTextArea").value =  message.GetEditorTextContent();
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -1112,19 +1101,7 @@
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
 	    	} else {
-	    		var texts = document.getElementById("plainTextArea").value.split("\n");
-	            var textData = "";
-	            for (var i=0; i<texts.length; i++) {
-	            	if (i == 0 && $.trim(texts[i]) == ""  && (pUse_Editor == "NAMO" || pUse_Editor == "CK")) {
-	            		textData = "<br/>";
-	            	}
-	            	if (texts[i] != "" && texts[i] != " ") {
-	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/gi, "\n");
-	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + " " + "</p>";
-	            	} 
-	            }
-	            
-	    		message.SetEditorContent(textData);
+	    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);
 	    		
 	    		document.getElementById("tbContentElement").style.display = "";
 				document.getElementById("plainTextArea").style.display = "none";
@@ -1692,7 +1669,6 @@
 	    	ul.outerWidth(this.element.outerWidth());
 	    }
 	    
-	    var IsInsert_MsgTo = false;
 		$(function() {
 			var widgetInst = $("#MsgTo").autocomplete({}).data('ui-autocomplete');
 			widgetInst._renderMenu = function(ul, items) {
@@ -1733,6 +1709,7 @@
 					self._renderItem( ul, item );
 				});
 			};
+			var IsInsert_MsgTo = false;
 			$("#MsgTo").autocomplete(
 					{
 						source : function(request, response) {
@@ -1754,24 +1731,26 @@
 											email : ul.mail,
 											dept : ul.description,
 											title : ul.title,
-											type : ul.type
+											type : ul.type,
+											href : ul.href
 										};
 									}));
-
 								}
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
-						autoFocus : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
 							var addressType = "email";
+							var href = ""
 							if(ui.item.type == "G") {
 								addressType = "mailgroup";
+								href = ui.item.href;
 							}
 							
 							newElem = PrepareMailTag("0", addressType, ui.item.value,
-									ui.item.email, "");
+									ui.item.email, href);
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
 								MsgToGot.appendChild(newElem);
@@ -1823,7 +1802,9 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type,
+											href : ul.href
 										};
 									}));
 
@@ -1831,10 +1812,18 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("1", "email", ui.item.value,
-									ui.item.email, "");
+							var addressType = "email";
+							var href = ""
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+								href = ui.item.href;
+							}
+							
+							newElem = PrepareMailTag("1", addressType, ui.item.value,
+									ui.item.email, href);
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
 								MsgCCGot.appendChild(newElem);
@@ -1886,7 +1875,9 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type,
+											href : ul.href
 										};
 									}));
 
@@ -1894,10 +1885,18 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("2", "email", ui.item.value,
-									ui.item.email, "");
+							var addressType = "email";
+							var href = ""
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+								href = ui.item.href;
+							}
+							
+							newElem = PrepareMailTag("2", addressType, ui.item.value,
+									ui.item.email, href);
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
 								MsgBCCGot.appendChild(newElem);

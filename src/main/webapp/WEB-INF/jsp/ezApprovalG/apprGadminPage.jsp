@@ -37,7 +37,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfoCB_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OpenSelWin_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AdminPage_Cross.js?ver=3')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AdminPage_Cross.js')}"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var OrderCell = "";
 	        var xmlhttp = createXMLHttpRequest();
@@ -73,6 +73,7 @@
 	        var isPeriodYear = true;
 	        var OpenWin;
 	        var approvalFlag = "${approvalFlag}";
+	        var ext = "";
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {

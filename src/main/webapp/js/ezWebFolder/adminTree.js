@@ -88,7 +88,19 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
+	spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
 	spanFolderName.onclick = function() {getSelected(this, folderType);};
+	
+	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
+	var spanW = 167 - (18 * list["folderLevel"]);
+	spanFolderName.style.display = "inline-block";
+	spanFolderName.style.textOverflow = "ellipsis";
+	spanFolderName.style.overflowX = "hidden";
+	
+	if (spanW < 0) {
+		 spanW = 0;
+	 }
+	spanFolderName.style.width = spanW + 'px';
 	
 	divElmt.appendChild(imgElmt);
 	divElmt.appendChild(imgElmt2);

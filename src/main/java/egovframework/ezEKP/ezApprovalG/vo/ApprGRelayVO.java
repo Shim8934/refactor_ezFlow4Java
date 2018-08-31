@@ -24,6 +24,8 @@ public class ApprGRelayVO {
 	private String attachURL;
 	private String attachSN;
 	private String attachType;
+	private String signName;
+	private String realSignName;
 	
 	public String getAttachName() {
 		return attachName;
@@ -162,5 +164,17 @@ public class ApprGRelayVO {
 	}
 	public void setReceivedDate(String receivedDate) {
 		ReceivedDate = receivedDate;
+	}
+	public String getSignName() {
+		return signName;
+	}
+	public void setSignName(String signName) {
+		this.signName = signName;
+	}
+	public String getRealSignName() {
+		return realSignName;
+	}
+	public void setRealSignName(String realSignName) {
+		this.realSignName = realSignName;
 	}
 }

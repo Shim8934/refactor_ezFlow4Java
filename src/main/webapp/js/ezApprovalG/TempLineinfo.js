@@ -215,12 +215,10 @@ function btn_DelAprLineTemplet_onclick()
 	var p_SelAprLineTempletSN;
 	var pInformationContent = linealt7;
 	var Ans = OpenInformationUI(pInformationContent, btn_DelAprLineTemplet_onclick_Complete);
-	if (!CrossYN()) {
 	    if (Ans) {
 	        p_SelAprLineTempletSN = ListViewLen[0].getAttribute("DATA1");
 	        DelAprLineTempletList(p_SelAprLineTempletSN);
 	    }
-	}
 }
 
 function btn_DelAprLineTemplet_onclick_Complete(Ans) {
@@ -362,31 +360,33 @@ function AddToAprLineFromAprLineTemplet(p_CheckAprLineTempletSN) {
 	});
 
     Resultxml = result;
-    if (document.getElementById("APRLINE").innerHTML != "")
-        document.getElementById("APRLINE").innerHTML = "";
-
-    var pAPRLINE = new ListView();  
-    pAPRLINE.SetID("lvAPRLINE");
-    pAPRLINE.SetMulSelectable(false);
-    pAPRLINE.SetHeightFree(true);
-    pAPRLINE.SetRowOnClick("OnSelChange_onclick");
-    pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
-    pAPRLINE.SetSelectFlag(false);
-
+    
     var lastlineRows = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     var pDraftWriterID;
     var pDraftDepteID;
-
+    
     pDraftWriterID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[0].childNodes[4]);
     pDraftDepteID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[0].childNodes[6]);
     
     if (pUserID == pDraftWriterID && pDraftDepteID == arr_userinfo[4]) {
+    	if (document.getElementById("APRLINE").innerHTML != "")
+    		document.getElementById("APRLINE").innerHTML = "";
+    	
+    	var pAPRLINE = new ListView();  
+    	pAPRLINE.SetID("lvAPRLINE");
+    	pAPRLINE.SetMulSelectable(false);
+    	pAPRLINE.SetHeightFree(true);
+    	pAPRLINE.SetRowOnClick("OnSelChange_onclick");
+    	pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
+    	pAPRLINE.SetSelectFlag(false);
+    	
         aprlinecount = 0;
         pAPRLINE.DataSource(Resultxml);
         pAPRLINE.DataBind("APRLINE");
         LineAprTyepSetAll();
     }
     else {
-        OpenAlertUI(strLang364);
+//        OpenAlertUI(strLang364);
+        OpenAlertUI(strLangKBM01);
     }
 }

@@ -1545,6 +1545,7 @@
 	            displayname displayname1  ,
 	            displayname2 ,
 	            mail ,
+	            compnm2 ,
 	            extensionattribute1 ,
 	            extensionattribute2 ,
 	            extensionattribute3 ,
@@ -1601,13 +1602,43 @@
 	<select id="EzOrganDAO.getLastLogin" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				lastLogin 
+				CONNECTTIME 
 	      	FROM 
-	      		TBL_USERMASTER 
-	      	WHERE  
-	      		cn = #userID#
-	      	AND
-	      		tenant_ID = #tenantID#	
+	      		( SELECT
+	      			( RANK() OVER(ORDER BY CONNECTTIME DESC)) AS RNUM, CONNECTTIME
+	      		  FROM
+	      		  	TBL_CONNECTION_INFO
+	      		  WHERE
+	      		  	USERID = #userID#
+	      		  AND
+	      		  	TENANT_ID = #tenantID#
+	      		  ORDER BY
+	      		  	CONNECTTIME 
+	      		  	DESC
+	      		) A
+	      	WHERE A.RNUM='2'
+	      	
+	     ]]> 
+	</select>
+	
+	<select id="EzOrganDAO.getLoginIP" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CONNECTIP 
+	      	FROM 
+	      		( SELECT
+	      			( RANK() OVER(ORDER BY CONNECTTIME DESC)) AS RNUM, CONNECTIP
+	      		  FROM
+	      		  	TBL_CONNECTION_INFO
+	      		  WHERE
+	      		  	USERID = #userID#
+	      		  AND
+	      		  	TENANT_ID = #tenantID#
+	      		  ORDER BY
+	      		  	CONNECTTIME 
+	      		  	DESC
+	      		) A
+	      	WHERE A.RNUM='2'	
 	     ]]> 
 	</select>
 	
@@ -1721,5 +1752,16 @@
 			TENANT_ID = #tenantID#
 		AND
 			PHYSICALDELIVERYOFFICENAME = #companyID#
+	</select>
+	
+	<select id="EzOrganDAO.getPhysicalDeliveryOfficeName" parameterClass="Map" resultClass="String">
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #v_TENANT_ID#		
 	</select>
 </sqlMap>

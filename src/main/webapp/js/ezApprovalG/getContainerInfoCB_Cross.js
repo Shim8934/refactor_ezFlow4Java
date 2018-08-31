@@ -190,6 +190,7 @@ function lvtDoclist_SelChange() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var tr = DocList.GetSelectedRows();
+    ext = tr[0].getAttribute("DATA2").substr(tr[0].getAttribute("DATA2").lastIndexOf(".")+1);
     if (tr.length > 0) {
         processRowClick(tr[0]);
     }
@@ -217,7 +218,7 @@ function OpenReceiptHistory() {
 
         var Url, OpenWin;
         if (isExtYN.toUpperCase() == "Y") {
-            Url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo.aspx?pDocID=" + pDocID + "&pDeptID=" + pDeptID;
+            Url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + pDocID + "&deptID=" + pDeptID;
         }
         else {
             Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
