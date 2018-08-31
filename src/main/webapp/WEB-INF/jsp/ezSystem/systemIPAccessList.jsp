@@ -8,7 +8,93 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
+		var companyId = '';
+		
+		window.onload = function() {
+			companyId = document.getElementById("ListCompany").value;
+			
+			getAccessList_http();
+		}
+		
+		function getAccessList_http() {
+			$.ajax({
+				type : "POST",
+				url : "/ezSystem/getAllAccessList.do?companyID=" + companyId,
+				datatype : 'json',
+				error : function(data) {
+					console.log("error");
+				},
+				complete : function(data) {
+					document.getElementById("HeaderAllCheckBox").checked = false;
+					makeAccessIdList(data.responseJSON);
+			    }
+			});
+		}
+		
+		function makeAccessIdList(json) {
+			var _TBODY = document.getElementById("tblIP").childNodes[1];
+			
+			if (json.length == 0) {
+				var _TR = document.createElement("TR");
+				_TR.setAttribute("id", "AccessIdNoData");
+				
+				var _NODATA = document.createElement("TD");
+                _NODATA.colSpan = "3";
+                _NODATA.style.textAlign = "center";
+                _NODATA.innerHTML = "데이터가 없습니다.";
+                
+				_TR.appendChild(_NODATA);
+                _TBODY.appendChild(_TR);
+                return;
+			}
+			
+			for (var Cnt = 0; Cnt < json.length; Cnt++) {
+				var _TR = document.createElement("TR");
+				_TR.setAttribute("id", "AccessId_" + Cnt);
+				_TR.setAttribute("accessno", json[Cnt].accessNo);
+				/* _TR.onclick = function() { event_listclick(this); };
+				_TR.onmouseover = function () { event_listMover(this); };
+				_TR.onmouseout = function () { event_listMout(this); };
+				_TR.ondblclick = function () { ipBandUpdateInfo(this); }; */
+				_TR.style.cursor = "pointer";
+				
+				var _TDCheckBox = document.createElement("TD");
+				//_TDCheckBox.onclick = function() { event_listclick(this); };
+                _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.textAlign = "center";
+                _TDCheckBox.style.cursor = "default";
+                
+                var _TDCheckBox_Sub = document.createElement("INPUT");
+                _TDCheckBox_Sub.type = "checkbox";
+                _TDCheckBox_Sub.style.margin = "0px";
+                _TDCheckBox_Sub.style.padding = "0px";
+                _TDCheckBox_Sub.style.width = "13px";
+                _TDCheckBox_Sub.style.height = "13px";
+                _TDCheckBox_Sub.style.cursor = "pointer";
+                
+                _TDCheckBox.appendChild(_TDCheckBox_Sub);
+                _TR.appendChild(_TDCheckBox);
+                
+                var _CN = document.createElement("TD");
+                _CN.style.width = "230px";
+                _CN.innerText = json[Cnt].cn;
+                _TR.appendChild(_CN);
+                
+                var _DEPARTMENT = document.createElement("TD");
+                _DEPARTMENT.style.width = "100px";
+                _DEPARTMENT.innerText = json[Cnt].department
+                _TR.appendChild(_DEPARTMENT);
+                
+                _TBODY.appendChild(_TR);
+			}
+		}
+		
+		function selectCompanyID() {
+			companyId = document.getElementById("ListCompany").value;
+		}
+		
 		function ipListAddPopUp() {
 			var url = "/ezSystem/systemAddAccessList.do";
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(970, 600));
@@ -31,9 +117,9 @@
 	    </ul>
 	</div>
 	
-	<table class="mainlist" style="width:50%;">	
+	<table id="tblIP" class="mainlist" style="width:50%;">	
 		<tr>
- 			<th width="22px;"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+ 			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
  			<th width="45%;">이름(ID)</th>
  			<th>부서</th>
 		</tr>

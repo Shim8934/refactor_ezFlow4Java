@@ -8,6 +8,7 @@ import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -63,5 +64,10 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void deleteIPBand(List<String> ipNoList) throws Exception {
 		delete ("EzSystemAdminDAO.deleteIPBand", ipNoList);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AccessIdVO> getAllAccessList(Map<String, Object> map) throws Exception {
+	    return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList", map);
+    }
 	
 }

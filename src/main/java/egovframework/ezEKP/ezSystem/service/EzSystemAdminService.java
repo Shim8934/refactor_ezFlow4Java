@@ -9,6 +9,7 @@ import org.antlr.grammar.v3.ANTLRParser.exceptionGroup_return;
 import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -29,4 +30,5 @@ public interface EzSystemAdminService {
 	public IPBandVO getSystemIPBand(String ipNo) throws Exception;
 	public void updateIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
 	public void deleteIPBand(String ipNo) throws Exception;
+	public List<AccessIdVO> getAllAccessList(String primaryLang, int tenantID, String companyID) throws Exception;
 }

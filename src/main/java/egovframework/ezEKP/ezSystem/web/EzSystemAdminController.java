@@ -43,6 +43,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -743,6 +744,32 @@ public class EzSystemAdminController {
 				
 		logger.debug("systemIPAccessList ended");
 		return "/ezSystem/systemIPAccessList";
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/getAllAccessList.do")
+	public JSONArray getAllAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String companyID) throws Exception {
+		logger.debug("getAllAccessList started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<AccessIdVO> list = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
+	
+		JSONArray returnJsonArr = new JSONArray();
+		
+		for (int i = 0; i < list.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("accessNo", list.get(i).getAccessNo());
+			obj.put("cn", list.get(i).getCn());
+			obj.put("department", list.get(i).getDepartment());
+			returnJsonArr.add(obj);
+		}
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAllAccessList ended");
+		
+		return returnJsonArr;
 	}
 	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do")

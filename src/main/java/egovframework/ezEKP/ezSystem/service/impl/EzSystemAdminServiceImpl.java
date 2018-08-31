@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
@@ -396,5 +397,25 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.deleteIPBand(list);
 		
 		logger.debug("deleteIPBand ended.");
+	}
+	
+	@Override
+	public List<AccessIdVO> getAllAccessList(String primaryLang, int tenantID, String companyID) throws Exception {
+		logger.debug("getAllAccessList started.");
+		logger.debug("primaryLang=" + primaryLang + ", tenantID=" + tenantID + ", companyID=" + companyID);
+		
+		if (!primaryLang.equals("1")) {
+			primaryLang = "2";
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("primaryLang", primaryLang);
+		params.put("tenantID", tenantID);
+		params.put("companyID", companyID);
+		
+		List<AccessIdVO> list = ezSystemAdminDAO.getAllAccessList(params);
+		
+		logger.debug("getAllAccessList ended.");
+		return list;
 	}
 }

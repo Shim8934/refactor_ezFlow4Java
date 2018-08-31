@@ -1,0 +1,31 @@
+package egovframework.ezEKP.ezSystem.vo;
+
+public class AccessIdVO {
+	String accessNo;
+	String cn;
+	String department;
+	
+	public String getAccessNo() {
+		return accessNo;
+	}
+	
+	public void setAccessNo(String accessNo) {
+		this.accessNo = accessNo;
+	}
+	
+	public String getCn() {
+		return cn;
+	}
+	
+	public void setCn(String cn) {
+		this.cn = cn;
+	}
+	
+	public String getDepartment() {
+		return department;
+	}
+	
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+}
