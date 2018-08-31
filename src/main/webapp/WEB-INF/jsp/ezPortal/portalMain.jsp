@@ -150,7 +150,7 @@
 			        			 }
 		        		 }
 		        		 
-		        		 $.ajax({
+		        		 /* $.ajax({
 		        			type : "POST",
 		        			data : {
 		        				draggedElId : draggedElId,
@@ -166,10 +166,10 @@
 			        				getMemoList();
 		        				}
 		        			}
-		        		 });
+		        		 }); */
 		        		 
 		        	 }
-		        	 
+		        	
 		        });
 		        
 		        $("#font-up").click(function() {
@@ -639,6 +639,10 @@
 		        	$(this).children("img").css("visibility", "hidden");
 		        });
 		        
+		        $(".memo-color-list").click(function(){
+		        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+		        })
+		        
 		        $(".memo-text").dblclick(function() {
 		        	
 		        	var memoId = $(this).attr("memoid");
@@ -651,25 +655,50 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-
+							
 		        			var $textarea = $("#textarea");
 		        			var $memoDetail = $(".detailMemo");
 		        			
 		                	var memoColor = result.memoList.split(";");
-		                	var headerColor = memoColor[defaultColor-1];
-		                	var bodyColor = memoColor[defaultColor+5]; 
+		                	
+		                	var memoColorId = result.memo.color_id;
+		                	var detailHeaderColor = memoColor[memoColorId-1];
+		                	var detailBodyColor = memoColor[memoColorId+5]; 
 		        			
 		        			$textarea.val(result.memo.contents);
-		        			$textarea.css("background-color", bodyColor);
+		        			$textarea.css("background-color", detailBodyColor);
 		        			$textarea.attr("textareaMemoid", result.memo.memo_id);
 		        			
-		        			$memoDetail.css("background-color", headerColor);
+		        			$memoDetail.css("background-color", detailHeaderColor);
 		        			$memoDetail.css("display", "");
 		        		}
 		        	});
 		        });
 		    }
 		    
+		 	// 메모 색상 변경
+		    function modifyMemoColor(obj, idx) {
+		    	var memoId = obj.attr("id").replace("memo", "");
+		    	
+		    	$.ajax ({
+	 			   	url : '/ezMemo/memoColorModify.do',
+	 			   	type : 'POST',
+	                dataType : 'json',
+	                data : { 
+	                	memoId : memoId,
+	                	colorId : idx
+	                },  
+	                cache: false,
+	                success: function(result) {
+	                	defaultColor = idx;
+	                	getMemoList();
+	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+	                },
+	                error : function() {
+	                	
+	                }
+				}); 
+		    }
 		    
 		    function getMemoList(type) {
 		    	var folderId = $("select option:selected").val();
