@@ -699,7 +699,7 @@ public class EzMemoGWController {
 		
 		try {
 			
-			Map<String, Object> compareResult = ezMemoService.comparOrders(draggedElId, compareElId, userId, memoConfigVO);
+			Map<String, Object> compareResult = ezMemoService.compareOrders(draggedElId, compareElId, userId, memoConfigVO);
 			
 			int draggedMemoOrder = (int)compareResult.get("draggedMemoOrder");
 			int compareMemoOrder = (int)compareResult.get("compareMemoOrder");

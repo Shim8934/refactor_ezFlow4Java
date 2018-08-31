@@ -191,10 +191,9 @@
 			<dynamic>
 				USE_DATE = #use_date#
 				, USE_GADGET = #use_gadget#
-				
-				<isNotNull property="font_size">
+				<isNotEqual property="font_size" compareValue="0">
 				, FONT_SIZE = #font_size#
-				</isNotNull>
+				</isNotEqual>
 				<isNotNull property="layer_width">
 				, layer_width = #layer_width#
 				</isNotNull>

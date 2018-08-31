@@ -90,7 +90,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 		map.put("use_date", memoConfigVO.getUse_date());
 		map.put("use_gadget", memoConfigVO.getUse_gadget());
-		map.put("font_size", memoConfigVO.getFont_size());
+		
+		if (memoConfigVO.getFont_size() > 0) {
+			map.put("font_size", memoConfigVO.getFont_size());
+		}
 		
 		if (memoConfigVO.getLayer_width() > 0 && memoConfigVO.getLayer_height() > 0) {
 
@@ -103,7 +106,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			map.put("layer_left", memoConfigVO.getLayer_left());
 		}
 		
-		
+		logger.debug("=========================");
+		logger.debug("파라미터 맵: " + map);
+		logger.debug("=========================");
 		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
 	}
@@ -393,7 +398,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoColor endeded.");
 	}
 	
-	public Map<String, Object> comparOrders(String draggedElId, String compareElId, String userId, MemoConfigVO memoConfigVO) {
+	public Map<String, Object> compareOrders(String draggedElId, String compareElId, String userId, MemoConfigVO memoConfigVO) {
 		logger.debug("comparOrders started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -406,24 +411,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		int draggedMemoOrder = draggedMemo.getOrders();
 		
 		map.remove("memo_id");
-
 		map.put("memo_id", compareElId);
+		
 		MemoVO nextMemo = ezMemoDAO.getMemo(map);
 		int compareMemoOrder = nextMemo.getOrders();
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if (draggedMemoOrder > compareMemoOrder) {
+			
 			result.put("result", 1);
-			logger.debug("===============================");
-			logger.debug("왼쪽에서 오른쪽으로");
-			logger.debug("===============================");
 			
 		} else if (draggedMemoOrder < compareMemoOrder) {
+			
 			result.put("result", 0);
-			logger.debug("===============================");
-			logger.debug("오른쪽에서 왼쪽으로");
-			logger.debug("===============================");
 		}
 		result.put("draggedMemoOrder", draggedMemoOrder);
 		result.put("compareMemoOrder", compareMemoOrder);
@@ -451,9 +452,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		}
 		
 		List<MemoVO> memoList = ezMemoDAO.getMemoListForReOrder(map);
-		logger.debug("==============================");
-		logger.debug("서비스 메모 리스트: " + memoList);
-		logger.debug("==============================");
 		
 		logger.debug("getMemoListForReOrder ended.");
 		return memoList;

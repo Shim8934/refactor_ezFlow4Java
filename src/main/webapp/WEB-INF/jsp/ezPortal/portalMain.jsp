@@ -392,7 +392,9 @@
 					memoId = obj.getAttribute("memoid");
 					beforeContents = obj.innerHTML;
 					afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+					
 		 		} else {
+		 			
 		 			memoId = obj.getAttribute("textareaMemoid");
 					beforeContents = obj.innerHTML;
 					afterContents = $("textarea[textareamemoid=" + memoId + "]").val();
