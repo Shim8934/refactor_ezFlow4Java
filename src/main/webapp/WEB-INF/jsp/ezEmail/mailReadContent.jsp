@@ -412,11 +412,11 @@
 			    			"contents" : content
 			    		}, success: function() {
 			    			alert("<spring:message code='ezMemo.t0052' />");
+			    			parent.opener.parent.parent.getMemoList();
 			    		}, error: function(err) {
 			    			alert("<spring:message code='ezMemo.t0053' />");
 			    		}
 			        });		
-		        	
 		        }
 			</script> 
 	</head>
