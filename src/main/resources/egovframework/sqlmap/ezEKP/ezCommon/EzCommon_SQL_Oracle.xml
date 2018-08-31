@@ -243,4 +243,22 @@
 		]]>
 	</update>
 	
+	<select id="EzCommonDAO.checkAddJobMasterOrderBy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ORDERBY
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE 
+				ROWNUM > 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterOrderBy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			ORDERBY NVARCHAR2(200) DEFAULT NULL
+	</statement>
+	
 </sqlMap>
