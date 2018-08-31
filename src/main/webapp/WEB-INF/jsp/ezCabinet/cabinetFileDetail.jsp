@@ -18,7 +18,7 @@
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="cursor overfl wide"></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate"></td>
+					<td class="nowrap" id="createdDate"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
