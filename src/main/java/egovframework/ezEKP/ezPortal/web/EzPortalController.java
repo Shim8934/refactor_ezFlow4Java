@@ -1179,12 +1179,9 @@ System.out.println(strHTML);
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
-<<<<<<< HEAD
 		model.addAttribute("type", req.getParameter("type"));
 		model.addAttribute("sliderList", sliderList);
-=======
 		model.addAttribute("loginIP", loginIP);
->>>>>>> master
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
