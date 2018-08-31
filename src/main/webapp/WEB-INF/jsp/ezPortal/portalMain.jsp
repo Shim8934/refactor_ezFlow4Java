@@ -118,7 +118,7 @@
 		        	
 		        	 containment: '.memoListBox',
 		        	 opacity : 0.5,
-		        	 change : function (event, ui) {
+		        	 update : function (event, ui) {
 		        		 
 	        			 var compareElId; 
 		        		 var clickedItem = ui.item;
@@ -127,6 +127,7 @@
 		        		 var draggedElId = clickedItemId.replace("memo", "");
 		        		 
 		        		 if (clickedItem.prev().attr("id") != undefined) {
+		        			 
 		        			 if (clickedItem.next().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.next().attr("orders"))) {
 		        				 
 								compareElId = clickedItem.prev().attr("id").replace("memo", "");
@@ -137,16 +138,16 @@
 		        			
 		        		 	
 		        		 } else if (clickedItem.next().attr("id") != undefined) {
+		        			 
 		        			 if (clickedItem.prev().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.next().attr("orders"))) {
+								compareElId = clickedItem.next().attr("id").replace("memo", "");
+		        			 } else {
 		        				 
-									compareElId = clickedItem.next().attr("id").replace("memo", "");
-			        			 } else {
-			        				 
-									compareElId = clickedItem.prev().attr("id").replace("memo", "");
-			        			 }
+								compareElId = clickedItem.prev().attr("id").replace("memo", "");
+		        			 }
 		        		 }
 		        		 
-		        		 /* $.ajax({
+		        		 $.ajax({
 		        			type : "POST",
 		        			data : {
 		        				draggedElId : draggedElId,
@@ -158,11 +159,10 @@
 		        				
 		        				if (result.status == 1) {
 		        					
-			        				console.log("자리값 세팅 - 리스트 출력");
 			        				getMemoList();
 		        				}
 		        			}
-		        		 }); */
+		        		 });
 		        		 
 		        	 }
 		        	
