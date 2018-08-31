@@ -106,7 +106,7 @@
 				function closeWindow() {window.close();}
 				
 				function setModuleTitle() {
-					String title = "";
+					var title = "";
 					
 					switch(moduleType) {
 						case "apprv" : title = setApprovalTitle()             ; break;
@@ -298,10 +298,7 @@
 							var params           = getAllUrlParams(hrefStr);
 							params["folderPath"] = javaURLDecode(params["folderPath"]).replace(/\+/g, " ");
 							
-							normalList.push({
-								fileHref : params,
-								fileName : spElmt.getAttribute("_filename")
-							});
+							normalList.push({fileHref : params, fileName : spElmt.getAttribute("_filename")});
 						}
 					}
 					
