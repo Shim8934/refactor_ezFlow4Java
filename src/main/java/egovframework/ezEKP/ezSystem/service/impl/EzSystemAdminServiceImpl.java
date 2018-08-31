@@ -407,13 +407,16 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		if (!primaryLang.equals("1")) {
 			primaryLang = "2";
 		}
-		
+		List<AccessIdVO> list;
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("primaryLang", primaryLang);
 		params.put("tenantID", tenantID);
 		params.put("companyID", companyID);
 		
-		List<AccessIdVO> list = ezSystemAdminDAO.getAllAccessList(params);
+		if (primaryLang.equals("1")) {
+			list = ezSystemAdminDAO.getAllAccessList(params);
+		} else {
+			list = ezSystemAdminDAO.getAllAccessList2(params);
+		}
 		
 		logger.debug("getAllAccessList ended.");
 		return list;

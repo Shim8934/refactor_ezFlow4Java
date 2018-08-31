@@ -67,7 +67,12 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<AccessIdVO> getAllAccessList(Map<String, Object> map) throws Exception {
-	    return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList", map);
+		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<AccessIdVO> getAllAccessList2(Map<String, Object> map) throws Exception {
+		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList2", map);
     }
 	
 	public void deleteAccessId(List<String> accessNoList) throws Exception {
