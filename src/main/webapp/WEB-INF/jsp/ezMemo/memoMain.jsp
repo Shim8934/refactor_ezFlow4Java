@@ -127,8 +127,7 @@
 	    	$(document).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);
 	    	});
-<<<<<<< Updated upstream
-	    	
+
 	    }
 		
 		function getMemoConfig() {
@@ -143,8 +142,6 @@
 					defaultColor = result.memoConfigVO.default_color;
 				}
    			});
-=======
->>>>>>> Stashed changes
 		}
 		
 		function getFolderList() {
@@ -216,10 +213,6 @@
                 cache: false,
                 success: function(result) {
                 	memoColor = result["colorList"].split(";");
-<<<<<<< Updated upstream
-=======
-                	defaultColor = result["defaultColor"];
->>>>>>> Stashed changes
                 	memoList = result["memoList"];
                 	
 					loadMemoList();
