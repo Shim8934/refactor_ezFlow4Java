@@ -3252,8 +3252,9 @@ System.out.println("result : " + result);
 	
 	public String getPorletPropertiesStr(String pUID, int tenantID, String companyID) throws Exception {
 		logger.debug("getPorletPropertiesStr started");
-
+		
 		PortalPortletGeneralVO result = getPorletProperties(pUID, tenantID, companyID);
+		
 		String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 
 		logger.debug("getPorletPropertiesStr ended");

@@ -921,7 +921,8 @@
 			
 			    try {
 			        if (bAttachProcess == false)
-			            window.opener.Refresh_Window();
+			        	//Refresh_Window() 사용안함으로 주석처리
+			            //window.opener.Refresh_Window();
 			    } catch (e) { }
 			
 			    try {
