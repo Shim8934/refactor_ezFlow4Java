@@ -106,9 +106,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			map.put("layer_left", memoConfigVO.getLayer_left());
 		}
 		
-		logger.debug("=========================");
-		logger.debug("파라미터 맵: " + map);
-		logger.debug("=========================");
 		ezMemoDAO.setMemoConfig(map);
 		logger.debug("setMemoConfig ended.");
 	}
