@@ -13938,15 +13938,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (!autoDeptID.equals("")) {
 						int addressCount = ezApprovalGDAO.doDocCompleteReceiptCnt(map);
-						// 수신처 아이디가 존재하는 경우
+						// 민원인 외부 수신처 아이디가 존재하는 경우
 						if (addressCount > 0) {
 							map.put("v_DOCID", docID);
 							map.put("v_TENANTID", userInfo.getTenantId());
-							// ProcessYN(진행여부)를 0으로 변경
+							// ProcessYN(진행여부)를 O으로 변경
 							ezApprovalGDAO.updateReceiptPointInfo(map);
-							
-							sendFlag = true;
 						}
+					}
+					//시행문일때만 발신함
+					if (realDocType.equals("001")) {
+						sendFlag = true;
 					}
 				}
 			} else { // 일반버젼
@@ -26112,7 +26114,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          String strTimeStamp;
 
          try {
-             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+             strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
              strTimeStamp = strTime.replace("-", "");
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
