@@ -271,8 +271,7 @@
 .divInfo table + table {margin-top: 15px;}
 .divInfo .cabmemo {height: 50px; overflow: auto; margin: 8px 0px;}
 .divAddInfo {height: 70px;}
-.tblFileInf, .cabShareInf, .tblAddRelatedInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
-.tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse;}
+.tblFileInf, .cabShareInf, .tblAddRelatedInf, .tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
 .tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td, .tblAddRelatedInf tr th, .tblAddRelatedInf tr td {border: 1px solid #ddd;}
 .tblFileInf tr th, .tblAddRelatedInf tr th {width: 80px; font-weight: normal; text-align: left;}
 .tblEmailInf tr th, .tblBoardInf tr th {text-align: left; max-width: 100px; width: 80px; font-weight: normal; min-width: 100px;}
@@ -285,7 +284,7 @@
 .rlDocDiv span:hover {text-decoration:none; text-shadow: 1px 1px 1px #555;}
 .rlDocDiv em, .cabemailDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
 
-.wide {width: 100%;}
+.wide {width: 52%;}
 .nowrap {white-space:nowrap; min-width: 135px;}
 
 .cabemailDiv {border: none; max-height: 30px; height: 20px; overflow-y: auto;}
