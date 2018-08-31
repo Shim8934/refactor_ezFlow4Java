@@ -16,7 +16,7 @@
 			<table class="tblFileInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="creator" class="cursor overfl"></td>
+					<td id="creator" class="cursor overfl wide"></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td id="createdDate"></td>
 				</tr>
@@ -127,7 +127,7 @@
 					title.textContent       = result["title"];
 					summary.textContent     = result["summary"];
 					title.setAttribute("title", result["title"]);
-					summary.setAttribute("summary", result["summary"]);
+					summary.setAttribute("title", result["summary"]);
 					
 					var spanElmt                  = document.createElement("span");
 					spanElmt.textContent          = CabinetMessages.strStorage + getFileSize(result["itemSize"]);

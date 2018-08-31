@@ -93,6 +93,7 @@ var CabinetFileHelper = function() {
 			
 			var summaryTd         = document.getElementById("summary");
 			summaryTd.textContent = result["summary"];
+			summaryTd.setAttribute("title", result["summary"]);
 			
 			//Related list
 			var divElmt       = document.getElementById("fileListDiv");
