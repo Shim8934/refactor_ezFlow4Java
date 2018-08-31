@@ -86,13 +86,9 @@
 				function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoEmail, scrollHandler) {
 					var result       = fileItem.fileDetail;
 					var optionWriter = fileItem.writerVO;
-					var confirm      = fileItem.confirmVO;
 					
 					//Display option creator name
 					document.getElementById("optionCreator").textContent = optionWriter["userName"];
-					
-					//Display confirmation
-					document.getElementById("confirmTd").innerHTML = confirm;
 					
 					//Display popup
 					displayUserInforPopup("fileCreator" , result["creatorId"]  , showInfoId);

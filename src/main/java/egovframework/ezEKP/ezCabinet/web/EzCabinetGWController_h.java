@@ -664,7 +664,6 @@ public class EzCabinetGWController_h {
 	
 	private void getMoreOptionDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("optionWriter")).collect(Collectors.toList()).get(0);
-		CabinetColumnVO confirmColumn = columnList.stream().filter(column -> column.getColumnId().equals("confirm")).collect(Collectors.toList()).get(0);
 		
 		String writerId              = writerColumn.getColumnValue();
 		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
@@ -674,7 +673,6 @@ public class EzCabinetGWController_h {
 		}
 		
 		result.put("writerVO",  writerVO);
-		result.put("confirmVO", confirmColumn.getColumnValue());
 	}
 	
 	private void getMoreResourceDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
