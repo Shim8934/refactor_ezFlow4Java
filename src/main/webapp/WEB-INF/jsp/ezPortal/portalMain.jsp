@@ -39,7 +39,7 @@
 			#slider-range{width:70px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			#textarea{padding-left:10px; padding-right:10px; width:100%; height:354px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+			#detailMemoContents{padding-left:10px; padding-right:10px; width:100%; height:354px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:84%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
@@ -253,14 +253,14 @@
 		        	
 		        });
 		        
-		        $(".layer-half").resizable({
+		        $(".layerControl").resizable({
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
 		        	stop : function () {
 		        		
-		        		var layerWidth = $(".layer-half").width();
-		        		var layerHeight = $(".layer-half").height();
+		        		var layerWidth = $(".layerControl").width();
+		        		var layerHeight = $(".layerControl").height();
 		        		
 		        		$.ajax({
 		        			type:"POST",
@@ -293,12 +293,12 @@
 			        var fontBtnHeight = $("#font-btn").height();
 			        
 			        var textareaHeight = detailMemoHeight - (memoBtnHeight + fontBtnHeight + 5);
-			        $("#textarea").css("height", parseInt(textareaHeight) +"px");
+			        $("#detailMemoContents").css("height", parseInt(textareaHeight) +"px");
 			        
 				    }
 		        });
 		        
-		        $(".layer-half").resize(function(e) {
+		        $(".layerControl").resize(function(e) {
 		        	
 		        	var layerHeight = $(this).height();
 		        	var btnBundle = $("#btn-bundle").height();
@@ -318,12 +318,12 @@
 		        	
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
-		        	if (layerClass.indexOf("layer-half") != -1) {
-		        		$("#layer-popup").removeClass().addClass("layer-all");
+		        	if (layerClass.indexOf("layerControl") != -1) {
+		        		$("#layer-popup").removeClass().addClass("layerFullScreen");
 		        		$(".ui-resizable-handle").css("display", "none");
 		        		
-		        	} else if (layerClass.indexOf("layer-all") != -1) {
-		        		$("#layer-popup").removeClass().addClass("layer-half ui-draggable ui-draggable-handle ui-resizable");
+		        	} else if (layerClass.indexOf("layerFullScreen") != -1) {
+		        		$("#layer-popup").removeClass().addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
 		        		$(".ui-resizable-handle").css("display", "");
 		        		
 		        	}
@@ -373,7 +373,7 @@
 		        	$(".detailMemo").css("display", "none");
 		        });
 		        
-		        $("#textarea").blur(function() {
+		        $("#detailMemoContents").blur(function() {
 					modifyMemo(this);
 		        });
 		    });
@@ -424,13 +424,13 @@
 	    		var winWidth = window.innerWidth;
 	    		var winHeight = window.innerHeight;
 	    		
-		    	if (layerClass.indexOf("layer-all") != -1) {
+		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
-		    		$(".layer-all").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
+		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
 		    		$(".memoListBox").css({"width" : winWidth+25, "height" : winHeight-56-16});
 		    		$("#memoList").css({"width" : winWidth+25, "height" : winHeight-56-16});
 
-		    	} else if (layerClass.indexOf("layer-half") != -1) {
+		    	} else if (layerClass.indexOf("layerControl") != -1) {
 		    		getMemoConfig();
 		    		setMemoListSize();
 		    	}
@@ -513,7 +513,7 @@
 		        	}
 		       	});
 		     
-		        $('.layer-half, .detailMemo').on("mouseup", function() {
+		        $('.layerControl, .detailMemo').on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
 		        	$("#open-memo").css("pointer-events", "auto");
 		        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");
@@ -650,7 +650,7 @@
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
 							
-		        			var $textarea = $("#textarea");
+		        			var $textarea = $("#detailMemoContents");
 		        			var $memoDetail = $(".detailMemo");
 		        			
 		                	var memoColor = result.memoList.split(";");
@@ -770,7 +770,7 @@
 		
 		<!-- memo note -->
 		<div class="noteBlock">
-			<div id="layer-popup" style="display: none" class="layer-half">
+			<div id="layer-popup" style="display: none" class="layerControl">
 
 				<!-- 메모 리스트 -->
 				<div style="text-align: center">
@@ -801,7 +801,7 @@
 					    <button id="font-down">폰트-</button>
 						<div id="detailClose" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
 					</div>
-					<textarea id="textarea" style="resize:none;"></textarea>
+					<textarea id="detailMemoContents" style="resize:none;"></textarea>
 	        	</div>
 			
 			<div id="open-memo" style="display: none;"><img src="/images/cmtFile.png" width="60px"></div>
