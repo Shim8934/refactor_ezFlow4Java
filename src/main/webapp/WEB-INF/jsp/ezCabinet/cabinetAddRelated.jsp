@@ -216,6 +216,8 @@
 				
 				function documentSavehandler() {
 					var moduleTitle  = document.getElementById("itemTtl").value;
+					var moduleSummary = document.getElementById("itemSum").value;
+					
 					if (!moduleTitle.replace(/\s/g,'')) {
 						alert(CabinetMessages.strNoTitle);
 						var inputTtl   = document.getElementById("itemTtl");
@@ -232,7 +234,14 @@
 						return;
 					}
 					
-					var moduleSummary = document.getElementById("itemSum").value;
+					if (moduleSummary.length > 250) {
+						alert(CabinetMessages.strSummLen);
+						var inputTt2   = document.getElementById("itemSum");
+						inputTt2.value = "";
+						inputTt2.focus();
+						return;
+					}
+					
 					var saveMode      = 1; //Mode 0 : auto save, mode 1: manual
 					var cabinetId     = null;
 					var checkedInput  = document.querySelector("input[name='checkCabinet']:checked");
