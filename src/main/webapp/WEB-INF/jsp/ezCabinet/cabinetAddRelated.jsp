@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')      }" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
@@ -106,20 +106,22 @@
 				function closeWindow() {window.close();}
 				
 				function setModuleTitle() {
+					String title = "";
+					
 					switch(moduleType) {
-					case "apprv" : setApprovalTitle()             ; break;
-					case "board" : setBoardTitle()                ; break;
-					case "email" : setEmailTitle()                ; break;
-					case "schedl": setScheduleTitle()             ; break;
-					case "todo"  : setTodoTitle()                 ; break;
-					case "commu" : setCommunityTitle()            ; break;
-					case "option": setOptionTitle()               ; break;
-					case "projt" : setProjectTitle()              ; break;
-					case "resrc" : setResourceTitle()             ; break;
-					case "addrs" : setAddressTitle()              ; break;
-					case "jounl" : setJournalTitle()              ; break;
-					default      : alert(CabinetMessages.strError); return;
+						case "apprv" : title = setApprovalTitle()             ; break;
+						case "board" : title = setBoardTitle()                ; break;
+						case "email" : title = setEmailTitle()                ; break;
+						case "schedl": title = setScheduleTitle()             ; break;
+						case "commu" : title = setCommunityTitle()            ; break;
+						case "option": title = setOptionTitle()               ; break;
+						case "resrc" : title = setResourceTitle()             ; break;
+						case "addrs" : title = setAddressTitle()              ; break;
+						case "jounl" : title = setJournalTitle()              ; break;
+						default      : alert(CabinetMessages.strError); return;
 					}
+					
+					if (title) {document.getElementById("itemTtl").value = title;}
 				}
 				
 				function setApprovalTitle() {
@@ -127,9 +129,8 @@
 					if(!approvalOpener) {alert(CabinetMessages.strSelect); return;}
 					var messageFrame   = approvalOpener.document.getElementById("message");
 					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
-					var doctitle       = trimStr(contentWd.document.getElementById("doctitle").textContent);
 					
-					document.getElementById("itemTtl").value = doctitle;
+					return trimStr(contentWd.document.getElementById("doctitle").textContent);
 				}
 				
 				function setBoardTitle() {
@@ -139,13 +140,11 @@
 					var messageFrame   =  boardOpener.document.getElementById("message");
 					if (messageFrame) {
 						var titleTd    = boardOpener.document.getElementById("cTitle");
-						var boardTitle = titleTd.getElementsByTagName("div")[0].textContent;
+						return  titleTd.getElementsByTagName("div")[0].textContent;
 					}
 					else {
-						var boardTitle = boardOpener.document.getElementById("title").textContent;
+						return boardOpener.document.getElementById("title").textContent;
 					}
-					
-					document.getElementById("itemTtl").value = boardTitle;
 				}
 				
 				function setEmailTitle() {
@@ -154,7 +153,7 @@
 					
 					var mailSubject = mailOpener.document.getElementById("LabelSubject").textContent;
 					
-					document.getElementById("itemTtl").value = mailSubject;
+					return mailSubject;
 				}
 				
 				function setScheduleTitle() {
@@ -163,67 +162,56 @@
 					
 					var scheduleTitle = trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent);
 					
-					document.getElementById("itemTtl").value = scheduleTitle;
+					return scheduleTitle;
 				}
 				
 				function setCommunityTitle() {
 					var commuOpener = window.opener;
 					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
-				
 					var postdate = commuOpener.document.getElementById("PostDate");
+					
 					if (postdate) {
-						var title = trimStr(commuOpener.document.getElementById("title").textContent);
+						return trimStr(commuOpener.document.getElementById("title").textContent);
 					}
 					else {
-						var title = trimStr(commuOpener.document.getElementById("Div1").textContent);
+						return trimStr(commuOpener.document.getElementById("Div1").textContent);
 					}
-					
-					document.getElementById("itemTtl").value = title;
 				}
 				
 				function setOptionTitle() {
 					var optionOpener = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var title = trimStr(optionOpener.document.getElementById("titleTd").textContent);
-					
-					document.getElementById("itemTtl").value = title;
+					return trimStr(optionOpener.document.getElementById("titleTd").textContent);
 				}
 				
 				function setResourceTitle() {
 					var resourceOpener = window.opener;
 					if (!resourceOpener) {alert(CabinetMessages.strSelect); return;}
-					var resTitle = trimStr(resourceOpener.document.getElementById("titleDIV").textContent);
-					
-					document.getElementById("itemTtl").value = resTitle;
+					return trimStr(resourceOpener.document.getElementById("titleDIV").textContent);
 				}
 				
 				function setAddressTitle() {
 					var addressOpener = window.opener;
 					if (!addressOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var listMembers = addressOpener.document.getElementById("ListMember");
-					var addressType = listMembers ? "group" : "normal";
+					var listMembers     = addressOpener.document.getElementById("ListMember");
+					var addressType     = listMembers ? "group" : "normal";
+					var addressDocument = addressOpener.document;
 					
 					if (listMembers) {
-						var addressDocument = addressOpener.document;
-						var title           = trimStr(addressDocument.getElementById("TextName").textContent);
+						return trimStr(addressDocument.getElementById("TextName").textContent);
 					}
 					else {
-						var addressDocument = addressOpener.document;
-						var title           = trimStr(addressDocument.getElementById("TextName").textContent);
+						return trimStr(addressDocument.getElementById("TextName").textContent);
 					}
-					
-					document.getElementById("itemTtl").value = title;
 				}
 				
 				function setJournalTitle() {
 					var journalOpener = window.opener;
 					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var title = trimStr(journalOpener.document.getElementById("cTitle").textContent);
-					
-					document.getElementById("itemTtl").value = title;
+					return trimStr(journalOpener.document.getElementById("cTitle").textContent);
 				}
 				
 				function documentSavehandler() {
@@ -244,10 +232,10 @@
 						return;
 					}
 					
-					var moduleSummary  = document.getElementById("itemSum").value;
-					var saveMode     = 1; //Mode 0 : auto save, mode 1: manual
-					var cabinetId    = null;
-					var checkedInput = document.querySelector("input[name='checkCabinet']:checked");
+					var moduleSummary = document.getElementById("itemSum").value;
+					var saveMode      = 1; //Mode 0 : auto save, mode 1: manual
+					var cabinetId     = null;
+					var checkedInput  = document.querySelector("input[name='checkCabinet']:checked");
 					if (checkedInput) {saveMode = checkedInput.id == "auto" ? 0 : 1;}
 					
 					if (saveMode == 1) {
@@ -264,10 +252,8 @@
 						case "board" : saveBoardDocument(moduleTitle, moduleSummary, saveMode, cabinetId)    ; break;
 						case "email" : saveEmailDocument(moduleTitle, moduleSummary, saveMode, cabinetId)    ; break;
 						case "schedl": saveScheduleDocument(moduleTitle, moduleSummary, saveMode, cabinetId) ; break;
-						case "todo"  : saveTodoDocument(moduleTitle, moduleSummary, saveMode, cabinetId)     ; break;
 						case "commu" : saveCommunityDocument(moduleTitle, moduleSummary, saveMode, cabinetId); break;
 						case "option": saveOptionDocument(moduleTitle, moduleSummary, saveMode, cabinetId)   ; break;
-						case "projt" : saveProjectDocument(moduleTitle, moduleSummary, saveMode, cabinetId)  ; break;
 						case "resrc" : saveResourceDocument(moduleTitle, moduleSummary, saveMode, cabinetId) ; break;
 						case "addrs" : saveAddressDocument(moduleTitle, moduleSummary, saveMode, cabinetId)  ; break;
 						case "jounl" : saveJournalDocument(moduleTitle, moduleSummary, saveMode, cabinetId)  ; break;
@@ -310,7 +296,7 @@
 							var spElmt           = listChildren[i].firstElementChild;
 							var hrefStr          = spElmt.getAttribute("_filehref");
 							var params           = getAllUrlParams(hrefStr);
-							params["folderPath"] = javaURLDecode(params["folderPath"]).replace("+", " ");
+							params["folderPath"] = javaURLDecode(params["folderPath"]).replace(/\+/g, " ");
 							
 							normalList.push({
 								fileHref : params,
@@ -492,10 +478,6 @@
 					}
 				}
 				
-				function saveProjectDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					//Add code here
-				}
-				
 				function saveCommunityDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
 					var commuOpener   = window.opener;
 					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
@@ -523,16 +505,13 @@
 					var content       = contentWd.document.documentElement.innerHTML;
 					var attach        = commuOpener.document.getElementById("lstAttachLink");
 					var attachList    = [];
+					var listChildren  = attach.getElementsByTagName("input");
 					
-					var listChildren    = attach.getElementsByTagName("input");
 					for (var i = 0, len = listChildren.length; i < len; i++) {
 						var hrefStr = listChildren[i].getAttribute("filehref");
 						var params  = getAllUrlParams(hrefStr);
 						
-						attachList.push({
-							filePath : javaURLDecode(params["filePath"]),
-							fileName : javaURLDecode(params["fileName"])
-						});
+						attachList.push({filePath : javaURLDecode(params["filePath"]), fileName : javaURLDecode(params["fileName"])});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedCommunity.do";
@@ -570,158 +549,6 @@
 							commuTitle : title,
 							writer     : writer,
 							content    : content
-					};
-					
-					if (saveMode == 1) {data.cabinet = cabinetId;}
-					
-					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
-				}
-				
-				function saveTodoDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var todoOpener = window.opener;
-					if (!todoOpener) {alert(CabinetMessages.strSelect); return;}
-					
-					var attachList       = [];
-					var taskContent      = document.createElement("div");
-					
-					//1: Task title + status + repeate information
-					var maintaskDiv         = todoOpener.document.querySelector("div[class='wrap_progress']");
-					var canvasElmt          = maintaskDiv.querySelector("canvas");
-					var taskTtlDiv          = maintaskDiv.cloneNode(true);
-					taskTtlDiv.style.height = "auto";
-					var h4TtlElmt           = taskTtlDiv.querySelector("h4");
-					var taskTtl             = h4TtlElmt.getAttribute("title");
-					var taskUpdateStatus    = taskTtlDiv.querySelector("a[id='updateStatus']");
-					var graphDiv            = taskTtlDiv.querySelector("div[class='circle progress_graph']");
-					graphDiv.style.width    = "";
-					var datePicker          = taskTtlDiv.querySelector("div[class='hasDatepicker']");
-					if (!datePicker) {graphDiv.style.top = "";}
-					var dataURL             = canvasElmt.toDataURL();
-					var newImgElmt          = document.createElement("img");
-					newImgElmt.src          = dataURL;
-					newImgElmt.style.width  = "135px";
-					newImgElmt.style.height = "135px";
-					var cloneCanvas         = graphDiv.querySelector("canvas");
-					graphDiv.replaceChild(newImgElmt, cloneCanvas);
-					
-					//graphDiv.innerHTML      = "<strong></strong>";
-					var taskUpdateParent    = taskUpdateStatus.parentElement;
-					
-					taskUpdateParent.removeChild(taskUpdateStatus);
-					taskTtlDiv.removeChild(h4TtlElmt);
-					taskContent.appendChild(taskTtlDiv);
-					
-					//2: Task information
-					var taskInfDiv       = todoOpener.document.getElementById("taskInfo");
-					var taskCreator      = todoOpener.creatorid;
-					var taskInfTable     = taskInfDiv.querySelector("table[class='content']");
-					var tableRows        = taskInfTable.rows;
-					var taskCreateDate   = trimStr(tableRows[1].lastElementChild.textContent);
-					var taskTypeName     = trimStr(taskInfTable.querySelector("span[class='taskType']").textContent);
-					var taskPriority     = trimStr(tableRows[3].lastElementChild.firstElementChild.textContent);
-					var executorDiv      = tableRows[4].lastElementChild.firstElementChild;
-					var taskExecutor     = getUserIdFromInline(executorDiv, "'");
-					var taskMemo         = trimStr(tableRows[6].lastElementChild.firstElementChild.textContent);
-					var taskShareList    = [];
-					var taskShareDiv     = taskInfTable.querySelector("div[id='taskShareList']");
-					var listShareUsers   = taskShareDiv.querySelectorAll("span");
-					
-					if (listShareUsers && listShareUsers.length > 0) {
-						for (var i = 0, len = listShareUsers.length; i < len; i++) {
-							var shareId = getUserIdFromInline(listShareUsers[i], "'");
-							taskShareList.push(shareId);
-						}
-					}
-					
-					//3. Task Content and attach List
-					var message1      = todoOpener.document.getElementById("message");
-					var message1Wd    = message1.contentWindow || message1.contentDocument;
-					var message1Body  = message1Wd.document.body;
-					var message1Clone = message1Body.cloneNode(true);
-					var taskChisi     = todoOpener.document.getElementById("1tab1");
-					var taskNormal    = todoOpener.document.getElementById("1tab2");
-					var taskComment   = todoOpener.document.getElementById("1tab3");
-					
-					if (taskChisi) {
-						var message2      = todoOpener.document.getElementById("message2");
-						var message2Wd    = message2.contentWindow || message2.contentDocument;
-						var message2Body  = message2Wd.document.body;
-						var message2Clone = message2Body.cloneNode(true);
-						
-						createTodoTitle(taskContent, taskChisi.textContent);
-						taskContent.appendChild(message1Clone);
-						createTodoTitle(taskContent, taskNormal.textContent);
-						taskContent.appendChild(message2Clone);
-					}
-					else {
-						createTodoTitle(taskContent, taskNormal.textContent);
-						taskContent.appendChild(message1Clone);
-					}
-					
-					//4. Comments
-					createTodoTitle(taskContent, taskComment.textContent);
-					var tableCmt          = todoOpener.document.getElementById("tablecomment2");
-					var divComment        = tableCmt.parentElement;
-					var cloneCmt          = divComment.cloneNode(true);
-					var trList            = cloneCmt.querySelectorAll("tr");
-					if (trList.length > 0) {
-						//Remove all img elements in comments
-						for (var i = 0, len = trList.length; i < len; i++) {
-							var secondTd = trList[i].children[1];
-							var imgElmt  = secondTd.querySelector("img");
-							if (imgElmt) {secondTd.removeChild(imgElmt);}
-						}
-						
-						cloneCmt.style.height       = "auto";
-						cloneCmt.style.borderBottom = "none";
-						taskContent.appendChild(cloneCmt);
-					}
-					
-					//Attach list1
-					var attachDivElmt = todoOpener.document.getElementById("attachedfileDIV");
-					var listAttach    = attachDivElmt.querySelectorAll("input[type='checkbox'][name='fileSelect']");
-					if (listAttach && listAttach.length > 0) {
-						for (var i = 0, len = listAttach.length; i < len; i++) {
-							var inputElmt = listAttach[i];
-							var filePath  = inputElmt.getAttribute("filepath");
-							var fileName  = inputElmt.getAttribute("filename");
-							
-							attachList.push({
-								filePath : filePath,
-								fileName : fileName
-							});
-						}
-					}
-					
-					//Attach list2
-					var attachDivElmt2 = todoOpener.document.getElementById("attachedfileDIV2");
-					var listAttach2    = attachDivElmt2.querySelectorAll("input[type='checkbox'][name='fileSelect']");
-					if (listAttach2 && listAttach2.length > 0) {
-						for (var i = 0, len = listAttach2.length; i < len; i++) {
-							var inputElmt = listAttach2[i];
-							var filePath  = inputElmt.getAttribute("filepath");
-							var fileName  = inputElmt.getAttribute("filename");
-							
-							attachList.push({
-								filePath : filePath,
-								fileName : fileName
-							});
-						}
-					}
-					
-					var url  = "/ezCabinet/saveRelatedTodo.do";
-					var data = {
-						mode      : saveMode,
-						title     : taskTtl,
-						creator   : taskCreator,
-						date      : taskCreateDate,
-						priority  : taskPriority,
-						memo      : taskMemo,
-						tasktype  : taskTypeName,
-						executor  : taskExecutor,
-						share     : JSON.stringify(taskShareList),
-						attach    : JSON.stringify(attachList),
-						content   : taskContent.innerHTML
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
@@ -776,10 +603,7 @@
 							var filePath  = inputElmt.getAttribute("filepath");
 							var fileName  = javaURLDecode(inputElmt.getAttribute("filename"));
 							
-							attachList.push({
-								filePath : filePath,
-								fileName : fileName
-							});
+							attachList.push({filePath : filePath, fileName : fileName});
 						}
 					}
 					
@@ -831,10 +655,7 @@
 						var filePath    = inputElmt.getAttribute("filepath");
 						var fileName    = inputElmt.getAttribute("filename");
 						
-						attachList.push({
-							filePath : filePath,
-							fileName : javaURLDecode(fileName)
-						});
+						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName)});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedOption.do";
@@ -879,16 +700,13 @@
 					var content       = contentWd.document.getElementById("journalContent").innerHTML;
 					var attach        = journalOpener.document.getElementById("lstAttachLink");
 					var attachList    = [];
+					var listChildren  = attach.getElementsByTagName("a");
 					
-					var listChildren    = attach.getElementsByTagName("a");
 					for (var i = 0, len = listChildren.length; i < len; i++) {
 						var hrefStr = listChildren[i].getAttribute("href");
 						var params  = getAllUrlParams(hrefStr);
 						
-						attachList.push({
-							filePath : javaURLDecode(params["filePath"]),
-							fileName : javaURLDecode(params["fileName"])
-						});
+						attachList.push({filePath : javaURLDecode(params["filePath"]), fileName : javaURLDecode(params["fileName"])});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedJournal.do";

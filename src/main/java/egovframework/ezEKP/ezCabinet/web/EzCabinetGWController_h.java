@@ -608,7 +608,7 @@ public class EzCabinetGWController_h {
 		
 		result.put("writerVO", writerVO);
 	}
-
+	
 	private void getMoreCommuintyDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("commuWriter")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO typeColumn   = columnList.stream().filter(column -> column.getColumnId().equals("commuType")).collect(Collectors.toList()).get(0);
@@ -623,7 +623,7 @@ public class EzCabinetGWController_h {
 		result.put("commuType", typeColumn.getColumnValue());
 		result.put("writerVO", writerVO);
 	}
-
+	
 	private void getMoreTodoDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		List<CabinetColumnVO> share   = columnList.stream().filter(column -> column.getColumnId().equals("sharelist")).collect(Collectors.toList());
@@ -812,6 +812,7 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
+	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")!= null ? request.getHeader("host-name")           : "";
@@ -852,7 +853,7 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
-
+	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/photo-community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject savePhotoCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")!= null ? request.getHeader("host-name")            : "";

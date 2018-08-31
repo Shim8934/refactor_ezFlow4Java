@@ -38,7 +38,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		return result;
 	}
-
+	
 	@Override
 	public void saveCompanyCapacity(int type, double newValue, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -49,7 +49,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		ezCabinetAdminDAO.saveCompanyCapacity(map);
 	}
-
+	
 	@Override
 	public List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int listCnt, int tenantId, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -65,7 +65,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		return ezCabinetAdminDAO.getListUserCapacity(map);
 	}
-
+	
 	@Override
 	public int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -76,7 +76,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		map.put("primary",   primary);
 		return ezCabinetAdminDAO.getTotalListUserCapacity(map);
 	}
-
+	
 	@Override
 	public void changeUserCapacity(List<String> userList, double newValue, int type, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -90,7 +90,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			ezCabinetAdminDAO.changeUserCapacity(map);
 		}
 	}
-
+	
 	@Override
 	public List<CabinetModuleVO> getModuleListForAdmin(String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -151,7 +151,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			ezCabinetAdminDAO.insertModulForAdmin(module);
 		}
 	}
-
+	
 	@Override
 	public String checkModuleActive(String moduleType, LoginVO userInfo) throws Exception {
 		String check           = "NO";

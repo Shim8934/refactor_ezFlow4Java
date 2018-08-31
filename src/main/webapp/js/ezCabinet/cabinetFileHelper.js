@@ -91,7 +91,7 @@ var CabinetFileHelper = function() {
 			titleTd.textContent = result["title"];
 			titleTd.setAttribute("title", result["title"]);
 			
-			var summaryTd       = document.getElementById("summary");
+			var summaryTd         = document.getElementById("summary");
 			summaryTd.textContent = result["summary"];
 			
 			//Related list
@@ -268,14 +268,14 @@ var CabinetFileHelper = function() {
 			titleTdElmt.appendChild(inputElmt1);
 			
 			//Set SummaryInputBox
-			var SummTdElmt        = document.getElementById("summary");
+			var summTdElmt        = document.getElementById("summary");
 			var inputElmt2        = document.createElement("input"); 
-			inputElmt2.value      = SummTdElmt.textContent;
-			SummTdElmt.innerHTML = "";
+			inputElmt2.value      = summTdElmt.textContent;
+			summTdElmt.innerHTML  = "";
 			inputElmt2.className  = "tblFileInput";
 			inputElmt2.setAttribute("id", "itemSumm");
 			inputElmt2.setAttribute("maxlength", "250");
-			SummTdElmt.appendChild(inputElmt2);
+			summTdElmt.appendChild(inputElmt2);
 			
 			//Set relatedBttn
 			var relDocDivElmt         = document.getElementById("rlWrapDiv");

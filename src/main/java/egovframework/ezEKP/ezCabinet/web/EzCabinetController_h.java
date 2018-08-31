@@ -470,7 +470,7 @@ public class EzCabinetController_h {
 		String jspPageName = "ezCabinet/cabinetJournalDetail";
 		return jspPageName;
 	}
-
+	
 	private String getCommunityColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName =  "";
 		String commuType  = iteminfo.get("commuType").toString();
@@ -484,7 +484,7 @@ public class EzCabinetController_h {
 		
 		return jspPageName;
 	}
-
+	
 	private String getTodoColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName = "ezCabinet/cabinetTodoDetail";
 		JSONObject creator = (JSONObject) iteminfo.get("creator");
@@ -566,5 +566,4 @@ public class EzCabinetController_h {
 		String jspPageName = "ezCabinet/cabinetOptionDetail";
 		return jspPageName;
 	}
-	
 }
