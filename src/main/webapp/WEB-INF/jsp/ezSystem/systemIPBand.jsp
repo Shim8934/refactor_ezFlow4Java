@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
 		var useIPAccess = "${useIPAccess}";
+		var rollInfo = "${rollInfo}";
 		
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
@@ -22,6 +23,15 @@
 				document.getElementById("ipRadio0").checked = true;
 			} else {
 				document.getElementById("ipRadio1").checked = true;
+			}
+			
+			if (!rollInfo.includes("c=1")) {
+				
+				var btnList = $("body [id^=btn]");
+				
+				for (var i = 0; i < btnList.length; i++) {
+					btnList[i].onclick = function() { alert("전체관리자만 수정 가능합니다"); return; };
+				}
 			}
 			
 			getIPList_http();
@@ -297,15 +307,15 @@
 	
 	<div style="width:600px;">
 		<div class="btnpositionJsp">
-	    	<a class="imgbtn" onClick="saveBtn()"><span>저장</span></a>
-	    	<a class="imgbtn" onClick="cancleBtn()"><span>취소</span></a>
+	    	<a id="btn1" class="imgbtn" onClick="saveBtn()"><span>저장</span></a>
+	    	<a id="btn2" class="imgbtn" onClick="cancleBtn()"><span>취소</span></a>
 	    </div>
 	</div> 
 	<div id="mainmenu">
 	    <ul class="on">
-	        <li><span onclick="ipBandEidtPopUp('add')">추가</span></li>
-	        <li><span onclick="ipBandEidtPopUp('modify')">수정</span></li>
-	        <li><span onclick="deleteIPBand()">삭제</span></li>
+	        <li><span id="btn3" onclick="ipBandEidtPopUp('add')">추가</span></li>
+	        <li><span id="btn4" onclick="ipBandEidtPopUp('modify')">수정</span></li>
+	        <li><span id="btn5" onclick="deleteIPBand()">삭제</span></li>
 	    </ul>
 	</div>
 	
