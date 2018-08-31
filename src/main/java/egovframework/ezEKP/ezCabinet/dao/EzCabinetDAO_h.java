@@ -2,9 +2,7 @@ package egovframework.ezEKP.ezCabinet.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -62,7 +60,7 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 	public void modifyItem(CabinetItemVO itemVO) {
 		update ("EzCabinetDAO_h.modifyItem", itemVO);
 	}
-
+	
 	public List<SimpleUserVO> getAncestorShareUserList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzCabinetDAO_h.getAncestorShareUserList", map);
 	}

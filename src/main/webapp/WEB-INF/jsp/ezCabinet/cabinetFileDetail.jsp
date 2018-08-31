@@ -321,7 +321,9 @@
 					
 					inputElmt1.setAttribute("id", "itemTtl");
 					inputElmt1.setAttribute("maxlength", "150");
+					
 					inputElmt2.setAttribute("id", "itemSum");
+					inputElmt2.setAttribute("maxlength", "250");
 					
 					titleTdElmt.innerHTML   = "";
 					summaryTdElmt.innerHTML = "";
@@ -438,6 +440,22 @@
 						var inputTtl   = document.getElementById("itemTtl");
 						inputTtl.value = "";
 						inputTtl.focus();
+						return;
+					}
+					
+					if (title.length > 150) {
+						alert(CabinetMessages.strTitleLen);
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
+						return;
+					}
+					
+					if (summary.length > 250) {
+						alert(CabinetMessages.strSummLen);
+						var inputTt2   = document.getElementById("itemSum");
+						inputTt2.value = "";
+						inputTt2.focus();
 						return;
 					}
 					

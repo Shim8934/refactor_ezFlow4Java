@@ -214,7 +214,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String optionTitle, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception {
+	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String optionTitle, String writer, String date, String content, String attach) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/option";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",      userId);
@@ -225,12 +225,6 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		jsonBody.put("optionTitle", optionTitle);
 		jsonBody.put("writer",      writer);
 		jsonBody.put("date",        date);
-		jsonBody.put("importance",  importance);
-		jsonBody.put("option",      option);
-		jsonBody.put("statusNum",   statusNum);
-		jsonBody.put("status",      status);
-		jsonBody.put("confirm",     confirm);
-		jsonBody.put("endDate",     endDate);
 		jsonBody.put("content",     content);
 		jsonBody.put("attach",      attach);
 		

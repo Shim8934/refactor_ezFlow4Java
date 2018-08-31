@@ -227,7 +227,6 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	
 	@RequestMapping(value="/admin/ezCabinet/saveUserCapacity.do")
 	@ResponseBody
 	public String jsonSaveUserCapacity(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "userList") List<String> userList, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -307,5 +306,4 @@ public class EzCabinetAdminController {
 		logger.debug("jsonSaveModulesSetting end");
 		return resultObj.toString();
 	}
-	
 }

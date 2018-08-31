@@ -254,19 +254,19 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<SimpleUserMailVO> getUserInfoFromEmail(Map<String, Object> map) {
 		return (List<SimpleUserMailVO>)list("EzCabinetDAO.getUserInfoFromEmail", map);
 	}
-
+	
 	public SimpleUserInfoVO getSimpleUserInfo(Map<String, Object> map) {
 		return (SimpleUserInfoVO)select("EzCabinetDAO.getSimpleUserInfo", map);
 	}
-
+	
 	public List<SimpleUserInfoVO> getUsersInfoFromIdList(Map<String, Object> map) {
 		return (List<SimpleUserInfoVO>)list("EzCabinetDAO.getUsersInfoFromIdList", map);
 	}
-
+	
 	public int getTotalChildren(Map<String, Object> map) {
 		return (int)select("EzCabinetDAO.getTotalChildren", map);
 	}
-
+	
 	public List<CabinetSimpleVO> getMySharedCabinetList(Map<String, Object> map) {
 		return (List<CabinetSimpleVO>)list("EzCabinetDAO.getMySharedCabinetList", map);
 	}

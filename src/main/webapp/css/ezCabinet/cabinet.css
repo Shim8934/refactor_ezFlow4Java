@@ -305,17 +305,17 @@
 
 .mailContDiv1  {margin: 10px 0px; border: 1px solid #ddd; min-height: 370px; height: 370px; overflow: auto;}
 .mailContDiv2  {margin: 10px 0px; border: 1px solid #ddd; min-height: 400px; height: 400px; overflow: auto;}
-.boardContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 430px; height: 430px; overflow: auto;}
+.boardContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 431px; height: 431px; overflow: auto;}
 .boardContDiv2 {margin: 10px 0px; border: 1px solid #ddd; min-height: 405px; height: 405px; overflow: auto;}
-.optionContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 420px; height: 420px; overflow: auto;}
-.resContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 444px; height: 444px; overflow: auto;}
+.optionContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 431px; height: 431px; overflow: auto;}
+.resContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 371px; height: 371px; overflow: auto;}
 .schContDiv1   {margin: 10px 0px; border: 1px solid #ddd; min-height: 388px; height: 388px; overflow: auto;}
-.schContDiv2   {margin: 10px 0px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
+.schContDiv2   {margin: 10px 0px; border: 1px solid #ddd; min-height: 341px; height: 341px; overflow: auto;}
 .todoContDiv   {margin: 10px 0px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
 .commuContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 477px; height: 477px; overflow: auto;}
 .apprvContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 505px; height: 505px; overflow: auto;}
 .commuPhotoContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 510px; height: 510px; overflow: auto;}
-.journalContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 477px; height: 477px; overflow: auto;}
+.journalContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 401px; height: 401px; overflow: auto;}
 
 .addressContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 400px; height: 400px; overflow: auto;}
 .addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}

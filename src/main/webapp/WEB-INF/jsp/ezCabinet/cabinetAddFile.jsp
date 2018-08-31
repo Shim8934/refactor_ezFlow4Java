@@ -114,6 +114,14 @@
 						return;
 					}
 					
+					if (summary.length > 250) {
+						alert(CabinetMessages.strSummLen);
+						var inputTt2   = document.getElementById("itemSum");
+						inputTt2.value = "";
+						inputTt2.focus();
+						return;
+					}
+					
 					var fileDivElmt  = document.getElementById("fileDiv");
 					var ulElmt       = fileDivElmt.querySelector("ul[class='ulFiles']");
 					var liChildren   = ulElmt.children;

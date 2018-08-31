@@ -45,24 +45,6 @@
 					<td class="nowrap"><c:out value="${fn:substring(optionTime.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${importance.columnName}"/></th>
-					<td><c:out value="${importance.columnValue}"/></td>
-					<th><c:out value="${option.columnName}"/></th>
-					<td><c:out value="${option.columnValue}"/></td>
-				</tr>
-				<tr>
-					<th><c:out value="${statusNum.columnName}"/></th>
-					<td><c:out value="${statusNum.columnValue}"/></td>
-					<th><c:out value="${status.columnName}"/></th>
-					<td><c:out value="${status.columnValue}"/></td>
-				</tr>
-				<tr>
-					<th><c:out value="${confirm.columnName}"/></th>
-					<td id="confirmTd"></td>
-					<th><c:out value="${endDate.columnName}"/></th>
-					<td class="nowrap"><c:out value="${endDate.columnValue}"/></td>
-				</tr>
-				<tr>
 					<th><c:out value="${optionTitle.columnName}"/></th>
 					<td class="overfl" colspan="3"><c:out value="${optionTitle.columnValue}"/></td>
 				</tr>
