@@ -118,7 +118,7 @@
 			$("#boardMemoList").sortable({
 	        	 containment: '#bodyFrame',
         		 opacity : 0.5,
-	        	 stop : function (event, ui) {
+	        	 update : function (event, ui) {
 	        		 if($("#orderOption").val() == 1) {
 	        			 var compareElId; 
 		        		 var clickedItem = ui.item;
@@ -158,6 +158,7 @@
 		        				
 		        				if (result.status == 1) {
 			        				getMemoList();
+			        				parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		        				}
 		        			}
 		        		 });
