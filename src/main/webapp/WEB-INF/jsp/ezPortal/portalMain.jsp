@@ -118,7 +118,7 @@
 		        	
 		        	 containment: '.memoListBox',
 		        	 opacity : 0.5,
-		        	 stop : function (event, ui) {
+		        	 change : function (event, ui) {
 		        		 
 	        			 var compareElId; 
 		        		 var clickedItem = ui.item;
