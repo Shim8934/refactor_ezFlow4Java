@@ -905,6 +905,7 @@
                                     case "id":
                                     case "class":
                                     case "summary":
+                                    case "style":
                                     case "width":
                                     case "width_kaoni":
                                     case "height":
@@ -980,6 +981,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -997,6 +999,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1014,6 +1017,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1031,6 +1035,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1048,6 +1053,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "abbr":
                                     case "axis":
                                     case "headers":
@@ -1076,6 +1082,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "abbr":
                                     case "axis":
                                     case "headers":
