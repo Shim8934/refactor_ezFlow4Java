@@ -140,7 +140,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useZipCodeSearchInApr','NO','민원인 주소의 우편번호 검색 기능 유무 (default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailWriteSenderClick','YES','메일 보낸사람 클릭시 보낸사람에게 메일 작성(no : 클릭 -> 행선택, yes : 클릭 -> 메일작성 팝업)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useImapMoveCommand','YES','메일 이동 시 IMAP MOVE 커맨드를 이용함');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useSearchContent','NO','메일 간단검색시 내용검색 사용여부');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useSearchContent','YES','메일 간단검색시 내용검색 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailAddrAutoComplete','NO','메일 쓰기창의 받는사람,참조,숨은참조에 수신인의 이름이 자동완성 되어지는 기능(default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailNewWindow','NO','메일리스트에서 단일클릭으로 메일 읽기 가능한 아이콘 사용 여부 (default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useAdvancedMailSearch','YES','속도가 개선된 메일검색 기능 사용 여부. 메일검색 테이블 사용 (default : NO)');
