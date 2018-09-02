@@ -1135,8 +1135,8 @@
 		            pDocID = tr[0].getAttribute("DATA1");
 		
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
-		        feature = feature + GetOpenPosition(580, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
+		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
 		    }
 		

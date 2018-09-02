@@ -109,83 +109,6 @@ function check_presence() {
     } catch (e) { }
 }
 
-function processRowClick(tr) {
-	if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
-        ChkCabRoleInfo(tr);
-
-    if (DocList_Flag != "CABINET") {
-        DocID = tr.getAttribute("DATA1");
-        pURL = tr.getAttribute("DATA2");
-        WriterID = tr.getAttribute("DATA19");
-
-        if (typeof (SendOfferCheckBtn) != "undefined")
-            SendOfferCheckBtn(DocID, UserID);
-
-        if (DocList_Flag == "RECORD") {
-            if (document.getElementById("tdGongRam")) {
-                /* 2015-07-06 표준모듈:수정 - KSK */
-                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1].trim() == WriterID.trim())) {
-                	document.getElementById("tdGongRam").style.display = "";
-                } else {
-                	document.getElementById("tdGongRam").style.display = "none";
-                }
-            }
-        }
-
-        if (WriterID == arr_userinfo[1]) {
-            try {
-                if (typeof (tr.cells[12].innerHTML) == "string") {
-                    // START
-                    if (tr.cells[12].innerHTML == strLang597 && tr.cells[11].innerHTML == "") {
-                    //END
-                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                            document.getElementById("tdReSend").style.display = "";
-                            //SwapImage(ReSend, "");
-                        }
-                    }
-                    else {
-                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                            document.getElementById("tdReSend").style.display = "none";
-                            //SwapImage(ReSend, "dis");
-                        }
-                    }
-                }
-                else {
-                    if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                        document.getElementById("tdReSend").style.display = "none";
-                        //SwapImage(ReSend, "dis");
-                    }
-                }
-            }
-            catch (e) {}
-        }
-        else {
-            if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                document.getElementById("tdReSend").style.display = "none";
-                //SwapImage(ReSend, "dis");
-            }
-        }
-
-        switch (jobState) {
-            case "ATTACH":
-                Attach_onclick();
-                break;
-
-            case "OPINION":
-                Opinion_onclick();
-                break;
-
-            case "APPROVAL":
-            	Approval_onclick();
-                break;
-
-            case "RECIPENT":
-                Recipent_onclick()
-                break;
-        }
-    }
-}
-
 function lvtDoclist_SelChange() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
@@ -410,7 +333,6 @@ function processRowClick(tr) {
         ChkCabRoleInfo(tr);
 
     if (DocList_Flag != "CABINET") {
-
         DocID = GetAttribute(tr,"DATA1");
         pURL = GetAttribute(tr,"DATA2");
         WriterID = GetAttribute(tr,"DATA19");
@@ -419,14 +341,13 @@ function processRowClick(tr) {
         if (WriterID == "") {
         	WriterID = GetAttribute(tr, "DATA3");
         }
-        
 
         if (typeof (SendOfferCheckBtn) != "undefined")
             SendOfferCheckBtn(DocID, UserID);
 
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
-                if (GetAttribute(tr, "DATA15") == "011" && (arr_userinfo[1] == WriterID))
+                if ((GetAttribute(tr, "DATA15") == "011" || GetAttribute(tr, "DATA15") == "001") && (arr_userinfo[1] == WriterID))
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
@@ -440,20 +361,17 @@ function processRowClick(tr) {
                     
                         if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                             document.getElementById("tdReSend").style.display = "";
-                            
                         }
                     }
                     else {
                         if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                             document.getElementById("tdReSend").style.display = "none";
-                            
                         }
                     }
                 }
                 else {
                     if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                         document.getElementById("tdReSend").style.display = "none";
-                        
                     }
                 }
             }
@@ -462,7 +380,6 @@ function processRowClick(tr) {
         else {
             if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                 document.getElementById("tdReSend").style.display = "none";
-                
             }
         }
 
