@@ -63,6 +63,9 @@
 	    	var fontSize;
 	    	var useDate;
 			var defaultColor;
+	    	var layerRight;
+	    	var layerBottom;
+	    	
 	    	
 			topHeight = "56";
 
@@ -72,6 +75,10 @@
 		        chagePosition();
 		        //setSizeOfLayer();
 		 	}
+		 	$(window).resize(function() {
+		        setLayerSizeOnResize();
+		 		
+		 	});
 		 	
 		    /* function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
@@ -90,17 +97,101 @@
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
 		    }
 		    
-		    function setSizeOfLayer() {
+		    /* function setSizeOfLayer() {
 		    	var winHeight = window.innerHeight;
 	        	var layerWidth =$("#layer-popup").css("width");
 	        		        
 	        	$(".memoListBox").css("width", layerWidth);
+	        	
+	        	var tringTop = $("#layer-popup").css("top");
+	        	var stringLeft = $("#layer-popup").css("left");
+	        	var width = $("#layer-popup").width();
+	        	var height = $("#layer-popup").height();
+	        	
+	        	var windowHeight = window.innerHeight;
+	        	var windowWidth = window.innerWidth;
+	        	
+	        	var pIndex = tringTop.indexOf("p");
+	        	var pIndex = stringLeft.indexOf("p");
+	        	
+	        	var top = parseInt(tringTop.substr(0, pIndex-1));
+	        	var left = parseInt(stringLeft.substr(0, pIndex));
+	        	
+	        	console.log(top);
+	        	console.log(left);
+	        	console.log(width);
+	        	console.log(height);
+	        	console.log(windowHeight);
+	        	console.log(windowWidth);
 
+		    } */
+		    function setLayerSizeOnResize() {
+		    	
+		    	var stringTop = $("#layer-popup").css("top");
+	        	var stringLeft = $("#layer-popup").css("left");
+	        	
+	        	var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+	        	
+	        	var pIndex = stringTop.indexOf("p");
+	        	var pIndex = stringLeft.indexOf("p");
+	        	
+	        	var width = parseInt($("#layer-popup").width());
+	        	var height = parseInt($("#layer-popup").height());
+	        	var left = parseInt(stringLeft.substr(0, pIndex));
+	        	var top = parseInt(stringTop.substr(0, pIndex));
+
+	        	
+	        	if (height > windowHeight) {
+	        		
+	        		height = windowHeight - 60;
+	        		$("#layer-popup").css("height", height + "px");
+	        	}
+	        	
+	        	if (width > windowWidth) {
+	        		width = windowWidth - 60;
+	        		$("#layer-popup").css("width", width + "px");
+	        		$(".memoListBox").css("width", width+25 + "px");
+	        		$("#memoList").css("width", width+25 + "px");
+	        	}
+	        	
+	        	
+        		var leftZero;
+        		
+	        	if (windowWidth > width) {
+	        		leftZero = windowWidth - width;
+	        	}
+	        	
+	        	var bottomZero;
+	        	
+	        	if (windowHeight > height) {
+	        		bottomZero = windowHeight - height;
+	        	}
+	        	
+        		if (top > windowHeight) {
+        			$("#layer-popup").css("top", bottomZero-10);
+        			
+        		} else if (top < windowHeight) {
+        			if (top + height > windowHeight) {
+        				$("#layer-popup").css("top", bottomZero-10);
+        			}
+        		}
+        		
+	        	if (left > windowWidth) {
+	        		$("#layer-popup").css("left", leftZero);
+	        		
+	        	} else if (left < windowWidth) {
+	        		if (left + width > windowWidth) {
+		        		$("#layer-popup").css("left", leftZero);
+		        		
+	        		 }
+	        	}
+	        	
 		    }
 		    
 		    $(function() {
 		    	chagePosition();
-		    	setSizeOfLayer();
+		    	//setSizeOfLayer();
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
@@ -531,6 +622,8 @@
 			        	
 			        	var layerTop = $("#layer-popup").css("top");
 		        		var layerLeft = $("#layer-popup").css("left");
+			        	layerRight = $("#layer-popup").css("right");
+			        	layerBottom = $("#layer-popup").css("bottom");
 			        	
 			        	$.ajax({
 			        		type : "POST",
