@@ -1817,7 +1817,7 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
-		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4'}">
+		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
 								<spring:message code='ezPoll.t237'/>

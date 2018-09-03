@@ -519,7 +519,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (searchCompanyID != null && !searchCompanyID.equals("")) {
-			searchQuery += " AND COMPANYID = '" + searchCompanyID + "' ";
+			if (listType.equals("10")) {
+				searchQuery += " AND TBL_APRDOCINFO.COMPANYID = '" + searchCompanyID + "' ";
+			} else {
+				searchQuery += " AND COMPANYID = '" + searchCompanyID + "' ";
+			}
 		}
 		
 		String resultXML = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userLang, searchQuery, domSub, userInfo.getTenantId(), userInfo.getOffset());
