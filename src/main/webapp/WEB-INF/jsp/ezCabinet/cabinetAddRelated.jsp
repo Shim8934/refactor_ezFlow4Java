@@ -324,6 +324,9 @@
 					var messageFrame   = approvalOpener.document.getElementById("message");
 					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
 					var divContent     = contentWd.document.getElementById("div_Content").innerHTML;
+					
+					if (!contentWd.document.getElementById("doctitle")) {alert(CabinetMessages.strApproval); return;}
+					
 					var doctitle       = trimStr(contentWd.document.getElementById("doctitle").textContent);
 					var attach         = approvalOpener.document.getElementById("lstAttachLink");
 					var attachList     = [];
