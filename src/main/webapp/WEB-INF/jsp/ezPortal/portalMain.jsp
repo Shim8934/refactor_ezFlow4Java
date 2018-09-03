@@ -204,7 +204,7 @@
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
 		        });
-		        
+		        // 메모 정렬
 		        $("#memoList").sortable({
 		        	
 		        	 containment: '.memoListBox',
@@ -258,7 +258,7 @@
 		        	 }
 		        	
 		        });
-		        
+		        // 폰트 사이즈 높이기
 		        $("#font-up").click(function() {
 		        	
 		        	var textarea = $("#font-up").parent().parent().find("textarea");
@@ -301,7 +301,7 @@
 		        	}
 		        	
 		        });
-		        
+		     // 폰트 사이즈 줄이기
 		        $("#font-down").click(function() {
 		        	
 		        	var textarea = $("#font-down").parent().parent().find("textarea");
@@ -343,7 +343,7 @@
 	        		}
 		        	
 		        });
-		        
+		        // 메모 레이어 리사이즈
 		        $(".layerControl").resizable({
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
@@ -371,7 +371,7 @@
 		        		});
 		        	}
 		        });
-		        
+		        // 메모 디테일 리사이즈
 		        $(".detailMemo").resizable({
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
@@ -407,7 +407,7 @@
 		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        });
-		        
+		        // 메모 레이어 전체화면, 사이즈 조절
 		        $("#changeMode").click(function() {
 		        	
 		        	var layerClass = $("#layer-popup").attr("class");
@@ -678,7 +678,7 @@
 		            }
 		        });
 		    }
-		    
+		    // 기본 메모함 체크
 		    function checkDefaultFolder() {
 		    	$.ajax({
 					type : "GET",
@@ -687,7 +687,7 @@
 					url : "/ezMemo/hasMemoFolder.do"
 				});
 		    }
-		    
+		    // 메모 추가
 			function newMemo() {
 				
 				var folderId = $("select option:selected").val();
@@ -745,7 +745,7 @@
 		        		dataType : "JSON",
 		        		url : "/ezMemo/memoDetail.do",
 		        		success : function(result) {
-							
+
 		        			var $textarea = $("#detailMemoContents");
 		        			var $memoDetail = $(".detailMemo");
 		        			
@@ -790,7 +790,7 @@
 	                }
 				}); 
 		    }
-		    
+		    // 메모 리스트 출력
 		    function getMemoList(type) {
 		    	
 		    	var folderId = $("select option:selected").val();
@@ -818,7 +818,7 @@
 				     }
 				});
 			}
-		    
+		    // 메모 리스트 사이즈 변경
 		    function setMemoListSize() {
 		    	
 		    	var btnBundlHeight = $("#btn-bundle").height();
@@ -830,7 +830,7 @@
 			    $("#memoList").css({"width" : layerWidth+25, "height" : memoListHeight});
 			    
 		    }
-		    
+		    // 메모함 리스트 출력
 		    function memoFoldersInfo() {
 		    	selFolderId="";
 				selFolderName="";
