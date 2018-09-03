@@ -535,7 +535,7 @@ public class EzMemoController {
 	public String memoMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String folder_id, String memo_ids) throws Exception{
 		logger.debug("memoMove started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("folder_id", folder_id);
