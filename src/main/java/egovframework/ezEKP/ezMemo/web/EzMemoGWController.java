@@ -278,7 +278,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/rest/ezMemo/folders/names/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoFolderNames(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+	public JSONObject gwMemoFolderNames(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/names/users/" +userId + "] started.");
 		
 		
@@ -286,8 +286,11 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			MemoFolderVO memoFolderVO = new MemoFolderVO();
+			memoFolderVO.setUser_id(userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
 			
 			List<MemoFolderVO> memoFolders  = ezMemoService.getMemoFolderInfo(memoFolderVO);
 			String folderNameList = "";
