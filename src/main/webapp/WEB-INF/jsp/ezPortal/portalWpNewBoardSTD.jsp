@@ -213,16 +213,31 @@
 		                            /* document.getElementById("content").innerHTML = FboardMainContent; */
 		                        } 
 		                    } else {
-		                        var nodata = "<div class='nodata_portlet '>";
+		                        /* var nodata = "<div class='nodata_portlet '>";
 		                        nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                        nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
-		                        document.getElementById("BoardList").innerHTML = nodata;
+		                        document.getElementById("BoardList").innerHTML = nodata; */
+		                    	var listHTML = "";
+							    listHTML += "<dl class='nodata'>";
+			                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+			                	listHTML += "<dd>" + strLang1_NewBoardSTD + "</dd>	";
+			                	listHTML += "</dl>";
+			                	
+			                	document.getElementById("BoardList").innerHTML = listHTML;
 		                    }
 		                } else {
-		                    var nodata = "<div class='nodata_portlet '>";
+		                    /* var nodata = "<div class='nodata_portlet '>";
 		                    nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                    nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
-		                    document.getElementById("BoardList").innerHTML = nodata;
+		                    document.getElementById("BoardList").innerHTML = nodata; */
+		                    
+		                	var listHTML = "";
+						    listHTML += "<dl class='nodata'>";
+		                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+		                	listHTML += "<dd>" + strLang1_NewBoardSTD + "</dd>	";
+		                	listHTML += "</dl>";
+		                	
+		                	document.getElementById("BoardList").innerHTML = listHTML;
 		                }
 		            }
 		            catch (e) {

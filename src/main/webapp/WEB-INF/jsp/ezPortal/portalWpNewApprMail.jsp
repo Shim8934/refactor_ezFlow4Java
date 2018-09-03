@@ -154,9 +154,14 @@
 		                     }
 		                    //listHTML += "</ul>";
 		                } else {
-		                    listHTML = "<div class='nodata_portlet '>";
+		                    /* listHTML = "<div class='nodata_portlet '>";
 		                    listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
-		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
+		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>"; */
+		            	    listHTML += "<dl class='nodata'>";
+		                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+		                	listHTML += "<dd>" + strLang1_NewApprMail + "</dd>	";
+		                	listHTML += "</dl>";
+		                    
 		                }
 		                
 		                document.getElementById("ApprList").innerHTML = listHTML;
@@ -537,9 +542,10 @@
 	
 		                //listHTML += "</ul>";
 		            } else {
-		                listHTML = "<div class='nodata_portlet '>";
-		                listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
-		                listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
+		    		    listHTML += "<dl class='nodata'>";
+	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+	                	listHTML += "<dd>" + strLang1_NewApprMail + "</dd>	";
+	                	listHTML += "</dl>";
 		            }
 	
 		            document.getElementById("MailList").innerHTML = listHTML;

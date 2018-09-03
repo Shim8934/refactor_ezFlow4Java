@@ -116,6 +116,14 @@
                     	nodata += "<p>" + strLang2_NewBoard + "</p></div>";
 
                     	document.getElementById("BoardList_NewBoard").innerHTML = nodata; */
+                    	
+	                	var listHTML = "";
+					    listHTML += "<dl class='nodata'>";
+	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+	                	listHTML += "<dd>" + strLang2_NewBoard + "</dd>	";
+	                	listHTML += "</dl>";
+	                	
+	                	document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
                 	}
             	} catch (e) {
             		
