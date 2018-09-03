@@ -432,6 +432,8 @@ public class EzCabinetController_h {
 		JSONObject item      = (JSONObject) iteminfo.get("item");
 		JSONArray columnList = (JSONArray) iteminfo.get("columns");
 		int itemType         = ((Long)item.get("itemType")).intValue();
+		int itemPermission   = ((Long)item.get("permission")).intValue();
+		model.addAttribute("permission", itemPermission);
 		model.addAttribute("item", item);
 		
 		if (columnList != null) {

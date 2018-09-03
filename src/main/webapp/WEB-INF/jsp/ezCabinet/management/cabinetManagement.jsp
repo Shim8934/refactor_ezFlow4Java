@@ -15,9 +15,9 @@
 		
 		<div class="cabMgTree" id="cabinetMgTree"></div>
 		
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetAdd.jsp"   ></jsp:include>
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetMove.jsp"  ></jsp:include>
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetDelete.jsp"></jsp:include>
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetAdd.jsp"   ></jsp:include>
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetMove.jsp"  ></jsp:include>
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetDelete.jsp"></jsp:include>
 		
 		<div class="cabdivBttn2" id="cabMgDivBttn">
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t75"/></span></a>

@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -729,5 +730,48 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		result.put("code", 0);
 		
 		return result;
+	}
+	
+	@Override
+	public int checkItemPermission(int cabinetId, LoginVO userInfo) throws Exception {
+		int permission         = 0;
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  userInfo.getTenantId());
+		
+		CabinetVO cabinet      = ezCabinetDAO.getCabinetById(map);
+		
+		if (cabinet.getCreatorId().equals(userInfo.getId())) {
+			permission = 1;
+			return permission;
+		}
+		
+		//Check if user get write permission by sharing
+		map.put("primary",   userInfo.getPrimary());
+		map.put("deptId",    userInfo.getDeptID());
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("userId",    userInfo.getId());
+		
+		String cabinetPath    = cabinet.getCabinetPath();
+		cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
+		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+		nodeIds.remove(nodeIds.size() - 1);
+		map.put("listNodes", nodeIds);
+		
+		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+		map.put("deptList", userDeptList);
+		
+		List<CabinetShareVO> listShared = ezCabinetDAO.getSharedCabinetListById(map);
+		
+		if (listShared != null && listShared.size() > 0) {
+			for (CabinetShareVO share : listShared) {
+				if (share.getPermission() == 1) {
+					permission = 1;
+					break;
+				}
+			}
+		}
+		
+		return permission;
 	}
 }

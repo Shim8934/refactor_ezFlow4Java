@@ -47,18 +47,22 @@
 		<div class="storageDiv" id="fileCapacityDiv"></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+			<c:if test="${permission != 0}">
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+			</c:if>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t111'/></span></a>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
-		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
-		</div>
+		<c:if test="${permission != 0}">
+			<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+			</div>
+			<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
+		</c:if>
 		
-		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
@@ -78,20 +82,26 @@
 					document.onselectstart  = function () { return false;}
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var cabBttnElmt         = document.getElementById("fileDivBttn");
+					var cabBttnModify       = document.getElementById("fileModifyDivBttn");
 					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {fileModify();};
-					listBttns[1].onclick    = function(e) {fileDelete();};
-					listBttns[2].onclick    = function(e) {filePrint();}
-					listBttns[3].onclick    = function(e) {closeWindow();};
+					
+					if (cabBttnModify) {
+						var listModifyBttns        = cabBttnModify.children;
+						listBttns[0].onclick       = function(e) {fileModify();};
+						listBttns[1].onclick       = function(e) {fileDelete();};
+						listBttns[2].onclick       = function(e) {filePrint();}
+						listBttns[3].onclick       = function(e) {closeWindow();};
+						listModifyBttns[0].onclick = function(e) {saveItem();};
+						listModifyBttns[1].onclick = function(e) {cancelChanges()};
+						document.getElementById("fileBttn").onchange = function(e) {CabinetFile.upload();};
+					}
+					else {
+						listBttns[0].onclick = function(e) {filePrint();};
+						listBttns[1].onclick = function(e) {closeWindow();};
+					}
 					
 					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
-					document.getElementById("fileBttn").onchange    = function(e) {CabinetFile.upload();};
-					
-					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
-					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {saveItem();};
-					listBttns[1].onclick    = function(e) {cancelChanges()};
-					document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
+					document.getElementById("cabRlClose").onclick   = function(e) {closeWindow();};
 					
 					getFileDetail();
 				}

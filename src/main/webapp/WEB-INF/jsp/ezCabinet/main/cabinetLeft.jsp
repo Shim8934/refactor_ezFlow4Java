@@ -53,7 +53,7 @@
 							<dd id="usePer" style="color: #0470e4;">0%</dd>
 						</c:when>
 						<c:otherwise>
-							<dt id="useVol"><c:out value='${useVolume}'/><span> / <c:out value="${totalCapacity}"/> MB</span></dt>
+							<dt id="useVol"><c:out value='${useVolume}'/><span> / <c:out value="${totalCapacity}"/>MB</span></dt>
 							<dd id="usePer" style="color: #0470e4;"><c:out value="${percent > 100 ? 100 : percent}"/>%</dd>
 						</c:otherwise>
 					</c:choose>

@@ -63,7 +63,7 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetPhotoDownload.jsp"></jsp:include>
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/detail/cabinetPhotoDownload.jsp"></jsp:include>
 		
 		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>

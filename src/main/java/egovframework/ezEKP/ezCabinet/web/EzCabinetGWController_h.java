@@ -436,11 +436,10 @@ public class EzCabinetGWController_h {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			String primary   = userInfo.getPrimary();
+			LoginVO userInfo         = commonUtil.getUserForGw(userId, serverName);
+			String primary           = userInfo.getPrimary();
 			int tenantId             = userInfo.getTenantId();
 			String offset            = commonUtil.getMinuteUTC(userInfo.getOffset());
-			
 			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
 			if(fileDetail.getItemType() != 0) {
@@ -448,9 +447,13 @@ public class EzCabinetGWController_h {
 				getColumnInformation(result, Integer.parseInt(itemId), fileDetail.getItemType(), primary, tenantId);
 			}
 			
-			result.put("item", fileDetail);
-			result.put("status", "ok");
-			result.put("code", 0);
+			//Check item privilege
+			int userPermission = cabinetService_h.checkItemPermission(fileDetail.getCabinetId(), userInfo);
+			
+			result.put("permission", userPermission);
+			result.put("item"      , fileDetail);
+			result.put("status"    , "ok");
+			result.put("code"      , 0);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
