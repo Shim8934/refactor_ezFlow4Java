@@ -41,29 +41,43 @@ var CabinetFileHelper = function() {
 			document.onselectstart  = function () { return false;}
 			window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 			var cabBttnElmt         = document.getElementById("fileDivBttn");
+			var cabBttnModify       = document.getElementById("fileModifyDivBttn");
 			var listBttns           = cabBttnElmt.children;
 			var totalBttn           = listBttns.length;
-			if (totalBttn == 4) {
-				listBttns[0].onclick    = function(e) {fileModify();};
-				listBttns[1].onclick    = function(e) {fileDelete();};
-				if (isphoto) {
-					listBttns[2].onclick = function(e) {fileDownloadAll();}
+			var specialFunct        = isphoto ? fileDownloadAll : filePrint;
+			
+			if (cabBttnModify) {
+				//Write privilege
+				var listModifyBttns = cabBttnModify.children;
+				
+				if (totalBttn == 4) {
+					listBttns[0].onclick = function(e) {fileModify()  ;};
+					listBttns[1].onclick = function(e) {fileDelete()  ;};
+					listBttns[2].onclick = function(e) {specialFunct();};
+					listBttns[3].onclick = function(e) {closeWindow() ;};
 				}
-				else {
-					listBttns[2].onclick = function(e) {filePrint();}
+				else if (totalBttn == 3) {
+					//Community photo
+					listBttns[0].onclick = function(e) {fileModify() ;};
+					listBttns[1].onclick = function(e) {fileDelete() ;};
+					listBttns[2].onclick = function(e) {closeWindow();};
 				}
-				listBttns[3].onclick    = function(e) {closeWindow();};
+				
+				listModifyBttns[0].onclick = function(e) {saveItem()     ;};
+				listModifyBttns[1].onclick = function(e) {cancelChanges();};
 			}
-			else if (totalBttn == 3) {
-				listBttns[0].onclick    = function(e) {fileModify();};
-				listBttns[1].onclick    = function(e) {fileDelete();};
-				listBttns[2].onclick    = function(e) {closeWindow();};
+			else {
+				//Read privilege
+				if (totalBttn == 2) {
+					listBttns[0].onclick = function(e) {specialFunct();};
+					listBttns[1].onclick = function(e) {closeWindow() ;};
+				}
+				else if (totalBttn == 1) {
+					//Community photo
+					listBttns[0].onclick = function(e) {closeWindow();};
+				}
 			}
 			
-			var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
-			var listBttns           = cabBttnElmt.children;
-			listBttns[0].onclick    = function(e) {saveItem();};
-			listBttns[1].onclick    = function(e) {cancelChanges()};
 			document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
 			
 			getFileDetail();

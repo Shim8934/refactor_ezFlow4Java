@@ -51,15 +51,18 @@
 		<div class="commuPhotoContDiv"><iframe id="commuIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+			<c:if test="${permission != 0}">
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+			</c:if>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
-		
-		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
-		</div>
+		<c:if test="${permission != 0}">
+			<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+			</div>
+		</c:if>
 		
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')             }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')   }"></script>

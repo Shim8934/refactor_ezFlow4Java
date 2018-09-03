@@ -57,18 +57,22 @@
 		<div class="boardContDiv2"><iframe id="boardIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+			<c:if test="${permission != 0}">
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+			</c:if>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t144'/></span></a>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/detail/cabinetPhotoDownload.jsp"></jsp:include>
 		
-		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
-		</div>
+		<c:if test="${permission != 0}">
+			<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+			</div>
+		</c:if>
 		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')             }"></script>
