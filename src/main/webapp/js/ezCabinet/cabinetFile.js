@@ -29,6 +29,8 @@ var CabinetFile = function() {
 		for (var i = 0; i < filelist.length; i++) {
 			fileupload(filelist[i]);
 		}
+		
+		if (!evt) {document.getElementById("fileBttn").value = null;}
 	}
 
 	function fileupload(fileItem) {
