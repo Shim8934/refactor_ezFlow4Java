@@ -108,15 +108,15 @@
 					var title = "";
 					
 					switch(moduleType) {
-						case "apprv" : title = setApprovalTitle()             ; break;
-						case "board" : title = setBoardTitle()                ; break;
-						case "email" : title = setEmailTitle()                ; break;
-						case "schedl": title = setScheduleTitle()             ; break;
-						case "commu" : title = setCommunityTitle()            ; break;
-						case "option": title = setOptionTitle()               ; break;
-						case "resrc" : title = setResourceTitle()             ; break;
-						case "addrs" : title = setAddressTitle()              ; break;
-						case "jounl" : title = setJournalTitle()              ; break;
+						case "apprv" : title = setApprovalTitle()     ; break;
+						case "board" : title = setBoardTitle()        ; break;
+						case "email" : title = setEmailTitle()        ; break;
+						case "schedl": title = setScheduleTitle()     ; break;
+						case "commu" : title = setCommunityTitle()    ; break;
+						case "option": title = setOptionTitle()       ; break;
+						case "resrc" : title = setResourceTitle()     ; break;
+						case "addrs" : title = setAddressTitle()      ; break;
+						case "jounl" : title = setJournalTitle()      ; break;
 						default      : alert(CabinetMessages.strError); return;
 					}
 					
@@ -129,7 +129,7 @@
 					var messageFrame   = approvalOpener.document.getElementById("message");
 					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
 					
-					return trimStr(contentWd.document.getElementById("doctitle").textContent);
+					return contentWd.document.getElementById("doctitle") ? trimStr(contentWd.document.getElementById("doctitle").textContent) : "";
 				}
 				
 				function setBoardTitle() {
@@ -139,10 +139,10 @@
 					var messageFrame   =  boardOpener.document.getElementById("message");
 					if (messageFrame) {
 						var titleTd    = boardOpener.document.getElementById("cTitle");
-						return titleTd.getElementsByTagName("div")[0].textContent;
+						return titleTd ? titleTd.getElementsByTagName("div")[0].textContent : "";
 					}
 					else {
-						return boardOpener.document.getElementById("title").textContent;
+						return boardOpener.document.getElementById("title") ? boardOpener.document.getElementById("title").textContent : "";
 					}
 				}
 				
@@ -150,18 +150,14 @@
 					var mailOpener = window.opener;
 					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var mailSubject = mailOpener.document.getElementById("LabelSubject").textContent;
-					
-					return mailSubject;
+					return mailOpener.document.getElementById("LabelSubject") ? trimStr(mailOpener.document.getElementById("LabelSubject").textContent) : "";
 				}
 				
 				function setScheduleTitle() {
 					var scheduleOpener = window.opener;
 					if (!scheduleOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var scheduleTitle = trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent);
-					
-					return scheduleTitle;
+					return scheduleOpener.document.getElementById("LabelSubject") ? trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent) : "";
 				}
 				
 				function setCommunityTitle() {
@@ -170,10 +166,10 @@
 					var postdate = commuOpener.document.getElementById("PostDate");
 					
 					if (postdate) {
-						return trimStr(commuOpener.document.getElementById("title").textContent);
+						return commuOpener.document.getElementById("title") ? trimStr(commuOpener.document.getElementById("title").textContent) : "";
 					}
 					else {
-						return trimStr(commuOpener.document.getElementById("Div1").textContent);
+						return commuOpener.document.getElementById("Div1") ? trimStr(commuOpener.document.getElementById("Div1").textContent) : "";
 					}
 				}
 				
@@ -181,36 +177,29 @@
 					var optionOpener = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					return trimStr(optionOpener.document.getElementById("titleTd").textContent);
+					return optionOpener.document.getElementById("titleTd") ? trimStr(optionOpener.document.getElementById("titleTd").textContent) : "";
 				}
 				
 				function setResourceTitle() {
 					var resourceOpener = window.opener;
 					if (!resourceOpener) {alert(CabinetMessages.strSelect); return;}
-					return trimStr(resourceOpener.document.getElementById("titleDIV").textContent);
+					
+					return resourceOpener.document.getElementById("titleDIV") ? trimStr(resourceOpener.document.getElementById("titleDIV").textContent) : "";
 				}
 				
 				function setAddressTitle() {
 					var addressOpener = window.opener;
 					if (!addressOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var listMembers     = addressOpener.document.getElementById("ListMember");
-					var addressType     = listMembers ? "group" : "normal";
 					var addressDocument = addressOpener.document;
-					
-					if (listMembers) {
-						return trimStr(addressDocument.getElementById("TextName").textContent);
-					}
-					else {
-						return trimStr(addressDocument.getElementById("TextName").textContent);
-					}
+					return addressDocument.getElementById("TextName") ? trimStr(addressDocument.getElementById("TextName").textContent) : "";
 				}
 				
 				function setJournalTitle() {
 					var journalOpener = window.opener;
 					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					return trimStr(journalOpener.document.getElementById("cTitle").textContent);
+					return journalOpener.document.getElementById("cTitle") ? trimStr(journalOpener.document.getElementById("cTitle").textContent) : "";
 				}
 				
 				function documentSavehandler() {
@@ -274,7 +263,7 @@
 					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
 					
 					var mailDate     = mailOpener.document.getElementById("LabelReceiveDate").textContent;
-					var mailSubject  = mailOpener.document.getElementById("LabelSubject").textContent;
+					var mailSubject  = trimStr(mailOpener.document.getElementById("LabelSubject").textContent);
 					var messageFrame = mailOpener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var emailContent = contentWd.document.getElementById("normalScreen").innerHTML;
