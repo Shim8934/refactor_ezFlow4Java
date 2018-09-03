@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -27,7 +28,9 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -327,6 +330,36 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		//2018-08-29 천성준 - 부서수신함에 들어온 접수문서를 최초 접수창으로 열지않고 문서보기로 열었을경우 문서파일이 생성되지 않아서 에러터지는것 수정 
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(dir);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(docFile);
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(orgDocFile);
+				
+				FileUtils.copyFile(orgFile, newFile);
+			}
+		}
+		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -481,7 +514,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 		
 		if (xmlDom.getElementsByTagName("LIMITRANGE").getLength() > 0) {
-			limitRange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
+			limitRange = commonUtil.cleanValue(xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent());
 		}
 		
 		if (xmlDom.getElementsByTagName("PUBLICITYCODE").getLength() > 0) {
@@ -882,5 +915,36 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+	
+	/**
+	 * 결재문서 > 저장버튼 다운로드
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		LOGGER.debug("============ downloadHWPdoc started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);		
+		
+		String docID = request.getParameter("DocId");
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		ApprGDocInfoWebSrvVO fileVO = ezApprovalGService.getHWPdownload(docID, tenantID, companyID);
+		
+		String filePath = fileVO.getHref();
+		String fileName = fileVO.getDocTitle() + ".hwp";
+		
+		String realPath = commonUtil.getRealPath(request);
+		/*String uploadFilePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());*/
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath; 
+		}
+		
+		String fullFilePath = realPath + filePath;
+
+		downFile(request, response, fullFilePath, fileName);	
 	}
 }

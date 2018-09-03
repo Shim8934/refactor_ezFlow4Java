@@ -41,6 +41,32 @@ var shareContext = (function() {
 		}, successHandle);
 	}
 	
+	function deleteShareConfirm(type, files, folders) {
+		if (typeof(type) == "undefined") {
+			type = "";
+		}
+		
+		var fileStr = "";
+		var folderStr = "";
+		
+		if (type == "EDIT") {
+			fileStr = files.toString();
+			folderStr = folders.toString();
+		} else {
+			var selectedRows = rowContext.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			
+			if (selectedLength == 0) {
+				alert(messages.strLang5);
+				return;
+			}
+			
+			openLeftPanel();
+		}
+		
+		DivPopUpShow(450, 250, "/ezWebFolder/deleteShareConfirm.do?type=" + type + "&fileList=" + fileStr + "&folderList=" + folderStr);
+	}
+	
 	function deleteShare() {
 		var selectedRows = rowContext.getSelectedRows();
 		var selectedLength = selectedRows.length;
@@ -66,7 +92,22 @@ var shareContext = (function() {
 		requestShareAjax("/ezWebFolder/deleteShare.do", false, {
 			fileList: files.toString(),
 			folderList: folders.toString()
-		}, refreshView);
+		}, deleteShareSuccess);
+	}
+	
+	function deleteShare2() {
+		var files = [], folders = [];
+		
+		if (folderFileType === "F") {
+			files.push(folderFileId);
+		} else {
+			folders.push(folderFileId);
+		}
+		
+		requestShareAjax("/ezWebFolder/deleteShare.do", false, {
+			fileList: files.toString(),
+			folderList: folders.toString()
+		}, deleteShareSuccess);
 	}
 	
 	function hideShare() {
@@ -164,7 +205,9 @@ var shareContext = (function() {
 		showShareInfo: showShareInfo,
 		showHiddenSharedList: showHiddenSharedList,
 		addShare: addShare,
+		deleteShareConfirm: deleteShareConfirm,
 		deleteShare: deleteShare,
+		deleteShare2: deleteShare2,
 		hideShare: hideShare,
 		showShare: showShare
 	}

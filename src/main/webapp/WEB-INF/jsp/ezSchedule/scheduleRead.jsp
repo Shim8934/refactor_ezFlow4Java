@@ -500,7 +500,7 @@
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelSubject">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 16px; padding-top: 2px" id="LabelSubject">	                                    
 	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>

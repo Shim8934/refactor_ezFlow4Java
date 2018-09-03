@@ -309,7 +309,7 @@ function SendDraftMappingSign(ret)
 			{
 				HwpCtrl.SetFieldText(psigncell, "");	
 				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
+				HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
 
 			  	
 			  	signInfo[signCnt] = psigncell;
@@ -326,7 +326,7 @@ function SendDraftMappingSign(ret)
 			{
 				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);	
 				
-				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
+				HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
 		  		
 		  		signInfo[signCnt] = psigncell;
 		  		
@@ -384,11 +384,12 @@ function SendDraftMappingSign(ret)
 				if (HwpCtrl.CheckFieldExist(pseumyungdatecell))
 				    OpinionText = "";
 
-				if (CurAprType == strAprType4 )	
+				if (CurAprType == strAprType4) {
 					OpinionText = strLang6 + OpinionText;
-	
-				HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
-	
+					HwpCtrl.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
+				} else {
+					HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
+				}
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -404,14 +405,15 @@ function SendDraftMappingSign(ret)
 			{
 			    if (HwpCtrl.CheckFieldExist(pseumyungdatecell))
 			        OpinionText = "";
-
-				if (CurAprType == strAprType4 )	
-					OpinionText = strLang6 + OpinionText;
 			  	
-				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);	
+				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);
 				
-				HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
-
+				if (CurAprType == strAprType4 )	{
+					OpinionText = strLang6 + OpinionText;
+					HwpCtrl.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
+				} else {
+					HwpCtrl.AppendFieldText(psigncell, OpinionText, true);
+				}
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -938,12 +940,9 @@ function SaveDraftDocInfo_susin() {
 	} else {
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
 	}
-
-	if (pHasOpinionYN == "") {
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(objNodes[10]));
-	} else {
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
-	}
+	
+	//2018-08-30 배현상, 재기안 시 의견이 없는 경우 의견이 있다고 알럿창이 나오는 버그 수정
+    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
 
 	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFT");
 	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");

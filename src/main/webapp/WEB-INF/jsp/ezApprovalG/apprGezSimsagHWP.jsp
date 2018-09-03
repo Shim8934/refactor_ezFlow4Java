@@ -127,6 +127,7 @@
         function window_onload() {
             try {
                 window.onresize();
+                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
                 HwpCtrl.SetSaveMode(1);
 
                 if (pDocHref != "") { 
@@ -265,13 +266,15 @@
 
                 var chkpass = chk_Passwd(pUserID);
                 if (chkpass == "False") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
                     OpenAlertUI(pAlertContent);
                     return;
-                } else if (chkpass == "cancel") {
+                } else if (chkpass == "cancel" || chkpass == undefined) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                    OpenAlertUI(pAlertContent);
                     return;
                 }
-
+                
                 SaveFile();
 
                 var rtnVal = "FALSE";
@@ -376,10 +379,12 @@
 
             var chkpass = chk_Passwd(pUserID);
             if (chkpass == "False") {
-                var pAlertContent =  "<spring:message code='ezApprovalG.t27'/>";
+                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
                 OpenAlertUI(pAlertContent);
                 return;
-            } else if (chkpass == "cancel") {
+            } else if (chkpass == "cancel" || chkpass == undefined) {
+                var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                OpenAlertUI(pAlertContent);
                 return;
             }
 
@@ -900,6 +905,7 @@
                                     case "id":
                                     case "class":
                                     case "summary":
+                                    case "style":
                                     case "width":
                                     case "width_kaoni":
                                     case "height":
@@ -975,6 +981,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -992,6 +999,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1009,6 +1017,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1026,6 +1035,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1043,6 +1053,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "abbr":
                                     case "axis":
                                     case "headers":
@@ -1071,6 +1082,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "abbr":
                                     case "axis":
                                     case "headers":
@@ -1171,12 +1183,12 @@ function PercentToMillimeter(strFontSize, strPercent) {
         </tr>
         <tr>
             <td height="20">
-                <table class="file">
+                <table class="file" style="height: 70px;">
                     <tr>
                         <th><spring:message code='ezApprovalG.t65'/></th>
                         <td>
-                            <div id="lstAttachLink"></div>
-                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+                            <div id="lstAttachLink" style="height: 65px;"></div>
+                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
                         </td>
                     </tr>
                 </table>

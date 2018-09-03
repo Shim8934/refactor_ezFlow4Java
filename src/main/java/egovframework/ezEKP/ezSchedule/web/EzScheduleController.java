@@ -748,8 +748,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		logger.debug("============ scheduleSelectAttendant started ============");
 		
         String title = request.getParameter("title");
-        String startTime = request.getParameter("startTime");
-        String endTime = request.getParameter("endTime");
+        String startTime = request.getParameter("StartTime");
+        String endTime = request.getParameter("EndTime");
         String gubun = request.getParameter("gubun");
         String type = request.getParameter("type");
         String pSearchString = request.getParameter("searchString");
@@ -1735,7 +1735,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");		
-		String pidList = "'" + idList + "'";
+		String pidList = "'" + idList + "',";
 		
 		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(idList, lang, tenantID);
 		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(idList, lang, tenantID);
@@ -1744,9 +1744,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		if(dList != null && dList.size()>0){
 			for (int i = 0; i < dList.size(); i++) {
-				if (i == 0) {
+				/*if (i == 0) {
 					dcidList += ",";
-				}
+				}*/
 				ScheduleDeptVO data = dList.get(i);			
 				dcidList += "\'" + data.getDeptId()+ "\',";				
 			}				
@@ -1755,9 +1755,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		if(cList != null && cList.size()>0 ){
 			for (int i = 0; i < cList.size(); i++) {							
 				if(dList == null || dList.size()<=0){
-					if (i == 0) {
+					/*if (i == 0) {
 						dcidList += ",";
-					}
+					}*/
 					ScheduleCumulerVO data = cList.get(i);			
 					dcidList += "\'" + data.getDeptId()+ "\',";		
 				}

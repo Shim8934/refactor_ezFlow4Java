@@ -165,6 +165,10 @@
 		                        setMenuBar("btnAssign", false);
 		                        setMenuBar("btnDistribute", false);
 		                    }
+
+		                    if (pOrg_orgDocID == "") {
+		                        setMenuBar("btnReturn", false);
+		                    }
 		
 		                    if (g_RetFlag == "Y") {
 		                        btnReturn_onclick();
@@ -239,8 +243,6 @@
 		            SetAutoPropertyValue();
 		
 		            var rtnVal = ExcuteInfo("INIT", "");
-		            if (!rtnVal) {
-		            }
 		        }
 		        catch (e) {
 		            alert("setAutoProperty : " + e.description);
@@ -251,10 +253,38 @@
 		        HwpCtrl.style.height = null;
 		        HwpCtrl.height = document.documentElement.clientHeight - 150;
 		    }
+		    
+		    function window_onload() {
+				var chkReceivedDoc = 0;
+				
+		    	//접수된 문서인지 확인하기
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/isReceivedDoc.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success : function(result) {
+		    			chkReceivedDoc = result;
+		    		}
+		    	});
+		    	
+		    	if (chkReceivedDoc != 0) {
+		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
+		        	window.close();
+		    	} else {
+		    		window_onload2();
+		    	}
+		    }
 		
-			function window_onload() {
+			function window_onload2() {
 			    window.onresize();
+			    
+			    HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 			    HwpCtrl.SetSaveMode(1);
+			    
 			    try {
 			        IsSkipDrafter = "FALSE"
 			        SetBtnStateTrue();
@@ -319,7 +349,8 @@
 			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
-			                    document.getElementById("btnReqReSend").style.display = "";
+			                	/* 재발송기능 display:none처리 2018-08-25 */
+			                    /* document.getElementById("btnReqReSend").style.display = ""; */
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
 			
@@ -391,7 +422,8 @@
 			
 			                var NewIsRelay = GetRelayDocInfo();
 			                if (NewIsRelay) {
-			                    btnReqReSend.style.display = "";
+			                	/* 재발송기능 display:none처리 */
+			                    /* btnReqReSend.style.display = ""; */
 			                } else {
 			                    btnReqReSend.style.display = "none";
 			                }
@@ -1274,7 +1306,6 @@
 		    		success : function(result) {
 		    			chkReceivedDoc = result;
 		    		}
-		    		
 		    	});
 		    	
 			    parameter[0] = pDocID;
@@ -1282,7 +1313,7 @@
 			    parameter[2] = SignCount;
 			    parameter[3] = SignInfo;
 			    parameter[4] = hapyuiCount;
-			    parameter[5] = pDraftFlag;
+			    parameter[5] = g_DraftFlag;
 			    parameter[6] = pSuSinFlag;
 			    parameter[7] = pChamJoFlag;
 			    parameter[8] = gongramCount;
@@ -1581,12 +1612,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

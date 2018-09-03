@@ -64,6 +64,7 @@
     var _hasattach = "${hasattach}";
     var approvalFlag = "${approvalFlag}";
     var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+    var ext = "";
     function getDocInfo() {
         try {
             if (isBody == "YES") {

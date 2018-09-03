@@ -102,6 +102,7 @@
 	        function window_onload() {
 	            window.onresize();
 	
+	            HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 	            HwpCtrl.SetSaveMode(1);
 				
 	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
@@ -419,12 +420,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

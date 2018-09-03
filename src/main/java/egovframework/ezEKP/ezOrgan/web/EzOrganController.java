@@ -315,7 +315,7 @@ public class EzOrganController {
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
 		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
-		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
+		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1)(docsysteminfo=*))";
 		int intScope = 1;
 
 		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope);
@@ -350,7 +350,7 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String strBaseDN = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-		String strFilter = "(&(objectclass=ucOrg2))";
+		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
 
         int intScope = 1;
         String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope);
@@ -367,7 +367,7 @@ public class EzOrganController {
 	public String insertAllOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , String deptID) throws Exception{
 		logger.debug("insertAllOrganSubTreeInfo Started (outer)");
 		userInfo = commonUtil.userInfo(loginCookie);
-		String strFilter = "(&(objectclass=ucOrg2))";
+		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
 		
 		int intScope = 1;
 		String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, deptID, intScope);

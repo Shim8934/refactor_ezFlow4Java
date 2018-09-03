@@ -31,6 +31,8 @@
 			var strActType4  = "<spring:message code='ezWebFolder.t111'/>";
 			var strActType5  = "<spring:message code='ezWebFolder.t19' />";
 			var strActType6  = "<spring:message code='ezWebFolder.t287'/>";
+			var strActType7  = "<spring:message code='ezWebFolder.t121'/>";
+			var strActType8  = "<spring:message code='ezWebFolder.t122'/>";
 			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
@@ -524,7 +526,7 @@
 							<th headers="ft" class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
 							<th headers="fn" class="wfFileLogName"><spring:message code='ezWebFolder.t156'/></th>
 							<th headers="fs" class="wfFileFavoriteSize"><spring:message code='ezWebFolder.t157'/></th>
-							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t154'/></th>
+							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t339'/></th>
 							<th headers="at" class="wfActive" ><spring:message code='ezWebFolder.t158'/></th>
 							<th headers="ad" class="wfFileLogDate" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 						</tr>

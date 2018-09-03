@@ -402,6 +402,11 @@
 	            	g_SepAttachLVXml = RetValue[49];
 	            	g_szSCListXml = RetValue[50];
 	            	sepAttachCheckYN = RetValue[51];
+	            	
+	            	if (pIniGubun == "1") {
+		        		document.title = "문서정보";
+	                    document.getElementById("h1_header").innerHTML = "문서정보";
+		        	}
 	            }
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
@@ -1499,7 +1504,7 @@
 		            return;
 		        }
 		
-		        if (CurSelRow[0].getAttribute("DATA6") != "") {
+		        if (CurSelRow[0].getAttribute("DATA6") != "" && useReceiveInfoName != '1') {
 		            alert("<spring:message code='ezApprovalG.t10500'/>");
 		            return;
 		        }
@@ -1602,11 +1607,12 @@
 		     */
 		    function CheckInputField() {
 		        var pRegType = selRegisterType.value;
-				if (txtTitle.value == "") {
-		            alert("<spring:message code='ezApprovalG.t955'/>");
+				if (txtTitle.value.trim() == "") {
+		            alert("기록물 제목을 입력해 주세요.");
+		            txtTitle.focus();
 		            return false;
 		        }
-				if (txtRegY.value == "" || txtRegD.value == "" || txtRegM.value == "") {
+				if (txtRegY.value.trim() == "" || txtRegD.value.trim() == "" || txtRegM.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1045'/>");
 		            return false;
 		        } else {
@@ -1643,23 +1649,25 @@
 			            return false;
 			        }
 		        }
-				if (txtDrafter.value == "") {
+				if (txtDrafter.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1055'/>");
+		            txtDrafter.focus();
 		            return false;
 		        }
-				if (txtReceiptMember.value == "") {
-	                alert("<spring:message code='ezApprovalG.t1056'/>");
+				if (txtReceiptMember.value.trim() == "") {
+	                alert("발신기관명을 입력해 주세요.");
+	                txtReceiptMember.focus();
 	                return false;
 	            }
 				
 				if (pRegType == "1" || pRegType == "3") {
-					if (txtAprMemberTitle.value == "") {
+					if (txtAprMemberTitle.value.trim() == "") {
 		                alert("<spring:message code='ezApprovalG.t1054'/>");
 		                return false;
 		            }
 				}
 				if (pRegType == "5" || pRegType == "6") {
-					if (txtSummary.value == "") {
+					if (txtSummary.value.trim() == "") {
 		                alert("<spring:message code='ezApprovalG.t1058'/>");
 		                return false;
 		            }
@@ -1669,8 +1677,9 @@
 		            }
 				}
 				if (pRegType == "2" || pRegType == "4" || pRegType == "7" || pRegType == "8") {
-					if (txtOriginSN.value == "") {
-		                alert("<spring:message code='ezApprovalG.t1057'/>");
+					if (txtOriginSN.value.trim() == "") {
+		                alert("문서번호를 입력해 주세요.");
+		                txtOriginSN.focus();
 		                return false;
 		            }
 				}
@@ -1721,6 +1730,16 @@
 		            g_SepAttachLVXml = rtn[1];
 		        }
 		    }
+		    
+		    function btn_AprDeptTempletModify_onclick() {
+		    	/* var listview = new ListView();
+		        listview.LoadFromID("lvRECEPTLIST");
+		        var CurSelRow = listview.GetSelectedRows();
+		        var DeleteState;
+		        if (CurSelRow.length != 0) {
+	                listview.DeleteRow(GetAttribute(CurSelRow[0], "id"));
+		        } */
+		    }
 	    </script>
 	    <style>
 	    	.mainlist_free tr th {text-align:center}
@@ -1743,13 +1762,13 @@
 	    </style>
 	</head>
 	<body id="bodytag" class="popup" style="background-color: #ffffff; overflow: hidden">
-	    <h1>
-	    	<spring:message code='ezApprovalG.t1742'/>
+		<div>
+	    	<h1 id="h1_header"><spring:message code='ezApprovalG.t1742'/></h1>
 	        <div id="btnArea" style="display:none;float:right;">
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
 	        </div>	        
-	    </h1>
+		</div>
 	    <div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
@@ -1985,7 +2004,6 @@
 		                        			</c:if>
 		                        			<c:if test="${docType ne '001'}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
-					                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
            		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
            		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        			</c:if>
@@ -2194,6 +2212,7 @@
 	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">
+	                            	<c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code = 'ezApprovalG.lhj20' /></c:if></span></a></c:if>
 	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
@@ -2738,7 +2757,7 @@
 								<tr id="trOriginSN" style="display: none;">
 								    <th>문서번호</th><!-- 문서번호 -->
 									<td>
-							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="9">
+							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
 								    </td>
 								</tr>
 								<c:if test="${guBun ne '1'}">

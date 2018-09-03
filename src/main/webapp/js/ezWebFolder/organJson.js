@@ -178,6 +178,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	spanDeptName.setAttribute("class", "spanName");
 	spanDeptName.setAttribute("name", list["deptId"]);
 	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.setAttribute("title", list["deptName"]);
 	spanDeptName.onclick    = function() {getSelected(this);};
 	spanDeptName.ondblclick = function() {addDept(this)};
 	
@@ -774,6 +775,7 @@ function showSelectedDept(mainElmt, deptName, deptId) {
 	imgElmt.setAttribute("class", "webFolderImg2");
 	imgElmt.src = "/images/OrganTree_cross/ic-open.gif";
 	spanElmt.setAttribute("class", "spanName2");
+	spanElmt.setAttribute("title", deptName);
 	spanElmt.textContent = deptName;
 	divElmt.setAttribute("class", "webFolderDiv");
 	divElmt.setAttribute("nodeId", deptId);
@@ -832,6 +834,7 @@ function displaySubDepts(divTree, divElmt, list) {
 	spanDeptName.setAttribute("class", "spanName");
 	spanDeptName.setAttribute("name", list["deptId"]);
 	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.setAttribute("title", list["deptName"]);
 	spanDeptName.onclick    = function() {getSelectedDept(this);};
 	spanDeptName.ondblclick = function() {addSelectedDept(this)};
 	

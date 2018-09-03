@@ -11,7 +11,7 @@ var messages = {
 	strLang10 : "총", 								// ezWebFolder.t137
 	strLang11 : "개", 								// ezWebFolder.t138
 	strLang12 : "데이터가 없습니다.", 					// ezWebFolder.t144
-	strLang13 : "파일들의 소유자 여야합니다.", 				// ezWebFolder.t243
+	strLang13 : "파일들의 소유자가 아닙니다.", 				// ezWebFolder.t243
 	strLang14 : "폴더가 선택되지 않았습니다.", 				// ezWebFolder.t270
 	strLang15 : "폴더", 								// ezWebFolder.t276
 	strLang16 : "파일", 								// ezWebFolder.t277
@@ -27,5 +27,9 @@ var messages = {
 	strLang26 : "외",
 	strLang27 : "명(팀)",
 	strLang28 : "공유를 추가했습니다.",
-	strLang29 : "공유를 수정했습니다."
+	strLang29 : "공유를 수정했습니다.",
+	strLang30 : "파일의 소유자가 아닙니다.",
+	strLang31 : "공유대상자가 없습니다. ",
+	strLang32 : "공유를 취소하시겠습니까?",
+	strLang33 : "공유를 취소했습니다."
 }

@@ -5,7 +5,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title><spring:message code='ezApprovalG.t30'/></title>
+	    <title>
+	    <c:choose>
+			<c:when test="${nonElecRec eq 'Y'}">
+            	비전자문서 등록
+			</c:when>
+			<c:otherwise>
+            	<spring:message code='ezApprovalG.t30'/>
+			</c:otherwise>
+		</c:choose>
+	    </title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
@@ -159,8 +168,8 @@
 	                setMenuBar("btnSendDraft", true);
 	                dragNdrapNo();
 	
-	                HwpCtrl.SetImgReg();
 	                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+	                HwpCtrl.SetImgReg();
 	                HwpCtrl.SetSaveMode(1);
 	
 	                IsSkipDrafter = "FALSE"
@@ -201,6 +210,14 @@
 	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
 	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
 	                	HwpCtrl.SetFieldText("docnumber","");
+	                }
+	                
+	                /**
+	                	기안인 경우에는 hwp파일이 실존하지 않아 로컬로 저장하는 것이 불가능하므로 저장버튼 display:none처리
+	                	또한, 일반 mht쪽에서도 기안을 올릴 때 저장 기능이 없음.
+	                */
+	                if(DraftFlag === 'DRAFT') {
+	                	$("#btnSave").css('display', 'none');
 	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e.description);
@@ -1353,13 +1370,17 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li id="btnSelForm"><span onclick="return btnSelForm_onclick()"><spring:message code='ezApprovalG.t152'/></span></li>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
-	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
+	                        <%-- <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li> --%>
 							<c:choose>
 								<c:when test="${nonElecRec eq 'Y'}">
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()">문서정보</span></li>
+	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
 								</c:when>
 								<c:otherwise>
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 								</c:otherwise>
 							</c:choose>
@@ -1401,12 +1422,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

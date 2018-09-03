@@ -451,8 +451,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
         
-        String multipartFirstIdx = "0";
-        
         // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
@@ -569,9 +567,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 			                
-			                multipartFirstIdx = attachedFileList.get(0).get("index");
-			                logger.debug("EDIT multipartFirstIdx=" + multipartFirstIdx);
-			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
 								
@@ -687,9 +682,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
-			                
-			                multipartFirstIdx = attachedFileList.get(0).get("index");
-			                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -937,9 +929,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 				                
-				                multipartFirstIdx = attachedFileListInReply.get(0).get("index");
-				                logger.debug("FORWARD multipartFirstIdx=" + multipartFirstIdx);
-				                
 								for (int i = 0; i < attachedFileListInReply.size(); i++) {
 									Map<String, String> fileInfo = attachedFileListInReply.get(i);
 									
@@ -1168,7 +1157,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
-		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		
 		//업무일지 아이디
@@ -4378,7 +4366,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							} else {
 								break;
 							}
-							}
+						}
 							
 						for (int i = 0; i < count; i++) {
 							p = mp.getBodyPart(i);
@@ -5220,6 +5208,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
 					jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
 					jsonObject.put("type", "");
+					jsonObject.put("href", "");
 					jsonList.add(jsonObject);
 				}
 			}
@@ -5236,6 +5225,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
 					jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
 					jsonObject.put("type", "");
+					jsonObject.put("href", "");
 					jsonList.add(jsonObject);
 				}
 			}
@@ -5250,6 +5240,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
 					jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
 					jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+					jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
 					jsonList.add(jsonObject);
 				}
 			}
@@ -5287,4 +5278,132 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	size += b.length;
 	    }
 	}
+	
+	@SuppressWarnings("static-access")
+	@RequestMapping(value="/ezEmail/downloadAttachInWriter.do")
+	public void downloadAttachInWriter(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("downloadAttachInWriter started");
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userInfo.get(1);
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("userEmail=" + userEmail);
+		
+		String folderPath = request.getParameter("folderPath");
+		String fileName = request.getParameter("filename");
+		String strUid = request.getParameter("uid");
+		int fileIndex = Integer.valueOf(request.getParameter("index")); 
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
+		logger.debug("folderPath=" + folderPath + ",uid=" + uid + "fileIndex=" + fileIndex + ",fileName=" + fileName);
+		
+		if (folderPath == null || strUid == null || fileName == null) {
+			logger.debug("downloadAttach illegal arguments");
+			return;
+		}
+		
+		IMAPAccess ia = null;
+		
+		try {
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), 
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			
+			Folder folder = ia.getFolder(folderPath);
+			
+			if (folder == null || !folder.exists()) {
+				logger.debug("folder not found. folderPath=" + folderPath);
+			} else {
+				folder.open(folder.READ_ONLY);
+				
+				Message message = null;
+				
+				if (folder.isOpen() && folder instanceof IMAPFolder) {
+					message = ((IMAPFolder)folder).getMessageByUID(uid);
+					
+					if (message == null) {
+						logger.error("message not found. uid=" + uid);
+					} else {
+
+						Multipart mp = (Multipart) message.getContent();
+						
+						int count = mp.getCount();
+						BodyPart p = null;
+						int nonAttachCount = 0;
+						
+						// 첨부파일 파트 이전에 존재하는 파트 갯수를 구한다.
+						for (int i = 0; i < count; i++) {
+							p = mp.getBodyPart(i);
+							
+							if (p.getDisposition() == null) {
+								nonAttachCount++;
+							} else {
+								break;
+							}
+						}
+						
+						// 첨부파일의 index가 nonAttachCount 만큼 뒤로 밀렸으므로 i - nonAttachCount와 비교하여 파일을 다운로드 한다.
+						for (int i = 0; i < count; i++) {
+							p = mp.getBodyPart(i);
+							
+							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+								
+								if (fileIndex == (i - nonAttachCount)) {
+									response.setContentType(p.getContentType());
+									fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
+									String nfcFileName = commonUtil.normalizeFileName(fileName);
+									
+									response.addHeader("content-disposition", "attachment; filename=\"" + nfcFileName + "\"");
+									logger.debug("content-disposition=" + "attachment; filename=\"" + nfcFileName + "\"");
+									
+									InputStream input = null;
+									OutputStream output = null;
+									
+									try {
+										input = p.getInputStream();
+										output = response.getOutputStream();
+										
+										byte[] buffer = new byte[4096];
+										int byteRead;
+										
+										while ((byteRead = input.read(buffer)) != -1) {
+											output.write(buffer, 0, byteRead);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									} finally {
+										if (ia != null) {
+											ia.close();
+										}
+										if (input != null) {
+											input.close();
+										}
+										if (output != null) {
+											output.flush();
+											output.close();
+										}
+									}
+									
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("downloadAttachInWriter ended");
+	}
+	
 }

@@ -58,6 +58,7 @@
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
 	        var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 		    var timeCheck = false;
+		    var timeSelect = false;
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -136,6 +137,9 @@
 		        if (document.getElementById("iReFlag")) {
 		        	tmpReFlag = document.getElementById("iReFlag").value;
 		        }
+		        
+		        //수정시 저장된 일정시간으로 설정
+		        setDate();
 		    }
 		    
 		    window.onresize = function () {   	
@@ -172,6 +176,11 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
+
+				setDate();
+		    });
+		    
+		    function setDate() {
 				var uploadSDate = "${UploadSDate}";
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
@@ -205,7 +214,7 @@
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', EDate);
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
-		    });
+		    }
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
 		    var monthStr = monthMsg.split(";");		    
@@ -414,6 +423,11 @@
 	            document.body.appendChild(form);
 	            form.submit();
 	        }
+	        
+	        $(document).on('click', ".ui-timepicker-list li", function() {
+	        	timeSelect = true;
+	        })
+
 	    </script>
 	</head>
 

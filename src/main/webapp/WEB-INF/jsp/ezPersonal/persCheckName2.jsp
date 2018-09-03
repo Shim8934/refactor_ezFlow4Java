@@ -108,15 +108,15 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-		<object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT>
-		</object>
+		<!-- <object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT>
+		</object> -->
 		<h1><spring:message code='ezPersonal.t100002'/></h1>
 		<div id="close">
 			<ul>
 		    	<li><span onClick="cancel_onClick()"></span></li>
 		  	</ul>
 		</div>
-		<h2><spring:message code='ezPersonal.t100003'/></h2>
+		<span>▒ <spring:message code='ezPersonal.t100003'/></span>
 		<div class="listview" style="overflow-x:hidden;overflow-y:auto;">
 			<div id="ListViewItem" style="Width:587px; Height:185px; border:0px;overflow:auto;" ></div>
 		</div>

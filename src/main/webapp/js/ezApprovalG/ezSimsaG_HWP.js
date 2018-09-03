@@ -67,7 +67,7 @@ function sendExt() {
 }
 
 function covBody(pbody) {
-    pbody = removeTags(pbody, '<caption><img><i><b><u><sub><sup><p><ul><ol><table><tr><td>');
+    pbody = removeTags(pbody, '<caption><img><i><b><u><sub><sup><br><p><span><ul><ol><table><tbody><tr><td>');
 
 	var compSTR, subcompSTR, compChar, startIdx, findIdx, nextIdx, endIdx;
 	var i, strgt, startflag;
@@ -142,6 +142,66 @@ function covBody(pbody) {
             i = i + 1
         }
 	}
+    
+    // html 태그를 모두 뽑아내기 위한 정규식
+    var tagRegexp = /<[/]?([^> ]*)[^>]*>/g;
+    
+    // 첫번째 html 태그를 매치함
+    var tagMatch = tagRegexp.exec(newSTR);
+    // tag 전체 문자열
+    var tagLabel = "";
+    // tag 이름
+    var tagName = "";
+    
+    var tagInfo, lastTagInfo;
+    var startTagStack = [];
+    // 홀태그 스택
+    var oddTagStack = [];
+    
+    while (tagMatch != null) {
+    	tagLabel = tagMatch[0];
+    	tagName = tagMatch[1];
+    	// 닫힌 태그
+    	if (tagLabel.indexOf('/') === 1) {
+    		lastTagInfo  = startTagStack.pop();
+    		
+    		if (lastTagInfo === undefined) {
+    			continue;
+    		}
+    		
+			// 홀태그를 뒤에 /> 로 되도록 함으로서 xml 파싱시에 에러가 나지 않도록 한다.
+			// 왜 홀태그를 따로 정규식으로 가져오지 않냐면 가끔 p 태그가 닫히지 않는 경우도 있기 때문이다.
+			// 정규식으로 닫히지 않는 태그를 가져오는건 힘들 것 같기 때문에 직접 검사하도록 구현함
+			
+			// 마지막 열리는 태그랑 닫히는 태그가 이름이 맞을 때 까지
+			while (lastTagInfo.name !== tagName) {
+				oddTagStack.push(lastTagInfo);
+				lastTagInfo = startTagStack.pop();
+			}
+    	} else {
+    		// 열린 태그
+    		startTagStack.push({
+    			name: tagName,
+    			endIndex: tagMatch.index + tagLabel.length - 1
+    		});
+    	}
+    	
+    	tagMatch = tagRegexp.exec(newSTR);
+    }
+    
+    while (startTagStack.length > 0) {
+    	oddTagStack.unshift(startTagStack.pop());
+    }
+    
+    oddTagStack.sort(function(aTag, bTag) {
+    	return aTag.endIndex - bTag.endIndex;
+    });
+    
+    while (oddTagStack.length > 0) {
+    	tagInfo = oddTagStack.pop();
+    	newSTR = [newSTR.slice(0, tagInfo.endIndex), '/', newSTR.slice(tagInfo.endIndex)].join('');
+    }
+    
 	var re = /&nbsp;/g; 
 	var BodyStr = "<content>" + newSTR.replace(re,"&amp;nbsp;") + "</content>";
 	
@@ -149,9 +209,6 @@ function covBody(pbody) {
 	BodyStr = BodyStr.replace(/'' /g,"' ");
 	BodyStr = BodyStr.replace(/''>/g,"'>");
 	BodyStr = BodyStr.replace(/'; /g,"; ");
-	BodyStr = BodyStr.replace(/<br>/g,"");
-    
-    BodyStr = BodyStr.replace(/<BR>/g, "");
     BodyStr = BodyStr.replace(/class=hstyle0/g, "");
     BodyStr = BodyStr.replace(/''font-size:'/g, "'font-size:");
     
@@ -159,6 +216,8 @@ function covBody(pbody) {
     BodyStr = BodyStr.replace(/='>/g, "=''>");
     BodyStr = BodyStr.replace(/=''/g, "='");
     BodyStr = BodyStr.replace(/:'  '/g, ":");
+    BodyStr = BodyStr.replace(/:'  /g, ":");
+    BodyStr = BodyStr.replace(/';'/g, ";'");
     
     //BodyStr = BodyStr.replace(/width="(.*?)[0-9]*/ig, " $&mm");
     //BodyStr = BodyStr.replace(/width='(.*?)[0-9]*/ig, " $&mm");
@@ -167,11 +226,33 @@ function covBody(pbody) {
     
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
-
+    
+    // rgb to hex
+    var rgbRegexp = /rgb[(](\d), (\d), (\d)[)]/g;
+    var rgbMatch = rgbRegexp.exec(BodyStr);
+    
+    var rgbToHex = function(regexpResult) {
+    	var out = "#";
+    	var integer;
+    	
+    	regexpResult.slice(1).forEach(function(color) {
+    		integer = parseInt(color);
+    		out += (integer < 16 ? '0' : '') + integer.toString(16);
+    	});
+    	
+    	return out;
+    };
+    
+    while (rgbMatch !== null) {
+    	BodyStr = [BodyStr.slice(0, rgbMatch.index), rgbToHex(rgbMatch), BodyStr.slice(rgbMatch.index + rgbMatch[0].length)].join('');
+    	rgbMatch = rgbRegexp.exec(BodyStr);
+    }
+    
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
     xmlpara.loadXML(BodyStr)
 	var bodyNodes = xmlpara.documentElement;
+    
 	return bodyNodes;
 }
 
@@ -731,10 +812,7 @@ function makeXML(newDocID) {
     	if (sendCNT[0] > 0) {
     		var rtnXML = makeExtinfo(sihangXML,newDocID, "GPKI");
     		if (encodePath == "NONE_Enc_SEND") {
-    			var rtnFileName = encodeDN(rtnXML);
-                ContentXML = rtnFileName.split('::')[1];
-                ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-                result = sendExtDoc(ContentXML);
+                result = sendExtDoc(rtnXML);
     		} else {
     			var rtnFileName = encodeDN(rtnXML);
     			result = encodeUP(rtnFileName);
@@ -747,10 +825,7 @@ function makeXML(newDocID) {
     	
     	if (sendCNT[1] > 0) {
             var rtnXML = makeExtinfo(sihangXML, newDocID, "SEND");
-            var resultXml = encodeDN(rtnXML);
-            ContentXML = resultXml.split('::')[1];
-            ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-            result = sendExtDoc(ContentXML);
+            result = sendExtDoc(rtnXML);
     	}
     	
     	if (result) {
@@ -1047,6 +1122,7 @@ function encodeUP(emlName) {
 				
 				
 				var NewContents = makePKIHeader(GPKIContent);
+				// 2018-08-25 sendExtDoc 함수 변경됨(클라이언트에서 Content를 넘겨주지 않고 서버에서 읽어서 처리). GPKI쪽 개발 시 참고!
 				rtnVal = sendExtDoc(NewContents);
             } else {
                 if (ObjGPKI.FailCertList != "") {
@@ -1104,6 +1180,7 @@ function encodeUP(emlName) {
 				
 				
 				var NewContents = makePKIHeader(GPKIContent);
+				// 2018-08-25 sendExtDoc 함수 변경됨(클라이언트에서 Content를 넘겨주지 않고 서버에서 읽어서 처리). GPKI쪽 개발 시 참고!
 				rtnVal = sendExtDoc(NewContents);
             } else {
                 if (ObjGPKI.FailCertList != "") {
