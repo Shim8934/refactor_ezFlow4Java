@@ -91,7 +91,7 @@ public class EzCabinetController_h {
 		model.addAttribute("userId"   , user.getId());
 		
 		logger.debug("jspGetShareCabinetPage ended");
-		return "ezCabinet/cabinetShare";
+		return "ezCabinet/share/cabinetShare";
 	}
 	
 	@RequestMapping(value="/ezCabinet/getSearchShareList.do")
@@ -112,7 +112,7 @@ public class EzCabinetController_h {
 		}
 		
 		logger.debug("jspGetShareUsers ended");
-		return "ezCabinet/cabinetSearchShare";
+		return "ezCabinet/share/cabinetSearchShare";
 	}
 	
 	@RequestMapping(value="/ezCabinet/getAncestorShareList.do")
@@ -131,7 +131,7 @@ public class EzCabinetController_h {
 		}
 		
 		logger.debug("jspGetAncestorShareList ended");
-		return "ezCabinet/cabinetAncestorShare";
+		return "ezCabinet/share/cabinetAncestorShare";
 	}
 	
 	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST)
@@ -445,7 +445,7 @@ public class EzCabinetController_h {
 		}
 		
 		switch(itemType) {
-			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"          ; break;
+			case 0  : jspPageName = "ezCabinet/detail/cabinetFileDetail"   ; break;
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)    ; break;
 			case 2  : jspPageName = getApprovalColumnInfo(model, iteminfo) ; break;
 			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)    ; break;
@@ -463,7 +463,7 @@ public class EzCabinetController_h {
 	}
 	
 	private String getJournalColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName = "ezCabinet/cabinetJournalDetail";
+		String jspPageName = "ezCabinet/detail/cabinetJournalDetail";
 		return jspPageName;
 	}
 	
@@ -472,10 +472,10 @@ public class EzCabinetController_h {
 		String commuType  = iteminfo.get("commuType").toString();
 		
 		if (commuType.equals("normal")) {
-			jspPageName = "ezCabinet/cabinetCommunityDetail";
+			jspPageName = "ezCabinet/detail/cabinetCommunityDetail";
 		}
 		else {
-			jspPageName = "ezCabinet/cabinetPhotoCommunityDetail";
+			jspPageName = "ezCabinet/detail/cabinetPhotoCommunityDetail";
 		}
 		
 		return jspPageName;
@@ -489,12 +489,12 @@ public class EzCabinetController_h {
 	}
 		
 	private String getApprovalColumnInfo(Model model, JSONObject iteminfo){
-		String jspPageName = "ezCabinet/cabinetApprovalDetail";
+		String jspPageName = "ezCabinet/detail/cabinetApprovalDetail";
 		return jspPageName;
 	}
 	
 	private String getScheduleColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName = "ezCabinet/cabinetScheduleDetail";
+		String jspPageName = "ezCabinet/detail/cabinetScheduleDetail";
 		JSONObject creator = (JSONObject) iteminfo.get("creator");
 		model.addAttribute("creatorUser", creator);
 		
@@ -502,7 +502,7 @@ public class EzCabinetController_h {
 	}
 	
 	private String getResourceColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName = "ezCabinet/cabinetResourceDetail";
+		String jspPageName = "ezCabinet/detail/cabinetResourceDetail";
 		JSONObject creator = (JSONObject) iteminfo.get("creator");
 		
 		model.addAttribute("creatorUser", creator);
@@ -519,17 +519,17 @@ public class EzCabinetController_h {
 		model.addAttribute("modifierUser", modifier);
 		
 		if (addressType.equals("group")) {
-			jspPageName = "ezCabinet/cabinetGroupAddress";
+			jspPageName = "ezCabinet/detail/cabinetGroupAddress";
 		}
 		else {
-			jspPageName = "ezCabinet/cabinetNormalAddress";
+			jspPageName = "ezCabinet/detail/cabinetNormalAddress";
 		}
 		
 		return jspPageName;
 	}
 	
 	private String getEmailColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName     = "ezCabinet/cabinetEmailDetail";
+		String jspPageName     = "ezCabinet/detail/cabinetEmailDetail";
 		JSONObject senderUser  = (JSONObject) iteminfo.get("sender");
 		JSONArray receiverList = (JSONArray) iteminfo.get("receivers");
 		
@@ -549,17 +549,17 @@ public class EzCabinetController_h {
 		String boardType   = iteminfo.get("boardType").toString();
 		
 		if (boardType.equals("photo")) {
-			jspPageName = "ezCabinet/cabinetBoardPhotoDetail";
+			jspPageName = "ezCabinet/detail/cabinetBoardPhotoDetail";
 		}
 		else {
-			jspPageName = "ezCabinet/cabinetBoardDetail";
+			jspPageName = "ezCabinet/detail/cabinetBoardDetail";
 		}
 		
 		return jspPageName;
 	}
 	
 	private String getOptionColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName = "ezCabinet/cabinetOptionDetail";
+		String jspPageName = "ezCabinet/detail/cabinetOptionDetail";
 		return jspPageName;
 	}
 }

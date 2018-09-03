@@ -38,7 +38,7 @@ public class EzCabinetController {
 	public String jspGetCabinetMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
 		logger.debug("jspGetCabinetMain started");
 		logger.debug("jspGetCabinetMain ended");
-		return "ezCabinet/cabinetMain";
+		return "ezCabinet/main/cabinetMain";
 	}
 	
 	@RequestMapping(value="/ezCabinet/cabinetLeft.do")
@@ -61,7 +61,7 @@ public class EzCabinetController {
 		}
 		
 		logger.debug("jspGetCabinetLeft ended");
-		return "ezCabinet/cabinetLeft";
+		return "ezCabinet/main/cabinetLeft";
 	}
 	
 	@RequestMapping(value="/ezCabinet/cabinetGeneral.do")
@@ -77,14 +77,14 @@ public class EzCabinetController {
 		}
 		
 		logger.debug("jspGetCabinetGeneral ended");
-		return "ezCabinet/cabinetGeneral";
+		return "ezCabinet/config/cabinetGeneral";
 	}
 	
 	@RequestMapping(value="/ezCabinet/cabinetConfig.do")
 	public String jspGetCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetConfig started");
 		logger.debug("jspGetCabinetConfig ended");
-		return "ezCabinet/cabinetConfig";
+		return "ezCabinet/config/cabinetConfig";
 	}
 	
 	@RequestMapping(value="/ezCabinet/cabinetManagement.do")
@@ -94,7 +94,7 @@ public class EzCabinetController {
 		model.addAttribute("node", currentNode);
 		
 		logger.debug("jspGetCabinetManagement ended");
-		return "ezCabinet/cabinetManagement";
+		return "ezCabinet/management/cabinetManagement";
 	}
 	
 	@RequestMapping(value="/ezCabinet/getRelatedFile.do")
@@ -108,7 +108,7 @@ public class EzCabinetController {
 		model.addAttribute("itemId", itemId);
 		
 		logger.debug("jspGetRelatedFile ended");
-		return "ezCabinet/cabinetFileSelect";
+		return "ezCabinet/item/cabinetFileSelect";
 	}
 	
 	@RequestMapping(value="/ezCabinet/cabinetInterLocking.do")
@@ -124,7 +124,7 @@ public class EzCabinetController {
 		}
 		
 		logger.debug("jspGetRelatedCabinetConfig ended");
-		return "ezCabinet/cabinetInterLock";
+		return "ezCabinet/config/cabinetInterLock";
 	}
 	
 	@RequestMapping(value="/ezCabinet/myCabinet.do")
@@ -149,7 +149,7 @@ public class EzCabinetController {
 		
 		model.addAttribute("cabinetId", cabinetId);
 		logger.debug("jspGetMyCabinet ended");
-		return "ezCabinet/cabinetItem";
+		return "ezCabinet/main/cabinetItem";
 	}
 	
 	@RequestMapping(value="/ezCabinet/getShareCabinet.do")
@@ -176,7 +176,7 @@ public class EzCabinetController {
 		
 		model.addAttribute("cabinetId", cabinetId);
 		logger.debug("jspGetShareCabinetPage ended");
-		return "ezCabinet/cabinetItem";
+		return "ezCabinet/main/cabinetItem";
 	}
 	
 	@RequestMapping(value="/ezCabinet/addCabinetFile.do")
@@ -186,7 +186,7 @@ public class EzCabinetController {
 		model.addAttribute("cabinetId", cabinetId);
 		
 		logger.debug("jspGetAddCabinetFile ended");
-		return "ezCabinet/cabinetAddFile";
+		return "ezCabinet/item/cabinetAddFile";
 	}
 	
 	@RequestMapping(value = "/ezCabinet/cabinetAddRelated.do")
@@ -208,7 +208,7 @@ public class EzCabinetController {
 		
 		model.addAttribute("module", module);
 		logger.debug("jspGetCabinetFileDetail ended");
-		return "ezCabinet/cabinetAddRelated";
+		return "ezCabinet/related/cabinetAddRelated";
 	}
 	
 	@RequestMapping(value = "/ezCabinet/getPreviewContent.do")
@@ -218,7 +218,7 @@ public class EzCabinetController {
 		model.addAttribute("module", module);
 		
 		logger.debug("jspGetPreviewPage ended");
-		return "ezCabinet/cabinetPrevContent";
+		return "ezCabinet/preview/cabinetPrevContent";
 	}
 	
 	@RequestMapping(value = "/ezCabinet/getPreviewPhoto.do")
@@ -226,7 +226,7 @@ public class EzCabinetController {
 		logger.debug("jspGetPreviewPhotoPage started");
 		
 		logger.debug("jspGetPreviewPhotoPage ended");
-		return "ezCabinet/cabinetPrevPhoto";
+		return "ezCabinet/preview/cabinetPrevPhoto";
 	}
 	
 	@RequestMapping(value="/ezCabinet/downloadAttachFile", produces="application/zip")
