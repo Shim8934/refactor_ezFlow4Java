@@ -393,9 +393,6 @@ public class EzMemoController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		/*param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_id",userInfo.getId());*/
 
 		double width = Double.parseDouble(layerWidth);
 		double height = Double.parseDouble(layerHeight);
@@ -426,9 +423,6 @@ public class EzMemoController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		/*param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_id",userInfo.getId());*/
 		
 		int topPIndex = layerTop.indexOf('p');
 		int leftPIndex = layerLeft.indexOf('p');
@@ -462,9 +456,6 @@ public class EzMemoController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		/*param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_id",userInfo.getId());*/
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/getMemoConfig/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -743,13 +734,9 @@ public class EzMemoController {
 	public String reOrder(@CookieValue("loginCookie") String loginCookie, String draggedElId, String compareElId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("reOrder started");
 		
-		//LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		/*param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_id",userInfo.getId());*/
 		param.put("draggedElId", draggedElId);
 		param.put("compareElId", compareElId);
 		
