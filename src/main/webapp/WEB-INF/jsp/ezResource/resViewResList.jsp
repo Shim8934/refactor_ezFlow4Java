@@ -371,9 +371,26 @@
 		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
 		        window.open(strUrl, 'right');
 		    }
+		    
+		    //2018-09-03 김보미 - 페이징 하단에 나타나도록 조정
+		    window.onload = function() {
+		    	makePageSelPage();
+	    		windowResize();
+		    }
+		    
+		    window.onresize = function() {
+	    		windowResize();
+		    }
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
+
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 	</head>
-	<body class="mainbody" onload = "makePageSelPage()">
+	<body class="mainbody">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 
 		<div id="mainmenu">
@@ -389,30 +406,38 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<table class="mainlist" style="width:100%; min-width:700px;">
-  			<tr>
-    			<th style="padding:0px; width:30px"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></th>
-    			<th> <spring:message code='ezResource.t39' /></th>
-    			<th style="width:120px"> <spring:message code='ezResource.t366' /></th>
-    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
-    			<th style="width:100px"> <spring:message code='ezResource.t37' /></th>
-    			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
-    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
-  			</tr>
-			<c:if test="${!empty resBrdList}" >
-				<c:forEach var="list"  items="${resBrdList}" begin="${start}">
-  					<tr>
-    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
-						<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left"><c:out value='${list.brdNm}' /> </td>
-						<td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td>
-						<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
-						<td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td>
-						<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
-						<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->
-					</tr> 
-				</c:forEach>
-			</c:if>
-		</table><br/>
+		<div id="contentlist" style="width:100%;">
+			<table class="mainlist" style="width:100%; min-width:700px;">
+	  			<tr>
+	    			<th style="padding:0px; width:30px"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></th>
+	    			<th> <spring:message code='ezResource.t39' /></th>
+	    			<th style="width:120px"> <spring:message code='ezResource.t366' /></th>
+	    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
+	    			<th style="width:100px"> <spring:message code='ezResource.t37' /></th>
+	    			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
+	    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
+	  			</tr>
+				<c:if test="${!empty resBrdList}" >
+					<c:forEach var="list"  items="${resBrdList}" begin="${start}">
+	  					<tr>
+	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
+							<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left"><c:out value='${list.brdNm}' /> </td>
+							<td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td>
+							<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
+							<td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td>
+							<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
+							<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->
+						</tr> 
+					</c:forEach>
+				</c:if>
+				<c:if test="${empty resBrdList}">
+					<tr>
+	    				<td colspan="7" style="text-align: center"><spring:message code='main.t00026' /></td>
+	    			</tr>
+				</c:if>
+			</table>
+		</div>
+		<br/>
     	<div id="tblPageRayer"></div>
 		<form name="frmRefresh" action="/ezResource/viewResList.do" method="post">
   			<input type="hidden" name="brdID">
