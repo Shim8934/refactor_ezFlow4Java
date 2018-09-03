@@ -397,11 +397,11 @@
                 			&nbsp;&nbsp;
              			   <c:choose>
                 				<c:when test="${birthType eq 'Y'}">
-                					<input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/></span>
                 					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup" ><spring:message code='ezPersonal.t2002'/></span>
                 				</c:when>
                 				<c:otherwise>
-                					<input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/></span>
                 					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/></span>
                 				</c:otherwise>
                 			</c:choose>
