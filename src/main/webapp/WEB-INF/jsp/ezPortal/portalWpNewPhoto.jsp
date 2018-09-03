@@ -89,7 +89,8 @@
 	        	
 		        var cnt = GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS")).length;
 		        
-		        if (cnt > 0) {
+		        if (cnt > 3) {
+		        	$('#photoul').empty();
 	    	        for (var i = 1; i < cnt + 1; i++) {
 	        	        var Imgsrc = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[5]);
 	            	    var ItemID = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[2]);
@@ -137,13 +138,38 @@
 	            	end_li.className = "btn_next";
 	            	end_li.innerHTML = "<img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\">";
 	            	document.getElementById("photoul").appendChild(end_li); */
+	        	} else if (cnt < 4 && cnt > 0){
+	        		$('#photoul').empty();
+	        		for (var i = 1; i < cnt + 1; i++) {
+		        		var Imgsrc = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[5]);
+	            	    var ItemID = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[2]);
+		                var BoardID = getNodeText(GetChildNodes(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[0])[1]);
+		                var ImgTitle = getNodeText(GetChildNodes(GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS"))[i - 1])[2]);
+	
+	    	            var _li = document.createElement("li");
+		                
+						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
+						
+	                	_li.innerHTML = "<img src='" + imgSrc + "' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>";
+	
+	                	document.getElementById("photoul").appendChild(_li);
+	        		}
+					var nodata = "";
+	                for (var j = 0; j < 4-cnt; j++){
+		        		
+		            	nodata += "<li class='none'><img src='/images/kr/main/photo_none.png'></li>";
+	                }	
+	                	console.log(nodata);
+		            	$('#photoul').append(nodata);
 	        	} else {
+	        		$('#photoul').empty();
 	        		var nodata = "";
 	        		
-	            	nodata += "<div class='nodata_portlet '>";
-	            	nodata += "<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>";
-	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
-
+	            	nodata += "<li class='none'><img src='/images/kr/main/photo_none.png'></li>";
+	            	nodata += "<li class='none'><img src='/images/kr/main/photo_none.png'></li>";
+	            	nodata += "<li class='none'><img src='/images/kr/main/photo_none.png'></li>";
+	            	nodata += "<li class='none'><img src='/images/kr/main/photo_none.png'></li>";
+	            	
 	            	$('#photoul').html(nodata);
 	        	}
 		    }
