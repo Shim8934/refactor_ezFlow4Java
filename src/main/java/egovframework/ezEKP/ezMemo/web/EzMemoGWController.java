@@ -536,18 +536,24 @@ public class EzMemoGWController {
 	
 	/**
 	 * 폴더함 존재 유무 확인 method
-	 * @param memoFolderVO
+	 * @param userId
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject hasMemoFolder(MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/rest/ezMemo/folders/check/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject hasMemoFolder(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/check started.");
 		
 		JSONObject result = new JSONObject();
 
 		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			MemoFolderVO memoFolderVO = new MemoFolderVO();
+			memoFolderVO.setUser_id(info.getUserId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setTenant_id(info.getTenantId());
 			
 			int hasMemoFolder = ezMemoService.hasMemoFolder(memoFolderVO);
 			if(hasMemoFolder==0) {

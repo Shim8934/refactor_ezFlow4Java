@@ -528,14 +528,11 @@ public class EzMemoController {
 	public String hasMemoFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("hasMemoFodler started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("tenant_id", userInfo.getTenantId());
-		param.put("user_id",userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check", param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check/users/" +userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if ("ok".equals(status)) {
@@ -622,7 +619,7 @@ public class EzMemoController {
 	public String memoMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String folder_id, String memo_ids) throws Exception{
 		logger.debug("memoMove started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("folder_id", folder_id);
