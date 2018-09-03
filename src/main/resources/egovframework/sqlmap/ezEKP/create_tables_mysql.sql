@@ -107,11 +107,11 @@ DROP TABLE IF EXISTS `james_mail_search`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `james_mail_search` (
   `MAIL_SEARCH_ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ATTACHED_FILENAME` mediumblob,
-  `CONTENT` longblob,
-  `RECIPIENT` mediumblob,
-  `SENDER` varchar(1000) DEFAULT NULL,
-  `SUBJECT` mediumblob,
+  `ATTACHED_FILENAME` longtext,
+  `CONTENT` longtext,
+  `RECIPIENT` longtext,
+  `SENDER` mediumtext,
+  `SUBJECT` longtext,
   `MAILBOX_ID` bigint(20) DEFAULT NULL,
   `MAIL_UID` bigint(20) DEFAULT NULL,
   `IMPORTANCE` int(1) DEFAULT NULL,

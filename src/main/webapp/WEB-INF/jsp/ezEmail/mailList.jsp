@@ -123,6 +123,7 @@
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";
+		    		$('#liReSend').css('display', 'block');
 		    		document.getElementById("MailHeader").style.minWidth = "600px";
 		    		document.getElementById("contentlist").style.minWidth = "600px";
 		    		useReceivingChk = true;

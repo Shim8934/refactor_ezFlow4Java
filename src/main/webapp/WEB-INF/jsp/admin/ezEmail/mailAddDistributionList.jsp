@@ -1785,7 +1785,7 @@
 		<form method="post">
 		         <div id="menu">
 		            <ul>
-		                <li><span onclick="return OK_Click()"><spring:message code='ezEmail.t378' /></span></li>
+		                <li><span onclick="return OK_Click()"><spring:message code='ezEmail.t48' /></span></li>
 		            </ul>
 		        </div>
 		        <div id="close">

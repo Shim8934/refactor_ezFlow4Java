@@ -1541,7 +1541,7 @@
 				<body>
 			</c:otherwise>
 		</c:choose>
-		<c:if test="${isCrossBrowser != true}">
+		<c:if test="${approvalFlag == 'G' && useHWP == 'YES'}">
 			<script type="text/javascript">
 				ezIcd_ActiveX("i_icd2");
 			</script>
@@ -1629,7 +1629,7 @@
 		<!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
 		${script1}
 		<div id="objectProgressDiv"></div>
-		<c:if test="${isCrossBrowser != true}">
+		<c:if test="${approvalFlag == 'G' && useHWP == 'YES'}">
 			<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
 		</c:if>
 		<iframe id=ifmpopup style="display:none" src=""></iframe>
