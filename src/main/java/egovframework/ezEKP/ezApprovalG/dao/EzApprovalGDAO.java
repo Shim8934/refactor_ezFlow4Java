@@ -3074,4 +3074,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGDocInfoWebSrvVO getHWPdownload(Map<String, Object> map) throws Exception{
 		return (ApprGDocInfoWebSrvVO)select("EzApprovalG.getHWPdownload", map);
 	}
+	public String isBebuDocExist(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.isBebuDocExist", map);
+	}
+	public void updateDocDeliveryHref(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateDocDeliveryHref", map);
+	}
 }
