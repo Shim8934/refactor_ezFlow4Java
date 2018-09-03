@@ -822,31 +822,7 @@
 		                     AND 
 		                     	A.TENANT_ID = #v_TENANTID#
 		                     AND
-								A.COMPANYID IN (
-										SELECT 
-											EXTENSIONATTRIBUTE2 
-										FROM 
-											TBL_DEPTMASTER 
-										INNER JOIN 
-											TBL_ADDJOBMASTER 
-										ON
-											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND 
-											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-										WHERE 
-											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-										AND 
-											TBL_ADDJOBMASTER.CN = #v_USERID#
-										UNION ALL
-										SELECT 
-											PHYSICALDELIVERYOFFICENAME
-										FROM
-											TBL_USERMASTER
-										WHERE
-											CN = #v_USERID#
-										AND
-											TENANT_ID = #v_TENANTID# 
-										)
+								A.COMPANYID = #companyID#
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		 	AND 
@@ -11382,31 +11358,7 @@
              AND
 				TENANT_ID = #v_TENANTID#
 			 AND
-				COMPANYID IN (
-						SELECT 
-							EXTENSIONATTRIBUTE2 
-						FROM 
-							TBL_DEPTMASTER 
-						INNER JOIN 
-							TBL_ADDJOBMASTER 
-						ON
-							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-						WHERE 
-							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-						AND 
-							TBL_ADDJOBMASTER.CN = #v_USERID#
-						UNION ALL
-						SELECT 
-							PHYSICALDELIVERYOFFICENAME
-						FROM
-							TBL_USERMASTER
-						WHERE
-							CN = #v_USERID#
-						AND
-							TENANT_ID = #v_TENANTID# 
-						)
+				COMPANYID = #companyID#
 		]]>
 		</isEqual>
 		<isNotEqual property="v_LISTTYPE" compareValue="1">
