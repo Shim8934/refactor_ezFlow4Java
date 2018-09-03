@@ -8,10 +8,12 @@
 	    	<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+			<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 	        <script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezMemo/contextmenu.js')}"></script>
 	    	<style>
 	    		
 			.context-menus {
@@ -54,9 +56,65 @@
 				    if (typeof(window.parent.g_rejectWord) == "string") {
 				        window.parent.g_rejectWord = g_rejectWord;
 				    }
-
+				    /* 마우스 오른쪽 메뉴 변수 */
+					var test = document.getElementById("context-menus");
 					sizeBtnAppend();
 					sentDateView();
+					
+					init();
+					
+					/* 마우스 클릭 리스너를 초기 실행시킨다. */
+					function init() {
+						rightMouseListener();
+						leftMouseListener();
+					}
+
+					/* 마우스 왼클릭 감지 */
+					function leftMouseListener() {
+						document.addEventListener("click", function(e) {
+							toggleOnOff(0);
+						})
+					}
+
+					/* 마우스 우클릭 감지 */
+					function rightMouseListener() {
+						document.addEventListener("contextmenu", function(e) {
+							event.preventDefault();
+							toggleOnOff(1);
+							copy();
+							showMenu(e.x, e.y);
+						});
+					}
+
+					/* 마우스 메뉴 on & off */
+					function toggleOnOff(num) {
+						num === 1 ? test.classList.add("active") : test.classList.remove("active");
+					}
+
+					/* 마우스 클릭한 지점에서 메뉴 보여줌 */
+					function showMenu(x, y) {
+						console.log(test);
+						test.style.top = y + "px";
+						test.style.left = x + "px";
+
+					}
+					
+					$(".menus").click(function(){
+						var rightId = $(this).attr('id');
+						toggleOnOff(0);
+				  		
+				  		switch(rightId) {
+							case "menu1":
+								copyToClip();
+								break;
+							case "menu2":
+								btnPrint_onClick();
+								break;
+							case "menu3":
+								copyToMemo();
+								break;
+						}
+					});
 				}
 				
 				function sizeBtnAppend() {
@@ -371,47 +429,6 @@
 		     		
 			    	parent.mailPrevSentDateChk();
 		        }
-		     	
-		     	var content;
-		        function copy() {
-					selected = window.getSelection();
-		            content = selected.toString();
-		        }
-		        
-		        function copyToClip() {
-		        	if(content === "") {
-		        		alert("<spring:message code='ezMemo.t0051' />");
-		        		return;
-		        	}
-			      	var tempTextArea = document.createElement('textarea');
-			      	tempTextArea.value = content;
-			      	document.body.appendChild(tempTextArea);
-			      	tempTextArea.select();
-	  				document.execCommand('copy');
-	  				document.body.removeChild(tempTextArea);
-		        }
-		        
-		        function copyToMemo() {
-		        	if(content === "") {
-		        		alert("<spring:message code='ezMemo.t0051' />");
-		        		return;
-		        	}
-		        	
-		        	$.ajax({
-			    		type : "POST",
-			    		dataType : "json",
-			    		async : false,
-			    		url : "/ezMemo/otherModuleCopy.do",
-			    		data : {
-			    			"contents" : content
-			    		}, success: function() {
-			    			alert("<spring:message code='ezMemo.t0052' />");
-			    			parent.opener.parent.parent.getMemoList();
-			    		}, error: function(err) {
-			    			alert("<spring:message code='ezMemo.t0053' />");
-			    		}
-			        });		
-		        }
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
@@ -445,69 +462,6 @@
 	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">메모 추가</span></td>
 	      		</tr>
 	    	</table>	
-	  	</div>
-	  	<script type="text/javascript">
-	  	(function() {
-
-	  	  /* 마우스 오른쪽 메뉴 변수 */
-	  	  var test = document.getElementById("context-menus");
-
-	  	  /* 마우스 클릭 리스너를 초기 실행시킨다. */
-	  	  function init() {
-	  	    rightMouseListener();
-	  	    leftMouseListener();
-	  	  /* var selObj = window.getSelection();
-			alert(selObj.toString); */
-	  	  }
-
-	  	  /* 마우스 왼클릭 감지 */
-	  	  function leftMouseListener() {
-	  	    document.addEventListener("click", function(e) {
-	  	      toggleOnOff(0);
-	  	    })
-	  	  }
-
-	  	  /* 마우스 우클릭 감지 */
-	  	  function rightMouseListener() {
-	  	    document.addEventListener("contextmenu", function(e) {
-	  	      event.preventDefault();
-	  	      toggleOnOff(1);
-	 	 	  copy();
-	  	      showMenu(e.x, e.y);
-	  	    });
-	  	  }
-
-	  	  /* 마우스 메뉴 on & off */
-	  	  function toggleOnOff(num) {
-	  	    num === 1 ? test.classList.add("active") : test.classList.remove("active");
-	  	  }
-
-	  	  /* 마우스 클릭한 지점에서 메뉴 보여줌 */
-	  	  function showMenu(x, y) {
-	  	    console.log(test);
-	  	    test.style.top = y + "px";
-	  	    test.style.left = x + "px";
-
-	  	  }
-			
-	  	  	$(".menus").click(function(){
-	  		  	var rightId = $(this).attr('id');
-	  		  	toggleOnOff(0);
-	  	
-	  		  	switch(rightId) {
-				case "menu1":
-					copyToClip();
-					break;
-				case "menu2":
-					btnPrint_onClick();
-					break;
-				case "menu3":
-					copyToMemo();
-					break;
-				}
-			});
-	  	  	init();
-	  		})();
-	  	</script>  
+	  	</div> 
 	</body>
 </html>

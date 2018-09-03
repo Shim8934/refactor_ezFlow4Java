@@ -319,7 +319,7 @@
 				            OpenAlertUI(pAlertContent);
 				            return;
 				        }
-				        else if (chkpass == "cancel") {
+				        else if (chkpass == "cancel"  || chkpass == undefined) {
 				            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>.";
 				    	        OpenAlertUI(pAlertContent);
 				    	        return;
