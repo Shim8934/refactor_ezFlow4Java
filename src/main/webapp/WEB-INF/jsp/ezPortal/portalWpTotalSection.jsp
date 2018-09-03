@@ -9,8 +9,6 @@
 		<meta http-equiv="refresh" content="${refreshSecond}">
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
-		<%-- <link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" /> --%>
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -28,9 +26,6 @@
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
-		<script type="text/javascript">
-		 	var UserOffset = "${userOffset}";
-		</script>
 		<c:choose>
 			<c:when test="${checkBrowser == true}">
 				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
@@ -39,15 +34,30 @@
 				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
 			</c:otherwise>
 		</c:choose>
-		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 		<script type="text/javascript">
+			var UserOffset = "${userOffset}";
 		    var pMode = "P";
 		    var date = "";
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 			var isCircularUsed = "${isCircularUsed}";
+			var month = "${curMon}";
+	    	var totalCnt = 0;
+	    	var totalPage = 0;
+	    	var curPage = 0;
+	    	var EndCnt = 6;
+	    	var timer;
+	    	/*근태관리 추가*/
+		 	var serverTime = "${serverTime}";
+		 	var nowAttiTime = "";
+		 	var beforeAlertDate = "";
+			var afterAlertDate = "";
+			var overTime = "";
+			var isUseAttMenuItem = "${isUseAttMenuItem}";
+	    	
+	    	document.onselectstart = function () { return false; };
 		    
 			$(document).ready(function(){
 				$('#featured').orbit();
@@ -60,17 +70,6 @@
 					$(".personal_content").show();
 				}
 			});
-		    
-		    var year = sDate.getFullYear();
-		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
-		 	var day = sDate.getDate();		 	
-		 	/*근태관리 추가*/
-		 	var serverTime = "${serverTime}";
-		 	var nowAttiTime = "";
-		 	var beforeAlertDate = "";
-			var afterAlertDate = "";
-			var overTime = "";
-			var isUseAttMenuItem = "${isUseAttMenuItem}";
 			
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -80,6 +79,18 @@
 			        document.body.style.oUserSelect = 'none';
 			        document.body.style.UserSelect = 'none';
 			    }
+			    
+			    if (month < 10 && String(month).length == 1)
+		            month = "0" + month;
+		        
+		        if (CrossYN())
+		            document.getElementById("curMon").textContent = month;
+	    	    else
+	        	    document.getElementById("curMon").innerText = month;
+
+	        	try { top.onresize() } catch (e) { }
+	        	
+	        	getbirthUserList();
 			    
 			    //CalendarMiniView("CalendarMini");
 				
@@ -882,6 +893,155 @@
 		    function goEnv() {
 		    	window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
 		    }
+	    	
+	    	function getbirthUserList() {
+	    		window.clearTimeout(timer);
+
+	        	$.ajax({
+    	        	type : "POST",
+    	        	dataType : "text",
+    	        	url : "/ezPersonal/mainBirthUserList.do",
+    	        	data : {
+    	        		mon   : month, 
+    	        	},
+    	        	success : function(xml){		        		
+    	        		getbirthUserList_after(loadXMLString(xml));
+    	        	},
+    	        	error : function(error){
+    	        		console.log(error);	
+    	        	}
+	    	    });
+	    	}
+	    	
+	    	var userPrimary = "${userInfo.primary}";
+	    	
+	    	function getbirthUserList_after(xml) {
+		        if (xml == null) return;
+
+		        if (document.getElementById("userlist").innerHTML != "") document.getElementById("userlist").innerHTML = "";
+
+	    	    if (SelectSingleNodeNew(xml, "DATA/ROW") != null) {
+	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xml, "DATA")).length;
+	            	totalPage = Math.ceil(totalCnt / EndCnt);
+
+	            	document.getElementById("birthcont").style.display = "";
+	            	document.getElementById("nodata_NewBirth").style.display = "none";
+	            	
+	            	for (var i = 0; i < totalCnt; i++) {
+		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
+	                    
+		                var birthType = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTHTYPE");
+	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
+	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+	        	        var userPic = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
+	        	        
+	            	    if (userPrimary != "1")
+	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
+
+	                	/* var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");	                	
+	                	
+	                	if (userPrimary != "1")
+		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2"); */
+	                	
+	                	var userDesc = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DESCRIPTION");
+	                	
+	                	if (userPrimary != "1")
+	                		userDesc = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DESCRIPTION2");
+	                	
+	                	/* <li>
+	                   	<dl class="birthListDL">
+	                       	<dt class="birthPic"><img src="/images/kr/main/birth01.png"></dt>
+	                        <dd class="birthName">[08.07] 김영미</dd>
+	                        <dd class="birthTeam">오픈솔루션팀</dd>
+	                    </dl>
+	                </li> */
+		                var _li = document.createElement("li");
+		                _li.style.display = "none";
+	    	            _li.style.cursor = "pointer";
+	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
+	        	        
+	        	        if (userPic == "") {
+	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/no_image.jpg' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        } else {
+	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        }
+	            	    
+	                	document.getElementById("userlist").appendChild(_li);
+
+	                	if (i >= (curPage * 6) && i < (curPage + 1) * 6) {
+		                    document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'block';
+	                	} else {
+	                    	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
+	                	}
+		            }
+		            curPage++;
+		            
+	    	        if (curPage >= totalPage) {
+	        	        curPage = 0;
+	            	}
+	    	        
+	            	if (totalCnt > EndCnt) {
+		                timer = window.setInterval("intervalList()", 5000);
+		            }
+	    	    } else {
+	            	document.getElementById("birthcont").style.display = "none";
+	            	document.getElementById("nodata_NewBirth").style.display = "";
+	        	}
+		    }
+
+		    function intervalList() {
+	    	    for (var i = 0; i < totalCnt; i++) {
+	        	    if (i >= (curPage * 6) && i < (curPage + 1) * 6) {
+	            	    document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'block';
+	            	} else {
+	                	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
+	            	}
+	        	}
+	    	    
+	        	curPage++;
+	        	
+	        	if (curPage >= totalPage) {
+		            curPage = 0;
+		        }
+	    	}
+
+	    	function moveBirth(page) {
+		        switch (page) {
+		            case "PREV":
+	    	            if (month != 1)
+	        	            month = month - 1;
+	            	    else
+	                	    month = 12;
+	                	break;
+	            	case "NEXT":
+		                if (month != 12)
+		                    month = Number(month) + 1;
+	    	            else
+	        	            month = 1;
+	            	    break;
+	        	}
+		        
+	        	if (month < 10 && String(month).length == 1)
+		            month = "0" + month;
+
+	        	if(CrossYN())
+		            document.getElementById("curMon").textContent = month;
+	        	else
+		            document.getElementById("curMon").innerText = month;
+	        	
+	        	curPage = 0;
+	        	getbirthUserList();
+	    	}
+	    	
+	    	function OpenUserInfo(pUserID) {
+		        var heigth = window.screen.availHeight;
+	        	var width = window.screen.availWidth;
+	        	var left = (width - 500) / 2;
+	        	var top = (heigth - 400) / 2;
+	        	
+	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	    	}
 		</script>
 	</head>
 	<body>	
@@ -963,6 +1123,26 @@
                 </dl>
                 </c:if>                    
             </div>    
+        </article>
+        <article class="birthday">
+			<div class="birthTit">
+               	<p class="birthText"><span id="curMon"></span><spring:message code='main.t1002' /></p>
+           	    <span class="birthRighttbtn" onclick="moveBirth('NEXT')"><img src="/images/kr/main/birthday_next.png"></span>
+                <span class="birthLeftbtn" onclick="moveBirth('PREV')"><img src="/images/kr/main/birthday_pre.png"></span>
+            </div>
+            <div id="birthcont">
+            	<ul class="birthList" id="userlist"></ul>
+            </div>
+            <div id="nodata_NewBirth" style="display:none;"></div>
+		</article>
+		
+		<article class="bestEmployee">
+        	<p class="emPic"><img src="${filePath}"></p>
+            <dl class="emDL">
+            	<dt class="emTit"><spring:message code='main.t68' /></dt>
+                <dd class="emName">"${displayNameBirth}<c:if test="${titleBirth != ''}"> ${titleBirth}</c:if>"</dd>
+                <dd class="emTeam">${description}</dd>
+            </dl>
         </article>
         
 		<!-- 2018-08-23 장진혁 신규포탈페이지 개발 -->

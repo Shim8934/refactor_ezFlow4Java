@@ -1149,6 +1149,44 @@ System.out.println(strHTML);
 		
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
 		
+		Calendar cal = Calendar.getInstance();
+		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
+	
+		model.addAttribute("curMon", curMon);
+		
+		String filePath = "";
+		String displayNameBirth = "";
+		String titleBirth = "";
+		String description = "";
+				
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + curMon;
+		
+		PersonalGetEmpOfMonthVO resultBirth = ezPersonalService.getEmpOfMonth(term, userInfo);
+		
+		if (resultBirth != null) {
+			if (resultBirth.getFilePath() != null && !resultBirth.getFilePath().equals("")) {
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + resultBirth.getFilePath();
+			} else {
+				filePath = "/images/default_pic.gif";
+			}
+			
+			if (userInfo.getPrimary().equals("1")) {
+				displayNameBirth = resultBirth.getDisplayName();
+				titleBirth = resultBirth.getTitle();
+				description = resultBirth.getDescription();
+			} else {
+				displayNameBirth = resultBirth.getDisplayName2();
+				titleBirth = resultBirth.getTitle2();
+				description = resultBirth.getDescription2();
+			}
+		}
+		
+		model.addAttribute("displayNameBirth", displayNameBirth);
+		model.addAttribute("titleBirth", titleBirth);
+		model.addAttribute("description", description);
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("result", resultBirth);
+		
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
@@ -1337,41 +1375,10 @@ System.out.println(strHTML);
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String filePath = "";
-		String displayName = "";
-		String title = "";
-		String description = "";
-		
-		Calendar cal = Calendar.getInstance();
-		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
-		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
-		
-		if (result != null) {
-			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
-				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
-			} else {
-				filePath = "/images/default_pic.gif";
-			}
-			
-			if (userInfo.getPrimary().equals("1")) {
-				displayName = result.getDisplayName();
-				title = result.getTitle();
-				description = result.getDescription();
-			} else {
-				displayName = result.getDisplayName2();
-				title = result.getTitle2();
-				description = result.getDescription2();
-			}
-		}
-		
-		model.addAttribute("displayName", displayName);
-		model.addAttribute("title", title);
-		model.addAttribute("description", description);
-		model.addAttribute("filePath", filePath);
-		model.addAttribute("result", result);
-		
+		model.addAttribute("userInfo", userInfo);
+
 		logger.debug("wpNewSide ended");
+		
 		return "/ezPortal/portalWpNewSide";
 	}
 	
@@ -1455,9 +1462,42 @@ System.out.println(strHTML);
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		model.addAttribute("userInfo", userInfo);
-
+		String filePath = "";
+		String displayName = "";
+		String title = "";
+		String description = "";
+		
+		Calendar cal = Calendar.getInstance();
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
+		
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
+		
+		if (result != null) {
+			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
+			} else {
+				filePath = "/images/default_pic.gif";
+			}
+			
+			if (userInfo.getPrimary().equals("1")) {
+				displayName = result.getDisplayName();
+				title = result.getTitle();
+				description = result.getDescription();
+			} else {
+				displayName = result.getDisplayName2();
+				title = result.getTitle2();
+				description = result.getDescription2();
+			}
+		}
+		
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("title", title);
+		model.addAttribute("description", description);
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("result", result);
+		
 		logger.debug("wpNewBoardSTD ended");
+
 		return "/ezPortal/portalWpNewBoardSTD";
 	}
 	
@@ -1912,7 +1952,7 @@ System.out.println(strHTML);
 	 */
 	@RequestMapping(value = "/ezPortal/wpTotalSection5.do")
 	public String wpTotalSection5(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		/*userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);
 		
 		Calendar cal = Calendar.getInstance();
 		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
@@ -1926,18 +1966,7 @@ System.out.println(strHTML);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
 		
-		return "/ezPortal/portalWpTotalSection5";*/
-		
-		logger.debug("wpNewSchedule started");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
-		model.addAttribute("sliderList", sliderList);
-		
-		logger.debug("wpNewSchedule ended");
-		
-		return "/ezPortal/portalWpNewSchedule";
+		return "/ezPortal/portalWpTotalSection5";
 	}
 	
 	/**
@@ -4075,11 +4104,6 @@ System.out.println(strHTML);
 	@RequestMapping(value = "/ezPortal/wpNewSchedule.do")
 	public String wpNewSchedule(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("wpNewSchedule started");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
-		model.addAttribute("sliderList", sliderList);
 		
 		logger.debug("wpNewSchedule ended");
 		

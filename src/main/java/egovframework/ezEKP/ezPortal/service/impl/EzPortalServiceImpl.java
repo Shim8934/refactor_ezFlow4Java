@@ -2686,7 +2686,7 @@ System.out.println("result.size() :" + result.size());
 		return sb.toString();
 	}
 	
-	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) throws Exception {
+	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, int number) throws Exception {
 		logger.debug("getRenderedPortalPageHTMLInsert started");
 		
 		StringBuilder sb = new StringBuilder();
@@ -2739,6 +2739,15 @@ System.out.println("result.size() :" + result.size());
             sb.append("style=\"table-layout:fixed;\">\n");
             sb.append("<tr id=\"main_row\">\n");
         }
+/* ccc */        
+        if (number == 1) {
+			sb.append("<div class='mainLayout_left'>");
+		} else if (number == 2) {
+			sb.append("<div class='mainLayout_middle'>");
+			pageColumnLength = (Integer.parseInt(pageColumnLength) + 2) + "";			
+		} else if (number == 3) {
+			sb.append("<div class='mainLayout_right'>");
+		}
         
         for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
         	if (pMode.equals("edit")) {
@@ -2789,13 +2798,17 @@ System.out.println("result.size() :" + result.size());
                 
                 if (pMode.equals("edit")) {
                 	sb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>" + columnWidth + "</td></TR>\n");
-                    sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+                    sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo, number));
                     sb.append("</tbody>\n</table>\n</td>\n");
                 }
         	} else {
         		if (userInfo.getTableViewOption().equals("D")) {
-System.out.println("iam D");        			
-        			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+System.out.println("iam D");
+					if (number == 4) {
+						sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, Integer.parseInt(pageColumnLength) - i, pMode, userInfo, number));
+					} else {
+						sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo, number));
+					}
         		} else {
         			String columnWidth = "*";
         			
@@ -2824,11 +2837,15 @@ System.out.println("iam D");
             		}
             		
             		if (pMode.equals("edit")) sb.append(columnWidth);
-            		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+            		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo, number));
                     sb.append("</td>\n");
         		}
         	}
         }
+        
+        if (number == 1 || number == 2 || number == 4) {
+			sb.append("</div>");
+		}
         
         if (pMode.equals("edit")) {
 			sb.append("</tr>\n</table>\n");
@@ -2909,7 +2926,7 @@ System.out.println("result : " + result);
 		
 		boolean loadFlag = true;
 		
-		for (int i=0; i<result.size()-2; i++) {
+		for (int i=0; i<result.size(); i++) {
 			int portletType = result.get(i).getPortletType();
 			String portletUID = result.get(i).getuID();
 			String portletPageUID = result.get(i).getPageUID();
@@ -2927,6 +2944,9 @@ System.out.println("result : " + result);
 			String portletMandatory = result.get(i).getMandatory();
 			String portletMoveURL = "";
 			
+System.out.println("portletUID : " + portletUID);
+System.out.println("portletDisplayName : " +portletDisplayName );
+			
 			if (pMode.equals("edit")) {
 				if (portletHeight != 0) {
 					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");
@@ -2938,7 +2958,7 @@ System.out.println("result : " + result);
 						sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo, i) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -2947,6 +2967,20 @@ System.out.println("result : " + result);
 				/* jjh */
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
+						sb.append("<section class='section_left'>\n");
+					} else if (i == 1) {
+						sb.append("<aside id='quickSide'><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
+						sb.append("<li><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
+						sb.append("<li><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
+						sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");
+						sb.append("<li><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezAddress.t351", userInfo.getLocale())+"</span></li></ul></div>");
+						sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu' id='QuickUl'></ul>");
+						sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre' id='preBtn' onclick='QuickMove(1)'><img src='/images/kr/main/link_preBtn_dis.png'></span><span class='linkBtn_next' id='nextBtn' onclick='QuickMove(2)'><img src='/images/kr/main/link_nextBtn_dis.png'></span></p></div></div></aside>");
+						
+						sb.append("<section class='section_main'>\n");
+					}
+/* abc */					
+					/*if (i == 0) {
 						sb.append("<section class='section_left'>\n");
 						sb.append("<iframe width='100%' height='815px' border=0 src='/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c' frameborder=0 scrolling=no></iframe>\n");
 						sb.append("<iframe width='100%' height='197px' border=0 src='/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4' frameborder=0 scrolling=no></iframe>\n");
@@ -2993,18 +3027,18 @@ System.out.println("result : " + result);
 								}
 							}
 						}
-					}
+					}*/
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
-						//sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
 					}
 					if (i == 0) {
 						sb.append("</section>\n");
-					} else {
+					} else if (i == result.size()-1){
 						sb.append("</section>\n");
 					}
 				} else {
@@ -3016,7 +3050,7 @@ System.out.println("result : " + result);
 								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
 						} else {
-							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
 						}
 						if (i == 0) {
 							sb.append("</section>\n");
@@ -3038,7 +3072,7 @@ System.out.println("result : " + result);
 								sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +" align=middle valign=top\" uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
 							}
 						} else {
-							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i));
 						}
 						sb.append("</TR>\n");
 						
@@ -3059,7 +3093,19 @@ System.out.println("result : " + result);
 	
 	}
 	
-	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception {
+	public String newPotletParam(String pURL, String strParam) {
+		if (!strParam.equals("")) {
+			if (pURL.indexOf("?") == -1) {			
+				strParam = "?type=" + strParam;			
+			} else {
+				strParam = "&type=" + strParam;
+			}
+		}
+		
+		return strParam;
+	}
+	
+	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo, int number) throws Exception {
 		logger.debug("getRenderedPortalPageColumnInsert started");
 
 		List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
@@ -3067,6 +3113,23 @@ System.out.println("result : " + result);
 		String strSQL = "";
 		String parentPortalPageID = pCallingPageID;
 		int count = 0;
+		String paramVal = "";
+		
+		if (number == 2) {			
+			if (pColumnIndex == 1) {
+				paramVal = "mail";
+				pColumnIndex = 1;
+			} else if (pColumnIndex == 2) {
+				paramVal = "appr";
+				pColumnIndex = 1;
+			} else if (pColumnIndex == 3) {
+				paramVal = "favo";
+				pColumnIndex = 1;
+			} else {				
+				paramVal = "";
+				pColumnIndex = 2;
+			}
+		}
 		   
 		strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
 		
@@ -3119,7 +3182,7 @@ System.out.println("result : " + result);
 						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo, i) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -3128,7 +3191,7 @@ System.out.println("result : " + result);
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							
-							if (result.size() != 1) {							
+							/*if (result.size() != 1) {							
 								if (i==0) {
 									sb.append("<div class='mainLayout_left'>");
 								} else if (i==1) {
@@ -3136,19 +3199,42 @@ System.out.println("result : " + result);
 								} else if (i==2) {
 									sb.append("<div class='mainLayout_right'>");
 								}
+							}*/							
+/* aaa */					portletHeight = 270;
+							String cls = "box_shadow";
+
+							if (number == 0) {
+								portletHeight = 1131;
+							} else if (number == 1) {
+								if (pColumnIndex == 2) {
+									portletHeight = 544;
+									cls = "schedule " + cls;
+								}
+							} else if (number == 3) {
+								if (pColumnIndex == 2) {
+									cls = "vote " + cls;
+								} else {
+									cls = "photo_board " + cls;
+								} 
+							} else if (number == 4) {
+								if (pColumnIndex == 2) {
+									cls = "stats_graph " + cls;
+								} else {
+									cls = "groupware_banner " + cls;
+								}
 							}
 							
-							if (portletWidth == 9999) {
-								portletWidthStr = "100%"; 
-								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-							} else {
-								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							if ((number != 3 || pColumnIndex != 1) && (number != 4 || pColumnIndex != 3)) {
+								if (number == 0) {								
+									sb.append("<iframe width='100%' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								} else {
+									sb.append("<article class='" + cls +"'><iframe class='mainIframe' width='100%' height=" + portletHeight + " border=0 src='" + portletMoveURL + newPotletParam(portletMoveURL, paramVal)  + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></article>\n");
+								}
 							}
-							
-							sb.append("</div>");
+							//sb.append("</div>");
 						}
 					} else {
-						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
 						
 					}
 				} else {
@@ -3164,7 +3250,7 @@ System.out.println("result : " + result);
 							sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
-						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i));
 					}
 				}
 			}
