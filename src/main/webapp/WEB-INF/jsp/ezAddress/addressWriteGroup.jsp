@@ -375,7 +375,6 @@
 	        }
 	
 	        function add() {
-	        	
 	        	var pTextName = document.getElementById("TextName").value.trim();
 	            
 	        	if ( pTextName == "") {
@@ -389,6 +388,12 @@
 		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
 		        	return;
 		        }
+	        	
+	        	/* 2018-09-03 홍승비 - 그룹주소 등록 시 구성원 최소 1명 이상 확인 */
+	        	if (document.getElementById("ListViewMsgTo").children.item(0).children.item(1).childNodes.length == 0) {
+	        		alert("<spring:message code='ezSchedule.t197' />");
+	        		return;
+	        	}
 	
                 var xmlHTTP = createXMLHttpRequest();
                 var xmlDom = createXmlDom();
@@ -531,6 +536,8 @@
                     	pSeach = true;
                     	DisplayUserImageList();
                     	makePageSelPage();
+                    	/* 2018-09-03 홍승비 - 검색 완료 후에 pSeach 플래그 false로 되돌림(pSeach가 true를 유지해서 '검색결과'가 고정되므로) */
+                    	pSeach = false;
                 	}
 	    	    }
 	    	}
@@ -738,10 +745,11 @@
 							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
+							/* 2018-09-03 홍승비 - strLang 터지는 부분 수정 */
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang_2 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang_2 + "</span>]";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang_2 + "</span>]";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
