@@ -461,4 +461,21 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAllAccessListDept ended.");
 		return list;
 	}
+	
+	@Override
+	public void insertAccessId(int tenantID, String cn) throws Exception {
+		logger.debug("insertAccessId started.");
+		logger.debug("tenantID=" + tenantID + ", cn=" + cn);
+		
+		String[] cnList = cn.split(";");
+		
+		for (int i = 0; i < cnList.length; i++) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("tenantID", tenantID);
+			params.put("cn", cnList[i]);
+			ezSystemAdminDAO.insertAccessId(params);
+		}
+		
+		logger.debug("insertAccessId ended.");
+	}
 }

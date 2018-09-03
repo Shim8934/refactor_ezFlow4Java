@@ -796,6 +796,16 @@ public class EzSystemAdminController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertAccessId")
+	public void insertAccessId(@CookieValue("loginCookie") String loginCookie, Model model, String strCnList) throws Exception {
+		logger.debug("insertAccessId started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.insertAccessId(userInfo.getTenantId(), strCnList);
+		logger.debug("insertAccessId ended");
+	}
+	
+	@ResponseBody
 	@RequestMapping(value="/ezSystem/deleteAccessList.do")
 	public void deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
 		logger.debug("deleteAccessList started. accessNo=" + accessNo);

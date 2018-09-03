@@ -89,4 +89,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		delete ("EzSystemAdminDAO.deleteAccessId", accessNoList);
 	}
 	
+	public void insertAccessId(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertAccessId", map);
+	}
+	
 }

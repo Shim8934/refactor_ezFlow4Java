@@ -258,5 +258,13 @@
             ]]> <iterate prepend="WHERE ACCESSNO IN" open="(" close=")" conjunction=",">#accessNoList[]#</iterate>
        
 	</delete>
+	
+	<insert id="EzSystemAdminDAO.insertAccessId" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ACCESS_ID (TENANT_ID, CN) 
+			VALUES (#tenantID#, #cn#)
+		]]>
+	</insert>
 		
 </sqlMap>

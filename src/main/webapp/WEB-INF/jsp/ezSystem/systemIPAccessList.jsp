@@ -101,8 +101,11 @@
 			
 			for (var Cnt = 0; Cnt < json.length; Cnt++) {
 				var _TR = document.createElement("TR");
+				var cn = json[Cnt].cn;
+				cn = cn.substring(cn.indexOf("(") + 1, cn.indexOf(")"));
 				_TR.setAttribute("id", "AccessId_" + Cnt);
 				_TR.setAttribute("accessno", json[Cnt].accessNo);
+				_TR.setAttribute("cn", cn);
 				_TR.onclick = function() { event_listclick(this); };
 				_TR.onmouseover = function () { event_listMover(this); };
 				_TR.onmouseout = function () { event_listMout(this); };
