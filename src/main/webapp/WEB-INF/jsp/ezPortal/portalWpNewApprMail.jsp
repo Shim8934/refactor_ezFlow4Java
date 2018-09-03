@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 <!DOCTYPE html>
 <html>
 	<head>
@@ -664,9 +665,30 @@
 	                <dd class="portletPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
 	            </dl>
 	             <ul class="bookmark">
-	             	<c:forEach var="form" items="${result}">
-	             		<li class="bookmarkLi" onclick="openDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
-					</c:forEach>
+	             	<c:choose>
+				        <c:when test = "${empty result}">
+				        	<c:forEach begin="1" end="5">
+			             		<li class="bookmarkLi_none"></li>
+	             			</c:forEach>
+				        </c:when>
+				       
+				        <c:otherwise>
+			             	<c:forEach var="form" begin="0" end="4" items="${result}" varStatus="i">
+			             		<li class="bookmarkLi" onclick="openDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
+							</c:forEach>
+		             		<c:if test="${fn:length(result) < 5 }">
+		             			<c:forEach begin="0" end="${4 - fn:length(result)}">
+		             				<li class="bookmarkLi_none"></li>
+		             			</c:forEach>
+		             		</c:if>
+				        </c:otherwise>
+				        
+				     </c:choose>	          
+				     <!-- <li class="bookmarkLi_none"></li>
+				     <li class="bookmarkLi_none"></li>
+				     <li class="bookmarkLi_none"></li>
+				     <li class="bookmarkLi_none"></li>
+				     <li class="bookmarkLi_none"></li>   --> 
 	            </ul>
 	            <div class="apprgraph">
 	                <div class="apprgraph_area">

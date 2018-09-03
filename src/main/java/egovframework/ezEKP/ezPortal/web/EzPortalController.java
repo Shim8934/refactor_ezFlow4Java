@@ -1393,6 +1393,8 @@ System.out.println(strHTML);
 		if (type.equals("favo")) {
 			List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 			
+			logger.debug("result : " + result + "    result.size() : " + result.size());
+			
 			model.addAttribute("result", result);
 		}
 		
