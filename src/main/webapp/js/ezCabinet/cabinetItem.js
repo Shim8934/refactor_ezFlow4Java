@@ -160,6 +160,15 @@ var CabinetItem = function() {
 		document.getElementById("sltView").addEventListener("click", function(e)       {toggleOptionView(this);}, false);
 		document.getElementById("listcount").addEventListener("change", function(e)    {startSearchCabinet("1");}, false);
 		
+		var topFrame    = window.parent.parent.document.getElementById("topFrame"); 
+		var leftFrame   = window.parent.document.getElementsByName("left")[0];
+		var topFrameWd  = topFrame.contentWindow || topFrame.contentDocument;
+		var leftFrameWd = leftFrame.contentWindow || leftFrame.contentDocument;
+		
+		topFrameWd.addEventListener("mouseup", function(e)  {closeViewPopUp();}, false);
+		leftFrameWd.addEventListener("mouseup", function(e) {closeViewPopUp();}, false);
+		document.addEventListener("mouseup", function(e)    {closeViewPopUp();}, false);
+		
 		var closeSearchBttn     = document.getElementById("cabSearchClose");
 		closeSearchBttn.onclick = function() {toggleSearchPanel();};
 		var cabdivBttnElmt      = document.getElementById("searchDivBttn");
