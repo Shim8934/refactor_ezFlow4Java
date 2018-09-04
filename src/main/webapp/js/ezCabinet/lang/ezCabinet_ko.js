@@ -68,7 +68,7 @@ var CabinetMessages = {
 	strDelete    : "문서를 삭제하시겠습니까?",
 	strStorage   : "총용량: ",
 	strNoAttach  : "첨부파일이 없습니다.",
-	strCreator   : "게시자",
+	strCreator   : "등록자",
 	strRelated   : "연관문서",
 	strSummary   : "요약",
 	strAttach1   : "파일을 드래그앤드랍하거나",
