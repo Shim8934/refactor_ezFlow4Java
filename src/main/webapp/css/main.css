@@ -389,7 +389,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .aside_link{ margin:0px; padding:0px; overflow:hidden;}
 .aside_link .linkmenu_title{ margin:0px; padding:0px; width:100px; height:30px; background:#8c8c8c; line-height:28px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 .aside_link .linkmenu{ margin:0px; padding:0px; list-style:none; height:230px;}
-.aside_link .linkmenu .linkText{ margin:0px; padding:0px 0px 0px 7px; font-size:12px; color:#333; background:url(../images/kr/main/linkBul.png) no-repeat 91px center; line-height:45px; height:45px; border-bottom:1px solid #e7e7e7; cursor:pointer;overflow: hidden;text-overflow: ellipsis}
+.aside_link .linkmenu .linkText{ margin:0px; padding:0px 7px 0px 7px; font-size:12px; color:#333; background:url(../images/kr/main/linkBul.png) no-repeat 91px center; line-height:45px; height:45px; border-bottom:1px solid #e7e7e7; cursor:pointer;overflow: hidden;text-overflow: ellipsis;white-space: nowrap}
 .aside_link .linkBtn{ margin:0px; padding:0px; height:30px; background:#f3f3f3;}
 .aside_link .linkBtn .btnLay{ margin:0 auto; padding:4px 0px 0px 0px; height:30px; width:45px; box-sizing:border-box;}
 .aside_link .linkBtn .linkBtn_pre{ margin:0px; padding:0px; display:inline-block; cursor:pointer;}
