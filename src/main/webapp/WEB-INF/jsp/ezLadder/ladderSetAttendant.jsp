@@ -1898,7 +1898,17 @@
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
 	        }
->>>>>>> master
+		    
+	        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != Tab1_SelectID) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -1915,8 +1925,8 @@
 	                	<tr>
 	                		<div class="portlet_tabpart01" style="width:664px;">
 	        					<div class="portlet_tabpart01_top" id="tab1" style="width:664px;">
-					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer; text-align: center;" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t037' /></span></p>
-									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer;" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t038' /></span></p>
+					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer; text-align: center;" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezLadder.t037' /></span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer;" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezLadder.t038' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">

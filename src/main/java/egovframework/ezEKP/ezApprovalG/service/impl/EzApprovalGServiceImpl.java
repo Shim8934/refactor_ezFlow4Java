@@ -10674,13 +10674,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<APRLINEINFO>");
 		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID, offset, "DRAFT", "", "", mode));
-		rtnVal.append("</APRLINEINFO></APROVEDATA>");
+		rtnVal.append("</APRLINEINFO>");
+		rtnVal.append("<APRDOCTIMESTAMP>");
+		rtnVal.append(commonUtil.getLastModifiedDate(userInfo.getRealPath() + href));
+		rtnVal.append("</APRDOCTIMESTAMP>");
+		rtnVal.append("</APROVEDATA>");
 
 		logger.debug("getApproveDocInfo ended");
 		
 		return rtnVal.toString();
 	}
-
+	
 	@Override
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getLastOpinionContent started");

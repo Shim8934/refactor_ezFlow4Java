@@ -1235,6 +1235,8 @@ function getApprovInfo() {
         var dataNodes = GetElementsByTagName(xmlpara, "DATA6");
         var lastIdx = dataNodes.length;
         drafterDeptid = getNodeText(dataNodes[lastIdx - 1]);
+        
+        aprDocTimeStamp = getNodeText(SelectSingleNodeNew(result, "APROVEDATA/APRDOCTIMESTAMP"));
 
         pdocXML = SelectSingleNodeNew(result, "APROVEDATA/DOCFLAGINFO");
         xmlString = getXmlString(pdocXML);
@@ -3185,7 +3187,7 @@ function putSignXML(SignXML) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            if (signImageType = "NAME") {
+                            if (signImageType == "NAME") {
                             	//이효진 signImageType Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
 //                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
                             	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;

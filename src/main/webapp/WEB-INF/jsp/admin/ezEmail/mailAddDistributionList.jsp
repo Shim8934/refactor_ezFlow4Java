@@ -58,6 +58,7 @@
 	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
 	        var ua = navigator.userAgent;
 	        var companyId = "${companyId}";
+	        var selSpan = "";
 	        
 	        window.onload = function () {
 	            try {
@@ -1284,6 +1285,7 @@
 	        function orgTabButton_onClick() {
 	        	methodForTabAction(1);
 		        selTab = "orglistView";
+		        selSpan = "orgSpan";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "normal";
@@ -1299,6 +1301,7 @@
 	        
 	        function dlTabButton_onClick() {
 	        	methodForTabAction(3);
+	        	selSpan = "dlSpan";
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -1740,6 +1743,17 @@
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
 	        }
+		    
+	        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -1821,10 +1835,10 @@
 		            	<div class="portlet_tabpart01" style="margin:0px;">
 		            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 		            			<p id="orgTabButton">
-		            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+		            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
 		            			</p>
 		            			<p id="dlTabButton">
-		            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
+		            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
 		            			</p>
 		            		</div>
 	            		</div>

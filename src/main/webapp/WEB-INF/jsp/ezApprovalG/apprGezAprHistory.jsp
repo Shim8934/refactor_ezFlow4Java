@@ -18,6 +18,8 @@
 		    var OrderCell = "";
 		    var orgCompanyID = parent.orgCompanyID;
 		    var ext = "${ext}";
+		    var selSpan = "";
+		    
 		    window.onload = function () {
 		        var rtnVal = new Array();
 		        getDocHistory();
@@ -29,6 +31,7 @@
 		        HisDoc.style.display = "none";
 		        HisAttach.style.display = "none";
 		        window.returnValue = rtnVal;
+		        selSpan = "orgSpan3";
 		    };
 		    function lvDocList_DBSelChange() {
 		        var Arguments = new Array();
@@ -218,6 +221,7 @@
 		    function BtnChange(TabButton) {
 		        switch (TabButton) {
 		            case "1":
+		            	selSpan = "orgSpan1";
 		                HisDoc.style.display = "";
 		                HisAttach.style.display = "none";
 		                HisLine.style.display = "none";
@@ -232,6 +236,7 @@
 		                document.getElementById("orgTabButton3").children[0].className = "";
 		                break;
 		            case "2":
+		            	selSpan = "orgSpan2";
 		                HisDoc.style.display = "none";
 		                HisAttach.style.display = "";
 		                HisLine.style.display = "none";
@@ -246,6 +251,7 @@
 		                document.getElementById("orgTabButton3").children[0].className = "";
 		                break;
 		            case "3":
+		            	selSpan = "orgSpan3";
 		                HisDoc.style.display = "none";
 		                HisAttach.style.display = "none";
 		                HisLine.style.display = "";
@@ -294,6 +300,17 @@
 		            window.close();
 		        }
 		    }
+		    
+		    /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -304,9 +321,9 @@
 		<div id="close"><ul><li id="Table1" ><span onClick="close_Click()"></span></li></ul></div>
 		<div class="portlet_tabpart01" style="margin:0px;">
        		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
-       			<p id="orgTabButton3"><span onclick="BtnChange('3')" class="tabon"><spring:message code='ezApprovalG.t375'/></span></p>
-       			<p id="orgTabButton2"><span onclick="BtnChange('2')"><spring:message code='ezApprovalG.t376'/></span></p>
-       			<p id="orgTabButton1"><span onclick="BtnChange('1')"><spring:message code='ezApprovalG.t377'/></span></p>
+       			<p id="orgTabButton3"><span id="orgSpan3" onclick="BtnChange('3')" class="tabon" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezApprovalG.t375'/></span></p>
+       			<p id="orgTabButton2"><span id="orgSpan2" onclick="BtnChange('2')" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezApprovalG.t376'/></span></p>
+       			<p id="orgTabButton1"><span id="orgSpan1" onclick="BtnChange('1')" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezApprovalG.t377'/></span></p>
        		</div>
        	</div>
 		<table> 

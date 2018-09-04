@@ -3941,6 +3941,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			userInfo.setCompanyID(orgCompanyID);
 		}
 		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
 		String result = ezApprovalGService.getApproveDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), mode, chamState);
 
 		logger.debug("getApproveDocInfo ended");
