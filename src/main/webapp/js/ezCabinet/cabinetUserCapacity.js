@@ -53,6 +53,15 @@
 		document.getElementById("listcount").addEventListener("change", function(e) {startSearch(1);}, false);
 		document.getElementById("companyList").addEventListener("change", function(e) {clearAllParamAndRefresh();}, false);
 		
+		var topFrame    = window.parent.parent.document.getElementById("topFrame"); 
+		var leftFrame   = window.parent.document.getElementsByName("left")[0];
+		var topFrameWd  = topFrame.contentWindow || topFrame.contentDocument;
+		var leftFrameWd = leftFrame.contentWindow || leftFrame.contentDocument;
+		
+		topFrameWd.addEventListener("mouseup", function(e)  {closeViewPopUp();}, false);
+		leftFrameWd.addEventListener("mouseup", function(e) {closeViewPopUp();}, false);
+		document.addEventListener("mouseup", function(e)    {closeViewPopupOutside(e);}, false);
+		
 		//Set table view
 		cabinetTable = new CabinetTable({
 			normal   : "bnkCabNormal",
@@ -468,6 +477,18 @@
 		document.getElementById("layerPopup").style.display = "none";
 		optElmt.setAttribute("role", "off");
 		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+	}
+	
+	function closeViewPopupOutside(e){
+		var viewPopup  = document.getElementById("layerPopup");
+		var optElmt    = document.getElementById("sltView");
+		var role       = optElmt.getAttribute("role");
+		
+		if(role == "on") {
+			if(!viewPopup.contains(e.target)) {
+				closeViewPopUp();
+			}
+		}
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
