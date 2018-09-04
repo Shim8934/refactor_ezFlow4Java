@@ -67,7 +67,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/rest/ezMemo/memo-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoList(@PathVariable String userId, MemoVO vo, MemoConfigVO memoConfigVO, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+	public JSONObject gwMemoList(@PathVariable String userId, MemoVO memoVO, MemoConfigVO memoConfigVO, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -75,21 +75,21 @@ public class EzMemoGWController {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String folderId = request.getParameter("folder_id");
-		String companyId = request.getParameter("company_id");
-		int tenantId = Integer.parseInt(request.getParameter("tenant_id"));
 		String offset = request.getParameter("offset");
 		String orderOption = request.getParameter("orderOption");
 		
-		vo.setUser_id(userId);
-		memoFolderVO.setUser_id(userId);
-		memoFolderVO.setCompany_id(companyId);
-		memoFolderVO.setTenant_id(tenantId);
-		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			
-			List<MemoVO> memoList = ezMemoService.getMemoList(vo, searchInput, startDate, endDate, folderId, offset, orderOption);
+			memoVO.setUser_id(userId);
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setTenant_id(info.getTenantId());
+			memoConfigVO.setUser_id(userId);
+			memoConfigVO.setCompany_id(info.getCompanyId());
+			memoConfigVO.setTenant_id(info.getTenantId());
+			
+			List<MemoVO> memoList = ezMemoService.getMemoList(memoVO, searchInput, startDate, endDate, folderId, offset, orderOption);
 			MemoConfigVO config = ezMemoService.getMemoConfig(memoConfigVO);
 			
 			result.put("status", "ok");
@@ -122,11 +122,16 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-list/memo/" + memoId+ "] started.");
 		
 		JSONObject result = new JSONObject();
+		String userId = request.getParameter("userId");
 		
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-list/memo/" + memoId + "] ended.");
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			
+			memoVO.setUser_id(info.getUserId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setTenant_id(info.getTenantId());
 			
 			ezMemoService.setMemoContents(memoVO);
 			
@@ -139,7 +144,7 @@ public class EzMemoGWController {
 		}
 		return result;
 	}
-//	
+
 	/**
 	 * 메모분류함 list 호출 method
 	 * @param userId
@@ -150,7 +155,6 @@ public class EzMemoGWController {
 	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersInfo(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/" +userId + "] started.");
-		
 		
 		JSONObject result = new JSONObject();
 		
@@ -327,8 +331,10 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setUser_id(userId);
 			
 			ezMemoService.addMemoFolder(memoFolderVO);
 			
@@ -361,8 +367,10 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setUser_id(userId);
 			
 			ezMemoService.modifyMemoFolder(memoFolderVO);
 			
@@ -396,8 +404,10 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setUser_id(userId);
 			
 			ezMemoService.deleteMemoFolder(memoFolderVO, folder_ids);
 			
@@ -472,7 +482,7 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memo.setTenant_id(info.getTenantId());
 			
 			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
@@ -623,7 +633,7 @@ public class EzMemoGWController {
 	}
 	
 	/**
-	 * 메모 상세 정보 호출 method
+	 * 메모 상세조회 method
 	 * @param memoId
 	 * @param userId
 	 * @param memoConfigVO

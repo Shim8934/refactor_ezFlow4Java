@@ -8,18 +8,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     	<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
-    	<style type="text/css">
-    		.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:17px; vertical-align:top; cursor:pointer; margin-top: 0px;}
-			.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:16px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:17px;}
-    	</style>    	
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var g_windowReference = null;
-			// var checkFlag 		  = "<c:out value='${hasConfig}'/>";
-			var use_date =  "<c:out value="${memoConfigVO.use_date}" />";
-			var use_gadget =  "<c:out value="${memoConfigVO.use_gadget}" />";
-			var font_size =  "<c:out value="${memoConfigVO.font_size}" />";
+			var use_date =  "<c:out value='${memoConfigVO.use_date}' />";
+			var use_gadget =  "<c:out value='${memoConfigVO.use_gadget}' />";
+			var font_size =  "<c:out value='${memoConfigVO.font_size}' />";
 			
          	document.onselectstart = function () { return false; };
          	
@@ -106,9 +101,5 @@
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
         		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezBoard.t15" /></span></a>
     		</div>
-    		
-    		<div style="display:none">
-				<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">					
-			</div>
 		</body>
 </html>

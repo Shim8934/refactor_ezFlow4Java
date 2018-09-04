@@ -1,12 +1,10 @@
 package egovframework.ezEKP.ezMemo.web;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
@@ -107,15 +105,13 @@ public class EzMemoController {
 		folderId = folderId != null ? folderId : "0";					// 메모함 선택
 		orderOption = orderOption != null ? orderOption : "1";	// 리스트설정(order, new, old)
 		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
 		logger.debug("searchInput : " + searchInput + ", startDate : " + startDate + ", endDate : " + endDate + ", folderId : " + folderId + ", orderOption : " + orderOption);
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		logger.debug("userId : " + userInfo.getId() + ", CompanyId : " + userInfo.getCompanyID() + ", tenantId : " + userInfo.getTenantId());
+		logger.debug("userId : " + userInfo.getId() + ", tenantId : " + userInfo.getTenantId());
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
+		param.put("userId",userInfo.getId());
 		param.put("searchInput", searchInput);
 		param.put("startDate", startDate);
 		param.put("endDate", endDate);
@@ -131,11 +127,9 @@ public class EzMemoController {
 		if (status.equals("ok")) {		
 				JSONArray memoList = (JSONArray) resultBody.get("memoList");
 				String colorList = resultBody.get("colorList").toString();
-				//folderId = resultBody.get("folderId").toString();
 				
 				model.addAttribute("memoList", memoList);
 				model.addAttribute("colorList", colorList);
-				//model.addAttribute("folderId", folderId);
 				
 				if (layerFlag != null) {
 					model.addAttribute("layerFlag", layerFlag);
@@ -147,7 +141,7 @@ public class EzMemoController {
 	}
 	
 	/**
-	 * 메모븐류함 리스트 호출 method
+	 * 메모분류함 리스트 호출 method
 	 * @param loginCookie
 	 * @param modelMap
 	 * @param request
@@ -236,16 +230,13 @@ public class EzMemoController {
 	public String memoWrite(String layerFlag, String folderId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoWrite started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String regDate = commonUtil.getTodayUTCTime("");
 		
 		folderId = request.getParameter("folderId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
 		param.put("tenant_id", userInfo.getTenantId());
-		
 		param.put("folder_id", folderId);
 		param.put("write_date", regDate);
 		
@@ -284,12 +275,11 @@ public class EzMemoController {
 	public String memoModify(String memoId, String contents, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoModify started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String regDate = commonUtil.getTodayUTCTime("");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
+		param.put("userId",userInfo.getId());
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("memo_id", memoId);
 		param.put("write_date", regDate);
@@ -308,15 +298,24 @@ public class EzMemoController {
 			return "error";
 		}
 	}
-	// 모르겠어요...
+
+	/**
+	 * 메모 상세조회 method
+	 * @param memoId
+	 * @param loginCookie
+	 * @param modelMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ezMemo/memoRead.do")
 	public String memoRead(String memoId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoRead started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("user_id",userInfo.getId());
 		param.put("memoId", memoId);
@@ -342,15 +341,13 @@ public class EzMemoController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezMemo/memoFolderAction.do")
-	public String memoFolderAdd(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id) throws Exception {
+	public String memoFolderAction(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id) throws Exception {
 		logger.debug("memoFolderAction started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
-		
+		//param.put("company_id",userInfo.getCompanyID());
+		//param.put("user_id",userInfo.getId());
 		if (request.getParameter("folder_ids") != null) {	// 삭제
 			param.put("folder_ids", request.getParameter("folder_ids"));
 		}
@@ -633,7 +630,7 @@ public class EzMemoController {
 	public String memoDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String memo_ids) throws Exception{
 		logger.debug("memoDelete started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String regDate = commonUtil.getTodayUTCTime("");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -694,7 +691,7 @@ public class EzMemoController {
 	public String setMemoColor(@CookieValue("loginCookie") String loginCookie, String memoId, String colorId, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoColor start");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
