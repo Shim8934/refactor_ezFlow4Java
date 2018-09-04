@@ -478,7 +478,7 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("font_size", 13);
+		param.put("font_size", 14);
 		param.put("use_date", 0);
 		param.put("use_gadget", 0);
 		param.put("default_color", 1);
