@@ -832,7 +832,7 @@
 		    	$.ajax({
 					type : "GET",
 					dataType : "json",
-					//async : false,
+					async : false,
 					url : "/ezMemo/getMemoFoldersInfo.do",
 					success: function(result){
 						
