@@ -177,16 +177,21 @@
 		    function Pagenationimage(page) {
 	    	    switch (page) {
 	        	    case "PREV":
-	                	if (CurPage_NewPhoto != 1)
+	                	if (CurPage_NewPhoto != 1){
 	                    	CurPage_NewPhoto--;
+	                	} else {
+	                		return;
+	                	}
 	                	break;
 	            	case "NEXT":
-		                if (CurPage_NewPhoto < totalPage_NewPhoto)
+		                if (CurPage_NewPhoto < totalPage_NewPhoto){
 		                    CurPage_NewPhoto++;
+		                } else {
+		                	return;
+		                }
 	    	            break;
 	        	}
-	    	    
-	        	getBoardList_NewPhoto();
+		        	getBoardList_NewPhoto();
 	    	}
 		    
 		    /* 2018-06-04 홍승비 - 포탈메인 포토게시판 포틀릿 > 게시물 읽기 창 사이즈 수정 */
@@ -216,11 +221,11 @@
 	</head>
 	<body>
 		<div class="layDIV">
-        	<dl class="portlet_title">
+        	<dl class="portlet_title photo_board">
                 <dt class="portletText"><spring:message code='main.t1007' /></dt>
                 <dd class="portletPlus" onclick="Boardmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
-                <dd class="photoNextBtn" onclick="Pagenationimage('NEXT')"><img src="/images/kr/main/photo_next.png"></dd>
-                <dd class="photoPreBtn" onclick="Pagenationimage('PREV')"><img src="/images/kr/main/photo_pre.png"></dd>
+                <dd class="nextBtn" onclick="Pagenationimage('NEXT')"><img src="/images/kr/main/photo_next.png"></dd>
+                <dd class="preBtn" onclick="Pagenationimage('PREV')"><img src="/images/kr/main/photo_pre.png"></dd>
             </dl>            
            	<c:choose>
  				<c:when test="${pExist == 'true'}">

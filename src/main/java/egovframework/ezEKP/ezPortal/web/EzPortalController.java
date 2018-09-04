@@ -737,7 +737,10 @@ System.out.println("======================fomace2");
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
-//				logger.debug("strHTML="+strHTML);
+				logger.debug("userInfo.getCompanyID() = "+userInfo.getCompanyID());
+				logger.debug("width = "+width);
+				logger.debug("height = "+height);
+				logger.debug("baseType = "+baseType);
 			}
 		}
 		
@@ -1131,6 +1134,12 @@ System.out.println(strHTML);
 		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
 		String accessList = ezPortalService.getAccessList(userInfo);
 		
+		//근태 태넌트 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		
 		/*
 		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
 		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
@@ -1154,6 +1163,7 @@ System.out.println(strHTML);
 	
 		model.addAttribute("curMon", curMon);
 		
+		//이달의 우수사원
 		String filePath = "";
 		String displayNameBirth = "";
 		String titleBirth = "";
@@ -1167,7 +1177,7 @@ System.out.println(strHTML);
 			if (resultBirth.getFilePath() != null && !resultBirth.getFilePath().equals("")) {
 				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + resultBirth.getFilePath();
 			} else {
-				filePath = "/images/default_pic.gif";
+				filePath = "/images/kr/main/bestEmployee_pic_none.png";
 			}
 			
 			if (userInfo.getPrimary().equals("1")) {
@@ -1179,6 +1189,8 @@ System.out.println(strHTML);
 				titleBirth = resultBirth.getTitle2();
 				description = resultBirth.getDescription2();
 			}
+		} else {
+			filePath = "/images/kr/main/bestEmployee_pic_none.png";
 		}
 		
 		model.addAttribute("displayNameBirth", displayNameBirth);
@@ -1223,6 +1235,7 @@ System.out.println(strHTML);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
+		model.addAttribute("use_attitude", use_attitude);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
