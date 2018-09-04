@@ -72,7 +72,7 @@ public class EzCabinetGWController_m {
 		
 		return result;
 	}
-		
+	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/jounl", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveRelatedJournal(@RequestBody JSONObject jContent, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName      = request.getHeader("host-name")             != null ? request.getHeader("host-name")               : "";
@@ -100,14 +100,15 @@ public class EzCabinetGWController_m {
 			return result;
 		}
 		
-		try{
+		try {
 			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId       = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath        = request.getServletContext().getRealPath("");
 			
 			//Save receiver list
 			result                 = cabinetService_m.saveJournalItem(realPath, dstCabinetId, title, summary, mode, journalTitle, createDate, journalWriter, journalType, journalContent, formName, attach, locale, userInfo);
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);

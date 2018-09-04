@@ -325,7 +325,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "delete", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject moveCabinet(HttpServletRequest request, String userId, String cabinetId, String parentId, String mode) throws Exception {
 		String url                = "/rest/ezcabinet/cabinet-move/mode/" + mode;
@@ -336,7 +336,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception {
@@ -523,7 +523,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public void downloadAttachFile(HttpServletRequest request, HttpServletResponse response, String userId, String filePath, String fileName) throws Exception {
 		String gwServerUrl = config.getProperty("config.cabinetGwServerURL");
@@ -559,7 +559,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		
 		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String summary, String mailTitle, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forward, String dateTime) throws Exception {
@@ -580,7 +580,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String summary, String relatedList) throws Exception {
@@ -613,7 +613,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedNormalAdress(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo) throws Exception {
@@ -645,7 +645,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String resTitle, String content, String createUser, String resDate, String resItem) throws Exception {
@@ -665,7 +665,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String summary, String mode, String cabinetId, String scheduleTitle, String createUser, String createDate, String scheduleDate, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception {

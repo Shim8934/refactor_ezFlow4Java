@@ -40,11 +40,11 @@ public class SimpleDeptVO {
 	public void setSubDepts(List<SimpleDeptVO> subDepts) {
 		this.subDepts = subDepts;
 	}
-
+	
 	public String getLevel() {
 		return level;
 	}
-
+	
 	public void setLevel(String level) {
 		this.level = level;
 	}

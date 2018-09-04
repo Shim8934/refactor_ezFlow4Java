@@ -627,6 +627,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",    userInfo.getTenantId());
 		map.put("cabinetId",   cabinet.getCabinetId());
 		map.put("cabinetPath", cabinet.getCabinetPath());
+		
 		return ezCabinetDAO.getCabinetStorage(map);
 	}
 
@@ -2003,7 +2004,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return ezCabinetDAO.getUsersInfoFromIdList(map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject savePhotoBoard(int cabinetId, String realPath, String title, String summary, String boardTitle, String mode, String createUser, String createDate, String descript, String boardId, String boardItemId, Locale locale, LoginVO userInfo) throws Exception {

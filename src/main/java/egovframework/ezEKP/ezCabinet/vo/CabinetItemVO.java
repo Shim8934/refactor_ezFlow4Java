@@ -190,5 +190,4 @@ public class CabinetItemVO {
 	public void setItemSize(long itemSize) {
 		this.itemSize = itemSize;
 	}
-	
 }

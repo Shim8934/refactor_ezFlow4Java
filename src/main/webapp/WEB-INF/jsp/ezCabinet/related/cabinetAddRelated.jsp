@@ -90,9 +90,9 @@
 				}
 				
 				function autoSelect(){
-					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
-					var fogPanel                         = document.getElementById("fogPanel");
-					fogPanel.style.display               = "block";
+					var cabinetMainDiv      = document.getElementById("cabMgTreeId");
+					var fogPanel            = document.getElementById("fogPanel");
+					fogPanel.style.display  = "block";
 				}
 				
 				function manualSelect(){
@@ -436,10 +436,7 @@
 							var params   = getAllUrlParams(hrefStr);
 							var fileName = listChildren2[i].getAttribute("value");
 							
-							attachList.push({
-								filePath : javaURLDecode(params["filePath"]),
-								fileName : fileName
-							});
+							attachList.push({filePath : javaURLDecode(params["filePath"]), fileName : fileName});
 						}
 					}
 					

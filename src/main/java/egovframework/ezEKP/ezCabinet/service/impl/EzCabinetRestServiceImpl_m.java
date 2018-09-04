@@ -2,9 +2,7 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 
 @Service
@@ -44,7 +41,6 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonParam);
 		return resultBody;
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	@Override

@@ -40,11 +40,11 @@ public class CompanyCapacityVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
-
+	
 	public int getCapacityType() {
 		return capacityType;
 	}
-
+	
 	public void setCapacityType(int capacityType) {
 		this.capacityType = capacityType;
 	}
