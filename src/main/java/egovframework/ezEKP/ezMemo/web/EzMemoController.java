@@ -1,12 +1,10 @@
 package egovframework.ezEKP.ezMemo.web;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
@@ -342,15 +340,13 @@ public class EzMemoController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezMemo/memoFolderAction.do")
-	public String memoFolderAdd(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id) throws Exception {
+	public String memoFolderAction(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id) throws Exception {
 		logger.debug("memoFolderAction started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
-		
+		//param.put("company_id",userInfo.getCompanyID());
+		//param.put("user_id",userInfo.getId());
 		if (request.getParameter("folder_ids") != null) {	// 삭제
 			param.put("folder_ids", request.getParameter("folder_ids"));
 		}
