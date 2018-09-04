@@ -10667,13 +10667,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<APRLINEINFO>");
 		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID, offset, "DRAFT", "", "", mode));
-		rtnVal.append("</APRLINEINFO></APROVEDATA>");
+		rtnVal.append("</APRLINEINFO>");
+		rtnVal.append("<APRDOCTIMESTAMP>");
+		rtnVal.append(commonUtil.getLastModifiedDate(userInfo.getRealPath() + href));
+		rtnVal.append("</APRDOCTIMESTAMP>");
+		rtnVal.append("</APROVEDATA>");
 
 		logger.debug("getApproveDocInfo ended");
 		
 		return rtnVal.toString();
 	}
-
+	
 	@Override
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getLastOpinionContent started");
@@ -26414,6 +26418,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_ORGDOCNUMCODE", orgDocNumCode);
 			map.put("companyID", userInfo.getCompanyID());
 			map.put("v_TENANTID", userInfo.getTenantId());
+			
+			//2018-09-03 강민수92 문서를 접수하지 않고 배부시 배부부서에서 접수할때 href 값을 넣어줌
+			String isBebuExist = ezApprovalGDAO.isBebuDocExist(map);
+			if (isBebuExist != null) {
+				if (isBebuExist.equals("NULL")) {
+					ezApprovalGDAO.updateDocDeliveryHref(map);
+				}
+			}
 			
 			ezApprovalGDAO.updateRecvDocInfo(map);
 			
