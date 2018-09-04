@@ -18,28 +18,24 @@
 			var memoId = "<c:out value='${memo.memo_id}' />";
 			
 			window.onload = function() {
-				var MainHeight = document.documentElement.clientHeight - 80;
+				var MainHeight = document.documentElement.clientHeight - 122;
 		        var MainWidth = document.documentElement.clientWidth - 32;
 		        $("textarea").css("height", parseInt(MainHeight) +"px");
 		        $("textarea").css("width", parseInt(MainWidth) +"px");
 			}
 			
 			window.onresize = function() {
-				var MainHeight = document.documentElement.clientHeight - 80;
+				var MainHeight = document.documentElement.clientHeight - 122;
 		        var MainWidth = document.documentElement.clientWidth - 32;
 		        $("textarea").css("height", parseInt(MainHeight) +"px");
 		        $("textarea").css("width", parseInt(MainWidth) +"px");
 			};
 			
-			window.onbeforeunload = function() { 
-				modifyMemo();
-			}
-			
-			function modifyMemo() {
+			function modifyMemo(status) {
 				var beforeContents = $("textarea").html();
 				var afterContents = $("textarea").val();
-
-				if(beforeContents != afterContents) {
+				
+				if(beforeContents != afterContents && status == 'save') {
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
 		 			   	type : 'post',
@@ -55,25 +51,33 @@
 		                	parent.opener.parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		                },
 		                error : function(e) {
-
+		                	
 		                },
 		                complete : function() {
 							window.close();
 						}
 					}); 
 				}
+				else
+					window.close();
 		    }
 			
+			function close_onclick() {
+		    	window.close();
+		    }
 </script>
-<body class="popup" style="overflow:hidden">
+<body class="popup" style="overflow:hidden" onBeforeUnload="modifyMemo()">
 		<h1><spring:message code='ezMemo.t0055'/></h1>
 		 <div id="close">
 		    <ul>
-		      <li><span onclick="modifyMemo();"></span></li>
+		      <li><span onclick="close_onclick()"></span></li>
 		    </ul>
 		 </div>
 		<div>
 			<textarea id="content" style="margin: 0px; resize: none;"><c:out value='${memo.contents}' /></textarea>
+		</div>
+		<div class="btnposition btnpositionNew">
+		    <a class="imgbtn"><span onClick="modifyMemo('save')" style="text-align:center;"><spring:message code='ezBoard.t98' /></span></a>
 		</div>
 </body>
 </html>
