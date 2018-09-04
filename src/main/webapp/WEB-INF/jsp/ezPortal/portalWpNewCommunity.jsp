@@ -121,13 +121,34 @@
 	        </dl>
 	        <div class="community_list">
 	            <c:if test="${strHTML != ''}">${strHTML}</c:if>
-        		<c:if test="${strHTML == ''}">
-        			<div class="nodata_portlet">
+        		<c:if test="${empty strHTML}">
+        			<%-- <div class="nodata_portlet">
  						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
 						<p><spring:message code='main.t00026' /></p>
-					</div>
+					</div> --%>
+					<dl class="comListDL02" style="border-right : 1px solid #e7e7e7;">
+                                <dt class="comPic"><img src="/images/kr/main/comImg_none.png"></dt>
+                                <dd class="comTit_none"><spring:message code='main.t00026' /></dd>
+                    </dl>
+                    <dl class="comListDL02">
+                                <dt class="comPic"><img src="/images/kr/main/comImg_none.png"></dt>
+                                <dd class="comTit_none"><spring:message code='main.t00026' /></dd>
+                    </dl>
         		</c:if>
 	        </div>
+	        
+	      <!--   <div class="community_list">
+                            <dl class="comListDL01">
+                                <dt class="comPic"><span class="best"><img src="images/kr/main/com_best.png"></span><img src="images/kr/main/comImg01.png"></dt>
+                                <dd class="comTit">"즐거운산악회"</dd>
+                                <dd class="comText">2000년 01월에 만들어진 가장<br>오래된 동아리입니다.</dd>
+                            </dl>
+                            <dl class="comListDL02">
+                                <dt class="comPic"><img src="images/kr/main/comImg_none.png"></dt>
+                                <dd class="comTit_none">"등록된 커뮤니티가 없습니다."</dd>
+                            </dl>
+                        </div> -->
+	        
 	    </div>
 	</body>
 </html>

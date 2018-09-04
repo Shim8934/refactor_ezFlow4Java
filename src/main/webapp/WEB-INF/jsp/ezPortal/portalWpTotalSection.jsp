@@ -962,7 +962,7 @@
 	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
 	        	        
 	        	        if (userPic == "") {
-	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/no_image.jpg' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/kr/main/birth_none.png' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
 	        	        } else {
 	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
 	        	        }
@@ -1068,27 +1068,29 @@
 	            </c:choose>
             </div>
             <dl class="info">
-            	<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></dt>
+            	<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/kr/main/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></dt>
                 <dd class="infoName">${displayName} ${title}</dd>
                 <dd class="infoTeam">${department}</dd>
                 <%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 <dd class="infoSet" onclick='goEnv();'><img src="/images/kr/main/info_set.png"></dd>
             </dl>
         </article>
-		<article class="time_check">
-           	<div id="timeinput" class="presentTime">
-               	<p class="timeTit" id="todayTime"><spring:message code="main.t00023" /></p>
-				<div id="timeFlow" class="timeText"></div>
-		    </div>
-            <div id="atti_area" class="main_time">
-            	<dl class="timeCheckIn">
-                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">출근</dd>
-                </dl>
-                <dl class="timeCheckOut">
-                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)">퇴근</dd>
-                </dl>
-	    	</div>
-		</article>
+        <c:if test="${use_attitude == 'YES'}">
+			<article class="time_check">
+	           	<div id="timeinput" class="presentTime">
+	               	<p class="timeTit" id="todayTime"><spring:message code="main.t00023" /></p>
+					<div id="timeFlow" class="timeText"></div>
+			    </div>
+	            <div id="atti_area" class="main_time">
+	            	<dl class="timeCheckIn">
+	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">출근</dd>
+	                </dl>
+	                <dl class="timeCheckOut">
+	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)">퇴근</dd>
+	                </dl>
+		    	</div>
+			</article>
+        </c:if>
         <!-- //time_check -->
         <!-- countingIcon -->
         <article class="countingIcon">
@@ -1133,14 +1135,32 @@
             <div id="birthcont">
             	<ul class="birthList" id="userlist"></ul>
             </div>
-            <div id="nodata_NewBirth" style="display:none;"></div>
+            <div id="nodata_NewBirth" style="display:none;">
+            	<dl class="nodata">
+	            	<dt><img src="/images/kr/main/nodata.png"></dt>
+	            	<dd><spring:message code="main.t00026" /></dd>	
+            	</dl>
+            </div>
 		</article>
 		
 		<article class="bestEmployee">
         	<p class="emPic"><img src="${filePath}"></p>
             <dl class="emDL">
             	<dt class="emTit"><spring:message code='main.t68' /></dt>
-                <dd class="emName">"${displayNameBirth}<c:if test="${titleBirth != ''}"> ${titleBirth}</c:if>"</dd>
+                <dd class="emName">
+                <c:if test="${displayNameBirth != ''}">"</c:if>${displayNameBirth}
+                <%-- <c:if test="${titleBirth != ''}"> ${titleBirth}</c:if>
+                <c:if test="${(titleBirth != '' && displayNameBirth != '') || titleBirth == '' && displayNameBirth != ''}">"</c:if> --%>
+                <c:choose>
+				        <c:when test = "${!empty displayNameBirth && empty titleBirth}">"</c:when>
+				        <c:when test = "${!empty titleBirth && displayNameBirth != ''}">${titleBirth}"</c:when>
+				        <c:otherwise></c:otherwise>
+				</c:choose>
+                </dd>
+                
+                
+                
+                
                 <dd class="emTeam">${description}</dd>
             </dl>
         </article>

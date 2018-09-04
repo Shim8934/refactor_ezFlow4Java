@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -28,21 +29,44 @@
 				<c:when test="${not empty list}">
       				<div class="v_graph">       					
         				<ul>
-			               	<c:forEach var="item" items="${list}">
+			               	<%-- <c:forEach var="item" items="${list}">
 		                		<li>
 									<span class="g_term">${item.displayName}</span>
 			                   		<span class="g_bar1" style="height:${item.draftCount}%"></span>
 			                   		<span class="g_bar2" style="height:${item.susinCount}%"></span>
 								</li> 
-			            	</c:forEach>
+			            	</c:forEach> --%>
+			            	<c:forEach var="item" begin="0" end="4" items="${list}" varStatus="i">
+			             		<li>
+									<span class="g_term">${item.displayName}</span>
+			                   		<span class="g_bar1" style="height:${item.draftCount}%"></span>
+			                   		<span class="g_bar2" style="height:${item.susinCount}%"></span>
+								</li> 
+							</c:forEach>
+		             		<c:if test="${fn:length(list) < 5 }">
+		             			<c:forEach begin="0" end="${4 - fn:length(list)}">
+		             				<li>
+										<span class="g_term"></span>
+				                   		<span class="g_bar1"></span>
+				                   		<span class="g_bar2"></span>
+									</li> 
+		             			</c:forEach>
+		             		</c:if>
         				</ul>
         			</div>	
       			</c:when>
       			<c:otherwise>
-      				<%-- <div class="nodata_portlet">
-      					<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
-      					<p><spring:message code='main.t00026' /></p>
-      				</div> --%>
+      				<div class="v_graph">       					
+        				<ul>
+			               	<c:forEach var="item" begin="0" end="4">
+		                		<li>
+									<span class="g_term"></span>
+			                   		<span class="g_bar1"></span>
+			                   		<span class="g_bar2"></span>
+								</li> 
+			            	</c:forEach>
+        				</ul>
+        			</div>	
       			</c:otherwise>
       		</c:choose>			
 		</div>
