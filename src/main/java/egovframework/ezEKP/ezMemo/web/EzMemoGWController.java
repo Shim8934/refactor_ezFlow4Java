@@ -488,6 +488,10 @@ public class EzMemoGWController {
 			memoVO.setCompany_id(info.getCompanyId());
 			memoVO.setUser_id(userId);
 			
+			memoConfigVO.setTenant_id(info.getTenantId());
+			memoConfigVO.setCompany_id(info.getCompanyId());
+			memoConfigVO.setUser_id(userId);
+			
 			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
 			memoVO.setColor_id(configVO.getDefault_color());
 			
