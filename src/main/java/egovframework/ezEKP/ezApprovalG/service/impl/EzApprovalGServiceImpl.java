@@ -26428,6 +26428,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("companyID", userInfo.getCompanyID());
 			map.put("v_TENANTID", userInfo.getTenantId());
 			
+			//2018-09-03 강민수92 문서를 접수하지 않고 배부시 배부부서에서 접수할때 href 값을 넣어줌
+			String isBebuExist = ezApprovalGDAO.isBebuDocExist(map);
+			if (isBebuExist != null) {
+				if (isBebuExist.equals("NULL")) {
+					ezApprovalGDAO.updateDocDeliveryHref(map);
+				}
+			}
+			
 			ezApprovalGDAO.updateRecvDocInfo(map);
 			
 			if (!publicFlag.equals("") || !docNumCode.equals("") || !orgDocNumCode.equals("")) {
