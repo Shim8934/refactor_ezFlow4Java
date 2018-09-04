@@ -125,7 +125,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailLinkHostname','NO','대용량첨부메일 및 보안메일 링크의 hostname 지정 여부.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'mailLinkHostname','','대용량첨부메일 및 보안메일 링크의 hostname.(port번호 포함)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'PrimaryTimeZone','235|+09:00','시스템 Primary 표준 시간대 설정');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'HWPToolbar','100001','hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'HWPToolbar','100001','hwp 툴바가 6줄인데 맨윗줄 부터 1 이면 사용 0 이면 사용하지 않는다. ex)100001 맨위랑 맨아래 툴바만 표시');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useBottomFrameOnly','NO','하단프레임에 우리 모듈이 들어가게 되는 경우 (default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'attachFileNameMaxLength','100','첨부파일명 최대 길이 (default : 100)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'editorFontStyle','굴림|13px','에디터 폰트 스타일 (사용자의 언어가 한글일 경우에만 적용)');
