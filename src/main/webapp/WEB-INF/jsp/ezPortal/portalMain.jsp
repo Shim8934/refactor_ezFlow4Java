@@ -82,11 +82,6 @@
 		 		
 		 	});
 		 	
-		    window.onload = function() {
-		    	$("#open-memo").css("display", "");
-		    	
-		    }
-		
 		    function chagePosition() {
 		    	
 		    	var winHeight = window.innerHeight;
@@ -173,6 +168,21 @@
 		    	checkDefaultFolder();
 		    	memoFoldersInfo();
 		    	
+		    	$(window).load(function () {
+		    		$.ajax({
+		    			type : "GET",
+			        	dataType : "JSON",
+			        	async : false,
+			        	url : "/ezMemo/getMemoConfig.do",
+			        	success : function(result) {
+			        		console.log(result);
+			        		if (result.memoConfigVO.use_gadget == 1) {
+			        			$("#open-memo").css("display", "");
+			        		}
+			        	}
+		    		});
+		    	});
+	    		getMemoConfig();
 		     
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
@@ -210,7 +220,6 @@
 								compareElId = clickedItem.next().attr("id").replace("memo", "");
 		        			 }
 		        			
-		        		 	
 		        		 } else if (clickedItem.next().attr("id") != undefined) {
 		        			 
 		        			 if (clickedItem.prev().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.next().attr("orders"))) {
@@ -396,7 +405,6 @@
 		        	
 		        });
 		        
-		        getMemoConfig();
 		        // 새 메모 추가 
 		        $("#newMemo").click(function() {
 		        	newMemo();
@@ -832,7 +840,7 @@
 		    	$.ajax({
 					type : "GET",
 					dataType : "json",
-					async : false,
+//					async : false,
 					url : "/ezMemo/getMemoFoldersInfo.do",
 					success: function(result){
 						

@@ -88,8 +88,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("tenant_id", memoConfigVO.getTenant_id());
 		map.put("company_id", memoConfigVO.getCompany_id());
 
-		map.put("use_date", memoConfigVO.getUse_date());
-		map.put("use_gadget", memoConfigVO.getUse_gadget());
+		if (memoConfigVO.getUse_date() > 0) {
+			map.put("use_date", memoConfigVO.getUse_date());
+		}
+		
+		if (memoConfigVO.getUse_gadget() > 0) {
+			map.put("use_gadget", memoConfigVO.getUse_gadget());
+		}
 		
 		if (memoConfigVO.getFont_size() > 0) {
 			map.put("font_size", memoConfigVO.getFont_size());

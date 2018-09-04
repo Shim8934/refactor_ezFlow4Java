@@ -479,8 +479,8 @@ public class EzMemoController {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("font_size", 14);
-		param.put("use_date", 0);
-		param.put("use_gadget", 0);
+		param.put("use_date", 1);
+		param.put("use_gadget", 1);
 		param.put("default_color", 1);
 		param.put("color_name", "#3498DB;#F3CA26;#E67E22;#27AE60;#9B59B6;#95A5A6;#9FD4F6;#F4E8B6;#F6C99F;#A5F1C5;#E9C1FA;#FFFFFF;");
 		param.put("gadget_right", 0);
@@ -739,4 +739,6 @@ public class EzMemoController {
 		logger.debug("reOrder ended");
 		return "json";
 	}
+	
+	
 }
