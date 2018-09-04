@@ -717,11 +717,13 @@
 		                return;
 		            }
 		            
-		            var listview = new ListView();
-		            listview.LoadFromID("lvUserList");
-		            var UserAddjoblistview = new ListView();
-		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		            //var listview = new ListView();
+		            //listview.LoadFromID("lvUserList");
+		            //var UserAddjoblistview = new ListView();
+		            //UserAddjoblistview.LoadFromID("lvAddjobList");
+		            //var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		            var bFlag = false;
+		            
 		            
 		            if (!bFlag) {
     		            var cn = GetAttribute(p_ListOrderObject, "_data2");
@@ -734,10 +736,10 @@
     		            	}
     		            }
     		            
-    		            var accessList = window.opener.document.getElementById("tblIP").childNodes[1].childNodes;
+    		            var accessList = window.opener.allComJson;
     		            
-    		            for (var i = 2; i < accessList.length; i++) {
-    		            	if (accessList[i].getAttribute("cn") == cn) {
+    		            for (var i = 0; i < accessList.length; i++) {
+    		            	if (accessList[i].cn == cn) {
     		            		bFlag = true;
     		            	}
     		            }
@@ -974,6 +976,84 @@
 				//keyword.value = "";
 			}
 		    
+		    function dept_select() {
+		    	
+		    	var selectedDept = $(".node_selected")[0].parentNode;
+		    	var deptcn = selectedDept.getAttribute("cn");
+		    	var deptname = selectedDept.getAttribute("nodename");
+		    	
+		    	if (selectedDept == null) {
+		    		alert("부서를 선택하세요");
+		    		return;
+		    	}
+		    	
+		    	var bFlag = false;
+		    	
+		    	if (document.getElementById("lvAddjobList") != null) {
+		    		var selectedList = document.getElementById("lvAddjobList").childNodes[1].childNodes;
+		            
+		            for (var i = 0; i < selectedList.length; i++) {
+		            	if (selectedList[i].getAttribute("data1") == deptcn) {
+		            		bFlag = true;
+		            	}
+		            }
+		    	}
+	            var accessList = window.opener.allComJson;
+	            
+	            for (var i = 0; i < accessList.length; i++) {
+	            	if (accessList[i].cn == deptcn) {
+	            		bFlag = true;
+	            	}
+	            }
+	            
+	            if (bFlag) {
+	                alert(strLang25);
+	                pAddFlag = true;
+	            } else {
+	            	
+	            	Addjob_Check(deptcn);
+	            	
+	                pparsingXML2 = "";
+	                pparsingXML = "";
+	                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+	                pparsingXML = pparsingXML + "<ROW><CELL>";
+	                pparsingXML = pparsingXML + "<VALUE>" + deptname + "</VALUE>";
+	                pparsingXML = pparsingXML + "<DATA1>" + deptcn + "</DATA1>";
+	                pparsingXML = pparsingXML + "<DATA2>" + deptname + "</DATA2>";
+	                pparsingXML = pparsingXML + "</CELL></ROW>";
+	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                Resultxml = loadXMLString(pparsingXML2);
+
+	                var listview = new ListView();
+	                listview.LoadFromID("lvAddjobList");		                
+	                var MaxID = 0;
+	                var InitTr = listview.GetDataRows();
+	                var MaxCntNum = 0;
+
+	                for (var j = 0  ; j < InitTr.length  ; j++) {
+	                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+	                    
+	                    if (MaxID < curnum) {
+	                        MaxID = curnum;
+	                        MaxCntNum = j;
+	                    }
+	                }
+	                var objTr = listview.AddRow(InitTr.length);
+	                
+	                if (MaxCntNum != 0) {
+	                    MaxCntNum = MaxCntNum + 1;
+	                }
+	                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                listview.AddDataRow(objTr, Resultxml);
+
+	                var _tdlength = document.getElementById("lvAddjobList").getElementsByTagName("TD").length;
+	                for (var y = 0; y < _tdlength; y++) {
+	                    document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.textOverflow = "";
+	                    document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.overflow = "";
+	                }
+	            }
+	        }
+		    
 		    function deptsearch_press() {
 	            if (window.event.keyCode == "13") {
 	                deptsearch_click();
@@ -1091,13 +1171,7 @@
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
-                                        <div style="padding-left:5px">
-                                        <input type="text" name="Input" id="deptkeyword" style="WIDTH: 120px; height:22px;" onkeypress="deptsearch_press()">
-                                        <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
-                                        </div>
-	                                </td>
-	                                <td>
-	                                    <div style="float:right; height:25px;">
+	                                    <div style="padding-left:5px; height:25px;">
 	                                        <select id="search_type" style="height:22px;">
 	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 					                            <option value="cn"><spring:message code='ezOrgan.t94' /></option>
@@ -1114,7 +1188,12 @@
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>&nbsp;
 	                                    </div>
 	                                </td>    
-	                                <td></td>
+	                                <td>
+	                                	<div style="float: right; margin-right: 5px; position: relative;">
+                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10">부서선택</span></a>
+                                            <a href="#" class="imgbtn"><span onclick="infoview_click()">직원정보보기</span></a>
+                                        </div>
+                                    </td>
 	                            </tr>
 	                        </table>
 	                    </div>

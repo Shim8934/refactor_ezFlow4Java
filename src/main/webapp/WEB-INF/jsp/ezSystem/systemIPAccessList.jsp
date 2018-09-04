@@ -15,9 +15,25 @@
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var m_strColorOpened = "#fafafa";
+		var allComJson;
 		
 		window.onload = function() {
 			getAccessList_http(document.getElementById("ListCompany").value);
+			getAllAccessComList();
+		}
+		
+		function getAllAccessComList() {
+			$.ajax({
+				type : "POST",
+				url : "/ezSystem/getAllAccessListCom.do",
+				datatype : 'json',
+				error : function(data) {
+					console.log("error");
+				},
+				complete : function(data) {
+					allComJson = data.responseJSON;
+			    }
+			});
 		}
 		
 		function getAccessList_http(companyId) {
@@ -143,6 +159,7 @@
 		}
 		
 		function selectCompanyID() {
+			getAllAccessComList();
 			getAccessList_http(document.getElementById("ListCompany").value);
 		}
 		

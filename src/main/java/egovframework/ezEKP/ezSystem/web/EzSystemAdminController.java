@@ -795,6 +795,31 @@ public class EzSystemAdminController {
 		return returnJsonArr;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/getAllAccessListCom.do")
+	public JSONArray getAllAccessListCom(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getAllAccessListCom started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<String> allList = ezSystemAdminService.getAllAccessListCom(userInfo.getTenantId());
+		JSONArray returnJsonArr = new JSONArray();
+		
+		for (int i = 0; i < allList.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("cn", allList.get(i));
+			returnJsonArr.add(obj);
+		}
+		
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAllAccessListCom ended");
+		
+		return returnJsonArr;
+	}
+	
+	
+	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/insertAccessId")
 	public void insertAccessId(@CookieValue("loginCookie") String loginCookie, Model model, String strCnList) throws Exception {

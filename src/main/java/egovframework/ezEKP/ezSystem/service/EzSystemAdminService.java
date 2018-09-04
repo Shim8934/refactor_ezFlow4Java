@@ -32,6 +32,7 @@ public interface EzSystemAdminService {
 	public void deleteIPBand(String ipNo) throws Exception;
 	public List<AccessIdVO> getAllAccessList(String primaryLang, int tenantID, String companyID) throws Exception;
 	public List<AccessIdVO> getAllAccessListDept(String primaryLang, int tenantID, String companyID) throws Exception;
+	public List<String> getAllAccessListCom (int tenantID) throws Exception;
 	public void deleteAccessId(String accessNo) throws Exception;
 	public void insertAccessId(int tenantID, String cn) throws Exception;
 }

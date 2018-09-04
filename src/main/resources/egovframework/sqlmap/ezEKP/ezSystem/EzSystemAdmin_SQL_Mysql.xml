@@ -229,7 +229,7 @@
 			INNER JOIN
 				TBL_DEPTMASTER
 			ON 
-				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE1=#companyID# 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE2=#companyID# 
 			AND	
 				TBL_DEPTMASTER.TENANT_ID=#tenantID#
 		]]>
@@ -245,9 +245,39 @@
 			INNER JOIN
 				TBL_DEPTMASTER
 			ON 
-				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE1=#companyID# 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE2=#companyID# 
 			AND	
 				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAllAccessListCom" parameterClass="Integer" resultClass="String">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.CN
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN
+			AND	
+				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAllAccessListCom2" parameterClass="Integer" resultClass="String">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.CN
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_USERMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_USERMASTER.CN
+			AND	
+				TBL_USERMASTER.TENANT_ID=#tenantID#
 		]]>
 	</select>
 	

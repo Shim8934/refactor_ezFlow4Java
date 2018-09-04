@@ -463,6 +463,28 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
+	public List<String> getAllAccessListCom (int tenantID) throws Exception {
+		logger.debug("getAllAccessListCom started.");
+		logger.debug("tenantID=" + tenantID);
+		
+		List<String> allUser = ezSystemAdminDAO.getAllAccessListCom(tenantID);
+		List<String> allDept = ezSystemAdminDAO.getAllAccessListCom2(tenantID);
+		List<String> allList = new ArrayList<String>();
+		
+		for (int i = 0; i < allUser.size(); i++) {
+			allList.add(allUser.get(i));
+		}
+		
+		for (int i = 0; i <allDept.size(); i++) {
+			allList.add(allDept.get(i));
+		}
+		
+		logger.debug("allList=" + allList.toString());
+		logger.debug("getAllAccessListCom ended.");
+		return allList;
+	}
+	
+	@Override
 	public void insertAccessId(int tenantID, String cn) throws Exception {
 		logger.debug("insertAccessId started.");
 		logger.debug("tenantID=" + tenantID + ", cn=" + cn);
