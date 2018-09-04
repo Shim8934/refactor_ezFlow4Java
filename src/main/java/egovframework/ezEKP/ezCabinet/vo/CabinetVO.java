@@ -226,4 +226,21 @@ public class CabinetVO {
 	public void setPermission(int permission) {
 		this.permission = permission;
 	}
+	
+	public int getOrderFromType() {
+		int mdlOrder = -1;
+		switch(cabinetType) {
+			case 1  : mdlOrder = 1; break;
+			case 2  : mdlOrder = 3; break;
+			case 3  : mdlOrder = 4; break;
+			case 4  : mdlOrder = 5; break;
+			case 6  : mdlOrder = 8; break;
+			case 7  : mdlOrder = 6; break;
+			case 8  : mdlOrder = 2; break;
+			case 9  : mdlOrder = 9; break;
+			case 11 : mdlOrder = 7; break;
+		}
+		
+		return mdlOrder;
+	}
 }

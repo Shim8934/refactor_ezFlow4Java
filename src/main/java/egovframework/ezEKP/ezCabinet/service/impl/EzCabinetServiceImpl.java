@@ -1023,7 +1023,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	private List<CabinetSimpleVO> generateSimpleCabinet(List<CabinetVO> list, String primary) {
 		List<CabinetSimpleVO> result = new ArrayList<>();
-		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getCabinetType(), cabinet2.getCabinetType()));
+		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getOrderFromType(), cabinet2.getOrderFromType()));
 		
 		for (CabinetVO cabinet : list) {
 			String cabinetName            = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
