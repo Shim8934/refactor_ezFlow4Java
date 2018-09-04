@@ -80,7 +80,7 @@ function insertMemo(hColor, bColor, memoId, layerFlag) {
 	} else {
 		$("#boardMemoList").prepend(div);
 	}
-	if(useDate == 0)
+	if(useDate == 1)
 		addDateInfo();
 }
 
@@ -106,7 +106,7 @@ function loadMemoList(flag) {
 				$("#memoList").prepend(div);
 			}
 		}
-		if(useDate == 0)
+		if(useDate == 1)
 			addDateInfo(memoList[i].write_date.substring(0,10));
 	}
 }
