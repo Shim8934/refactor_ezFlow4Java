@@ -627,6 +627,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",    userInfo.getTenantId());
 		map.put("cabinetId",   cabinet.getCabinetId());
 		map.put("cabinetPath", cabinet.getCabinetPath());
+		
 		return ezCabinetDAO.getCabinetStorage(map);
 	}
 
@@ -1022,7 +1023,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	private List<CabinetSimpleVO> generateSimpleCabinet(List<CabinetVO> list, String primary) {
 		List<CabinetSimpleVO> result = new ArrayList<>();
-		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getCabinetType(), cabinet2.getCabinetType()));
+		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getOrderFromType(), cabinet2.getOrderFromType()));
 		
 		for (CabinetVO cabinet : list) {
 			String cabinetName            = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
@@ -2003,7 +2004,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return ezCabinetDAO.getUsersInfoFromIdList(map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject savePhotoBoard(int cabinetId, String realPath, String title, String summary, String boardTitle, String mode, String createUser, String createDate, String descript, String boardId, String boardItemId, Locale locale, LoginVO userInfo) throws Exception {

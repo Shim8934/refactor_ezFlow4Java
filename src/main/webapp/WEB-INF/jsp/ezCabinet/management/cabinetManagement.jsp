@@ -157,7 +157,7 @@
 					if (!mode || mode != "del") {if (selectedNode) {currentNode = selectedNode.getAttribute("role");}}
 					
 					myCabinetTree.makeTree({cabinetNode : (!mode || mode != "del" ? currentNode : "")});
-					var leftPanel   = window.opener;
+					var leftPanel = window.opener;
 					
 					if (leftPanel) {leftPanel.CabUserLeft.reloadTree(currentNode, mode);}
 				}
@@ -178,10 +178,7 @@
 				function addCabinet(strName1) {
 					var url      = "/ezCabinet/addCabinet.do";
 					var parentId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
-					var data     = {
-						parentId  : parentId,
-						cabName1  : strName1
-					};
+					var data     = {parentId : parentId, cabName1 : strName1};
 					
 					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "add");
 				}

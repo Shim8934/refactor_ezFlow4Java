@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -40,6 +39,4 @@ public interface EzCabinetRestService_h {
 	
 	//Save communityPhotoModules
 	JSONObject saveRelatedPhotoCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String summary, String commuTitle, String writer, String content) throws Exception;
-
-
 }

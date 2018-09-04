@@ -145,8 +145,8 @@
 					fileCapacityDivElmt.appendChild(spanElmt);
 					
 					//첨부파일리스트
-					var fileDivElmt         = document.getElementById("fileDiv");
-					var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
+					var fileDivElmt   = document.getElementById("fileDiv");
+					var divInformElmt = fileDivElmt.querySelector("div[class='divInform']");
 					
 					if(attachFile == null || attachFile.length == 0) {
 						var spanElmt         = document.createElement("span");
@@ -264,8 +264,8 @@
 					
 					switch(true) {
 						case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
-						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
-						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
+						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2)    + "MB"; break;
+						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2)       + "KB"; break;
 					}
 					return result;
 				}
@@ -298,10 +298,7 @@
 						default     : urlImg   = "/images/cabinet/none.png" ; break;
 					}
 					
-					return {
-						isImage  : imgCheck,
-						urlImage : urlImg
-					};
+					return {isImage : imgCheck, urlImage : urlImg};
 				}
 				
 				function fileModify() {
@@ -317,15 +314,12 @@
 					fileModifyDivBttn.style.display = "";
 					
 					//Set inputBox
-					var titleTdElmt   = document.getElementById("title");
-					var summaryTdElmt = document.getElementById("summary");
-					
-					var inputElmt1 = document.createElement("input"); 
-					var inputElmt2 = document.createElement("input");
-					
-					inputElmt1.value = titleTdElmt.textContent;
-					inputElmt2.value = summaryTdElmt.textContent;
-					
+					var titleTdElmt      = document.getElementById("title");
+					var summaryTdElmt    = document.getElementById("summary");
+					var inputElmt1       = document.createElement("input"); 
+					var inputElmt2       = document.createElement("input");
+					inputElmt1.value     = titleTdElmt.textContent;
+					inputElmt2.value     = summaryTdElmt.textContent;
 					inputElmt1.className = "tblFileInput";
 					inputElmt2.className = "tblFileInput";
 					
@@ -342,9 +336,9 @@
 					summaryTdElmt.appendChild(inputElmt2);
 					
 					//Set attachButton
-					var fileDivElmt    = document.getElementById("fileDiv");
-					var ulElmt         = fileDivElmt.querySelector("ul[class='ulFiles']");
-					var liElmt         = ulElmt.querySelectorAll("li");
+					var fileDivElmt = document.getElementById("fileDiv");
+					var ulElmt      = fileDivElmt.querySelector("ul[class='ulFiles']");
+					var liElmt      = ulElmt.querySelectorAll("li");
 					
 					fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
 					fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
@@ -537,8 +531,8 @@
 					if (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
 					
 					//Remove events
-					var fileDivElmt         = document.getElementById("fileDiv");
-					var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
+					var fileDivElmt   = document.getElementById("fileDiv");
+					var divInformElmt = fileDivElmt.querySelector("div[class='divInform']");
 					
 					if (divInformElmt) {
 						while (divInformElmt.firstChild) {

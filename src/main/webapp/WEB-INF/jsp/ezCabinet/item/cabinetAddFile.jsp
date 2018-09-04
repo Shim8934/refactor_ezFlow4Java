@@ -80,8 +80,8 @@
 					
 					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
 					
-					var relatedBttn         = document.getElementById("rlBttn");
-					relatedBttn.onclick     = function(e) {getRelatedFile();};
+					var relatedBttn     = document.getElementById("rlBttn");
+					relatedBttn.onclick = function(e) {getRelatedFile();};
 				}
 				
 				function getRelatedFile() {
@@ -237,8 +237,6 @@
 				};
 			}();
 		</script>
-		<script type="text/javascript">
-			CabinetAddFile.start("<c:out value='${cabinetId}'/>");
-		</script>
+		<script type="text/javascript">CabinetAddFile.start("<c:out value='${cabinetId}'/>");</script>
 	</body>
 </html>

@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.Locale;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService_m {
@@ -14,6 +12,4 @@ public interface EzCabinetService_m {
 	
 	//User item functions
 	void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String doctitle, String realPath, LoginVO userInfo) throws Exception;
-	
-
 }

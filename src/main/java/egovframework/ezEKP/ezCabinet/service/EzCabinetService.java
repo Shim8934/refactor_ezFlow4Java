@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;

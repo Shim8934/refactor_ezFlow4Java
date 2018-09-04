@@ -12,7 +12,6 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @SuppressWarnings("unchecked")
 @Repository("EzCabinetDAO_h")
 public class EzCabinetDAO_h extends EgovAbstractDAO {
-	
 	public List<SimpleUserVO> getDeptMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzCabinetDAO_h.getDeptMemberList", map);
 	}

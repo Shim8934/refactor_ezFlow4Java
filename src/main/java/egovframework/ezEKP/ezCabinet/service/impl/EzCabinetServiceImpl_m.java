@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.annotation.Resource;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
@@ -142,10 +139,6 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		itemVO.setTenantId(tenantId);
 		
 		saveItem(itemVO);
-	}
-	
-	private String getCabinetDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
 	}
 	
 	private synchronized void saveAllColumns(List<CabinetColumnVO> listColm) {

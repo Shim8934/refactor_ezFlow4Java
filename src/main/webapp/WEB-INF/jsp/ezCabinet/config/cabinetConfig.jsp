@@ -44,12 +44,8 @@
 				function changeTab(obj) {
 					var pSelectTab = obj.getAttribute("role");
 					switch (pSelectTab) {
-						case "cbEnv_div1": 
-							document.getElementById("cbEnv_ifrm").src = "/ezCabinet/cabinetGeneral.do";
-							break;
-						case "cbEnv_div2":
-							document.getElementById("cbEnv_ifrm").src = "/ezCabinet/cabinetInterLocking.do";
-							break;
+						case "cbEnv_div1": document.getElementById("cbEnv_ifrm").src = "/ezCabinet/cabinetGeneral.do"     ; break;
+						case "cbEnv_div2": document.getElementById("cbEnv_ifrm").src = "/ezCabinet/cabinetInterLocking.do"; break;
 					}
 				}
 				
