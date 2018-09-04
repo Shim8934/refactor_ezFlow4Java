@@ -159,11 +159,8 @@ public class EzMemoController {
 	public String memoFoldersInfo(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoFoldersInfo started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -208,11 +205,8 @@ public class EzMemoController {
 	public String memoInputName(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoInputName started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("company_id",userInfo.getCompanyID());
-		param.put("user_id",userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/names/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
