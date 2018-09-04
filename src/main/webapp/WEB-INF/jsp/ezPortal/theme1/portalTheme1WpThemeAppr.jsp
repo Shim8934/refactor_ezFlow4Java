@@ -27,12 +27,14 @@
 	        var strlang = "${userInfo.lang}";
 	        var strLang1 = "<spring:message code='main.t00026' />";
 	        var pNoneActiveX = "${noneActiveX}";
+	        var selTab = "";
 	        
 	        window.onload = window_onload;
 	        
 	        function window_onload() {
 	            getAppr();
-
+	            selTab = "doingTab";
+	            
 	            try { top.onresize() } catch (e) { }
 	        }
 
@@ -170,6 +172,7 @@
 	                switch (obj.id) {
 	                    case "doingTab":
 	                        pListTypeValue = "1";
+	                        selTab = "doingTab";
 	                        document.getElementById("doingTab").className = "on";
 	                        document.getElementById("rejectTab").className = "";
 	                        document.getElementById("draftTab").className = "";
@@ -177,6 +180,7 @@
 
 	                    case "rejectTab":
 	                        pListTypeValue = "4";
+	                        selTab = "rejectTab";
 	                        document.getElementById("doingTab").className = "";
 	                        document.getElementById("rejectTab").className = "on";
 	                        document.getElementById("draftTab").className = "";
@@ -184,6 +188,7 @@
 
 	                    case "draftTab":
 	                        pListTypeValue = "2";
+	                        selTab = "draftTab";
 	                        document.getElementById("doingTab").className = "";
 	                        document.getElementById("rejectTab").className = "";
 	                        document.getElementById("draftTab").className = "on";
@@ -479,7 +484,18 @@
 	                    width = parseInt(width) - 10;
 	                }
 	                window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
-	            }	
+	            }
+	            
+	            /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+		        function tabover(tabObj) {
+		        	tabObj.setAttribute("class", "on");
+		        }
+		        function tabout(tabObj) {
+		        	if (tabObj.id != selTab) {
+		        		tabObj.setAttribute("class", "");
+		        	}
+		        }
+		        
 		</script>
 	</head>
 	<body>
@@ -489,15 +505,15 @@
             	<dd onclick="Appmore_btnClick()"><spring:message code='main.t1008'/></dd>
         	</dl>
         	<ul class="content_tabTitle">
-            	<li id="doingTab" class="on" onclick="apprChangeTab(this)">
+            	<li id="doingTab" class="on" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)">
                 	<span class="title"><spring:message code='main.t302'/></span>
                 	<span class="count" id="count1"></span>
             	</li>
-            	<li id="rejectTab" class="" onclick="apprChangeTab(this)">
+            	<li id="rejectTab" class="" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)">
                 	<span class="title"><spring:message code='main.t00004'/></span>
                 	<span class="count" id="count2"></span>
             	</li>
-            	<li id="draftTab" class="" onclick="apprChangeTab(this)">
+            	<li id="draftTab" class="" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)">
                 	<span class="title"><spring:message code='main.t304'/></span>
                 	<span class="count" id="count3"></span>
             	</li>

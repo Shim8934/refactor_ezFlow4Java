@@ -25065,4 +25065,28 @@
 		AND
 			TENANT_ID = #tenantID#
    </delete>
+   <select id="EzApprovalG.isBebuDocExist" parameterClass="Map" resultClass="String">
+    	SELECT
+    		IFNULL(HREF,'NULL') as HREF
+    	FROM
+    		TBL_DOCDELIVERY
+    	WHERE
+    		DOCID = #v_DOCID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+    <update id="EzApprovalG.updateDocDeliveryHref" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_DOCDELIVERY
+	  		SET 
+	  			HREF = #v_HREF#
+		  	WHERE 
+		  		TENANT_ID = #v_TENANTID#
+		  	AND
+		  		COMPANYID = #companyID#
+		  	AND
+		  		DOCID = #v_DOCID#
+	  </update>
 </sqlMap>
