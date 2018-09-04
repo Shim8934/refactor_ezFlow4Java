@@ -475,7 +475,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/rest/ezMemo/memo-list/{folderId}/memo/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwMemoWrite(@PathVariable String folderId, @PathVariable String userId, MemoVO memo, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
+	public JSONObject gwMemoWrite(@PathVariable String folderId, @PathVariable String userId, MemoVO memoVO, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-list/" + folderId + "/memo/" +userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -483,10 +483,13 @@ public class EzMemoGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
-			memo.setTenant_id(info.getTenantId());
+			
+			memoVO.setTenant_id(info.getTenantId());
+			memoVO.setCompany_id(info.getCompanyId());
+			memoVO.setUser_id(userId);
 			
 			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
-			memo.setColor_id(configVO.getDefault_color());
+			memoVO.setColor_id(configVO.getDefault_color());
 			
 			if(folderId.equals("0")) {
 				MemoFolderVO memoFolderVO = new MemoFolderVO();
@@ -494,10 +497,10 @@ public class EzMemoGWController {
 				memoFolderVO.setTenant_id(info.getTenantId());
 				memoFolderVO.setUser_id(info.getUserId());
 				
-				memo.setFolder_id(ezMemoService.getMemoDefaultFolder(memoFolderVO));
+				memoVO.setFolder_id(ezMemoService.getMemoDefaultFolder(memoFolderVO));
 			}
 			
-			int memoId = ezMemoService.memoWrite(memo);
+			int memoId = ezMemoService.memoWrite(memoVO);
 			
 			result.put("status", "ok");
 			result.put("memoId", memoId);
