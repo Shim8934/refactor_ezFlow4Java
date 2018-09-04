@@ -327,8 +327,10 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setUser_id(userId);
 			
 			ezMemoService.addMemoFolder(memoFolderVO);
 			
@@ -361,8 +363,10 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setUser_id(userId);
 			
 			ezMemoService.modifyMemoFolder(memoFolderVO);
 			
@@ -396,8 +400,10 @@ public class EzMemoGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("user_id"));
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
+			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setUser_id(userId);
 			
 			ezMemoService.deleteMemoFolder(memoFolderVO, folder_ids);
 			
