@@ -8,11 +8,15 @@
 		<title>::: ezEKP Java :::</title>
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+		<!-- 스크롤바 css 추가 -->
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
+		<!-- 스크롤바 js 추가 -->
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.concat.min.js')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -47,6 +51,7 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
+			.mCSB_inside > .mCSB_container{margin-right: 10px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -86,6 +91,7 @@
 
 		    window.onload = function() {
 		    	$("#open-memo").css("display", "");
+		    	
 		    }
 		
 		    function chagePosition() {
@@ -151,8 +157,8 @@
 	        	if (width > windowWidth) {
 	        		width = windowWidth - 60;
 	        		$("#layer-popup").css("width", width + "px");
-	        		$(".memoListBox").css("width", width+25 + "px");
-	        		$("#memoList").css("width", width+25 + "px");
+	        		$(".memoListBox").css("width", width + "px");
+	        		$("#memoList").css("width", width + "px");
 	        	}
 	        	
 	        	
@@ -200,6 +206,14 @@
 		    	memoFoldersInfo();
 		    	
 		     
+		    	/* 스크롤바 함수 추가 */
+		    	$(".memoListBox").mCustomScrollbar({
+		    		theme : "dark",
+		    		scrollType : "stepped",
+		    		scrollInertia : 1000
+		    		
+		    	});
+		    	
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
@@ -521,8 +535,8 @@
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth+25, "height" : winHeight-56-16});
-		    		$("#memoList").css({"width" : winWidth+25, "height" : winHeight-56-16});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-16});
+		    		$("#memoList").css({"width" : winWidth, "height" : winHeight-56-16});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
 		    		getMemoConfig();
@@ -824,10 +838,10 @@
 		    	var btnBundlHeight = $("#btn-bundle").height();
 			    var layerHeight = $("#layer-popup").height();
 			    var layerWidth = $("#layer-popup").width();
-			    var memoListHeight = layerHeight - btnBundlHeight;
+			    var memoListHeight = layerHeight - btnBundlHeight - 20;
 			    
-			    $(".memoListBox").css({"height" : memoListHeight+25, "width" : layerWidth});
-			    $("#memoList").css({"width" : layerWidth+25, "height" : memoListHeight});
+			    $(".memoListBox").css({"height" : memoListHeight, "width" : layerWidth});
+			    $("#memoList").css({"width" : layerWidth, "height" : memoListHeight});
 			    
 		    }
 		    // 메모함 리스트 출력
@@ -875,14 +889,15 @@
 						<div id="slider-range"></div>
 						
 						<select id="memoFolderList" name="memoFolderList"></select>
-						<button id="changeMode">모드</button>
-						<button id="newMemo">추가</button>
-						<button id="close-button">닫기</button>
+						<button id="changeMode">모</button>
+						<button id="newMemo">추</button>
+						<button id="close-button">닫</button>
 					</div>
 										
 					<div class="memoListBox" style="overflow:hidden;">
 						<!-- <div id="memoList" style="height: 50%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div> -->
-						<div id="memoList" style="height:100%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
+						<!-- <div id="memoList" style="height:100%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div> -->
+						<div id="memoList" style="height:100%; position:relative;"></div>
 					</div>
 					
 				</div>
