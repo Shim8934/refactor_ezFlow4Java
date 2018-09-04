@@ -567,7 +567,9 @@
 	            		return;
 	            	}
 	            }
+	            /* 2018-09-03 홍승비 - 간단추가 완료 이후 추가한 정보 td에서 제거 */
 	            else {
+	            	quick_add_close();
 	            	$.modal.close();
 	            	Get_AddressList();
 	            }	            
