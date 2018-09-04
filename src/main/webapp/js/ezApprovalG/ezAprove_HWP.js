@@ -1442,6 +1442,7 @@ function setRecevInfo(ret) {
              }
         }
     }
+    
     if (HwpCtrl.CheckFieldExist("recipient")) {
         if (precipent == strLang92) {
             HwpCtrl.SetFieldText("recipient", precipent);

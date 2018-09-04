@@ -3381,6 +3381,7 @@
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
 				DEPTID ,
+				deptname,
                 DEPTSN 
            FROM 
            		TBL_FormRecv 

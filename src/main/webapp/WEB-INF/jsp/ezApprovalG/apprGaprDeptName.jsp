@@ -11,20 +11,22 @@
 <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <script type="text/javascript">
     function btn_SaveAprDeptTempletName_onclick() {
-        var p_AprDeptTempletName = trim(TxtAprDeptTempletName.value);
+        var p_AprDeptTempletName = trim(document.getElementById('Text1').value);
         if (p_AprDeptTempletName.length <= 0) {
             var pAlertContent = "<spring:message code='ezApprovalG.t349'/>";
             OpenAlertUI(pAlertContent);
 
-            TxtAprDeptTempletName.focus();
+            document.getElementById('Text1').focus();
         }
         else {
-        	  if (!CheckLen(TxtAprDeptTempletName, 100)) {
+        	  if (!CheckLen(document.getElementById('Text1'), 100)) {
                   return;
               }
 
               if (ReturnFunction != null) {
                   ReturnFunction(p_AprDeptTempletName);
+                  //2018-09-03 관리자 팝업호출 close추가
+                  window.close();
               }
               else {
                   window.returnValue = p_AprDeptTempletName;
@@ -56,8 +58,8 @@
                 RetValue = window.dialogArguments;
             }
         }
-        TxtAprDeptTempletName.value = RetValue;
-        TxtAprDeptTempletName.focus();
+        document.getElementById('Text1').value = RetValue;
+        document.getElementById('Text1').focus();
     }
     
     function OpenAlertUI(pAlertContent) {

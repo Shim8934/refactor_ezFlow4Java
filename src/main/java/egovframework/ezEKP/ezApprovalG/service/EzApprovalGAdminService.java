@@ -36,6 +36,8 @@ public interface EzApprovalGAdminService {
 	
 	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
 	
+	public String updateReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
+	
 	public String deleteReceiveGroupItemInfo(String groupID, String companyID, int tenantID) throws Exception;
 	
 	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID, int tenantID) throws Exception;
@@ -118,7 +120,7 @@ public interface EzApprovalGAdminService {
 	
 	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
 	
-	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception;
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag, String useReceiveInfoName) throws Exception;
 
 	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
 

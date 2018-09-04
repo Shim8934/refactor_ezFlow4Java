@@ -481,6 +481,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
@@ -531,6 +532,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		
 		logger.debug("formMainOther ended.");
 		
@@ -783,10 +785,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag, useReceiveInfoName);
 		
 		logger.debug("getFormRecvAdmin ended. result = " + result);
 		
@@ -1349,6 +1352,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
 		String serverName = userInfo.getServerName();
 		String topID = "";
 		
@@ -1380,6 +1384,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		
 		logger.debug("apprGReceiveGroup ended.");
 		
@@ -1433,6 +1438,28 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
 		
 		logger.debug("setGroupSubItemInfo ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 부서명변경
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/updateGroupSubItemInfo.do")
+	@ResponseBody
+	public String updateGroupSubItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("updateGroupSubItemInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String groupID = request.getParameter("node1");
+		String deptID = request.getParameter("node2");
+		String deptName = request.getParameter("node3");
+		String companyID = request.getParameter("node4");
+		String deptName2 = request.getParameter("node6");
+		
+		String result = ezApprovalGAdminService.updateReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
+		
+		logger.debug("updateGroupSubItemInfo ended.");
 		
 		return result;
 	}

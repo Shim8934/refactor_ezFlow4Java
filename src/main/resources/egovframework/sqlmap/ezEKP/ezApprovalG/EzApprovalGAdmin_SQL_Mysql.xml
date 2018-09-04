@@ -990,6 +990,7 @@
 			<![CDATA[
 				SELECT
 					deptid,
+					deptname,
 					userid
 				FROM
 					TBL_FORMRECV
@@ -1006,7 +1007,8 @@
 		<isEqual property="approvalFlag" compareValue="G">
 			<![CDATA[
 				SELECT
-					deptid
+					deptid,
+					deptname
 				FROM
 					TBL_FORMRECV
 				WHERE
@@ -1742,6 +1744,7 @@
 					(formid,
 					deptid,
 					deptsn,
+					deptname,
 					userid,
 					companyid,
 					tenant_id)
@@ -1749,6 +1752,7 @@
 					(#v_PFORMID#,
 					#deptID#,
 					#deptSN#,
+					#deptName#,
 					#userID#,
 					#companyID#,
 					#tenantID#)
@@ -1760,12 +1764,14 @@
 					(formid,
 					deptid,
 					deptsn,
+					deptname,
 					companyid,
 					tenant_id)
 				VALUES
 					(#v_PFORMID#,
 					#deptID#,
 					#deptSN#,
+					#deptName#,
 					#companyID#,
 					#tenantID#)
 			]]>
@@ -2672,6 +2678,24 @@
 				#tenantID#)
 		]]>
 	</insert>
+	
+	<update id="EzApprovalGAdmin.updateReceiveGroupItemInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADMINRECEIPTGROUP_SUB
+			SET
+				deptname = #deptName#,
+				deptname2 = #deptName2#
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyID = #companyID#
+			AND
+				mainid = #mainID#
+			AND
+				deptid = #deptID#
+		]]>
+	</update>
 
 	<!-- <procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" -->
 	<!-- parameterClass="Map"> -->
