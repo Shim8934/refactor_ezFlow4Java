@@ -77,8 +77,8 @@
                 	<th><spring:message code="ezMemo.t005" /></th>
                 	<td> 
 						<select id="setQuickFlag" style="margin-left: 5px;">
-							<option value="0" <c:if test = "${memoConfigVO.use_gadget eq '0' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
-							<option value="1" <c:if test = "${memoConfigVO.use_gadget eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>
+							<option value="1" <c:if test = "${memoConfigVO.use_gadget eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
+							<option value="2" <c:if test = "${memoConfigVO.use_gadget eq '2' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>
 						</select>
                    	</td>                   	
             	</tr>
@@ -86,8 +86,8 @@
                 	<th><spring:message code="ezMemo.t006" /></th>
                 	<td>
                 		<select id="setDateFlag" style="margin-left: 5px;">							
-							<option value="0" <c:if test = "${memoConfigVO.use_date eq '0' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
-							<option value="1" <c:if test = "${memoConfigVO.use_date eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>							
+							<option value="1" <c:if test = "${memoConfigVO.use_date eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
+							<option value="2" <c:if test = "${memoConfigVO.use_date eq '2' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>							
 						</select>
                 	</td>
             	</tr>
