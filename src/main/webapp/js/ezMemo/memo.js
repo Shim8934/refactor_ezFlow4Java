@@ -86,7 +86,7 @@ function insertMemo(hColor, bColor, memoId, layerFlag) {
 
 
 function loadMemoList(flag) {
-/*function loadMemoList() {*/
+	
 	$("#boardMemoList").html('');
 	$("#memoList").html('');
 	
