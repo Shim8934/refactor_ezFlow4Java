@@ -1237,6 +1237,8 @@ function getApprovInfo() {
         pdocXML = SelectSingleNodeNew(result, "APROVEDATA/DOCFLAGINFO");
         xmlString = getXmlString(pdocXML);
         xmlpara = loadXMLString(xmlString);
+        
+        aprDocTimeStamp = GetElementsByTagName(result, "APROVEDATA/APRDOCTIMESTAMP");
 
         var node = GetElementsByTagName(xmlpara, "DocHref");
         pDocHref = getNodeText(node[0]);
