@@ -8,14 +8,12 @@
 		<title>::: ezEKP Java :::</title>
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-		<!-- 스크롤바 css 추가 -->
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
-		<!-- 스크롤바 js 추가 -->
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.concat.min.js')}"></script>
 		<style>
 			.layerpopup {
@@ -69,7 +67,6 @@
 	    	var useDate;
 			var defaultColor;
 	    	var layerRight;
-	    	var layerBottom;
 	    	
 	    	
 			topHeight = "56";
@@ -78,17 +75,13 @@
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
 		        chagePosition();
-		        //setSizeOfLayer();
 		 	}
+		 	
 		 	$(window).resize(function() {
 		        setLayerSizeOnResize();
 		 		
 		 	});
 		 	
-		    /* function Div_Close() {
-		        document.getElementById("popup_layer").style.display = "none";
-		    } */
-
 		    window.onload = function() {
 		    	$("#open-memo").css("display", "");
 		    	
@@ -103,34 +96,6 @@
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
 		    }
 		    
-		    /* function setSizeOfLayer() {
-		    	var winHeight = window.innerHeight;
-	        	var layerWidth =$("#layer-popup").css("width");
-	        		        
-	        	$(".memoListBox").css("width", layerWidth);
-	        	
-	        	var tringTop = $("#layer-popup").css("top");
-	        	var stringLeft = $("#layer-popup").css("left");
-	        	var width = $("#layer-popup").width();
-	        	var height = $("#layer-popup").height();
-	        	
-	        	var windowHeight = window.innerHeight;
-	        	var windowWidth = window.innerWidth;
-	        	
-	        	var pIndex = tringTop.indexOf("p");
-	        	var pIndex = stringLeft.indexOf("p");
-	        	
-	        	var top = parseInt(tringTop.substr(0, pIndex-1));
-	        	var left = parseInt(stringLeft.substr(0, pIndex));
-	        	
-	        	console.log(top);
-	        	console.log(left);
-	        	console.log(width);
-	        	console.log(height);
-	        	console.log(windowHeight);
-	        	console.log(windowWidth);
-
-		    } */
 		    function setLayerSizeOnResize() {
 		    	
 		    	var stringTop = $("#layer-popup").css("top");
@@ -150,12 +115,14 @@
 	        	
 	        	if (height > windowHeight) {
 	        		
-	        		height = windowHeight - 60;
+	        		height = windowHeight - 30;
 	        		$("#layer-popup").css("height", height + "px");
+	        		$(".memoListBox").css("height", height - 35 + "px");
+	        		$("#memoList").css("height", height - 35 + "px");
 	        	}
 	        	
 	        	if (width > windowWidth) {
-	        		width = windowWidth - 60;
+	        		width = windowWidth - 30;
 	        		$("#layer-popup").css("width", width + "px");
 	        		$(".memoListBox").css("width", width + "px");
 	        		$("#memoList").css("width", width + "px");
@@ -175,29 +142,30 @@
 	        	}
 	        	
         		if (top > windowHeight) {
-        			$("#layer-popup").css("top", bottomZero-10);
+        			$("#layer-popup").css("top", bottomZero - 10);
         			
         		} else if (top < windowHeight) {
         			if (top + height > windowHeight) {
-        				$("#layer-popup").css("top", bottomZero-10);
+        				$("#layer-popup").css("top", bottomZero - 10);
         			}
         		}
         		
 	        	if (left > windowWidth) {
-	        		$("#layer-popup").css("left", leftZero);
+	        		$("#layer-popup").css("left", leftZero - 10);
 	        		
 	        	} else if (left < windowWidth) {
 	        		if (left + width > windowWidth) {
-		        		$("#layer-popup").css("left", leftZero);
+		        		$("#layer-popup").css("left", leftZero - 10);
 		        		
 	        		 }
 	        	}
 	        	
+	        	setLayerPosition();
+	    		setLayerArea();
 		    }
 		    
 		    $(function() {
 		    	chagePosition();
-		    	//setSizeOfLayer();
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
@@ -206,11 +174,11 @@
 		    	memoFoldersInfo();
 		    	
 		     
-		    	/* 스크롤바 함수 추가 */
+		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
 		    		theme : "dark",
 		    		scrollType : "stepped",
-		    		scrollInertia : 1000
+		    		/* scrollInertia : 1000 */
 		    		
 		    	});
 		    	
@@ -218,6 +186,7 @@
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
 		        });
+		        
 		        // 메모 정렬
 		        $("#memoList").sortable({
 		        	
@@ -367,24 +336,11 @@
 		        	},
 		        	stop : function () {
 		        		
-		        		var layerWidth = $(".layerControl").width();
-		        		var layerHeight = $(".layerControl").height();
-		        		
-		        		$.ajax({
-		        			type:"POST",
-		        			data : {
-		        				"layerWidth" : layerWidth,
-		        				"layerHeight" : layerHeight
-		        			},
-		        			dataType: "JSON",
-		        			url :  "/ezMemo/setLayerArea.do", 
-		        			success : function (result) {
-		        			},
-		        			error : function() {
-		        			}
-		        		});
+		        		setLayerArea();
 		        	}
 		        });
+		        
+		        
 		        // 메모 디테일 리사이즈
 		        $(".detailMemo").resizable({
 		        	
@@ -525,7 +481,7 @@
 				}
 		    }
 		 	
-		    // 레이어 넓이 값 저장
+		    // 모드 변경 시 레이어 넓이 변경
 		    function setLayerSize() {
 		    	var layerClass = $("#layer-popup").attr("class");
 		    	
@@ -535,8 +491,8 @@
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-16});
-		    		$("#memoList").css({"width" : winWidth, "height" : winHeight-56-16});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-40});
+		    		$("#memoList").css({"width" : winWidth, "height" : winHeight-56-40});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
 		    		getMemoConfig();
@@ -629,32 +585,57 @@
 		        	$(".noteBlock").css("pointer-events", "auto");
 		       	}).draggable({
 		       		containment:".noteBlock",
-	        		stop:function(){
-	        			$(".noteBlock").css("pointer-events", "none");
+		       		stop : function() {
+		       			$(".noteBlock").css("pointer-events", "none");
 			        	$("#open-memo").css("pointer-events", "auto");
 			        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");
 			        	
-			        	var layerTop = $("#layer-popup").css("top");
-		        		var layerLeft = $("#layer-popup").css("left");
-			        	layerRight = $("#layer-popup").css("right");
-			        	layerBottom = $("#layer-popup").css("bottom");
-			        	
-			        	$.ajax({
-			        		type : "POST",
-			        		data : {
-			        			layerTop : layerTop,
-			        			layerLeft : layerLeft
-			        		},
-			        		dataType : "JSON",
-			        		url : "/ezMemo/setLayerPosition.do",
-			        		success : function(result) {
-			        			
-			        		}
-			        	});
-	        		} 
+			        	setLayerPosition();
+		       		}
 		       	});
 			}
+			
+		    // 레이어 위치값 변경
+		    function setLayerPosition() {
+		    	
+	        	var layerTop = $("#layer-popup").css("top");
+        		var layerLeft = $("#layer-popup").css("left");
+	        	layerRight = $("#layer-popup").css("right");
+	        	layerBottom = $("#layer-popup").css("bottom");
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		data : {
+	        			layerTop : layerTop,
+	        			layerLeft : layerLeft
+	        		},
+	        		dataType : "JSON",
+	        		url : "/ezMemo/setLayerPosition.do",
+	        		success : function(result) {
+	        			
+	        		}
+	        	});
+		    }
 		    
+		    // 레이어 넓이값 변경
+		    function setLayerArea() {
+	        	var layerWidth = $(".layerControl").width();
+        		var layerHeight = $(".layerControl").height();
+        		
+        		$.ajax({
+        			type:"POST",
+        			data : {
+        				"layerWidth" : layerWidth,
+        				"layerHeight" : layerHeight
+        			},
+        			dataType: "JSON",
+        			url :  "/ezMemo/setLayerArea.do", 
+        			success : function (result) {
+        			},
+        			error : function() {
+        			}
+        		});
+	        }
 		    /**
 		     * layer-popup(노트판)의 투명도 조절
 		     */
@@ -851,7 +832,7 @@
 		    	$.ajax({
 					type : "GET",
 					dataType : "json",
-					async : false,
+					//async : false,
 					url : "/ezMemo/getMemoFoldersInfo.do",
 					success: function(result){
 						

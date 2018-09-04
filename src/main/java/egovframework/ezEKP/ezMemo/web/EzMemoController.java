@@ -391,7 +391,7 @@ public class EzMemoController {
 		param.put("layer_width", width);
 		param.put("layer_height", height);
 		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerArea/users/" + userInfo.getId(), param, request, "post", null);
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerArea/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("setLayerArea ended");
@@ -425,7 +425,7 @@ public class EzMemoController {
 		param.put("layer_top", topPositon);
 		param.put("layer_left", leftPosition);
 		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerPosition/users/" + userInfo.getId(), param, request, "post", null);
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setLayerPosition/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("setLayerPosition ended");
@@ -730,7 +730,7 @@ public class EzMemoController {
 		param.put("draggedElId", draggedElId);
 		param.put("compareElId", compareElId);
 		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/compareElId/" + compareElId + "/users/" + userInfo.getId(), param, request, "post", null);
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/compareElId/" + compareElId + "/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
 		
 		if ("ok".equals(status)) {
