@@ -132,6 +132,7 @@
 	        var isHWP = "${isHWP}";
 	        var approvalFlag = "${approvalFlag}";
 	        var ext = "hwp";
+	        var aprDocTimeStamp = "";
 	        var docState = "${docState}";
 	        var nonElecRec = "${nonElecRec}";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
@@ -239,7 +240,7 @@
 		            GetExchInfo();
 		
 		            if (pDocHref != "") {
-		                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
+		                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
 		                var isTrue = HwpCtrl.LoadFile(URL, false);
 		
 		                FieldsAvailable(isTrue);
@@ -327,9 +328,8 @@
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
-		
-		
+		                    
+				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
 
 				        FieldsAvailable(isTrue);
