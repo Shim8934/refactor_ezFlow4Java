@@ -44,9 +44,14 @@
     					use_date = $("#setDateFlag option:selected").val();
     					use_gadget = $("#setQuickFlag option:selected").val();
     					font_size = $("#setFontSize option:selected").val();
+    					
+    					alert("<spring:message code='ezMemo.t0025' />");
+    					parent.parent.parent.getMemoConfig();
+    					parent.parent.parent.getMemoList();
+    				}, error: function() {
+    					alert("<spring:message code='ezMemo.t0059' />");
     				}
     			}); 
-				alert("<spring:message code='ezMemo.t0025' />");
         	}
         	
         	function Cancel_Click() {
