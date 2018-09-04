@@ -552,7 +552,6 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("memo_ids", memo_ids);
-		//param.put("userId", userInfo.getId());
 		param.put("display", display);
 	
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-display/memo/" + memo_ids + "/users/" + userInfo.getId(), param, request, "post", null);
@@ -742,6 +741,7 @@ public class EzMemoController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-order/draggedElId/" + draggedElId + "/compareElId/" + compareElId + "/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
+		
 		if ("ok".equals(status)) {
 			model.addAttribute("status", 1);
 		}
