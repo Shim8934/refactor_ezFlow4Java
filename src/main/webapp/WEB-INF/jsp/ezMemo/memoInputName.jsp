@@ -17,7 +17,7 @@
 	        var CancelFunction;
 	        var InputValue;
             var FolderId="";
-            var folderNameList = "${folderNameList}";
+            var folderNameList = "<c:out value='${folderNameList}' />";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
