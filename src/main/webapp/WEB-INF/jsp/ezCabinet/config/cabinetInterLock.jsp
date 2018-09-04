@@ -37,8 +37,8 @@
 								</c:choose>
 							</td>
 							<td>
-								<input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-								<input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t35"/></label>
+								<label style="cursor:pointer;"><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><spring:message code="ezCabinet.t34"/></label>
+								<label style="cursor:pointer;"><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><spring:message code="ezCabinet.t35"/></label>
 							</td>
 						</tr>
 					</c:forEach>

@@ -46,8 +46,8 @@
 							</c:choose>
 						</td>
 						<td>
-							<input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t147"/></label>
-							<input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t148"/></label>
+							<label style="cursor:pointer;"><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><spring:message code="ezCabinet.t147"/></label>
+							<label style="cursor:pointer;"><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><spring:message code="ezCabinet.t148"/></label>
 						</td>
 					</tr>
 				</c:forEach>
