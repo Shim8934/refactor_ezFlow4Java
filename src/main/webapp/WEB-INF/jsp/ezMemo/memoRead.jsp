@@ -31,45 +31,45 @@
 		        $("textarea").css("width", parseInt(MainWidth) +"px");
 			};
 			
-			window.onbeforeunload = function() {
+			window.onbeforeunload = function() { 
 				modifyMemo();
-			};
-
-			function close_onclick() {
-				modifyMemo();
-				//window.close();
 			}
 			
 			function modifyMemo() {
 				var beforeContents = $("textarea").html();
 				var afterContents = $("textarea").val();
-				
+
 				if(beforeContents != afterContents) {
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
-		 			   	type : 'POST',
+		 			   	type : 'post',
 		                dataType : 'json',
+		                async : false,
 		                data : { 
 		                	memoId : memoId,
 		                	contents : afterContents
 		                },  
 		                cache: false,
 		                success: function(result) {
-		                	//parent.opener.refresh_onclick();							// 메모 게시판의 리스트 새로고침()				
-		                	//parent.opener.parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+		                	parent.opener.refresh_onclick();							// 메모 게시판의 리스트 새로고침()				
+		                	parent.opener.parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		                },
-		                error : function() {
-		                	
-		                }
+		                error : function(e) {
+
+		                },
+		                complete : function() {
+							window.close();
+						}
 					}); 
 				}
 		    }
+			
 </script>
 <body class="popup" style="overflow:hidden">
 		<h1><spring:message code='ezMemo.t0055'/></h1>
 		 <div id="close">
 		    <ul>
-		      <li><span onClick="close_onclick()"></span></li>
+		      <li><span onclick="modifyMemo();"></span></li>
 		    </ul>
 		 </div>
 		<div>
