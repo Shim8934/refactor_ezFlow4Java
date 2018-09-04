@@ -24,6 +24,7 @@
 		    var BoardCnt_NewBoardSTD = parseInt("${pHeaderCount}");
 		    var strLang1_NewBoardSTD = "<spring:message code='main.t00026' />";
 		    var pNoneActiveX = "${pNoneActiveX}";
+		    var selTab = "";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -38,6 +39,7 @@
 		        GetMyBoardItem();
 		        getTabList();
 		        getBoardList_NewBoardSTD();
+		        selTab = "Board0";
 		    }
 
 		    function getTabList() {
@@ -64,11 +66,11 @@
 		                    else
 		                        BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
 		                    if (i == 0) {
-		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' " + classon + " DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'" + "><span> " + BoardName + " </span></dt>";
+		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' " + classon + " DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'" + " onmouseover='tabover(this)' onmouseout='tabout(this)'><span> " + BoardName + " </span></dt>";
 		                        pBoardType_NewBoardSTD = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 		                    }
 		                    else
-		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'><span> " + BoardName + " </span></dt>";
+		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'  onmouseover='tabover(this)' onmouseout='tabout(this)'><span> " + BoardName + " </span></dt>";
 		                }
 
 		                listHTML += "</dl>";
@@ -314,6 +316,7 @@
 		        function boardChangeTab(obj) {
 		            switch (obj.id) {
 		                case "Board0":
+		                	selTab = "Board0";
 		                    document.getElementById("Board0").className = "on";
 		                    for (var i = 1; i < BoardCnt_NewBoardSTD; i++) {
 		                        document.getElementById("Board" + i).className = "";
@@ -321,7 +324,7 @@
 		                    break;
 
 		                case "Board1":
-
+		                	selTab = "Board1";
 		                    document.getElementById("Board0").className = "";
 		                    document.getElementById("Board1").className = "on";
 		                    if (BoardCnt_NewBoardSTD == 3)
@@ -329,7 +332,7 @@
 		                    break;
 
 		                case "Board2":
-
+		                	selTab = "Board2";
 		                    document.getElementById("Board0").className = "";
 		                    document.getElementById("Board1").className = "";
 		                    document.getElementById("Board2").className = "on";
@@ -359,7 +362,17 @@
 		                getBoardList_NewBoardSTD();
 		            }
 		        }
-
+		        
+		        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+		        function tabover(tabObj) {
+		        	tabObj.setAttribute("class", "on");
+		        }
+		        function tabout(tabObj) {
+		        	if (tabObj.id != selTab) {
+		        		tabObj.setAttribute("class", "");
+		        	}
+		        }
+		        
 		        window_onload_NewBoardSTD();	
 		</script>
 	</head>	
