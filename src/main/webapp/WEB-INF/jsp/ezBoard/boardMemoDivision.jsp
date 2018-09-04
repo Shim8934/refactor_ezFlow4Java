@@ -211,13 +211,13 @@
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
-    		<%-- <h2><spring:message code="ezMemo.t0040" /></h2>
-    		<span class="txt">▒ <spring:message code="ezMemo.t002" /></span>   
+    		<h2><spring:message code="ezMemo.t0040" /></h2>
+    		<span class="txt">▒ <spring:message code='ezMemo.t0056' /></span>  
     		<br />
-    		<span class="txt">▒ <spring:message code="ezMemo.t003" /></span>
-        	<br />
-        	<span class="txt">▒ <spring:message code="ezMemo.t004" /></span>
-        	<br /> --%>
+        	<span class="txt">▒ <spring:message code='ezMemo.t0057' /></span> 
+    		<br />
+    		<span class="txt">▒ <spring:message code='ezMemo.t0058' /></span>
+        	<br /><br/>
      
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
