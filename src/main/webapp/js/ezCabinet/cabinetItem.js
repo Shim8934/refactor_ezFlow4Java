@@ -167,7 +167,7 @@ var CabinetItem = function() {
 		
 		topFrameWd.addEventListener("mouseup", function(e)  {closeViewPopUp();}, false);
 		leftFrameWd.addEventListener("mouseup", function(e) {closeViewPopUp();}, false);
-		document.addEventListener("mouseup", function(e)    {closeViewPopUp();}, false);
+		document.addEventListener("mouseup", function(e)    {closeViewPopupOutside(e);}, false);
 		
 		var closeSearchBttn     = document.getElementById("cabSearchClose");
 		closeSearchBttn.onclick = function() {toggleSearchPanel();};
@@ -559,6 +559,19 @@ var CabinetItem = function() {
 		optElmt.setAttribute("role", "off");
 		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}
+	
+	function closeViewPopupOutside(e){
+		var viewPopup  = document.getElementById("layerPopup");
+		var optElmt    = document.getElementById("sltView");
+		var role       = optElmt.getAttribute("role");
+		
+		if(role == "on") {
+			if(!viewPopup.contains(e.target)) {
+				closeViewPopUp();
+			}
+		}
+	}
+	
 	/* Option View end */
 	
 	function addFile() {
