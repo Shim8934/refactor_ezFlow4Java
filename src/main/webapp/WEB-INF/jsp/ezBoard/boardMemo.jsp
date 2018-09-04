@@ -91,8 +91,8 @@
                 	<td>
                			<select id="setFontSize" style="margin-left: 5px;">							
 							<option value="12" <c:if test = "${memoConfigVO.font_size eq '12' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0010"/></option>
-							<option value="13" <c:if test = "${memoConfigVO.font_size eq '13' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
-							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
+							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
+							<option value="16" <c:if test = "${memoConfigVO.font_size eq '16' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
 						</select>
                 	</td>
             	</tr>
