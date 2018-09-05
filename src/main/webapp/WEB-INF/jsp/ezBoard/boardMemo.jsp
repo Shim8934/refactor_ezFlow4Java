@@ -26,8 +26,21 @@
 	                document.body.style.oUserSelect = 'none';
                		document.body.style.UserSelect = 'none';
            		}	
+           		
+           		$(".preview").css("font-size", font_size + "px");
+           		preview();
         	}  
         	
+        	// 폰트 사이즈 미리보기
+        	function preview() {
+        		var previewSize;
+        		$("#setFontSize").on("change", function(){
+        			previewSize = $("#setFontSize option:selected").val() + "px";
+        			$(".preview").css("font-size", previewSize);
+        		});
+        	}
+        	
+        	// 저장
         	function Change_Click() {
         		$.ajax({
     				type: "POST",
@@ -55,10 +68,12 @@
     			}); 
         	}
         	
+        	// 취소
         	function Cancel_Click() {
         		$("#setDateFlag").val(use_date).attr("selected", "selected");
         		$("#setQuickFlag").val(use_gadget).attr("selected", "selected");
         		$("#setFontSize").val(font_size).attr("selected", "selected");
+        		$(".preview").css("font-size", font_size + "px");
         	}
         	
         	
@@ -100,6 +115,7 @@
 							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
 							<option value="16" <c:if test = "${memoConfigVO.font_size eq '16' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
 						</select>
+						<span class="preview" style="padding-left:50px;" ><spring:message code="ezMemo.t0063"/></span>
                 	</td>
             	</tr>
         	</table>
