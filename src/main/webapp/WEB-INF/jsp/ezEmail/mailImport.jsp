@@ -291,8 +291,7 @@
 	
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailImportUpload.do" target="ifrm">
-	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick(); this.value=null;return false;" style="width: 1px; height: 1px; display:none;" multiple="true" />
-	        
+	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick();" style="width: 1px; height: 1px; display:none;" multiple="true" />
 	        <input type="hidden" name="folderid" id="folderid" />
 	        <input type="hidden" name="cnt" id="cnt" />
 	    </form>
