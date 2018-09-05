@@ -265,6 +265,8 @@ var CabinetShareItem = function() {
 		var listTableElmt  = document.getElementById("shareTable");
 		var selectedTrList = listTableElmt.querySelectorAll("tr[class='bnkCabSelect2']");
 		
+		if (selectedTrList.length == 0) {addDeptToShareList();}
+		
 		for (var i = 0, len = selectedTrList.length; i < len; i++) {
 			if (ownId ==  selectedTrList[i].getAttribute("role")) {continue;}
 			addUser(selectedTrList[i]);
