@@ -2259,7 +2259,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				String menuitemLinkLocationSub = result2.get(j).getLinkLocation();
 				String menuitemWindowOptionSub = result2.get(j).getWindowOption();
 				
-				sbSubSub.append("<li><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURLSub + topLoadGetParameters(menuitemLinkURLSub, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocationSub + "', '" + menuitemWindowOptionSub + "')\"><dt><span class='");
+				sbSubSub.append("<li class='subMenu'><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURLSub + topLoadGetParameters(menuitemLinkURLSub, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocationSub + "', '" + menuitemWindowOptionSub + "')\"><dt><span class='");
 				/* 2018-08-17 장진혁 매뉴 class 호출 */
 				sbSubSub.append(getMenuClass(menuitemLinkURLSub));
 				sbSubSub.append("'></span></dt><dd>" + menuitemDisplayNameSub + "</dd></dl></li>\n");			

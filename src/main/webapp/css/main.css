@@ -128,6 +128,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .full_menu_toggle {position:relative; border: 1px solid #424242; overflow:hidden;}
 .full_menu_toggleUL {list-style:none; margin:0px; padding:0px;}
 .full_menu_toggleUL > li { float: left; width: 100px; height: 100px; background:#fff; border-right: 1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; box-sizing: border-box; cursor:pointer;}
+.full_menu_toggleUL > li.subMenu{ background:#f6f6f6;}
 .full_menu_toggleUL > li:hover { background: #e5efff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .full_menu_toggleDL { margin: 0px; padding: 0px; }
 .full_menu_toggleDL > dt {display:block; height:42px; margin: 0px; padding: 0px; text-align:center;}
@@ -266,7 +267,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
 .scheduleUL{ margin:0px; padding:3px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:200px;} /*장진혁 */
 .scheduleUL .scheduleLi{margin:0px; padding:3px 0px 12px 0px;}
-.scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px;}
+.scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px; line-height: 16px;}
 .scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .Tindividual{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#aeaeae; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .timeText{margin:0px; padding:0px 0px 0px 5px; font-size:13px; color:#333;}
@@ -407,7 +408,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 
 /* main media query */
-@media only screen and (max-width :1920px) and (min-width :1707px) { 
+@media only screen and (max-width :1920px) and (min-width :1686px) { 
 	.section_main .mainLayout_right{  width:33.3%;}
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
@@ -415,7 +416,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.bannerText{ padding:73px 18px 0px 0px;}
 }
 
-@media only screen and (max-width :1706px) and (min-width :1280px) { 
+@media only screen and (max-width :1685px) and (min-width :1280px) { 
 	.section_main .mainLayout_right{ clear:both; width:auto;}
 	.section_main .mainLayout_left{ width:auto;}
 	.section_main .mainLayout_middle{ width:auto;}

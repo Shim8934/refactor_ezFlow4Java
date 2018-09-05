@@ -1137,12 +1137,16 @@
 				
 				if (parent.document.getElementById("topFrame").style.position == "") {
 					parent.document.getElementById("topFrame").style.position = "relative";
-					$(".full_menu_toggle").css("display", "");
 					parent.document.getElementById("topFrame").style.minHeight = sh+"px";
+					parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0.3)";
+					//$(".full_menu_toggle").css("display", "");
+					$(".full_menu_toggle").slideDown(200);
 				} else {
-					parent.document.getElementById("topFrame").style.position = "";
-					$(".full_menu_toggle").css("display", "none");
 					parent.document.getElementById("topFrame").style.minHeight = "260px";
+					parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0)";
+					$(".full_menu_toggle").slideUp(200, function(){
+						parent.document.getElementById("topFrame").style.position = "";
+					});
 				}
 			}
 			
@@ -1402,8 +1406,25 @@
 			var clickmenuName = "";
 			
 			function OpenWindow(evt, url, location, option) {
-				$(".full_menu_toggle").css("display", "none");
-				parent.document.getElementById("topFrame").style.position = "";				
+				if ($(".full_menu_toggle").css("display") != "none") {
+					$(".full_menu_toggle").slideUp(200, function(){
+						parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0)";
+						parent.document.getElementById("topFrame").style.position = "";
+						$(".full_menu_toggle").css("display", "none");
+						
+						if (url == "/ezPersonal/personSearch.do") {
+							option = GetOpenWindowfeature(750, 550);
+						}
+						
+						window.open(url, location, option);
+					});
+				} else {
+					if (url == "/ezPersonal/personSearch.do") {
+						option = GetOpenWindowfeature(750, 550);
+					}
+					
+					window.open(url, location, option);
+				}
 				
 				/* if (option != "") {
 	    			var width = 0, height = 0;
@@ -1457,13 +1478,6 @@
 	 		            }
 	 		        }
 				} */
-				
-				/* 2018-07-16 천성준 - 직원조회 팝업 가운데로 나오게  */
-				if (url == "/ezPersonal/personSearch.do") {
-					option = GetOpenWindowfeature(750, 550);
-				}
-				
-				window.open(url, location, option);
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
