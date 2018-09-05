@@ -430,9 +430,9 @@ function getExtInfo()
 					for( var i = 0 ; i < tempNodes(0).childNodes.length ; i++ )
 					{
 						if( i == 0 )
-							bodySTR = tempNodes(0).childNodes(i).xml;
+							bodySTR = getNodeText(tempNodes(0).childNodes(i));
 						else
-							bodySTR = bodySTR + tempNodes(0).childNodes(i).xml;
+						    bodySTR = bodySTR + getNodeText(tempNodes(0).childNodes(i));
 					}
 					
 					if( bodySTR.indexOf("<![CDATA[") > -1 )
@@ -880,7 +880,7 @@ function getExtInfo()
 			    signWidth = GetAttribute(Nodes(0).childNodes(0),"width").replace("mm", "");
 
 			if (GetAttribute(Nodes(0).childNodes(0),"height") == "" || GetAttribute(Nodes(0).childNodes(0),"height") == null)
-	  			signHeight = 70;
+	  			signHeight = 20;
 	  		else
 			    signHeight = GetAttribute(Nodes(0).childNodes(0),"height").replace("mm", "");
 	  		
