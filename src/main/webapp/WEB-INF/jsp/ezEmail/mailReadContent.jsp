@@ -7,6 +7,7 @@
 	    <title></title>
 	    	<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+	        <link rel="stylesheet" href="${util.addVer('/css/ezMemo/memoContext.css')}">
 			<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 			<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
@@ -14,23 +15,6 @@
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 			<script type="text/javascript" src="${util.addVer('/js/ezMemo/contextmenu.js')}"></script>
-	    	<style>
-	    		
-			.context-menus {
-			  position: absolute;
-			  display: none;
-			  text-align: center;
-			  cursor:pointer;
-			  z-index:6000;
-			}
-			
-			.context-menus.active {
-			  display: block;
-			  background-color: white;
-			}
-
-
-	    	</style>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";
