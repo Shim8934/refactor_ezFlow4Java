@@ -46,6 +46,7 @@
     					font_size = $("#setFontSize option:selected").val();
     					
     					alert("<spring:message code='ezMemo.t0025' />");
+    					parent.parent.parent.quickMemoDisplay();
     					parent.parent.parent.getMemoConfig();
     					parent.parent.parent.getMemoList();
     				}, error: function() {
