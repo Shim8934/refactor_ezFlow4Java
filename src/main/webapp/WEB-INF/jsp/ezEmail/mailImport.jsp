@@ -193,6 +193,11 @@
 	        function btn_AttachAdd_onclick() {
         		var cnt = document.getElementById("form").file1.files.length;
         		
+        		if (cnt == 0) {
+        			document.getElementById("mailCount").innerText = "";
+        			return;
+        		}
+        		
         		if (cnt > 100) {
         			alert(maxAllowMailMsg);
         			document.getElementById("mailCount").innerText = "";
