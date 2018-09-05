@@ -19,6 +19,13 @@ public class ApprGDeliveryListVO {
 	private String reMark;
 	private String orgDocNumCode;
 	private String docTitle;
+	private String organUserName;
+	public String getOrganUserName() {
+		return organUserName;
+	}
+	public void setOrganUserName(String organUserName) {
+		this.organUserName = organUserName;
+	}
 	public String getSn() {
 		return sn;
 	}
