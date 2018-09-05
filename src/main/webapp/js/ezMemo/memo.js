@@ -8,15 +8,6 @@ function createMemo(memo, flag) {
 		div.style.opacity = 0.5;
 	}
 	
-	/*var div = document.createElement("div");
-	div.setAttribute("class", "individual-memo");
-	div.style.backgroundColor = hColor;
-	div.id  = "memo" + memoId;
-	div.setAttribute("orders", orders)
-	if(flag == 1) {
-		div.style.opacity = 0.5;
-	}*/
-	
 	var dl = document.createElement("dl");
 	dl.setAttribute("class", "memoTit");
 	
@@ -30,15 +21,15 @@ function createMemo(memo, flag) {
 	var dt = document.createElement("dt");
 	dt.setAttribute("class", "mtitText");
 	
-	var dd = document.createElement("dd");
-	dd.setAttribute("class", "memoIcon memoX");
+	/*var dd = document.createElement("dd");
+	dd.setAttribute("class", "memoIcon memoX");*/
 	
 	var dd2 = document.createElement("dd");
 	dd2.setAttribute("class", "memoIcon pallete");
 	
-	dl.appendChild(dt);
 	dl.appendChild(input);
-	dl.appendChild(dd);
+	dl.appendChild(dt);
+	//dl.appendChild(dd);
 	dl.appendChild(dd2);
 	
 	var textarea = document.createElement("textarea");
@@ -50,8 +41,20 @@ function createMemo(memo, flag) {
 		textarea.innerHTML = memo.contents;
 	}
 	
+	var ul = document.createElement("ul");
+	ul.setAttribute("class", "color_popup");
+	ul.style.visibility = "hidden";
+	
+	for(var i=1; i<=6; i++) {
+		var li = document.createElement("li");
+		li.setAttribute("class", "color0" + i + " color_list");
+		//li.setAttribute("color_list", i);
+		ul.appendChild(li);
+	}
+	
 	div.appendChild(dl);
 	div.appendChild(textarea);
+	div.appendChild(ul);
 	
 	/*
 	var span = document.createElement("span");
