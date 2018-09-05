@@ -159,7 +159,6 @@
 		        		
 		            	nodata += "<li class='none'><img src='/images/kr/main/photo_none.png'></li>";
 	                }	
-	                	console.log(nodata);
 		            	$('#photoul').append(nodata);
 	        	} else {
 	        		$('#photoul').empty();

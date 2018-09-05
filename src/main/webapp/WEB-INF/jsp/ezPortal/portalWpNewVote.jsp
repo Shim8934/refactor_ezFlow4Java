@@ -193,10 +193,16 @@
 			        </ul>
 		        </c:when>
   				<c:otherwise>
-  					<div class="nodata_portlet">
+  					<%-- <div class="nodata_portlet">
 						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
 						<p><spring:message code='main.t261' /></p>
-					</div>
+					</div> --%>
+					<ul class="voteList">
+						<dl class='nodata'>
+		                	<dt><img src='/images/kr/main/nodata.png'></dt>
+		                	<dd><spring:message code='main.t00026' /></dd>
+	                	</dl>
+                	</ul>
   				</c:otherwise>
   			</c:choose>
 	    </div>
