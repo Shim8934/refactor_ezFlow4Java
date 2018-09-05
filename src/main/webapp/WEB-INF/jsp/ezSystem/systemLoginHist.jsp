@@ -485,7 +485,7 @@
 					&nbsp;&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; 
 						<select id="searchKeycode"> 
-						<option value="1"><spring:message code="ezSystem.x0022"></spring:message></option>
+						<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
 						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
 						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>

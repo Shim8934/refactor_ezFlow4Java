@@ -21,6 +21,8 @@
 	        var isCrossBrowser = "${isCrossBrowser}";
 	        var ReturnFunction;
 	        var maxAllowMailMsg = "<spring:message code='ezEmail.jje04'/>";
+	        var CurrentWidth = "";
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -28,6 +30,8 @@
 	                return true;
 	        };
 	        window.onload = function () {
+	        	
+	        	CurrentWidth = window.innerWidth;
 	            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
 	                document.getElementById("file1").multiple = false;
 	            }
@@ -44,6 +48,7 @@
 	        }
 	        function selectMail() {
 	            document.getElementById("filepath").innerHTML = "";
+	            document.getElementById("mailCount").innerHTML = "";
 	            
 	            if (CrossYN()) {
 	            	document.getElementById("form").value = "";
@@ -188,19 +193,25 @@
 	        function btn_AttachAdd_onclick() {
         		var cnt = document.getElementById("form").file1.files.length;
         		
+        		if (cnt == 0) {
+        			document.getElementById("mailCount").innerText = "";
+        			return;
+        		}
+        		
         		if (cnt > 100) {
         			alert(maxAllowMailMsg);
         			document.getElementById("mailCount").innerText = "";
         			return;
         		}
         		
-        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
+        		ShowMailProgress();
         		for (var i = 0; i < cnt; i++) {
 	                var tempname = document.getElementById("form").file1.files[i].name;
 	                var last = tempname.split(".").length;
 	                var extension = tempname.split(".")[last - 1];
 	
 	                if (extension.toUpperCase() != "EML") {
+	                	HiddenMailProgress();
 	                    alert("<spring:message code='ezEmail.lsd05' />");
 	                    return;
 	                }
@@ -212,8 +223,23 @@
 	                _Span.innerHTML = document.getElementById("form").file1.files[i].name;
 	                document.getElementById("filepath").innerHTML += _Span.outerHTML;
 	            }
+        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
+        		HiddenMailProgress(); 
 	            document.getElementById("cnt").value = cnt;
 	        }
+	        
+	        function ShowMailProgress() {
+	            document.getElementById("mailPanel").style.display = "";
+	            document.getElementById("MailProgress").style.top = "190px";
+	            document.getElementById("MailProgress").style.left = (CurrentWidth / 2) - 80 + "px";
+	            document.getElementById("MailProgress").style.display = "";
+	        }
+	        
+	        function HiddenMailProgress() {
+	            document.getElementById("mailPanel").style.display = "none";
+	            document.getElementById("MailProgress").style.display = "none";
+	        }
+	        
 	        function returnvalue(resultxml) {
 	            if (resultxml == "OK") {
 	                alert("<spring:message code='ezEmail.t403' />");
@@ -244,10 +270,17 @@
 	                <input id="foldername" type="text" name="textfield" style="width: 100%" disabled></td>
 	            <td style="text-align:center;"><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
+	        <tr>
+	        	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+		            <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+		            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+		        </div>
+		    </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
-	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
+	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px">
+	                </div>
 	            </td>
 	            <td style="text-align:center;"><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
@@ -258,7 +291,8 @@
 	
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailImportUpload.do" target="ifrm">
-	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display:none;" multiple="true" />
+	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick();" style="width: 1px; height: 1px; display:none;" multiple="true" />
+	        
 	        <input type="hidden" name="folderid" id="folderid" />
 	        <input type="hidden" name="cnt" id="cnt" />
 	    </form>
