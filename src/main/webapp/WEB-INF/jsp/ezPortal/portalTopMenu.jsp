@@ -1133,12 +1133,16 @@
 			}
 	
 			function subMenuClick() {
+				var sh = screen.height;
+				
 				if (parent.document.getElementById("topFrame").style.position == "") {
 					parent.document.getElementById("topFrame").style.position = "relative";
 					$(".full_menu_toggle").css("display", "");
+					parent.document.getElementById("topFrame").style.minHeight = sh+"px";
 				} else {
 					parent.document.getElementById("topFrame").style.position = "";
 					$(".full_menu_toggle").css("display", "none");
+					parent.document.getElementById("topFrame").style.minHeight = "260px";
 				}
 			}
 			

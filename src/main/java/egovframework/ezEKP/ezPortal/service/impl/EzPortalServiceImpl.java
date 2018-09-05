@@ -2178,7 +2178,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		StringBuilder sb = new StringBuilder();		
 		sb.append("<li class='contentlayout_none'><ul class='contentlayout topmenu'><li class='contentlayout_none' style='margin:0 auto'>");
-		sb.append("<nav id='topNav' class='topNavCls'><div class='full_nav on' title='전체메뉴' onclick='subMenuClick()'><span class='icon_topmenu full_menu'></span></div>");
+		sb.append("<nav id='topNav' class='topNavCls'><div id='topMenuFull' class='full_nav on' onclick='subMenuClick()'><span class='icon_topmenu full_menu'></span></div>");
 		sb.append("<div class='countBox'><span class='hidden_nav_count'>+0</span><span class='icon_topmenu icon_count_arrow'></span></div>");
 		sb.append("<ul class='navUL'>");		
 		
