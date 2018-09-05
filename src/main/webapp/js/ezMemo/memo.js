@@ -76,7 +76,7 @@ function insertMemo(hColor, bColor, memoId, layerFlag) {
 	var div = createMemo(hColor, bColor, memoId, null, layerFlag);
 	
 	if (layerFlag == 'layer') {
-		$("#memoList").prepend(div);
+		$(".memo_main").prepend(div);
 	} else {
 		$("#boardMemoList").prepend(div);
 	}
@@ -88,7 +88,7 @@ function insertMemo(hColor, bColor, memoId, layerFlag) {
 function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
-	$("#memoList").html('');
+	$(".memo_main").html('');
 	
 	for(var i=0; i<memoList.length; i++) {
 		if ('layer' != flag) {
@@ -103,7 +103,7 @@ function loadMemoList(flag) {
 				var bColor = memoColor[memoList[i].color_id+5];
 				var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag, memoList[i].orders);
 				
-				$("#memoList").prepend(div);
+				$(".memo_main").prepend(div);
 			}
 		}
 		if(useDate == 1)
