@@ -585,6 +585,18 @@ public class CommonUtil {
 		}
 	}	
 	
+	/**
+	 * @param path 파일의 풀경로
+	 * 파일의 최종 업데이트 날짜 가져오기
+	 */
+	public String getLastModifiedDate(String path) {
+		Date lastDate = new Date(new File(path).lastModified());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		
+		return sdf.format(lastDate);
+	}
+	
 	public String cleanValue(String pOrgString) {
 		String value = ""; 
 				

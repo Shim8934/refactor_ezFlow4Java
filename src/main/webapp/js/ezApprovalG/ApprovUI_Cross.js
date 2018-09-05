@@ -1233,6 +1233,8 @@ function getApprovInfo() {
         var dataNodes = GetElementsByTagName(xmlpara, "DATA6");
         var lastIdx = dataNodes.length;
         drafterDeptid = getNodeText(dataNodes[lastIdx - 1]);
+        
+        aprDocTimeStamp = getNodeText(SelectSingleNodeNew(result, "APROVEDATA/APRDOCTIMESTAMP"));
 
         pdocXML = SelectSingleNodeNew(result, "APROVEDATA/DOCFLAGINFO");
         xmlString = getXmlString(pdocXML);
@@ -3561,7 +3563,7 @@ function setRecevInfo(ret) {
         }
     }
     message.DocumentBodySetAttribute("sendMailInfo", strMailAdd);
-
+    
     var field = message.GetListItem(fields, "recipient");
     if (field) {
         if (precipent == strLang92) {

@@ -32,8 +32,6 @@
 			var userOffset = "${userOffset}";
 			var companyId = "${companyId}";
 			var date = "${date}";
-			var time = "${time}";//현재시간
-			var nowTime = time.split(":");
 			var mode = "${mode}";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
@@ -48,6 +46,11 @@
 			var holidayFlag = false;
 			var closedDay = "";
 			var holidayAttReg = ""; //(회사규율)휴일등록 가능여부
+			var selectType = "";
+			var modFirstFlag = true;
+			var timeSelect = false; //timepicker 선택했는지 여부
+			var startDate = "";
+			var endDate = "";
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -72,7 +75,7 @@
 		    var monthStr = monthMsg.split(";");		    
 		    var dayMsg = "<spring:message code='ezAttitude.t140'/>";
 		    var dayStr = dayMsg.split(";");
-		    
+
 			function setDatePicker(type) {
 				$("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -93,18 +96,22 @@
 		        
 		        var uploadSDate = "";
 		        var uploadEDate = "";
-		        if (mode == "mod" && modFirstFlag) {
-					uploadSDate = pStartDate;
-					uploadEDate = pEndDate;					
-		        } else if (!modFirstFlag) {
-		        	uploadSDate = startDate;
-		        	uploadEDate = endDate == "" ? startDate.split(" ")[0] + " 23:59:59" : endDate;
-		        } else {
-					uploadSDate = date + " " + nowTime[0] + ":00:00";
-					uploadEDate = date + " " + nowTime[0] + ":30:00";
+		        if (mode == "mod") { //수정모드일때
+		        	if (modFirstFlag) {
+						uploadSDate = pStartDate;
+						uploadEDate = pEndDate;					
+		        	} else {
+	 		        	uploadSDate = startDate + " " + setNowTime(true);
+	 		        	uploadEDate = endDate == "" ? startDate + " " + setNowTime(false) : endDate + " " + setNowTime(false);
+		        	}
+		        } else { //쓰기모드일때
+					uploadSDate = date + " " + setNowTime(true);
+					uploadEDate = date + " " + setNowTime(false);
 		        }
 		        
+		        timeSelect = false; //시간선택 초기화
 		        modFirstFlag = false;
+		        
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
 				var sDay = uploadSDate.substring(8, 10);
@@ -180,10 +187,7 @@
 				message.SetEditorContent(content);
 		    }
 			
-			var selectType = "";
-			var modFirstFlag = true;
 			function form_change(obj) {
-				// 근태종류를 선택하면 폼이 바뀌어야 된다.
 				// A05일 경우 subSelectAtti에서 변경해준다.
 				if ($(obj).val() == 'A05') {
 					$("#subSelectAtti").css("display","");
@@ -195,13 +199,19 @@
 					selectType = $(obj).val();
 				}
 				
-				if (mode == "mod" && modFirstFlag) {
+				if (mode == "mod" && modFirstFlag) { //수정모드이고, 근태유형 변경전
 					selectType = typeId;
 					if ($("#selectAtti option[value='" + selectType + "']").length == 0) {
 						$("#selectAtti").val("A05");
 						$("#subSelectAtti").css("display","").val(selectType);
 					} else {
 						$("#selectAtti").val(selectType);
+					}
+				} else {
+					startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+					endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+					if (endDate == undefined) {
+						endDate = "";
 					}
 				}
 				
@@ -222,7 +232,6 @@
 					},
 					success : function (result) {
 						if (!modFirstFlag) {
-							dateTypeCheck();
 							if ($("input[name=region]").length != 0) {
 								region = $("input[name=region]").val();
 							}
@@ -246,8 +255,6 @@
 				})
 			}
 			
-			var startDate = "";
-			var endDate = "";
 			function dateTypeCheck() {
 				var dateType = $("#periodblock").attr("datetype");
 				startDate = "";
@@ -544,6 +551,18 @@
 					$("#periodblock").attr("datetype", 4);
 					
 				} else {
+					//하루종일 체크 해제시 현재시각 출력.
+					if (mode != "mod" || (selectType == 'A04' && dateType == 4)) { //수정모드가 아닐때 || 외근이면서 하루종일 일때
+						if (!timeSelect) {
+							sTime = setNowTime(true);
+							eTime = setNowTime(false);
+					        $('#Stimepicker').timepicker('setTime', sTime);
+					        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+					        $('#Etimepicker').timepicker('setTime', eTime);
+					        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+						}
+					}
+					
 					$("#Stimepicker").css("display", "");
 					$("#Etimepicker").css("display", "");
 					$("#periodblock").attr("datetype", 5);
@@ -626,6 +645,49 @@
 		    	})
 		    	return isAttitudeReturn;
 		    }
+			
+            //2018-08-28 김보미 - 현재시간으로 설정
+	    	function setNowTime(isStart) {
+	        	var now = new Date();
+	        	var cDate;
+	        	
+	        	if (isStart) { //시작시간
+		        	var hour = now.getHours();
+		        	var time = now.getMinutes();
+		        	
+		        	if (hour.toString().length == 1) {
+		        		hour = "0" + hour;	
+		        	}
+		        	
+		        	if (parseInt(time) < 30) {
+		        		cDate = hour + ":00:00";
+		        	} else {
+		        		cDate = hour + ":30:00";
+		        	}
+	        	} else { //종료시간
+		        	now.setMinutes(now.getMinutes() + 30);
+		        	
+		        	hour = now.getHours();
+		        	time = now.getMinutes();
+		        	
+		        	if (hour.toString().length == 1) {
+		        		hour = "0" + hour;	
+		        	}
+		        	
+		        	if (parseInt(time) < 30) {
+		        		cDate = hour + ":00:00";
+		        	} else {
+		        		cDate = hour + ":30:00";
+		        	}
+	        	}
+	        	
+	        	return cDate;
+	    	}
+            
+            //시간선택시 이벤트
+	    	$(document).on('click', ".ui-timepicker-list li", function() {
+	        	timeSelect = true;
+	        })
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">

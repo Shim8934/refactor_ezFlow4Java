@@ -1309,7 +1309,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String formID = request.getParameter("formID");
-		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
+		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), useReceiveInfoName);
 
 		logger.debug("<<<result : " + result );
 		logger.debug("getFormRecv ended.");
@@ -3736,6 +3737,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String chamState = request.getParameter("chamState");
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
 		String result = ezApprovalGService.getApproveDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), mode, chamState);
 
