@@ -168,21 +168,7 @@
 		    	setDetailMemoPosition();
 		    	checkDefaultFolder();
 		    	memoFoldersInfo();
-		    	
-		    	$(window).load(function () {
-		    		$.ajax({
-		    			type : "GET",
-			        	dataType : "JSON",
-			        	async : false,
-			        	url : "/ezMemo/getMemoConfig.do",
-			        	success : function(result) {
-			        		console.log(result);
-			        		if (result.memoConfigVO.use_gadget == 1) {
-			        			$("#open-memo").css("display", "");
-			        		}
-			        	}
-		    		});
-		    	});
+		    	quickMemoDisplay();   	
 	    		getMemoConfig();
 		     
 		    	// 스크롤바 디자인 변경
@@ -872,6 +858,24 @@
 					}     			
 				});
 		    }
+		    
+		    // 퀵메모 디스플레이
+		    function quickMemoDisplay() {
+	    		$.ajax({
+	    			type : "GET",
+		        	dataType : "JSON",
+		        	async : false,
+		        	url : "/ezMemo/getMemoConfig.do",
+		        	success : function(result) {
+		        		console.log(result);
+		        		if (result.memoConfigVO.use_gadget == 1) {
+		        			$("#open-memo").css("display", "");
+		        		} else {
+		        			$("#open-memo").css("display", "none");
+		        		}
+		        	}
+	    		});
+	    	}
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
