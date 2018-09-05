@@ -3381,6 +3381,7 @@
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
 				DEPTID ,
+				deptname,
                 DEPTSN 
            FROM 
            		TBL_FormRecv 
@@ -16646,7 +16647,8 @@
 				   			DEPTID, 
 				   			REMARK, 
 				   			ORGDOCNUMCODE, 
-				   			DOCTITLE
+				   			DOCTITLE,
+				   			ORGANUSERNAME
 				   		FROM 
 				   			TBL_DOCDELIVERY 
 				   		WHERE 
@@ -20847,9 +20849,9 @@
 	<insert id="EzApprovalG.insertBebuDocDelivery" parameterClass="Map">
 		INSERT INTO 
 			TBL_DOCDELIVERY 
-		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID) 
+		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID, ORGANUSERNAME) 
 		(SELECT 
-			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID 
+			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID, #v_OrganUserName# 
          FROM 
          	TBL_APRDOCINFO a 
          INNER JOIN 

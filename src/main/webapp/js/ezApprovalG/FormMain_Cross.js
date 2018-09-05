@@ -469,6 +469,7 @@ function MakeFormRecevGroupXML_Detail() {
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTID", GetAttribute(selRow[i], "data1"));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
+//            createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTNAME", selRow[i].cells[0].innerText);
         }
     }
     return getXmlString(xmlpara.childNodes[0]);

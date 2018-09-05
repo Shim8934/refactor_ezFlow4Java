@@ -87,7 +87,7 @@ public interface EzApprovalGService {
 	
 	public String getFormInfoDetail(String formID, String companyID, int tenantID) throws Exception;
 	
-	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception;
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID, String useReceiveInfoName) throws Exception;
 	
 	public String createNewDoc(String formID, String companyID, int tenantID) throws Exception;
 	
@@ -378,7 +378,7 @@ public interface EzApprovalGService {
 
 	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang, int tenantID)throws Exception;
 
-	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet)throws Exception;
+	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo)throws Exception;
 
 	public String updateProcessYN2(String docID, String deptID,	String deptName, String deptName2, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception;
 
