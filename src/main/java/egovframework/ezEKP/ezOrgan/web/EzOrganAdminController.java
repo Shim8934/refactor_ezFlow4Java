@@ -2320,21 +2320,68 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-        int tenantID = user.getTenantId();        
-        
-        logger.debug("tenantID=" + tenantID);
+   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+   		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+
+   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+   		
+   		logger.debug("retireUserManage ended");
+   		
+		return "admin/ezOrgan/retireUserManage";
+	}	
+	
+	/**
+	 * 조직도관리 퇴직자 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getRetireUserList.do")	
+	public String getRetireUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("retireUserManage started");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
-		String strLang = user.getPrimary();
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+        int tenantID = user.getTenantId(); 
+        String strLang = user.getPrimary();
+        
+        logger.debug("tenantID=" + tenantID + ",strLang=" + strLang);
+		
 		int pPageRow = 20;
    		int pPage = 1;
+   		String searchStartDate = "";
+   		String searchEndDate = "";
+   		String searchKeycode = "";
+   		String searchKeyword = "";
    		
    		if (request.getParameter("page") != null) {
    			pPage = Integer.parseInt(request.getParameter("page"));
    		}
    		
-   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		if (request.getParameter("searchStartDate") != null) {
+   			searchStartDate = request.getParameter("searchStartDate");
+   		}
    		
-   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID);
+   		if (request.getParameter("searchEndDate") != null) {
+   			searchEndDate = request.getParameter("searchEndDate");
+   		}
+   		
+   		if (request.getParameter("searchKeycode") != null) {
+   			searchKeycode = request.getParameter("searchKeycode");
+   		}
+   		
+   		if (request.getParameter("searchKeyword") != null) {
+   			searchKeyword = request.getParameter("searchKeyword");
+   		}
+   		
+   		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
    		int totalPage = 0;
    		
 		if (totalCount > 0) {
@@ -2353,24 +2400,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID);
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
 		
-		model.addAttribute("lang", strLang);
+   		model.addAttribute("lang", strLang);
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
    		model.addAttribute("totalCount", totalCount);
    		model.addAttribute("pPageRow", pPageRow);
 		
-   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
-   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
-   		
-		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
-		model.addAttribute("dotNetIntegration", dotNetIntegration);
-   		
    		logger.debug("retireUserManage ended");
    		
-		return "admin/ezOrgan/retireUserManage";
+		return "json";
 	}	
 	
 	/**

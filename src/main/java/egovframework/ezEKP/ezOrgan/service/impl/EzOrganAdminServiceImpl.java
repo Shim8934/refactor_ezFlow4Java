@@ -146,9 +146,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword)	throws Exception {
         logger.debug("getRetireList started");
         logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+        logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -156,6 +158,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
 		map.put("v_STARTROW", pPageRow*(pPage - 1));
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -496,15 +502,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception {
 	    logger.debug("getRetireListCount started");
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
 		
 		logger.debug("getRetireListCount ended");
 		
