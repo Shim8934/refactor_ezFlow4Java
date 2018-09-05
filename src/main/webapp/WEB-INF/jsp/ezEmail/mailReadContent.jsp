@@ -453,13 +453,13 @@
 	  	<div id="context-menus" class="context-menus">
 	   		<table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
 	   			<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">복사</span></td>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextCopy.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0060' /></span></td>
 	      		</tr>
 	      		<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu2" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">인쇄</span></td>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu2" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextPrint.png"  align="absmiddle" hspace="5"><spring:message code='ezMemo.t0061' /></span></td>
 	      		</tr>
 	      		<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5">메모 추가</span></td>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextMemoAdd.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0062' /></span></td>
 	      		</tr>
 	    	</table>	
 	  	</div> 
