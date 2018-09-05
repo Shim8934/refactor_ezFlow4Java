@@ -70,6 +70,13 @@
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
+		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+			<isNotEqual property="searchEndDate" compareValue="">
+				<![CDATA[
+					(UPDATEDT >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND UPDATEDT <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+				]]>
+			</isNotEqual>
+		</isNotEqual>
 	</sql>
 	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
@@ -2545,6 +2552,7 @@
             WHERE
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
+		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
@@ -2566,14 +2574,17 @@
                 EXTENSIONATTRIBUTE10 ,
                 EXTENSIONATTRIBUTE102 ,
                 EXTENSIONATTRIBUTE14 ,
-                REPLACE(SUBSTR(UpdateDT,1,10),'-','') UPDATEDT  
+                SUBSTR(UpdateDT,1,10) UPDATEDT  
            FROM
            		TBL_USERMASTER_RETIRE 
            WHERE
                 TENANT_ID = #v_TENANT_ID#
+		]]>
+        <include refid="EzOrganAdminDAO.searchQuery"/>
+        <![CDATA[
            ORDER BY UPDATEDT DESC
            LIMIT #v_STARTROW#, #v_ROWPERPAGE#                	
-		]]>
+        ]]>  
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
