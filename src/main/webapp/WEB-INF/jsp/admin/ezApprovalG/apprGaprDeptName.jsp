@@ -25,6 +25,8 @@
 
               if (ReturnFunction != null) {
                   ReturnFunction(p_AprDeptTempletName);
+                  //2018-09-03 관리자 팝업호출 close추가
+                  window.close();
               }
               else {
                   window.returnValue = p_AprDeptTempletName;
