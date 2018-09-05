@@ -159,12 +159,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				logger.debug("messageId = " + messageId);
 				
-				//TODO: 외부용 메일 처리
-//				String outerReadCheck = "NONE";
-//				if (message.ExtendedProperties.Count > 0) {
-//              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
-//          	}
-				
 				//get readList(수신확인)
 				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
