@@ -1431,9 +1431,9 @@
 			                    }
 			                }
 		                }
-		
+		                
 		                if (pSuSinFlag == "Y") {
-		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                    	$.ajax({
 		                    		type : "POST",
 		                    		dataType : "text",

@@ -3571,7 +3571,7 @@ function setRecevInfo(ret) {
         }
     }
     message.DocumentBodySetAttribute("sendMailInfo", strMailAdd);
-
+    
     var field = message.GetListItem(fields, "recipient");
     if (field) {
         if (precipent == strLang92) {

@@ -547,6 +547,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String docState = request.getParameter("docState");
 		
+		//2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
+		String publicityYN = request.getParameter("publicityYN");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
@@ -558,6 +561,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         int tenantID = userInfo.getTenantId();        
+        
+        //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
+        if (publicityYN != null && publicityYN.equals("N")) {
+        	String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+        	String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag);
+        	
+			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+				return "NOTPERMISSION";
+			}
+        }
+    
+     
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
@@ -1369,7 +1384,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String formID = request.getParameter("formID");
-		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
+		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), useReceiveInfoName);
 
 		logger.debug("<<<result : " + result );
 		logger.debug("getFormRecv ended.");

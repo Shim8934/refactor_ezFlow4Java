@@ -88,7 +88,7 @@ public interface EzApprovalGService {
 	
 	public String getFormInfoDetail(String formID, String companyID, int tenantID) throws Exception;
 	
-	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception;
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID, String useReceiveInfoName) throws Exception;
 	
 	public String createNewDoc(String formID, String companyID, int tenantID) throws Exception;
 	

@@ -45,7 +45,7 @@
 			var pAttitudeTypeList = ${attitudeTypeList}; 
 			var holidayFlag = false;
 			var closedDay = "";
-			var holidayAttReg = ""; //(회사규율)휴일등록 가능여부
+			var holidayAttReg = ""; //(회사규율)휴일등록 가능여부(0:허용안함/1:허용)
 			var selectType = "";
 			var modFirstFlag = true;
 			var timeSelect = false; //timepicker 선택했는지 여부
@@ -293,7 +293,7 @@
 				
 				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
 				if (attRegCheck() && holidayAttReg == "0") {
-					if (selectType != "A07") {
+					if (selectType != "A07" && selectType != "A09" && selectType != "A10" ) { //휴근, 출장, 파견은 휴무근태등록 허용안함 상태에도 휴무일포함해서 등록되도록
 						alert("<spring:message code='ezAttitude.t154'/>");
 						return;
 	 				} 
@@ -552,13 +552,15 @@
 					
 				} else {
 					//하루종일 체크 해제시 현재시각 출력.
-					if (!timeSelect) {
-						sTime = setNowTime(true);
-						eTime = setNowTime(false);
-				        $('#Stimepicker').timepicker('setTime', sTime);
-				        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-				        $('#Etimepicker').timepicker('setTime', eTime);
-				        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+					if (mode != "mod" || (selectType == 'A04' && dateType == 4)) { //수정모드가 아닐때 || 외근이면서 하루종일 일때
+						if (!timeSelect) {
+							sTime = setNowTime(true);
+							eTime = setNowTime(false);
+					        $('#Stimepicker').timepicker('setTime', sTime);
+					        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+					        $('#Etimepicker').timepicker('setTime', eTime);
+					        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+						}
 					}
 					
 					$("#Stimepicker").css("display", "");
@@ -653,6 +655,10 @@
 		        	var hour = now.getHours();
 		        	var time = now.getMinutes();
 		        	
+		        	if (hour.toString().length == 1) {
+		        		hour = "0" + hour;	
+		        	}
+		        	
 		        	if (parseInt(time) < 30) {
 		        		cDate = hour + ":00:00";
 		        	} else {
@@ -663,6 +669,10 @@
 		        	
 		        	hour = now.getHours();
 		        	time = now.getMinutes();
+		        	
+		        	if (hour.toString().length == 1) {
+		        		hour = "0" + hour;	
+		        	}
 		        	
 		        	if (parseInt(time) < 30) {
 		        		cDate = hour + ":00:00";

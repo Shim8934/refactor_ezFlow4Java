@@ -1,4 +1,5 @@
 var g_CurrentFormCd = "_DEF_1";
+var publicityYN = "";
 
 
 function DisplayLineCnt(Resultxml, viewtype) {
@@ -33,7 +34,8 @@ function getDataInfo() {
 		url : pUrl,
 		data : {
 				docID : DocID,
-				mode  : "END"
+				mode  : "END",
+				publicityYN : publicityYN
 				},
 		success: function(xml){
 			getdoclistSub_after(xml);
@@ -331,6 +333,10 @@ function lvtDoclist_SelChange() {
 function processRowClick(tr) {
     if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
         ChkCabRoleInfo(tr);
+    
+    if (DocList_Flag == "RECORD") {
+    	publicityYN = GetAttribute(tr,"DATA16");
+    }
 
     if (DocList_Flag != "CABINET") {
         DocID = GetAttribute(tr,"DATA1");
