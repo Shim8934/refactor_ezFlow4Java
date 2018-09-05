@@ -60,8 +60,8 @@
 						folderList.forEach(function(list, index){
 							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-							html+="<img src='/images/ImgIcon/icon_approval.gif' style='width:18px;height:19px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer;' class='node' data1='" + list.folder_name+ "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
+							html+="<img src='/images/ezMemo/memoFolder.png' style='width:18px;height:18px;'>";
+							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer; padding-left:2px; vertical-align: top;' class='node' data1='" + list.folder_name+ "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
 						});
 						$('.memoFolders').append(html);
 					}     			
