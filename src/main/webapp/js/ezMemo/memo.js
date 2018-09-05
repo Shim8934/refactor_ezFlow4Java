@@ -1,25 +1,59 @@
-function createMemo(hColor, bColor, memoId, contents, flag, orders) {
+function createMemo(memo, flag) {
 	
 	var div = document.createElement("div");
+	div.setAttribute("class", "mamo0"+ memo.color_id +" memoLay");
+	div.id  = "memo" + memo.memo_id;
+	div.setAttribute("orders", memo.orders)
+	if(flag == 1) {
+		div.style.opacity = 0.5;
+	}
+	
+	/*var div = document.createElement("div");
 	div.setAttribute("class", "individual-memo");
 	div.style.backgroundColor = hColor;
 	div.id  = "memo" + memoId;
 	div.setAttribute("orders", orders)
 	if(flag == 1) {
 		div.style.opacity = 0.5;
+	}*/
+	
+	var dl = document.createElement("dl");
+	dl.setAttribute("class", "memoTit");
+	
+	if (flag != 'layer') {
+		var input = document.createElement("input");
+		input.setAttribute("name", "memo");
+		input.setAttribute("type", "checkbox");
+		input.setAttribute("value", memo.memo_id);
 	}
 	
-	var input = document.createElement("input");
-	input.setAttribute("name", "memo");
-	input.setAttribute("type", "checkbox");
-	input.setAttribute("value", memoId);
-	if ('layer' != flag) {
-		input.setAttribute("display", flag);
+	var dt = document.createElement("dt");
+	dt.setAttribute("class", "mtitText");
+	
+	var dd = document.createElement("dd");
+	dd.setAttribute("class", "memoIcon memoX");
+	
+	var dd2 = document.createElement("dd");
+	dd2.setAttribute("class", "memoIcon pallete");
+	
+	dl.appendChild(dt);
+	dl.appendChild(input);
+	dl.appendChild(dd);
+	dl.appendChild(dd2);
+	
+	var textarea = document.createElement("textarea");
+	textarea.setAttribute("class", "memoText");
+	textarea.setAttribute("memoId", memo.memo_id);
+	textarea.style.fontSize = fontSize + "px";
+	
+	if(memo.contents != null) {
+		textarea.innerHTML = memo.contents;
 	}
 	
-	var div2 = document.createElement("div");
-	div2.setAttribute("class", "memo-color");
+	div.appendChild(dl);
+	div.appendChild(textarea);
 	
+	/*
 	var span = document.createElement("span");
 	span.setAttribute("class", "write-date");
 	
@@ -64,10 +98,11 @@ function createMemo(hColor, bColor, memoId, contents, flag, orders) {
 		div.appendChild(input);
 	}
 	
-	div.appendChild(div2);
+	div.appendChild(dl);
 	div.appendChild(span);
 	div.appendChild(img);
 	div.appendChild(textarea);
+	*/
 	
 	return div;
 }
@@ -94,14 +129,16 @@ function loadMemoList(flag) {
 		if ('layer' != flag) {
 			var hColor = memoColor[memoList[i].color_id-1];
 			var bColor = memoColor[memoList[i].color_id+5];
-			var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, memoList[i].display_flag, memoList[i].orders);
+			//var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, memoList[i].display_flag, memoList[i].orders);
+			var div = createMemo(memoList[i]);
 			
 			$("#boardMemoList").prepend(div);
 		} else {
 			if (memoList[i].display_flag != 1) {
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
-				var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag, memoList[i].orders);
+				//var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag, memoList[i].orders);
+				var div = createMemo(memoList[i], flag);
 				
 				$(".memo_main").prepend(div);
 			}
@@ -132,7 +169,7 @@ function addDateInfo(date) {
     		date = "0"+date;
     	}
 
-		$(".write-date:first").html(month+"."+date+" ("+dayArray[day]+")");	
+		$(".mtitText:first").html(month+"."+date+" ("+dayArray[day]+")");	
 }
 
 //날짜 초기화
