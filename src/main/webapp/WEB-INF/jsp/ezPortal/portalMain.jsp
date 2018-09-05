@@ -34,6 +34,7 @@
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 			.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
+			.draggingMemo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; }
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#memo-btn{text-align:right; height:40px; }
@@ -197,12 +198,24 @@
 		        	$("#open-memo" ).css("display", "");
 		        });
 		        
+		        // 메모 drag & drop시 배경색 임시로 넣는 변수
+		        var originalHeaderColor;
+		        var originalBodyColor;
+		        
 		        // 메모 정렬
 		        $("#memoList").sortable({
 		        	
-		        	 containment: '.memoListBox',
-		        	 opacity : 0.5,
-		        	 update : function (event, ui) {
+		        	containment: '.memoListBox',
+		        	opacity : 0.5,
+		        	start : function(event, ui) {
+
+		        		originalHeaderColor = ui.item.css("background-color");
+						originalBodyColor = ui.item.find("textarea").css("background-color");
+						
+						ui.item.css("background-color", "rgb(255, 51, 51);");
+						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);");
+		        	},
+		        	update : function (event, ui) {
 		        		 
 	        			 var compareElId; 
 		        		 var clickedItem = ui.item;
@@ -247,6 +260,10 @@
 		        			}
 		        		 });
 		        		 
+		        	 },
+		        	 stop : function(event, ui) {
+		        		 ui.item.css("background-color", originalHeaderColor);
+		        		 ui.item.find("textarea").css("background-color", originalBodyColor);
 		        	 }
 		        	
 		        });
