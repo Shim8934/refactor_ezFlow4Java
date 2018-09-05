@@ -597,6 +597,17 @@
 	   			opener.showReceiver();
 	   			window.close();
 	   		}
+	   		
+	   	  /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != Tab1_SelectID) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 		</script>
 		<style>
 			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
@@ -626,8 +637,8 @@
 					 	<tr>
 			                <div class="portlet_tabpart01" style="width:680px;">
 			                	<div class="portlet_tabpart01_top" id="tab1" style="margin-top:25px;margin-bottom: 2px;">
-					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
-									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t90' /></span></p>
+					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezJournal.t89' /></span></p>
+									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezJournal.t90' /></span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">

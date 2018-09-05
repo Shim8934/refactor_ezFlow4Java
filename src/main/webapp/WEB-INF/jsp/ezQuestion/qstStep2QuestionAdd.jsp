@@ -343,10 +343,11 @@
         		}
     		}
     		function Form_Check() {
-        		if (document.Ques_Answer.txtQuestion.value=="") {
+    			//2018-09-05 천성준- 단일문항일 때만 질문란 작성 여부를 검사해서 표 형식도 검사 할 수 있게 검사 로직 fun_QuesSave()으로 이동
+        		/* if (document.Ques_Answer.txtQuestion.value=="") {
             		alert("<spring:message code='ezQuestion.t492' />");
             		return false;
-        		}
+        		} */
         		if (document.Ques_Answer.selView[0].checked) {
             		if (document.Ques_Answer.input_Ans.length < 1) {	
                 		alert("<spring:message code='ezQuestion.t493' />");
@@ -412,6 +413,11 @@
     		}
     		
     		function fun_QuesSave() {
+    			if (document.Ques_Answer.txtQuestion.value=="") {
+            		alert("<spring:message code='ezQuestion.t492' />");
+            		document.Ques_Answer.txtQuestion.focus();
+            		return;
+        		}
         		if(Ques_Answer.selType[0].checked){
             		if (Form_Check()==false)
                 		return;
