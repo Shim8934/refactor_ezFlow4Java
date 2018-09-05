@@ -2,14 +2,14 @@
 /* CSS Document */
 
 
-.memoIcon{display:inline-block; background:url(../images/kr/memo/memo_icon.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
+.memoIcon{display:inline-block; background:url(../../images/ezMemo/memo_icon.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
 
 .memo_wrap{ margin:0px; padding:10px 25px 10px 20px; box-sizing:border-box; overflow:hidden; background:#e0e3e4; border:1px solid #999999;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;}
 .memoHeaderUL{ margin:0px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
 .memoHeaderUL li.memoSelect{  float:left; margin:0px 4px 0px 5px; padding:0px;}
-.memoHeaderUL li.memoSelect select{ background:#fff url(../images/kr/memo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
+.memoHeaderUL li.memoSelect select{ background:#fff url(../../images/ezMemo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
 select::-ms-expand {
     display: none;
 }
@@ -19,12 +19,12 @@ select::-ms-expand {
 .memoHeaderUL li.memoExpand{ margin:5px 15px 0px 0px; padding:0px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
 .memo_main{clear:both;}
 .memo_main .memoLay{ width:260px; height:310px; float:left; margin:0px 10px 10px 0px; position:relative;}
-.mamo01{ background:url(../images/kr/memo/memo01.png) no-repeat left center; overflow:hidden;}
-.mamo02{ background:url(../images/kr/memo/memo02.png) no-repeat left center; overflow:hidden;}
-.mamo03{ background:url(../images/kr/memo/memo03.png) no-repeat left center; overflow:hidden;}
-.mamo04{ background:url(../images/kr/memo/memo04.png) no-repeat left center; overflow:hidden;}
-.mamo05{ background:url(../images/kr/memo/memo05.png) no-repeat left center; overflow:hidden;}
-.mamo06{ background:url(../images/kr/memo/memo06.png) no-repeat left center; overflow:hidden;}
+.mamo01{ background:url(../../images/ezMemo/memo01.png) no-repeat left center; overflow:hidden;}
+.mamo02{ background:url(../../images/ezMemo/memo02.png) no-repeat left center; overflow:hidden;}
+.mamo03{ background:url(../../images/ezMemo/memo03.png) no-repeat left center; overflow:hidden;}
+.mamo04{ background:url(../../images/ezMemo/memo04.png) no-repeat left center; overflow:hidden;}
+.mamo05{ background:url(../../images/ezMemo/memo05.png) no-repeat left center; overflow:hidden;}
+.mamo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; overflow:hidden;}
 .memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
 .memoTit .mtitText{ margin:0px; padding:0px; font-family:Gulim; color:#696969; font-size:11px; float:left;}
 .memoTit .pallete{ margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
@@ -37,37 +37,37 @@ select::-ms-expand {
 .memo01Big .bigTop{ background:#fff9c5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px;}
 .memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../images/kr/memo/big_point01.png) no-repeat;}
+.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point01.png) no-repeat;}
 
 .memo02Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo02Big .bigTop{ background:#c5ffdf; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px;}
 .memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../images/kr/memo/big_point02.png) no-repeat;}
+.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point02.png) no-repeat;}
 
 .memo03Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo03Big .bigTop{ background:#e8ffc5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px;}
 .memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../images/kr/memo/big_point03.png) no-repeat;}
+.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point03.png) no-repeat;}
 
 .memo04Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo04Big .bigTop{ background:#c5f3ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px;}
 .memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../images/kr/memo/big_point04.png) no-repeat;}
+.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point04.png) no-repeat;}
 
 .memo05Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo05Big .bigTop{ background:#d7d6ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px;}
 .memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../images/kr/memo/big_point05.png) no-repeat;}
+.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point05.png) no-repeat;}
 
 .memo06Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo06Big .bigTop{ background:#ffd6f2; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px;}
 .memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../images/kr/memo/big_point06.png) no-repeat;}
+.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point06.png) no-repeat;}
 
 .color_popup{ margin:0px; padding:6px; list-style:none; width:86px; height:63px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:38px; top:34px; background:#fff;}
 .color_popup li{ margin:2px; padding:0px; width:18px; height:18px; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; float:left; cursor:pointer;}
@@ -80,5 +80,5 @@ select::-ms-expand {
 .memobgBar{ float:right; clear:both; overflow:hidden;}
 
 /* memoBtn */
-.memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../images/kr/memo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
+.memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
 .memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
