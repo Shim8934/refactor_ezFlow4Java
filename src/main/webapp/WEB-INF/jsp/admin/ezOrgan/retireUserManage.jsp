@@ -10,26 +10,34 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" language="javascript">
-			var CurPage = "<c:out value='${pPage}'/>";
-			var totalPage = "<c:out value='${totalPage}'/>";
-			var totalCount = "<c:out value = '${totalCount}' />";
-			var BlockSize = "<c:out value = '${pPageRow}' />";
+			var CurPage = 1;
+			var totalPage = 1;
+			var totalCount = 0;
+			var BlockSize = 1;
+			var lang = "";
 			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 	    	
-			document.onselectstart = function () {
+			document.onselectstart = function() {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
 		        } else {
 		            return true;
 				}
 			};
+			
+			$(document).ready(function(){
+				retireUserList();
+			});
 	        
 			/* 페이지네이션 변경으로 인한 주석처리
 			function prevPage_onclick()	{
@@ -267,7 +275,6 @@
             function makePageSelPage() {
                 var strtext;
                 var PagingHTML = "";
-                
                 document.getElementById("tblPageRayer").innerHTML = "";
                 document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang23 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang24 + "]";
                 strtext = "<div class='pagenavi'>";
@@ -407,10 +414,175 @@
 		    
 		    $(function(){
 	    		windowResize();
-		    });            
+		    });
+		    
+			$(function() {
+				$('#startDatepicker').datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true,
+					maxDate: 0,
+					onSelect: function(selected) {
+						$('#endDatepicker').datepicker("option", "minDate", selected);
+					}
+				});
+				$('#endDatepicker').datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true,
+					maxDate: 0,
+					onSelect: function(selected) {
+						$('#startDatepicker').datepicker("option", "maxDate", selected)
+					}
+				});    	    	
+			});
+			
+			
+			var dayMsg = "<spring:message code='main.kyj1'/>";
+			var dayStr = dayMsg.split(";");
+			var monthMsg = "<spring:message code='main.kyj2'/>";
+			var monthStr = monthMsg.split(";");
+			
+			$(function() {
+				$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+						closeText: "<spring:message code='main.t3'/>",
+						prevText: "<spring:message code='main.t0604'/>",
+						nextText: "<spring:message code='main.t0605'/>",
+						currentText: "<spring:message code='main.t0606' />",
+						monthNames: monthStr,
+						monthNamesShort: monthStr,
+						dayNames: dayStr,
+						dayNamesShort: dayStr,
+						dayNamesMin: dayStr,
+						weekHeader: 'Wk',
+						dateFormat: 'yy-mm-dd',
+			   			firstDay:0,
+						isRTL: false,
+						duration: 200,
+						showAnim: 'show',
+						showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
+					
+			});
+			
+			//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
+			function keyword_onkeydown(e) {
+				
+			    if (!window.ActiveXObject) {
+			        var keyCode = e.keyCode;
+			    } else {
+			        var keyCode = event.keyCode;
+			    }
+			    
+			    if (keyCode == 13) {
+					search();
+					return false;
+				}
+			    
+				return true;
+			}
+			
+			//**/ 검색 버튼 클릭시 이벤트
+		    function search() {
+				if ($('#startDatepicker').val() == "" && $('#endDatepicker').val() == "" && $('#searchKeyword').val() == "") {
+ 					alert("<spring:message code='ezOrgan.0hun04' />");
+ 					return ;
+				}
+				
+				 if ($("#startDatepicker").val() != "" && $("#endDatepicker").val() == "") {
+ 				 	alert("<spring:message code='ezOrgan.0hun06' />");
+				     return;
+				 }
+				 
+				 if ($("#endDatepicker").val() != "" && $("#startDatepicker").val() == "") {
+ 				 	alert("<spring:message code='ezOrgan.0hun05' />");
+				     return;
+				 }
+				 
+				 retireUserList();
+		    }
+			
+			//**/ 초기화버튼
+			function reset() {
+				$('#startDatepicker').val('');				
+				$('#endDatepicker').val('');				
+				$('#searchKeyword').val('');
+			}
+			
+			 //**/ 새로고침 클릭시 이벤트
+		    function reload() {
+		    	retireUserList();
+		    }
+			 
+			function retireUserList() {
+				 $.ajax ({
+					 type : "POST",
+					 async : true,
+					 dataType : "json",
+					 url : "/admin/ezOrgan/getRetireUserList.do",
+					 data : {
+						 "page" : CurPage,						 
+						 "searchStartDate" : $('#startDatepicker').val(),
+						 "searchEndDate" : $('#endDatepicker').val(),
+						 "searchKeycode" : $('#searchKeycode').val(),
+						 "searchKeyword" : $('#searchKeyword').val()
+					 },
+					 success : function(data) {
+						 CurPage = data.pPage;
+						 totalPage = data.totalPage;
+						 totalCount = data.totalCount;
+						 BlockSize = data.pPageRow;
+						 lang = data.lang;
+						
+						 var html = "";
+						 
+						 if (totalCount < 1) {
+							 html = "";							 
+							 html += "<tr>";
+							 html += "    <td colspan='6' style='text-align:center' bgcolor='#FFFFFF'><spring:message code='ezOrgan.0hun07'/></td>" ;
+							 html += "</tr>";
+						 } else {
+							 data.list.forEach(function(i,v){
+								html += "<tr>";
+								html += "    <td width='20' style='padding:0'>";
+								html += "        <input type='checkbox' name='chk' id='chk' value='" + i.cn + "'/>";
+								html += "    </td>";
+								
+								if (lang == '' || lang == 1) {
+									html += "<td>" + i.description + "</td>";
+									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName + "</td>";
+									html += "<td>" + i.title + "</td>";
+									html += "<td>" + i.extensionAttribute10 + "</td>";
+								} 
+								
+								else if (lang != '' || lang != 1) {
+									html += "<td>" + i.description2+ "</td>";
+									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName2 + "</td>";
+									html += "<td>" + i.title2 + "</td>";
+									html += "<td>" + i.extensionAttribute102 + "</td>";
+								}
+								
+								html += "<td>" + i.updateDT + "</td>";
+								html += "</tr>";
+							 });
+						 }
+						 
+	    				$("#mainListBody").empty().append(html);
+	    				makePageSelPage();
+					 }
+				 })
+			}
 	    </script>
 	</head>
-	<body class="mainbody" onload="makePageSelPage()">
+	<body class="mainbody">
 		<h1><spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 		<div id="mainmenu">
 			<ul>
@@ -423,6 +595,34 @@
                 </c:if>
 		  	</ul>
 		</div>
+		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
+		<tr>
+			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
+				<span id="topmenu" style="width: 500px"><spring:message code='ezOrgan.0hun01'/> : &nbsp;
+					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
+					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
+				</span> 
+				&nbsp;&nbsp;
+				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
+					<select id="searchKeycode" style="height:24px"> 
+						<option value="1"><spring:message code='ezOrgan.t67'/></option>
+						<option value="2"><spring:message code='ezOrgan.t68'/></option>
+						<option value="3"><spring:message code='ezOrgan.t218'/></option>
+					</select>
+					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
+					<a class="imgbtn" style="height:22px">
+						<span onclick="search();"><spring:message code='ezOrgan.t101'/></span>
+					</a>
+					<a class="imgbtn" style="height:22px">
+						<span onclick="reset();"><spring:message code='ezOrgan.0hun02'/></span>
+					</a>
+					<a class="imgbtn" style="height:22px">
+						<span onclick="reload();"><spring:message code='ezOrgan.0hun03'/></span>
+					</a>
+				</span> 
+			</td>
+		</tr>
+		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
@@ -444,27 +644,9 @@
 				      		<th><spring:message code='ezOrgan.t313'/></th>
 				   		</tr>
 					   	<!-- list -->
-						<c:forEach var="item" items="${list}">
-							<tr>
-								<td width="20" style="padding:0">
-									<input type="checkbox" name="chk" id="chk" value="<c:out value='${item.cn}'/>" />
-								</td>
-								<c:if test="${lang == '' || lang == 1}">
-									<td><c:out value='${item.description}'/></td>
-									<td style="cursor:pointer" onclick="ShowUserInfo('<c:out value='${item.cn}'/>')"><c:out value='${item.displayName}'/></td>
-									<td><c:out value='${item.title}'/></td>
-									<td><c:out value='${item.extensionAttribute10}'/></td>
-								</c:if>
-								<c:if test="${lang != '' && lang != 1}">
-									<td><c:out value='${item.description2}'/></td>
-									<td style="cursor:pointer" onclick="ShowUserInfo('<c:out value='${item.cn}'/>')"><c:out value='${item.displayName2}'/></td>
-									<td><c:out value='${item.title2}'/></td>
-									<td><c:out value='${item.extensionAttribute102}'/></td>
-								</c:if>
-								<td><c:out value='${fn:substring(item.updateDT, 0, 4)}'/>-<c:out value='${fn:substring(item.updateDT, 4, 6)}'/>-<c:out value='${fn:substring(item.updateDT, 6, 8)}'/></td>
-							</tr>	
-						</c:forEach>	   
+				   		<tbody id="mainListBody"></tbody>
 				</table>
+		   		</table>
 			</div>		
 		</div>
      <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
