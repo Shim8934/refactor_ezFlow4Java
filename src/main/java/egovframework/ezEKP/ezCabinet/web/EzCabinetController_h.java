@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
@@ -37,7 +38,7 @@ public class EzCabinetController_h {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
 	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do")
-	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String itemId         = request.getParameter("itemId");
@@ -45,6 +46,16 @@ public class EzCabinetController_h {
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), itemId, "", 0);
 		
 		if ((long)permission.get("code") == 1) {
+			int reasonCode = ((Long)permission.get("reason")).intValue();
+			String messageCode = "";
+			
+			switch(reasonCode) {
+				case 1: messageCode = "ezCabinet.t160"; break;
+				case 2: messageCode = "ezCabinet.t08" ; break;
+				case 3: messageCode = "ezCabinet.err2"; break;
+			}
+			
+			model.addAttribute("reasonMessage", messageCode);
 			return "ezCabinet/cabinetAccessDenied";
 		}
 		
@@ -54,6 +65,7 @@ public class EzCabinetController_h {
 			jspPageName = getModuleHandler(model, iteminfo);
 		}
 		else {
+			
 			return "ezCabinet/cabinetAccessDenied";
 		}
 		

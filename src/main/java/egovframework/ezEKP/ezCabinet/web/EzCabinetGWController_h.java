@@ -346,6 +346,7 @@ public class EzCabinetGWController_h {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", 3);
 			return result;
 		}
 		

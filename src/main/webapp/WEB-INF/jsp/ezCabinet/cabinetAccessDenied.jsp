@@ -4,5 +4,5 @@
 <!DOCTYPE html>
 <html>
 	<head></head>
-	<body style="text-align: center;"><spring:message code='ezCabinet.t08'/></body>
+	<body style="text-align: center;"><spring:message code='${reasonMessage}'/></body>
 </html>

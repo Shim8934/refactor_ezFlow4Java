@@ -517,6 +517,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		if (listCabinet == null || listCabinet.size() == 0) {
 			result.put("code", 1);
+			result.put("reason", 1);
 			return result;
 		}
 		
@@ -556,6 +557,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		else {
 			result.put("code", 1);
+			result.put("reason", 2);
 		}
 		
 		return result;
