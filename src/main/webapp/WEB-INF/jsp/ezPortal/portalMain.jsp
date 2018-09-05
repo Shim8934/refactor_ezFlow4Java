@@ -435,7 +435,7 @@
 		        	});
 		        });
 		        
-		        $(".memo_main").on("blur", ".individual-memo textarea", function() {
+		        $(".memo_main").on("blur", ".memoLay textarea", function() {
 		        	modifyMemo(this);
 		        });
 		        
@@ -461,7 +461,7 @@
 		 			
 					memoId = obj.getAttribute("memoid");
 					beforeContents = obj.innerHTML;
-					afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+					afterContents = $(".memoText[memoid=" + memoId + "]").val();
 					
 		 		} else {
 		 			
@@ -747,7 +747,7 @@
 		        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
 		        })
 		        
-		        $(".memo-text").dblclick(function() {
+		        $(".memoText").dblclick(function() {
 		        	
 		        	var memoId = $(this).attr("memoid");
 		        	
@@ -766,8 +766,9 @@
 		                	var memoColorId = result.memo.color_id;
 		                	
 		        			$textarea.val(result.memo.contents);
-		        			$memoDetail.removeClass().addClass("memo0" + memoColorId + "Big");
+		        			$textarea.attr("textareaMemoid", result.memo.memo_id);
 		        			
+		        			$memoDetail.removeClass().addClass("memo0" + memoColorId + "Big");
 		        			$memoDetail.css("display", "");
 		        			
 		        			/* var $memoDetail = $(".detailMemo");
@@ -780,8 +781,7 @@
 		        			$memoDetail.css("background-color", detailHeaderColor);
 		        			$memoDetail.css("display", ""); */
 		        			
-		        			/* $textarea.css("background-color", detailBodyColor);
-		        			$textarea.attr("textareaMemoid", result.memo.memo_id); */
+		        			/* $textarea.css("background-color", detailBodyColor); */
 		        			
 		        		}
 		        	});

@@ -20,12 +20,6 @@ function createMemo(memo, flag) {
 	var dl = document.createElement("dl");
 	dl.setAttribute("class", "memoTit");
 	
-	if (flag != 'layer') {
-		var input = document.createElement("input");
-		input.setAttribute("name", "memo");
-		input.setAttribute("type", "checkbox");
-		input.setAttribute("value", memo.memo_id);
-	}
 	
 	var dt = document.createElement("dt");
 	dt.setAttribute("class", "mtitText");
@@ -37,7 +31,13 @@ function createMemo(memo, flag) {
 	dd2.setAttribute("class", "memoIcon pallete");
 	
 	dl.appendChild(dt);
-	dl.appendChild(input);
+	if (flag != 'layer') {
+		var input = document.createElement("input");
+		input.setAttribute("name", "memo");
+		input.setAttribute("type", "checkbox");
+		input.setAttribute("value", memo.memo_id);
+		dl.appendChild(input);
+	}
 	dl.appendChild(dd);
 	dl.appendChild(dd2);
 	
