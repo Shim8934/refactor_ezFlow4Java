@@ -693,6 +693,15 @@ function prevShow() {
 
     try {
         if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+        	var sentDateStr = document.querySelector("#PreContent_Rayer" + pPreviewShow_HOW).getElementsByClassName("sentDateStr")[0];
+        	
+        	document.getElementById("ifrmPreView" + pPreviewShow_HOW).src = strLangLHM18;
+            document.getElementById("Preview_Header" + pPreviewShow_HOW).style.display = "none";
+            
+            if (sentDateStr != null) {
+            	sentDateStr.style.display = "none";
+            }
+            
             return;
         }
         else {
@@ -953,12 +962,22 @@ function MailList_ChangeStatus(obj) {
 }
 function prevShow_Clear() {
     if (pPreviewShow_HOW == "W") {
+    	var sentDateStr = document.body.querySelector("#PreContent_RayerW #sentDateStr");
         document.getElementById("Preview_HeaderW").style.display = "none";
         document.getElementById("ifrmPreViewW").src = strLangLHM18;
+        
+        if (sentDateStr != null) {
+        	sentDateStr.style.display = "none";
+        }
     }
     else {
+    	var sentDateStr = document.body.querySelector("#PreContent_RayerH #sentDateStr");
         document.getElementById("Preview_HeaderH").style.display = "none";
         document.getElementById("ifrmPreViewH").src = strLangLHM18;
+        
+        if (sentDateStr != null) {
+        	sentDateStr.style.display = "none";
+        }
     }
 }
 function ReceiverDetail_view(obj) {
