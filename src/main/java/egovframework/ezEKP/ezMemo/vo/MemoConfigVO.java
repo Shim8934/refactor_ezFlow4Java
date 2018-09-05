@@ -24,9 +24,9 @@ public class MemoConfigVO {
 	/** 레이어 팝업 y 좌표*/
 	private int layer_top;
 	/** 레이어 팝업 너비*/
-	private double layer_width;
+	private int layer_width;
 	/** 레이어 팝업 높이*/
-	private double layer_height;
+	private int layer_height;
 	/** 컴퍼니 아이디*/
 	private String company_id;
 	/** 테넌트 아이디*/
@@ -91,16 +91,16 @@ public class MemoConfigVO {
 	public void setLayer_top(int layer_top) {
 		this.layer_top = layer_top;
 	}
-	public double getLayer_width() {
+	public int getLayer_width() {
 		return layer_width;
 	}
-	public void setLayer_width(double layer_width) {
+	public void setLayer_width(int layer_width) {
 		this.layer_width = layer_width;
 	}
-	public double getLayer_height() {
+	public int getLayer_height() {
 		return layer_height;
 	}
-	public void setLayer_height(double layer_height) {
+	public void setLayer_height(int layer_height) {
 		this.layer_height = layer_height;
 	}
 	public String getCompany_id() {

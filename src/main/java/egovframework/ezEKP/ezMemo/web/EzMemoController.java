@@ -346,8 +346,7 @@ public class EzMemoController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		//param.put("company_id",userInfo.getCompanyID());
-		//param.put("user_id",userInfo.getId());
+
 		if (request.getParameter("folder_ids") != null) {	// 삭제
 			param.put("folder_ids", request.getParameter("folder_ids"));
 		}
@@ -385,8 +384,8 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 
-		double width = Double.parseDouble(layerWidth);
-		double height = Double.parseDouble(layerHeight);
+		int width = Integer.parseInt(layerWidth);
+		int height = Integer.parseInt(layerHeight);
 		
 		param.put("layer_width", width);
 		param.put("layer_height", height);

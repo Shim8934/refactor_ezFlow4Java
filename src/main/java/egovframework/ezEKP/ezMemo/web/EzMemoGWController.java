@@ -213,7 +213,7 @@ public class EzMemoGWController {
 			memoConfig.setCompany_id(info.getCompanyId());
 			memoConfig.setTenant_id(info.getTenantId());
 			memoConfig.setUser_id(info.getUserId());
-			
+
 			ezMemoService.setMemoConfig(memoConfig);
 			
 			result.put("status", "ok");

@@ -176,7 +176,7 @@
 			        	async : false,
 			        	url : "/ezMemo/getMemoConfig.do",
 			        	success : function(result) {
-			        		console.log(result);
+
 			        		if (result.memoConfigVO.use_gadget == 1) {
 			        			$("#open-memo").css("display", "");
 			        		}
@@ -549,7 +549,7 @@
 		        				dataType : "JSON",
 		        				url : "/ezMemo/insertMemoConfig.do",
 		        				success : function(result) {
-		        					console.log("insert 성공");
+
 		        				}
 		        			});
 		        		}
@@ -644,8 +644,8 @@
 		    
 		    // 레이어 넓이값 변경
 		    function setLayerArea() {
-	        	var layerWidth = $(".layerControl").width();
-        		var layerHeight = $(".layerControl").height();
+	        	var layerWidth = parseInt($(".layerControl").width());
+        		var layerHeight = parseInt($(".layerControl").height());
         		
         		$.ajax({
         			type:"POST",
