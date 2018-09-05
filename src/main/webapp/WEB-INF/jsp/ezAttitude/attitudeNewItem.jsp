@@ -45,7 +45,7 @@
 			var pAttitudeTypeList = ${attitudeTypeList}; 
 			var holidayFlag = false;
 			var closedDay = "";
-			var holidayAttReg = ""; //(회사규율)휴일등록 가능여부
+			var holidayAttReg = ""; //(회사규율)휴일등록 가능여부(0:허용안함/1:허용)
 			var selectType = "";
 			var modFirstFlag = true;
 			var timeSelect = false; //timepicker 선택했는지 여부
@@ -293,7 +293,7 @@
 				
 				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
 				if (attRegCheck() && holidayAttReg == "0") {
-					if (selectType != "A07") {
+					if (selectType != "A07" && selectType != "A09" && selectType != "A10" ) { //휴근, 출장, 파견은 휴무근태등록 허용안함 상태에도 휴무일포함해서 등록되도록
 						alert("<spring:message code='ezAttitude.t154'/>");
 						return;
 	 				} 
