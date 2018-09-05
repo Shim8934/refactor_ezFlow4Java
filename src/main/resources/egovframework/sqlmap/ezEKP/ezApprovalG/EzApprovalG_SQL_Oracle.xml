@@ -3385,7 +3385,8 @@
 	<select id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO">
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
-				DEPTID ,
+				DEPTID,
+				deptname,
                 DEPTSN 
            FROM 
            		TBL_FormRecv 

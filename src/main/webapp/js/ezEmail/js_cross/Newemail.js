@@ -1772,9 +1772,10 @@ function mailOpenPopup(btn, event) {
 
 function mailPrevIframeSize() {
 	var previewmail_info = $("#PreContent_Rayer" + pPreviewShow_HOW).find(".previewmail_info").outerHeight();
+	var sentDateStr = $("#PreContent_Rayer" + pPreviewShow_HOW).find(".sentDateStr").outerHeight();
 	var pPreview = pPreviewShow_HOW == "H" ? CurrentHeight : pMailPreHeightW;
 	
-	previewmail_info = (Math.ceil(previewmail_info/10) * 10) + 10;
+	previewmail_info = (Math.ceil((previewmail_info + sentDateStr)/10) * 10) + 10;
 	
 	$("#ifrmPreView" + pPreviewShow_HOW).height(pPreview - previewmail_info);
 }

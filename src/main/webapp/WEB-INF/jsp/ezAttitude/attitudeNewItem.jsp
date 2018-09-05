@@ -552,13 +552,15 @@
 					
 				} else {
 					//하루종일 체크 해제시 현재시각 출력.
-					if (!timeSelect) {
-						sTime = setNowTime(true);
-						eTime = setNowTime(false);
-				        $('#Stimepicker').timepicker('setTime', sTime);
-				        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-				        $('#Etimepicker').timepicker('setTime', eTime);
-				        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+					if (mode != "mod" || (selectType == 'A04' && dateType == 4)) { //수정모드가 아닐때 || 외근이면서 하루종일 일때
+						if (!timeSelect) {
+							sTime = setNowTime(true);
+							eTime = setNowTime(false);
+					        $('#Stimepicker').timepicker('setTime', sTime);
+					        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+					        $('#Etimepicker').timepicker('setTime', eTime);
+					        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+						}
 					}
 					
 					$("#Stimepicker").css("display", "");
@@ -653,6 +655,10 @@
 		        	var hour = now.getHours();
 		        	var time = now.getMinutes();
 		        	
+		        	if (hour.toString().length == 1) {
+		        		hour = "0" + hour;	
+		        	}
+		        	
 		        	if (parseInt(time) < 30) {
 		        		cDate = hour + ":00:00";
 		        	} else {
@@ -663,6 +669,10 @@
 		        	
 		        	hour = now.getHours();
 		        	time = now.getMinutes();
+		        	
+		        	if (hour.toString().length == 1) {
+		        		hour = "0" + hour;	
+		        	}
 		        	
 		        	if (parseInt(time) < 30) {
 		        		cDate = hour + ":00:00";
