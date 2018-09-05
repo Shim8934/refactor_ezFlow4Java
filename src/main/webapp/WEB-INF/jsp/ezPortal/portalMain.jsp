@@ -199,8 +199,9 @@
 		        		originalHeaderColor = ui.item.css("background-color");
 						originalBodyColor = ui.item.find("textarea").css("background-color");
 						
+						/* ui.item.css("backgroud", "");
 						ui.item.css("background-color", "rgb(255, 51, 51);");
-						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);");
+						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);"); */
 		        	},
 		        	update : function (event, ui) {
 		        		 
@@ -249,15 +250,16 @@
 		        		 
 		        	 },
 		        	 stop : function(event, ui) {
-		        		 ui.item.css("background-color", originalHeaderColor);
-		        		 ui.item.find("textarea").css("background-color", originalBodyColor);
+		        		 /* ui.item.css("background-color", originalHeaderColor);
+		        		 ui.item.find("textarea").css("background-color", originalBodyColor); */
 		        	 }
 		        	
 		        });
 		        // 폰트 사이즈 높이기
-		        $(".memoPlus").click(function() {
+		       $(".memoIcon memoPlus").click(function() {
 		        	
-		        	var textarea = $(".memoPlus").parent().parent().parent().find("textarea");
+		        	var textarea = $(".memoPlus").parent().parent().find("textarea");
+		        	console.log(textarea);
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	 
@@ -297,8 +299,8 @@
 		        	}
 		        	
 		        });
-		     // 폰트 사이즈 줄이기
-		        $(".memoMinus").click(function() {
+		     	// 폰트 사이즈 줄이기
+		        $(".memoIcon memoMinus").click(function() {
 		        	
 		        	var textarea = $(".memoMinus").parent().parent().parent().find("textarea");
 		        	var thisFont = textarea.css("font-size");
@@ -415,8 +417,9 @@
 		        getMemoList();
 		        
 		        // 메모 숨김 상태 변경 
-		        $(".memo_main").on("click", ".individual-memo img", function() {
-		        	var memoId = $(this).attr("id").replace("memoId", "");
+		        $(".memo_main").on("click", ".memoLay .memoX", function() {
+		        	
+		        	var memoId = $(this).attr("memoid").replace("memoid", "");
 		        	
 		        	$.ajax({
 		        		type: "POST",

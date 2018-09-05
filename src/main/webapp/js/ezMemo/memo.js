@@ -26,6 +26,7 @@ function createMemo(memo, flag) {
 	
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon memoX");
+	dd.setAttribute("memoId", memo.memo_id);
 	
 	var dd2 = document.createElement("dd");
 	dd2.setAttribute("class", "memoIcon pallete");
