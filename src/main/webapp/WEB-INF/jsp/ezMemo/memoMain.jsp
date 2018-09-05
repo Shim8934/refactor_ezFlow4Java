@@ -12,7 +12,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
-		<link rel="stylesheet" href="/css/ezMemo/memo.css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
@@ -55,10 +55,10 @@
 			font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;
 			vertical-align: middle;
 		}
-		input { 
+		/* input { 
 			width: 13px; height: 13px; margin-left: 10px;
 			vertical-align: middle;
-		}
+		} */
 		.memo-color { 
 			padding:0px; box-sizing:border-box; width: 232px; height: 35px; position:absolute; top:0px; left:0px; visibility:hidden;
 		}
