@@ -4578,7 +4578,7 @@ DROP TABLE IF EXISTS `tbl_deletecabinetinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_deletecabinetinfo` (
-  `CabinetID` varchar(28) NOT NULL,
+  `CabinetID` varchar(112) NOT NULL,
   `DelUserID` varchar(50) DEFAULT NULL,
   `IPAddress` varchar(50) DEFAULT NULL,
   `companyID` varchar(45) NOT NULL,

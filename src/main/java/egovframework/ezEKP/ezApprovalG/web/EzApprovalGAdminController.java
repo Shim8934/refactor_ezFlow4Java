@@ -1411,7 +1411,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			pcompanyID = doc.getDocumentElement().getChildNodes().item(2).getTextContent();
 		}
 		
-		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		//2018-09-06 김보미 - primary에서 lang으로 변경
+		//String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		logger.debug("getAdminReceivGroup ended.");
 		

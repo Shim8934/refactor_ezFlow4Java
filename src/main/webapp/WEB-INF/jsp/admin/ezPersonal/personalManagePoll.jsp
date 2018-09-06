@@ -167,9 +167,14 @@
 	        }
 	
 	        function del_poll(poll_number) {
-	            if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
+		    	//2018-09-06  김보미 - rownumber추가
+	            /*if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
 	                return;
-	            }
+	            }*/
+		        var row_number = $("tr[data1=" + poll_number + "] td:eq(0)").text();
+		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		            return;
+		        }
 	            
 	            $.ajax({
 	            	type : "POST",
