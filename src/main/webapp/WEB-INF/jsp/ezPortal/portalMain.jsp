@@ -977,6 +977,7 @@
 			     <div class="memoListBox" style="overflow:hidden;">
 			     	<div class="memo_main"></div>
 			     </div>
+
 			     <div id="slider-range" class="memobgBar"></div>
 			     <!-- <div class="memobgBar"><img id="slider-range" src="/images/ezMemo/memoBar.png"></div> -->
 			</div>
