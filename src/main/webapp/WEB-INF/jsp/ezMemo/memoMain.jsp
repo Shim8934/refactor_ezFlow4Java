@@ -342,15 +342,6 @@
 		    		})
 		    	})
 	        });
-		    
-		    $(".memo-text").dblclick(function(){
-		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
-		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
-		        
-		        var memoId = $(this).attr("memoid");
-
-		    	window.open("/ezMemo/memoRead.do?memoId=" + memoId, "",  "height=480px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
-		    });
 	        
 	        $(".individual-memo").mouseleave(function(){
 	        	$(this).children("img").css("visibility", "hidden");
@@ -366,10 +357,6 @@
 	        	}
 	        });
 	        
-	        $(".memo-text").blur(function(){
-					modifyMemo(this);
-	        })
-	        
 	        /* CSS 추가 이후 */
 	        
 	        $(".pallete").mouseenter(function(){
@@ -383,6 +370,25 @@
 		    $(".color_list").click(function(){
 		    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
 	        })
+	        
+	        $(".memoLay").mouseleave(function(){
+	        	if($(this).children(".color_popup").css("visibility") == "visible") {
+	        		$(this).children(".color_popup").css("visibility", "hidden");
+	        	}
+	        })
+	        
+	        $(".memoText").blur(function(){
+					modifyMemo(this);
+	        })
+	        
+	        $(".memoText").dblclick(function(){
+		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
+		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
+		        
+		        var memoId = $(this).attr("memoid");
+
+		    	window.open("/ezMemo/memoRead.do?memoId=" + memoId, "",  "height=480px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
+		    });
 	    }
 	    
 	    // 메모 색상 변경
@@ -413,7 +419,7 @@
 	    function modifyMemo(obj) {
 			var memoId = obj.getAttribute("memoid");
 			var beforeContents = obj.innerHTML;
-			var afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+			var afterContents = $(".memoText[memoid=" + memoId + "]").val();
 			
 			if(beforeContents != afterContents) {
 		    	$.ajax ({

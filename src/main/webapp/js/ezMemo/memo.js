@@ -4,8 +4,8 @@ function createMemo(memo, flag) {
 	div.setAttribute("class", "mamo0"+ memo.color_id +" memoLay");
 	div.id  = "memo" + memo.memo_id;
 	div.setAttribute("orders", memo.orders)
-	if(flag == 1) {
-		div.style.opacity = 0.5;
+	if(memo.display_flag == 1) {
+		div.style.opacity = 0.6;
 	}
 	
 	var dl = document.createElement("dl");
@@ -16,6 +16,7 @@ function createMemo(memo, flag) {
 		input.setAttribute("name", "memo");
 		input.setAttribute("type", "checkbox");
 		input.setAttribute("value", memo.memo_id);
+		input.setAttribute("display", memo.display_flag);
 	}
 	
 	var dt = document.createElement("dt");
@@ -39,6 +40,7 @@ function createMemo(memo, flag) {
 	
 	if(memo.contents != null) {
 		textarea.innerHTML = memo.contents;
+		textarea.style.fontSize = fontSize + "px";
 	}
 	
 	var ul = document.createElement("ul");
