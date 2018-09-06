@@ -496,7 +496,7 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvtDeptSelForm");
 		        var CurSelRow = listview.GetSelectedRows();
-		        var windowName = "/ezApprovalG/aprDeptName.do";
+		        var windowName = "/admin/ezApprovalG/aprDeptName.do";
 		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
 		
 		        if (CurSelRow[0] == undefined) {

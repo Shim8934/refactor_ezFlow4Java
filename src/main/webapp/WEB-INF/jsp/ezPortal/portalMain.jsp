@@ -33,20 +33,13 @@
 	 			border:1px solid #ffffff;
 			}
 
-			/* #open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;} */
 			.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			.draggingMemo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
-			
-			/* #layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; } */
-			
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#memo-btn{text-align:right; height:40px; }
-			/* #font-btn{text-align:right; height: 23px; } */
 			#slider-range{width:70px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			/* #detailMemoContents{padding-left:10px; padding-right:10px; width:100%; height:354px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; } */
-			/* .detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; } */
 			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:84%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list {display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
@@ -206,8 +199,9 @@
 		        		originalHeaderColor = ui.item.css("background-color");
 						originalBodyColor = ui.item.find("textarea").css("background-color");
 						
+						/* ui.item.css("backgroud", "");
 						ui.item.css("background-color", "rgb(255, 51, 51);");
-						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);");
+						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);"); */
 		        	},
 		        	update : function (event, ui) {
 		        		 
@@ -256,15 +250,16 @@
 		        		 
 		        	 },
 		        	 stop : function(event, ui) {
-		        		 ui.item.css("background-color", originalHeaderColor);
-		        		 ui.item.find("textarea").css("background-color", originalBodyColor);
+		        		 /* ui.item.css("background-color", originalHeaderColor);
+		        		 ui.item.find("textarea").css("background-color", originalBodyColor); */
 		        	 }
 		        	
 		        });
 		        // 폰트 사이즈 높이기
-		        $(".memoPlus").click(function() {
+		       $(".memoIcon memoPlus").click(function() {
 		        	
-		        	var textarea = $(".memoPlus").parent().parent().parent().find("textarea");
+		        	var textarea = $(".memoPlus").parent().parent().find("textarea");
+		        	console.log(textarea);
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	 
@@ -304,8 +299,8 @@
 		        	}
 		        	
 		        });
-		     // 폰트 사이즈 줄이기
-		        $(".memoMinus").click(function() {
+		     	// 폰트 사이즈 줄이기
+		        $(".memoIcon memoMinus").click(function() {
 		        	
 		        	var textarea = $(".memoMinus").parent().parent().parent().find("textarea");
 		        	var thisFont = textarea.css("font-size");
@@ -368,15 +363,13 @@
 		        	containment:".noteBlock",
 		        	minWidth: 310,
 		        	minHeight: 310,
-		        	//ghost : true,
-		        	stop : function() {
+		        	resize : function() {
 		        	
-			    	var detailMemoHeight = $(".detailMemo").height();
-			        var memoBtnHeight = $("#memo-btn").height();
+			    	var detailMemoHeight = $(".bigTop").height();
+			        var detailHeaderHeight = $(".memoTit").height();
 			        
-			        var fontBtnHeight = $("#font-btn").height();
 			        
-			        var textareaHeight = detailMemoHeight - (memoBtnHeight + fontBtnHeight + 5);
+			        var textareaHeight = detailMemoHeight - detailHeaderHeight;
 			        $("#detailMemoContents").css("height", parseInt(textareaHeight) +"px");
 			        
 				    }
@@ -424,8 +417,9 @@
 		        getMemoList();
 		        
 		        // 메모 숨김 상태 변경 
-		        $(".memo_main").on("click", ".individual-memo img", function() {
-		        	var memoId = $(this).attr("id").replace("memoId", "");
+		        $(".memo_main").on("click", ".memoLay .memoX", function() {
+		        	
+		        	var memoId = $(this).attr("memoid").replace("memoid", "");
 		        	
 		        	$.ajax({
 		        		type: "POST",
@@ -444,7 +438,7 @@
 		        	});
 		        });
 		        
-		        $(".memo_main").on("blur", ".individual-memo textarea", function() {
+		        $(".memo_main").on("blur", ".memoLay textarea", function() {
 		        	modifyMemo(this);
 		        });
 		        
@@ -470,7 +464,7 @@
 		 			
 					memoId = obj.getAttribute("memoid");
 					beforeContents = obj.innerHTML;
-					afterContents = $(".memo-text[memoid=" + memoId + "]").val();
+					afterContents = $(".memoText[memoid=" + memoId + "]").val();
 					
 		 		} else {
 		 			
@@ -756,7 +750,7 @@
 		        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
 		        })
 		        
-		        $(".memo-text").dblclick(function() {
+		        $(".memoText").dblclick(function() {
 		        	
 		        	var memoId = $(this).attr("memoid");
 		        	
@@ -775,8 +769,9 @@
 		                	var memoColorId = result.memo.color_id;
 		                	
 		        			$textarea.val(result.memo.contents);
-		        			$memoDetail.removeClass().addClass("memo0" + memoColorId + "Big");
+		        			$textarea.attr("textareaMemoid", result.memo.memo_id);
 		        			
+		        			$memoDetail.removeClass().addClass("memo0" + memoColorId + "Big");
 		        			$memoDetail.css("display", "");
 		        			
 		        			/* var $memoDetail = $(".detailMemo");
@@ -789,8 +784,7 @@
 		        			$memoDetail.css("background-color", detailHeaderColor);
 		        			$memoDetail.css("display", ""); */
 		        			
-		        			/* $textarea.css("background-color", detailBodyColor);
-		        			$textarea.attr("textareaMemoid", result.memo.memo_id); */
+		        			/* $textarea.css("background-color", detailBodyColor); */
 		        			
 		        		}
 		        	});
@@ -855,7 +849,7 @@
 		    	var btnBundlHeight = $("#btn-bundle").height();
 			    var layerHeight = $("#layer-popup").height();
 			    var layerWidth = $("#layer-popup").width();
-			    var memoListHeight = layerHeight - btnBundlHeight - 20;
+			    var memoListHeight = layerHeight - btnBundlHeight - 20 - 40;
 			    
 			    $(".memoListBox").css({"height" : memoListHeight, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight});
