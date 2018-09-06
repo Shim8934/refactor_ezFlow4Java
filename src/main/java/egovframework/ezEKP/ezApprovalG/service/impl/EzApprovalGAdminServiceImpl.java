@@ -571,8 +571,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				ApprGListHeaderVO headerVo = listHeader.get(j);				
 				String fieldName = headerVo.getColName();
 				String fieldValue = "";
-								
-				if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")) {
+				
+				//2018-09-06 김보미 - primary에서 lang으로 변경
+				//if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")) {
+				if (!commonUtil.getPrimaryData(lang, tenantID).equals("1") && fieldName.toUpperCase().equals("DEPTNAME")) {
 					fieldName = fieldName + "2";
 				}
 				
