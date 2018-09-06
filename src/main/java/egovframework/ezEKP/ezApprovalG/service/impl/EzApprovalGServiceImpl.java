@@ -25501,16 +25501,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (strAprType.equals(staATSoonChaHyubJo)) {
 				result.append(iAssistSN);
 				result.append("</ORDER>");
-				iAssistSN += iAssistSN +1;
+				iAssistSN += 1;
 			} else {
 				if (xmlDoc.getElementsByTagName("APRMEMBERSN").item(i).getTextContent().equals(Integer.toString(iFinalSn))) {
 					result.append("final");
 					result.append("</ORDER>");
-					iAprSN += iAprSN +1;
+					iAprSN += 1;
 				} else {
 					result.append(iAprSN);
 					result.append("</ORDER>");
-					iAprSN += iAprSN +1;
+					iAprSN += 1;
 				}
 			}
 			
