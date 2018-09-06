@@ -617,7 +617,7 @@
                     EXTENSIONATTRIBUTE14 ,
                     EXTENSIONATTRIBUTE15 ,
                     ADSPATH ,
-                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') ,
+                    to_date(#timeUTC#, 'yyyy-MM-dd HH24:MI:SS') ,
                     MOBILE_ENABLE ,
                     MOBILE_NOTUSE ,
                     MOBILE_PIN ,
@@ -3860,8 +3860,8 @@
 	
 	<select id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
 			SELECT
-				X.rnum,
-				X.CN ,
+				X.rnum ,
+				X.CN , 
                 X.DISPLAYNAME ,
                 X.DISPLAYNAME2 ,
                 X.DESCRIPTION ,
@@ -3871,10 +3871,10 @@
                 X.EXTENSIONATTRIBUTE10 ,
                 X.EXTENSIONATTRIBUTE102 ,
                 X.EXTENSIONATTRIBUTE14 ,
-                TO_CHAR(X.UPDATEDT,'YYYY-MM-DD') UPDATEDT
+                TO_CHAR(UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'),'YYYY-MM-DD') AS UPDATEDT
             FROM (
 				SELECT
-					ROWNUM AS rnum,
+					ROWNUM AS rnum ,
 					A.CN ,
 	                A.DISPLAYNAME ,
 	                A.DISPLAYNAME2 ,
@@ -4045,6 +4045,7 @@
                 PHYSICALDELIVERYOFFICENAME = (SELECT EXTENSIONATTRIBUTE2 FROM (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 COMPANY = (SELECT EXTENSIONATTRIBUTE3 FROM (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA)
+            	UPDATEDT = TO_DATE(#timeUTC#, 'yyyy-MM-dd HH24:MI:SS')
             WHERE
                 CN = #v_CN#
             AND

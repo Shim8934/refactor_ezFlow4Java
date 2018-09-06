@@ -4,6 +4,8 @@ import java.util.List;
 
 
 
+
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -18,7 +20,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception;
 		
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchField, String searchValue) throws Exception;
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchField, String searchValue) throws Exception;
 	
 	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
 
@@ -63,7 +65,7 @@ public interface EzOrganAdminService {
 
 	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception;
 	
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID) throws Exception;
+	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception;
 
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 
@@ -75,7 +77,7 @@ public interface EzOrganAdminService {
 	
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
 
-	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception;
+	public void restoreRetireEntry(String cn, String deptID, int tenantID, String offset) throws Exception;
 
 	public int userCountCheck(String cn, int tenantID) throws Exception;
 	
@@ -94,5 +96,4 @@ public interface EzOrganAdminService {
 	public String mailDelDistributionList(int tenantID, String cn) throws Exception;
 	
 	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
-
 }
