@@ -28,6 +28,7 @@ select::-ms-expand {
 .mamo05{ background:url(../../images/ezMemo/memo05.png) no-repeat left center; overflow:hidden;}
 .mamo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; overflow:hidden;}
 .memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
+.memoTit input{ width: 13px; height: 13px; vertical-align: middle; float:left;}
 .memoTit .mtitText{ margin:0px; padding:0px; font-family:Gulim; color:#696969; font-size:11px; float:left;}
 .memoTit .pallete{ margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-16px 0px; width:16px; height:16px; cursor:pointer;}
@@ -77,7 +78,7 @@ select::-ms-expand {
 .memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point06.png) no-repeat;}
 .memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 
-.color_popup{ margin:0px; padding:6px; list-style:none; width:86px; height:63px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:38px; top:34px; background:#fff;}
+.color_popup{ margin:0px; padding:6px; list-style:none; width:86px; height:63px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:25px; top:34px; background:#fff;}
 .color_popup li{ margin:2px; padding:0px; width:18px; height:18px; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; float:left; cursor:pointer;}
 .color_popup li.color01{background:#f0e468; border:1px solid #e2d657;}
 .color_popup li.color02{background:#5feab0; border:1px solid #54e2a7;}

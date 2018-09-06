@@ -369,6 +369,20 @@
 	        $(".memo-text").blur(function(){
 					modifyMemo(this);
 	        })
+	        
+	        /* CSS 추가 이후 */
+	        
+	        $(".pallete").mouseenter(function(){
+	        	$(this).parent().nextAll(".color_popup").css("visibility", "");
+	        })
+	        
+	        $(".color_popup").mouseleave(function(){
+		        	$(this).css("visibility", "hidden");
+		    })
+		    
+		    $(".color_list").click(function(){
+		    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+	        })
 	    }
 	    
 	    // 메모 색상 변경
