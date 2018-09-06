@@ -845,8 +845,14 @@ public class EzSystemAdminController {
 		logger.debug("systemAddAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		logger.debug("tenantID=" + userInfo.getTenantId() + ", companyID=" + userInfo.getCompanyID());
+		String topID = userInfo.getCompanyID();
 		
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
+			topID = "Top";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("topID", topID);
 		logger.debug("systemAddAccessList ended");
 		return "/ezSystem/systemAddAccessList";
 	}
