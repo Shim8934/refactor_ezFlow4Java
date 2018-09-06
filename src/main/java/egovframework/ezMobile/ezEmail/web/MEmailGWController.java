@@ -2195,7 +2195,26 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        
 					// 메일 본문 및 타입
 					MimeBodyPart content = new MimeBodyPart();
-				
+					
+					String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+					
+					//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+					if (info.getLang().equals("1")) {
+						String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", info.getTenantId());
+						
+						if (!editorFontStyle.equals("")) {
+							String fontFamily = editorFontStyle.split("\\|")[0];
+							String fontSize = editorFontStyle.split("\\|")[1];
+							
+							defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+						}
+					}
+					
+					LOGGER.debug("defaultFontAndSize=" + defaultFontAndSize);
+					
+					// p태그에 기본 폰트를 적용한다.
+					textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
+					
 		            content.setContent(textBody, "text/html; charset=utf-8");
 		
 		            // multipart/alternative로 구성한다.
