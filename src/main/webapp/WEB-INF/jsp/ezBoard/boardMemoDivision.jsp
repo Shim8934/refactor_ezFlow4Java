@@ -27,7 +27,7 @@
 	    			success: function(result){
 	    				var html="";
 						var folderList = result["folders"];
-						memoFolderList = "<colgroup><col width='7%' /><col width='55%' /><col width='38%' /></colgroup>";							
+						memoFolderList = "<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>";							
 							 
 						folderList.forEach(function(list, index){
 							if(index == 0) {
@@ -231,7 +231,7 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 450px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
-		                    	<colgroup><col width='7%' /><col width='55%' /><col width='38%' /></colgroup>
+		                    	<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>
 		                        <tr>
 									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
 		                            <th><spring:message code='ezMemo.t0041' /></th>
