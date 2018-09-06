@@ -145,6 +145,7 @@
 		    }
 		    
 		    function TreeViewNodeClick() {
+		    	p_ListOrderObject = null;
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        nodeIdx = treeView.GetSelectNode();
@@ -1128,7 +1129,26 @@
 	          	}
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
-	        }		        
+	        }
+		    
+	        function infoview_click() {
+	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
+	                alert("직원을 먼저 선택해주세요.");
+	                return;
+	            }
+	            
+	            var clickList = $("#txtlist_Layer tr[id^=MailUserlist_]");
+	            
+	            var id = p_ListOrderObject.getAttribute("_DATA2");
+	            var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            var rtn
+	            var width = 420, height = 450;
+	            var leftPosition, topPosition;
+	            leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+	            topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+	
+	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	        }
 	    </script>
 	</head>
 	<body class="popup">
