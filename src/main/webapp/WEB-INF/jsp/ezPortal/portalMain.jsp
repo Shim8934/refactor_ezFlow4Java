@@ -403,10 +403,17 @@
 		        		$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
 		        		$(".ui-resizable-handle").css("display", "none");
 		        		
+		        		$("#layer-popup").draggable({
+		        			disabled: true
+		        		});
 		        	} else if (layerClass.indexOf("layerFullScreen") != -1) {
 		        		$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
 		        		$(".ui-resizable-handle").css("display", "");
+		        		$("#layer-popup").draggable({
+		        			disabled: false
+		        		});
 		        		
+		        		//setPanelPointer();
 		        	}
 		        	
 		        	setLayerSize();
@@ -510,7 +517,7 @@
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-40});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-40-25});
 		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-56-40});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
@@ -603,6 +610,7 @@
 		        }).on("mousedown", function() {
 		        	$(".noteBlock").css("pointer-events", "auto");
 		       	}).draggable({
+		       		
 		       		containment:".noteBlock",
 		       		stop : function() {
 		       			$(".noteBlock").css("pointer-events", "none");

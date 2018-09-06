@@ -86,7 +86,7 @@ select::-ms-expand {
 .color_popup li.color04{background:#519ef0; border:1px solid #4592e4;}
 .color_popup li.color05{background:#8e74f6; border:1px solid #8167ec;}
 .color_popup li.color06{background:#f261d0; border:1px solid #e752c4;}
-.memobgBar{ float:left; clear:both; overflow:hidden;}
+.memobgBar{ clear:both; overflow:hidden; margin-top: 3px;}
 
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
