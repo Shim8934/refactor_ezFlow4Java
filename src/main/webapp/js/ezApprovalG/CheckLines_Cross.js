@@ -24,7 +24,7 @@ function checkLines() {
         var rtnVal = getNodeText(dataNodes[0]);
 
         if (rtnVal != "") {
-            OpenAlertUILong(xmlHTTP.responseText);
+            OpenAlertUILong(rtnVal);
             return false;
         }
     }
@@ -38,7 +38,7 @@ function checkLines() {
         var rtnVal = getNodeText(dataNodes[0]);
 
         if (rtnVal != "") {
-            OpenAlertUILong(xmlHTTP2.responseText);
+            OpenAlertUILong(rtnVal);
             return false;
         }
     }
@@ -47,13 +47,19 @@ function checkLines() {
 
 var ezapralertlong_cross_dialogArguments = new Array();
 function OpenAlertUILong(pAlertContent) {
-    var parameter = pAlertContent;
-    var url = "/ezApprovalG/ezAprAlertLong.do";
-
-    ezapralertlong_cross_dialogArguments[0] = parameter;
-    ezapralertlong_cross_dialogArguments[1] = OpenAlertUILong_Complete;
-
-    DivPopUpShow(330, 205, url);
+	var parameter = pAlertContent;
+	var url = "/ezApprovalG/ezAprAlertLong.do";
+	
+	if (ext == "hwp") {
+		var feature = "status:no;dialogWidth:330px;dialogHeight:305px;help:no;scroll:no;edge:sunken";
+		
+		window.showModalDialog(url, parameter, feature);
+	} else {
+		ezapralertlong_cross_dialogArguments[0] = parameter;
+		ezapralertlong_cross_dialogArguments[1] = OpenAlertUILong_Complete;
+		
+		DivPopUpShow(330, 305, url);
+	}
 }
 
 function OpenAlertUILong_Complete() {
