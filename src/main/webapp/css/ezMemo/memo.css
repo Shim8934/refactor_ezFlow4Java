@@ -99,4 +99,4 @@ select::-ms-expand {
 /*09-05 추가  */
 #detailMemo{width:400px; height:400px; position:absolute;}
 /*09-06 추가  */
-#memoFolderList {width:149px; height:29px; }
+#memoFolderList {width:149px; height:27px; border-radius:25px;}
