@@ -643,7 +643,7 @@
 					AND 
 						B.TENANT_ID = C.TENANT_ID 
 					WHERE 
-						AA.TENANT_ID = #tenantID# AND C.cn = #v_PCOMPANYID# ) BB
+						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB
 			ON
 				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID
           	WHERE
@@ -654,6 +654,8 @@
 				COMPANYID = #v_PCOMPANYID#
 			AND 
 				A.OWNERID = #v_POWNERID#
+			AND
+				A.DEPTNM = BB.DEPTNM
 			AND
 				REFLAG = '0'
 			AND 
@@ -818,7 +820,7 @@
 					AND 
 						B.TENANT_ID = CC.TENANT_ID 
 					WHERE 
-						AA.TENANT_ID = #tenantID# AND CC.cn = #v_PCOMPANYID# ) BB   
+						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB   
 			ON
 				A.writerID = BB.CN
 			AND
