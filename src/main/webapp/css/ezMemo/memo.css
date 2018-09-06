@@ -36,47 +36,47 @@ select::-ms-expand {
 .memoTit .memoMinus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-80px 0px; width:16px; height:16px; cursor:pointer;}
 .memoText{border: none; background: none; margin: 10px 0px 0px 17px; padding: 0px 30px 0px 0px; line-height: 24px; color: #000; font-size: 12px; width: 90%; height: 213px; outline:none;}
 
-.memo01Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-.memo01Big .bigTop{ background:#fff9c5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo01Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo01Big .bigTop{ background:#fff9c5; height:92%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px;}
-.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20);}
 .memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point01.png) no-repeat;}
-.memo01Big .bigTop #detailMemoContents{background:#fff9c5; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+.memo01Big .bigTop #detailMemoContents{background:#fff9c5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.memo02Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-.memo02Big .bigTop{ background:#c5ffdf; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo02Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo02Big .bigTop{ background:#c5ffdf; height:92%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px;}
 .memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
 .memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point02.png) no-repeat;}
-.memo02Big .bigTop #detailMemoContents{background:#c5ffdf; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+.memo02Big .bigTop #detailMemoContents{background:#c5ffdf; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.memo03Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-.memo03Big .bigTop{ background:#e8ffc5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo03Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo03Big .bigTop{ background:#e8ffc5; height:92%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px;}
 .memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
 .memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point03.png) no-repeat;}
-.memo03Big .bigTop #detailMemoContents{background:#e8ffc5; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+.memo03Big .bigTop #detailMemoContents{background:#e8ffc5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.memo04Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-.memo04Big .bigTop{ background:#c5f3ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo04Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo04Big .bigTop{ background:#c5f3ff; height:92%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px;}
 .memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
 .memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point04.png) no-repeat;}
-.memo04Big .bigTop #detailMemoContents{background:#c5f3ff; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+.memo04Big .bigTop #detailMemoContents{background:#c5f3ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.memo05Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-.memo05Big .bigTop{ background:#d7d6ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo05Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo05Big .bigTop{ background:#d7d6ff; height:92%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px;}
 .memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
 .memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point05.png) no-repeat;}
-.memo05Big .bigTop #detailMemoContents{background:#d7d6ff; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+.memo05Big .bigTop #detailMemoContents{background:#d7d6ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.memo06Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-.memo06Big .bigTop{ background:#ffd6f2; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo06Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
+.memo06Big .bigTop{ background:#ffd6f2; height:92%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px;}
 .memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
 .memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point06.png) no-repeat;}
-.memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:358px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
+.memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .color_popup{ margin:0px; padding:6px; list-style:none; width:86px; height:63px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:25px; top:34px; background:#fff;}
 .color_popup li{ margin:2px; padding:0px; width:18px; height:18px; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; float:left; cursor:pointer;}
@@ -94,3 +94,4 @@ select::-ms-expand {
 
 /*09-05 추가  */
 #detailMemo{width:400px; height:400px; position:absolute;}
+#memoFolderList {width:149px; height:29px;}

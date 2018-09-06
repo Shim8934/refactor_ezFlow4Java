@@ -346,6 +346,8 @@
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
+		        	minWidth: 280,
+		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
 		        	},
@@ -453,6 +455,8 @@
 		        $("#detailMemoContents").blur(function() {
 					modifyMemo(this);
 		        });
+		        
+		       
 		    });
 		    
 		 	// 메모 내용 변경	    
@@ -748,6 +752,18 @@
 		        
 		        $(".memo-color-list").click(function(){
 		        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+		        });
+		        
+		        $(".pallete").mouseenter(function(){
+		        	$(this).parent().nextAll(".color_popup").css("visibility", "");
+		        })
+		        
+		        $(".color_popup").mouseleave(function(){
+			        	$(this).css("visibility", "hidden");
+			    })
+			    
+			    $(".color_list").click(function(){
+			    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
 		        })
 		        
 		        $(".memoText").dblclick(function() {
@@ -870,7 +886,15 @@
 						var html="";
 						html += "<option value='0'>전체</option>";
 						folderList.forEach(function(list, index){
-							html += "<option value='"+list.folder_id+"'>"+list.folder_name +"</option>"
+							var folderName = list.folder_name;
+							console.log(folderName.length);
+							
+							if (folderName.length > 11) {
+								folderName = folderName.substr(0, 10);
+								folderName += "...";
+							}
+							html += "<option value='"+list.folder_id+"'>"+ folderName +"</option>"
+
 						});
 						$('#memoFolderList option').remove();
 						$('#memoFolderList').html(html);
