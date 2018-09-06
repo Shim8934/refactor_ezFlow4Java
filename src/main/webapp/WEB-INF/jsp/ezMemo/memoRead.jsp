@@ -47,7 +47,7 @@
 		                },  
 		                cache: false,
 		                success: function(result) {
-		                	parent.opener.refresh_onclick();							// 메모 게시판의 리스트 새로고침()				
+		                	parent.opener.getMemoList();							// 메모 게시판의 리스트 새로고침()				
 		                	parent.opener.parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		                },
 		                error : function(e) {

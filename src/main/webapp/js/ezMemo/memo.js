@@ -4,13 +4,12 @@ function createMemo(memo, flag) {
 	div.setAttribute("class", "mamo0"+ memo.color_id +" memoLay");
 	div.id  = "memo" + memo.memo_id;
 	div.setAttribute("orders", memo.orders)
-	if(flag == 1) {
-		div.style.opacity = 0.5;
+	if(memo.display_flag == 1) {
+		div.style.opacity = 0.6;
 	}
 	
 	var dl = document.createElement("dl");
 	dl.setAttribute("class", "memoTit");
-	
 	
 	var dt = document.createElement("dt");
 	dt.setAttribute("class", "mtitText");
@@ -24,6 +23,7 @@ function createMemo(memo, flag) {
 		input.setAttribute("name", "memo");
 		input.setAttribute("type", "checkbox");
 		input.setAttribute("value", memo.memo_id);
+		input.setAttribute("display", memo.display_flag);
 
 		dl.appendChild(input);
 	
@@ -57,64 +57,12 @@ function createMemo(memo, flag) {
 	for(var i=1; i<=6; i++) {
 		var li = document.createElement("li");
 		li.setAttribute("class", "color0" + i + " color_list");
-		//li.setAttribute("color_list", i);
 		ul.appendChild(li);
 	}
 	
 	div.appendChild(dl);
 	div.appendChild(textarea);
 	div.appendChild(ul);
-	
-	/*
-	var span = document.createElement("span");
-	span.setAttribute("class", "write-date");
-	
-	var img = document.createElement("img");
-	img.setAttribute("src", "/images/ezMemo/more.png");
-	img.style.visibility = "hidden";
-	img.style.float = "right";
-	img.style.height = "20px";
-	img.style.paddingRight = "10px";
-	img.style.cursor = "pointer";
-	
-	var textarea = document.createElement("textarea");
-	textarea.setAttribute("class", "memo-text");
-	textarea.setAttribute("memoId", memoId);
-	textarea.style.backgroundColor = bColor;
-	textarea.style.fontSize = fontSize + "px";
-	
-	var closeImg = document.createElement("img");
-	closeImg.setAttribute("src", "/images/ezMemo/close_xBtn.png");
-	closeImg.style.visibility = "hidden";
-	closeImg.style.float = "right";
-	closeImg.style.height = "20px";
-	closeImg.style.paddingRight = "10px";
-	closeImg.style.cursor = "pointer";
-	closeImg.id = "memoId" + memoId;
-	
-	if(contents != null) {
-		textarea.innerHTML = contents;
-	}
-	
-	for(var i=1; i<=6; i++) {
-		var div3 = document.createElement("div");
-		div3.setAttribute("class", "memo-color-list");
-		div3.setAttribute("color-num", i);
-		div2.appendChild(div3);
-	}
-	
-	if (flag == 'layer') {
-		div.appendChild(closeImg);
-		
-	} else {
-		div.appendChild(input);
-	}
-	
-	div.appendChild(dl);
-	div.appendChild(span);
-	div.appendChild(img);
-	div.appendChild(textarea);
-	*/
 	
 	return div;
 }
