@@ -12,6 +12,7 @@
 	<script type="text/javascript">
 		var useIPAccess = "${useIPAccess}";
 		var rollInfo = "${rollInfo}";
+		var permission = true;
 		
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
@@ -26,7 +27,7 @@
 			}
 			
 			if (rollInfo.indexOf("c=1") == -1) {
-				
+				permission = false;
 				var btnList = $("body [id^=btn]");
 				
 				for (var i = 0; i < btnList.length; i++) {
@@ -107,7 +108,13 @@
 				_TR.onclick = function() { event_listclick(this); };
 				_TR.onmouseover = function () { event_listMover(this); };
 				_TR.onmouseout = function () { event_listMout(this); };
-				_TR.ondblclick = function () { ipBandUpdateInfo(this); };
+				_TR.ondblclick = function () {
+					if (!permission) {
+						alert("전체관리자만 수정 가능합니다");
+						return;
+					}
+					ipBandUpdateInfo(this); 
+				};
 				_TR.style.cursor = "pointer";
 				
 				var _TDCheckBox = document.createElement("TD");
