@@ -157,7 +157,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		map.put("v_TENANT_ID", tenantID);
 		map.put("offset", offset);
-		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
 		map.put("v_STARTROW", pPageRow*(pPage - 1));
 		map.put("searchStartDate", searchStartDate);

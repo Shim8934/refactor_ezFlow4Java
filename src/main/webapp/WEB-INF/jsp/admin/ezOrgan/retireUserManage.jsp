@@ -19,25 +19,28 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var CurPage = 1;
-			var totalPage = 1;
-			var totalCount = 0;
+			var totalPage = "${totalPage}";
+			var totalCount = "${totalCount}";
 			var BlockSize = 1;
-			var lang = "";
+			var lang = "${lang}";
 			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 	    	
-			document.onselectstart = function() {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
-		            return false;
-		        } else {
-		            return true;
-				}
+			window.onresize = function () {
+				var height = document.documentElement.clientHeight - 135 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
 			};
 			
-			$(document).ready(function(){
+			document.onselectstart = function() {return false;};
+			
+			window.onload = function() {
 				retireUserList();
-			});
+			}
 	        
 			/* 페이지네이션 변경으로 인한 주석처리
 			function prevPage_onclick()	{
@@ -355,9 +358,8 @@
             }
             
             function goToPageByNum(Value) {
-                sCurPage = Value;
-                makePageSelPage();
-				moveToPage(sCurPage);
+            	CurPage = Value;
+            	retireUserList();
             }
             
             function selbeforeBlock() {
@@ -392,30 +394,6 @@
                 }
             }
             
-            function moveToPage(sCurPage) {
-				if (parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(totalPage)) {
-					window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + parseInt(sCurPage);
-				}
-			}
-            
-            //2018-08-06 김보미 - 페이지 위치 고정
-		    $(window).on("resize", function(){
-	            windowResize();
-	        });
-		    
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 135 - document.getElementById("mainmenu").clientHeight;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
-	        }
-		    
-		    $(function(){
-	    		windowResize();
-		    });
-		    
 			$(function() {
 				$('#startDatepicker').datepicker({
 					changeMonth: true,
@@ -522,10 +500,11 @@
 		    	retireUserList();
 		    }
 			 
+			 //**/ 퇴직자 검색
 			function retireUserList() {
 				 $.ajax ({
 					 type : "POST",
-					 async : true,
+					 async : false,
 					 dataType : "json",
 					 url : "/admin/ezOrgan/getRetireUserList.do",
 					 data : {
@@ -576,9 +555,12 @@
 						 }
 						 
 	    				$("#mainListBody").empty().append(html);
-	    				makePageSelPage();
+					 },
+					 error : function(error) {
+						 alert("<spring:message code='ezOrgan.0hun08' />");
 					 }
 				 })
+   				makePageSelPage();
 			}
 	    </script>
 	</head>

@@ -3909,10 +3909,10 @@
 				   		UPDATEDT DESC
 			  		) A
 		  	<![CDATA[
-		  		WHERE ROWNUM <= (#v_ROWPERPAGE# + #v_PAGE#)
-		  	]]>	
+		  		WHERE ROWNUM <= (#v_ROWPERPAGE# + #v_STARTROW#)
 		  	) X
-		  	WHERE X.rnum >= #v_PAGE#
+		  	WHERE X.rnum >= (#v_STARTROW# + 1)
+		  	]]>	
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
