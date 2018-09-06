@@ -83,7 +83,7 @@
 		            ShowMyBoardItem();
 		        }
 		
-		        if (Func != "1" && Func != "3" && Func != "4") {
+		        if (Func != "1" && Func != "3" && Func != "4" && Func != "5") {
 		            if (subFunc == "1") {
 		                MyBoard();
 		            }
