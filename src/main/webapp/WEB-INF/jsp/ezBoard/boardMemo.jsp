@@ -27,6 +27,13 @@
                		document.body.style.UserSelect = 'none';
            		}	
            		
+           		if(font_size === "12") {
+        			$(".preview").text("<spring:message code='ezMemo.t0010' />");
+        		} else if(font_size === "14") {
+        			$(".preview").text("<spring:message code='ezMemo.t0011' />");
+        		} else {
+        			$(".preview").text("<spring:message code='ezMemo.t0012' />");
+        		}
            		$(".preview").css("font-size", font_size + "px");
            		preview();
         	}  
@@ -36,6 +43,14 @@
         		var previewSize;
         		$("#setFontSize").on("change", function(){
         			previewSize = $("#setFontSize option:selected").val() + "px";
+        			
+        			if(previewSize === "12px") {
+            			$(".preview").text("<spring:message code='ezMemo.t0010' />");
+            		} else if(previewSize === "14px") {
+            			$(".preview").text("<spring:message code='ezMemo.t0011' />");
+            		} else {
+            			$(".preview").text("<spring:message code='ezMemo.t0012' />");
+            		}
         			$(".preview").css("font-size", previewSize);
         		});
         	}
@@ -73,6 +88,14 @@
         		$("#setDateFlag").val(use_date).attr("selected", "selected");
         		$("#setQuickFlag").val(use_gadget).attr("selected", "selected");
         		$("#setFontSize").val(font_size).attr("selected", "selected");
+        		
+        		if(font_size === "12") {
+        			$(".preview").text("<spring:message code='ezMemo.t0010' />");
+        		} else if(font_size === "14") {
+        			$(".preview").text("<spring:message code='ezMemo.t0011' />");
+        		} else {
+        			$(".preview").text("<spring:message code='ezMemo.t0012' />");
+        		}
         		$(".preview").css("font-size", font_size + "px");
         	}
         	
@@ -115,7 +138,7 @@
 							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
 							<option value="16" <c:if test = "${memoConfigVO.font_size eq '16' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
 						</select>
-						<span class="preview" style="padding-left:50px;" ><spring:message code="ezMemo.t0063"/></span>
+						<span class="preview" style="padding-left:50px;" ></span>
                 	</td>
             	</tr>
         	</table>
