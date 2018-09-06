@@ -18,7 +18,6 @@ function createMemo(memo, flag) {
 	var dd2 = document.createElement("dd");
 	dd2.setAttribute("class", "memoIcon pallete");
 	
-	dl.appendChild(dt);
 	if (flag != 'layer') {
 		
 		var input = document.createElement("input");
@@ -38,7 +37,7 @@ function createMemo(memo, flag) {
 		
 	}
 	
-	dl.appendChild(input);
+	dl.appendChild(dt);
 	dl.appendChild(dt);
 	dl.appendChild(dd2);
 	
