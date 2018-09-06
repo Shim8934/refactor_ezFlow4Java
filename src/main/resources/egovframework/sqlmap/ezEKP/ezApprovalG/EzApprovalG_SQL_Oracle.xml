@@ -23689,7 +23689,7 @@
 				SELECT 
 					COUNT(CABINETID) AS CNT 
 				FROM 
-					TBL_EXPENDAPRDOCINFO 
+					TBL_SEPERATEATTACH
 				WHERE 
 					CABINETID = #v_CABINETID# 
 		UNION 
@@ -25360,4 +25360,22 @@
 		  	AND
 		  		DOCID = #v_DOCID#
 	  </update>
+	  	<update id="EzApprovalG.moveRecord2" parameterClass="Map">
+			UPDATE 
+				TBL_EXPENDAPRDOCINFO
+	        SET 
+	         	CABINETID = #v_CABINETID#
+	        WHERE 
+                DOCID =
+               		(SELECT 
+                    	DOCID
+                	FROM
+                    	TBL_RECORD
+                	WHERE
+	       				RECORDID = #v_RECORDID#
+                	AND
+	         			TENANT_ID = #v_TENANTID#
+                	AND
+   						COMPANYID = #companyID#)
+	</update>
 </sqlMap>
