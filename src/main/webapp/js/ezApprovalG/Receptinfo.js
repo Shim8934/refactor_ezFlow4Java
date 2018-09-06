@@ -130,12 +130,15 @@ function initReceptListView() {
 		}        			
 	});
 
-    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 9) {
-        document.getElementById("inputSummaryOuterReceiverList").focus();
-        document.getElementById("trSummaryOuterReceiverList").style.display = "";
-        document.getElementById("btnaddress").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+    //시행문
+    if (pDocType != null && pDocType != undefined && pDocType == "001") {
+	    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
+	    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 8) {
+	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	        document.getElementById("btnaddress").style.display = "none";
+	        document.getElementById("btnaddressChange").style.display = "none";
+	    }
     }
 
     document.getElementById('RECEPTLIST').innerHTML = "";
@@ -1888,6 +1891,7 @@ function AprLineAddDeptG(nodeIdx, tr) {
 
     DeptAddIndex = DeptAddIndex + 1;
 
+    InitTr = listview.GetDataRows();
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
     if (InitTr.length > 8) {
         document.getElementById("inputSummaryOuterReceiverList").focus();
@@ -1991,7 +1995,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length < 10) {
+    if (listview.GetDataRows().length <= 9) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
