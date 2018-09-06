@@ -25,7 +25,7 @@
 				document.getElementById("ipRadio1").checked = true;
 			}
 			
-			if (!rollInfo.includes("c=1")) {
+			if (rollInfo.indexOf("c=1") == -1) {
 				
 				var btnList = $("body [id^=btn]");
 				
