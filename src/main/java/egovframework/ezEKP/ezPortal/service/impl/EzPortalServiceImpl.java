@@ -3528,7 +3528,7 @@ System.out.println("portletDisplayName : " +portletDisplayName );
 			
 			strData.append("<dl class='comListDL02'>");
 			strData.append("<dt class='comPic'><img src='/images/kr/main/comImg_none.png'></dt>");
-			strData.append("<dd class='comTit_none'>"+egovMessageSource.getMessage("main.t00026",locale) +"</dd>");
+			strData.append("<dd class='comTit_none'>\""+egovMessageSource.getMessage("main.t00026",locale) +"\"</dd>");
 			strData.append(" </dl>");
            
 		}

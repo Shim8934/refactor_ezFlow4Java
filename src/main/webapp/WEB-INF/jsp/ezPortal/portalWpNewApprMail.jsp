@@ -160,7 +160,7 @@
 		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>"; */
 		            	    listHTML += "<dl class='nodata'>";
 		                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-		                	listHTML += "<dd>" + strLang1_NewApprMail + "</dd>	";
+		                	listHTML += '<dd>"' + strLang1_NewApprMail + '"</dd>';
 		                	listHTML += "</dl>";
 		                    
 		                }
@@ -545,7 +545,7 @@
 		            } else {
 		    		    listHTML += "<dl class='nodata'>";
 	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-	                	listHTML += "<dd>" + strLang1_NewApprMail + "</dd>	";
+	                	listHTML += '<dd>"' + strLang1_NewApprMail + '"</dd>';
 	                	listHTML += "</dl>";
 		            }
 	

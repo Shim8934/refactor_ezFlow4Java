@@ -326,21 +326,21 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .voteList .voteList_01 .voteGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0470e4;}
 .voteList .voteList_01 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
 .voteList .voteList_02{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
-.voteList .voteList_02 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; width: 22%; text-align:left;}
+.voteList .voteList_02 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
 .voteList .voteList_02 .voteT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#81bc3d; font-size:13px; font-weight:bold; color:#fff;}
 .voteList .voteList_02 .voteT .Vtext{ font-size:13px; color:#555;}
 .voteList .voteList_02 .voteGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
 .voteList .voteList_02 .voteGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#81bc3d;}
 .voteList .voteList_02 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
 .voteList .voteList_03{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
-.voteList .voteList_03 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; width: 22%; text-align:left;}
+.voteList .voteList_03 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
 .voteList .voteList_03 .voteT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900; font-size:13px; font-weight:bold; color:#fff;}
 .voteList .voteList_03 .voteT .Vtext{ font-size:13px; color:#555;}
 .voteList .voteList_03 .voteGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
 .voteList .voteList_03 .voteGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900;}
 .voteList .voteList_03 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
 .voteList .voteList_04{overflow:hidden; height:20px; line-height:20px;}
-.voteList .voteList_04 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; width: 22%; text-align:left;}
+.voteList .voteList_04 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
 .voteList .voteList_04 .voteT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff; font-size:13px; font-weight:bold; color:#fff;}
 .voteList .voteList_04 .voteT .Vtext{ font-size:13px; color:#555;}
 .voteList .voteList_04 .voteGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
@@ -404,7 +404,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 /* nodata */
 .nodata{ margin:0px; padding:0px; text-align:center;}
 .nodata dt{ margin:0px; padding:40px 0px 20px 0px;}
-.nodata dd{ margin:0px; padding:0px; font-size:15px; color:#c0c0c0; letter-spacing:-0.5px;}
+.nodata dd{ margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}
 
 
 /* main media query */

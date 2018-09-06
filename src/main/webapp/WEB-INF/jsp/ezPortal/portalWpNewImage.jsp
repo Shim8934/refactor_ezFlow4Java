@@ -129,10 +129,11 @@
 			            nodata += "<p style='margin-left:10px'>" + strLang2_total + "</p></div>"; */
 			            
 			            var listHTML = "";
+			            listHTML += "<ul class='portlet_list'>";
 					    listHTML += "<dl class='nodata'>";
 	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-	                	listHTML += "<dd>" + strLang2_total + "</dd>";
-	                	listHTML += "</dl>";
+	                	listHTML += '<dd>"' + strLang2_total + '"</dd>';
+	                	listHTML += "</dl></ul>";
 	                	$('#ScheduleList').empty();
 	                	$('#ScheduleList').after(listHTML);
 			            //document.getElementById("ScheduleList").innerHTML = listHTML;

@@ -61,10 +61,12 @@
 	        </dl>
 	       	 <c:choose>
 		         <c:when test = "${pPollResultContent eq null || pPollResultContent == ''}">
-		         	<dl class='nodata'>
-	                	<dt><img src='/images/kr/main/nodata.png'></dt>
-	                	<dd><spring:message code='main.t00026' /></dd>
-                	</dl>
+		          	<ul class="portlet_list">
+		         		<dl class='nodata'>
+	                		<dt><img src='/images/kr/main/nodata.png'></dt>
+	                		<dd>"<spring:message code='main.t00026' />"</dd>
+                		</dl>
+                	</ul>	
 		         </c:when>
 	        <%-- <c:if test="${pPollTitle != ''}"> --%>
 		         <c:otherwise>

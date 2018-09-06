@@ -126,13 +126,13 @@
  						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
 						<p><spring:message code='main.t00026' /></p>
 					</div> --%>
-					<dl class="comListDL02" style="border-right : 1px solid #e7e7e7;">
-                                <dt class="comPic"><img src="/images/kr/main/comImg_none.png"></dt>
-                                <dd class="comTit_none"><spring:message code='main.t00026' /></dd>
+					<dl class="comListDL01">
+						<dt class="comPic"><img src="/images/kr/main/comImg_none.png"></dt>
+                        <dd class="comTit_none">"<spring:message code='main.t00026' />"</dd>
                     </dl>
                     <dl class="comListDL02">
-                                <dt class="comPic"><img src="/images/kr/main/comImg_none.png"></dt>
-                                <dd class="comTit_none"><spring:message code='main.t00026' /></dd>
+                        <dt class="comPic"><img src="/images/kr/main/comImg_none.png"></dt>
+                        <dd class="comTit_none">"<spring:message code='main.t00026' />"</dd>
                     </dl>
         		</c:if>
 	        </div>

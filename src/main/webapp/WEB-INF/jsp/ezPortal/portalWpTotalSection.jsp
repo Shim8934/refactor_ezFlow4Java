@@ -1137,8 +1137,8 @@
             </div>
             <div id="nodata_NewBirth" style="display:none;">
             	<dl class="nodata">
-	            	<dt><img src="/images/kr/main/nodata.png"></dt>
-	            	<dd><spring:message code="main.t00026" /></dd>	
+	            	<dt style="padding-top:33px"><img src="/images/kr/main/nodata.png"></dt>
+	            	<dd>"<spring:message code="main.t00026" />"</dd>
             	</dl>
             </div>
 		</article>
@@ -1157,10 +1157,6 @@
 				        <c:otherwise></c:otherwise>
 				</c:choose>
                 </dd>
-                
-                
-                
-                
                 <dd class="emTeam">${description}</dd>
             </dl>
         </article>

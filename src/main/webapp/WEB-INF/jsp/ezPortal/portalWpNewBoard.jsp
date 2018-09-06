@@ -120,7 +120,7 @@
 	                	var listHTML = "";
 					    listHTML += "<dl class='nodata'>";
 	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-	                	listHTML += "<dd>" + strLang2_NewBoard + "</dd>	";
+	                	listHTML += '<dd>"' + strLang2_NewBoard + '"</dd>';
 	                	listHTML += "</dl>";
 	                	
 	                	document.getElementById("BoardList_NewBoard").innerHTML = listHTML;

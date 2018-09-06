@@ -220,7 +220,7 @@
 		                    	var listHTML = "";
 							    listHTML += "<dl class='nodata'>";
 			                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-			                	listHTML += "<dd>" + strLang1_NewBoardSTD + "</dd>	";
+			                	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
 			                	listHTML += "</dl>";
 			                	
 			                	document.getElementById("BoardList").innerHTML = listHTML;
@@ -234,7 +234,7 @@
 		                	var listHTML = "";
 						    listHTML += "<dl class='nodata'>";
 		                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-		                	listHTML += "<dd>" + strLang1_NewBoardSTD + "</dd>	";
+		                	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
 		                	listHTML += "</dl>";
 		                	
 		                	document.getElementById("BoardList").innerHTML = listHTML;

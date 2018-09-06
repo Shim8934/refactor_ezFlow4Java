@@ -168,7 +168,7 @@
 			        <ul class="voteList">
 			         	<c:forEach var="_option" items="${listOptions}" varStatus="loop"> 
 			         		<li class="voteList_0${loop.index+1}">
-			         			<div class="voteT"><span class="Vnum">${loop.index+1}</span><span class="Vtext"><c:out value ="${_option.content}" /></span></div>
+			         			<div class="voteT" style='width:${seeResultBefore == 1 ? "22%" : "82%"}'><span class="Vnum">${loop.index+1}</span><span class="Vtext"><c:out value ="${_option.content}" /></span></div>
                                 <div class="percent" id="percent<c:out value ="${_option.ansId}" />">0%</div>
                                 <c:choose>
 	               						<c:when test="${seeResultBefore == 1}">
@@ -197,10 +197,10 @@
 						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
 						<p><spring:message code='main.t261' /></p>
 					</div> --%>
-					<ul class="voteList">
+					<ul class="portlet_list">
 						<dl class='nodata'>
 		                	<dt><img src='/images/kr/main/nodata.png'></dt>
-		                	<dd><spring:message code='main.t00026' /></dd>
+		                	<dd>"<spring:message code='main.t00026' />"</dd>
 	                	</dl>
                 	</ul>
   				</c:otherwise>
