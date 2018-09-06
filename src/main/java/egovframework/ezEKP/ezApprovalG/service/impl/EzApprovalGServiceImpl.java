@@ -20821,6 +20821,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		ezApprovalGDAO.moveRecord(map);
+		//2018-09-06 강민수92 분리첨부번호가 00일경우 expendaprdocinfo 의 cabinetid를 바꿔줌
+		if (SepAttachNo.equals("00")) {
+			ezApprovalGDAO.moveRecord2(map);
+		}
 		rtnVal = "<RESULT>TRUE</RESULT>";
 		
 		return rtnVal;
