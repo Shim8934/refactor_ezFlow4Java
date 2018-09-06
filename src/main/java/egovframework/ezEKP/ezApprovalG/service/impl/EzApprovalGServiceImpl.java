@@ -26058,7 +26058,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	// 수신,접수,반송 처리결과에 대한 ACK 통합문서 생성
 	@Override
-	public boolean sendAck(String realPath, String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception {
+	public boolean sendAck(String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception {
 		/*	1. recRelayInfo 테이블에서 해당 문서의 정보를 조회함
 		        1) 수신부서의 ID            : xFromCode (원문발신부서코드)
 		        2) 원문상의 문서ID          : xDocID
@@ -26090,7 +26090,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              Document objXML = commonUtil.xmlLod(strSamplePath);
 
              strFileName = strSendOrgCode + strSendID + strTimeStamp;
-             strFileName = getFileName(realPath, strFileName, "send", tenantID);
+             strFileName = getFileName(strFileName, "send", tenantID);
 
              objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strSendOrgCode);
              objXML.getElementsByTagName("send-id").item(0).setTextContent(strSendOrgCode);
@@ -26144,31 +26144,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          } 
 	}
 
-	private String getFileName(String realPath, String strFileName, String strFolderName, int tenantID) {
-		String strPath = config.getProperty("relay_root") + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+	private String getFileName(String strFileName, String strFolderName, int tenantID) {
+		String strPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
+				+ config.getProperty("upload_relay.ROOT") + commonUtil.separator + "data" + commonUtil.separator + strFolderName + commonUtil.separator;
 		String strResult = "";
-		boolean exist;
-		
+
 		for (int i = 1; i <= 99; i++) {
 			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
-			
-		      File FI = new File(realPath + strPath);
-		      
-		      if (!FI.exists()) {
-		    	  FI.mkdirs();
-			  }
-		      
-		      File file = new File(realPath + strPath + strResult);
-		         
-		      exist = file.exists();
-		      
-		      if (!exist) {
-		    	  strResult =  strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
-		      } else {
-		    	  strResult = strFileName + "00.xml";
-		      }
+
+			File FI = new File(strPath);
+
+			if (!FI.exists()) {
+				FI.mkdirs();
+			}
+
+			File file = new File(strPath + strResult);
+
+			if (!file.exists()) {
+				return strResult;
+			}
 		}
-		return strResult;
+		
+		return strFileName + "00.xml";
 	}
 
 	@Override
@@ -26256,6 +26253,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRelayFailMessage(map);
 			result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
@@ -26515,7 +26513,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception {
+	public String sendAck(String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception {
 		logger.debug("sendAck Started");
 		String result = "";
 		Map <String, Object> map = new HashMap<String, Object>();
@@ -26540,7 +26538,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         2. 원본 통합문서 sample xml를 로딩 (값이 없는 샘플문서를 미리 생성하여 둠)
         3. 입력값 Assign
         4. sendtemp 폴더에 저장 : 발신부서코드(7) + 수신부서코드(7) + 시간스탬프(YYYYMMDDhhmmss) + 일련번호(2)*/
-			boolean rtnVal = sendAck(realPath, strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, companyID, tenantID);
+			boolean rtnVal = sendAck(strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, companyID, tenantID);
 			
 			if (rtnVal) {
 				result = "<RESLUT>TRUE</RESULT>";
@@ -26766,7 +26764,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return cabinetSN;
 
 	}
-	
+
 	public String getDocExt(String docID, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocExt started");
 		String ext = "";

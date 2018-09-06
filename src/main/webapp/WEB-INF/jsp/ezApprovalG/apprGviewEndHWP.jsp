@@ -18,7 +18,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    <script type="text/javascript">
-<%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
 	        var pDocID = "${docID}";
 	        var docHref = "${docHref}";
 	        var pListSusin = "${listSusin}";
@@ -298,12 +297,6 @@
 		            return;
 		        }
 		        return;
-		        SignXML = result;
-		        var rtnVal = putSignXML(SignXML);
-		        if (rtnVal) {
-		            SaveFile();
-		            SaveSignCheck();
-		        }
 		    }
 	
 			function putSignXML(SignXML) {
@@ -349,6 +342,28 @@
 			        return false;
 			    }
 			    return retVal;
+			}
+			
+			function btnReqOpinion_onclick() {
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/getRelayReqOpinion.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(text){
+		    			result = text.opinion;
+		    		}
+		    	});
+		    	
+				var url = "/ezApprovalG/ezAprAlertLong.do";
+				var feature = "status:no;dialogWidth:330px;dialogHeight:305px;help:no;scroll:no;edge:sunken";
+				
+				window.showModalDialog(url, result, feature);
 			}
 	
 			function SaveFile() {
@@ -398,6 +413,9 @@
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()">PC<spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+	                        <c:if test="${sendType eq 'T'}">
+		                        <li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
+	                        </c:if>
 	                    </ul>
 	                </div>
 	                <div id="close">

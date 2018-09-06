@@ -982,7 +982,7 @@ function openViewDocInfo(type) {
         else {
             openLocation = "/ezApprovalG/contDocView.do";
         }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
+        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
     }
     else {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {

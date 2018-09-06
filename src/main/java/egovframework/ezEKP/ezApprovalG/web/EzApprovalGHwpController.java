@@ -572,6 +572,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String listSusin = request.getParameter("listSusin");
 		String orgDocID = request.getParameter("orgDocID");
 		String formID = request.getParameter("formID");
+		String sendType = request.getParameter("sendType");
 		String endDir = "";
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
@@ -650,6 +651,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("sendType", sendType);
 		model.addAttribute("pass", pass);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
