@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezOrgan.t00013' /></title>
+		<title>접속 허용 리스트 추가</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
@@ -793,8 +793,19 @@
 		    }
 		    
 		    function OK_Click() {
+		    	
+		    	if (document.getElementById("lvAddjobList") == null || document.getElementById("lvAddjobList") == undefined) {
+		    		alert("사원을 선택하세요.");
+		    		return;
+		    	}
+		    	
 	            var accessList = document.getElementById("lvAddjobList").childNodes[1].childNodes;
 	            var strCnList = "";
+	            
+	            if (accessList.length == 0 || accessList == null) {
+	            	alert("사원을 선택하세요.");
+	            	return;
+	            }
 	             
 	            for (var i = 0; i < accessList.length; i++) {
 	            	strCnList += accessList[i].getAttribute("data1");
