@@ -3870,4 +3870,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("manageBujae ended");
 		return mapJson;
 	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
+	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("aprDeptName started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("aprDeptName ended");
+		return "/admin/ezApprovalG/apprGaprDeptName";
+	}
 }
