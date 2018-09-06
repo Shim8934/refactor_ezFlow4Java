@@ -481,8 +481,10 @@ var CabinetFileHelper = function() {
 			alert(CabinetMessages.strDel);
 			var parentWd = window.opener;
 			if (parentWd) {
-				while(!parentWd.CabinetItem) {parentWd = parentWd.opener;}
+				var currentWd = window;
+				while(!parentWd.CabinetItem) {currentWd = parentWd; parentWd = parentWd.opener;}
 				parentWd.CabinetItem.reload();
+				currentWd.close();
 			}
 			
 			closeWindow();
