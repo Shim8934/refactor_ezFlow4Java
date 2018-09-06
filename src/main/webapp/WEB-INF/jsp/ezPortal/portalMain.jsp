@@ -972,7 +972,7 @@
 			     <div class="memoListBox" style="overflow:hidden;">
 			     	<div class="memo_main"></div>
 			     </div>
-			     <div class="memobgBar"><img id="slider-range" src="/images/ezMemo/memoBar.png"></div>
+			     <div class="memobgBar"></div>
 			</div>
 						
 			<!-- 하나 클릭 -->

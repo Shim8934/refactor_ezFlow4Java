@@ -243,7 +243,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	memoFlag = "YES";
         }
         else {	// 개발시에만 YES로 추후 NO로 변경
-        	memoFlag = "YES";
+        	memoFlag = "NO";
         }
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
@@ -412,7 +412,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	memoFlag = "YES";
         }
         else {	// 개발 끝나면 NO로 변경
-        	memoFlag = "YES";
+        	memoFlag = "NO";
         }
         
         modelMap.addAttribute("pollFlag", pollFlag);
