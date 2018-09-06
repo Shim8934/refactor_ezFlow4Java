@@ -183,6 +183,7 @@
 		        $(".memoClose").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
+		        	$("#detailMemo").css("display", "none");
 		        });
 		        
 		        // 메모 drag & drop 시 배경색 임시로 넣는 변수
@@ -256,7 +257,7 @@
 		        	
 		        });
 		        // 폰트 사이즈 높이기
-		       $(".memoIcon memoPlus").click(function() {
+		       $(".memoPlus").click(function() {
 		        	
 		        	var textarea = $(".memoPlus").parent().parent().find("textarea");
 		        	console.log(textarea);
@@ -300,9 +301,10 @@
 		        	
 		        });
 		     	// 폰트 사이즈 줄이기
-		        $(".memoIcon memoMinus").click(function() {
+		        $(".memoMinus").click(function() {
 		        	
 		        	var textarea = $(".memoMinus").parent().parent().parent().find("textarea");
+		        	
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	
@@ -412,7 +414,7 @@
 		        });
 		        
 		        // 새 메모 추가 
-		        $(".memoPlus").click(function() {
+		        $("#addMemo").click(function() {
 		        	newMemo();
 		        });
 				
@@ -736,7 +738,7 @@
 			}
 			
 		    function addremove() {
-			    $(".individual-memo").mouseenter(function(){
+			    /* $(".individual-memo").mouseenter(function(){
 			    	$(this).children("img").css("visibility", "visible");
 			    	$(this).children("img").click(function(){
 			    		$(this).prevAll("div").css("visibility", "visible");
@@ -752,19 +754,25 @@
 		        
 		        $(".memo-color-list").click(function(){
 		        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-		        });
+		        }); */
 		        
 		        $(".pallete").mouseenter(function(){
 		        	$(this).parent().nextAll(".color_popup").css("visibility", "");
-		        })
+		        });
 		        
 		        $(".color_popup").mouseleave(function(){
 			        	$(this).css("visibility", "hidden");
-			    })
+			    });
 			    
 			    $(".color_list").click(function(){
 			    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-		        })
+		        });
+		        
+		        $(".memoLay").mouseleave(function(){
+		        	if($(this).children(".color_popup").css("visibility") == "visible") {
+		        		$(this).children(".color_popup").css("visibility", "hidden");
+		        	}
+		        });
 		        
 		        $(".memoText").dblclick(function() {
 		        	
@@ -887,12 +895,12 @@
 						html += "<option value='0'>전체</option>";
 						folderList.forEach(function(list, index){
 							var folderName = list.folder_name;
-							console.log(folderName.length);
+							/* console.log(folderName.length);
 							
 							if (folderName.length > 11) {
 								folderName = folderName.substr(0, 10);
 								folderName += "...";
-							}
+							} */
 							html += "<option value='"+list.folder_id+"'>"+ folderName +"</option>"
 
 						});
@@ -957,7 +965,7 @@
 			         	<li class="memoSelect">
 			            	<select id="memoFolderList"></select>
 			            </li>
-			            <li class="memoPlus"><span>추가</span></li>
+			            <li class="memoPlus" id="addMemo"><span>추가</span></li>
 						<li class="memoClose memoIcon"></li>
 			            <li class="memoExpand memoIcon"></li>
 			         </ul>
