@@ -263,7 +263,7 @@
 							AND
 								TENANT_ID = #tenantId#
 							AND
-								$srchOption$ LIKE ||('%', #srchValue#, '%')
+								$srchOption$ LIKE concat('%', concat(#srchValue#, '%'))
 						) AA
 						ORDER BY
 							EXTENSIONATTRIBUTE15 ASC,
@@ -289,7 +289,7 @@
 				AND
 					TENANT_ID = #tenantId#
 				AND 
-					$srchOption$ LIKE ||('%', #srchValue#, '%')
+					$srchOption$ LIKE concat('%', concat(#srchValue#, '%'))
 			) AA
 		]]>
 	</select>
@@ -322,7 +322,7 @@
 				where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1
 		]]>
 		<isNotEmpty property="searchValue" prepend="and">
-			$sqlQuery$ LIKE ||('%', #searchValue#, '%')
+			$sqlQuery$ LIKE concat('%', concat(#searchValue#, '%'))
 		</isNotEmpty>
 		<![CDATA[
 				union
@@ -340,7 +340,7 @@
 				where s1.cabinet_id = #cabinetId# and s1.sharer_id = #userId# and s1.tenant_id = #tenantId# and s1.use_status = 1
 		]]>
 		<isNotEmpty property="searchValue" prepend="and">
-			$sqlQuery$ LIKE ||('%', #searchValue#, '%')
+			$sqlQuery$ LIKE concat('%', concat(#searchValue#, '%'))
 		</isNotEmpty>
 		<![CDATA[
 			) s2

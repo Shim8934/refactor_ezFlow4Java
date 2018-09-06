@@ -297,18 +297,18 @@
 		i.use_status = 1 and i.tenant_id = #tenantId#
 		<isEqual property="searchMode" compareValue="1">
 			<isEqual property="searchOption" compareValue="title" prepend=" and ">
-				i.title like ||('%', concat(#title#, '%'))
+				i.title like concat('%', concat(#title#, '%')) escape '\'
 			</isEqual>
 			<isEqual property="searchOption" compareValue="summary" prepend=" and ">
-				i.summary like ||('%', concat(#summary#, '%'))
+				i.summary like concat('%', concat(#summary#, '%')) escape '\'
 			</isEqual>
 		</isEqual>
 		<isEqual property="searchMode" compareValue="2">
-			<isNotEmpty property="title"   prepend=" and ">i.title like ||('%', concat(#title#, '%'))</isNotEmpty>
-			<isNotEmpty property="summary" prepend=" and ">i.summary like ||('%', concat(#summary#, '%'))</isNotEmpty>
+			<isNotEmpty property="title"   prepend=" and ">i.title like concat('%', concat(#title#, '%')) escape '\'</isNotEmpty>
+			<isNotEmpty property="summary" prepend=" and ">i.summary like concat('%', concat(#summary#, '%')) escape '\'</isNotEmpty>
 			<isNotEmpty property="creatorName" prepend=" and ">
-				<isEqual property="primary"    compareValue="1">i.creator_name1 like ||('%', concat(#creatorName#, '%'))</isEqual>
-				<isNotEqual property="primary" compareValue="1">i.creator_name2 like ||('%', concat(#creatorName#, '%'))</isNotEqual>
+				<isEqual property="primary"    compareValue="1">i.creator_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
+				<isNotEqual property="primary" compareValue="1">i.creator_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="startDate">
 				<isNotEmpty property="endDate" prepend=" and ">
@@ -790,7 +790,7 @@
 		from
 			tbl_cb_cabinet c1 where 
 			<iterate property="pathList" conjunction=" or ">
-				c1.cabinet_path like ||('%', concat(#pathList[]#, '%'))
+				c1.cabinet_path like concat('%', concat(#pathList[]#, '%'))
 			</iterate>
 	</select>
 	
