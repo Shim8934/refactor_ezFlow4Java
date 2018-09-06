@@ -676,19 +676,24 @@
 		     * layer-popup(노트판)의 투명도 조절
 		     */
 		    function layerPopupOpacity(){
+		    	
+		    	var defaultValue = 2;
+		    	$("#layer-popup").css("background-color", "rgba(0,0,0,0.4)");
+		    	
 		    	$("#slider-range").slider({
 		            step: 1,
 		            range: "max",
-		            min: 0,
-		            max: 5,
-		            value: 5,
+		            min: 1,
+		            max: 4,
+		            value: defaultValue,
 		            slide: function( event, ui ) {
-		            	var opacityValue = ui.value;
+		            	/* var opacityValue = ui.value; */
+		            	opacityValue = ui.value;
 		            
 		             	switch(opacityValue) {
-				        	case 0:
+				        	/* case 0:
 				        		opacityValue = 0;
-				            	break;
+				            	break; */
 				            case 1:
 				            	opacityValue = 0.2;
 				            	break;
@@ -701,11 +706,12 @@
 				            case 4:
 				            	opacityValue = 0.8;
 				            	break;
-				            case 5:
+				            /* case 5:
 				            	opacityValue = 1;
-				            	break;
+				            	break; */
 				          }
-		             	$("#layer-popup").css("background-color", "rgba(231,231,231," + opacityValue + ")");
+		             	/* $("#layer-popup").css("background-color", "rgba(231,231,231," + opacityValue + ")"); */
+		             	$("#layer-popup").css("background-color", "rgba(0,0,0," + opacityValue + ")");
 		            }
 		        });
 		    }
@@ -782,7 +788,7 @@
 		        	}
 		        });
 		        
-		        $(".memoText").dblclick(function() {
+		        /* $(".memoText").dblclick(function() {
 		        	
 		        	var memoId = $(this).attr("memoid");
 		        	
@@ -806,21 +812,9 @@
 		        			$memoDetail.removeClass().addClass("memo0" + memoColorId + "Big");
 		        			$memoDetail.css("display", "");
 		        			
-		        			/* var $memoDetail = $(".detailMemo");
-		        			
-		                	var memoColor = result.memoList.split(";");
-		                	var detailHeaderColor = memoColor[memoColorId-1];
-		                	var detailBodyColor = memoColor[memoColorId+5]; 
-		        			
-		        			
-		        			$memoDetail.css("background-color", detailHeaderColor);
-		        			$memoDetail.css("display", ""); */
-		        			
-		        			/* $textarea.css("background-color", detailBodyColor); */
-		        			
 		        		}
 		        	});
-		        });
+		        }); */
 		    }
 		    
 		 	// 메모 색상 변경
@@ -967,16 +961,19 @@
 			</div> -->
 			
 			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
-			 	<div class="memo_header">
-			     	<ul class="memoHeaderUL">
-			         	<li class="memoSelect">
-			            	<select id="memoFolderList"></select>
-			            </li>
-			            <li class="memoPlus" id="addMemo"><span>추가</span></li>
-						<li class="memoClose memoIcon"></li>
-			            <li class="memoExpand memoIcon"></li>
-			         </ul>
+				<div class="memo_header_wrapper">
+				 	<div class="memo_header">
+				     	<ul class="memoHeaderUL">
+				         	<li class="memoSelect">
+				            	<select id="memoFolderList"></select>
+				            </li>
+				            <li class="memoPlus" id="addMemo"><span>추가</span></li>
+							<li class="memoClose memoIcon"></li>
+				            <li class="memoExpand memoIcon"></li>
+				         </ul>
+				     </div>
 			     </div>
+			     
 			     <div class="memoListBox" style="overflow:hidden;">
 			     	<div class="memo_main"></div>
 			     </div>

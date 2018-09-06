@@ -17,6 +17,11 @@ function createMemo(memo, flag) {
 	var dd2 = document.createElement("dd");
 	dd2.setAttribute("class", "memoIcon pallete");
 	
+	var dd3 = document.createElement("dd");
+	dd3.setAttribute("class", "memoSave");
+	dd3.style.cursor= "pointer";
+	dd3.innerHTML = "+";
+	
 	if (flag != 'layer') {
 		
 		var input = document.createElement("input");
@@ -40,6 +45,7 @@ function createMemo(memo, flag) {
 	dl.appendChild(dt);
 	dl.appendChild(dt);
 	dl.appendChild(dd2);
+	dl.appendChild(dd3);
 	
 	var textarea = document.createElement("textarea");
 	textarea.setAttribute("class", "memoText");
