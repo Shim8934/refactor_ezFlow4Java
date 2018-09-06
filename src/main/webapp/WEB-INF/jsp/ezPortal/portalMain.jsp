@@ -432,7 +432,7 @@
 		        	
 		        	var memoId = $(this).attr("memoid").replace("memoid", "");
 		        	
-		        	$.ajax({
+		        	/* $.ajax({
 		        		type: "POST",
 		        		data : {
 		        			memo_ids : memoId,
@@ -446,7 +446,24 @@
 		        				getMemoList();
 		        			}
 		        		}
-		        	});
+		        	}); */
+		        	
+		        	// 삭제로 변경
+		        	$.ajax ({
+		 			   	url : '/ezMemo/memoDelete.do',
+		 			   	type : 'POST',
+		                dataType : 'json',
+		                data : { 
+		                	memo_ids : memoId
+		                },  
+		                cache: false,
+		                success: function(result) {
+		                	getMemoList();
+		                },
+		                error : function() {
+		                	
+		                }
+					});
 		        });
 		        
 		        $(".memo_main").on("blur", ".memoLay textarea", function() {
