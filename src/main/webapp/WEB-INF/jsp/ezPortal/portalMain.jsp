@@ -169,8 +169,8 @@
 		    	setDetailMemoPosition();
 		    	checkDefaultFolder();
 		    	memoFoldersInfo();
-		    	quickMemoDisplay();   	
 	    		getMemoConfig();
+	    		quickMemoDisplay();   	
 		     
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
