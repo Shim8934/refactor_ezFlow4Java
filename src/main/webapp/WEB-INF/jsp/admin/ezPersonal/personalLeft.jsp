@@ -70,7 +70,7 @@
 				<ul></ul>
 			</h2>
 		  
-		  	<h2 style="display: ${(pollFlag != 'YES') ? 'block' : 'none'};"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span>
+		  	<h2 style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span>
 		    	<ul></ul>
 			</h2>
 			
