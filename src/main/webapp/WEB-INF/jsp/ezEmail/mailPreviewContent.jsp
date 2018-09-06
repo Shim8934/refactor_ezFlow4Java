@@ -298,9 +298,9 @@
 	        function sentDateView(msg) {
 	     		var preViewInfoParent = $(".previewmail_info", parent.document).parent();
 	     		preViewInfoParent.find(".sentDateStr").remove();
-
+				
 	     		if (sentDateMsg != "") {
-	     			preViewInfoParent.prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+	     			preViewInfoParent.prepend("<div class='sentDateStr' id='sentDateStr'>" + sentDateMsg + "</div>");
 	     			preViewInfoParent.find(".sentDateStr").css({
 			    		"height" : "27px",
 			        	"box-sizing" : "border-box",

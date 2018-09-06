@@ -473,21 +473,6 @@ CREATE TABLE `jmocha_inbox_rule_sub` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `jmocha_init_mailbox`
---
-
-DROP TABLE IF EXISTS `jmocha_init_mailbox`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jmocha_init_mailbox` (
-  `mailbox_name` varchar(200) NOT NULL,
-  `tenant_id` int(11) NOT NULL,
-  `order` int(11) DEFAULT NULL,
-  PRIMARY KEY (`mailbox_name`,`tenant_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `jmocha_letter`
 --
 
@@ -1218,20 +1203,6 @@ CREATE TABLE `jmocha_user_quota` (
   `MAX_STORAGE` double DEFAULT '0',
   `WARN_STORAGE` double DEFAULT '0',
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `openjpa_sequence_table`
---
-
-DROP TABLE IF EXISTS `openjpa_sequence_table`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `openjpa_sequence_table` (
-  `ID` tinyint(4) NOT NULL,
-  `SEQUENCE_VALUE` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4607,7 +4578,7 @@ DROP TABLE IF EXISTS `tbl_deletecabinetinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_deletecabinetinfo` (
-  `CabinetID` varchar(28) NOT NULL,
+  `CabinetID` varchar(112) NOT NULL,
   `DelUserID` varchar(50) DEFAULT NULL,
   `IPAddress` varchar(50) DEFAULT NULL,
   `companyID` varchar(45) NOT NULL,
@@ -4825,6 +4796,7 @@ CREATE TABLE `tbl_docdelivery` (
   `CHARGENAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `COMPANYID` varchar(20) NOT NULL,
+  `ORGANUSERNAME` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`DEPTID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -5388,6 +5360,7 @@ CREATE TABLE `tbl_formrecv` (
   `USERID` varchar(400) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
+  `DEPTNAME` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`FORMID`,`DEPTID`(255),`TENANT_ID`,`COMPANYID`),
   UNIQUE KEY `PK_TBL_FORMRECV` (`TENANT_ID`,`COMPANYID`,`FORMID`,`DEPTID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -11310,24 +11283,6 @@ SET character_set_client = @saved_cs_client;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`ezEKP2017`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `svtaskclass` AS select `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,`tbl_taskcategory`.`NAME` AS `CNAME`,`tbl_taskcategory`.`NAME2` AS `CNAME2`,`tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,`tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,`tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,`tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,`tbl_tasksubcategory`.`NAME` AS `SCNAME`,`tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,`tbl_taskcode`.`TASKCODE` AS `TASKCODE`,`tbl_taskcode`.`TASKNAME` AS `TASKNAME`,`tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,`tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,`tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,`tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,`tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,`tbl_taskcode`.`COMPANYID` AS `COMPANYID`,`tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,`tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,`tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,`tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,`tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,`tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,`tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,`tbl_taskcode`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_taskcode`.`ITEMSECURITY` AS `ITEMSECURITY`,`tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG` from ((((`tbl_taskcategory` join `tbl_taskmiddlecategory` on(((`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`) and (`tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`) and (`tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`)))) join `tbl_tasksubcategory` on(((`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`) and (`tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`) and (`tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`)))) join `tbl_taskcode` on(((`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`) and (`tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`) and (`tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`)))) left join `tbl_task_deptinfo` on(((`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`) and (`tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`) and (`tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`)))) where ((`tbl_task_deptinfo`.`DELFLAG` = '0') or isnull(`tbl_task_deptinfo`.`DELFLAG`) or (`tbl_task_deptinfo`.`DELFLAG` = '2')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `v_ajsb_emp`
---
-
-/*!50001 DROP VIEW IF EXISTS `v_ajsb_emp`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`ezEKP2017`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_ajsb_emp` AS select '구사번' AS `OLDEMP_ID`,`tbl_usermaster`.`EXTENSIONATTRIBUTE14` AS `EMP_ID`,`tbl_usermaster`.`DISPLAYNAME` AS `DISPLAYNAME`,1 AS `STATE_CD`,`tbl_usermaster`.`DEPARTMENT` AS `ORG_ID`,`tbl_usermaster`.`DESCRIPTION` AS `ORG_NM`,`tbl_usermaster`.`TITLE` AS `TITLE`,`tbl_usermaster`.`TELEPHONENUMBER` AS `COMTEL_NO`,`tbl_usermaster`.`MOBILE` AS `TEL_NO`,`tbl_usermaster`.`MAIL` AS `EMAIL` from `tbl_usermaster` where (not(`tbl_usermaster`.`CN` in (select `tbl_usermaster_retire`.`CN` from `tbl_usermaster_retire`))) union all select '구사번' AS `OLDEMP_ID`,`tbl_usermaster_retire`.`EXTENSIONATTRIBUTE14` AS `EMP_ID`,`tbl_usermaster_retire`.`DISPLAYNAME` AS `DISPLAYNAME`,3 AS `STATE_CD`,`tbl_usermaster_retire`.`DEPARTMENT` AS `ORG_ID`,`tbl_usermaster_retire`.`DESCRIPTION` AS `ORG_NM`,`tbl_usermaster_retire`.`TITLE` AS `TITLE`,`tbl_usermaster_retire`.`TELEPHONENUMBER` AS `COMTEL_NO`,`tbl_usermaster_retire`.`MOBILE` AS `TEL_NO`,`tbl_usermaster_retire`.`MAIL` AS `EMAIL` from `tbl_usermaster_retire` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

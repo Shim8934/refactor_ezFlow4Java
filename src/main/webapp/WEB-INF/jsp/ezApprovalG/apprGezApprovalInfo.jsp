@@ -2208,7 +2208,7 @@
 	                                <a style="margin-top: 10px; display: none;" class="imgbtn imgbck" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
 	                            	<!-- 2018-08-08 천성준 - 외부수신자요약 UI때문에 이동 -->
 	                            	<span style="display: inline-block; margin-top: 8px;">
-	                            		<a class="h2_dot" style="display: none;" id="trSummaryOuterReceiverList">외부수신자 요약:&nbsp;<input id="inputSummaryOuterReceiverList" value="" style="width: 470px; height: 22px;"/></a>
+	                            		<a class="h2_dot" style="display: none;" id="trSummaryOuterReceiverList">외부수신자 요약:&nbsp;<input id="inputSummaryOuterReceiverList" value="" style="width: 280px; height: 22px;"/></a>
 	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">

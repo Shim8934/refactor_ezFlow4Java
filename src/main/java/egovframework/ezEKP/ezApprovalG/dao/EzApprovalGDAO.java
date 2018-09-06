@@ -3073,4 +3073,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateDocDeliveryHref(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateDocDeliveryHref", map);
 	}
+
+	public void moveRecord2(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.moveRecord2", map);
+	}
 }

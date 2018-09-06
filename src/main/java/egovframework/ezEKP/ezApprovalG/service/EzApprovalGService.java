@@ -378,7 +378,7 @@ public interface EzApprovalGService {
 
 	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang, int tenantID)throws Exception;
 
-	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet)throws Exception;
+	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo)throws Exception;
 
 	public String updateProcessYN2(String docID, String deptID,	String deptName, String deptName2, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception;
 
