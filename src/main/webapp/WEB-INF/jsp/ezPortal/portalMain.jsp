@@ -895,12 +895,11 @@
 						html += "<option value='0'>전체</option>";
 						folderList.forEach(function(list, index){
 							var folderName = list.folder_name;
-							/* console.log(folderName.length);
 							
 							if (folderName.length > 11) {
 								folderName = folderName.substr(0, 10);
 								folderName += "...";
-							} */
+							}
 							html += "<option value='"+list.folder_id+"'>"+ folderName +"</option>"
 
 						});
