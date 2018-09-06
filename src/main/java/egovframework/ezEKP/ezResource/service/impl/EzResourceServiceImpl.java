@@ -2973,6 +2973,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public List<Date[]> getchkDailyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
+		logger.debug("getchkDailyRepDateTimes started");
 		int selType = vo.getSelType();
 		int interval = vo.getInterval();
 		int endRecurType = vo.getEndRecurType();
@@ -3036,6 +3037,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String oEndDate;
 		String tEDate;
 		
+		Date resEndDate1 = resEndDate;
+		
 		while (true) {
 			
 			oSDate = osdf.format(tmpStartDate);
@@ -3063,7 +3066,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				// 종료일 지정했을 경우
 				else if (endRecurType == 2) {
-					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
+					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate1)) {
 						break;
 					} else if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0) {
 //						tempEndCal.setTime(tmpStartDate);
@@ -3114,7 +3117,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				// 종료일 지정했을 경우
 				else if (endRecurType == 2) {
-					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
+					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate1)) {
 						break;
 					} else if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0 && tempYoil > 1 && tempYoil < 7) {
 //						tempEndCal.setTime(tmpStartDate);
@@ -3165,11 +3168,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				break;
 			}
 		}
-		
+		logger.debug("getchkDailyRepDateTimes started");
 		return returnList;
 	}
 	
 	public List<Date[]> getchkWeeklyRepDateTime (ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception  {
+		logger.debug("getchkWeeklyRepDateTime started");
 		int interval = vo.getInterval();
 		int endRecurType = vo.getEndRecurType();
 		int instances = vo.getInstances();
@@ -3240,12 +3244,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String oEDate;
 		String oEndDate;
 		String tEDate;
+		Date resEndDate1 = resEndDate;
 		
 		while (loopFlag) {
 			for (int i=0; i<wDay.size(); i++) {
 				tempStartCal.set(Calendar.DAY_OF_WEEK, wDay.get(i) + 1);
 				tmpStartDate = tempStartCal.getTime();
 				oEndCal.set(Calendar.DAY_OF_WEEK, wDay.get(i) + 1);
+				
 				resEndDate = oEndCal.getTime();
 				
 				tempEndCal.setTime(tmpStartDate);
@@ -3278,7 +3284,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				// 종료일 지정했을 경우
 				else if (endRecurType == 2) {
-					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
+					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate1)) {
 						loopFlag = false;
 						break;
 					} else if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0) {
@@ -3325,7 +3331,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 			
 		}
-		
+		logger.debug("getchkWeeklyRepDateTime ended");
 		return returnList;
 	}
 	
@@ -3403,6 +3409,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String oStartDate;
 		String oEDate;
 		String oEndDate;
+		Date resEndDate1 = resEndDate;
 		
 		while (loopFlag) {
 			
@@ -3502,7 +3509,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					String tsdDate = osdf.format(tsd);
 					logger.debug("tsdDate : " + tsdDate + " == oStartDate : " + oStartDate);
 					logger.debug("tsdDate : " + tsdDate + " == oEndDate : " + oEndDate);
-					if (tsd.after(endDate) || tsd.after(resEndDate)) {
+					if (tsd.after(endDate) || tsd.after(resEndDate1)) {
 						loopFlag = false;
 						break;
 					} else if (tsdDate.compareTo(oStartDate) >= 0 && tsdDate.compareTo(oEndDate) <= 0) {
