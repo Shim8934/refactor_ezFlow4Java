@@ -1995,7 +1995,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length <= 9) {
+    if (listview.GetDataRows().length < 9) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
