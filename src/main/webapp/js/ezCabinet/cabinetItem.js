@@ -463,18 +463,6 @@ var CabinetItem = function() {
 		}
 	}
 	
-	function getFileSize(fileSize) {
-		var result = fileSize + "B";
-		
-		switch(true) {
-			case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
-			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
-			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
-		}
-		
-		return result;
-	}
-	
 	function getItemType(type) {
 		var result = "";
 		
@@ -560,13 +548,13 @@ var CabinetItem = function() {
 		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}
 	
-	function closeViewPopupOutside(e){
-		var viewPopup  = document.getElementById("layerPopup");
-		var optElmt    = document.getElementById("sltView");
-		var role       = optElmt.getAttribute("role");
+	function closeViewPopupOutside(e) {
+		var viewPopup = document.getElementById("layerPopup");
+		var optElmt   = document.getElementById("sltView");
+		var role      = optElmt.getAttribute("role");
 		
 		if(role == "on") {
-			if(!viewPopup.contains(e.target)) {
+			if(!viewPopup.contains(e.target) && e.target != optElmt) {
 				closeViewPopUp();
 			}
 		}
@@ -1375,22 +1363,22 @@ var CabinetItem = function() {
 			case "gif"  :
 			case "bmp"  :
 			case "png"  :
-			case "jpeg" : imgCheck = true                               ; break;
-			case "pdf"  : urlImg   = "/images/cabinet/pdf.png"          ; break;
-			case "ppt"  : urlImg   = "/images/cabinet/msPowerpoint.png" ; break;
-			case "pptx" : urlImg   = "/images/cabinet/pptx.png"         ; break;
-			case "doc"  : urlImg   = "/images/cabinet/msWord.png"       ; break;
-			case "docx" : urlImg   = "/images/cabinet/docx.png"         ; break;
-			case "xls"  : urlImg   = "/images/cabinet/msExcel.png"      ; break;
-			case "xlsx" : urlImg   = "/images/cabinet/xlsx.png"         ; break;
-			case "hwp"  : urlImg   = "/images/cabinet/hwp.png"          ; break;
-			case "txt"  : urlImg   = "/images/cabinet/txt.png"          ; break;
-			case "mp4"  : urlImg   = "/images/cabinet/mp4.png"          ; break;
-			case "flv"  : urlImg   = "/images/cabinet/flv.png"          ; break;
-			case "mkv"  : urlImg   = "/images/cabinet/mkv.png"          ; break;
-			case "iso"  : urlImg   = "/images/cabinet/iso.png"          ; break;
-			case "rar"  : urlImg   = "/images/cabinet/rar.png"          ; break;
-			default     : urlImg   = "/images/cabinet/none.png"         ; break;
+			case "jpeg" : imgCheck = true                       ; break;
+			case "pdf"  : urlImg   = "/images/cabinet/pdf.png"  ; break;
+			case "ppt"  : urlImg   = "/images/cabinet/ppt.png"  ; break;
+			case "pptx" : urlImg   = "/images/cabinet/pptx.png" ; break;
+			case "doc"  : urlImg   = "/images/cabinet/doc.png"  ; break;
+			case "docx" : urlImg   = "/images/cabinet/docx.png" ; break;
+			case "xls"  : urlImg   = "/images/cabinet/xls.png"  ; break;
+			case "xlsx" : urlImg   = "/images/cabinet/xlsx.png" ; break;
+			case "hwp"  : urlImg   = "/images/cabinet/hwp.png"  ; break;
+			case "txt"  : urlImg   = "/images/cabinet/txt.png"  ; break;
+			case "mp4"  : urlImg   = "/images/cabinet/mp4.png"  ; break;
+			case "flv"  : urlImg   = "/images/cabinet/flv.png"  ; break;
+			case "mkv"  : urlImg   = "/images/cabinet/mkv.png"  ; break;
+			case "iso"  : urlImg   = "/images/cabinet/iso.png"  ; break;
+			case "rar"  : urlImg   = "/images/cabinet/rar.png"  ; break;
+			default     : urlImg   = "/images/cabinet/none.png" ; break;
 		}
 		
 		return {
@@ -1416,8 +1404,8 @@ var CabinetItem = function() {
 		
 		switch(true) {
 			case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
-			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
-			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
+			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2)    + "MB"; break;
+			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2)       + "KB"; break;
 		}
 		return result;
 	}
