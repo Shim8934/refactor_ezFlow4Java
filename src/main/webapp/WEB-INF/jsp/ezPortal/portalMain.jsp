@@ -46,7 +46,6 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			.mCSB_inside > .mCSB_container{margin-right: 25px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -466,9 +465,15 @@
 					});
 		        });
 		        
+		        /* 메모 내용 변경 blur 이벤트 -> click 이벤트로 변경 */
 		        /* $(".memo_main").on("blur", ".memoLay textarea", function() {
 		        	modifyMemo(this);
 		        }); */
+		        
+		        /* 메모 내용 변경 click 이벤트 */
+		        $(".memo_main").on("click", ".memoLay .memoSave", function() {
+		        	modifyMemo(this);
+		        });
 		        
 		        $("#memoFolderList").change(function() {
 		        	getMemoList();
@@ -478,10 +483,10 @@
 		        	$("#detailMemo").css("display", "none");
 		        });
 		        
-		        $("#detailMemoContents").blur(function() {
+		        /* 큰 메모 blur 이벤트 */
+		        /* $("#detailMemoContents").blur(function() {
 					modifyMemo(this);
-		        });
-		        
+		        }); */
 		       
 		    });
 		    
