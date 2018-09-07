@@ -562,7 +562,7 @@
 								searchEndTime = res.endDate;
 							},
 							error : function(err) {
-								alert(err);
+								//alert(err);
 							}
 						});
 				

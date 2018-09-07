@@ -540,7 +540,7 @@ function getDocListjson(pageNum) {
 					
 				},
 				error : function(err) {
-					alert(err);
+					//alert(err);
 				}
 			});
 		makePageSelPage();
