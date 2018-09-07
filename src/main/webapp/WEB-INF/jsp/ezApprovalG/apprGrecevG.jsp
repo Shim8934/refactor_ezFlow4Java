@@ -102,6 +102,7 @@
 		    var arrDelFiles = new Array();
 		    var junGyulFlag = "${junGyulFlag}";
 			var dirPath = "${approvalROOT}";
+			var ext = "hwp";
 			var approvalFlag = "${approvalFlag}";
 			var orgCompanyID = "";
 			

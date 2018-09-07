@@ -112,6 +112,7 @@
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
 			var orgCompanyID = "";
+			var ext = "mht";
 			var isHWP = "";
 			
 			window.onload = function () {

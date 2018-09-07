@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -423,7 +424,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList,"\'\'", searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId(),info.getCompanyId(), info.getDeptId());
 		
-		Collections.sort(sList, new EzScheduleCompareUtil());
+		Collections.sort(sList, new EzScheduleCompareUtilPublic());
 		
 		return sList;
 	}

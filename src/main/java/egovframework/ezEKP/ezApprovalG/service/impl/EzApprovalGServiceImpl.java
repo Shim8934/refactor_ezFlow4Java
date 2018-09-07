@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +11,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,6 +80,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
@@ -117,12 +124,16 @@ import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private KlibUtil klibUtil;
 	
 	@Autowired
 	private ApplicationContext context;
@@ -147,6 +158,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource messageSource;
+	
+	@Resource(name = "EzApprovalGKlibService")
+	private EzApprovalGKlibService ezApprovalGKlibService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -2192,6 +2206,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
 		
 		if (!rtnVal.equals("FALSE")) {
+			// 2018.06.26 - 대장등록 성공시 파일 KLIB 암호화
+			if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID))) {
+				ezApprovalGKlibService.encryptCompleteApproveFiles(newDocID, companyID, tenantID);
+			}
+			
 			logger.debug("setCabinetReject ended");
 			return "<RESULT>TRUE</RESULT>";
 		} else {
@@ -2399,6 +2418,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String href = ezApprovalGDAO.getDocInfoHref(map);
 			String extFileName = getExtendedFileName(href);
+			
+			boolean isEncryptedByKlib = false;
+			
+			// 2018.08.29 KLIB .ezd 확장자 처리
+			if (extFileName.endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				isEncryptedByKlib = true;
+				extFileName = getExtendedFileName(href.substring(0, href.lastIndexOf(".")));
+			}
+			
 			String susinDocURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + 
 					commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
 			String fileURL = dirPath + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
@@ -2418,6 +2446,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertGongRamAprAttachInfo(map);
 			
 			copyFile(fileURL, target, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID));
+			
+			// 2018.08.29 KLIB 기록물등록대장에서 공람발송 시에 복호화되도록 수정
+			if (isEncryptedByKlib) {
+				Path targetPath = Paths.get(target);
+				
+				byte[] targetBytes = Files.readAllBytes(targetPath);
+				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
+				
+				Files.write(targetPath, decryptBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			}
 		}
 		
 		map.put("v_TENANTID", tenantID);
@@ -12065,7 +12103,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		} else {
 			String oldYear = getDocHrefYear(docID, companyID, tenantID);
-			url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
+			url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 			
 			rtnVal = copyFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
 					dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName,
@@ -15548,8 +15586,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String oldYear = getDocHrefYear(docID, companyID, tenantID);
 				String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
 				String source = dirPath + commonUtil.separator + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
+				String targetPath = dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
 				
-				rtnVal = copyFile(source, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
+				rtnVal = copyFile(source, targetPath, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
 				// 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {
 					map.put("v_DOCID", docID);
@@ -15568,6 +15607,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.insertApprovEndReceiptProcessInfo(map);
 					ezApprovalGDAO.insertApprovExpEndAprDocInfo(map);
 					ezApprovalGDAO.insertApprovExpEndAprLine(map);
+					
+					// 2018.06.20 - mht 문서는 KLIB 암호화 제공 안 함 (추후에 개발)
+					if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID)) && "G".equals(ezCommonService.getTenantConfig("ApprovalFlag", tenantID))) {
+						ezApprovalGKlibService.encryptCompleteApproveFiles(docID, companyID, tenantID);
+					}
 				}
 				
 				break;
@@ -16460,6 +16504,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			FileUtils.copyFile(src, des);
 			
 			logger.debug("copyFile ended");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * source 파일의 바이트를 KLIB 으로 복호화 후 target 파일로 복사한다.
+	 * */
+	// copyFile() 메소드와 같은 중복코드 리팩토링 안 함
+	public boolean copyDecryptFileForKlib(String source, String target, String dirPath) throws Exception {
+		logger.debug("copyDecryptFileForKlib started");
+
+		if (!dirPath.trim().equals("")) {
+			File file = new File(dirPath);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+		}
+		try {
+			File src = new File(source);
+			File des = new File(target);
+			
+			byte[] descryptedBytes = klibUtil.decrypt(Files.readAllBytes(src.toPath()));
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
+			
+			Files.copy(inputStream, des.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			
+			logger.debug("copyDecryptFileForKlib ended");
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -18018,9 +18093,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					File file = new File(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
 					
+					// 2018.06.27 - KLIB 암호화 파일이면 .ezd 확장자 제거
+					boolean isEncryptedForKlib = fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+					
+					if (isEncryptedForKlib) {
+						extFileName = getExtendedFileName(fileName.substring(0, fileName.lastIndexOf(".")));
+					}
+					
 					if (!file.exists()) {
-						copyFile(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
-								dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+						// 2018.06.29 - KLIB 암호화 파일이면 복호화하여 복사, 아니라면 원본 파일 복사
+						if (isEncryptedForKlib) {
+							copyDecryptFileForKlib(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+									dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+						} else {
+							copyFile(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+									dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+						}
 					}
 					
 					if (companyID.toUpperCase().equals(orgCompanyID.toUpperCase())) {
@@ -22894,6 +22982,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_FLAG", "END");
 
 						String fileName = ezApprovalGDAO.getDocInfoHref(map);
+						
+						// 2018.08.28 KLIB ezd 확장자 처리
+						if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileName = fileName.substring(0, fileName.length() - EzApprovalGKlibService.ENCRYPTED_FILE_EXT.length() - 1);
+						}
+						
 						String extFileName = getExtendedFileName(fileName);
                         
                         // 2011.03.29 년도별 폴더 변경 
@@ -25679,14 +25773,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //                        CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
 //                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
-                    		File file = new File(mapPath + strPath);
+						byte[] bytes;
+						File file = new File(mapPath + strPath);
+
+						// 2018.08.26 KLIB 복호화
+						if (strPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							bytes = Files.readAllBytes(file.toPath());
+							bytes = klibUtil.decrypt(bytes);
+						} else {
+                        
                     		InputStream is = new FileInputStream(file);
 
                     	    long length = file.length();
                     	    if (length > Integer.MAX_VALUE) {
                     	        // File is too large
                     	    }
-                    	    byte[] bytes = new byte[(int)length];
+                    	    bytes = new byte[(int)length];
                     	    
                     	    int offset = 0;
                     	    int numRead = 0;
@@ -25699,6 +25801,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     	    }
 
                     	    is.close();
+						}
                     	    
                     		byte[] encoded = Base64.encodeBase64(bytes);
                     		String encodedString = new String(encoded);
@@ -26100,7 +26203,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	// 수신,접수,반송 처리결과에 대한 ACK 통합문서 생성
 	@Override
-	public boolean sendAck(String realPath, String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception {
+	public boolean sendAck(String strDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception {
 		/*	1. recRelayInfo 테이블에서 해당 문서의 정보를 조회함
 		        1) 수신부서의 ID            : xFromCode (원문발신부서코드)
 		        2) 원문상의 문서ID          : xDocID
@@ -26132,7 +26235,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              Document objXML = commonUtil.xmlLod(strSamplePath);
 
              strFileName = strSendOrgCode + strSendID + strTimeStamp;
-             strFileName = getFileName(realPath, strFileName, "send", tenantID);
+             strFileName = getFileName(strFileName, "send", tenantID);
 
              objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strSendOrgCode);
              objXML.getElementsByTagName("send-id").item(0).setTextContent(strSendOrgCode);
@@ -26186,31 +26289,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          } 
 	}
 
-	private String getFileName(String realPath, String strFileName, String strFolderName, int tenantID) {
-		String strPath = config.getProperty("relay_root") + commonUtil.separator + "data" + commonUtil.separator + strFolderName	 + commonUtil.separator;
+	private String getFileName(String strFileName, String strFolderName, int tenantID) {
+		String strPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
+				+ config.getProperty("upload_relay.ROOT") + commonUtil.separator + "data" + commonUtil.separator + strFolderName + commonUtil.separator;
 		String strResult = "";
-		boolean exist;
-		
+
 		for (int i = 1; i <= 99; i++) {
 			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
-			
-		      File FI = new File(realPath + strPath);
-		      
-		      if (!FI.exists()) {
-		    	  FI.mkdirs();
-			  }
-		      
-		      File file = new File(realPath + strPath + strResult);
-		         
-		      exist = file.exists();
-		      
-		      if (!exist) {
-		    	  strResult =  strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
-		      } else {
-		    	  strResult = strFileName + "00.xml";
-		      }
+
+			File FI = new File(strPath);
+
+			if (!FI.exists()) {
+				FI.mkdirs();
+			}
+
+			File file = new File(strPath + strResult);
+
+			if (!file.exists()) {
+				return strResult;
+			}
 		}
-		return strResult;
+		
+		return strFileName + "00.xml";
 	}
 
 	@Override
@@ -26298,6 +26398,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRelayFailMessage(map);
 			result = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = false;
 		}
 		return result;
@@ -26557,7 +26658,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception {
+	public String sendAck(String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception {
 		logger.debug("sendAck Started");
 		String result = "";
 		Map <String, Object> map = new HashMap<String, Object>();
@@ -26582,7 +26683,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         2. 원본 통합문서 sample xml를 로딩 (값이 없는 샘플문서를 미리 생성하여 둠)
         3. 입력값 Assign
         4. sendtemp 폴더에 저장 : 발신부서코드(7) + 수신부서코드(7) + 시간스탬프(YYYYMMDDhhmmss) + 일련번호(2)*/
-			boolean rtnVal = sendAck(realPath, strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, companyID, tenantID);
+			boolean rtnVal = sendAck(strXDocID, strXToCode, strXFromCode, strSubject, type, userDeptName, userName, errMsg, companyID, tenantID);
 			
 			if (rtnVal) {
 				result = "<RESLUT>TRUE</RESULT>";
@@ -26816,7 +26917,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("tenantId", tenantId);
 		return ezApprovalGDAO.getAllCompanyList(map);
 	}
-	
+
 	public String getDocExt(String docID, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocExt started");
 		String ext = "";

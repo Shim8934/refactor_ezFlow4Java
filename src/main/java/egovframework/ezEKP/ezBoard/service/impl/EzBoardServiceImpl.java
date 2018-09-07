@@ -37,6 +37,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -3086,6 +3087,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 				
 				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
+				
+				// 2018.07.05 - KLIB - ezd 확장자 없애기
+				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+					fileName = fileName.substring(0, fileName.lastIndexOf("."));
+				}
 				
 				saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
 			}

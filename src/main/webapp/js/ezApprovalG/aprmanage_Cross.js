@@ -974,9 +974,11 @@ function openViewDocInfo(type) {
     }
 
     var openLocation;
+    var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
-        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+    	// 2018.07.26 (KLIB) - ezd 확장자 처리
+        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
             } else {
@@ -989,10 +991,11 @@ function openViewDocInfo(type) {
         else {
             openLocation = "/ezApprovalG/contDocView.do";
         }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
+        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
     }
     else {
-        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+    	// 2018.07.06 (KLIB) - ezd 확장자 처리
+        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezviewAprHWP.do";
             } else {

@@ -1012,8 +1012,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 		
-		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, primary, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, primary, userInfo.getTenantId(), lang);
 		
 		logger.debug("apprGMLgetDoctype ended.");
 		
@@ -1075,8 +1076,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 		
-		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag, lang);
 		
 		logger.debug("apprGGetContDocType ended.");
 		

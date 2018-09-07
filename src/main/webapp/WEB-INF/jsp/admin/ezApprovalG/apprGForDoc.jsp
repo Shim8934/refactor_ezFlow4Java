@@ -463,8 +463,10 @@
 			        para[0] = DocID;
 			        para[1] = pURL;
 			        var openLocation = "";
+			        var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
 			        
-			        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글기안
+			        // 2018.08.01 (KLIB) - ezd 확장자 처리
+			        if (ext == "hwp" || ext == "ezd") { //한글기안
 			        	if (isIE()) {
 				            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
