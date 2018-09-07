@@ -6,11 +6,12 @@
 <html>
 	<head>
 		<title>::: ezEKP Java :::</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="/css/ezMemo/memo.css">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -720,7 +721,7 @@
 		     */
 		    function layerPopupOpacity(){
 		    	
-		    	var defaultValue = 2;
+		    	var defaultValue = 3;
 		    	$("#layer-popup").css("background-color", "rgba(0,0,0,0.4)");
 		    	
 		    	$("#slider-range").slider({
@@ -741,10 +742,10 @@
 				            	opacityValue = 0.2;
 				            	break;
 				            case 2:
-				            	opacityValue = 0.4;
+				            	opacityValue = 0.3;
 				            	break;
 				            case 3:
-				            	opacityValue = 0.6;
+				            	opacityValue = 0.4;
 				            	break;
 				            /* case 4:
 				            	opacityValue = 0.8;
@@ -1020,7 +1021,7 @@
 			     <div class="memoListBox" style="overflow:hidden;">
 			     	<div class="memo_main"></div>
 			     </div>
-
+				 
 			     <div class="memobgBar">
 			     	<div id="slider-range"></div>
 			     </div>
