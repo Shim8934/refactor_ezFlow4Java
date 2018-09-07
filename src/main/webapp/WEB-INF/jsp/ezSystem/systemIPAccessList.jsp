@@ -17,6 +17,10 @@
 		var m_strColorOpened = "#fafafa";
 		var allComJson;
 		
+		window.parent.onresize = function () {
+			windowResize();
+		}
+		
 		window.onload = function() {
 			getAccessList_http(document.getElementById("ListCompany").value);
 			getAllAccessComList();
@@ -145,12 +149,11 @@
                 _TR.appendChild(_TDCheckBox);
                 
                 var _CN = document.createElement("TD");
-                _CN.style.width = "230px";
+                _CN.style.width = "45%";
                 _CN.innerText = json[Cnt].cn;
                 _TR.appendChild(_CN);
                 
                 var _DEPARTMENT = document.createElement("TD");
-                _DEPARTMENT.style.width = "100px";
                 _DEPARTMENT.innerText = json[Cnt].department
                 _TR.appendChild(_DEPARTMENT);
                 
@@ -232,9 +235,23 @@
 			var url = "/ezSystem/systemAddAccessList.do";
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(970, 600));
 		}
+		
+		function windowResize() {
+        	var height = parent.document.documentElement.clientHeight - 270;
+        	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+        		height = height - 10;
+        	} */
+        	document.getElementById("contentlist").style.height = height + "px";
+        	document.getElementById("contentlist").style.overflow = "auto";
+        }
+		
+		$(function(){
+    		windowResize();
+	    });
+		
 	</script>
 </head>
-<body class="mainbody">
+<body class="mainbody" style="overflow:hidden;">
 	<br><span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
 	    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
         	<c:forEach var="item" items="${list}">
@@ -250,13 +267,27 @@
 	    </ul>
 	</div>
 	
-	<table id="tblIP" class="mainlist" style="width:50%;">	
-		<tr>
- 			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
- 			<th width="45%;">이름(ID)</th>
- 			<th>부서</th>
-		</tr>
-	</table>
+	<div style="width:50%;">
+		<table class="mainlist" style="width:100%;">
+			<thead id="accessHeader">
+				<tr>
+	 			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+	 			<th width="45%;">이름(ID)</th>
+	 			<th>부서</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+	
+	
+	<div id="contentlist" style="height:400px; width:50%;">
+		<table id="tblIP" class="mainlist" style="width:100%;">	
+			<tbody id="accessBody">
+				
+			</tbody>
+		</table>
+	</div>
+	
 	
 </body>
 </html>

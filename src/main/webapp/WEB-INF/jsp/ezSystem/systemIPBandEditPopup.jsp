@@ -80,7 +80,7 @@
 			var allIPList = window.opener.allIPList;
 			
 			for (var i = 0; i < allIPList.length; i++) {
-				if (allIPList[i].ipAddress == ipAddress) { // IP 중복 되었을때
+				if (allIPList[i].ipAddress == ipAddress && ipAddress != _ipAddress) { // IP 중복 되었을때
 					alert("IP주소가 중복되었습니다.");
 					return;
 				}
@@ -98,6 +98,8 @@
 				formUrl = "/ezSystem/updateIPBand.do";
 				formData = "ipNo=" + _ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
 			}
+			
+			console.log(formData);
 			
 			$.ajax({
 				type : "POST",

@@ -137,7 +137,7 @@
 	        }
 	    </script>
 	</head>
-	<body class="mainbody" style="height: 95%;">
+	<body class="mainbody" style="height: 95%; overflow:hidden;">
 	    <h1>접속 IP 관리</h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
@@ -145,6 +145,6 @@
 			    <p><span id="tagsub2">접속 허용 리스트</span></p>
 	        </div>
 	    </div>
-	    <iframe id="ipManager_ifrm" style="width: 1200px; height:535px;" frameborder="0"></iframe> 
+	    <iframe id="ipManager_ifrm" style="width: 1200px; height:780px;" frameborder="0"></iframe> 
 	</body>
 </html>

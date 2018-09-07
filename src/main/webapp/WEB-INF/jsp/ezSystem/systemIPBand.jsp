@@ -20,6 +20,10 @@
 		var m_strColorDefault = "#ffffff";
 		var m_strColorOpened = "#fafafa";
 		
+		window.parent.onresize = function () {
+			windowResize();
+		}
+		
 		window.onload = function () {
 			if (useIPAccess === "NO") {
 				document.getElementById("ipRadio0").checked = true;
@@ -82,12 +86,12 @@
 			var ipListElement = $("#tblIP tbody tr[id^=IPBand]");
 			
 			for (var i = 0; i < ipListElement.length; i++) {
-				document.getElementById("tblIP").childNodes[1].removeChild(ipListElement[i]);
+				document.getElementById("ipBody").removeChild(ipListElement[i]);
 			}
 		}
 		
 		function makeIPBands(json) {
-			var _TBODY = document.getElementById("tblIP").childNodes[1];
+			var _TBODY = document.getElementById("ipBody");
 			
 			if (json.length == 0) {
 				var _TR = document.createElement("TR");
@@ -147,7 +151,7 @@
                 _TR.appendChild(_ACCESS);
                 
                 var _EXPLANATION = document.createElement("TD");
-                _EXPLANATION.innerHTML = json[Cnt].explanation;
+                _EXPLANATION.innerText = json[Cnt].explanation;
                 _TR.appendChild(_EXPLANATION);
                 
                 _TBODY.appendChild(_TR);
@@ -299,9 +303,22 @@
 		    }
 		}
 		
+		function windowResize() {
+        	var height = parent.document.documentElement.clientHeight - 345;
+        	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+        		height = height - 10;
+        	} */
+        	document.getElementById("contentlist").style.height = height + "px";
+        	document.getElementById("contentlist").style.overflow = "auto";
+        }
+		
+		$(function(){
+    		windowResize();
+	    });
+		
 	</script>
 </head>
-<body class="mainbody">
+<body class="mainbody" style="overflow:hidden;" >
 	<br><span class="txt">▒ IP 주소를 사용하여 허용된 IP(IP대역)에서만 접속 할 수 있습니다.</span><br><br>
 	
 	<table class="content" style="width:600px;">
@@ -328,14 +345,27 @@
 	    </ul>
 	</div>
 	
-	<table id="tblIP" class="mainlist" style="width:100%;">	
-		<tr>
-			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
- 			<th width="230px;">IP 주소</th>
- 			<th width="100px; text-algin:center;">허용여부</th>
- 			<th>설명</th>
-		</tr>
-	</table>
+	<div>
+		<table class="mainlist" style="width:100%;">
+			<thead id="ipHeader">
+				<tr>
+					<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+		 			<th width="230px;">IP 주소</th>
+		 			<th width="100px; text-algin:center;">허용여부</th>
+		 			<th>설명</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="contentlist">
+		<table id="tblIP" class="mainlist" style="width:100%;">	
+			<tbody id="ipBody">
+				
+			</tbody>
+			
+		</table>
+	</div>
+	
 	
 </body>
 </html>

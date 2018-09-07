@@ -690,8 +690,9 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/ezSystem/updateIPBand.do")
 	public void updateIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
 		logger.debug("updateIPBand started");
+		logger.debug("ipNo=" + ipBand.getIpNo() + ", ipAddress=" + ipBand.getIpAddress() + ", access=" + ipBand.getAccess() + ", explanation=" + ipBand.getExplanation());
 		
-		ezSystemAdminService.updateIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
+		ezSystemAdminService.updateIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
 		
 		logger.debug("updateIPBand ended");
 	}
