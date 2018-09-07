@@ -11,6 +11,18 @@ function createMemo(memo, flag) {
 	var dl = document.createElement("dl");
 	dl.setAttribute("class", "memoTit");
 	
+	if (flag != 'layer') {
+		
+		var input = document.createElement("input");
+		input.setAttribute("name", "memo");
+		input.setAttribute("type", "checkbox");
+		input.setAttribute("value", memo.memo_id);
+		input.setAttribute("display", memo.display_flag);
+		
+		dl.appendChild(input);
+		
+	} 
+	
 	var dt = document.createElement("dt");
 	dt.setAttribute("class", "mtitText");
 	
@@ -19,29 +31,19 @@ function createMemo(memo, flag) {
 	
 	var dd3 = document.createElement("dd");
 	dd3.setAttribute("class", "memoSave");
+	dd3.setAttribute("memoid", memo.memo_id);
 	dd3.style.cursor= "pointer";
 	dd3.innerHTML = "+";
 	
-	if (flag != 'layer') {
-		
-		var input = document.createElement("input");
-		input.setAttribute("name", "memo");
-		input.setAttribute("type", "checkbox");
-		input.setAttribute("value", memo.memo_id);
-		input.setAttribute("display", memo.display_flag);
-
-		dl.appendChild(input);
+	var dd = document.createElement("dd");
+	dd.setAttribute("class", "memoIcon memoX");
+	dd.setAttribute("memoId", memo.memo_id);
 	
-	} else {
-		
-		var dd = document.createElement("dd");
-		dd.setAttribute("class", "memoIcon memoX");
-		dd.setAttribute("memoId", memo.memo_id);
-		
-		dl.appendChild(dd);
-		
+	if(flag != 'layer') {
+		dd.setAttribute("onclick", "DeleteItem_onclick("+memo.memo_id+")");
 	}
-	
+		
+	dl.appendChild(dd);
 	dl.appendChild(dt);
 	dl.appendChild(dt);
 	dl.appendChild(dd2);

@@ -274,13 +274,6 @@
 					loadMemoList();
 					setMemoCount(memoList.length);
 				    addremove();
-				    
-				    if(folderId == 0) {
-						$("#moveMemo").css("display", "none");
-					}
-				    else {
-						$("#moveMemo").css("display", "");
-				    }
 			     },
 	             error : function() {
 	                	
@@ -377,18 +370,23 @@
 	        	}
 	        })
 	        
-	        $(".memoText").blur(function(){
-					modifyMemo(this);
+	        $(".memoSave").click(function(){
+	        	var obj = $(this).parent().next();
+	        	modifyMemo(obj[0]);
 	        })
 	        
-	        $(".memoText").dblclick(function(){
+	        /* $(".memoText").blur(function(){
+					modifyMemo(this);
+	        }) */
+	        
+	       /*  $(".memoText").dblclick(function(){
 		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
 		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
 		        
 		        var memoId = $(this).attr("memoid");
 
 		    	window.open("/ezMemo/memoRead.do?memoId=" + memoId, "",  "height=480px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
-		    });
+		    }); */
 	    }
 	    
 	    // 메모 색상 변경
@@ -443,18 +441,23 @@
 	    }
 	    
 	    // 메모 삭제
-	    function DeleteItem_onclick() {
+	    function DeleteItem_onclick(memoid) {
 	    	var memo_ids = [];
-			
-			$(":checkbox[name=memo]:checked").each(function(){
-				memo_ids.push($(this).val());
-			});
-			
-			if (memo_ids.length == 0) {
-	        	alert("<spring:message code='ezMemo.t0043' />");
-	            return;
-	        }
-			
+	    	
+	    	if(memoid == null) {
+				$(":checkbox[name=memo]:checked").each(function(){
+					memo_ids.push($(this).val());
+				});
+				
+				if (memo_ids.length == 0) {
+		        	alert("<spring:message code='ezMemo.t0043' />");
+		            return;
+		        }
+	    	}
+	    	else {
+	    		memo_ids.push(memoid);
+	    	}
+	    	
 	    	if(confirm("<spring:message code='ezMemo.t0023'/>")) {
 		    	$.ajax ({
 	 			   	url : '/ezMemo/memoDelete.do',
@@ -659,11 +662,11 @@
 		<h1><spring:message code='ezMemo.t001'/><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 		  <ul>
-		        <li><span onClick="allClick()"><spring:message code='ezMemo.t0013'/></span></li>
 		        <li><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
+		        <li><span onClick="allClick()"><spring:message code='ezMemo.t0013'/></span></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
-		        <li id="moveMemo"><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
+		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
