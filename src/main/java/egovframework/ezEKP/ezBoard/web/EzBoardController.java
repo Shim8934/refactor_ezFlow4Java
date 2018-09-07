@@ -6546,8 +6546,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String[] fileLocations = new String[cnt];
 		String[] types = new String[cnt];
 		String[] uploadSN = new String[cnt];
-		// 2018.07.05 추가, 사이드이펙트 가능성 다분함
-		String[] uploadLocations = new String[cnt];
 		
 		for (int k = 0; k < cnt; k++) {
 			fileNames[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
@@ -6577,48 +6575,55 @@ public class EzBoardController extends EgovFileMngUtil{
 			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
-		String fileLocation, fileExt, puploadSN;
-		int extIndex;
-		boolean isEncryptedForKlib;
-		
 		for (int k = 0; k < cnt; k++) {
+			String fileName = fileNames[k];
+			String fileLocation = fileLocations[k];
+			String fileSize = fileSizes[k];
+			String puploadSN;
+			
+			String uploadLocation;
+			
 			// 2018.07.04 - KLIB 암호화된 .ezd 확장자 파일일때 처리
 			fileLocation = fileLocations[k];
 			
-			extIndex = fileLocation.lastIndexOf(".");
-			fileExt = fileLocation.substring(extIndex);
-			isEncryptedForKlib = fileExt.endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+			int extIndex = fileLocation.lastIndexOf(".");
+			String fileExt = fileLocation.substring(extIndex);
+			boolean isEncryptedForKlib = fileExt.endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
 			
 			// ezd 확장자라면 그 뒤의 확장자로 설정
 			if (isEncryptedForKlib) {
 				fileExt = fileLocation.substring(fileLocation.lastIndexOf(".", extIndex - 1), extIndex);
 			}
-			
-			if (fileExt.toUpperCase().contains("MHT") || fileExt.toUpperCase().contains("HWP") || fileExt.toUpperCase().contains("DOC")) {
-				fileNames[k] = fileNames[k] + fileExt;
-				file = new File(dirPath2 + commonUtil.separator + fileLocation);
-				fileSizes[k] = String.valueOf(file.length());
+						
+			// 결재 본문 처리
+			if (fileExt.equalsIgnoreCase(".mht") || fileExt.equalsIgnoreCase(".hwp") || fileExt.equalsIgnoreCase(".doc")) {
+				// fileName 에 확장자가 포함되지 않으면 확장자 붙여줌
+				if (!fileName.endsWith(fileExt)) {
+					fileName += fileExt;
+					file = new File(dirPath2 + commonUtil.separator + fileLocation);
+					fileSize = String.valueOf(file.length());
+				}
 			}
 			
 			file = new File(dirPath2 + commonUtil.separator + fileLocation);
-			uploadLocations[k] = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName.replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
 					replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-			puploadSN = uploadSN[k] + "_" + fileNames[k];
+			puploadSN = uploadSN[k] + "_" + fileName;
 			
 			if (isEncryptedForKlib) {
-				uploadLocations[k] += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+				uploadLocation += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 				puploadSN += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
 			if (file.exists()) {
-				FileUtils.copyFile(file, new File(uploadLocations[k]));
+				FileUtils.copyFile(file, new File(uploadLocation));
 			}
 			
 			strXML += "<NODE><PUPLOADSN><![CDATA[" + puploadSN + "]]></PUPLOADSN>";
 			strXML += "<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>";
-			strXML += "<PFILENAME><![CDATA[" + fileNames[k] + "]]></PFILENAME>";
-			strXML += "<FILESIZE>" + fileSizes[k] + "</FILESIZE>";
-			strXML += "<FILELOCATION><![CDATA[" + uploadLocations[k] + "]]></FILELOCATION>";
+			strXML += "<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>";
+			strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
+			strXML += "<FILELOCATION><![CDATA[" + uploadLocation + "]]></FILELOCATION>";
 			strXML += "</NODE>";
 		}
 		
