@@ -6,11 +6,12 @@
 <html>
 	<head>
 		<title>::: ezEKP Java :::</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="/css/ezMemo/memo.css">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -46,7 +47,6 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			.mCSB_inside > .mCSB_container{margin-right: 10px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -348,7 +348,7 @@
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	minWidth: 280,
+		        	minWidth: 295,
 		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
@@ -466,7 +466,13 @@
 					});
 		        });
 		        
-		        $(".memo_main").on("blur", ".memoLay textarea", function() {
+		        /* 메모 내용 변경 blur 이벤트 -> click 이벤트로 변경 */
+		        /* $(".memo_main").on("blur", ".memoLay textarea", function() {
+		        	modifyMemo(this);
+		        }); */
+		        
+		        /* 메모 내용 변경 click 이벤트 */
+		        $(".memo_main").on("click", ".memoLay .memoSave", function() {
 		        	modifyMemo(this);
 		        });
 		        
@@ -478,10 +484,10 @@
 		        	$("#detailMemo").css("display", "none");
 		        });
 		        
-		        $("#detailMemoContents").blur(function() {
+		        /* 큰 메모 blur 이벤트 */
+		        /* $("#detailMemoContents").blur(function() {
 					modifyMemo(this);
-		        });
-		        
+		        }); */
 		       
 		    });
 		    
@@ -533,9 +539,9 @@
 	    		
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
-		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-40-25});
-		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-56-40});
+		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 0, "left" : 0});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-40-25});
+		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
 		    		getMemoConfig();
@@ -544,6 +550,7 @@
 		    }
 		    
 		    // 메모 컨피그 DB 확인 후 없으면 insert
+		    var firstDBLayerSize="yes";
 		    function getMemoConfig() {
 	        	
 		        $.ajax({
@@ -559,7 +566,27 @@
 							useDate = result.memoConfigVO.use_date;
 							defaultColor = result.memoConfigVO.default_color;
 		        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
-		        		
+		        			if((result.memoConfigVO.layer_top == 0) && (result.memoConfigVO.layer_left == 0) && (result.memoConfigVO.layer_width == 295) && (result.memoConfigVO.layer_height == 380)) {
+		        				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
+		        				if(firstDBLayerSize=="yes") {
+			        				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
+					        		$(".ui-resizable-handle").css("display", "none");
+					        		
+					        		$("#layer-popup").draggable({
+					        			disabled: true
+					        		});
+		        				} else {
+		        					$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
+		    		        		$(".ui-resizable-handle").css("display", "");
+		    		        		$("#layer-popup").draggable({
+		    		        			disabled: false
+		    		        		});
+		        					return;
+		        				}
+				        		firstDBLayerSize="no";
+				        		setLayerSize();
+		        			}
+		        			
 		        		} else {
 		        			
 		        			$.ajax({
@@ -694,7 +721,7 @@
 		     */
 		    function layerPopupOpacity(){
 		    	
-		    	var defaultValue = 2;
+		    	var defaultValue = 3;
 		    	$("#layer-popup").css("background-color", "rgba(0,0,0,0.4)");
 		    	
 		    	$("#slider-range").slider({
@@ -715,10 +742,10 @@
 				            	opacityValue = 0.2;
 				            	break;
 				            case 2:
-				            	opacityValue = 0.4;
+				            	opacityValue = 0.3;
 				            	break;
 				            case 3:
-				            	opacityValue = 0.6;
+				            	opacityValue = 0.4;
 				            	break;
 				            /* case 4:
 				            	opacityValue = 0.8;
@@ -994,8 +1021,10 @@
 			     <div class="memoListBox" style="overflow:hidden;">
 			     	<div class="memo_main"></div>
 			     </div>
-
-			     <div id="slider-range" class="memobgBar"></div>
+				 
+			     <div class="memobgBar">
+			     	<div id="slider-range"></div>
+			     </div>
 			     <!-- <div class="memobgBar"><img id="slider-range" src="/images/ezMemo/memoBar.png"></div> -->
 			</div>
 						

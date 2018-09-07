@@ -93,10 +93,13 @@ select::-ms-expand {
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
 .memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
 
-/*09-05 추가  */
+/* 09-05 추가  */
 #detailMemo{width:400px; height:400px; position:absolute;}
-/*09-06 추가  */
+/* 09-06 추가  */
 #memoFolderList {width:149px; height:27px; border-radius:25px;}
 /* .memo_header_wrapper{ overflow:hidden; padding:0px; opacity:1; background:#000000;} */
 #mCSB_1_scrollbar_vertical {margin-right: 4px;}
+/* 09-07 추가 */
+.mCSB_inside > .mCSB_container{margin-right: 25px;}
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {background-color: rgba(89,89,89,0.75);}
 .memoTit .pallete2{ margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
