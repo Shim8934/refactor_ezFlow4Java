@@ -40,11 +40,67 @@
 	        		height = height - 30;
 	        	}
 	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
 			}
 			
 			window.onload = function() {
 				retireUserList();
+				
+				$(function() {
+					$('#startDatepicker').datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.gif",
+						buttonImageOnly: true,
+						maxDate: 0,
+						onSelect: function(selected) {
+							$('#endDatepicker').datepicker("option", "minDate", selected);
+						}
+					});
+					$('#endDatepicker').datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.gif",
+						buttonImageOnly: true,
+						maxDate: 0,
+						onSelect: function(selected) {
+							$('#startDatepicker').datepicker("option", "maxDate", selected)
+						}
+					});    	    	
+				});
+				
+				
+				var dayMsg = "<spring:message code='main.kyj1'/>";
+				var dayStr = dayMsg.split(";");
+				var monthMsg = "<spring:message code='main.kyj2'/>";
+				var monthStr = monthMsg.split(";");
+				
+				$(function() {
+					$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+							closeText: "<spring:message code='main.t3'/>",
+							prevText: "<spring:message code='main.t0604'/>",
+							nextText: "<spring:message code='main.t0605'/>",
+							currentText: "<spring:message code='main.t0606' />",
+							monthNames: monthStr,
+							monthNamesShort: monthStr,
+							dayNames: dayStr,
+							dayNamesShort: dayStr,
+							dayNamesMin: dayStr,
+							weekHeader: 'Wk',
+							dateFormat: 'yy-mm-dd',
+				   			firstDay:0,
+							isRTL: false,
+							duration: 200,
+							showAnim: 'show',
+							showMonthAfterYear: true
+					};
+					
+					$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
+						
+				});
 			}
 			
 			function showProgress() {
@@ -375,63 +431,6 @@
                 }
             }
             
-			$(function() {
-				$('#startDatepicker').datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
-					buttonImageOnly: true,
-					maxDate: 0,
-					onSelect: function(selected) {
-						$('#endDatepicker').datepicker("option", "minDate", selected);
-					}
-				});
-				$('#endDatepicker').datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
-					buttonImageOnly: true,
-					maxDate: 0,
-					onSelect: function(selected) {
-						$('#startDatepicker').datepicker("option", "maxDate", selected)
-					}
-				});    	    	
-			});
-			
-			
-			var dayMsg = "<spring:message code='main.kyj1'/>";
-			var dayStr = dayMsg.split(";");
-			var monthMsg = "<spring:message code='main.kyj2'/>";
-			var monthStr = monthMsg.split(";");
-			
-			$(function() {
-				$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
-						closeText: "<spring:message code='main.t3'/>",
-						prevText: "<spring:message code='main.t0604'/>",
-						nextText: "<spring:message code='main.t0605'/>",
-						currentText: "<spring:message code='main.t0606' />",
-						monthNames: monthStr,
-						monthNamesShort: monthStr,
-						dayNames: dayStr,
-						dayNamesShort: dayStr,
-						dayNamesMin: dayStr,
-						weekHeader: 'Wk',
-						dateFormat: 'yy-mm-dd',
-			   			firstDay:0,
-						isRTL: false,
-						duration: 200,
-						showAnim: 'show',
-						showMonthAfterYear: true
-				};
-				
-				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
-					
-			});
-			
 			//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
 			function keyword_onkeydown(e) {
 				
