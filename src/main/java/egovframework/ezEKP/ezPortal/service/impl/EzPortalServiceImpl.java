@@ -3423,37 +3423,57 @@ System.out.println("portletDisplayName : " +portletDisplayName );
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
-		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */		
-		if (list.size() >= 2){
-			for (int i=0; i<2; i++) {			
-				strData.append("<dl class='comListDL0"+(i+1)+"' style='cursor:pointer'");			
-				
-				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-				} else {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
+		/* 2018-09-07 구해안 - 포탈 포틀릿 소스코드 수정*/
+		if (list != null){
+			int mainCnt = list.size();
+			if (mainCnt > 2) {
+				mainCnt = 2;
+			}
+			CommunityMyCommunityVO commu;
+			if (mainCnt > 0) {
+				for (int i=0; i<mainCnt; i++) {
+					commu = list.get(i);
+					strData.append("<dl class='comListDL0"+(i+1)+"' style='cursor:pointer'");			
+					
+					if (commu.getC_ClubGubun() != null && commu.getC_ClubGubun().equals("3")) {
+						strData.append("onclick=\"go_best('" + commu.getC_ClubNo() + "','" + memberChk(commu.getC_ClubNo(), userInfo) + "')\">");
+					} else {
+						strData.append("onclick=\"go_best('" + commu.getC_ClubNo() + "','" + "0" + "')\">");
+					}
+					
+					strData.append("<dt class='comPic'>");
+					
+					if (i == 0) {
+						strData.append("<span class='best'><img src='/images/kr/main/com_best.png'></span>");
+					}
+					
+					String bannerSrc = "";
+					
+					if (commu.getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+						bannerSrc = "/images/ezCommunity/logo/" + commu.getC_Logo_Thumbnail().trim();
+					} else {
+						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+commu.getC_Logo_Thumbnail();
+					}
+					
+					logger.debug("bannerSrc="+bannerSrc);
+					
+					strData.append("<img src='" + bannerSrc + "'></dt>");			
+					strData.append("<dd class='comTit'>\"" + commu.getC_ClubName() + "\"</dd>");
+					strData.append("<dd class='comText'>" + commu.getC_ClubDesc() + "</dd></dl>");
 				}
-				
-				strData.append("<dt class='comPic'>");
-				
-				if (i == 0) {
-					strData.append("<span class='best'><img src='/images/kr/main/com_best.png'></span>");
+				if (mainCnt == 1) {
+					strData.append("<dl class='comListDL02'>");
+					strData.append("<dt class='comPic'><img src='/images/kr/main/comImg_none.png'></dt>");
+					strData.append("<dd class='comTit_none'>\""+egovMessageSource.getMessage("main.t00026",locale) +"\"</dd>");
+					strData.append(" </dl>");
 				}
-				
-				String bannerSrc = "";
-				
-				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
-				} else {
-					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
-				}
-				
-				logger.debug("bannerSrc="+bannerSrc);
-				
-				strData.append("<img src='" + bannerSrc + "'></dt>");			
-				strData.append("<dd class='comTit'>\"" + list.get(i).getC_ClubName() + "\"</dd>");
-				strData.append("<dd class='comText'>" + list.get(i).getC_ClubDesc() + "</dd></dl>");
-				
+			} else {
+				strData.append("");
+			}
+		} else {
+			strData.append("");
+		}
 				/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
 				/*if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
 				strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
@@ -3493,46 +3513,6 @@ System.out.println("portletDisplayName : " +portletDisplayName );
 			strData.append("</dd>");
 			strData.append("</dl>");*/
 				
-			}
-		} else if (list.size() == 1) {
-			for (int i=0; i<1; i++) {			
-				strData.append("<dl class='comListDL0"+(i+1)+"' style='cursor:pointer'");			
-				
-				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-				} else {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-				}
-				
-				strData.append("<dt class='comPic'>");
-				
-				if (i == 0) {
-					strData.append("<span class='best'><img src='/images/kr/main/com_best.png'></span>");
-				}
-				
-				String bannerSrc = "";
-				
-				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
-				} else {
-					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
-				}
-				
-				logger.debug("bannerSrc="+bannerSrc);
-				
-				strData.append("<img src='" + bannerSrc + "'></dt>");			
-				strData.append("<dd class='comTit'>\"" + list.get(i).getC_ClubName() + "\"</dd>");
-				strData.append("<dd class='comText'>" + list.get(i).getC_ClubDesc() + "</dd></dl>");
-				
-			}
-			
-			strData.append("<dl class='comListDL02'>");
-			strData.append("<dt class='comPic'><img src='/images/kr/main/comImg_none.png'></dt>");
-			strData.append("<dd class='comTit_none'>\""+egovMessageSource.getMessage("main.t00026",locale) +"\"</dd>");
-			strData.append(" </dl>");
-           
-		}
-		
 		return strData.toString();
 	}
 	
