@@ -111,6 +111,7 @@
 			var docNumZeroCnt = "${docNumZeroCnt}";
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
+			var ext = "mht";
 			var isHWP = "";
 			
 			window.onload = function () {
