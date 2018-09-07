@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -534,9 +536,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String docState = request.getParameter("docState");
 		
+		//2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
+		String publicityYN = request.getParameter("publicityYN");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         int tenantID = userInfo.getTenantId();        
+        
+        //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
+        if (publicityYN != null && publicityYN.equals("N")) {
+        	String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+        	String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag);
+        	
+			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+				return "NOTPERMISSION";
+			}
+        }
+    
+     
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
@@ -1319,7 +1336,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String formID = request.getParameter("formID");
-		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
+		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), useReceiveInfoName);
 
 		logger.debug("<<<result : " + result );
 		logger.debug("getFormRecv ended.");
@@ -3746,6 +3764,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String chamState = request.getParameter("chamState");
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
 		String result = ezApprovalGService.getApproveDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), mode, chamState);
 
@@ -7716,6 +7736,54 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		ezApprovalGService.delCirculation(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("delCirculation ended");
+	}
+	
+	/**
+	 * @return  전자결재G 문서유통 재발송 요청한 문서에 요청 시 의견 표출
+	 */
+	@RequestMapping(value = "/ezApprovalG/getRelayReqOpinion.do")
+	public String getRelayReqOpinion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getRelayReqOpinion started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String filePath = config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExOpinion" + commonUtil.separator + docID + "return.txt";
+		StringBuffer sb = new StringBuffer();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			String readLine = "";
+			
+			while ((readLine = br.readLine()) != null) {
+				sb.append(readLine);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		String textOpinion = new String(Base64.decodeBase64(sb.toString()), "euc-kr");
+		
+		if (textOpinion == null || textOpinion.equals("")) {
+			textOpinion = "의견정보가 없습니다.";
+		}
+		
+		model.addAttribute("opinion", textOpinion);
+		
+		logger.debug("getRelayReqOpinion ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * @return 중계문서 재전송 요청 의견 호출
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezRetOpinon.do")
+	public String ezRetOpinon() throws Exception {
+		logger.debug("ezRetOpinon started");
+
+
+		logger.debug("ezRetOpinon ended");
+		return "ezApprovalG/apprGezRetOpinon";
 	}
 	
 	/**

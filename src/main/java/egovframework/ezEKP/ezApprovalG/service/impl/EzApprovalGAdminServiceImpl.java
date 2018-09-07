@@ -571,8 +571,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				ApprGListHeaderVO headerVo = listHeader.get(j);				
 				String fieldName = headerVo.getColName();
 				String fieldValue = "";
-								
-				if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")) {
+				
+				//2018-09-06 김보미 - primary에서 lang으로 변경
+				//if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")) {
+				if (!commonUtil.getPrimaryData(lang, tenantID).equals("1") && fieldName.toUpperCase().equals("DEPTNAME")) {
 					fieldName = fieldName + "2";
 				}
 				
@@ -625,6 +627,25 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		ezApprovalGAdminDAO.insertReceiveGroupItemInfo(map);
 			
 		logger.debug("insertReceiveGroupItemInfo ended.");
+		
+		return "TRUE";
+	}
+	
+	@Override
+	public String updateReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception {
+		logger.debug("updateReceiveGroupItemInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mainID", groupID);
+		map.put("deptID", deptID);
+		map.put("deptName", deptName);
+		map.put("deptName2", deptName2);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		ezApprovalGAdminDAO.updateReceiveGroupItemInfo(map);
+		
+		logger.debug("updateReceiveGroupItemInfo ended.");
 		
 		return "TRUE";
 	}
@@ -2262,7 +2283,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag, String useReceiveInfoName) throws Exception {
 		logger.debug("getFormRecvAdmin started.");
 		
 		String multiData = commonUtil.getMultiData(lang, tenantID);
@@ -2323,7 +2344,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getUserID(), "displayName" + multiData, tenantID)) + "</VALUE>");
 					}
 				} else {
-					sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+					if (useReceiveInfoName.equals("1")) {
+						sb.append("<VALUE>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</VALUE>");
+					} else {
+						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+					}
 
 					if (j == 0) {
 						sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1>");
@@ -2689,6 +2714,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
 					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					map.put("deptName", doc.getElementsByTagName("DEPTNAME").item(i).getTextContent());
 					
 					if (approvalFlag.equals("S")) {
 						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
@@ -2969,6 +2995,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
 					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					map.put("deptName", doc.getElementsByTagName("DEPTNAME").item(i).getTextContent());
 					
 					if (approvalFlag.equals("S")) {
 						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
@@ -3086,6 +3113,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
 					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					map.put("deptName", doc.getElementsByTagName("DEPTNAME").item(i).getTextContent());
 					
 					if (approvalFlag.equals("S")) {
 						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						

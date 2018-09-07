@@ -984,7 +984,7 @@ function openViewDocInfo(type) {
         else {
             openLocation = "/ezApprovalG/contDocView.do";
         }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
+        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
     }
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리

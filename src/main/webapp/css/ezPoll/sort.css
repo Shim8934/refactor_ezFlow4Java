@@ -199,8 +199,13 @@ input[type=text]::-ms-clear{ display:none;}
 
 img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}
 
-.qstSettingInnerDivRight{display: inline-block; float: right;}
-.qstSetting{height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;}
+.qstSettingInnerDivRight{display: inline-block; float: right;margin-top: 3px;}
+.qstSetting{height:30px;border-bottom:1px solid #DDD; margin:0px; padding:0px 5px 0px 0px;}
+.qstSettingSpan{display:inline-block; height:100%; line-height:30px; margin:0px; padding:0px 0px; background:#f9f9f9; border-right:1px solid #DDD; text-align: center; width: 70px;}
+td.qstSettingTd{padding:0;}
+#target_select{border:0px;}
+#newTargetDiv{position: relative;top: 3px;overflow: hidden; text-overflow: ellipsis; max-width: 60%; white-space: nowrap; display:inline-block;}
+
 
 .voteCmtCnt{color: #c64200;}
 
