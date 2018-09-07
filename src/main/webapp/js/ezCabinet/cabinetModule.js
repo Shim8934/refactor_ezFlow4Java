@@ -125,7 +125,9 @@
 		setListModules();
 		var leftFrame = window.parent.parent.frames["left"];
 		if (leftFrame && leftFrame.CabUserLeft) {
-			if (leftFrame.document.getElementById("relatedCabinet").className == "on") {
+			var activeList = document.querySelectorAll("input[type='radio'][role='on']:checked");
+			
+			if (leftFrame.document.getElementById("relatedCabinet").className == "on" || activeList.length == 0) {
 				leftFrame.CabUserLeft.relateTree("1");
 			}
 		}
