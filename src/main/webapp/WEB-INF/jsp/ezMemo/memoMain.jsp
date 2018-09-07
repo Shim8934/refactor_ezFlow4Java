@@ -13,6 +13,7 @@
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
@@ -104,7 +105,7 @@
 		window.onload = function() {
 			var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 	        document.getElementById("bodyFrame").style.height = MainHeight + "px";
-	        
+	        /* 
 			$(".individual-memo").mouseenter(function(){
 		    	$(this).children("img").css("visibility", "visible");
 		    	$(this).children("img:first").click(function(){
@@ -115,7 +116,7 @@
 			$(".individual-memo").mouseleave(function(){
 	        	$(this).children("img").css("visibility", "hidden");
 	        });
-			
+			 */
 			$("#boardMemoList").sortable({
 	        	 containment: '#bodyFrame',
         		 opacity : 0.5,
@@ -185,6 +186,31 @@
 	    	});
 
 	    }
+		
+		function addremove() {
+			 $(".pallete").on("mouseenter", function(){
+			    	$(this).parent().nextAll(".color_popup").css("visibility", "");
+			 });
+		    
+		    $(".color_popup").mouseleave(function(){
+		        	$(this).css("visibility", "hidden");
+		    });
+		    
+		    $(".color_list").click(function(){
+		    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+		    });
+		    
+		    $(".memoLay").mouseleave(function(){
+		    	if($(this).children(".color_popup").css("visibility") == "visible") {
+		    		$(this).children(".color_popup").css("visibility", "hidden");
+		    	}
+		    });
+		    
+		    $(".pallete2").click(function(){
+		    	var obj = $(this).parent().next();
+		    	modifyMemo(obj[0]);
+		    });
+		}
 		
 		function getMemoConfig() {
 			$.ajax({
@@ -325,8 +351,8 @@
 			});
 		}
 		
-	    function addremove() {
-		    $(".individual-memo").mouseenter(function(){
+	    function addremove2() {
+		   /*  $(".individual-memo").mouseenter(function(){
 		    	$(this).children("img").css("visibility", "visible");
 		    	$(this).children("img").click(function(){
 		    		$(this).prevAll("div").css("visibility", "visible");
@@ -348,13 +374,15 @@
 	        	if($(this).css("visibility") == "visible") {
 	        		$(this).css("visibility", "hidden");
 	        	}
-	        });
+	        }); */
 	        
 	        /* CSS 추가 이후 */
 	        
-	        $(".pallete").mouseenter(function(){
+	        $(".pallete").on("click", function(e){
+	       		 e.stopPropagation();
+	        }).on("mouseenter", function(){
 	        	$(this).parent().nextAll(".color_popup").css("visibility", "");
-	        })
+	        });
 	        
 	        $(".color_popup").mouseleave(function(){
 		        	$(this).css("visibility", "hidden");
@@ -370,7 +398,8 @@
 	        	}
 	        })
 	        
-	        $(".memoSave").click(function(){
+	        $(".memoSave").click(function(e){
+	        	e.stopPropagation();
 	        	var obj = $(this).parent().next();
 	        	modifyMemo(obj[0]);
 	        })
@@ -387,7 +416,7 @@
 
 		    	window.open("/ezMemo/memoRead.do?memoId=" + memoId, "",  "height=480px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
 		    }); */
-	    }
+	    } 
 	    
 	    // 메모 색상 변경
 	    function modifyMemoColor(obj, idx) {
@@ -670,7 +699,7 @@
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
-		        <li><select id="memoType" style="height: 20px;" onchange="getMemoList('folder')"></select></li>
+		        <li><select id="memoType" style="height: 20px; width:80px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
 		        </li>

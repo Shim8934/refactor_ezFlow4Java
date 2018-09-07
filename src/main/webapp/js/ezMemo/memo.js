@@ -13,12 +13,21 @@ function createMemo(memo, flag) {
 	
 	if (flag != 'layer') {
 		
+		var label = document.createElement("label");
+		label.setAttribute("for", memo.memo_id);
+		label.style.width = "175px";
+		label.style.height = "36px";
+		label.style.position = "absolute";
+		label.style.left = "0px";
+		
 		var input = document.createElement("input");
+		input.setAttribute("id", memo.memo_id);
 		input.setAttribute("name", "memo");
 		input.setAttribute("type", "checkbox");
 		input.setAttribute("value", memo.memo_id);
 		input.setAttribute("display", memo.display_flag);
 		
+		dl.appendChild(label);
 		dl.appendChild(input);
 		
 	} 
@@ -30,7 +39,7 @@ function createMemo(memo, flag) {
 	dd2.setAttribute("class", "memoIcon pallete");
 	
 	var dd3 = document.createElement("dd");
-	dd3.setAttribute("class", "memoSave");
+	dd3.setAttribute("class", "pallete2");
 	dd3.setAttribute("memoid", memo.memo_id);
 	dd3.style.cursor= "pointer";
 	dd3.innerHTML = "+";
@@ -43,9 +52,8 @@ function createMemo(memo, flag) {
 		dd.setAttribute("onclick", "DeleteItem_onclick("+memo.memo_id+")");
 	}
 		
+	dl.appendChild(dt);
 	dl.appendChild(dd);
-	dl.appendChild(dt);
-	dl.appendChild(dt);
 	dl.appendChild(dd2);
 	dl.appendChild(dd3);
 	
@@ -68,6 +76,7 @@ function createMemo(memo, flag) {
 		ul.appendChild(li);
 	}
 	
+//	label.appendChild(dl);
 	div.appendChild(dl);
 	div.appendChild(textarea);
 	div.appendChild(ul);
@@ -194,4 +203,29 @@ function MailOptionHiddenOutside(e) {
 			MailOptionHidden();
 		}
 	}
+}
+
+function addremove() {
+	 $(".pallete").on("mouseenter", function(){
+	    	$(this).parent().nextAll(".color_popup").css("visibility", "");
+	 });
+    
+    $(".color_popup").mouseleave(function(){
+        	$(this).css("visibility", "hidden");
+    });
+    
+    $(".color_list").click(function(){
+    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+    });
+    
+    $(".memoLay").mouseleave(function(){
+    	if($(this).children(".color_popup").css("visibility") == "visible") {
+    		$(this).children(".color_popup").css("visibility", "hidden");
+    	}
+    });
+    
+    $(".pallete2").click(function(){
+    	var obj = $(this).parent().next();
+    	modifyMemo(obj[0]);
+    });
 }
