@@ -701,7 +701,7 @@
 		            step: 1,
 		            range: "max",
 		            min: 1,
-		            max: 4,
+		            max: 3,
 		            value: defaultValue,
 		            slide: function( event, ui ) {
 		            	/* var opacityValue = ui.value; */
@@ -720,10 +720,10 @@
 				            case 3:
 				            	opacityValue = 0.6;
 				            	break;
-				            case 4:
+				            /* case 4:
 				            	opacityValue = 0.8;
 				            	break;
-				            /* case 5:
+				            case 5:
 				            	opacityValue = 1;
 				            	break; */
 				          }
