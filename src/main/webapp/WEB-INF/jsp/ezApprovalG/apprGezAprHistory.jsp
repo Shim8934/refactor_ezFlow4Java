@@ -39,10 +39,12 @@
 		        var oArrRows = listview.GetSelectedRows();
 		        pUrl = oArrRows[0].getAttribute("DATA2");
 		        Arguments[0] = oArrRows[0].getAttribute("DATA2");
-		        if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "doc") {
+		        var fileExt = pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase();
+		        
+		        if (fileExt == "doc") {
 		            pUrl = "DocViewerWord.aspx?DocHref=" + escapenew(Arguments[0]);
 		        }
-		        else if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "hwp") {
+		        else if (fileExt == "hwp" || fileExt == "ezd") {
 		        	//hwp사용안함
 		            if (CrossYN()) {
 // 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
