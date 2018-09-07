@@ -1097,7 +1097,7 @@ function convertDate(datestring) {
 }
 
 function btnReqReSend_onclick() {
-    var url = "/myoffice/ezApprovalG/ezRETOPINION.aspx";
+    var url = "/ezApprovalG/ezRetOpinon.do";
     var feature = "status:no;dialogWidth:420px;dialogHeight:270px;help:no;scroll:no"
     var ret = window.showModalDialog(url, null, feature);
 
