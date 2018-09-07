@@ -13,6 +13,7 @@
 		var useIPAccess = "${useIPAccess}";
 		var rollInfo = "${rollInfo}";
 		var permission = true;
+		var allIPList = "";
 		
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
@@ -69,8 +70,9 @@
 					console.log("error");
 				},
 				complete : function(data) {
+					allIPList = data.responseJSON
 					document.getElementById("HeaderAllCheckBox").checked = false;
-					makeIPBands(data.responseJSON);
+					makeIPBands(allIPList);
 			    }
 			});
 		}

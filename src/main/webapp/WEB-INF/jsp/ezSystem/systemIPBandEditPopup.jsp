@@ -40,13 +40,21 @@
 				document.getElementById("explanText").value = _explanation;
 			}
 		}
+		
+		// IP주소에 들어갈수 있는 값 체크 (숫자/*만 가능)
+		function textChk(txt) {
+			var regexp = /^[0-9*]*$/;
+			
+			if(!regexp.test(txt)) {
+				return false;
+			} else{
+				return true;
+			}
+		}
 	
 		function saveBtn() {
-			
 			var formData = $("#myForm").serialize();
 			var formUrl = "/ezSystem/insertIPBand.do";
-			// 먼저 &!@#$%^ 이런거 체크 후, 아이피 중복되는지 체크
-			// 메서드 만들어서 하기
 			
 			formData = formData.split("ipBand=");
 			var ipAddress = "";
@@ -54,11 +62,31 @@
 			var explanation = "";
 			
 			for (var i = 1; i < formData.length; i++) {
-				ipAddress += formData[i];
+				
+				if (i != formData.length - 1) {
+					formData[i] = formData[i].substring(0, formData[i].length - 1);
+				}
+				
+				if (!textChk(formData[i]) || formData[i].length == 0 || formData[i] == "") {
+					alert("IP주소를 정확히 입력해주세요.");
+					return;
+				}
+				
+				ipAddress = ipAddress + "." + formData[i];
+				
 			}
-			formData = "";
-			ipAddress = replaceAll(ipAddress, "&", ".");
+			ipAddress = ipAddress.substring(1, ipAddress.length);
 			
+			var allIPList = window.opener.allIPList;
+			
+			for (var i = 0; i < allIPList.length; i++) {
+				if (allIPList[i].ipAddress == ipAddress) { // IP 중복 되었을때
+					alert("IP주소가 중복되었습니다.");
+					return;
+				}
+			}
+			
+			formData = "";
 			if (!document.getElementById("ipAllow1").checked) {
 				access = "NO";
 			}
