@@ -106,9 +106,9 @@
 .cabDivPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .cabMainPrevH >div {height: 100%; display: flex; flex-flow: column;}
-.cabinetTree {margin: 5px; min-height: 100px; white-space: nowrap; overflow-x: auto;}
+.cabinetTree {margin: 10px; min-height: 100px; white-space: nowrap; overflow-x: auto;}
 .cabinetTree2:empty {padding: 0px !important;}
-.cabinetTree2 {margin: 5px; white-space: nowrap; overflow-x: auto; min-height: 100px;}
+.cabinetTree2 {margin: 10px; white-space: nowrap; overflow-x: auto; min-height: 100px;}
 .cabinetImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
 .cabSpanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
 .overY {overflow-y: hidden !important;}
@@ -285,6 +285,7 @@
 .rlDocDiv em, .cabemailDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
 
 .wide {width: 52%;}
+.wide2 {width: 88%;}
 .nowrap {white-space:nowrap; min-width: 135px;}
 
 .cabemailDiv {border: none; max-height: 30px; height: 20px; overflow-y: auto;}
@@ -396,7 +397,7 @@
 .cursor {cursor: pointer;}
 .icon_rbtn img {width: 16px; height: 16px;}
 .cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px; overflow-x: hidden;}
-.cabtxtPrint .cabrltxt table, th, td {padding: auto; margin: auto;}
+.cabtxtPrint .cabrltxt table, th, td {margin: auto;}
 .cabtxtPrint .cabrltxt p {margin-top: 0px !important; margin-bottom: 0px !important;}
 .cabwrapPrintoff, .cabwrapPrinton {pointer-events: none;}
 .cabwrapPrintoff {display: none;}

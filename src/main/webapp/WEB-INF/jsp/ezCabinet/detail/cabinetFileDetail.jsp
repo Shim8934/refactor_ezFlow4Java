@@ -21,7 +21,7 @@
 					<td class="nowrap" id="createdDate"></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
+					<th><spring:message code='ezCabinet.t161'/></th>
 					<td colspan="3" id ="title" class="overfl"></td>
 				</tr>
 				<tr>

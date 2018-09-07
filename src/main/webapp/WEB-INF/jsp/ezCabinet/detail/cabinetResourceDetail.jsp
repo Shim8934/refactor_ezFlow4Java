@@ -23,7 +23,7 @@
 					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
+					<th><spring:message code='ezCabinet.t161'/></th>
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
 				<tr>
@@ -39,7 +39,7 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><c:out value="${resourceitem.columnName}"/></th>
-					<td class="overfl wide" colspan="3" title="<c:out value="${resourceitem.columnValue}"/>"><c:out value="${resourceitem.columnValue}"/></td>
+					<td class="overfl wide2" colspan="3" title="<c:out value="${resourceitem.columnValue}"/>"><c:out value="${resourceitem.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>

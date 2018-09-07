@@ -23,7 +23,7 @@
 					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
+					<th><spring:message code='ezCabinet.t161'/></th>
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
 				<tr>

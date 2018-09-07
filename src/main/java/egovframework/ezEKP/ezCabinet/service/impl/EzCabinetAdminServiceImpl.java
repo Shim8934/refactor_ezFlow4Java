@@ -102,14 +102,14 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		if (result == null || result.size() == 0) {
 			//Auto insert data
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
-			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-			result.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "resrc" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "option", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
-			result.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "commu" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
-			result.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
-			result.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "addrs" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "jounl" , 1, tenantId));
 			
 			insertModulForAdmin(result);
 		}
@@ -166,14 +166,14 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		if (result == null || result.size() == 0) {
 			//Auto insert data
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
-			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-			result.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "resrc" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "option", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
-			result.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "commu" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
-			result.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
-			result.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "addrs" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "jounl" , 1, tenantId));
 			
 			insertModulForAdmin(result);
 		}
