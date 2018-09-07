@@ -539,7 +539,7 @@
 	    		
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
-		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 0, "left" : 0});
+		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
 		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-40-25});
 		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
 
