@@ -960,8 +960,9 @@
 		            	period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
 	            	} */
 	            	
+	            	//2018-09-07 배현상, 년도 선택 시 한자리 숫자인 월 앞에 0이 붙지 않도록 변경
 	            	if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
-	            		period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
+	            		period = condition[5].substring(0, 4) + strLang1028 + " " + parseInt(condition[5].substring(5, 7)) + strLang1029 + " " + parseInt(condition[5].substring(8,10)) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + parseInt(condition[6].substring(5, 7)) + strLang1029 + " " + parseInt(condition[6].substring(8, 10)) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "" && condition[6] != null && condition[6] != "" && condition[3].length <= 4 && condition[6].length <= 4) {
 	            		period = condition[3]+strLang1028+" "+condition[4]+strLang1029+" "+condition[5]+strLang1030+" ~ "+condition[6]+strLang1028+" "+condition[7]+strLang1029+" "+condition[8]+strLang1030;
 	            	} else if (condition[9] != null && condition[9] != "" && condition[12] != null && condition[12] != "" && condition[9].length <= 4 && condition[12].length <= 4) {
