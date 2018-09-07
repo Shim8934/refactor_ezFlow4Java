@@ -816,6 +816,11 @@ var CabinetItem = function() {
 				case 10: showProjectPreview(data, dlElmt)  ; break;
 				case 11: showResourcePreview(data, dlElmt) ; break;
 			}
+			
+			ifameContent.addEventListener("load", function(e) {
+				var ifameContentWd = ifameContent.contentWindow || ifameContent.contentDocument;
+				ifameContentWd.addEventListener("mouseup", function(e) {closeViewPopupOutside(e);}, false);
+			}, false); 
 		}
 		else {
 			showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv);
