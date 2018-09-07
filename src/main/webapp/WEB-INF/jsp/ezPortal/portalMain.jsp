@@ -46,7 +46,7 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			.mCSB_inside > .mCSB_container{margin-right: 10px;}
+			.mCSB_inside > .mCSB_container{margin-right: 25px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -348,7 +348,7 @@
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	minWidth: 280,
+		        	minWidth: 295,
 		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
@@ -466,9 +466,9 @@
 					});
 		        });
 		        
-		        $(".memo_main").on("blur", ".memoLay textarea", function() {
+		        /* $(".memo_main").on("blur", ".memoLay textarea", function() {
 		        	modifyMemo(this);
-		        });
+		        }); */
 		        
 		        $("#memoFolderList").change(function() {
 		        	getMemoList();
@@ -533,9 +533,9 @@
 	    		
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
-		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight-56, "top" : 56, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-56-40-25});
-		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-56-40});
+		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 0, "left" : 0});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-40-25});
+		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
 		    		getMemoConfig();
@@ -995,7 +995,9 @@
 			     	<div class="memo_main"></div>
 			     </div>
 
-			     <div id="slider-range" class="memobgBar"></div>
+			     <div class="memobgBar">
+			     	<div id="slider-range"></div>
+			     </div>
 			     <!-- <div class="memobgBar"><img id="slider-range" src="/images/ezMemo/memoBar.png"></div> -->
 			</div>
 						
