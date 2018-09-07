@@ -83,9 +83,9 @@ function CabinetTree() {
 		switch(code) {
 			case 1 : alert(CabinetMessages.strParamErr) ; return;
 			case 2 : alert(CabinetMessages.strError)    ; return;
-			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
-					 alert(CabinetMessages.strTreeErr2) ; return;
-			case 5 : alert(CabinetMessages.strShareErr2); return;
+			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}; return;
+					 //alert(CabinetMessages.strTreeErr2); 
+			case 5 : return; //alert(CabinetMessages.strShareErr2); return;
 		}
 		
 		var nodesTree   = data.tree;
@@ -101,7 +101,7 @@ function CabinetTree() {
 			case "listshare":
 				var len = nodesTree.length;
 				
-				if (len == 0 && _genType == "listshare") {alert(CabinetMessages.strShareErr3);}
+				//if (len == 0 && _genType == "listshare") {alert(CabinetMessages.strShareErr3);}
 				
 				for (var i = 0; i < len; i++) {
 					var divChildNode  = document.createElement("div");
