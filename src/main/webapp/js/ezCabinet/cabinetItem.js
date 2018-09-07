@@ -1385,7 +1385,7 @@ var CabinetItem = function() {
 			case "mkv"  : urlImg   = "/images/cabinet/mkv.png"          ; break;
 			case "iso"  : urlImg   = "/images/cabinet/iso.png"          ; break;
 			case "rar"  : urlImg   = "/images/cabinet/rar.png"          ; break;
-			default     : urlImg   = "/images/cabinet/unknown.png"      ; break;
+			default     : urlImg   = "/images/cabinet/none.png"         ; break;
 		}
 		
 		return {
