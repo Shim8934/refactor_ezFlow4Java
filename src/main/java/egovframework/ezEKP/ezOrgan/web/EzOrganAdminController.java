@@ -2383,7 +2383,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
    		model.addAttribute("totalCount", totalCount);
-   		model.addAttribute("pPageRow", pPageRow);
 		
    		logger.debug("getRetireUserList ended");
    		

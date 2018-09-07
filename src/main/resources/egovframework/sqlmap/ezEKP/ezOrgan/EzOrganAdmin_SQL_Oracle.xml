@@ -55,8 +55,8 @@
 	</procedure> -->
 	
 	<sql id="EzOrganAdminDAO.searchQuery">
-		<isNotEmpty property="search_keycode" prepend="and">
-			<isNotEmpty property="search_keyword" >
+		<isNotEqual property="search_keycode" compareValue="" prepend="and">
+			<isNotEqual property="search_keyword" compareValue="">
 					<isEqual property="search_keycode" compareValue="1">
 						DISPLAYNAME LIKE '%' || #search_keyword# || '%'
 					</isEqual>
@@ -66,8 +66,8 @@
 					<isEqual property="search_keycode" compareValue="3">
 						CN LIKE '%' || #search_keyword# || '%'
 					</isEqual>
-			</isNotEmpty>
-		</isNotEmpty>
+			</isNotEqual>
+		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<isNotEqual property="searchEndDate" compareValue="">
 				<![CDATA[
@@ -3849,7 +3849,7 @@
             WHERE
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
-		<include refid="EzOrganAdminDAO.searchQuery"/
+		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">

@@ -21,12 +21,19 @@
 			var CurPage = 1;
 			var totalPage = "${totalPage}";
 			var totalCount = "${totalCount}";
-			var BlockSize = 1;
+			var BlockSize = 10;
 			var lang = "${lang}";
 			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 	    	
+			document.onselectstart = function () {
+		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		            return false;
+		        else
+		            return true;
+		    }
+		    
 			window.onresize = function () {
 				var height = document.documentElement.clientHeight - 135 - document.getElementById("mainmenu").clientHeight;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
@@ -34,38 +41,12 @@
 	        	}
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
-			};
-			
-			document.onselectstart = function() {return false;};
+			}
 			
 			window.onload = function() {
 				retireUserList();
 			}
-	        
-			/* 페이지네이션 변경으로 인한 주석처리
-			function prevPage_onclick()	{
-				newPage = parseInt(CurPage) - 1;
-				if (newPage > 0) {
-					window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + newPage.toString();
-				}
-			}
-
-			function nextPage_onclick()	{
-				newPage = parseInt(CurPage) + 1;
-				if (newPage <= parseInt(totalPage)) {
-					window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + newPage.toString();
-				}
-			}
 			
-			 function moveToPage() {
-				if (window.event.keyCode == 13) {
-					var newPage = txt_PageInputNum.value;	
-					if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-						window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + parseInt(newPage);
-					}
-				}
-			} */
-	       
 			function showProgress() {
 			    document.getElementById("progressPanel").style.display = "";
 			    document.getElementById("loadingLayer").style.display = "";
@@ -363,13 +344,13 @@
             }
             
             function selbeforeBlock() {
-                var pageNum = parseInt(sCurPage);
+                var pageNum = parseInt(CurPage);
                 pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
                 goToPageByNum(pageNum);    
             }
             
             function selbeforeBlock_one() {
-                var pageNum = parseInt(sCurPage);
+                var pageNum = parseInt(CurPage);
                 
                 if (parseInt(pageNum - 1) > 0) {
                     goToPageByNum(parseInt(pageNum - 1));
@@ -379,13 +360,13 @@
             }
             
             function selafterBlock() {
-                var pageNum = parseInt(sCurPage);
+                var pageNum = parseInt(CurPage);
                 pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
                 goToPageByNum(pageNum);
             }
             
             function selafterBlock_one() {
-                var pageNum = parseInt(sCurPage);
+                var pageNum = parseInt(CurPage);
                 
                 if( parseInt(pageNum + 1) <= sTotalPage) {
                     goToPageByNum(parseInt(pageNum + 1));
@@ -518,7 +499,6 @@
 						 CurPage = data.pPage;
 						 totalPage = data.totalPage;
 						 totalCount = data.totalCount;
-						 BlockSize = data.pPageRow;
 						 lang = data.lang;
 						
 						 var html = "";
@@ -536,17 +516,17 @@
 								html += "    </td>";
 								
 								if (lang == '' || lang == 1) {
-									html += "<td>" + i.description + "</td>";
+									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName + "</td>";
-									html += "<td>" + i.title + "</td>";
-									html += "<td>" + i.extensionAttribute10 + "</td>";
+									html += "<td>" + (i.title  != null ? i.title : " ") + "</td>";
+									html += "<td>" + (i.extensionAttribute10  != null ? i.extensionAttribute10 : " ")+ "</td>";
 								} 
 								
 								else if (lang != '' || lang != 1) {
-									html += "<td>" + i.description2+ "</td>";
+									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName2 + "</td>";
-									html += "<td>" + i.title2 + "</td>";
-									html += "<td>" + i.extensionAttribute102 + "</td>";
+									html += "<td>" + (i.title2  != null ? i.title2 : " ") + "</td>";
+									html += "<td>" + (i.extensionAttribute102  != null ? i.extensionAttribute102 : " ")+ "</td>";
 								}
 								
 								html += "<td>" + i.updateDT + "</td>";
@@ -608,15 +588,10 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<%-- <div class="page"> 페이지 네이션 변경으로 인한 주석처리
-			<img src="/images/page_previous.gif" align="absmiddle" id=td_Previous onClick="prevPage_onclick()"/> <spring:message code='ezOrgan.t314'/>: <c:out value='${totalPage}'/>&nbsp;&nbsp; -
-		  	<input name="txt_PageInputNum" type="text" value="<c:out value='${pPage}'/>" onKeyDown="moveToPage()"/>
-		  	<img src="/images/page_next.gif" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
-		</div> --%>
-		<div id="contentlist" style="width:100%; overflow: auto;">
+		<div id="contentlist" style="width:100%; height: 653px; overflow: auto;">
 			<div>
-				<table class="mainlist" style="width:100%"> 
-					<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
+				<table class="mainlist" style="width:100%">
+					<thead style> 
 				    	<tr>
 				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
 				      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
@@ -625,15 +600,15 @@
 				      		<th style="width:100px;"><spring:message code='ezOrgan.t1500'/></th>
 				      		<th><spring:message code='ezOrgan.t313'/></th>
 				   		</tr>
-					   	<!-- list -->
-				   		<tbody id="mainListBody"></tbody>
+			   		</thead>
+				   	<!-- list -->
+			   		<tbody id="mainListBody" style="overflow: auto;"></tbody>
 				</table>
-		   		</table>
 			</div>		
 		</div>
-     <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
-     <span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
-     <br/>
+     	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+     	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
+     	<br/>
 		<div id="tblPageRayer"></div>
 	</body>
 </html>
