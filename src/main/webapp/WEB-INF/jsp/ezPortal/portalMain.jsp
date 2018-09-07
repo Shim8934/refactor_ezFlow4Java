@@ -46,7 +46,6 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			.mCSB_inside > .mCSB_container{margin-right: 25px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
