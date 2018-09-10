@@ -47,6 +47,15 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
+			
+			.alertPopup{width:200px;position:absolute; top:112px;left:27px;}
+			.popHeader{height:47px;line-height:47px;font-size:18px;font-weight:bold;border-radius:5px 5px 0 0;background:#f1f3f4;border-bottom:1px solid #cccfd3;}
+			.popContainer{background:#fff; border-radius:0 0 5px 5px;margin-top: -17px;height: 59px;}
+			.txtDialog{padding:0px 0 25px 0;font-size:16px;color:#333;line-height:26px;font-weight:bold;}
+			.footBtn{font-size:18px;line-height:33px;text-align:center;}
+			.modal {z-index: 10000;padding-top:top: 0px; width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 4px;margin-top: 3px;}
+			.modRm-wrap{display:inline-block; margin:10px;}
+			.close-wrap{display:inline-block; margin:10px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -170,8 +179,8 @@
 		    	checkDefaultFolder();
 		    	memoFoldersInfo();
 	    		getMemoConfig();
-	    		quickMemoDisplay();   	
-		     
+	    		quickMemoDisplay();   
+	   
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
 		    		theme : "dark",
@@ -427,43 +436,39 @@
 				
 		        getMemoList();
 		        
-		        // 메모 숨김 상태 변경 
+		        // 메모 삭제  버튼(dom 생성후, event 추가)
 		        $(".memo_main").on("click", ".memoLay .memoX", function() {
-		        	
 		        	var memoId = $(this).attr("memoid").replace("memoid", "");
+		        	var modal = document.createElement('div');
+		        	modal.setAttribute("class", "modal");
+		        	modal.id = "modal" + memoId;
 		        	
-		        	/* $.ajax({
-		        		type: "POST",
-		        		data : {
-		        			memo_ids : memoId,
-		        			display : 1
-		        		},
-		        		dataType: "JSON",
-		        		url : "/ezMemo/memo-display.do",
-		        		success : function(result) {
-		        			
-		        			if (result.result == "ok") {
-		        				getMemoList();
-		        			}
-		        		}
-		        	}); */
+		        	var alertPopup = document.createElement('div');
+		        	alertPopup.setAttribute("class", "alertPopup");
+		        	alertPopup.id = "memo" + memoId;
 		        	
-		        	// 삭제로 변경
-		        	$.ajax ({
-		 			   	url : '/ezMemo/memoDelete.do',
-		 			   	type : 'POST',
-		                dataType : 'json',
-		                data : { 
-		                	memo_ids : memoId
-		                },  
-		                cache: false,
-		                success: function(result) {
-		                	getMemoList();
-		                },
-		                error : function() {
-		                	
-		                }
-					});
+		        	var popHeader = document.createElement('div');
+		        	popHeader.setAttribute("class", "popHeader");
+		        	popHeader.innerHTML = "<span>삭제</span>";
+		        	
+		        	var popContainer = document.createElement('div');
+		        	popContainer.setAttribute("class", "popContainer");
+		        	
+		    		var txtDialog = document.createElement('div');
+		    		txtDialog.setAttribute("class", "txtDialog");
+		    		
+		    		var footBtn = document.createElement('p');
+		    		footBtn.setAttribute("class", "footBtn");
+		    		footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' >확인</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' >취소</span></div>";
+		    		
+		    		txtDialog.appendChild(footBtn);
+		    		popContainer.appendChild(txtDialog);
+		    		popHeader.appendChild(popContainer);
+		    		alertPopup.appendChild(popHeader);
+		    		modal.appendChild(alertPopup)
+   					
+		    		modal.addEventListener('click', modalDelete, false);
+		    		$("#memo" + memoId).prepend(modal);
 		        });
 		        
 		        /* 메모 내용 변경 blur 이벤트 -> click 이벤트로 변경 */
@@ -490,6 +495,32 @@
 		        }); */
 		       
 		    });
+		    
+		    // 모달 삭제 || 메모지 삭제
+		    function modalDelete(event) {
+		    	var mode = event.target.id.substring(0,5);
+		    	var ID = event.target.id.substring(5);
+		    	if(mode === "modal" || mode === "close") {
+		    		$("#modal" + ID).remove();
+		    	} else if(mode === "modRm") {
+		    		$.ajax ({  	
+			        	url : '/ezMemo/memoDelete.do',
+			 			type : 'POST',
+			            dataType : 'json',
+			            data : { 
+			               	memo_ids : ID
+			            },  
+			            async:false,
+			            cache: false,
+			            success: function(result) {
+			                getMemoList();
+			            },
+			            error : function() {
+			                	
+			            }
+					});
+		    	}
+		    }
 		    
 		 	// 메모 내용 변경	    
 		    function modifyMemo(obj) {
