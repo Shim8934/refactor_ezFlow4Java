@@ -1061,9 +1061,9 @@
 						</c:forEach>
 	            	</c:when>
 	            	<c:otherwise>
-		            	<img src="/images/WebPartSliderCI/rolling01.png" />
-			    		<img src="/images/WebPartSliderCI/rolling01.png" />
-			    		<img src="/images/WebPartSliderCI/rolling01.png" />
+		            	<img src="/images/WebPartSliderCI/rolling01.png" width="280" height="515" />
+			    		<img src="/images/WebPartSliderCI/rolling01.png" width="280" height="515" />
+			    		<img src="/images/WebPartSliderCI/rolling01.png" width="280" height="515" />
 	            	</c:otherwise>
 	            </c:choose>
             </div>

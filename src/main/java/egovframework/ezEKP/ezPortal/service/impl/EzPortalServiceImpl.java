@@ -2109,7 +2109,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		
-		sb.append("<li><span class='icon_topmenu util_systemlink' onclick='javascript:viewQuick()' /></span></li>\n");
+		//sb.append("<li><span class='icon_topmenu util_systemlink' onclick='javascript:viewQuick()' /></span></li>\n");
 		
 		sb.append("</ul></li>\n");
 		logger.debug("sb="+sb.toString());
