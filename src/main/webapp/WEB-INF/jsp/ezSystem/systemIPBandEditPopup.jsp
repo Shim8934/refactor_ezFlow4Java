@@ -43,7 +43,11 @@
 		
 		// IP주소에 들어갈수 있는 값 체크 (숫자/*만 가능)
 		function textChk(txt) {
-			var regexp = /^[0-9*]*$/;
+			if (txt.indexOf("*") != -1 && txt.length == 1) {
+				return true;
+			}
+			
+			var regexp = /^[0-9]*$/;
 			
 			if(!regexp.test(txt)) {
 				return false;
