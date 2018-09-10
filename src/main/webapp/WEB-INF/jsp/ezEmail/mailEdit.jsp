@@ -110,7 +110,6 @@
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
 		    var folderPath = "${draftsFolderName}";
-		    var multipartFirstIdx = "${multipartFirstIdx}";
 		    
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -671,7 +670,7 @@
 			                					+ "&tid=" + tid;
 			                } else {
 			                	// 일반파일 첨부시
-				                aitem = "/ezEmail/downloadAttach.do?" 
+				                aitem = "/ezEmail/downloadAttachInWriter.do?" 
 				                				+ "mode=Attach"
 				                				+ "&folderPath=" + encodeURIComponent(folderPath)
 				                				+ "&filename=" + encodeURIComponent(filename);
@@ -908,7 +907,7 @@
 		        </tr>
                 <c:if test="${isCrossBrowser == true}">          
 		        <tr>
-		            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
+		            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
 		                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 		                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" frameborder="0" src="/ezEmail/dragAndDrop.do"></iframe>
 		            </td>

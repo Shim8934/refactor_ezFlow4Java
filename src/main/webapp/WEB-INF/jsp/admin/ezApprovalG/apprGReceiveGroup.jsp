@@ -29,6 +29,7 @@
 	        var lvtDept = new ListView();
 	        var lvtDeptSelect = new ListView();
 	        var treeView = new TreeView();
+	        var useReceiveInfoName = "${useReceiveInfoName}";
 		    
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = "<c:out value='${companyID}'/>";
@@ -39,6 +40,8 @@
 	        	InitlvtDeptSelectListView();
 
 	        	getAdminReceivGroup();
+	        	// 페이지가 열리자마자 최상위 수신자 그룹 선택처리.
+	        	lvtDept_SelChange();
 		    });
 		    
 		    function Tree_setconfig() {
@@ -91,7 +94,7 @@
 		        lvtDept.LoadFromID("lvtDeptForm");
 		        var selRow = lvtDept.GetSelectedRows();
 
-		        if (selRow) {
+		        if (selRow.length > 0) {
 		            getAdminReceivItem(selRow[0].getAttribute("DATA1"));
 		            p_groupid = selRow[0].getAttribute("DATA1");
 		            //pGroupID.innerText = selRow[0].getAttribute("DATA1");
@@ -355,41 +358,49 @@
 		    }
 		    
 		    function Deletegroupmaininfo() {
+		    	var chkDel = false;
+		    	
 		        if (p_groupid == "") {		            
 		            //2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
 		            //OpenAlertUI("<spring:message code='ezApprovalG.t1563'/>");
 		            alert("<spring:message code='ezApprovalG.t1563'/>");
 		            return;
 		        }
+		        
+		        if (confirm("<spring:message code='ezApprovalG.t999933'/>")) {
+					chkDel = true;  	
+		        }
 
-		        $.ajax({
-		        	type : "POST",
-		        	dataType : "html",
-		        	url : "/admin/ezApprovalG/deleteGroupMainInfo.do",
-		        	async : false,
-		        	data : { 
-		        		node1 : p_groupid, node2 : document.getElementById("SCompID").value
-		        	},
-		        	success : function(result) {
-		        		if (result == "TRUE") {
-		        			getAdminReceivGroup();
-				            p_groupid = "";
-				            //pGroupID.innerText = "";
-				            pGroupName2.innerText = "";
-				            pGroupName.value = "";
-				            lvtDeptSelect.DataSource("");
-				        } else {
-				        	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
+		        if (chkDel) {
+			        $.ajax({
+			        	type : "POST",
+			        	dataType : "html",
+			        	url : "/admin/ezApprovalG/deleteGroupMainInfo.do",
+			        	async : false,
+			        	data : { 
+			        		node1 : p_groupid, node2 : document.getElementById("SCompID").value
+			        	},
+			        	success : function(result) {
+			        		if (result == "TRUE") {
+			        			getAdminReceivGroup();
+					            p_groupid = "";
+					            //pGroupID.innerText = "";
+					            pGroupName2.innerText = "";
+					            pGroupName.value = "";
+					            lvtDeptSelect.DataSource("");
+					        } else {
+					        	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
+					            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");
+					            alert("<spring:message code='ezApprovalG.t1564'/>");
+					        }
+			        	}, 
+			        	error : function() {
+			        		//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
 				            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");
 				            alert("<spring:message code='ezApprovalG.t1564'/>");
-				        }
-		        	}, 
-		        	error : function() {
-		        		//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
-			            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");
-			            alert("<spring:message code='ezApprovalG.t1564'/>");
-		        	}
-		        });
+			        	}
+			        });
+		        }
 			}
 		    
 		    var ezapropinion_cross_dialogArguments = new Array();
@@ -479,6 +490,85 @@
 	            	}
 	            });
 	        }
+	        
+	        var aprdeptname_cross_dialogArguments = new Array();
+		    function btnaddressChange() {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtDeptSelForm");
+		        var CurSelRow = listview.GetSelectedRows();
+		        var windowName = "/admin/ezApprovalG/aprDeptName.do";
+		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
+		
+		        if (CurSelRow[0] == undefined) {
+		            alert("<spring:message code='ezApprovalG.t10501'/>");
+		            return;
+		        }
+		        
+		        var dialogValue = CurSelRow[0].cells[0].innerText;
+		        if (CrossYN()) {
+		            aprdeptname_cross_dialogArguments[0] = dialogValue;
+		            aprdeptname_cross_dialogArguments[1] = btnaddressChange_Complete;
+		            
+		            var feature = "width=360, height=220, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
+		            feature = feature + GetOpenPosition(360, 220);
+		            window.open(windowName, "", feature);
+		            
+// 		            DivPopUpShow(360, 220, windowName);
+		        }
+		        else {
+		            parameter = parameter + GetShowModalPosition(330, 205);
+		            var AddressName = window.showModalDialog(windowName, dialogValue, parameter);
+		            if (AddressName == "cancel" || AddressName == undefined)
+		                return;
+		            if (CrossYN()) {
+		                CurSelRow[0].cells[0].textContext = AddressName;
+		                CurSelRow[0].cells[0].innerText = AddressName;
+		            }
+		            else {
+		                CurSelRow[0].cells[0].innerText = AddressName;
+		            }
+		            SetAttribute(CurSelRow[0], "DATA5", AddressName);
+		            SetAttribute(CurSelRow[0], "DATA6", AddressName);
+		        }
+		    }
+		
+		    function btnaddressChange_Complete(AddressName) {
+		        if (AddressName == "cancel" || AddressName == undefined)
+		            return;
+		
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtDeptSelForm");
+		        var CurSelRow = listview.GetSelectedRows();
+		
+		        if (CrossYN()) {
+		            CurSelRow[0].cells[0].textContext = AddressName;
+		            CurSelRow[0].cells[0].innerText = AddressName;
+		        }
+		        else {
+		            CurSelRow[0].cells[0].innerText = AddressName;
+		        }
+		        SetAttribute(CurSelRow[0], "DATA5", AddressName);
+		        SetAttribute(CurSelRow[0], "DATA6", AddressName);
+		        
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezApprovalG/updateGroupSubItemInfo.do",
+		        	async : false,
+		        	data : {
+		        		node1 : p_groupid,
+		        		node2 : CurSelRow[0].getAttribute("DATA3"),
+		        		node3 : CurSelRow[0].getAttribute("DATA5"),
+		        		node4 : CurSelRow[0].getAttribute("DATA4"),
+		        		node6 : CurSelRow[0].getAttribute("DATA6")
+		        	},
+		        	success : function() {
+		        		getAdminReceivItem(p_groupid);
+		        	},
+		        	error : function(jqXHR, textStatus, errorThrown) {
+		        	}
+		        });
+		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody">
@@ -559,7 +649,18 @@
                 	</div>
             	</td>
         	</tr>
+        	<c:if test="${useReceiveInfoName == '1' }">
+	        	<tr>
+	        		<td colspan="3">
+	        			<a class="imgbtn imgbck" style="float: right;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
+	        		</td>
+	        	</tr>
+        	</c:if>
     	</table>
     	<br/>
+    	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

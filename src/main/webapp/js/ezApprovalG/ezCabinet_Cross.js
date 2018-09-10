@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -1199,8 +1199,11 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (trim_Cross(pURL) == "") {
             if (trim_Cross(DocID) == "") {
                 OpenAlertUI(strLang260);
-            }
-            else {
+            } else if (g_uFlag == "m03") {
+            	var pAlertContent = "배부문서는 최초접수시 생성되므로 배부받은 부서에서 접수를 하여야 열람할 수 있습니다.";
+                OpenAlertUI(pAlertContent);
+                return "";
+            } else {
                 var para2 = new Array();
                 para2[0] = selRow.getAttribute("DATA6");
                 para2[1] = selRow.getAttribute("DATA8");
@@ -1226,10 +1229,16 @@ function ViewDoc_onclick_Complete(Rtn) {
             var para = new Array();
             DocID = selRow.getAttribute("DATA1");
             pURL = selRow.getAttribute("DATA2");
+            
+            var tempUrl = pURL;
 
             var openLocation = "";
             
-            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+            if (tempUrl.substr(tempUrl.length - 4, tempUrl.length).toLowerCase() == ".ezd") {
+            	tempUrl = tempUrl.substr(0, tempUrl.length - 4);
+            }
+            
+            if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
             	if (isIE()) {
                 	if (g_uFlag == "m03") {
                 		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";

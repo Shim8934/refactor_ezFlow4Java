@@ -16,6 +16,17 @@
 	        var ImageFilePath = "";
 	        var pNoneActiveX = "YES";
 	        var suffix = 0;
+	        var agent = navigator.userAgent.toLowerCase();
+	        
+	        /* 2018-08-29 홍승비 - 사진다운로드 팝업창 세로길이 리사이즈 추가 */
+	        window.onresize = function () {
+	        	if (agent.indexOf("chrome") != -1) {
+	        	 	document.getElementById("imageDiv").style.height = document.documentElement.clientHeight - 90 + "px";
+	        	} else {
+	        		document.getElementById("imageDiv").style.height = document.documentElement.clientHeight - 94 + "px";
+	        	}
+	        }
+	        
 	        function downloadAll(checks) {
 	            if (checks[suffix]) {
 	                if (checks[suffix].checked) {
@@ -84,7 +95,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height: 410px;">
+	                <div class="layout" id="imageDiv" style="padding-top:10px;padding-bottom:10px;overflow-y:auto;height: 410px;">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
 	                	<c:set var="fileName" value="${fn:split(fileName, '|')}"/>

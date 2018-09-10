@@ -599,7 +599,13 @@
 		            }
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
-		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		            var tempURL = pURL;
+		            
+		            if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
+	                	tempURL = tempURL.substr(0, tempURL.length - 4);
+	                }
+		            
+		            if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
 		            	if (isIE()) {
 			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
@@ -960,7 +966,7 @@
 	            	} */
 	            	
 	            	if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
-	            		period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
+	            		period = condition[5].substring(0, 4) + strLang1028 + " " + parseInt(condition[5].substring(5, 7)) + strLang1029 + " " + parseInt(condition[5].substring(8,10)) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + parseInt(condition[6].substring(5, 7)) + strLang1029 + " " + parseInt(condition[6].substring(8, 10)) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "" && condition[6] != null && condition[6] != "" && condition[3].length <= 4 && condition[6].length <= 4) {
 	            		period = condition[3]+strLang1028+" "+condition[4]+strLang1029+" "+condition[5]+strLang1030+" ~ "+condition[6]+strLang1028+" "+condition[7]+strLang1029+" "+condition[8]+strLang1030;
 	            	} else if (condition[9] != null && condition[9] != "" && condition[12] != null && condition[12] != "" && condition[9].length <= 4 && condition[12].length <= 4) {
@@ -1135,8 +1141,8 @@
 		            pDocID = tr[0].getAttribute("DATA1");
 		
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
-		        feature = feature + GetOpenPosition(580, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
+		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
 		    }
 		

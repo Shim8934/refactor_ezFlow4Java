@@ -3385,7 +3385,8 @@
 	<select id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO">
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
-				DEPTID ,
+				DEPTID,
+				deptname,
                 DEPTSN 
            FROM 
            		TBL_FormRecv 
@@ -6550,7 +6551,17 @@
 		      		AND
 		      				TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 		      		AND
-		      				TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID		      				
+		      				TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+		      		LEFT JOIN 
+		      				TBL_RECORD_TEMP
+                	ON 
+                			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+                	AND 
+                			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+                	AND 
+                			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+                	AND 
+       						TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 		      		WHERE 
 		      				(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
 		      		AND 
@@ -6609,6 +6620,16 @@
 	      			TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 	      		AND
 	      			TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID	      			
+	      		LEFT JOIN 
+	      				TBL_RECORD_TEMP
+               	ON 
+               			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+               	AND 
+               			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+               	AND 
+               			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+               	AND 
+       					TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 	      		WHERE 
 	      			TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
 	      		AND 
@@ -6630,6 +6651,16 @@
 	         	AND 
 	         		 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
 	      	</isEqual>
+	      	<isEqual property="v_aprFlag" compareValue="G">
+		     	OR
+		     	((  TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID# ) 
+	     		AND
+		     		TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+		     	AND
+		     	(   TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID IS NULL )
+		     	AND
+		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
+		     </isEqual>
 	      	)
 			</isNotEqual>
 			<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
@@ -9006,6 +9037,16 @@
 	   			TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 	   		AND
 	   			TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	   		LEFT JOIN 
+   				TBL_RECORD_TEMP
+           	ON 
+       			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+           	AND 
+       			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+           	AND 
+       			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+       		AND 
+       			TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 	   		WHERE 
 	   			TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
 	   		AND 
@@ -9026,6 +9067,16 @@
       		AND	
 		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
+   		<isEqual property="v_aprFlag" compareValue="G">
+	     	OR
+	     	((  TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID# ) 
+     		AND
+	     		TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+	     	AND
+	     	(   TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID IS NULL )
+	     	AND
+		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
+	     </isEqual>
    		 	 )
    		 	<![CDATA[
 	   		 	AND 
@@ -11592,6 +11643,16 @@
 	      		TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 			AND
 	      		TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      	LEFT JOIN 
+  				TBL_RECORD_TEMP
+          	ON 
+      			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+          	AND 
+       			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+          	AND 
+       			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+   			AND 
+       			TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 	      	WHERE 
 	      		(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
 	      	AND 
@@ -11626,6 +11687,16 @@
 	      		TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
 			AND
 	      		TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      	LEFT JOIN 
+   				TBL_RECORD_TEMP
+           	ON 
+       			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+           	AND 
+      			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+           	AND 
+       			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+       		AND 
+       			TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 	      	WHERE 
 	      		TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
 	      	AND 
@@ -11645,6 +11716,16 @@
 	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
           OR 
           	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND   TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+	     </isEqual>
+	     <isEqual property="v_aprFlag" compareValue="G">
+	     	OR
+	     	((  TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID# ) 
+     		AND
+	     		TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+	     	AND
+	     	(   TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID IS NULL )
+	     	AND
+		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
 	     </isEqual>
 	     	)  
 		</isNotEqual>
@@ -16684,7 +16765,8 @@
 				   			DEPTID, 
 				   			REMARK, 
 				   			ORGDOCNUMCODE, 
-				   			DOCTITLE
+				   			DOCTITLE,
+				   			ORGANUSERNAME
 				   		FROM 
 				   			TBL_DOCDELIVERY 
 				   		WHERE 
@@ -21000,9 +21082,9 @@
 	<insert id="EzApprovalG.insertBebuDocDelivery" parameterClass="Map">
 		INSERT INTO 
 			TBL_DOCDELIVERY 
-		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID) 
+		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID, ORGANUSERNAME) 
 		(SELECT 
-			#v_maxSN#, a.DocID, a.Href, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID 
+			#v_maxSN#, a.DocID, a.Href, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID, #v_OrganUserName#
          FROM 
          	TBL_APRDOCINFO a 
          INNER JOIN 
@@ -23607,7 +23689,7 @@
 				SELECT 
 					COUNT(CABINETID) AS CNT 
 				FROM 
-					TBL_EXPENDAPRDOCINFO 
+					TBL_SEPERATEATTACH
 				WHERE 
 					CABINETID = #v_CABINETID# 
 		UNION 
@@ -25254,4 +25336,46 @@
 		AND
 			TENANT_ID = #tenantID#
    </delete>
+      <select id="EzApprovalG.isBebuDocExist" parameterClass="Map" resultClass="String">
+    	SELECT
+    		NVL(HREF,'NULL') as HREF
+    	FROM
+    		TBL_DOCDELIVERY
+    	WHERE
+    		DOCID = #v_DOCID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+    <update id="EzApprovalG.updateDocDeliveryHref" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_DOCDELIVERY
+	  		SET 
+	  			HREF = #v_HREF#
+		  	WHERE 
+		  		TENANT_ID = #v_TENANTID#
+		  	AND
+		  		COMPANYID = #companyID#
+		  	AND
+		  		DOCID = #v_DOCID#
+	  </update>
+	  	<update id="EzApprovalG.moveRecord2" parameterClass="Map">
+			UPDATE 
+				TBL_EXPENDAPRDOCINFO
+	        SET 
+	         	CABINETID = #v_CABINETID#
+	        WHERE 
+                DOCID =
+               		(SELECT 
+                    	DOCID
+                	FROM
+                    	TBL_RECORD
+                	WHERE
+	       				RECORDID = #v_RECORDID#
+                	AND
+	         			TENANT_ID = #v_TENANTID#
+                	AND
+   						COMPANYID = #companyID#)
+	</update>
 </sqlMap>

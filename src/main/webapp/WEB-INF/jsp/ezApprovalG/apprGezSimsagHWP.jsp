@@ -379,10 +379,12 @@
 
             var chkpass = chk_Passwd(pUserID);
             if (chkpass == "False") {
-                var pAlertContent =  "<spring:message code='ezApprovalG.t27'/>";
+                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
                 OpenAlertUI(pAlertContent);
                 return;
-            } else if (chkpass == "cancel") {
+            } else if (chkpass == "cancel" || chkpass == undefined) {
+                var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                OpenAlertUI(pAlertContent);
                 return;
             }
 
@@ -903,6 +905,7 @@
                                     case "id":
                                     case "class":
                                     case "summary":
+                                    case "style":
                                     case "width":
                                     case "width_kaoni":
                                     case "height":
@@ -978,6 +981,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -995,6 +999,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1012,6 +1017,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1029,6 +1035,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "align":
                                     case "char":
                                     case "charoff":
@@ -1046,6 +1053,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "abbr":
                                     case "axis":
                                     case "headers":
@@ -1074,6 +1082,7 @@
                                 switch (ArrAttr[AttrIdx].name.toLowerCase()) {
                                     case "id":
                                     case "class":
+                                    case "style":
                                     case "abbr":
                                     case "axis":
                                     case "headers":

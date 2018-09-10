@@ -166,7 +166,8 @@
 .selectAnsImg{width: 13px;vertical-align: middle;margin-bottom: 2px;}
 
 /* vote thumbnail*/
-.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
+/* 2018-08-29 홍승비 - 이미지 확대 레이어팝업 IE오류 수정(zoom 속성 제거) */
+.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; cursor:pointer;}
 .imgPopupMagnify{position: relative; float: left; cursor: pointer;}
 .imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
 .imgPopupBoxMagnify{width: 800px;height: 800px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
