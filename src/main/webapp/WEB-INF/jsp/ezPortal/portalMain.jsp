@@ -60,14 +60,14 @@
 			.modRm-wrap{display:inline-block; margin:10px; cursor:pointer;}
 			.close-wrap{display:inline-block; margin:10px; cursor:pointer;}
 			
-			.select_wrapper {background: #aabbcc url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative; width:210px;}
+			.select_wrapper {text-align: left; padding-left: 10px;color:#fff; background: #6a8547 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative; width:210px;}
 			.select_wrapper:hover { background: #566c3a url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
-			.select_wrapper .select_inner {background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 100%;z-index: 15000;list-style: none; text-align:left; padding:0px;}
-			.select_wrapper .select_inner li {border-bottom: 1px solid #eee;padding: 0px;}
+			.select_wrapper .select_inner {font-family: arial;font-size: 13px; background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 100%;z-index: 15000;list-style: none; text-align:left; padding:0px;}
+			.select_wrapper .select_inner li {padding-left: 10px; border-bottom: 1px solid #eee;}
 			.select_wrapper .select_inner li:hover { background: #eee; }
 			.select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
 			.select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
-			.select_wrapper span {display: block; width:200px; }
+			.select_wrapper span {display: block; width:200px;}
 			.memoPlus{margin-left:250px;} //임시
     	</style>
 		<script type="text/javascript">
@@ -589,8 +589,9 @@
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-40-25});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-115});
 		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
+		    		$("#layer-popup").css({"height" : winHeight-45});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
 		    		getMemoConfig();
