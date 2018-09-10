@@ -250,7 +250,7 @@
 			FROM 
 				TBL_ADDJOBMASTER
 			WHERE 
-				ROWNUM > 1
+				ROWNUM <= 1
 		]]>
 	</select>
 	
