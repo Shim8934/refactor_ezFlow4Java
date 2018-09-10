@@ -599,7 +599,13 @@
 		            }
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
-		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		            var tempURL = pURL;
+		            
+		            if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
+	                	tempURL = tempURL.substr(0, tempURL.length - 4);
+	                }
+		            
+		            if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
 		            	if (isIE()) {
 			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {

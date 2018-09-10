@@ -242,8 +242,8 @@
 			}
 	
 			function getHistory() {
-				 var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
-					centerOpenWindow(URL, 730, 430);
+				var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + ext;
+				centerOpenWindow(URL, 730, 430);
 			}
 	
 			function centerOpenWindow(wfileLocation, wWeight, wHeight) {
