@@ -238,5 +238,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	public int deleteCompanyConfig(Map<String, Object> map) throws Exception {
 		return delete("EzCommonDAO.deleteCompanyConfig", map);
 	}
-	
+
+	public void addAddJobMasterOrderBy() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterOrderBy");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster orderby column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterOrderBy");
+		}
+	}
 }

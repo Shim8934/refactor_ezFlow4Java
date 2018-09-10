@@ -60,4 +60,6 @@ public interface EzCommonService {
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
 
+	public void addAddJobMasterOrderBy() throws Exception;
+
 }

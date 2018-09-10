@@ -1872,11 +1872,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("szFrom=" + szFrom);
 		logger.debug("szTo=" + szTo);
 		
+		/* 2018-09-07 홍승비 - 결재방법 다국어 데이터(v_LANG) 수정 */
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_APRTYPE", aprType);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
 		map1.put("v_STRLANG", commonUtil.getMultiData(lang, tenantID));
+		map1.put("v_LANG", commonUtil.getLangData(lang));
 		map1.put("userFlag", userFlag);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);

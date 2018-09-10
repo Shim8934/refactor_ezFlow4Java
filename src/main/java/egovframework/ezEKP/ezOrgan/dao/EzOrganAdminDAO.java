@@ -795,6 +795,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void updateProperty(Map<String, Object> map) throws Exception{
 		updatePropertyForLocal(map);       
 	}
+	
+	public void updateProperty_addJob(Map<String, Object> map) throws Exception{
+        update("EzOrganAdminDAO.updateProperty_addJob", map);
+	}
 
     private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
