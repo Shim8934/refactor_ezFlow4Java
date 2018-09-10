@@ -937,11 +937,11 @@
 		        }
 			    
 			    $(window).on("resize", function(){
-		            windowResize();
+			    	windowResize();
 		        });
 			    
 			    function windowResize() {
-		        	var height = document.documentElement.clientHeight - 243 - document.getElementById("mainmenu").clientHeight;
+		        	var height = document.documentElement.clientHeight - 235;
 		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 		        		height = height - 30;
 		        	}

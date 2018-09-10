@@ -784,7 +784,7 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 213 - document.getElementById("mainmenu").clientHeight;
+	        	var height = document.documentElement.clientHeight - 205;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
