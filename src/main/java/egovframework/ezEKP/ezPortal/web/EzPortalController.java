@@ -1766,7 +1766,8 @@ System.out.println(strHTML);
 //								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
 //								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
 //								"</dl>";
-								pPollResultContent.append("<li class='voteList_0"+(i+1)+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
+								
+								pPollResultContent.append("<li class='voteList_0"+(list.get(i).getResult())+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
 								pPollResultContent.append("<div class='percent'>" + String.format("%.1f", poolRstPer) + "%</div>");
 								pPollResultContent.append("<div class='voteGraph'><span style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%'></span></div></li>");
 								
@@ -1812,7 +1813,11 @@ System.out.println(strHTML);
 //									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
 //		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
 //		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-									pPollResultContent.append("");
+									
+									/* 2018-09-10 홍승비 - 비어있는 설문조사 보기 생성 */
+									pPollResultContent.append("<li class='voteList_0"+(i)+"'><div class='voteT'><span class='Vnum'>"+ i + "</span><span class='Vtext'>" + titleString + "</span></div>");
+									pPollResultContent.append("<div class='percent'>0%</div>");
+									pPollResultContent.append("<div class='voteGraph'><span style='width:0%'></span></div></li>");
 											
 									/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
 									/*"<div class='poll_list1'>" + 								    
