@@ -58,16 +58,15 @@
 			.modRm-wrap{display:inline-block; margin:10px; cursor:pointer;}
 			.close-wrap{display:inline-block; margin:10px; cursor:pointer;}
 			
-			.select_wrapper {background: #abc999 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative;}
+			.select_wrapper {background: #aabbcc url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative; width:210px;}
 			.select_wrapper:hover { background: #566c3a url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
-			.select_wrapper span {display: block;margin: 0 30px 0 15px;}
-			.select_wrapper .select_inner {background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 79%;z-index: 15000;list-style: none;}
-			.select_wrapper .select_inner li {border-bottom: 1px solid #eee;padding: 0 15px;}
+			.select_wrapper .select_inner {background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 100%;z-index: 15000;list-style: none; text-align:left; padding:0px;}
+			.select_wrapper .select_inner li {border-bottom: 1px solid #eee;padding: 0px;}
 			.select_wrapper .select_inner li:hover { background: #eee; }
 			.select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
 			.select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
-			.memoPlus{margin-left:200px;} //임시
-			.memoHeaderUL li.memoPlus span{margin-left:200px;} // 임시
+			.select_wrapper span {display: block; width:200px; }
+			.memoPlus{margin-left:250px;} //임시
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -997,13 +996,13 @@
 						
 						$('select').wrap('<div class="select_wrapper"></div>')
 						$('select').parent().prepend('<span>'+ $("select option:selected").text() +'</span>');
-						$('select').parent().children('span').width($('select').width());	
+						//$('select').parent().children('span').width($('select').width());	
 						$('select').css('display', '');		
 						$('select').parent().append('<ul class="select_inner"></ul>');
 						$('select').children().each(function(){
 						  var opttext = $(this).text();
 						  var optval = $(this).val();
-						  $('select').parent().children('.select_inner').append('<li id="' + optval + '">' + opttext + '</li>');
+						  $('select').parent().children('.select_inner').append('<li class="changeFolder" id="' + optval + '">' + opttext + '</li>');
 						});
 						
 						$('select').parent().find('li').on('click', function (){
@@ -1076,7 +1075,7 @@
 				         	<li class="memoSelect">
 				            	<select id="memoFolderList"></select>
 				            </li>
-				            <li class="memoPlus" id="addMemo"><span>추가</span></li>
+				            <li class="memoPlus" id="addMemo" style="margin-left:230px;"><span>추가</span></li>
 							<li class="memoClose memoIcon"></li>
 				            <li class="memoExpand memoIcon"></li>
 				         </ul>
