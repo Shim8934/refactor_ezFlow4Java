@@ -60,6 +60,13 @@
 				},
 				complete : function(data) {
 					alert("저장하였습니다.");
+					
+					if (useIPAccess == "NO") {
+						useIPAccess = "YES";
+					} else {
+						useIPAccess = "NO";
+					}
+					
 				}
 			});
 		}
