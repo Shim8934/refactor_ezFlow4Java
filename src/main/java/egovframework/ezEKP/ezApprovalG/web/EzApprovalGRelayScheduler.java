@@ -9,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -269,8 +268,18 @@ public class EzApprovalGRelayScheduler {
         				 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
         				 logger.debug("#문서종류=" + strDocType);
         				 strWriterName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
+        				 
+        				 if (strWriterName == null || strWriterName.equals("")) {
+        					 strWriterName = "미확인";
+        				 }
+        				 
         				 logger.debug("#문서작성자이름=" + strWriterName);
         				 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr");
+        				 
+        				 if (strWriterDept == null || strWriterDept.equals("")) {
+        					 strWriterDept = "미확인";
+        				 }
+        				 
         				 logger.debug("#문서작성자부서=" + strWriterDept);
         				 strSendName = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
         				 logger.debug("#송신기관명=" + strSendName);
@@ -418,7 +427,7 @@ public class EzApprovalGRelayScheduler {
         					 logger.debug("#수신문서정보입력=" + inputReceiveInfo);
         					 
         					 //수신된 유통문서에 대해 수신(Receive) ACK 발송
-        					 boolean SendReceiveACK = ezApprovalGService.sendAck(config.getProperty("relay_root"), strXDocID, strReceiveID, strSendID, strTitle, "receive", "", "", "", strCompanyID, tenantID);
+        					 boolean SendReceiveACK = ezApprovalGService.sendAck(strXDocID, strReceiveID, strSendID, strTitle, "receive", "", "", "", strCompanyID, tenantID);
         					 logger.debug("#수신ACK발송=" + SendReceiveACK);
         					 
         					 break;
@@ -426,23 +435,25 @@ public class EzApprovalGRelayScheduler {
         				 case "fail":
         					 String Message = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
         					 boolean UpdateSendDoc_Fail = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
-        					 boolean InsMessage = ezApprovalGService.insFailMessage(strXDocID, strSendID, strSendName, Message, strCompanyID, tenantID);
+//        					 boolean InsMessage = ezApprovalGService.insFailMessage(strXDocID, strSendID, strSendName, Message, strCompanyID, tenantID);
         					 logger.debug("#발송실패오류=" + Message, "");
-        					 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_Fail, "");
+        					 logger.debug("#발송문서실패=" + UpdateSendDoc_Fail, "");
         					 break;
         					 // 도달 - 수신기관의 중계모듈이 전송용 통합파일을 임시수신함(receivetemp)에 저장한 후 생성
         				 case "arrive":
         					 boolean UpdateSendDoc_Arrive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
+        					 logger.debug("#발송문서도달=" + UpdateSendDoc_Arrive);
         					 break;
         					 // 수신 - 수신기관의 전자문서시스템이 중계모듈의 임시수신함(receivetemp)에 수신된 문서를 가져가는 작업 완료 후 생성
         				 case "receive":
         					 boolean UpdateSendDoc_Receive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
+        					 logger.debug("#발송문서수신=" + UpdateSendDoc_Receive);
         					 break;
         					 // 접수 - 수신기관에서 문서를 정상적으로 최초 확인
         				 case "accept":
         					 String strAcceptName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
         					 boolean UpdateSendDoc_Accept = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, strAcceptName, strCompanyID, tenantID);
-        					 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_Accept);
+        					 logger.debug("#발송문서접수=" + UpdateSendDoc_Accept);
         					 
         					 break;
         					 // 발송 문서에 대한 수신 기관 접수 부서 및 접수자 Update
@@ -450,6 +461,20 @@ public class EzApprovalGRelayScheduler {
         				 case "req-resend":
         					 boolean UpdateSendDoc_ReqResend = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
         					 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_ReqResend);
+        					 
+        					 //수신기관에서 재발송 요청시 의견 추가
+        					 strCont_Role = objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role").getTextContent();
+        					 
+        					 if (strCont_Role != null && strCont_Role.equals("return")) {
+        						 strCont = objXML.getElementsByTagName("content").item(0).getTextContent();
+        						 strCont_Name = "return.txt";
+        						 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
+        						 
+        						 //인코딩 안풀고 그냥 저장
+        						 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strCont_Name);
+        						 logger.debug("#재발송요청 의견 생성=" + writeReqResendOpinion);
+        					 }
+        					 
         					 break;
         				 }
         				 
@@ -534,6 +559,34 @@ public class EzApprovalGRelayScheduler {
 		 logger.debug("receiverSchedulerMain ended");
 	}
 	
+	//수신기관에서 재발송 요청하면 요청의견 텍스트 파일로 떨어뜨리고 발송대장 화면에서 제공하기
+	private boolean writeReqResendOpinion(String strCont, String pFilePath, String fileName) {
+		logger.debug("writeReqResendOpinion started");
+
+		boolean result = false;
+		
+		try {
+			File dir = new File(pFilePath);
+			
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			
+	        FileOutputStream fos = new FileOutputStream(pFilePath + commonUtil.separator + fileName);
+	        fos.write(strCont.getBytes());
+	        fos.close();
+
+	        result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		}
+		
+		logger.debug("writeReqResendOpinion ended");
+		
+		return result;
+	}
+
 	public String MakeMailContent(List<List<String[]>> list) {
 		String body = null;
 		StringBuilder sb = new StringBuilder(32);

@@ -28,6 +28,8 @@
 		var menuindex = "${menuIndex}";
 		var pSkin = "1";   // 기본설정에선 모두 스킨1만 설정
 		var pNoneActiveX = "${noneActiveX}";
+		var selSpan = "";
+		
 	    window.onload = function() {
 			toggle_menu(menuindex);
 		}
@@ -54,6 +56,7 @@
 			// 이미지 변경
 			switch(pIndex.toString()) {
 				case "1":
+					selSpan = "menuSpan1";
 					menu_1.src = "/images/tap_portal01o.gif";
 					menu_3.src = "/images/tap_portal03.gif";
 					toggle_tbl1.style.display = "";
@@ -62,6 +65,7 @@
 					toggle_tbl3_3.style.display = "none";
 					break;
 				case "3":
+					selSpan = "menuSpan3";
 					menu_1.src = "/images/tap_portal01.gif";
 					menu_3.src = "/images/tap_portal03o.gif";
 					toggle_tbl1.style.display = "none";
@@ -332,6 +336,17 @@
 				tab2.className = "tabon";
 			}
 		}
+		
+		/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+        function tabover(tabObj) {
+        	tabObj.setAttribute("class", "tabon");
+        }
+        function tabout(tabObj) {
+        	if (tabObj.id != selSpan) {
+        		tabObj.setAttribute("class", "");
+        	}
+        }
+        
 		</script>
 	</head>
 	 <body class="popup">
@@ -353,8 +368,8 @@
       	</div>	 --%>
       	<div class="portlet_tabpart01" style="margin-top: 0px;">
 			<div class="portlet_tabpart01_top" id="tab1" style="border-bottom: 0px;">
-				<p id="menu_1"><span onClick="toggle_menu(1)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t86'/></span></p>
-				<p id="menu_3"><span onClick="toggle_menu(3)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t87'/></span></p>
+				<p id="menu_1"><span id="menuSpan1" onClick="toggle_menu(1)" style="min-width: 45px; cursor:pointer;" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezPortal.t86'/></span></p>
+				<p id="menu_3"><span id="menuSpan3" onClick="toggle_menu(3)" style="min-width: 45px; cursor:pointer;" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezPortal.t87'/></span></p>
 			</div>
 		</div>
 	  	<!-- 로고 관련 설정 -->

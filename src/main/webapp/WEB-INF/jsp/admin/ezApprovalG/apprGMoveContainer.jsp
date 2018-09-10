@@ -114,8 +114,11 @@
 	                orgDocid = "";
 	            else
 	                orgDocid = GetAttribute(oArrRows[0], "DATA5");
+	            
+	            var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
 	
-	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+	            // 2018.08.01 (KLIB) - ezd 확장자 처리
+	            if (ext == "hwp" || ext == "ezd") {
 	            	if (isIE()) {
 		            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	                } else {

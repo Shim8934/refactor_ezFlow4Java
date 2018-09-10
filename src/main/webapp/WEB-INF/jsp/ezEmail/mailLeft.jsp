@@ -1100,7 +1100,7 @@
 		        </dl>
 		    </div>
 		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-		    <h4><span onclick="operatorSendMail()"><spring:message code="ezEmail.0hun01" /></span></h4>
+		    <h4 onclick="operatorSendMail()"><span><spring:message code="ezEmail.0hun01" /></span></h4>
 		    </c:if>
 	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">

@@ -294,6 +294,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String ldapPath = "";
 			
 	        // 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
 	        int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 	        
 	        logger.debug("userCheck cnt=" + cnt);
@@ -564,6 +565,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String cn = vo.getCn();
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
 			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 			
 			logger.debug("cn=" + cn + ",cnt=" + cnt);
@@ -1421,6 +1423,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			logger.debug("domain=" + domain + ",cn=" + cn);
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
 			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 			
 			logger.debug("cnt=" + cnt);
