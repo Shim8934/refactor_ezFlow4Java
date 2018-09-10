@@ -2773,7 +2773,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2978,7 +2978,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
