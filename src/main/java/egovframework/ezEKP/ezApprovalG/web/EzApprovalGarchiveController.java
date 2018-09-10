@@ -1240,7 +1240,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = commonUtil.getRealPath(request);
 		String dirpath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator ;
-		String result = ezApprovalGService.addBebu(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGService.addBebu(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo);
 		
 		logger.debug("addBebu ended");
 		
@@ -2569,7 +2569,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			userDeptName = "";
 		}
 
-		String result = ezApprovalGService.sendAck(commonUtil.getRealPath(request), docID, type, userName, userDeptName, errMsg, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.sendAck(docID, type, userName, userDeptName, errMsg, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("sendAckforReSend ended");
 		return result;
 	}

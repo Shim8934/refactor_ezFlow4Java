@@ -87,7 +87,7 @@ public interface EzApprovalGService {
 	
 	public String getFormInfoDetail(String formID, String companyID, int tenantID) throws Exception;
 	
-	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception;
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID, String useReceiveInfoName) throws Exception;
 	
 	public String createNewDoc(String formID, String companyID, int tenantID) throws Exception;
 	
@@ -378,7 +378,7 @@ public interface EzApprovalGService {
 
 	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang, int tenantID)throws Exception;
 
-	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet)throws Exception;
+	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo)throws Exception;
 
 	public String updateProcessYN2(String docID, String deptID,	String deptName, String deptName2, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception;
 
@@ -498,7 +498,7 @@ public interface EzApprovalGService {
 
 	public boolean createRelayDocInfo(String strWriterName, String strWriterDept, String realPath, String strXDocID, String strReceiveID, String strCompanyID, int tenantID) throws Exception;
 
-	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
+	public boolean sendAck(String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
 
 	public boolean updateRelaySusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
 
@@ -512,7 +512,7 @@ public interface EzApprovalGService {
 
 	public String updateRecvDocInfo(String docID, String docNo, String docNumCode, String orgDocNumCode, String cabinetID, String taskCode, String userID, String userName, String userName2, String deptID, String userTitle, String userTitle2, String deptName, String deptName2, String tempCompanyID, LoginVO userInfo, String realPath) throws Exception;
 
-	public String sendAck(String realPath, String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception;
+	public String sendAck(String docID, String type, String userName, String userDeptName, String errMsg, String companyID, int tenantID) throws Exception;
 
 	public List<OrganUserVO> getTenantID() throws Exception;
 	
@@ -568,4 +568,5 @@ public interface EzApprovalGService {
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
 	
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
+
 }

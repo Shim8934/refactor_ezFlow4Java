@@ -1200,9 +1200,20 @@ function on_keydown(e) {
 }
 
 function onblurOnRecipientInputField(value) {
-    if (value != null && value != '') {
-        NameCertify_onClick(null);
-    }
+    if (navigator.userAgent.toLowerCase().search("trident") > -1) {
+        setTimeout(function() {
+            if (value != null && value != '' 
+                && $("#ui-id-1").css('display') == 'none'
+                && $("#ui-id-2").css('display') == 'none'
+                && $("#ui-id-3").css('display') == 'none') {
+                NameCertify_onClick(null);
+            }
+        }, 1);
+    } else {
+        if (value != null && value != '') {
+            NameCertify_onClick(null);
+        }
+    }    
 }
 
 var NameCertify_onClick_returnFunction;
@@ -1764,6 +1775,13 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         }
     } else {
 	   	 var fileext = DocHref.toLowerCase().substr(DocHref.length - 4);
+	   	 
+	   	 // 2018.07.03 (KLIB) 암호화된 파일 확장자 처리 (ezd 확장자라면 원래 확장자로 변경해줌)
+	   	 if (fileext === ".ezd") {
+	   		// 최소 8글자 이상이 보장됨
+	   		fileext = DocHref.toLowerCase().substr(DocHref.length - 8, 4);
+	   	 }
+	   	 
 	     /*var ezUtil = new ActiveXObject("ezUtil.RegScript");
 	     var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
 	     ezUtil = null;*/
@@ -1908,6 +1926,11 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	                var fileName = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
 	                var fileHref = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
 	                var fileAttachSize =  SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
+	                
+		            if ((fileAttachSize == "0" || fileAttachSize == "") && (fileHref.indexOf(".hwp") > -1 || fileHref.indexOf(".mht") > -1)) {
+		            	fileAttachSize = strLang116;
+		            }
+	                
 	                fileName = fileName.replace("&amp;","&");
 	
 	                fileName = ReplaceText(fileName, "\\\\", "");
@@ -1921,6 +1944,11 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	                fileName = ReplaceText(fileName, "\\|", "");
 	
 	                var tmpExt = fileHref.substr(fileHref.length - 3, 3);
+	                // 2018.07.04 (KLIB) 암호화된 ezd 확장자 파일일 경우 원래 확장자로 처리
+	                if (tmpExt === 'ezd') {
+	                	tmpExt = fileHref.substr(fileHref.length - 7, 3);
+	                }
+	                
 	                if (fileName.length > 3) {
 	                    if (fileName.substr(fileName.length - 3, 3) != tmpExt)
 	                        fileName += "." + tmpExt;

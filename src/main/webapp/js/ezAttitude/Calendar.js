@@ -60,6 +60,9 @@ function CalendarView(pTargetID) {
         oTh.appendChild(datePick);
 		
 		// 다음 달로 이동하는 버튼 생성
+        var kSpan = document.createElement("SPAN");
+        kSpan.setAttribute("width", "10px");
+        oTh.appendChild(kSpan);
 		var mSpan = document.createElement("SPAN");
 		mSpan.className = "btn_next";
 		var mImg = document.createElement("IMG");
