@@ -460,7 +460,7 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 191;
+	        	var height = document.documentElement.clientHeight - 192;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}

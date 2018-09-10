@@ -74,8 +74,10 @@
 		        if (Type == "APR") {
 		            document.getElementById("displayTR1").style.display = "none";
 		            document.getElementById("displayTR2").style.display = "none";
+		            //2018-09-10 이효진 진행중페이지에서 검색 시 문서번호 숨김
+		            document.getElementById("displayTR3").style.display = "none";
 		            //window.resizeBy(0, -60);
-		            window.resizeTo(510, 375);
+		            window.resizeTo(510, 355);
 		        }
 				if (openPageInfo == "usercontlist") {
 					$("#displayTR2").css("display", "none");
@@ -884,7 +886,7 @@
 		    	</c:otherwise>
 		    </c:choose>
 		  </tr>
-		  <tr>
+		  <tr id="displayTR3">
 		    <th ><spring:message code='ezApprovalG.t440'/></th>
 		    <td ><input type="text" id="DocNumber" name="DocNumber" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>
