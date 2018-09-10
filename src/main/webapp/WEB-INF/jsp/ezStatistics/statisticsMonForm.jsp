@@ -132,21 +132,25 @@
 
                     var _Th2 = document.createElement("TH");
                     _Th2.style.whiteSpace = "normal";
+                    _Th2.style.wordBreak = "break-all";
                     _Th2.innerHTML = "<spring:message code='ezStatistics.t1026'/>";
                     _Th2.setAttribute( 'title', "<spring:message code='ezStatistics.t1026'/>" );
 
                     var _Th3 = document.createElement("TH");
                     _Th3.style.whiteSpace = "normal";
+                    _Th3.style.wordBreak = "break-all";
                     _Th3.innerHTML = "<spring:message code='ezStatistics.t1027'/>";
                     _Th3.setAttribute( 'title', "<spring:message code='ezStatistics.t1027'/>" );
                     
                     var _Th4 = document.createElement("TH");
                     _Th4.style.whiteSpace = "normal";
+                    _Th4.style.wordBreak = "break-all";
                     _Th4.innerHTML = "<spring:message code='ezStatistics.t1028'/>";
                     _Th4.setAttribute( 'title', "<spring:message code='ezStatistics.t1028'/>" );
 
                     var _Th5 = document.createElement("TH");
                     _Th5.style.whiteSpace = "normal";
+                    _Th5.style.wordBreak = "break-all";
                     _Th5.innerHTML = "<spring:message code='ezStatistics.t1029'/>";
                     _Th5.setAttribute( 'title', "<spring:message code='ezStatistics.t1029'/>" );
 

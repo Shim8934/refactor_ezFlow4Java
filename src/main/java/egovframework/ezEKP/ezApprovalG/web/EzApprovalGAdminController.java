@@ -1012,8 +1012,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 		
-		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, primary, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, primary, userInfo.getTenantId(), lang);
 		
 		logger.debug("apprGMLgetDoctype ended.");
 		
@@ -1075,8 +1076,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 		
-		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag, lang);
 		
 		logger.debug("apprGGetContDocType ended.");
 		
@@ -2771,7 +2773,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2976,7 +2978,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			return "cmm/error/adminDenied";
 		}
 		

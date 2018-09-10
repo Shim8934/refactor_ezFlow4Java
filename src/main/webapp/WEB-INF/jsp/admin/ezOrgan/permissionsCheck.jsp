@@ -1090,7 +1090,7 @@
 			        <ROW>
 			            <CELL>
 			                <VALUE><spring:message code='ezOrgan.lhj1'/></VALUE>
-			                <DATA1>f</DATA1>
+			                <DATA1>ff</DATA1>
 			            </CELL>
 			        </ROW>
 			        </c:if>
@@ -1118,7 +1118,7 @@
                     <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.kbm01' /></span></VALUE>
-			                <DATA1>wa</DATA1>
+			                <DATA1>a1</DATA1>
 			            </CELL>
 			        </ROW>
 			        </c:if>

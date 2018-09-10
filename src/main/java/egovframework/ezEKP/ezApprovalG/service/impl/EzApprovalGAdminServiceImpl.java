@@ -154,11 +154,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContTypeInfo(String type, String companyID, String primary ,int tenantID) throws Exception {
+	public String getContTypeInfo(String type, String companyID, String primary ,int tenantID, String lang) throws Exception {
 		logger.debug("getContTypeInfo started.");
 		
 		StringBuilder sb = new StringBuilder();
-		String strMultiData = commonUtil.getMultiData(primary, tenantID);
+		//String strMultiData = commonUtil.getMultiData(primary, tenantID);
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -168,7 +169,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		if (type.equals("LIST")) {
 			sb.append("<LISTVIEWDATA><HEADERS><HEADER>");
-			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, primary, tenantID) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
+			//sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, primary, tenantID) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
+			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, lang, tenantID) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
 			
 			for (ApprGContInfoVO vo : list) {
 				if (strMultiData.equals("")) {
@@ -252,17 +254,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag) throws Exception {
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag, String lang) throws Exception {
 		logger.debug("getContainerToDocStateInfo started.");
 		
-		String strMultiData = commonUtil.getMultiData(primary, tenantID);
+		//String strMultiData = commonUtil.getMultiData(primary, tenantID);
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
 		StringBuilder sb = new StringBuilder();		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "111");
-		map.put("v_LANGTYPE", primary);
+		//map.put("v_LANGTYPE", primary);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_LANGTYPE", lang);
 		
 		logger.debug("getListHeader started." );
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
@@ -291,7 +295,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		for (int i = 0; i < listBody.size(); i++) {
 			ApprGDocStateVO vo = listBody.get(i);
 			
-			Field field = vo.getClass().getDeclaredField("documentStateName" + commonUtil.getLangData(primary));
+			//Field field = vo.getClass().getDeclaredField("documentStateName" + commonUtil.getLangData(primary));
+			Field field = vo.getClass().getDeclaredField("documentStateName" + commonUtil.getLangData(lang));
 	    	field.setAccessible(true);
 
 			sb.append("<ROW>");			
@@ -1867,11 +1872,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("szFrom=" + szFrom);
 		logger.debug("szTo=" + szTo);
 		
+		/* 2018-09-07 홍승비 - 결재방법 다국어 데이터(v_LANG) 수정 */
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_APRTYPE", aprType);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
 		map1.put("v_STRLANG", commonUtil.getMultiData(lang, tenantID));
+		map1.put("v_LANG", commonUtil.getLangData(lang));
 		map1.put("userFlag", userFlag);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);

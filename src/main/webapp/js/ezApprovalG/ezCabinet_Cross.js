@@ -1229,10 +1229,16 @@ function ViewDoc_onclick_Complete(Rtn) {
             var para = new Array();
             DocID = selRow.getAttribute("DATA1");
             pURL = selRow.getAttribute("DATA2");
+            
+            var tempUrl = pURL;
 
             var openLocation = "";
             
-            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+            if (tempUrl.substr(tempUrl.length - 4, tempUrl.length).toLowerCase() == ".ezd") {
+            	tempUrl = tempUrl.substr(0, tempUrl.length - 4);
+            }
+            
+            if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
             	if (isIE()) {
                 	if (g_uFlag == "m03") {
                 		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
