@@ -47,15 +47,27 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			
+			.memoSelect{position:absolute; height:500px;}
+			#memoFolderList{display:none;}
 			.alertPopup{width:200px;position:absolute; top:112px;left:27px;}
 			.popHeader{height:47px;line-height:47px;font-size:18px;font-weight:bold;border-radius:5px 5px 0 0;background:#f1f3f4;border-bottom:1px solid #cccfd3;}
 			.popContainer{background:#fff; border-radius:0 0 5px 5px;margin-top: -17px;height: 59px;}
 			.txtDialog{padding:0px 0 25px 0;font-size:16px;color:#333;line-height:26px;font-weight:bold;}
 			.footBtn{font-size:18px;line-height:33px;text-align:center;}
 			.modal {z-index: 10000;padding-top:top: 0px; width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 4px;margin-top: 3px;}
-			.modRm-wrap{display:inline-block; margin:10px;}
-			.close-wrap{display:inline-block; margin:10px;}
+			.modRm-wrap{display:inline-block; margin:10px; cursor:pointer;}
+			.close-wrap{display:inline-block; margin:10px; cursor:pointer;}
+			
+			.select_wrapper {background: #abc999 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative;}
+			.select_wrapper:hover { background: #566c3a url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
+			.select_wrapper span {display: block;margin: 0 30px 0 15px;}
+			.select_wrapper .select_inner {background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 79%;z-index: 15000;list-style: none;}
+			.select_wrapper .select_inner li {border-bottom: 1px solid #eee;padding: 0 15px;}
+			.select_wrapper .select_inner li:hover { background: #eee; }
+			.select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
+			.select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
+			.memoPlus{margin-left:200px;} //임시
+			.memoHeaderUL li.memoPlus span{margin-left:200px;} // 임시
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -982,6 +994,28 @@
 						});
 						$('#memoFolderList option').remove();
 						$('#memoFolderList').html(html);
+						
+						$('select').wrap('<div class="select_wrapper"></div>')
+						$('select').parent().prepend('<span>'+ $("select option:selected").text() +'</span>');
+						$('select').parent().children('span').width($('select').width());	
+						$('select').css('display', '');		
+						$('select').parent().append('<ul class="select_inner"></ul>');
+						$('select').children().each(function(){
+						  var opttext = $(this).text();
+						  var optval = $(this).val();
+						  $('select').parent().children('.select_inner').append('<li id="' + optval + '">' + opttext + '</li>');
+						});
+						
+						$('select').parent().find('li').on('click', function (){
+							  var cur = $(this).attr('id');
+							  $('select').parent().children('span').text($(this).text());
+							  $('select').children().removeAttr('selected');
+							  $('select').children('[value="'+cur+'"]').attr('selected','selected');					
+							  console.log($('select').children('[value="'+cur+'"]').text());
+							});
+							$('select').parent().on('click', function (){
+							  $(this).find('ul').slideToggle('fast');
+							});
 					}     			
 				});
 		    }
