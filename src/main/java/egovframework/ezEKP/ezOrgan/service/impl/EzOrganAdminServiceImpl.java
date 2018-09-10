@@ -293,6 +293,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         // 사원의 경우
     	if (pClass.toLowerCase().equals("user")) {
     		ezOrganAdminDao.updateProperty(map);
+    	} else if (pClass.toLowerCase().equals("addJob")) {
+    		ezOrganAdminDao.updateProperty_addJob(map);
     	// 부서의 경우
     	} else {
     		ezOrganAdminDao.updateProperty_U(map);
@@ -300,7 +302,34 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("updateProperty ended");
 	}
-
+	
+	@Override
+	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String deptID) throws Exception {
+	    logger.debug("updateProperty started");
+	    logger.debug("cn=" + cn + ",column=" + column + ",number=" + number + ",pClass=" + pClass + ",tenantID=" + tenantID + ",deptID=" + deptID);
+	    
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("v_CLASS", pClass);
+		map.put("v_PROPNAME", column);
+		map.put("v_PROPVALUE", number);
+		map.put("V_DEPTID", deptID);
+		
+        // 사원의 경우
+    	if (pClass.toLowerCase().equals("user")) {
+    		ezOrganAdminDao.updateProperty(map);
+    	} else if (pClass.toLowerCase().equals("addjob")) {
+    		ezOrganAdminDao.updateProperty_addJob(map);
+    	// 부서의 경우
+    	} else {
+    		ezOrganAdminDao.updateProperty_U(map);
+    	}       
+		
+		logger.debug("updateProperty ended");
+	}
+	
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
         logger.debug("moveDBData started");
         logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
