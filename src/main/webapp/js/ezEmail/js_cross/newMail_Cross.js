@@ -1200,9 +1200,20 @@ function on_keydown(e) {
 }
 
 function onblurOnRecipientInputField(value) {
-    if (value != null && value != '') {
-        NameCertify_onClick(null);
-    }
+    if (navigator.userAgent.toLowerCase().search("trident") > -1) {
+        setTimeout(function() {
+            if (value != null && value != '' 
+                && $("#ui-id-1").css('display') == 'none'
+                && $("#ui-id-2").css('display') == 'none'
+                && $("#ui-id-3").css('display') == 'none') {
+                NameCertify_onClick(null);
+            }
+        }, 1);
+    } else {
+        if (value != null && value != '') {
+            NameCertify_onClick(null);
+        }
+    }    
 }
 
 var NameCertify_onClick_returnFunction;

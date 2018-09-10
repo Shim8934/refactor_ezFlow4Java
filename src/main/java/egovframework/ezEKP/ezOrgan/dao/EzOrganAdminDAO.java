@@ -184,6 +184,42 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return companyChildCheckForLocal(map);       
 	}
 	
+	private int userCheckForJMocha(Map<String, Object> map) throws Exception {
+		String cn = (String)map.get("cn");
+        int tenantID = (Integer)map.get("tenantID");
+        
+        logger.debug("userCheckForJMocha started. cn=" + cn + ",tenantID=" + tenantID);
+
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "mailId=" + URLEncoder.encode(cn, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkMailId";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        int result = 0;
+        
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+            
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            
+            if (resultCode.equals("OK") && reasonCode == 0) {
+            	result = ((Long)responseObj.get("result")).intValue();
+            } else {
+            	logger.debug("resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+            	throw new Exception("JGwServer /jMochaEzEmail/checkMailId Failed!");
+            }
+        }
+        
+        logger.debug("userCheckForJMocha ended. result=" + result);
+        return result;
+    }
+	
     private int userCheckForLocal(Map<String, Object> map) throws Exception {
         String cn = (String)map.get("cn");
         int tenantID = (Integer)map.get("tenantID");
@@ -198,12 +234,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public int userCheck(String cn, int tenantID) throws Exception{
-    	Map<String, Object> map = new HashMap<String, Object>();
+    	int result = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
     	
     	map.put("cn", cn);
     	map.put("tenantID", tenantID);
     	
-        return userCheckForLocal(map);       
+    	result = userCheckForLocal(map);
+    	
+    	if (result == 0) {
+    		result = userCheckForJMocha(map);
+    	}
+    	
+        return result;    
 	}
 		
     private int getPermissionListCountForLocal(Map<String, Object> map) throws Exception {
