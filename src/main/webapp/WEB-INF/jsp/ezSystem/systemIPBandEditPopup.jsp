@@ -142,7 +142,7 @@
         <div id="leTop">			
 			<div class="leTitle" style="padding-left:10px">IP 주소 설정</div>
 			
-			<table class="content" style="width:95%; margin:auto; margin-top: 5px;">
+			<table class="content" style="width:95%; margin:auto; margin-top: 2px;">
 				<tr>
 					<th>허용여부</th>
 					<td>
