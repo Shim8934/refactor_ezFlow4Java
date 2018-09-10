@@ -33,17 +33,14 @@
 		        else
 		            return true;
 		    }
-		    
+			
 			window.onresize = function () {
-				var height = document.documentElement.clientHeight - 135 - document.getElementById("mainmenu").clientHeight;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
+				windowResize();
 			}
 			
 			window.onload = function() {
 				retireUserList();
+				windowResize();
 				
 				$(function() {
 					$('#startDatepicker').datepicker({
@@ -541,6 +538,14 @@
 				 })
    				makePageSelPage();
 			}
+			 
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 192;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
