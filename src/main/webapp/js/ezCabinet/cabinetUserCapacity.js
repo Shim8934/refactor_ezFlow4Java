@@ -485,7 +485,7 @@
 		var role       = optElmt.getAttribute("role");
 		
 		if(role == "on") {
-			if(!viewPopup.contains(e.target)) {
+			if(!viewPopup.contains(e.target) && e.target != optElmt) {
 				closeViewPopUp();
 			}
 		}
