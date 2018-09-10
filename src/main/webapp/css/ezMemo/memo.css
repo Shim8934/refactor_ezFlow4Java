@@ -103,3 +103,5 @@ select::-ms-expand {
 .mCSB_inside > .mCSB_container{margin-right: 25px;}
 .mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {background-color: rgba(89,89,89,0.75);}
 .memoTit .pallete2{ margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
+/* 09-10 추가 */
+h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;  }

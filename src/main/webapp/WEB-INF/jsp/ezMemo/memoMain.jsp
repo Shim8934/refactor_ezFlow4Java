@@ -33,41 +33,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	</head>
-	
-	<style>
-		h1 {
-			font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
-		.individual-memo { 
-			width:230px; height:230px; 
-			background-color:#0470e4; 
-			text-align:left; float: left; 
-			margin: 10px 25px 10px 25px; overflow:hidden; 
-			padding-top:5px; position:relative; 
-			border:1px solid black; 
-		}
-		.memo-text {
-			margin-top:10px; padding-left:11px; padding-right: 25px; padding-bottom:5px; 
-			border:0px; width:100%; height:84%; resize:none; 
-			overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;
-		}
-		.write-date {
-			font-size:14px; 
-			font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;
-			vertical-align: middle;
-		}
-		/* input { 
-			width: 13px; height: 13px; margin-left: 10px;
-			vertical-align: middle;
-		} */
-		.memo-color { 
-			padding:0px; box-sizing:border-box; width: 232px; height: 35px; position:absolute; top:0px; left:0px; visibility:hidden;
-		}
-		.memo-color-list { 
-			display:inline-block; width:16.5%; height:100%; text-align:center; float:left;
-		}
-			
-	</style>
 	<script type="text/javascript">
 		var memoList;
 		var folderId =  "<c:out value='${folderId}' />";
@@ -78,7 +43,6 @@
 		var defaultColor;
 		var listType = 0;		// 정렬 보기 방식 선택
 		var moveFlag = 0;		// 전체 메모일때 이동 보여주고, 아닐때 안보여줌
-		var pAdminType  = "n";
 		var folders;
     	var searchInput;
 		var startDate;
@@ -105,21 +69,30 @@
 		window.onload = function() {
 			var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 	        document.getElementById("bodyFrame").style.height = MainHeight + "px";
-	        /* 
-			$(".individual-memo").mouseenter(function(){
-		    	$(this).children("img").css("visibility", "visible");
-		    	$(this).children("img:first").click(function(){
-		    		$(this).parent().remove();
-		    	})
-		    });
+
+			getMemoSortable();
+			getMemoConfig();
+			getFolderList();
+			getMemoList();
 			
-			$(".individual-memo").mouseleave(function(){
-	        	$(this).children("img").css("visibility", "hidden");
-	        });
-			 */
+			$($(window.parent.frames['left'].document)).mouseup(function (e) {
+	    		MailOptionHiddenOutside(e);
+	    	});
+	    	
+	    	$(parent.document).mouseup(function (e) {
+	    		MailOptionHiddenOutside(e);
+	    	});
+	    	
+	    	$(document).mouseup(function (e) {
+	    		MailOptionHiddenOutside(e);
+	    	});
+
+	    }
+		
+		function getMemoSortable() {
 			$("#boardMemoList").sortable({
 	        	 containment: '#bodyFrame',
-        		 opacity : 0.5,
+       		 	opacity : 0.5,
 	        	 update : function (event, ui) {
 	        		 if($("#orderOption").val() == 1) {
 	        			 var compareElId; 
@@ -168,48 +141,6 @@
 		        	 }
 	        	 }
 	        });
-			
-			getMemoConfig();
-			getFolderList();
-			getMemoList();
-			
-			$($(window.parent.frames['left'].document)).mouseup(function (e) {
-	    		MailOptionHiddenOutside(e);
-	    	});
-	    	
-	    	$(parent.document).mouseup(function (e) {
-	    		MailOptionHiddenOutside(e);
-	    	});
-	    	
-	    	$(document).mouseup(function (e) {
-	    		MailOptionHiddenOutside(e);
-	    	});
-
-	    }
-		
-		function addremove() {
-			 $(".pallete").on("mouseenter", function(){
-			    	$(this).parent().nextAll(".color_popup").css("visibility", "");
-			 });
-		    
-		    $(".color_popup").mouseleave(function(){
-		        	$(this).css("visibility", "hidden");
-		    });
-		    
-		    $(".color_list").click(function(){
-		    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-		    });
-		    
-		    $(".memoLay").mouseleave(function(){
-		    	if($(this).children(".color_popup").css("visibility") == "visible") {
-		    		$(this).children(".color_popup").css("visibility", "hidden");
-		    	}
-		    });
-		    
-		    $(".pallete2").click(function(){
-		    	var obj = $(this).parent().next();
-		    	modifyMemo(obj[0]);
-		    });
 		}
 		
 		function getMemoConfig() {
@@ -350,73 +281,6 @@
                 }
 			});
 		}
-		
-	    function addremove2() {
-		   /*  $(".individual-memo").mouseenter(function(){
-		    	$(this).children("img").css("visibility", "visible");
-		    	$(this).children("img").click(function(){
-		    		$(this).prevAll("div").css("visibility", "visible");
-		    		$(this).prevAll("div").children().each(function(index, element){
-		    			$(element).css("background-color", memoColor[index]);
-		    		})
-		    	})
-	        });
-	        
-	        $(".individual-memo").mouseleave(function(){
-	        	$(this).children("img").css("visibility", "hidden");
-	        });
-	        
-	        $(".memo-color-list").click(function(){
-	        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-	        })
-	        
-	        $(".memo-color").mouseleave(function(){
-	        	if($(this).css("visibility") == "visible") {
-	        		$(this).css("visibility", "hidden");
-	        	}
-	        }); */
-	        
-	        /* CSS 추가 이후 */
-	        
-	        $(".pallete").on("click", function(e){
-	       		 e.stopPropagation();
-	        }).on("mouseenter", function(){
-	        	$(this).parent().nextAll(".color_popup").css("visibility", "");
-	        });
-	        
-	        $(".color_popup").mouseleave(function(){
-		        	$(this).css("visibility", "hidden");
-		    })
-		    
-		    $(".color_list").click(function(){
-		    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-	        })
-	        
-	        $(".memoLay").mouseleave(function(){
-	        	if($(this).children(".color_popup").css("visibility") == "visible") {
-	        		$(this).children(".color_popup").css("visibility", "hidden");
-	        	}
-	        })
-	        
-	        $(".memoSave").click(function(e){
-	        	e.stopPropagation();
-	        	var obj = $(this).parent().next();
-	        	modifyMemo(obj[0]);
-	        })
-	        
-	        /* $(".memoText").blur(function(){
-					modifyMemo(this);
-	        }) */
-	        
-	       /*  $(".memoText").dblclick(function(){
-		    	var pheight = parseInt(window.screen.availHeight)/2 - 200;
-		        var pwidth = parseInt(window.screen.availWidth)/2 - 127;
-		        
-		        var memoId = $(this).attr("memoid");
-
-		    	window.open("/ezMemo/memoRead.do?memoId=" + memoId, "",  "height=480px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
-		    }); */
-	    } 
 	    
 	    // 메모 색상 변경
 	    function modifyMemoColor(obj, idx) {
@@ -650,10 +514,6 @@
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		});
-		
-		function onSelect_Option() {
-			
-		}
 		
 		// 레이어 팝업 생성된 상태에서 뒤로가기 이벤트 처리
 		function Window_onunload() {

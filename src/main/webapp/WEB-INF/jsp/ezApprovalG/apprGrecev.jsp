@@ -91,7 +91,7 @@
 			var isSplit = "${optisSplit}";
 			var SplitKind = "${optSplitKind}";
 			var ConvertYN = "Y";	// 이 값이 N이면, 원문서를 그대로 사용한다.
-			var _USE_DirectSign = "${useDirectSign}";     //20090112 직접서명
+			var _USE_DirectSign = "${userDirectSign}";     //20090112 직접서명
 			
 			//20110201  기안일자 확인 
 			var _DraftDate = "${draftDate}";
@@ -111,6 +111,7 @@
 			var docNumZeroCnt = "${docNumZeroCnt}";
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
+			var ext = "mht";
 			var isHWP = "";
 			
 			window.onload = function () {
