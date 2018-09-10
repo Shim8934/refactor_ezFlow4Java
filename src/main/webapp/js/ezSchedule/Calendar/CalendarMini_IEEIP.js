@@ -255,22 +255,31 @@ function MonthMiniData(oThisDate) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
+    
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
+    
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
 
-    if (document.getElementById(g_selTDID))
+    /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
     if (document.getElementById(g_selTRID))
-        document.getElementById(g_selTRID).style.backgroundColor = "";
+        document.getElementById(g_selTRID).style.backgroundColor = "";*/
 
    
  
-        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
-        g_selTRID = event.parentNode.parentNode.getAttribute("id");
-        g_selTDID = event.getAttribute("id");
+        //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
+    $("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    
+    g_selTRID = event.parentNode.parentNode.getAttribute("id");
+    g_selTDID = event.getAttribute("id");
 
-        var sDate = event.getAttribute("id").substring(7, 17);
-        date = sDate;
-        getScheduleList(date, pMode);
-        
+    var sDate = event.getAttribute("id").substring(7, 17);
+    date = sDate;
+    getScheduleList(date, pMode);
 }
 
 var MiniHttp;
