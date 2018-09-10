@@ -251,12 +251,12 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .calendar_mini th{color:#000; margin:0; padding:8px 0px 6px 0px; border-top:0 none; border-left:0 none; font-weight:bold; }
 .calendar_mini th.sun{color:#cd3b3b;}
 .calendar_mini th.sat{color:#0470e4;}
-.calendar_mini td {height:30px; text-align:center; cursor:pointer; color:#oaoaoa;}
+.calendar_mini td {height:30px; text-align:center; cursor:pointer; color:#oaoaoa; position: relative;}
 .calendar_mini td.sun{color:#fc4a4a;}
 .calendar_mini td.sat{color:#46abfc;}
 .calendar_mini td.gray{color:#8a8e9b;}
 .calendar_mini td.today{ color:#ffffff; background:#0470e4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-.calendar_mini td div {height:21px;line-height:21px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.calendar_mini td div {height:26px;line-height:26px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .CalendarArea .todayDate{ margin:0px; padding:0px; float:right; overflow:hidden; width:25%; height:260px; border-left:1px solid #e7e7e7; box-sizing:border-box; text-align:center;}
 .CalendarArea .todayDate .Dgray{ font-size:12px; color:#b7b7b7; font-weight:bold; margin:0px; padding:30px 0px 60px 0px;}
 .CalendarArea .todayDate .dayText{font-size:14px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
@@ -265,7 +265,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scheduleDate{ margin:0px; padding:0px 15px 0px 0px; float:left;}
 .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
-.scheduleUL{ margin:0px; padding:3px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:200px;} /*장진혁 */
+.scheduleUL{ margin:0px; padding:0px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:202px;} /*장진혁 */
 .scheduleUL .scheduleLi{margin:0px; padding:3px 0px 12px 0px;}
 .scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px; line-height: 16px;}
 .scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
@@ -406,6 +406,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .nodata dt{ margin:0px; padding:40px 0px 20px 0px;}
 .nodata dd{ margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}
 
+
+.dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
 
 /* main media query */
 @media only screen and (max-width :1920px) and (min-width :1686px) { 

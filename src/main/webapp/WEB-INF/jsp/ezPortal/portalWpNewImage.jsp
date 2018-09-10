@@ -121,23 +121,17 @@
 		                count++;
 			        }
 
-			        if (count > 0)
-			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
-			        else {
-			            /* var nodata = "<div class='nodata_schedule'>"; */
-			           /*  nodata += "<p style='margin-left:10px'><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin:10px 0px 0px'></p>";
-			            nodata += "<p style='margin-left:10px'>" + strLang2_total + "</p></div>"; */
-			            
+			        if (count > 0) {
+			            document.getElementById("ScheduleList").innerHTML = listHTML;
+			            $('#scheduleEmptyList').empty();
+			        } else {
 			            var listHTML = "";
-			            listHTML += "<ul class='portlet_list'>";
 					    listHTML += "<dl class='nodata'>";
 	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
 	                	listHTML += '<dd>"' + strLang2_total + '"</dd>';
-	                	listHTML += "</dl></ul>";
+	                	listHTML += "</dl>";
 	                	$('#ScheduleList').empty();
-	                	$('#ScheduleList').after(listHTML);
-			            //document.getElementById("ScheduleList").innerHTML = listHTML;
-			            return;
+	                	$('#scheduleEmptyList').html(listHTML);
 			        }
 			    } catch (e) {}
 			}
@@ -187,6 +181,7 @@
                     <dd class="dayN" id="dayN"></dd>
                 </dl>
                 <ul class="scheduleUL" id="ScheduleList"></ul>
+                <ul class="portlet_list" id="scheduleEmptyList"></ul>
             </div>
         </div>
 		
