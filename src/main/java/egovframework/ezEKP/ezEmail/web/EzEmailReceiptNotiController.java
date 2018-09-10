@@ -159,27 +159,38 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				logger.debug("messageId = " + messageId);
 				
-				//get readList(수신확인)
+				// get readList(수신확인)
+				// readList의 reader 주소에는 alias 주소가 들어올 수 있다.
 				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
-				//get cancelList(회수)
+				// get cancelList(회수)
+				//cancelList의 reader 주소에는 real(account) 주소만 들어온다.
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
 				
-				//get all recipients from email message(메일)
+				// get all recipients from email message(메일)
+				// addresses에는 alias 주소가 들어올 수 있다.
 				Address[] addresses = message.getAllRecipients();
 				
-				//get aliasAddressList from recipients
+				// get aliasAddressMap from addresses and readList
+				// alias 주소가 들어올 수 있는 addresses와 readList reader 주소로부터 real 주소를 가져온다.
 				List<String> addressList = new ArrayList<String>();
+				
 				for (Address address : addresses) {
 					if (((InternetAddress)address).getAddress() != null) {
 						addressList.add(((InternetAddress)address).getAddress());
 					}
 				}
-				Map<String, String> aliasAddressList = ezEmailService.getAliasAddressMap(addressList, loginInfo.getTenantId());
 				
+				for (MailReadVO vo : readList) {
+					addressList.add(vo.getReaderEmail());
+				}
+				
+				Map<String, String> aliasAddressMap = ezEmailService.getAliasAddressMap(addressList, loginInfo.getTenantId());
+				
+				// tempMailList는 중복을 제거하기 위해 이미 처리한 메일주소를 담는다. 메일주소는 real 주소로만 들어간다.
 				List<String> tempMailList = new ArrayList<String>();
 				
-				//recipients from email message
+				// recipients from email message
 				for (Address address : addresses) {
 					String email = ((InternetAddress)address).getAddress();
 					String name = ((InternetAddress)address).getPersonal() == null ? 
@@ -191,20 +202,33 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						tempSb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
 						tempSb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
 						
-						if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
-							email = aliasAddressList.get(email);
+						// 메일 수신자의 주소가 alias 주소인 경우 real(account) 주소로 바꾼다.
+						if (aliasAddressMap.containsKey(email)) {
+							email = aliasAddressMap.get(email);
 						}
 						
 						String readDate = "UNREAD";
+						
 						for (MailReadVO vo : readList) {
-							if (vo.getReaderEmail().equals(email)) {
-								readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
-								break;
+							
+							// readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+							if (aliasAddressMap.containsKey(vo.getReaderEmail())) {
+								if (aliasAddressMap.get(vo.getReaderEmail()).equals(email)) {
+									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
+									break;
+								}
+							} else {
+								if (vo.getReaderEmail().equals(email)) {
+									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
+									break;
+								}
 							}
 						}
+						
 						tempSb.append("<READDATE><![CDATA[" + readDate + "]]></READDATE>");
 						
 						String status = "";
+						
 						for (MailCancelVO vo : cancelList) {
 							if (vo.getReaderEmail().equals(email)) {
 								if (vo.getStatus() != null && !vo.getStatus().equals("")) {
@@ -215,8 +239,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 								break;
 							}
 						}
-						tempSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
+						tempSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						tempSb.append("</ROW>");
 						
 						if (readDate.equals("UNREAD")) {
@@ -229,9 +253,16 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					}
 				}
 				
-				//readList
+				// readList
 				for (MailReadVO vo : readList) {
-					if (!tempMailList.contains(vo.getReaderEmail())) {
+					String realEmailAddress = vo.getReaderEmail();
+					
+					// readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+					if (aliasAddressMap.containsKey(realEmailAddress)) {
+						realEmailAddress = aliasAddressMap.get(realEmailAddress);
+					}
+					
+					if (!tempMailList.contains(realEmailAddress)) {
 						String readerEmail = vo.getReaderEmail();
 						String readerName = vo.getReaderName();
 					
@@ -244,7 +275,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						
 						String status = "";
 						for (MailCancelVO cvo : cancelList) {
-							if (cvo.getReaderEmail().equals(vo.getReaderEmail())) {
+							if (cvo.getReaderEmail().equals(realEmailAddress)) {
 								if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
 									status = cvo.getStatus();
 								} else {
@@ -253,15 +284,15 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 								break;
 							}
 						}
-						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
+						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						sb.append("</ROW>");
 						
-						tempMailList.add(readerEmail);
+						tempMailList.add(realEmailAddress);
 					}
 				}
 				
-				//cancelList
+				// cancelList
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
@@ -272,13 +303,14 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
 						
 						String status = "";
+						
 						if (vo.getStatus() != null && !vo.getStatus().equals("")) {
 							status = vo.getStatus();
 						} else {
 							status = "0";
 						}
-						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
+						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						unreadSb.append("</ROW>");
 					}
 				}
