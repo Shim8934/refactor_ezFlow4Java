@@ -504,7 +504,12 @@
 		        /* $("#detailMemoContents").blur(function() {
 					modifyMemo(this);
 		        }); */
-		       
+		       	
+		        $(".changeFolder").click(function(event) {
+		        	$("select option:selected").val();
+		        	$("select").val(event.target.id).prop("selected", true);
+		        	getMemoList();
+		        });
 		    });
 		    
 		    // 모달 삭제 || 메모지 삭제
@@ -1006,15 +1011,14 @@
 						});
 						
 						$('select').parent().find('li').on('click', function (){
-							  var cur = $(this).attr('id');
-							  $('select').parent().children('span').text($(this).text());
-							  $('select').children().removeAttr('selected');
-							  $('select').children('[value="'+cur+'"]').attr('selected','selected');					
-							  console.log($('select').children('[value="'+cur+'"]').text());
-							});
-							$('select').parent().on('click', function (){
-							  $(this).find('ul').slideToggle('fast');
-							});
+							var cur = $(this).attr('id');
+							$('select').parent().children('span').text($(this).text());
+							$('select').children().removeAttr('selected');
+							$('select').children('[value="'+cur+'"]').attr('selected','selected');					
+						});
+						$('select').parent().on('click', function (){
+							$(this).find('ul').slideToggle('fast');
+						});
 					}     			
 				});
 		    }
@@ -1036,6 +1040,8 @@
 		        	}
 	    		});
 	    	}
+		    
+			
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
