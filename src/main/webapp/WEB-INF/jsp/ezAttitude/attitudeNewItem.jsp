@@ -437,9 +437,8 @@
 							}
 						}
 					}
-					return returnFlag;
 				}
-				return false;
+				return returnFlag;
 			}
 			
 			//휴근등록시
