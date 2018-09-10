@@ -70,7 +70,7 @@
 			var accessNo = "";
 			
 			if (selectedList.length == 0) {
-				alert("삭제할 IP대역 리스트를 선택해주세요.");
+				alert("삭제할 리스트를 선택해주세요.");
 				return;
 			} else if (selectedList.length == 1) {
 				accessNo = selectedList[0].getAttribute("accessno");
@@ -196,7 +196,7 @@
 		}
 		
 		function event_HeaderCheckBoxClick(obj) {
-			var accessListElement = $("#tblIP tbody tr[id^=AccessId]");
+			var accessListElement = $("#tblIP tbody tr[id^=AccessId_]");
 			
 			if (accessListElement.length == 0) {
 				return;

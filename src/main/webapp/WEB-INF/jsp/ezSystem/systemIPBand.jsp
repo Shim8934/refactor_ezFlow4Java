@@ -275,7 +275,7 @@
 		}
 		
 		function event_HeaderCheckBoxClick(obj) {
-			var ipListElement = $("#tblIP tbody tr[id^=IPBand]");
+			var ipListElement = $("#tblIP tbody tr[id^=IPBand_]");
 			
 			// 설정한 IP대역이 없을 경우
 			if (ipListElement.length == 0) {
