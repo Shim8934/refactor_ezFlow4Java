@@ -558,6 +558,21 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
+	
+	<update id="EzOrganAdminDAO.updateProperty_addJob" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				$v_PROPNAME$ = #v_PROPVALUE# 
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				DEPTID = #V_DEPTID#
+		]]>
+	</update>
 		
 	<!-- <procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[

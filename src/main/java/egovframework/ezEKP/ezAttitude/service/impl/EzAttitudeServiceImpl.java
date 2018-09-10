@@ -1641,7 +1641,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeAuthDeptList started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
-			if (rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wa=1")) {
+			if (rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("a1=1")) {
 				// 전체, 회사, 근태관리자 -> 모든부서 관리권한
 				userAuthType = "all";
 			} else if (rollInfo.contains("g=1")) {

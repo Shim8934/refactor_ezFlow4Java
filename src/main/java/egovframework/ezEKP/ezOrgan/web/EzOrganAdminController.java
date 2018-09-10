@@ -124,6 +124,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
 
     	ezCommonService.createTblCompanyConfig();
+    	ezCommonService.addAddJobMasterOrderBy();
     	
     	logger.debug("init ended.");
     }
@@ -755,15 +756,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID);
 	    
+        String column = "EXTENSIONATTRIBUTE15";
+        String deptID = request.getParameter("deptId");
+        String userType = request.getParameter("userType");
 		String pClass = request.getParameter("pClass");
 		String cn = request.getParameter("cn");
 		String[] cnDatas = cn.split(",");
+		String[] userTypeDatas = userType.split(",");
 		String result = "";
 		
-		logger.debug("pClass=" + pClass + ",cn=" + cn);
+		logger.debug("pClass=" + pClass + ",cn=" + cn + ",userType=" + userType);
 		
+		String pClassTemp = pClass;
 		for (int i = 0; i < cnDatas.length; i++) {
-			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass, tenantID);	
+			if (pClassTemp.toLowerCase().equals("user")) {
+				pClass = userTypeDatas[i];
+				column = pClass.equals("addJob") ? "ORDERBY" : "EXTENSIONATTRIBUTE15";
+			}
+
+			ezOrganAdminService.updateProperty(cnDatas[i], column, i+"", pClass, tenantID, deptID);	
 		}
 		
 		logger.debug("saveOrderList ended.");
