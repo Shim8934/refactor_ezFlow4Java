@@ -723,6 +723,9 @@ public class EzSystemAdminController {
 			ipAddress = getIPBand.getIpAddress();
 			access = getIPBand.getAccess();
 			explanation = getIPBand.getExplanation();
+			explanation = explanation.replaceAll("\\\\", "\\\\\\\\");
+			
+			logger.debug("explanation=" + explanation);
 		}
 		
 		model.addAttribute("ipNo", ipBand.getIpNo() == null ? "" : ipBand.getIpNo());

@@ -238,9 +238,12 @@
 		
 		function windowResize() {
         	var height = parent.document.documentElement.clientHeight - 270;
+        	var width = parent.document.documentElement.clientWidth - 30;
         	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
         		height = height - 10;
         	} */
+        	document.getElementById("contentHeader").style.width = width + "px";
+        	document.getElementById("contentlist").style.width = width + "px";
         	document.getElementById("contentlist").style.height = height + "px";
         	document.getElementById("contentlist").style.overflow = "auto";
         }
@@ -267,7 +270,7 @@
 	    </ul>
 	</div>
 	
-	<div style="width:50%;">
+	<div id="contentHeader" style="width:50%;">
 		<table class="mainlist" style="width:100%;">
 			<thead id="accessHeader">
 				<tr>

@@ -92,11 +92,17 @@
 			}
 			
 			explanation = document.getElementById("explanText").value;
+			
+			if (explanation.length > 100) {
+				alert("설명은 최대 100글자 입니다.");
+				return;
+			}
+			
 			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
 			
 			if (_type == "modify") {
 				formUrl = "/ezSystem/updateIPBand.do";
-				formData = "ipNo=" + _ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+				formData = "ipNo=" + _ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
 			}
 			
 			console.log(formData);
@@ -136,7 +142,7 @@
         <div id="leTop">			
 			<div class="leTitle" style="padding-left:10px">IP 주소 설정</div>
 			
-			<table class="content" style="width:95%; margin:auto;">
+			<table class="content" style="width:95%; margin:auto; margin-top: 5px;">
 				<tr>
 					<th>허용여부</th>
 					<td>
@@ -151,7 +157,8 @@
 			    </tr>
 			    <tr>
 					<th>설명</th>
-					<td><textarea style="width:96%;resize:none;"id="explanText" rows="3"> </textarea></td>
+					<td><input type="text" id="explanText" size="56"></td>
+					<!-- <td><textarea style="width:96%;resize:none;"id="explanText" rows="3"> </textarea></td> -->
 			    </tr>
 			</table>
 			

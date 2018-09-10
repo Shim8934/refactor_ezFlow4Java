@@ -151,7 +151,15 @@
                 _TR.appendChild(_ACCESS);
                 
                 var _EXPLANATION = document.createElement("TD");
-                _EXPLANATION.innerText = json[Cnt].explanation;
+                var _SPAN = document.createElement("span");
+                _EXPLANATION.title = json[Cnt].explanation;
+                _SPAN.innerText = json[Cnt].explanation;
+                _SPAN.style.display = "inline-block";
+                _SPAN.style.width = "100%";
+                _SPAN.style.whiteSpace = "nowrap";
+                _SPAN.style.overflow = "hidden";
+                _SPAN.style.textOverflow = "ellipsis";
+                _EXPLANATION.appendChild(_SPAN);
                 _TR.appendChild(_EXPLANATION);
                 
                 _TBODY.appendChild(_TR);
@@ -171,7 +179,7 @@
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			if (type === "add") {
 				url += "?type=add";
-				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
 			} else {
 				var selectedList = $("#tblIP tbody tr[selected=true]");
 				if (selectedList.length > 1) {
@@ -193,9 +201,9 @@
 			var explanation = obj.childNodes[3].innerText;
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			
-			url += "?type=modify&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+			url += "?type=modify&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
 			
-			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
+			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
 		}
 		
 		function deleteIPBand() {
@@ -305,11 +313,14 @@
 		
 		function windowResize() {
         	var height = parent.document.documentElement.clientHeight - 345;
+        	var width = parent.document.documentElement.clientWidth - 30;
         	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
         		height = height - 10;
         	} */
+        	document.getElementById("contentHeader").style.width = width + "px";
+        	document.getElementById("contentlist").style.width = width + "px";
         	document.getElementById("contentlist").style.height = height + "px";
-        	document.getElementById("contentlist").style.overflow = "auto";
+        	document.getElementById("contentlist").style.overflowY = "auto";
         }
 		
 		$(function(){
@@ -345,7 +356,7 @@
 	    </ul>
 	</div>
 	
-	<div>
+	<div id="contentHeader">
 		<table class="mainlist" style="width:100%;">
 			<thead id="ipHeader">
 				<tr>
