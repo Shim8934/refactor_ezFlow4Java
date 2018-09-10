@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.concat.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -47,6 +48,7 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
+
 			.memoSelect{position:absolute; height:500px;}
 			#memoFolderList{display:none;}
 			.alertPopup{width:200px;position:absolute; top:112px;left:27px;}
@@ -447,7 +449,7 @@
 				
 		        getMemoList();
 		        
-		        // 메모 삭제  버튼(dom 생성후, event 추가)
+		        /* // 메모 삭제  버튼(dom 생성후, event 추가)
 		        $(".memo_main").on("click", ".memoLay .memoX", function() {
 		        	var memoId = $(this).attr("memoid").replace("memoid", "");
 		        	var modal = document.createElement('div');
@@ -480,7 +482,7 @@
    					
 		    		modal.addEventListener('click', modalDelete, false);
 		    		$("#memo" + memoId).prepend(modal);
-		        });
+		        }); */
 		        
 		        /* 메모 내용 변경 blur 이벤트 -> click 이벤트로 변경 */
 		        /* $(".memo_main").on("blur", ".memoLay textarea", function() {

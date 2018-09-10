@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 		<!-- data picker-->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
@@ -334,22 +335,17 @@
 	    }
 	    
 	    // 메모 삭제
-	    function DeleteItem_onclick(memoid) {
+	    function DeleteItem_onclick() {
 	    	var memo_ids = [];
 	    	
-	    	if(memoid == null) {
-				$(":checkbox[name=memo]:checked").each(function(){
-					memo_ids.push($(this).val());
-				});
-				
-				if (memo_ids.length == 0) {
-		        	alert("<spring:message code='ezMemo.t0043' />");
-		            return;
-		        }
-	    	}
-	    	else {
-	    		memo_ids.push(memoid);
-	    	}
+			$(":checkbox[name=memo]:checked").each(function(){
+				memo_ids.push($(this).val());
+			});
+			
+			if (memo_ids.length == 0) {
+	        	alert("<spring:message code='ezMemo.t0043' />");
+	            return;
+	        }
 	    	
 	    	if(confirm("<spring:message code='ezMemo.t0023'/>")) {
 		    	$.ajax ({
@@ -372,6 +368,26 @@
 	    	else {
 
 	    	}
+	    }
+	    
+	 // 모달 삭제 || 메모지 삭제
+	    function modalDelete(memoId) {
+	    	$.ajax ({  	
+		        	url : '/ezMemo/memoDelete.do',
+		 			type : 'POST',
+		            dataType : 'json',
+		            data : { 
+		               	memo_ids : memoId
+		            },  
+		            async:false,
+		            cache: false,
+		            success: function(result) {
+		                getMemoList();
+		            },
+		            error : function() {
+		                	
+		            }
+			});
 	    }
 	    
 	 // 메모 숨김 처리
