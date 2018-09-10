@@ -490,7 +490,7 @@
 		        }); */
 		        
 		        /* 메모 내용 변경 click 이벤트 */
-		        $(".memo_main").on("click", ".memoLay .memoSave", function() {
+		        $(".memo_main").on("click", ".memoLay .pallete2", function() {
 		        	modifyMemo(this);
 		        });
 		        
