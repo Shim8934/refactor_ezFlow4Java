@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.concat.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -47,15 +48,6 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			
-			.alertPopup{width:200px;position:absolute; top:112px;left:27px;}
-			.popHeader{height:47px;line-height:47px;font-size:18px;font-weight:bold;border-radius:5px 5px 0 0;background:#f1f3f4;border-bottom:1px solid #cccfd3;}
-			.popContainer{background:#fff; border-radius:0 0 5px 5px;margin-top: -17px;height: 59px;}
-			.txtDialog{padding:0px 0 25px 0;font-size:16px;color:#333;line-height:26px;font-weight:bold;}
-			.footBtn{font-size:18px;line-height:33px;text-align:center;}
-			.modal {z-index: 10000;padding-top:top: 0px; width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 4px;margin-top: 3px;}
-			.modRm-wrap{display:inline-block; margin:10px;}
-			.close-wrap{display:inline-block; margin:10px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -436,7 +428,7 @@
 				
 		        getMemoList();
 		        
-		        // 메모 삭제  버튼(dom 생성후, event 추가)
+		        /* // 메모 삭제  버튼(dom 생성후, event 추가)
 		        $(".memo_main").on("click", ".memoLay .memoX", function() {
 		        	var memoId = $(this).attr("memoid").replace("memoid", "");
 		        	var modal = document.createElement('div');
@@ -469,7 +461,7 @@
    					
 		    		modal.addEventListener('click', modalDelete, false);
 		    		$("#memo" + memoId).prepend(modal);
-		        });
+		        }); */
 		        
 		        /* 메모 내용 변경 blur 이벤트 -> click 이벤트로 변경 */
 		        /* $(".memo_main").on("blur", ".memoLay textarea", function() {

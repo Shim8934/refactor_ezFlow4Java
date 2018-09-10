@@ -47,11 +47,8 @@ function createMemo(memo, flag) {
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon memoX");
 	dd.setAttribute("memoId", memo.memo_id);
+	dd.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
-	if(flag != 'layer') {
-		dd.setAttribute("onclick", "DeleteItem_onclick("+memo.memo_id+")");
-	}
-		
 	dl.appendChild(dt);
 	dl.appendChild(dd);
 	dl.appendChild(dd2);
@@ -83,29 +80,24 @@ function createMemo(memo, flag) {
 	return div;
 }
 
-function insertMemo(hColor, bColor, memoId, layerFlag) {
-	var div = createMemo(hColor, bColor, memoId, null, layerFlag);
-	
-	if (layerFlag == 'layer') {
-		$(".memo_main").prepend(div);
-	} else {
-		$("#boardMemoList").prepend(div);
-	}
-	if(useDate == 1)
-		addDateInfo();
-}
-
-
 function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
 	$(".memo_main").html('');
 	
+	if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
+		var img = document.createElement("dd");
+		img.setAttribute("class", "mamo01 memoLay");
+		
+		$("#boardMemoList").prepend(img);
+		
+		return;
+	}
+	
 	for(var i=0; i<memoList.length; i++) {
 		if ('layer' != flag) {
 			var hColor = memoColor[memoList[i].color_id-1];
 			var bColor = memoColor[memoList[i].color_id+5];
-			//var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, memoList[i].display_flag, memoList[i].orders);
 			var div = createMemo(memoList[i]);
 			
 			$("#boardMemoList").prepend(div);
@@ -113,7 +105,6 @@ function loadMemoList(flag) {
 			if (memoList[i].display_flag != 1) {
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
-				//var div = createMemo(hColor, bColor, memoList[i].memo_id, memoList[i].contents, flag, memoList[i].orders);
 				var div = createMemo(memoList[i], flag);
 				
 				$(".memo_main").prepend(div);
@@ -146,6 +137,39 @@ function addDateInfo(date) {
     	}
 
 		$(".mtitText:first").html(month+"."+date+" ("+dayArray[day]+")");	
+}
+
+function addRemoveButton(memoId) {
+	var modal = document.createElement('div');
+	modal.setAttribute("class", "memoModal");
+	modal.setAttribute("id", "modal" + memoId);
+	
+	var alertPopup = document.createElement('div');
+	alertPopup.setAttribute("class", "alertPopup");
+	alertPopup.setAttribute("id", "memo" + memoId);
+	
+	var popHeader = document.createElement('div');
+	popHeader.setAttribute("class", "memoPopHeader");
+	popHeader.innerHTML = "<span>"+strLang4+"</span>";
+	
+	var popContainer = document.createElement('div');
+	popContainer.setAttribute("class", "popContainer");
+	
+	var txtDialog = document.createElement('div');
+	txtDialog.setAttribute("class", "txtDialog");
+	
+	var footBtn = document.createElement('p');
+	footBtn.setAttribute("class", "footBtn");
+	footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLang5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$(#modal"+memoId+").remove()>"+strLang6+"</span></div>";
+	
+	txtDialog.appendChild(footBtn);
+	popContainer.appendChild(txtDialog);
+	popHeader.appendChild(popContainer);
+	alertPopup.appendChild(popHeader);
+	modal.appendChild(alertPopup)
+		
+	modal.addEventListener('click', modalDelete, false);
+	$("#memo" + memoId).prepend(modal);
 }
 
 //날짜 초기화
