@@ -414,6 +414,7 @@ function getExtInfo()
 		{
 			if( !needDoubleFormFlag )
 			{
+				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 				needDoubleFormFlag = true;
 				var URL = document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pRelayURL2);
 	  			var isTrue = HwpCtrl.LoadFile(URL, true);
