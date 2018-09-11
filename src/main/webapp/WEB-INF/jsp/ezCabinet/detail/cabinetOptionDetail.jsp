@@ -16,7 +16,7 @@
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="divInfo">
-			<table class="tblBoardInf">
+			<table class="tblBoardInf cabcolor">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="fileCreator" class="cursor overfl wide"><c:out value="${item.creatorName}"/></td>

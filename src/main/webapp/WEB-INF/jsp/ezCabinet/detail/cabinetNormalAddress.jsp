@@ -15,7 +15,7 @@
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
-			<table class="tblEmailInf">
+			<table class="tblEmailInf cabcolor">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
