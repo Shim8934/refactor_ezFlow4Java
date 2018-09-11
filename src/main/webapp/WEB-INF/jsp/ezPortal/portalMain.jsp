@@ -361,7 +361,7 @@
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	minWidth: 320,
+		        	minWidth: 340,
 		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
