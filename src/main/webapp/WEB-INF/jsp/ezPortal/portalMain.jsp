@@ -370,7 +370,7 @@
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
-		        	minWidth: 320,
+		        	minWidth: 340,
 		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
@@ -723,9 +723,15 @@
 		 		
 		 		if (layerClass.indexOf("layerControl") != -1) {
 		        	
-		        	var layerTop = $("#layer-popup").css("top");
-	        		var layerLeft = $("#layer-popup").css("left");
-		        	
+		        	var topString = $("#layer-popup").css("top");
+	        		var leftString = $("#layer-popup").css("left");
+	        		
+	        		var topPIndex = topString.indexOf("p");
+	        		var leftPIndex = leftString.indexOf("p");
+	        		
+	        		var layerTop = parseInt(topString.substr(0, topPIndex));
+	        		var layerLeft = parseInt(leftString.substr(0, leftPIndex));
+	        		
 		        	$.ajax({
 		        		type : "POST",
 		        		data : {

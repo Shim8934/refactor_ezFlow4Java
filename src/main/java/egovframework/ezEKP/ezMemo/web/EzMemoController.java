@@ -414,12 +414,16 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		int topPIndex = layerTop.indexOf('p');
+		/*int topPIndex = layerTop.indexOf('p');
 		int leftPIndex = layerLeft.indexOf('p');
 		String top = layerTop.substring(0, topPIndex);
 		String left = layerLeft.substring(0, leftPIndex);
 		int topPositon = Integer.parseInt(top);
-		int leftPosition = Integer.parseInt(left);
+		int leftPosition = Integer.parseInt(left);*/
+		
+		int topPositon = Integer.parseInt(layerTop);
+		int leftPosition = Integer.parseInt(layerLeft);
+		
 
 		param.put("layer_top", topPositon);
 		param.put("layer_left", leftPosition);
