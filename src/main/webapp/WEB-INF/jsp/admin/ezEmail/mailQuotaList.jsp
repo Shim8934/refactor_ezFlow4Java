@@ -383,39 +383,24 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<div style="width:100%; padding-bottom:5px;">
-			<div id="mainmenu"> <!-- mainmenu -->    
-			    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-				    <select id="ListCompany" onChange="selectCompanyID()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-				    </select><br /><br />
-			    </span>
-			</div>
-			<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
-				<tr>
-					<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-						<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
-							<select id="searchKeycode" style="height:22px;"> 
-								<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
-								<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
-								<option value="3"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
-							</select>
-							<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
-							<a class="imgbtn" >
-								<span onclick="javascript:search();"><spring:message code="ezStatistics.t36"></spring:message></span> <!-- 검색 -->
-							</a>
-							<a class="imgbtn" >
-								<span onclick="javascript:reset();"><spring:message code="ezStatistics.t1059"></spring:message></span> <!-- 재입력 -->
-							</a>
-							<a class="imgbtn" >
-								<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
-							</a>
-						</span> 
-					</td>
-					<td width="5%">
-						<a class="imgbtn" style="margin-right:5px;">
-							<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
+		<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
+			<tr>
+				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
+					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
+						<select id="searchKeycode" style="height:22px;"> 
+							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
+							<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
+							<option value="userId"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
+						</select>
+						<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
+						<a class="imgbtn" >
+							<span onclick="javascript:search();"><spring:message code="ezStatistics.t36"></spring:message></span> <!-- 검색 -->
+						</a>
+						<a class="imgbtn" >
+							<span onclick="javascript:reset();"><spring:message code="ezStatistics.t1059"></spring:message></span> <!-- 재입력 -->
+						</a>
+						<a class="imgbtn" >
+							<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
 						</a>
 					</td>
 				</tr>

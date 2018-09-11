@@ -283,7 +283,7 @@ function CalendarMiniDataSource() {
 			ENDDATE : sEndDate,
 			APP : "0",
 			GROUPID : groupid,
-			IDLIST : (idlist == "") ? idtype : idlist
+			IDLIST : (idlist == "") ? 'T' : idlist
 		},
 		success: function(text){
 			getCalendarMiniDataSource_after(text)
