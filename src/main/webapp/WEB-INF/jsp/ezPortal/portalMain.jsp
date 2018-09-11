@@ -77,7 +77,6 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        setGadgetPositionOnResize();
 		 	}
 		 	
 		 	$(window).resize(function() {
@@ -86,6 +85,7 @@
 		 		
 		 		if (layerClass.indexOf("layerControl") != -1) {
 		        	setLayerSizeOnResize();
+			        setGadgetPositionOnResize();
 		 		}
 		 		
 		 	});
@@ -165,8 +165,7 @@
 		    	setDetailMemoPosition();
 		    	checkDefaultFolder();
 		    	memoFoldersInfo();
-	    		getMemoConfig();
-	    		quickMemoDisplay();   
+	    		checkMemoConfig();
 
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
@@ -435,7 +434,7 @@
 		    
 		    // 메모 컨피그 DB 확인 후 없으면 insert
 		    var firstDBLayerSize="yes";
-		    function getMemoConfig() {
+		    function checkMemoConfig() {
 	        	
 		        $.ajax({
 		        	type : "GET",
@@ -443,48 +442,70 @@
 		        	async : false,
 		        	url : "/ezMemo/getMemoConfig.do",
 		        	success : function(result) {
-		        		
+
 		        		if (result.memoConfigVO != null) {
-		        		
-		        			fontSize = result.memoConfigVO.font_size;
-							useDate = result.memoConfigVO.use_date;
-							defaultColor = result.memoConfigVO.default_color;
-		        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
-		        			if((result.memoConfigVO.layer_top == 0) && (result.memoConfigVO.layer_left == 0) && (result.memoConfigVO.layer_width == 295) && (result.memoConfigVO.layer_height == 380)) {
-		        				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
-		        				if(firstDBLayerSize=="yes") {
-			        				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
-					        		$(".ui-resizable-handle").css("display", "none");
-					        		
-					        		$("#layer-popup").draggable({
-					        			disabled: true
-					        		});
-		        				} else {
-		        					$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
-		    		        		$(".ui-resizable-handle").css("display", "");
-		    		        		$("#layer-popup").draggable({
-		    		        			disabled: false
-		    		        		});
-		        					return;
-		        				}
-				        		firstDBLayerSize="no";
-				        		setLayerSize();
-		        			}
-		        			
+		        			getMemoConfig();
+		        			quickMemoDisplay();
 		        		} else {
 		        			
-		        			$.ajax({
-		        				type : "POST",
-		        				dataType : "JSON",
-		        				url : "/ezMemo/insertMemoConfig.do",
-		        				success : function(result) {
-
-		        				}
-		        			});
+		        			insertMemoConfig();
+		        			
 		        		}
 		        	}
 		        });
 	        }
+		    
+		    function getMemoConfig() {
+		    	
+		    	$.ajax({
+		    		type : "GET",
+		        	dataType : "JSON",
+		        	async : false,
+		        	url : "/ezMemo/getMemoConfig.do",
+		        	success : function(result) {
+		        		
+		        		fontSize = result.memoConfigVO.font_size;
+						useDate = result.memoConfigVO.use_date;
+						defaultColor = result.memoConfigVO.default_color;
+	        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
+	        			if((result.memoConfigVO.layer_top == 0) && (result.memoConfigVO.layer_left == 0) && (result.memoConfigVO.layer_width == 295) && (result.memoConfigVO.layer_height == 380)) {
+	        				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
+	        				if(firstDBLayerSize=="yes") {
+		        				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
+				        		$(".ui-resizable-handle").css("display", "none");
+				        		
+				        		$("#layer-popup").draggable({
+				        			disabled: true
+				        		});
+	        				} else {
+	        					$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
+	    		        		$(".ui-resizable-handle").css("display", "");
+	    		        		$("#layer-popup").draggable({
+	    		        			disabled: false
+	    		        		});
+	        					return;
+	        				}
+			        		firstDBLayerSize="no";
+			        		setLayerSize();
+	        			}
+			        		
+		        	}
+		    	});
+		    }
+		    
+		    // 메모 초기값 입력
+		    function insertMemoConfig() {
+		    	
+		    	$.ajax({
+    				type : "POST",
+    				dataType : "JSON",
+    				url : "/ezMemo/insertMemoConfig.do",
+    				success : function(result) {
+    					checkMemoConfig();
+    				}
+    			});
+		    }
+		    
 		    // 메모 디테일 default값 세팅
 		    function setDetailMemoPosition () {
 		    	
@@ -906,17 +927,19 @@
 		        	async : false,
 		        	url : "/ezMemo/getMemoConfig.do",
 		        	success : function(result) {
-		        		
-		        		if (result.memoConfigVO.use_gadget == 1) {
-		        			getGadgetPosition(result.memoConfigVO);
+		        		var userGadget = result.memoConfigVO.use_gadget;
+		        		var memoConfig = result.memoConfigVO;
+		        		if (userGadget == 1) {
+		        			getGadgetPosition(memoConfig);
 		        			$("#open-memo").css("display", "");
+		        			
 		        		} else {
 		        			$("#open-memo").css("display", "none");
+		        			
 		        		}
 		        	}
 	    		});
 	    	}
-		    
 			
 		</script>
 	</head>
