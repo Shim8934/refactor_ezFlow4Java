@@ -250,6 +250,11 @@
 		        				if (result.status == 1) {
 		        					
 			        				getMemoList();
+			        				
+			        				if(window.frames["main"].frames["right"] != undefined) {			
+					                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+					                		window.frames["main"].frames["right"].getMemoList();
+				                	}
 		        				}
 		        			}
 		        		 });
@@ -504,12 +509,17 @@
 		 			type : 'POST',
 		            dataType : 'json',
 		            data : { 
-		               	memo_ids : ID
+		               	memo_ids : memoId
 		            },  
 		            async:false,
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
+		            	
+		            	if(window.frames["main"].frames["right"] != undefined) {			
+		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+		                		window.frames["main"].frames["right"].getMemoList();
+	                	}
 		            },
 		            error : function() {
 		                	
@@ -548,6 +558,11 @@
 		                success: function(result) {
 		                	
 		                	getMemoList();
+		                	
+		                	if(window.frames["main"].frames["right"] != undefined) {			
+			                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+			                		window.frames["main"].frames["right"].getMemoList();
+		                	}
 		                },
 		                error : function() {
 		                	
@@ -814,7 +829,11 @@
 	                	var memoId = result["memoId"];
 	                	
 	                	getMemoList("new");
-	                	parent.parent.getMemoList();
+	                
+	                	if(window.frames["main"].frames["right"] != undefined) {			
+		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+		                		window.frames["main"].frames["right"].getMemoList("new");
+	                	}
 	                },
 	                error : function() {
 	                	
@@ -905,7 +924,10 @@
 	                success: function(result) {
 	                	defaultColor = idx;
 	                	getMemoList();
-	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+	                	if(window.frames["main"].frames["right"] != undefined) {			
+		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+		                		window.frames["main"].frames["right"].getMemoList();
+	                	}
 	                },
 	                error : function() {
 	                	
