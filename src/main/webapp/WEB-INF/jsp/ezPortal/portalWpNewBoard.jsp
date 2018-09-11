@@ -5,8 +5,25 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">	
+		<style>
+			.portlet_list li {
+				cursor:pointer;
+				background:none;
+				display:inline-block;
+				width:118px;
+				height:180px;
+			}
+			.noticeImg {
+				cursor:pointer;
+				width:118px;
+				height:155px;
+			}
+			.noticeSpan {
+				display:block;
+			}		
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
@@ -72,8 +89,12 @@
 	                var RowCnt = xmldom.getElementsByTagName("ROW").length;
                 
     	            if (RowCnt > 0) {
-        	            if (RowCnt > 6) {
+    	            	/* 2018-09-11 홍승비 - 포틀릿에 표시되는 게시물의 수는 최대 3개(아래에서 i=1부터 시작함)로 고정 */
+        	            /* if (RowCnt > 6) {
             	            RowCnt = 6;
+        	            } */
+        	            if (RowCnt > 4) {
+            	            RowCnt = 4;
         	            }
 
         	            /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */
@@ -96,20 +117,43 @@
                         for (var i = 1; i < RowCnt; i++) {
                             var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
+                            var imgSrc = "";
                             
-                            listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
+                          //  listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
+                          /* 2018-09-11 홍승비 - 게시물의 이미지와 제목을 화면에 뿌려주도록 수정 */
+							$.ajax({
+								type : "POST",
+								dataType : "text",
+								async : false,
+								url : "/ezBoard/getContentInfo.do",
+								data : { type   : "BOARDCONTENT",
+										 docID   : pItemID 
+									   },
+								success: function(filePath){	
+									imgSrc = getMhtImg(pItemID, filePath);
+									
+									// mht 내부에 사진이 없는 경우, 디폴트 이미지 사용함
+									if (imgSrc == "") {
+										imgSrc = "/images/kr/main/photo0" + i + ".png";
+									}
+									
+									listHTML += "<li><img class='noticeImg'  src='" + imgSrc + "' onclick=\"openDoc('" + pItemID + "')\">";
+									listHTML += "<span class='noticeSpan' onclick=\"openDoc('" + pItemID + "')\">" + DOCTITLE + "</span></li>"; 							
+								}
+							});
                         }
-                        
-                        listHTML += "</ul>";
+                     //   listHTML += "</ul>";
                         
                         document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
-						
+                        
+                        /* 2018-09-11 홍승비 - 게시물의 내용(content)을 화면에 표출하는 부분 주석처리 */
+						/* 
                         if (boardType == "3" || boardType == "4") {
                         	document.getElementById("content").innerHTML = FboardMainContent;	
                         } else {
                         	getContent(pfirstItemID);
                         }
-                        
+                         */
 	                } else {
                     	/* var nodata = "<div class='nodata_portlet '>";
                     	nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
@@ -129,6 +173,36 @@
             		
             	}
         	}
+			
+			/* 2018-09-11 홍승비 - mht파일 내부의 첫번째 이미지 경로를 리턴하는 함수 */
+			function getMhtImg(pItemID, filePath) {
+				var imgMht = "";
+				var imgSrc = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommon/mhtToHTMLContent.do",
+					data : { type   : "BOARDCONTENT", 
+							 itemID : pItemID,
+							 href   : filePath 
+						   },
+					success: function(result){			
+						imgMht = result.substr(result.indexOf('<img src="'));
+						imgMht = imgMht.substring((imgMht.indexOf('"') + 1), imgMht.indexOf(">"));
+						imgMht = imgMht.substring(0, imgMht.indexOf('"'));
+						
+						if(imgMht == "") {
+							imgSrc = "";
+						} else {
+							imgSrc = imgMht;
+						}
+					}
+				});
+				
+				return imgSrc;
+			}
 			
 			function openDoc(pItemID) {
 	            var pheight = window.screen.availHeight;
