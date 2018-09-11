@@ -160,7 +160,7 @@ function addRemoveButton(memoId) {
 	
 	var footBtn = document.createElement('p');
 	footBtn.setAttribute("class", "footBtn");
-	footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLang5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$(#modal"+memoId+").remove()>"+strLang6+"</span></div>";
+	footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLang5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+strLang6+"</span></div>";
 	
 	txtDialog.appendChild(footBtn);
 	popContainer.appendChild(txtDialog);

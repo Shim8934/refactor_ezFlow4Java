@@ -382,7 +382,8 @@
 		            async:false,
 		            cache: false,
 		            success: function(result) {
-		                getMemoList();
+		            	$("#memo"+memoId).remove();
+		            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		            },
 		            error : function() {
 		                	

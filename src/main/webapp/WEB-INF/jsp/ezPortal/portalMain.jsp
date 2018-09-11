@@ -506,29 +506,23 @@
 		    });
 		    
 		    // 모달 삭제 || 메모지 삭제
-		    function modalDelete(event) {
-		    	var mode = event.target.id.substring(0,5);
-		    	var ID = event.target.id.substring(5);
-		    	if(mode === "modal" || mode === "close") {
-		    		$("#modal" + ID).remove();
-		    	} else if(mode === "modRm") {
-		    		$.ajax ({  	
-			        	url : '/ezMemo/memoDelete.do',
-			 			type : 'POST',
-			            dataType : 'json',
-			            data : { 
-			               	memo_ids : ID
-			            },  
-			            async:false,
-			            cache: false,
-			            success: function(result) {
-			                getMemoList();
-			            },
-			            error : function() {
-			                	
-			            }
-					});
-		    	}
+		    function modalDelete(memoId) {
+	    		$.ajax ({  	
+		        	url : '/ezMemo/memoDelete.do',
+		 			type : 'POST',
+		            dataType : 'json',
+		            data : { 
+		               	memo_ids : ID
+		            },  
+		            async:false,
+		            cache: false,
+		            success: function(result) {
+		            	$("#memo"+memoId).remove();
+		            },
+		            error : function() {
+		                	
+		            }
+				});
 		    }
 		    
 		 	// 메모 내용 변경	    
