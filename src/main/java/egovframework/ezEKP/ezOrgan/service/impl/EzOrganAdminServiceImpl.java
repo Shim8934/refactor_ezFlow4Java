@@ -75,6 +75,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
+	@Autowired
+	private Properties globals;
+	
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
 	    logger.debug("getCompanyList started");
@@ -146,16 +149,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword)	throws Exception {
         logger.debug("getRetireList started");
-        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+        logger.debug("tenantID=" + tenantID + ",offset=" + offset);
+        logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+   		
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		
 		map.put("v_TENANT_ID", tenantID);
-		map.put("v_PAGE", pPage);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("v_ROWPERPAGE", pPageRow);
 		map.put("v_STARTROW", pPageRow*(pPage - 1));
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -470,24 +483,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID) throws Exception {
+	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception {
 	    logger.debug("retireEntry started");
-	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID);
+	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID + ",offset=" + offset);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_TENANT_ID", tenantID);
-		map.put("v_CN", cn);
 		
 		// 퇴직자의 암호를 현재 관리자의 암호와 동일하게 변경한다.
 		// 이후 과정에서 에러가 발생했을 때 암호를 롤백할 방법이 없는 문제가 있다. 
 		setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
-		
-		map.put("nowDate", nowDate);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+	
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
 	    ezOrganAdminDao.retireDBData(map);
@@ -525,15 +537,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception {
 	    logger.debug("getRetireListCount started");
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
+   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+   		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
 		
 		logger.debug("getRetireListCount ended");
 		
@@ -1119,17 +1140,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }
     
 	@Override
-	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
+	public void restoreRetireEntry(String cn, String deptID, int tenantID, String offset) throws Exception {
 	    logger.debug("restoreRetireEntry started");
-	    logger.debug("cn=" + cn + ",deptID=" + deptID + ",tenantID=" + tenantID);
+	    logger.debug("cn=" + cn + ",deptID=" + deptID); 
+	    logger.debug("tenantID=" + tenantID + ",offset=" + offset);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	    date.setTimeZone(TimeZone.getTimeZone("GMT"));
-	    String nowDate = date.format(new Date()); 
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
-		map.put("nowDate", nowDate);
+		map.put("timeUTC", timeUTC);
 	    map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_PARENTCN", deptID);
@@ -1161,6 +1183,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     									 String keycode,String keyword) throws Exception {     
     	logger.debug("getUserList started");
     	
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		keyword = commonUtil.getWildcardEscapedString(keyword, dbName);
+   		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
@@ -1182,6 +1207,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
     	logger.debug("getUserCount started");
     	
+    	int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		keyword = commonUtil.getWildcardEscapedString(keyword, dbName);
+   		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
