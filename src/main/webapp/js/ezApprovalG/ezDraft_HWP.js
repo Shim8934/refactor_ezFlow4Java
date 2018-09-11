@@ -715,6 +715,8 @@ function openFormUI()
 		{
 	  		if(pFormHref != "cancel")
 	  		{
+	  			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+	  			
 	  			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref), false);
 	  			
 	  			pReadPC = false;
