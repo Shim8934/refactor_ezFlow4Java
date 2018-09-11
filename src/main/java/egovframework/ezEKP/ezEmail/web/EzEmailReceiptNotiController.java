@@ -296,10 +296,11 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
+						String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
 						
 						unreadSb.append("<ROW>");
 						unreadSb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
-						unreadSb.append("<READERNAME><![CDATA[" + readerEmail + "]]></READERNAME>");
+						unreadSb.append("<READERNAME><![CDATA[" + readerName + "]]></READERNAME>");
 						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
 						
 						String status = "";
@@ -363,7 +364,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String uidStr = url.split("/")[1];
 		long uid = Long.parseLong(uidStr);
 		
-		//넘어온 folderPath가 보낸편지함이 아닐경우
+		// 넘어온 folderPath가 보낸편지함이 아닐 경우
 		if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
 			logger.debug(egovMessageSource.getMessage("ezEmail.lhm22", locale));
 			logger.debug("mailCancelSend ended.");
@@ -392,7 +393,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.lhm23", locale);
 			}
 			
-			//메시지의 from이 user의 계정인지(또는 user의 alias mail)인지 검사
+			// 메시지의 sender가 user의 계정(또는 user의 alias mail)인지 검사
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 			
@@ -412,41 +413,37 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.lhm24", locale);
 			}
 			
-			//수신자 수가 max를 넘는 메일은 회수가 불가능
-			int maxRecAllCount = 500;
-			Address[] addresses = message.getAllRecipients();
-			if (addresses.length > maxRecAllCount) {
-				logger.debug(egovMessageSource.getMessage("ezEmail.lhm25", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.lhm26", locale));
-				logger.debug("mailCancelSend ended.");
-				return egovMessageSource.getMessage("ezEmail.lhm25", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.lhm26", locale);
-			}
 			
-			String internetMessageId = ((MimeMessage)message).getMessageID();
-			String subject = message.getSubject();
+			// get arrAddress
+			List<String> addressList = new ArrayList<String>();
 			
-			//get arrAddress
-			String[] arrAddress = null;
 			if (pEachCancel.equals("NO")) {
-				arrAddress = new String[addresses.length];
-				for (int i=0; i<addresses.length; i++) {
-					arrAddress[i] = ((InternetAddress)addresses[i]).getAddress();
+				Address[] addresses = message.getAllRecipients();
+				
+				for (Address address : addresses) {
+					addressList.add(((InternetAddress)address).getAddress());
 				}
 			} else {
-				arrAddress = pEachCancel.split("\\|!\\|");
+				String[] arrAddress = pEachCancel.split("\\|!\\|");
+				
+				for (String address : arrAddress) {
+					addressList.add(address);
+				}
 			}
 			
-			//get innerAddresses(내부사용자)
+			// get innerAddresses(내부사용자)
 			List<String> innerDomainList = ezEmailUtil.getInnerDomain(loginInfo.getTenantId());
 			List<String> innerAddresses = new ArrayList<String>();
 			
-			for (String address : arrAddress) {
+			for (String address : addressList) {
 				int index = address.indexOf("@");
 				String domain = "";
+				
 				if (index > -1) {
 					domain = address.substring(index + 1);
 				}
 				
-				for (int i=0; i<innerDomainList.size(); i++) {
+				for (int i = 0; i < innerDomainList.size(); i++) {
 					if (domain.equals(innerDomainList.get(i))) {
 						innerAddresses.add(address);
 						break;
@@ -454,17 +451,17 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 			}
 			
-			//alias address(부서 address, 개인 alias address 등)가 있으면 real address로 바꾼다.
-			innerAddresses = getMember(innerAddresses);
-			
-			//내부사용자 없을 경우 리턴
+			// 내부사용자 없을 경우 리턴
 			if (innerAddresses.size() == 0) {
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm27", locale));
 				logger.debug("mailCancelSend ended.");
 				return egovMessageSource.getMessage("ezEmail.lhm27", locale);
 			}
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, innerAddresses);
+			String messageId = ((MimeMessage)message).getMessageID();
+			String subject = message.getSubject();
+			
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, loginInfo.getId(), subject, innerAddresses);
 			
 			folder.close(true);
 			
