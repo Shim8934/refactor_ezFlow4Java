@@ -849,7 +849,6 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	ExtXML.load("/xml/ezApprovalG/packXML.xml");
 	
   try {
-	var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
 	var eNodes = ExtXML.documentElement;
 	var Nodes = psihangXML.documentElement;
 	

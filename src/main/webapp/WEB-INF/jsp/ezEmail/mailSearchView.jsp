@@ -38,6 +38,10 @@
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
+		    var keywordFromList = "${keywordFromList}";
+			var searchCheck = "${searchCheck}";
+			var searchFromList = "${searchFromList}";
+		    
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -113,6 +117,30 @@
 		        }
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
+		        
+		        var inputkeyword = document.getElementsByName('prekeyword').item(0);
+		        
+		        if (searchFromList) {
+		       		if (searchCheck == 'SUBJECT') {
+		        		var subject = document.getElementById("select").children[0];
+		        		subject.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+		        	} else if (searchCheck == 'FROM') {
+				   	 	var sender = document.getElementById("select").children[2];
+				   	 	sender.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+			   	 	} else if (searchCheck == 'RECEIVE') {
+		        		var receiver = document.getElementById("select").children[3];
+		        		receiver.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+			   	 	} else if (searchCheck == 'ALL') {
+		        		var all = document.getElementById("select").children[4];
+		        		all.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+		        	}  
+
+		       		setTimeout(set_searchKey, 1000);
+		    	}
 		        
 		        document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
 		    }

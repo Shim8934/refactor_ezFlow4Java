@@ -333,14 +333,14 @@
 	            try {
 	                switch (type) {
 	                    case "null":
-	                        if (xfe.getBodyValue() == "")
+	                        if (xfe.getBody() == "")
 	                            return true;
 	                        else
 	                            return false;
 	                        break;
 	                    case "body":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = xfe.getBody().getElementsByTagName("*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                CheckCount++;
@@ -349,7 +349,7 @@
 	                        break;
 	                    case "doctitle":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = xfe.getBody().getElementsByTagName("*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
 	                                CheckCount++;
@@ -358,7 +358,7 @@
 	                        break;
 	                    case "doctitlefield":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = xfe.getBody().getElementsByTagName("*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                return GetAttribute(HtmlTag[i], "doctitlefield");
