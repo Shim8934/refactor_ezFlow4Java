@@ -60,7 +60,7 @@
 					myCabinetTree.setTreeInfo({
 						treeId     : "cabinetMgTree",
 						treeType   : "cabinet",
-						type       : "list",
+						type       : "all",
 						initialUrl : "/ezCabinet/getAllCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
 						click      : null,
@@ -73,11 +73,10 @@
 					document.onselectstart   = function(e) {return false;};
 					var cabMgConfig          = document.getElementById("addRelated");
 					
-					autoSelect();
-					
 					if (cabMgConfig) {
 						document.getElementById("auto").onchange   = function (e) {autoSelect();}
 						document.getElementById("manual").onchange = function (e) {manualSelect();}
+						autoSelect();
 					}
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
@@ -90,16 +89,19 @@
 				}
 				
 				function autoSelect(){
-					var cabinetMainDiv      = document.getElementById("cabMgTreeId");
-					var fogPanel            = document.getElementById("fogPanel");
-					fogPanel.style.display  = "block";
+					var cabinetMainDiv       = document.getElementById("cabMgTreeId");
+					cabinetMainDiv.className = "cabMgRelTree hid";
+					var fogPanel             = document.getElementById("fogPanel");
+					var realHeight           = Math.max(cabinetMainDiv.clientHeight, cabinetMainDiv.scrollHeight);
+					fogPanel.style.height    = realHeight + "px";
+					fogPanel.style.display   = "block";
 				}
 				
 				function manualSelect(){
-					var fogPanel                         = document.getElementById("fogPanel");
-					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
-					cabinetMainDiv.style.backgroundColor = "#fff";
-					fogPanel.style.display               = "none";
+					var fogPanel             = document.getElementById("fogPanel");
+					var cabinetMainDiv       = document.getElementById("cabMgTreeId");
+					cabinetMainDiv.className = "cabMgRelTree";
+					fogPanel.style.display   = "none";
 				}
 				
 				function closeWindow() {window.close();}

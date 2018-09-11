@@ -15,7 +15,7 @@
 			<div class="left_cabinet"><span><spring:message code='ezCabinet.t01'/></span></div>
 			
 			<!-- 나의 캐비넷  -->
-			<h2 id="myCabinet"><span><spring:message code='ezCabinet.t02'/></span></h2>
+			<h2 id="myCabinet" class="on"><span><spring:message code='ezCabinet.t02'/></span></h2>
 			<ul>
 				<div id="cabinetTree" class="cabinetTree"></div>
 				<!-- 캐비넷  관리 -->
@@ -143,6 +143,8 @@
 					myShareTree.makeTree({cabinetNode : currentSelected});
 				}
 				
+				function destroyRelatedTree() {document.getElementById("cabinetModulesTree").innerHTML = "";}
+				
 				function getManagement() {
 					var mycabinetElmt  = document.getElementById("cabinetTree");
 					var selectedNode   = mycabinetElmt.querySelector("span[class='selectedNode']");
@@ -266,6 +268,7 @@
 				return {
 					reloadTree    : reloadTree,
 					relateTree    : reloadRelatedTree,
+					destroyTree   : destroyRelatedTree, 
 					reloadMyShare : reloadMyShareTree,
 					draw          : drawVolume
 				};

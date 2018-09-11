@@ -98,5 +98,7 @@ var CabinetMessages = {
 	strDelete3   : "하위 캐비넷이 존재하는 캐비넷은 삭제할 수 없습니다.",
 	strShareErr3 : "공유한 캐비넷이 없습니다.",
 	strSummLen   : "요약은 250 글자 이내이어야 합니다.",
-	strApproval  : "전자결재에 내용이 없어 캐비넷 등록을 할 수 없습니다."
+	strApproval  : "전자결재에 내용이 없어 캐비넷 등록을 할 수 없습니다.",
+	strMycabinet : "나의 캐비넷",
+	strRelatedTr : "연동 캐비넷"
 }

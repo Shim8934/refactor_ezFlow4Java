@@ -125,10 +125,14 @@
 		setListModules();
 		var leftFrame = window.parent.parent.frames["left"];
 		if (leftFrame && leftFrame.CabUserLeft) {
-			var activeList = document.querySelectorAll("input[type='radio'][role='on']:checked");
+			var activeList  = document.querySelectorAll("input[type='radio'][role='on']:checked");
+			var totalActive = activeList.length;
 			
-			if (leftFrame.document.getElementById("relatedCabinet").className == "on" || activeList.length == 0) {
+			if (leftFrame.document.getElementById("relatedCabinet").className == "on" && totalActive > 0) {
 				leftFrame.CabUserLeft.relateTree("1");
+			}
+			else {
+				if (totalActive == 0) {leftFrame.CabUserLeft.destroyTree();}
 			}
 		}
 	}

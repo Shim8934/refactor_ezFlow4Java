@@ -253,9 +253,8 @@ var CabinetItem = function() {
 		
 		switch(mode) {
 			case "search": handleClickFunct = toggleSearchPanel; break;
-			case "del"   : handleClickFunct = toggleDeletePopup; break;
 			case "move"  : handleClickFunct = toggleMovePopup  ; break;
-			default      : alert(CabinetMessages.strError); return;
+			default      : alert(CabinetMessages.strError)     ; return;
 		}
 		
 		var fogPanel                 = document.createElement("div");
@@ -596,7 +595,6 @@ var CabinetItem = function() {
 	function afterDeleteSuccessfully() {
 		alert(CabinetMessages.strDel);
 		refreshAllFrames();
-		toggleDeletePopup();
 	}
 	
 	function moveFileConfirm() {
