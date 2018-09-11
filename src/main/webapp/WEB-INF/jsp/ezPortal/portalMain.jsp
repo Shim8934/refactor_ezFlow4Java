@@ -48,18 +48,9 @@
 			.ui-resizable-se {background-image: url("");}
 			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-
+			
 			.memoSelect{position:absolute; height:500px;}
 			#memoFolderList{display:none;}
-			.alertPopup{width:200px;position:absolute; top:112px;left:27px;}
-			.popHeader{height:47px;line-height:47px;font-size:18px;font-weight:bold;border-radius:5px 5px 0 0;background:#f1f3f4;border-bottom:1px solid #cccfd3;}
-			.popContainer{background:#fff; border-radius:0 0 5px 5px;margin-top: -17px;height: 59px;}
-			.txtDialog{padding:0px 0 25px 0;font-size:16px;color:#333;line-height:26px;font-weight:bold;}
-			.footBtn{font-size:18px;line-height:33px;text-align:center;}
-			.modal {z-index: 10000;padding-top:top: 0px; width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 4px;margin-top: 3px;}
-			.modRm-wrap{display:inline-block; margin:10px; cursor:pointer;}
-			.close-wrap{display:inline-block; margin:10px; cursor:pointer;}
-			
 			.select_wrapper {text-align: left; padding-left: 10px;color:#fff; background: #6a8547 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative; width:210px;}
 			.select_wrapper:hover { background: #566c3a url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
 			.select_wrapper .select_inner {font-family: arial;font-size: 13px; background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 100%;z-index: 15000;list-style: none; text-align:left; padding:0px;}
