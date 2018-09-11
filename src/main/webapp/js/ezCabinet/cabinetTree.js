@@ -24,6 +24,8 @@ function CabinetTree() {
 	var _name2        = null;
 	var _userIcon     = null;
 	var _cabinetIcon  = null;
+	var _errorHandler = null;
+	var _relatedUrl   = null;
 	
 	//set public functions
 	this.makeTree     = getInitalData;
@@ -31,20 +33,24 @@ function CabinetTree() {
 	
 	//privileged functions
 	function setTreeInfo(data) {
-		_treeElmtId  = data["treeId"];
-		_treeType    = data["treeType"];
-		_initialUrl  = data["initialUrl"];
-		_getSubUrl   = data["extendUrl"];
-		_shareUrl    = data["shareUrl"];
-		_clickHandle = data["click"];
-		_dblClickHdl = data["dblClick"];
-		_companyId   = data["companyId"];
-		_genType     = data["type"]     ? data["type"]     : _genType;
-		_transImg    = data["transImg"] ? data["transImg"] : "/images/OrganTree_cross/dot_continue.gif";
-		_plusImg     = data["plus"]     ? data["plus"]     : "/images/OrganTree_cross/plus.gif";
-		_minusImg    = data["minus"]    ? data["minus"]    : "/images/OrganTree_cross/minus.gif";
-		_userIcon    = "/images/cabinet/icon_user.png";
-		_cabinetIcon = "/images/cabinet/left_cabinet.png";
+		_treeElmtId    = data["treeId"];
+		_treeType      = data["treeType"];
+		_initialUrl    = data["initialUrl"];
+		_getSubUrl     = data["extendUrl"];
+		_shareUrl      = data["shareUrl"];
+		_clickHandle   = data["click"];
+		_dblClickHdl   = data["dblClick"];
+		_companyId     = data["companyId"];
+		_genType       = data["type"]       ? data["type"]       : _genType;
+		_transImg      = data["transImg"]   ? data["transImg"]   : "/images/OrganTree_cross/dot_continue.gif";
+		_plusImg       = data["plus"]       ? data["plus"]       : "/images/OrganTree_cross/plus.gif";
+		_minusImg      = data["minus"]      ? data["minus"]      : "/images/OrganTree_cross/minus.gif";
+		_errorHandler  = data["errHandler"] ? data["errHandler"] : null;
+		_userIcon      = "/images/cabinet/icon_user.png";
+		_cabinetIcon   = "/images/cabinet/left_cabinet.png";
+		_relatedUrl    = "/ezCabinet/cabinetRelatedTreeNotFound.do";
+		_shareErrUrl   = "/ezCabinet/cabinetShareTreeNotFound.do";
+		_myshareErrUrl = "/ezCabinet/myShareTreeNotFound.do";
 		
 		switch(_treeType) {
 			case "organ": 
@@ -85,9 +91,9 @@ function CabinetTree() {
 		switch(code) {
 			case 1 : alert(CabinetMessages.strParamErr) ; return;
 			case 2 : alert(CabinetMessages.strError)    ; return;
-			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}; return;
-					 //alert(CabinetMessages.strTreeErr2); 
-			case 5 : return; //alert(CabinetMessages.strShareErr2); return;
+			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);};
+					 if (_errorHandler) {_errorHandler(_relatedUrl) }; return; //alert(CabinetMessages.strTreeErr2);
+			case 5 : if (_errorHandler) {_errorHandler(_shareErrUrl)}; return; //alert(CabinetMessages.strShareErr2); return;
 		}
 		
 		var nodesTree   = data.tree;
@@ -103,12 +109,13 @@ function CabinetTree() {
 			case "listshare":
 				var len = nodesTree.length;
 				
-				//if (len == 0 && _genType == "listshare") {alert(CabinetMessages.strShareErr3);}
+				if (len == 0 && _genType == "listshare") {if (_errorHandler) {_errorHandler(_myshareErrUrl)}; return;} //alert(CabinetMessages.strShareErr3); return;
 				
 				for (var i = 0; i < len; i++) {
 					var divChildNode  = document.createElement("div");
 					generateSubTree(divTree, divChildNode, nodesTree[i]);
 				}
+				
 				break;
 			case "share":
 				var userLen  = nodesTree.length;

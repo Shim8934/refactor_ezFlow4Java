@@ -16,7 +16,7 @@
 			
 			<!-- 나의 캐비넷  -->
 			<h2 id="myCabinet" class="on"><span><spring:message code='ezCabinet.t02'/></span></h2>
-			<ul>
+			<ul class="on">
 				<div id="cabinetTree" class="cabinetTree"></div>
 				<!-- 캐비넷  관리 -->
 				<h3 id="cabinetManagement"><span><spring:message code='ezCabinet.t03'/></span></h3>
@@ -24,15 +24,15 @@
 			
 			<!-- 연동 캐비넷 -->
 			<h2 id="relatedCabinet"><span><spring:message code='ezCabinet.t32'/></span></h2>
-			<ul><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
+			<ul class="off"><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
 			
 			<!-- 공유 한은 캐비넷 -->
 			<h2 id="shareCabinet"><span><spring:message code='ezCabinet.t157'/></span></h2>
-			<ul><div id="myShareTree" class="cabinetTree2"></div></ul>
+			<ul class="off"><div id="myShareTree" class="cabinetTree2"></div></ul>
 			
 			<!-- 공유 반은 캐비넷 -->
 			<h2 id="sharedCabinet"><span><spring:message code='ezCabinet.t05'/></span></h2>
-			<ul><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
+			<ul class="off"><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
 			
 			<!-- 용량보기 -->
 			<div class="volumeDiv">
@@ -104,6 +104,8 @@
 					if (!document.getElementById("myBar").className == "") {drawVolume();}
 				}
 				
+				function handleErrorTree(errorUrl) {window.parent.frames["right"].location.href = errorUrl;}
+				
 				function getCabinet(obj) {
 					var cabinetId = obj.getAttribute("role");
 					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
@@ -161,6 +163,7 @@
 						type       : "list",
 						initialUrl : "/ezCabinet/getRelatedCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						errHandler : handleErrorTree,
 						click      : getCabinet,
 						dblClick   : null
 					});
@@ -176,6 +179,7 @@
 						initialUrl : "/ezCabinet/getSharedCabinetTree.do",
 						shareUrl   : "/ezCabinet/getSharedCabinetsByUser.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						errHandler : handleErrorTree,
 						click      : getShareCabinet,
 						dblClick   : null
 					});
@@ -190,6 +194,7 @@
 						type       : "listshare",
 						initialUrl : "/ezCabinet/getMyShareCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						errHandler : handleErrorTree,
 						click      : getCabinet,
 						dblClick   : null
 					});
