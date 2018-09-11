@@ -1770,6 +1770,7 @@ function MailOptionHidden() {
     document.getElementById("layer_popup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    ContextMenuHidden();
 }
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
 function MailOptionHiddenOutside(e) {
