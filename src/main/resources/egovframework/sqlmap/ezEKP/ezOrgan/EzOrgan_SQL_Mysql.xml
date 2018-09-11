@@ -373,6 +373,7 @@
                   			ORDER BY
                   				EXTENSIONATTRIBUTE15 ASC,
                   			DISPLAYNAME ASC
+			]]>
 		</isEqual>
 		<isEqual property="v_CLASS" compareValue="group">
 			<![CDATA[
