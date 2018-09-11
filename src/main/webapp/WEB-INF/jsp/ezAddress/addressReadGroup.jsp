@@ -129,7 +129,7 @@
 			
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(480, 540));
+				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(480, 505));
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {

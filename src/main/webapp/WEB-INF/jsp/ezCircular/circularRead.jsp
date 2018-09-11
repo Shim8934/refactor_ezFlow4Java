@@ -504,7 +504,7 @@
 			}
 			
 			function addRelatedCabinet() {
-				window.open("/ezCabinet/cabinetAddRelated.do?module=option", "addRelated", getOpenWindowfeature(480, 540));
+				window.open("/ezCabinet/cabinetAddRelated.do?module=option", "addRelated", getOpenWindowfeature(480, 505));
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
