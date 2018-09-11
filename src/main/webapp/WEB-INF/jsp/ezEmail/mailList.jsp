@@ -97,6 +97,7 @@
 		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
 		    var isSentItems = "${isSentItems}";
+		    var importExportMode = false;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -637,6 +638,7 @@
 		    	
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
+ 					importExportMode = true;
 		        	var obj = JSON.parse(message.data);
 		        	
 		        	if (obj.status == "transferStart") {
@@ -691,10 +693,12 @@
 		        // 웹소켓 연결 해제시 실행 되는 함수
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
+		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 			        webSocket = null;
+			        importExportMode = false;
 		        };
 		    }
 			
@@ -741,6 +745,7 @@
 			
 		        webSocket.onmessage = function(message){
 		        	
+		        	importExportMode = true;
 		            var curr = "";
 		        	var obj = JSON.parse(message.data);
 		            ShowMailProgressNew();
@@ -771,10 +776,12 @@
 		        
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
+		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 		        	webSocket = null;
+		        	importExportMode = false;
 		        };
 		        				
 			}
