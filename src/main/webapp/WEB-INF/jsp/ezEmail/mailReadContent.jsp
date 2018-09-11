@@ -41,7 +41,7 @@
 				        window.parent.g_rejectWord = g_rejectWord;
 				    }
 				    /* 마우스 오른쪽 메뉴 변수 */
-					var test = document.getElementById("context-menus");
+					var conObject = document.getElementById("context-menus");
 					sizeBtnAppend();
 					sentDateView();
 					
@@ -66,21 +66,32 @@
 							event.preventDefault();
 							toggleOnOff(1);
 							copy();
-							showMenu(e.x, e.y);
+							showMenu(event.pageX, event.pageY);
 						});
 					}
 
 					/* 마우스 메뉴 on & off */
 					function toggleOnOff(num) {
-						num === 1 ? test.classList.add("active") : test.classList.remove("active");
+						num === 1 ? conObject.classList.add("active") : conObject.classList.remove("active");
 					}
 
 					/* 마우스 클릭한 지점에서 메뉴 보여줌 */
-					function showMenu(x, y) {
-						console.log(test);
-						test.style.top = y + "px";
-						test.style.left = x + "px";
-
+					function showMenu(contextLeft, contextTop) {
+						var contextmenu = document.getElementById("context-menus");
+						var frameX = document.body.scrollWidth > 800 ? document.body.scrollWidth : window.innerWidth;
+						var frameY = document.body.scrollHeight > 610 ? document.body.scrollHeight : window.innerHeight;
+						var conWidth = contextmenu.offsetWidth;
+						var conHeight = contextmenu.offsetHeight;
+				
+						// 컨텍스트의 위치가 프레임의 범위를 벗어날 경우 위치 조정
+						if(contextLeft + conWidth >= frameX) {
+							contextLeft = frameX - conWidth + 9;
+						}
+						if(contextTop + conHeight >= frameY) {
+							contextTop = frameY - conHeight;
+						}
+						conObject.style.left = contextLeft + "px";
+						conObject.style.top = contextTop + "px";
 					}
 					
 					$(".menus").click(function(){
