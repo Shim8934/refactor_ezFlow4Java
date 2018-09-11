@@ -8,9 +8,9 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
-		<link rel="stylesheet" href="/css/ezMemo/memo.css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
@@ -42,7 +42,7 @@
 			#slider-range{width:70px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:84%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
+			
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list {display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se {background-image: url("");}
@@ -52,6 +52,7 @@
 			.memoSelect{position:absolute; height:500px;}
 			#memoFolderList{display:none;}
 			.memoPlus{margin-left:250px;} //임시
+			
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -76,7 +77,7 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        chagePosition();
+		        setGadgetPositionOnResize();
 		 	}
 		 	
 		 	$(window).resize(function() {
@@ -89,15 +90,6 @@
 		 		
 		 	});
 		 	
-		    function chagePosition() {
-		    	
-		    	var winHeight = window.innerHeight;
-				var winWidth = window.innerWidth;
-				var memoBtn = $("#open-memo");
-				
-				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
-		    }
-		    
 		    function setLayerSizeOnResize() {
 		    	
 		    	var stringTop = $("#layer-popup").css("top");
@@ -167,7 +159,6 @@
 		    }
 		    
 		    $(function() {
-		    	chagePosition();
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
@@ -176,12 +167,11 @@
 		    	memoFoldersInfo();
 	    		getMemoConfig();
 	    		quickMemoDisplay();   
-	   
+
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
 		    		theme : "dark",
 		    		scrollType : "stepped",
-		    		/* scrollInertia : 1000 */
 		    		
 		    	});
 		    	
@@ -191,24 +181,11 @@
 		        	$("#detailMemo").css("display", "none");
 		        });
 		        
-		        // 메모 drag & drop 시 배경색 임시로 넣는 변수
-		        var originalHeaderColor;
-		        var originalBodyColor;
-		        
 		        // 메모 정렬
 		        $(".memo_main").sortable({
 		        	
 		        	containment: '.memoListBox',
 		        	opacity : 0.5,
-		        	start : function(event, ui) {
-
-		        		originalHeaderColor = ui.item.css("background-color");
-						originalBodyColor = ui.item.find("textarea").css("background-color");
-						
-						/* ui.item.css("backgroud", "");
-						ui.item.css("background-color", "rgb(255, 51, 51);");
-						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);"); */
-		        	},
 		        	update : function (event, ui) {
 		        		 
 	        			 var compareElId; 
@@ -250,18 +227,18 @@
 		        				if (result.status == 1) {
 		        					
 			        				getMemoList();
+			        				
+			        				if(window.frames["main"].frames["right"] != undefined) {			
+					                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+					                		window.frames["main"].frames["right"].getMemoList();
+				                	}
 		        				}
 		        			}
 		        		 });
 		        		 
-		        	 },
-		        	 stop : function(event, ui) {
-		        		 /* ui.item.css("background-color", originalHeaderColor);
-		        		 ui.item.find("textarea").css("background-color", originalBodyColor); */
 		        	 }
 		        	
 		        });
-		        
 		        // 메모 레이어 리사이즈
 		        $(".layerControl").resizable({
 		        	
@@ -374,12 +351,17 @@
 		 			type : 'POST',
 		            dataType : 'json',
 		            data : { 
-		               	memo_ids : ID
+		               	memo_ids : memoId
 		            },  
 		            async:false,
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
+		            	
+		            	if(window.frames["main"].frames["right"] != undefined) {			
+		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+		                		window.frames["main"].frames["right"].getMemoList();
+	                	}
 		            },
 		            error : function() {
 		                	
@@ -418,6 +400,11 @@
 		                success: function(result) {
 		                	
 		                	getMemoList();
+		                	
+		                	if(window.frames["main"].frames["right"] != undefined) {			
+			                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+			                		window.frames["main"].frames["right"].getMemoList();
+		                	}
 		                },
 		                error : function() {
 		                	
@@ -526,6 +513,9 @@
 	        	$("#open-memo" ).draggable({
 	        		containment:".noteBlock",
 	        		stop:function(){
+	            		
+	            		setGadgetPosition();
+	        			
 	        			defaultPointer();		
 	        		}
 	        	}).on("mouseup", function() {
@@ -570,9 +560,15 @@
 		 		
 		 		if (layerClass.indexOf("layerControl") != -1) {
 		        	
-		        	var layerTop = $("#layer-popup").css("top");
-	        		var layerLeft = $("#layer-popup").css("left");
-		        	
+		        	var topString = $("#layer-popup").css("top");
+	        		var leftString = $("#layer-popup").css("left");
+	        		
+	        		var topPIndex = topString.indexOf("p");
+	        		var leftPIndex = leftString.indexOf("p");
+	        		
+	        		var layerTop = parseInt(topString.substr(0, topPIndex));
+	        		var layerLeft = parseInt(leftString.substr(0, leftPIndex));
+	        		
 		        	$.ajax({
 		        		type : "POST",
 		        		data : {
@@ -613,6 +609,84 @@
 	        		});
 		 		}
 	        }
+		    
+		    // 퀵메모 버튼 위치 변경
+		    function setGadgetPosition() {
+
+		    	var topString = $("#open-memo").css("top");
+		    	var leftString = $("#open-memo").css("left");
+        		
+		    	var topPIndex = topString.indexOf("p");
+        		var leftPIndex = leftString.indexOf("p");
+        		
+        		var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+        		
+	        	var outHeight = parseInt($("#open-memo").height());
+	        	var outWidth = parseInt($("#open-memo").width());
+        		
+        		var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
+        		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));
+		    	
+				$.ajax({
+        			type : "POST",
+        			data : {
+        				gadgetBottom: gadgetBottom,
+        				gadgetRight : gadgetRight
+        			}, 
+        			dataType: "JSON",
+        			url : "/ezMemo/setGadgetPosition.do",
+        			success : function(result) {
+        				
+        			}
+        			
+        		});
+        		
+		    }
+		    
+		    // 퀵메모 버튼 위치 가져오기
+		    function getGadgetPosition(memoConfigVO) {
+		    	
+		    	var gadgetBottom = memoConfigVO.gadget_bottom;
+		    	var gadgetRight = memoConfigVO.gadget_right;
+		    	
+		    	$("#open-memo").css("bottom", gadgetBottom + "px");
+		    	$("#open-memo").css("right", gadgetRight + "px");
+		    	
+		    }
+		    
+		    // 리사이즈 시, 퀵메모 위치 변경 
+		    function setGadgetPositionOnResize() {
+		    	
+	        	var stringBottom = $("#open-memo").css("bottom");
+		    	var stringRight = $("#open-memo").css("right");
+	        	
+	        	var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+	        	
+	        	var bottomPIndex = stringBottom.indexOf("p");
+	        	var rightPIndex = stringRight.indexOf("p");
+	        	
+	        	var width = parseInt($("#open-memo").width());
+	        	var height = parseInt($("#open-memo").height());
+	        	
+	        	var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
+	        	var right = parseInt(stringRight.substr(0, rightPIndex));
+	        	
+	        	if (bottom < 0) {
+        			$("#open-memo").css({"top" : "auto", "bottom" : 10 });
+        			
+        		} 
+
+	        	if (right < 0) {
+	        		$("#open-memo").css({"left" : "auto", "right" : 10 });
+	        		
+	        	}
+	        	
+		    	setGadgetPosition();
+
+		    }
+		    
 		    /**
 		     * layer-popup(노트판)의 투명도 조절
 		     */
@@ -673,7 +747,11 @@
 	                	var memoId = result["memoId"];
 	                	
 	                	getMemoList("new");
-	                	parent.parent.getMemoList();
+	                
+	                	if(window.frames["main"].frames["right"] != undefined) {			
+		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+		                		window.frames["main"].frames["right"].getMemoList("new");
+	                	}
 	                },
 	                error : function() {
 	                	
@@ -681,7 +759,7 @@
 				});
 			}
 			
-		    function addremove() {	        
+		    /* function addremove() {	        
 		        $(".pallete").mouseenter(function(){
 		        	$(this).parent().nextAll(".color_popup").css("visibility", "");
 		        });
@@ -699,7 +777,7 @@
 		        		$(this).children(".color_popup").css("visibility", "hidden");
 		        	}
 		        });
-		    }
+		    } */
 		    
 		 	// 메모 색상 변경
 		    function modifyMemoColor(obj, idx) {
@@ -718,7 +796,10 @@
 	                success: function(result) {
 	                	defaultColor = idx;
 	                	getMemoList();
-	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+	                	if(window.frames["main"].frames["right"] != undefined) {			
+		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+		                		window.frames["main"].frames["right"].getMemoList();
+	                	}
 	                },
 	                error : function() {
 	                	
@@ -827,6 +908,7 @@
 		        	success : function(result) {
 		        		
 		        		if (result.memoConfigVO.use_gadget == 1) {
+		        			getGadgetPosition(result.memoConfigVO);
 		        			$("#open-memo").css("display", "");
 		        		} else {
 		        			$("#open-memo").css("display", "none");
