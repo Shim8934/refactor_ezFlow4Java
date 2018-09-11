@@ -93,7 +93,7 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        chagePosition();
+		        setGadgetPositionOnResize();
 		 	}
 		 	
 		 	$(window).resize(function() {
@@ -106,15 +106,6 @@
 		 		
 		 	});
 		 	
-		    function chagePosition() {
-		    	
-		    	var winHeight = window.innerHeight;
-				var winWidth = window.innerWidth;
-				var memoBtn = $("#open-memo");
-				
-				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
-		    }
-		    
 		    function setLayerSizeOnResize() {
 		    	
 		    	var stringTop = $("#layer-popup").css("top");
@@ -184,7 +175,6 @@
 		    }
 		    
 		    $(function() {
-		    	chagePosition();
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
@@ -193,12 +183,11 @@
 		    	memoFoldersInfo();
 	    		getMemoConfig();
 	    		quickMemoDisplay();   
-	   
+
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
 		    		theme : "dark",
 		    		scrollType : "stepped",
-		    		/* scrollInertia : 1000 */
 		    		
 		    	});
 		    	
@@ -282,7 +271,7 @@
 		       $(".memoPlus").click(function() {
 		        	
 		        	var textarea = $(".memoPlus").parent().parent().find("textarea");
-		        	console.log(textarea);
+
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	 
@@ -679,6 +668,9 @@
 	        	$("#open-memo" ).draggable({
 	        		containment:".noteBlock",
 	        		stop:function(){
+	            		
+	            		setGadgetPosition();
+	        			
 	        			defaultPointer();		
 	        		}
 	        	}).on("mouseup", function() {
@@ -772,6 +764,84 @@
 	        		});
 		 		}
 	        }
+		    
+		    // 퀵메모 버튼 위치 변경
+		    function setGadgetPosition() {
+
+		    	var topString = $("#open-memo").css("top");
+		    	var leftString = $("#open-memo").css("left");
+        		
+		    	var topPIndex = topString.indexOf("p");
+        		var leftPIndex = leftString.indexOf("p");
+        		
+        		var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+        		
+	        	var outHeight = parseInt($("#open-memo").height());
+	        	var outWidth = parseInt($("#open-memo").width());
+        		
+        		var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
+        		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));
+		    	
+				$.ajax({
+        			type : "POST",
+        			data : {
+        				gadgetBottom: gadgetBottom,
+        				gadgetRight : gadgetRight
+        			}, 
+        			dataType: "JSON",
+        			url : "/ezMemo/setGadgetPosition.do",
+        			success : function(result) {
+        				
+        			}
+        			
+        		});
+        		
+		    }
+		    
+		    // 퀵메모 버튼 위치 가져오기
+		    function getGadgetPosition(memoConfigVO) {
+		    	
+		    	var gadgetBottom = memoConfigVO.gadget_bottom;
+		    	var gadgetRight = memoConfigVO.gadget_right;
+		    	
+		    	$("#open-memo").css("bottom", gadgetBottom + "px");
+		    	$("#open-memo").css("right", gadgetRight + "px");
+		    	
+		    }
+		    
+		    // 리사이즈 시, 퀵메모 위치 변경 
+		    function setGadgetPositionOnResize() {
+		    	
+	        	var stringBottom = $("#open-memo").css("bottom");
+		    	var stringRight = $("#open-memo").css("right");
+	        	
+	        	var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+	        	
+	        	var bottomPIndex = stringBottom.indexOf("p");
+	        	var rightPIndex = stringRight.indexOf("p");
+	        	
+	        	var width = parseInt($("#open-memo").width());
+	        	var height = parseInt($("#open-memo").height());
+	        	
+	        	var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
+	        	var right = parseInt(stringRight.substr(0, rightPIndex));
+	        	
+	        	if (bottom < 0) {
+        			$("#open-memo").css({"top" : "auto", "bottom" : 10 });
+        			
+        		} 
+
+	        	if (right < 0) {
+	        		$("#open-memo").css({"left" : "auto", "right" : 10 });
+	        		
+	        	}
+	        	
+		    	setGadgetPosition();
+
+		    }
+		    
 		    /**
 		     * layer-popup(노트판)의 투명도 조절
 		     */
@@ -1042,6 +1112,7 @@
 		        	success : function(result) {
 		        		
 		        		if (result.memoConfigVO.use_gadget == 1) {
+		        			getGadgetPosition(result.memoConfigVO);
 		        			$("#open-memo").css("display", "");
 		        		} else {
 		        			$("#open-memo").css("display", "none");

@@ -414,16 +414,8 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		/*int topPIndex = layerTop.indexOf('p');
-		int leftPIndex = layerLeft.indexOf('p');
-		String top = layerTop.substring(0, topPIndex);
-		String left = layerLeft.substring(0, leftPIndex);
-		int topPositon = Integer.parseInt(top);
-		int leftPosition = Integer.parseInt(left);*/
-		
 		int topPositon = Integer.parseInt(layerTop);
 		int leftPosition = Integer.parseInt(layerLeft);
-		
 
 		param.put("layer_top", topPositon);
 		param.put("layer_left", leftPosition);
@@ -743,5 +735,34 @@ public class EzMemoController {
 		return "json";
 	}
 	
+	/**
+	 * 퀵메모 right, bottom 정보 변경 method
+	 * @param loginCookie
+	 * @param request
+	 * @param layerTop
+	 * @param layerLeft
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/setGadgetPosition.do")
+	public String setGadgetPosition(@CookieValue("loginCookie") String loginCookie,  String gadgetBottom, String gadgetRight, HttpServletRequest request) throws Exception {
+		logger.debug("setLayerPosition started");
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		int bottomPositon = Integer.parseInt(gadgetBottom);
+		int rightPosition = Integer.parseInt(gadgetRight);
+		
+		param.put("gadget_bottom", bottomPositon);
+		param.put("gadget_right", rightPosition);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setGadgetPosition/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("setLayerPosition ended");
+		return "json";
+	}
 	
 }

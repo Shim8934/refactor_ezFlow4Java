@@ -946,4 +946,46 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId}] ended.");
 		return result;
 	}
+	
+	/**
+	 * 레이어 top, left 정보 변경 method
+	 * @param userId
+	 * @param memoConfig
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezMemo/setGadgetPosition/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject gwSetGadgetPosition(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setGadgetPosition/users/" +userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, userId);
+			
+			memoConfig.setCompany_id(info.getCompanyId());
+			memoConfig.setTenant_id(info.getTenantId());
+			memoConfig.setUser_id(info.getUserId());
+			
+			ezMemoService.setGadgetConfig(memoConfig);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			
+		} catch(Exception e) {
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setGadgetPosition/users/" +userId + "] ended.");
+		return result;
+	}
+	
 }

@@ -502,4 +502,26 @@
 		AND 
 			USER_ID = #user_id#
 	</update>
+	
+	<update id="EzMemoDAO.setGadgetConfig" parameterClass="hashmap">
+
+		<![CDATA[
+			UPDATE
+				TBL_MEMO_CONFIG
+		]]>
+			<dynamic prepend="SET">
+				<isNotNull property="gadget_bottom" prepend=",">
+				gadget_bottom = #gadget_bottom#
+				</isNotNull>
+				<isNotNull property="gadget_right" prepend=",">
+				gadget_right = #gadget_right#
+				</isNotNull>
+			</dynamic>
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+	</update>
 </sqlMap>
