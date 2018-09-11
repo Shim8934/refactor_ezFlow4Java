@@ -358,7 +358,7 @@ function MakeListInfoHTML(ConentObject) {
                             	if (g_bdraft == true) {
 	                            	p_Subject = p_Subject
 	                            } else {
-                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
 	                            }
                             }
                             
@@ -1078,7 +1078,7 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
-	
+	ContextMenuHidden();
 	if (typeof (searchMode) != "undefined" && typeof (importExportMode) != "undefined") {
 		if (searchMode || importExportMode) {
 			return;
@@ -1253,14 +1253,30 @@ function makePageSelPage() {
     PagingHTML += "</div>";
     td_Create1(PagingHTML);
 }
+
+function event_secondRightClick() {
+	 if (document.getElementById("ContextMenuDiv").style.display == "") {
+		 HiddenContextMenu();
+	 } else {
+		 return;
+	 }
+	
+}
+
 function event_listContextMenu(event) {
+	if (document.getElementById("mailPanel").style.display == "none") {
+		 if (document.getElementById("ContextMenuDiv").style.display == "") {
+			 $("mailPanel").css("display","none");
+			 HiddenContextMenu();
+		 }
+	}
     if (!event) event = window.event;
     var EventMouseX = event.clientX;
     var EventMouseY = event.clientY;
 
     var listsizeheight = document.documentElement.clientHeight;
     var listsizewidth = document.documentElement.clientWidth;
-    var EventDivSize = EventMouseY + 240;
+    var EventDivSize = EventMouseY + 400;
     if (listsizeheight < EventDivSize) {
         var Div_ = EventDivSize - listsizeheight;
         EventMouseY = EventMouseY - Div_;
@@ -1274,12 +1290,26 @@ function event_listContextMenu(event) {
     if (g_foldertype == "draft") {
     	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
     }
-    //document.getElementById("mailPanel").style.display = "";
+    
+    var target = event.target ? event.target : event.srcElement;
+    var targetTag = target.tagName;
+
+    if (targetTag == 'SPAN'){ 
+		$("#ContextMenuDiv tbody :nth-child(9)").css("display","");
+		$("#ContextMenuDiv tbody :nth-child(10)").css("display","");
+		$("#ContextMenuDiv tbody :nth-child(11)").css("display","");
+	} else {
+		$("#ContextMenuDiv tbody :nth-child(9)").css("display","none");
+	    $("#ContextMenuDiv tbody :nth-child(10)").css("display","none");
+	    $("#ContextMenuDiv tbody :nth-child(11)").css("display","none"); 	
+	}
+//    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
     document.getElementById("ContextMenuDiv").style.display = "";
 }
 function event_listMover(obj) {
+	currentMoverId = obj.id;
     if (pGroupListClickObject != obj && !obj.childNodes.item(0).childNodes.item(0).checked) {
         obj.style.backgroundColor = m_strColorOver;
     }

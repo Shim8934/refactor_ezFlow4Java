@@ -71,6 +71,7 @@
 		<result property="type" 								column="type" 							columnIndex="40"/>
 		<result property="sipUri" 								column="sipUri" 						columnIndex="41"/>
 		<result property="positionCD" 							column="positionCD" 					columnIndex="42"/>
+		<result property="userType" 							column="userType" 						columnIndex="43"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -294,7 +295,7 @@
                        				DISPLAYNAME2
                        			END
                        				DISPLAYNAME  , 
-                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(B.ORDERBY, '0'))), IFNULL(B.ORDERBY, '0')) EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -352,7 +353,7 @@
                        				DISPLAYNAME2
                        			END
                        				DISPLAYNAME  , 
-                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(B.ORDERBY, '0'))), IFNULL(B.ORDERBY, '0')) EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -438,7 +439,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(B.ORDERBY, '0'))), IFNULL(B.ORDERBY, '0')) EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE  
                           		FROM
                           			TBL_ADDJOBMASTER B
@@ -522,7 +523,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(B.ORDERBY, '0'))), IFNULL(B.ORDERBY, '0')) EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_ADDJOBMASTER B
@@ -608,7 +609,7 @@
                                  	DISPLAYNAME2
                                  END
                                  	DISPLAYNAME  ,
-                                 	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                 	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(B.ORDERBY, '0'))), IFNULL(B.ORDERBY, '0')) EXTENSIONATTRIBUTE15  ,
                                      'USER' TYPE  
                               FROM
                               	TBL_ADDJOBMASTER B
@@ -934,7 +935,8 @@
 	            UPDATEDT ,
 	            'user' TYPE  ,
 	            SIPURI ,
-	            POSITIONCD
+	            POSITIONCD ,
+	            'user' USERTYPE
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1022,7 +1024,8 @@
              A.UPDATEDT ,
              'user' TYPE  ,
              SIPURI ,
-             B.POSITIONCD
+             B.POSITIONCD ,
+	         'addJob' USERTYPE
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
