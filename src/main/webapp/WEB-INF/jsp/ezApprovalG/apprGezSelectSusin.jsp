@@ -516,6 +516,11 @@
 			{
 			    var returnValue = new Array();
 				var rtnVal = makertnVal();
+				
+				if (rtnVal == "noItems") {
+					return;
+				}
+				
 			    returnValue[0] = "OK";
 			    returnValue[1] = rtnVal;
 				//window.returnValue = returnValue;
@@ -549,7 +554,12 @@
 				
 				var i;
 				var rows = listview.GetDataRows();
-				
+
+				if (rows.length < 1 || rows[0].id.indexOf("noItems") > -1) {
+				    alert("<spring:message code='ezApprovalG.t1225'/>");
+				    return "noItems";
+				}
+
 				for(i=0; i<rows.length; i++)
 				{
 				    subNode = createNodeAndAppandNode(xmlpara, objNode, subNode, "RECEIPT");
