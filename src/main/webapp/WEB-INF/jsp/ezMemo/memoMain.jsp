@@ -383,6 +383,7 @@
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
+		            	setMemoCount($(".memoLay").length);
 		            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		            },
 		            error : function() {
