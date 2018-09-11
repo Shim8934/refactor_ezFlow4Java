@@ -8,9 +8,9 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
-		<link rel="stylesheet" href="/css/ezMemo/memo.css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
@@ -42,7 +42,7 @@
 			#slider-range{width:70px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:84%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
+			
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list {display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se {background-image: url("");}
@@ -52,6 +52,7 @@
 			.memoSelect{position:absolute; height:500px;}
 			#memoFolderList{display:none;}
 			.memoPlus{margin-left:250px;} //임시
+			
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -700,7 +701,7 @@
 				});
 			}
 			
-		    function addremove() {	        
+		    /* function addremove() {	        
 		        $(".pallete").mouseenter(function(){
 		        	$(this).parent().nextAll(".color_popup").css("visibility", "");
 		        });
@@ -718,7 +719,7 @@
 		        		$(this).children(".color_popup").css("visibility", "hidden");
 		        	}
 		        });
-		    }
+		    } */
 		    
 		 	// 메모 색상 변경
 		    function modifyMemoColor(obj, idx) {
