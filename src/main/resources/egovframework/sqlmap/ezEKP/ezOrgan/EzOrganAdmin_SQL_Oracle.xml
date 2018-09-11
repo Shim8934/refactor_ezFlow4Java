@@ -55,26 +55,26 @@
 	</procedure> -->
 	
 	<sql id="EzOrganAdminDAO.searchQuery">
-		<isNotEqual property="search_keycode" compareValue="" prepend="and">
-			<isNotEqual property="search_keyword" compareValue="">
-					<isEqual property="search_keycode" compareValue="1">
-						DISPLAYNAME LIKE '%' || #search_keyword# || '%'
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="userName">
+						DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="2">
-						DESCRIPTION LIKE '%' || #search_keyword# || '%'
+					<isEqual property="search_keycode" compareValue="deptName">
+						DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="3">
-						CN LIKE '%' || #search_keyword# || '%'
+					<isEqual property="search_keycode" compareValue="userId">
+						CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
-			</isNotEqual>
-		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
-			<isNotEqual property="searchEndDate" compareValue="">
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate" prepend="AND">
+			<isNotEmpty property="searchEndDate">
 				<![CDATA[
 					UPDATEDT > to_date(#searchStartDate#, 'yyyy-MM-dd HH24:MI:SS') AND UPDATEDT < to_date(#searchEndDate#, 'yyyy-MM-dd HH24:MI:SS')
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">

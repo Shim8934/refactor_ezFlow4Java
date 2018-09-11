@@ -59,24 +59,24 @@
 	<sql id="EzOrganAdminDAO.searchQuery">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
-					<isEqual property="search_keycode" compareValue="1">
+					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="2">
+					<isEqual property="search_keycode" compareValue="dpetName">
 						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="3">
+					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
-		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
-			<isNotEqual property="searchEndDate" compareValue="">
+		<isNotEmpty property="searchStartDate" prepend="AND">
+			<isNotEmpty property="searchEndDate">
 				<![CDATA[
 					(UPDATEDT >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND UPDATEDT <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">

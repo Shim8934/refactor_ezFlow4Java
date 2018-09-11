@@ -2361,7 +2361,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		
    		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
-   		int totalPage = 0;
+   		int totalPage = 1;
    		
 		if (totalCount > 0) {
 			if (totalCount > pPageRow) {
@@ -2370,11 +2370,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (totalCount % pPageRow != 0) {
 				    totalPage++;
 				}
-			} else {
-				totalPage = 1;
 			}
-		} else {
-			totalPage = 1;
 		}
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);

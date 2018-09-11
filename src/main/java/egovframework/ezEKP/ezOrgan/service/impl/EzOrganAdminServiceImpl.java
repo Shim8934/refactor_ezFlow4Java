@@ -75,6 +75,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
+	@Autowired
+	private Properties globals;
+	
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
 	    logger.debug("getCompanyList started");
@@ -153,8 +156,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+   		
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("v_ROWPERPAGE", pPageRow);
@@ -508,6 +514,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
+   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+   		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -1145,6 +1154,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     									 String keycode,String keyword) throws Exception {     
     	logger.debug("getUserList started");
     	
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		keyword = commonUtil.getWildcardEscapedString(keyword, dbName);
+   		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
@@ -1166,6 +1178,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
     	logger.debug("getUserCount started");
     	
+    	int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
+   		keyword = commonUtil.getWildcardEscapedString(keyword, dbName);
+   		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);

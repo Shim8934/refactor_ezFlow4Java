@@ -584,9 +584,9 @@
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
 					<select id="searchKeycode" style="height:24px"> 
-						<option value="1"><spring:message code='ezOrgan.t67'/></option>
-						<option value="2"><spring:message code='ezOrgan.t68'/></option>
-						<option value="3"><spring:message code='ezOrgan.t218'/></option>
+						<option value="userName"><spring:message code='ezOrgan.t67'/></option>
+						<option value="deptName"><spring:message code='ezOrgan.t68'/></option>
+						<option value="userId"><spring:message code='ezOrgan.t218'/></option>
 					</select>
 					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
 					<a class="imgbtn" style="height:22px">
