@@ -20153,12 +20153,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return doc;
 	}
 	
-	public int checkReceivedDoc(String docID, String companyID, int tenantID) throws Exception {
+	public int checkReceivedDoc(String docID, String deptID, String companyID, int tenantID) throws Exception {
 		logger.debug("checkReceivedDoc started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_DOCID", docID);
+		map.put("deptID", deptID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		

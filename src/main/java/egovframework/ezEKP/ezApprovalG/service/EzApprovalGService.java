@@ -481,7 +481,7 @@ public interface EzApprovalGService {
 
 	public String checkPubDocXML(String mapPath) throws Exception;
 	
-	public int checkReceivedDoc(String docID, String companyID, int tenantID) throws Exception;
+	public int checkReceivedDoc(String docID, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
 
