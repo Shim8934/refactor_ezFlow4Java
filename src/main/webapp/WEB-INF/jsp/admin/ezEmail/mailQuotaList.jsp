@@ -375,9 +375,9 @@
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
 						<select id="searchKeycode" style="height:22px;"> 
-							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
-							<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
-							<option value="3"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
+							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
+							<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
+							<option value="userId"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
 						</select>
 						<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
 						<a class="imgbtn" >
