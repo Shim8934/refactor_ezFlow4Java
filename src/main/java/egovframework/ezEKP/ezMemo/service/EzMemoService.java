@@ -32,4 +32,5 @@ public interface EzMemoService {
 	public List<MemoVO> getMemoListForReOrder(int draggedMemoOrder,
 			int nextMemoOrder, MemoConfigVO memoConfigVO);
 	public void setMemoOrders(MemoVO memoVO);
+	public void setGadgetConfig(MemoConfigVO memoConfigVO);
 }

@@ -476,4 +476,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoOrders ended");
 	}
 
+	@Override
+	public void setGadgetConfig(MemoConfigVO memoConfigVO) {
+		logger.debug("setGadgetConfig started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+
+		map.put("gadget_bottom", memoConfigVO.getGadget_bottom());
+		map.put("gadget_right", memoConfigVO.getGadget_right());
+		
+		ezMemoDAO.setGadgetConfig(map);
+		logger.debug("setGadgetConfig ended.");
+	}
+
 }

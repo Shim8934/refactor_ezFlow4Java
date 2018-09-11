@@ -79,7 +79,7 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        chagePosition();
+		        setGadgetPositionOnResize();
 		 	}
 		 	
 		 	$(window).resize(function() {
@@ -92,15 +92,6 @@
 		 		
 		 	});
 		 	
-		    function chagePosition() {
-		    	
-		    	var winHeight = window.innerHeight;
-				var winWidth = window.innerWidth;
-				var memoBtn = $("#open-memo");
-				
-				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
-		    }
-		    
 		    function setLayerSizeOnResize() {
 		    	
 		    	var stringTop = $("#layer-popup").css("top");
@@ -170,7 +161,6 @@
 		    }
 		    
 		    $(function() {
-		    	chagePosition();
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
@@ -179,12 +169,11 @@
 		    	memoFoldersInfo();
 	    		getMemoConfig();
 	    		quickMemoDisplay();   
-	   
+
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
 		    		theme : "dark",
 		    		scrollType : "stepped",
-		    		/* scrollInertia : 1000 */
 		    		
 		    	});
 		    	
@@ -194,24 +183,11 @@
 		        	$("#detailMemo").css("display", "none");
 		        });
 		        
-		        // 메모 drag & drop 시 배경색 임시로 넣는 변수
-		        var originalHeaderColor;
-		        var originalBodyColor;
-		        
 		        // 메모 정렬
 		        $(".memo_main").sortable({
 		        	
 		        	containment: '.memoListBox',
 		        	opacity : 0.5,
-		        	start : function(event, ui) {
-
-		        		originalHeaderColor = ui.item.css("background-color");
-						originalBodyColor = ui.item.find("textarea").css("background-color");
-						
-						/* ui.item.css("backgroud", "");
-						ui.item.css("background-color", "rgb(255, 51, 51);");
-						ui.item.find("textarea").css("background-color", "rgb(255, 51, 51);"); */
-		        	},
 		        	update : function (event, ui) {
 		        		 
 	        			 var compareElId; 
@@ -262,14 +238,9 @@
 		        			}
 		        		 });
 		        		 
-		        	 },
-		        	 stop : function(event, ui) {
-		        		 /* ui.item.css("background-color", originalHeaderColor);
-		        		 ui.item.find("textarea").css("background-color", originalBodyColor); */
 		        	 }
 		        	
 		        });
-		        
 		        // 메모 레이어 리사이즈
 		        $(".layerControl").resizable({
 		        	
@@ -544,6 +515,9 @@
 	        	$("#open-memo" ).draggable({
 	        		containment:".noteBlock",
 	        		stop:function(){
+	            		
+	            		setGadgetPosition();
+	        			
 	        			defaultPointer();		
 	        		}
 	        	}).on("mouseup", function() {
@@ -588,9 +562,15 @@
 		 		
 		 		if (layerClass.indexOf("layerControl") != -1) {
 		        	
-		        	var layerTop = $("#layer-popup").css("top");
-	        		var layerLeft = $("#layer-popup").css("left");
-		        	
+		        	var topString = $("#layer-popup").css("top");
+	        		var leftString = $("#layer-popup").css("left");
+	        		
+	        		var topPIndex = topString.indexOf("p");
+	        		var leftPIndex = leftString.indexOf("p");
+	        		
+	        		var layerTop = parseInt(topString.substr(0, topPIndex));
+	        		var layerLeft = parseInt(leftString.substr(0, leftPIndex));
+	        		
 		        	$.ajax({
 		        		type : "POST",
 		        		data : {
@@ -631,6 +611,84 @@
 	        		});
 		 		}
 	        }
+		    
+		    // 퀵메모 버튼 위치 변경
+		    function setGadgetPosition() {
+
+		    	var topString = $("#open-memo").css("top");
+		    	var leftString = $("#open-memo").css("left");
+        		
+		    	var topPIndex = topString.indexOf("p");
+        		var leftPIndex = leftString.indexOf("p");
+        		
+        		var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+        		
+	        	var outHeight = parseInt($("#open-memo").height());
+	        	var outWidth = parseInt($("#open-memo").width());
+        		
+        		var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
+        		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));
+		    	
+				$.ajax({
+        			type : "POST",
+        			data : {
+        				gadgetBottom: gadgetBottom,
+        				gadgetRight : gadgetRight
+        			}, 
+        			dataType: "JSON",
+        			url : "/ezMemo/setGadgetPosition.do",
+        			success : function(result) {
+        				
+        			}
+        			
+        		});
+        		
+		    }
+		    
+		    // 퀵메모 버튼 위치 가져오기
+		    function getGadgetPosition(memoConfigVO) {
+		    	
+		    	var gadgetBottom = memoConfigVO.gadget_bottom;
+		    	var gadgetRight = memoConfigVO.gadget_right;
+		    	
+		    	$("#open-memo").css("bottom", gadgetBottom + "px");
+		    	$("#open-memo").css("right", gadgetRight + "px");
+		    	
+		    }
+		    
+		    // 리사이즈 시, 퀵메모 위치 변경 
+		    function setGadgetPositionOnResize() {
+		    	
+	        	var stringBottom = $("#open-memo").css("bottom");
+		    	var stringRight = $("#open-memo").css("right");
+	        	
+	        	var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+	        	
+	        	var bottomPIndex = stringBottom.indexOf("p");
+	        	var rightPIndex = stringRight.indexOf("p");
+	        	
+	        	var width = parseInt($("#open-memo").width());
+	        	var height = parseInt($("#open-memo").height());
+	        	
+	        	var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
+	        	var right = parseInt(stringRight.substr(0, rightPIndex));
+	        	
+	        	if (bottom < 0) {
+        			$("#open-memo").css({"top" : "auto", "bottom" : 10 });
+        			
+        		} 
+
+	        	if (right < 0) {
+	        		$("#open-memo").css({"left" : "auto", "right" : 10 });
+	        		
+	        	}
+	        	
+		    	setGadgetPosition();
+
+		    }
+		    
 		    /**
 		     * layer-popup(노트판)의 투명도 조절
 		     */
@@ -852,6 +910,7 @@
 		        	success : function(result) {
 		        		
 		        		if (result.memoConfigVO.use_gadget == 1) {
+		        			getGadgetPosition(result.memoConfigVO);
 		        			$("#open-memo").css("display", "");
 		        		} else {
 		        			$("#open-memo").css("display", "none");
