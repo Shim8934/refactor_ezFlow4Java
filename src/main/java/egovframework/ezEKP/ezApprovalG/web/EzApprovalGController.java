@@ -4451,7 +4451,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 접수된 문서인지 확인하기.
 		// return 값이 1 이상이면 접수된 문서로 판단.
 		
-		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String isNonElecRec = "";
 		if (approvalFlag.equals("G")) {
@@ -4496,7 +4496,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		
-		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("docID : " + docID);
 		logger.debug("isReceived : " + isReceived);
