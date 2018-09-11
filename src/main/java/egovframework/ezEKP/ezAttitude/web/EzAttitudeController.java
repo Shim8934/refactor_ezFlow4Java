@@ -472,7 +472,7 @@ public class EzAttitudeController {
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		boolean attitudeAdminCheck = false;
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -876,14 +876,10 @@ public class EzAttitudeController {
 			}
 		}
 		
-		//현재시간
-		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
-		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
-		model.addAttribute("time", time);
 		model.addAttribute("mode", mode);
 		
 		LOGGER.debug("/ezAttitude/attitudeNewItem ended");
@@ -1493,7 +1489,7 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
@@ -1899,7 +1895,7 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2103,7 +2099,7 @@ public class EzAttitudeController {
 		String url = "";
 		
 		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2285,7 +2281,7 @@ public class EzAttitudeController {
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||searchDeptId =" + searchDeptId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			isAdmin = "Y";
 		}
 		
@@ -2404,7 +2400,7 @@ public class EzAttitudeController {
 		} 
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2819,7 +2815,7 @@ public class EzAttitudeController {
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
 		
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {

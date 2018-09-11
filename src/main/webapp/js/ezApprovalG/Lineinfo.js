@@ -894,7 +894,7 @@ function APRLINESNDownFunction() {
     				}
     				else if (pReDraftFlag == "REDRAFT") {
     					if (pSelAprLineState == "002" || pSelAprLineState == "003" || pSelAprLineState == "004") {
-    						Ans = ture;
+    						Ans = true;
     						if (Ans) {
     							AprLineChangeType();
     							DoAprLineDown(pSelectedRow);

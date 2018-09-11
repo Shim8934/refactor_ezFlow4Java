@@ -1428,9 +1428,9 @@
 			                    }
 			                }
 		                }
-		
+		                
 		                if (pSuSinFlag == "Y") {
-		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                    	$.ajax({
 		                    		type : "POST",
 		                    		dataType : "text",
@@ -1598,7 +1598,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

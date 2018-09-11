@@ -24,6 +24,20 @@
 			}		
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<%-- <section  class="body_bg1">
+      		<article class="portlet_notice">
+        		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
+        		<dl class="notice_tab">
+          			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pCompanyBDNM}</span></dt>
+          			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pDeptBDNM}</span></dt>
+          			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pNewsBDNM}</span></dt>
+        		</dl>
+          		<div id="BoardList_NewBoard" >
+        		</div>
+      		</article>
+		</section>
+
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css"> --%>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
@@ -31,7 +45,8 @@
     		var BoardCnt_NewBoard = 0;
     		var strLang1_NewBoard = "<spring:message code='main.t00025'/>";
     		var strLang2_NewBoard = "<spring:message code='main.t00026'/>";
-
+			var selTab = "";
+			
         	document.onselectstart = function () { return false; };
         
 	        window.onload = function(){
@@ -44,6 +59,7 @@
             	}
     	        // 2016-08-03 첫화면에 공지게시판 불러오기
 				getBoardList_NewBoard();
+				selTab = "Board0_Newboard";
     	        
             	try { top.onresize() } catch (e) { }
         	}
@@ -279,18 +295,21 @@
     	    function boardChangeTab_Newboard(obj) {
         	    switch (obj.id) {
             	    case "Board0_Newboard":
+						selTab = "Board0_Newboard";
                 	    document.getElementById("Board0_Newboard").className = "on";
                     	document.getElementById("Board1_Newboard").className = "";
                     	document.getElementById("Board2_Newboard").className = "";
                     	break;
 
 	                case "Board1_Newboard":
+	                	selTab = "Board1_Newboard";
     	                document.getElementById("Board0_Newboard").className = "";
         	            document.getElementById("Board1_Newboard").className = "on";
             	        document.getElementById("Board2_Newboard").className = "";
                 	    break;
 
                 	case "Board2_Newboard":
+                		selTab = "Board2_Newboard";
 	                    document.getElementById("Board0_Newboard").className = "";
     	                document.getElementById("Board1_Newboard").className = "";
         	            document.getElementById("Board2_Newboard").className = "on";
@@ -317,6 +336,18 @@
                 	getBoardList_NewBoard();
             	}
         	}
+        	
+        	/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "on");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selTab) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
+        	window_onload_Newboard();
 		</script>
 	</head>
 	<body>

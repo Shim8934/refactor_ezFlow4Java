@@ -140,7 +140,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
                     strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
                     strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
-                } else if (FileExt == "hwp") {
+                } else if (FileExt == "hwp" || FileExt == "ezd") {
                 	if (isIE()) {
                 		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
                 		"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";

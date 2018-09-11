@@ -2,9 +2,12 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -27,13 +30,15 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Controller
 public class EzApprovalGHwpController extends EgovFileMngUtil{
@@ -44,6 +49,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private KlibUtil klibUtil;
 	
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
@@ -407,6 +415,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		if (newwindowid == null) {
 			newwindowid = "";
 		}
+		
 		String useExtension = "";
 		String pDirTempPath = "";
 	    if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
@@ -419,6 +428,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
         String copyPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
+        
+		// 2018.07.05 - KLIB - ezd 확장자로 변경
+		if (sFileHref.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+			newfilename += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+		}
 		
 	       if (pBigFileUpload.equals("Y")) {
                // 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
@@ -572,6 +586,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String listSusin = request.getParameter("listSusin");
 		String orgDocID = request.getParameter("orgDocID");
 		String formID = request.getParameter("formID");
+		String sendType = request.getParameter("sendType");
 		String endDir = "";
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
@@ -596,7 +611,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
@@ -650,6 +665,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("sendType", sendType);
 		model.addAttribute("pass", pass);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
@@ -708,8 +724,19 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			
 			if (!newFile.exists()) {
 				File orgFile = new File(orgDocFile);
+				InputStream orgFileInputStream;
+
+				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+				} else {
+					orgFileInputStream = new FileInputStream(orgFile);
+				}
 				
-				FileUtils.copyFile(orgFile, newFile);
+				Files.copy(orgFileInputStream, newFile.toPath());
+				orgFileInputStream.close();
+				//FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		
@@ -836,8 +863,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String formText = request.getParameter("html");
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		InputStream stream = null;
-		OutputStream bos = null;
 		
 		try {
 			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
@@ -847,39 +872,21 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 			
 			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
-		
-			stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
-
-			bos = new FileOutputStream(saveFileName);
+			byte[] documentBytes = Base64.decodeBase64(formText);
 			
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-			
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
+			// 2018.08.23 KLIB 암호화
+			if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", userInfo.getTenantId()))) {
+				documentBytes = klibUtil.encrypt(documentBytes);
+				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
+			Files.write(Paths.get(saveFileName), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
+
 			result = "SUCCESS";
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 			result = "FAIL";
-		} finally {
-			if (bos != null) {
-				try {
-					bos.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-			
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
 		}
 		
 		LOGGER.debug("saveEndFileHwp ended");

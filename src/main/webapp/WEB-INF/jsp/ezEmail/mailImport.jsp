@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<c:if test="${isCrossBrowser != true}">
 	    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    </c:if>
@@ -21,6 +22,8 @@
 	        var isCrossBrowser = "${isCrossBrowser}";
 	        var ReturnFunction;
 	        var maxAllowMailMsg = "<spring:message code='ezEmail.jje04'/>";
+	        var CurrentWidth = "";
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -28,6 +31,8 @@
 	                return true;
 	        };
 	        window.onload = function () {
+	        	
+	        	CurrentWidth = window.innerWidth;
 	            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
 	                document.getElementById("file1").multiple = false;
 	            }
@@ -43,11 +48,8 @@
 	                ReturnFunction();
 	        }
 	        function selectMail() {
-	            document.getElementById("filepath").innerHTML = "";
 	            
 	            if (CrossYN()) {
-	            	document.getElementById("form").value = "";
-		            document.getElementById("cnt").value = "";
 	            	document.form.file1.click();
 	            } else {
 	            	var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
@@ -118,24 +120,37 @@
 	        }
 	        function upload_mail() {
 	        	if (CrossYN()) {
-	        		try {
-		                var frm = document.getElementById('form');
-		                try {
-		                	frm.submit();
-		                } catch (e) {
-		                		setTimeout(function () { 
-		                			try {
-		                				frm.submit();
-		                			} catch (e) {
-		                				setTimeout(function () { frm.submit(); }, 50);
-		                			}
-		                		}, 50);
-		                }
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezEmail.t404' />" + e.description);
-		                return;
-		            }
+	        		ShowMailProgress();
+	        		
+	        		var form = $('#form')[0];
+	        		var data = new FormData(form);
+	        		
+	        		$.ajax({
+	        			type: 'POST',
+	        			enctype: 'multipart/form-data',
+	        			url: '/ezEmail/mailImportUpload.do',
+	        			data: data,
+	        			processData: false,
+	                    contentType: false,
+	                    cache: false,
+	        			success: function(result) {
+	        				HiddenMailProgress();
+	        				
+	        				if (result == "OK") {
+	        	                alert("<spring:message code='ezEmail.t403' />");
+	        	                window_Close();
+	        	            } else if (result.indexOf("NO APPEND failed.") > -1) {
+	        		        	alert(strLang241);
+	        	            } else {
+	        	            	alert("<spring:message code='ezEmail.t404' />");
+	        	            }
+	        			},
+	        			error: function(e) {
+	        				HiddenMailProgress();
+	        				alert("<spring:message code='ezEmail.t404' />" + e.responseText);
+	        			}
+	        		});
+	        		
 	        	} else {
 	        		try {
 	                    mailInBtn.disabled = true;
@@ -185,16 +200,23 @@
 	                }
 	        	}
 	        }
+	        
 	        function btn_AttachAdd_onclick() {
+	        	document.getElementById("filepath").innerHTML = "";
+	            document.getElementById("mailCount").innerHTML = "";
+	            document.getElementById("cnt").value = "";
+	            
         		var cnt = document.getElementById("form").file1.files.length;
         		
-        		if (cnt > 100) {
-        			alert(maxAllowMailMsg);
-        			document.getElementById("mailCount").innerText = "";
+        		if (cnt == 0) {
         			return;
         		}
         		
-        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
+        		if (cnt > 100) {
+        			alert(maxAllowMailMsg);
+        			return;
+        		}
+        		
         		for (var i = 0; i < cnt; i++) {
 	                var tempname = document.getElementById("form").file1.files[i].name;
 	                var last = tempname.split(".").length;
@@ -204,29 +226,31 @@
 	                    alert("<spring:message code='ezEmail.lsd05' />");
 	                    return;
 	                }
+	                
 	                var _Span = document.createElement("SPAN");
 	                _Span.style.width = "310px";
 	                _Span.style.textOverflow = "epllipsis";
 	                _Span.style.whiteSpace = "nowrap";
 	                _Span.style.display = "inline-block";
-	                _Span.innerHTML = document.getElementById("form").file1.files[i].name;
+	                _Span.innerHTML = tempname;
+	                
 	                document.getElementById("filepath").innerHTML += _Span.outerHTML;
 	            }
+        		
+        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
 	            document.getElementById("cnt").value = cnt;
 	        }
-	        function returnvalue(resultxml) {
-	            if (resultxml == "OK") {
-	                alert("<spring:message code='ezEmail.t403' />");
-	                window_Close();
-	            }
-	            else {
-	            	if (resultxml.indexOf("NO APPEND failed.") > -1) {
-		        		alert(strLang241);
-	            	}
-	            	else {
-	                	alert("<spring:message code='ezEmail.t404' />" + resultxml);
-	            	}
-	            }
+	        
+	        function ShowMailProgress() {
+	            document.getElementById("mailPanel").style.display = "";
+	            document.getElementById("MailProgress").style.top = "190px";
+	            document.getElementById("MailProgress").style.left = (CurrentWidth / 2) - 80 + "px";
+	            document.getElementById("MailProgress").style.display = "";
+	        }
+	        
+	        function HiddenMailProgress() {
+	            document.getElementById("mailPanel").style.display = "none";
+	            document.getElementById("MailProgress").style.display = "none";
 	        }
 	    </script>
 	</head>
@@ -244,10 +268,17 @@
 	                <input id="foldername" type="text" name="textfield" style="width: 100%" disabled></td>
 	            <td style="text-align:center;"><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
+	        <tr>
+	        	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+		            <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+		            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+		        </div>
+		    </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
-	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
+	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px">
+	                </div>
 	            </td>
 	            <td style="text-align:center;"><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
@@ -257,8 +288,8 @@
 	    </div>
 	
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailImportUpload.do" target="ifrm">
-	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display:none;" multiple="true" />
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
+	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick();" style="width: 1px; height: 1px; display:none;" multiple="true" />
 	        <input type="hidden" name="folderid" id="folderid" />
 	        <input type="hidden" name="cnt" id="cnt" />
 	    </form>

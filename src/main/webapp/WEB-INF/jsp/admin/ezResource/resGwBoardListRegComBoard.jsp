@@ -130,18 +130,17 @@
 			    	objRootNode.appendChild(objNode);
 				}
 
+				/* 2018-09-05 홍승비 - 자원관리 일반설정 수정 시 에러 alert 메세지 수정 */
 				xmlHttp.open("Post", "/admin/ezResource/callBrdMod.do", false);
 				xmlHttp.send(xmlPara)
-
 				if (xmlHttp.status != 200){
-					alert("1. <spring:message code='ezResource.t42' />");
+					alert("<spring:message code='ezResource.t42' />");
 					return;
 				}
 
 				var rtnText = xmlHttp.responseText
-
 				if (rtnText == "" || rtnText == "False"){
-					alert("2. <spring:message code='ezResource.t42' />");
+					alert("<spring:message code='ezResource.t42' />");
 					return;
 				}else{
 			    	alert("<spring:message code='ezResource.t43' />");
