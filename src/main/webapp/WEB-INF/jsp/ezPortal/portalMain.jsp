@@ -266,93 +266,7 @@
 		        	 }
 		        	
 		        });
-		        // 폰트 사이즈 높이기
-		       $(".memoPlus").click(function() {
-		        	
-		        	var textarea = $(".memoPlus").parent().parent().find("textarea");
-		        	console.log(textarea);
-		        	var thisFont = textarea.css("font-size");
-		        	var fontNum = parseInt(thisFont.substr(0, 2));
-		        	 
-		        	switch(fontNum) {
-			        	case 12 : 
-			        		textarea.css("font-size", "13px");
-			        		break;
-	
-			        	case 13 : 
-			        		textarea.css("font-size", "14px");
-			        		break;
-		        		
-		        		case 14 : 
-			        		textarea.css("font-size", "15px");
-			        		break;
-			        		
-		        		case 15 : 
-			        		textarea.css("font-size", "16px");
-			        		break;
-			        		
-		        		case 16 : 
-			        		textarea.css("font-size", "17px");
-			        		break;
-			        		
-		        		case 17 : 
-			        		textarea.css("font-size", "18px");
-			        		break;
-			        		
-		        		case 18 : 
-			        		textarea.css("font-size", "19px");
-			        		break;
-			        	
-		        		case 19 : 
-			        		textarea.css("font-size", "20px");
-			        		break;
-			        		
-		        	}
-		        	
-		        });
-		     	// 폰트 사이즈 줄이기
-		        $(".memoMinus").click(function() {
-		        	
-		        	var textarea = $(".memoMinus").parent().parent().parent().find("textarea");
-		        	
-		        	var thisFont = textarea.css("font-size");
-		        	var fontNum = parseInt(thisFont.substr(0, 2));
-		        	
-		        	switch(fontNum) {
-		        		case 20 : 
-			        		textarea.css("font-size", "19px");
-			        		break;
-		        		
-		        		case 19 : 
-			        		textarea.css("font-size", "18px");
-			        		break;
-			        		
-		        		case 18 : 
-			        		textarea.css("font-size", "17px");
-			        		break;
-			        		
-		        		case 17 : 
-			        		textarea.css("font-size", "16px");
-			        		break;
-			        		
-		        		case 16 : 
-			        		textarea.css("font-size", "15px");
-			        		break;
-		        		
-		        		case 15 : 
-			        		textarea.css("font-size", "14px");
-			        		break;
-			        		
-		        		case 14 : 
-			        		textarea.css("font-size", "13px");
-			        		break;
-			        		
-		        		case 13 : 
-			        		textarea.css("font-size", "12px");
-			        		break;
-	        		}
-		        	
-		        });
+		        
 		        // 메모 레이어 리사이즈
 		        $(".layerControl").resizable({
 		        	
@@ -437,45 +351,6 @@
 				
 		        getMemoList();
 		        
-		        /* // 메모 삭제  버튼(dom 생성후, event 추가)
-		        $(".memo_main").on("click", ".memoLay .memoX", function() {
-		        	var memoId = $(this).attr("memoid").replace("memoid", "");
-		        	var modal = document.createElement('div');
-		        	modal.setAttribute("class", "modal");
-		        	modal.id = "modal" + memoId;
-		        	
-		        	var alertPopup = document.createElement('div');
-		        	alertPopup.setAttribute("class", "alertPopup");
-		        	alertPopup.id = "memo" + memoId;
-		        	
-		        	var popHeader = document.createElement('div');
-		        	popHeader.setAttribute("class", "popHeader");
-		        	popHeader.innerHTML = "<span>삭제</span>";
-		        	
-		        	var popContainer = document.createElement('div');
-		        	popContainer.setAttribute("class", "popContainer");
-		        	
-		    		var txtDialog = document.createElement('div');
-		    		txtDialog.setAttribute("class", "txtDialog");
-		    		
-		    		var footBtn = document.createElement('p');
-		    		footBtn.setAttribute("class", "footBtn");
-		    		footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' >확인</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' >취소</span></div>";
-		    		
-		    		txtDialog.appendChild(footBtn);
-		    		popContainer.appendChild(txtDialog);
-		    		popHeader.appendChild(popContainer);
-		    		alertPopup.appendChild(popHeader);
-		    		modal.appendChild(alertPopup)
-   					
-		    		modal.addEventListener('click', modalDelete, false);
-		    		$("#memo" + memoId).prepend(modal);
-		        }); */
-		        
-		        /* 메모 내용 변경 blur 이벤트 -> click 이벤트로 변경 */
-		        /* $(".memo_main").on("blur", ".memoLay textarea", function() {
-		        	modifyMemo(this);
-		        }); */
 		        
 		        /* 메모 내용 변경 click 이벤트 */
 		        $(".memo_main").on("click", ".memoLay .pallete2", function() {
@@ -489,12 +364,7 @@
 		        $(".memoX").click(function() {
 		        	$("#detailMemo").css("display", "none");
 		        });
-		        
-		        /* 큰 메모 blur 이벤트 */
-		        /* $("#detailMemoContents").blur(function() {
-					modifyMemo(this);
-		        }); */
-		       	
+		
 		        $(".changeFolder").click(function(event) {
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
@@ -581,7 +451,7 @@
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-115});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-125});
 		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
 		    		$("#layer-popup").css({"height" : winHeight-45});
 
@@ -773,13 +643,9 @@
 		            max: 3,
 		            value: defaultValue,
 		            slide: function( event, ui ) {
-		            	/* var opacityValue = ui.value; */
 		            	opacityValue = ui.value;
 		            
 		             	switch(opacityValue) {
-				        	/* case 0:
-				        		opacityValue = 0;
-				            	break; */
 				            case 1:
 				            	opacityValue = 0.2;
 				            	break;
@@ -789,14 +655,7 @@
 				            case 3:
 				            	opacityValue = 0.4;
 				            	break;
-				            /* case 4:
-				            	opacityValue = 0.8;
-				            	break;
-				            case 5:
-				            	opacityValue = 1;
-				            	break; */
 				          }
-		             	/* $("#layer-popup").css("background-color", "rgba(231,231,231," + opacityValue + ")"); */
 		             	$("#layer-popup").css("background-color", "rgba(0,0,0," + opacityValue + ")");
 		            }
 		        });
@@ -841,25 +700,7 @@
 				});
 			}
 			
-		    function addremove() {
-			    /* $(".individual-memo").mouseenter(function(){
-			    	$(this).children("img").css("visibility", "visible");
-			    	$(this).children("img").click(function(){
-			    		$(this).prevAll("div").css("visibility", "visible");
-			    		$(this).prevAll("div").children().each(function(index, element){
-			    			$(element).css("background-color", memoColor[index]);
-			    		});
-			    	});
-		        });
-			    
-		        $(".individual-memo").mouseleave(function(){
-		        	$(this).children("img").css("visibility", "hidden");
-		        });
-		        
-		        $(".memo-color-list").click(function(){
-		        	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-		        }); */
-		        
+		    function addremove() {	        
 		        $(".pallete").mouseenter(function(){
 		        	$(this).parent().nextAll(".color_popup").css("visibility", "");
 		        });
@@ -877,34 +718,6 @@
 		        		$(this).children(".color_popup").css("visibility", "hidden");
 		        	}
 		        });
-		        
-		        /* $(".memoText").dblclick(function() {
-		        	
-		        	var memoId = $(this).attr("memoid");
-		        	
-		        	$.ajax({
-		        		type : "GET",
-		        		data : {
-		        			memoId : memoId
-		        		},
-		        		dataType : "JSON",
-		        		url : "/ezMemo/memoDetail.do",
-		        		success : function(result) {
-							
-		        			var $memoDetail = $("#detailMemo");
-		        			
-		        			var $textarea = $("#detailMemoContents");
-		                	var memoColorId = result.memo.color_id;
-		                	
-		        			$textarea.val(result.memo.contents);
-		        			$textarea.attr("textareaMemoid", result.memo.memo_id);
-		        			
-		        			$memoDetail.removeClass().addClass("memo0" + memoColorId + "Big");
-		        			$memoDetail.css("display", "");
-		        			
-		        		}
-		        	});
-		        }); */
 		    }
 		    
 		 	// 메모 색상 변경
@@ -934,6 +747,7 @@
 	                }
 				}); 
 		    }
+		 	
 		    // 메모 리스트 출력
 		    function getMemoList(type) {
 		    	
@@ -968,7 +782,7 @@
 		    	var btnBundlHeight = $("#btn-bundle").height();
 			    var layerHeight = $("#layer-popup").height();
 			    var layerWidth = $("#layer-popup").width();
-			    var memoListHeight = layerHeight - btnBundlHeight - 20 - 40;
+			    var memoListHeight = layerHeight - btnBundlHeight - 70;
 			    
 			    $(".memoListBox").css({"height" : memoListHeight, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight});
