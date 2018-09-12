@@ -310,10 +310,8 @@
 		// 메모 내용 변경	    
 	    function modifyMemo(obj) {
 			var memoId = obj.getAttribute("memoid");
-			var beforeContents = obj.innerHTML;
 			var afterContents = $(".memoText[memoid=" + memoId + "]").val();
-			
-			if(beforeContents != afterContents) {
+
 		    	$.ajax ({
 	 			   	url : '/ezMemo/memoModify.do',
 	 			   	type : 'POST',
@@ -331,7 +329,6 @@
 	                	
 	                }
 				}); 
-			}
 	    }
 	    
 	    // 메모 삭제

@@ -39,10 +39,10 @@ function createMemo(memo, flag) {
 	dd2.setAttribute("class", "memoIcon pallete");
 	
 	var dd3 = document.createElement("dd");
-	dd3.setAttribute("class", "pallete2");
+	dd3.setAttribute("class", "memoIcon saveBtn");
 	dd3.setAttribute("memoid", memo.memo_id);
-	dd3.style.cursor= "pointer";
-	dd3.innerHTML = "+";
+	/*dd3.style.cursor= "pointer";
+	dd3.innerHTML = "+";*/
 	
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon memoX");
@@ -83,15 +83,33 @@ function createMemo(memo, flag) {
 function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
+	$(".memo_add").remove();
 	$(".memo_main").html('');
 	
 	if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
-		var img = document.createElement("dd");
-		img.setAttribute("class", "mamo01 memoLay");
 		
-		$("#boardMemoList").prepend(img);
+		var div = document.createElement("div");
+		div.setAttribute("class", "memo_add");
+		div.style.margin = "10px";
+		
+		var span = document.createElement("span");
+		span.innerHTML = strLang7;
+		
+		div.appendChild(span);
+		
+		$("#boardMemoList").parent().prepend(div);
 		
 		return;
+	} else if(memoList.length == 0 && flag == 'layer') {
+		var div = document.createElement("div");
+		div.setAttribute("class", "memo_add");
+		div.id = "addFirstMemo";
+		var span = document.createElement("span");
+		span.innerHTML = "메모를 추가해주세요";
+		
+		div.appendChild(span);
+		
+		$(".memo_main").prepend(div);
 	}
 	
 	for(var i=0; i<memoList.length; i++) {
@@ -269,7 +287,7 @@ function addremove() {
    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
    });
    
-    $(".pallete2").click(function(){
+    $(".saveBtn").click(function(){
     	  var obj = $(this).parent().next();
     	  modifyMemo(obj[0]);
     });

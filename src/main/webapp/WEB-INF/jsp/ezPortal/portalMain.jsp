@@ -64,6 +64,7 @@
 	    	var useDate;
 			var defaultColor;
 	    	var layerRight;
+	    	var memoList;
 	    	var userGadget;
 	    	
 			topHeight = "56";
@@ -191,7 +192,7 @@
 		        });
 		        
 		        // 메모 레이어 전체화면, 사이즈 조절
-		        $(".memoExpand").click(function() {
+		        $("#fullScreen").click(function() {
 		        	
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
@@ -221,15 +222,20 @@
 		        	newMemo();
 		        });
 		        
+		     	// 메모함 비어있을 시, 추가 이미지 클릭으로 새 메모 추가 
+		        $(".memo_main").on("click", "#addFirstMemo", function() {
+		        	newMemo();
+		        });
 		        
 		        // 메모 내용 변경 
-		        $(".memo_main").on("click", ".memoLay .pallete2", function() {
+		        /* $(".memo_main").on("click", ".memoLay .pallete2", function() {
 		        	modifyMemo(this);
-		        });
+
+		        });*/
 		    });
 		    
 		    function changeFolder() {
-		    	// 메모 분류함 클릭 시, 해당 메모 리스트 호출
+		        // 메모 분류함 클릭 시, 해당 메모 리스트 호출
 		        $(".changeFolder").click(function(event) {
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
@@ -265,22 +271,23 @@
 		 	// 메모 내용 변경	    
 		    function modifyMemo(obj) {
 
-		 		var memoId, beforeContents, afterContents;
-		 		
-		 		if (obj.getAttribute("memoid") != null) {
+		    	var memoId = obj.getAttribute("memoid");
+				var afterContents = $(".memoText[memoid=" + memoId + "]").val();
+
+		 		/*if (obj.getAttribute("memoid") != null) {
 		 			
 					memoId = obj.getAttribute("memoid");
-					beforeContents = obj.innerHTML;
+					console.log(memoList[index].contents);
+					beforeContents = memoList[index].contents;
 					afterContents = $(".memoText[memoid=" + memoId + "]").val();
 					
-		 		} else {
+		 		}  else {
 		 			
 		 			memoId = obj.getAttribute("textareaMemoid");
-					beforeContents = obj.innerHTML;
+					beforeContents = memoList[index].contents;
 					afterContents = $("textarea[textareamemoid=" + memoId + "]").val();
-		 		}
+		 		} */
 				
-				if(beforeContents != afterContents) {
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
 		 			   	type : 'POST',
@@ -303,7 +310,6 @@
 		                	
 		                }
 					}); 
-				}
 		    }
 		 	
 		    // 모드 변경 시 레이어 넓이 변경
@@ -928,9 +934,10 @@
 				         	<li class="memoSelect">
 				            	<select id="memoFolderList"></select>
 				            </li>
-				            <li class="memoPlus" id="addMemo" style="margin-left:230px;"><span>추가</span></li>
-							<li class="memoClose memoIcon"></li>
-				            <li class="memoExpand memoIcon"></li>
+							<li class="memoClose memoIcon30"></li>
+			                <li class="memoExpand_s memoIcon30" id="controllable"></li>
+			                <li class="memoExpand memoIcon30" id="fullScreen"></li>
+			                <li class="memoPlus memoIcon30" id="addMemo"></li>
 				         </ul>
 				     </div>
 			     </div>
