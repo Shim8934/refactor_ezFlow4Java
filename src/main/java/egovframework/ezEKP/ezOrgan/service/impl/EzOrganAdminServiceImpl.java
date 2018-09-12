@@ -75,9 +75,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
-	@Autowired
-	private Properties globals;
-	
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
 	    logger.debug("getCompanyList started");
@@ -156,8 +153,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
-   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -542,9 +537,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
-	    
-   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
-   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1183,9 +1175,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     									 String keycode,String keyword) throws Exception {     
     	logger.debug("getUserList started");
     	
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
-   		keyword = commonUtil.getWildcardEscapedString(keyword, dbName);
-   		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
@@ -1206,9 +1195,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Override
     public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
     	logger.debug("getUserCount started");
-    	
-    	int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
-   		keyword = commonUtil.getWildcardEscapedString(keyword, dbName);
    		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
