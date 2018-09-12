@@ -83,6 +83,7 @@ function createMemo(memo, flag) {
 function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
+	$(".memo_add").remove();
 	$(".memo_main").html('');
 	
 	if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
