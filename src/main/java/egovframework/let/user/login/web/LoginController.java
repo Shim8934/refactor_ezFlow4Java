@@ -325,24 +325,12 @@ public class LoginController {
 	        	response.addCookie(cookieName);
 	        	
 	        	// 로그인 후 IP 주소 체크
-	        	
-	        	String strIp = request.getHeader("X-FORWARDED-FOR");
-	        	if (strIp == null) {
-	        		strIp = request.getRemoteAddr();
-	        	}
-	        	
 	        	boolean ipAddressChk = ipAccessCheck(resultVO);
 	        	logger.debug("ipAddressChk=" + ipAddressChk);
 	        	
 	        	if (ipAddressChk == true) {
 	        		return "redirect:/ezPortal/portalMain.do";
 	        	} else {
-	        		// 쿠키 삭제
-	        		cookieName.setValue("");
-	        		cookieName.setMaxAge(0);
-	        		cookieName.setPath("/");
-	        		response.addCookie(cookieName);
-	        		
 	        		return "cmm/error/accessDenied";
 	        	}
         		
@@ -429,7 +417,15 @@ public class LoginController {
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
     		        	
-    		        	return "redirect:/ezPortal/portalMain.do";
+    		        	// 로그인 후 IP 주소 체크
+    		        	boolean ipAddressChk = ipAccessCheck(resultVO);
+    		        	logger.debug("ipAddressChk=" + ipAddressChk);
+    		        	
+    		        	if (ipAddressChk == true) {
+    		        		return "redirect:/ezPortal/portalMain.do";
+    		        	} else {
+    		        		return "cmm/error/accessDenied";
+    		        	}
     				}
     			// 해당 사용자의 로그인이 블록된 경우
                 } else {
@@ -522,7 +518,8 @@ public class LoginController {
     		return true;
     	} else { // useIPAccess 사용하면 IP, ID 체크
     		
-    		String topID = loginVO.getRollInfo().indexOf("c=1") != -1 ? "Top" : loginVO.getCompanyID();
+    		String topID = loginVO.getCompanyID();
+    		//String topID = loginVO.getRollInfo().indexOf("c=1") != -1 ? "Top" : loginVO.getCompanyID();
     		String clientIP[] = loginVO.getIp().split("\\.");
         	List<AccessIdVO> accessIdList = ezSystemAdminService.getAllAccessList(loginVO.getPrimary(), loginVO.getTenantId(), topID);
         	List<AccessIdVO> accessDeptList = ezSystemAdminService.getAllAccessListDept(loginVO.getPrimary(), loginVO.getTenantId(), topID);
