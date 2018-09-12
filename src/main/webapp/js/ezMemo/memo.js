@@ -249,13 +249,18 @@ function MailOptionHiddenOutside(e) {
 		}
 	}
 }
-
 // 메모지 이벤트 추가
 function addremove() {
-	 $(".pallete").on("mouseenter", function(){
-	    	$(this).parent().nextAll(".color_popup").css("visibility", "");
-	 });
-   
+	$(".pallete").hover(function (e) {
+		$(this).parent().nextAll(".color_popup").css("visibility", "");
+	}, function (e) {
+		e = e || event;
+		var goingto = e.relatedTarget || e.toElement;
+		if (!goingto || goingto.className != "color_popup") {
+			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); //메뉴에서 마우스가 빠질때 마우스가 이동한 영역이 서브메뉴가 아니라면 서브메뉴 감추고
+		}
+	});
+	
    $(".color_popup").mouseleave(function(){
        	$(this).css("visibility", "hidden");
    });
@@ -264,14 +269,8 @@ function addremove() {
    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
    });
    
-   $(".memoLay").mouseleave(function(){
-   	if($(this).children(".color_popup").css("visibility") == "visible") {
-   		$(this).children(".color_popup").css("visibility", "hidden");
-   	}
-   });
-   
-   $(".pallete2").click(function(){
-   	var obj = $(this).parent().next();
-   	modifyMemo(obj[0]);
-   });
+    $(".pallete2").click(function(){
+    	  var obj = $(this).parent().next();
+    	  modifyMemo(obj[0]);
+    });
 }

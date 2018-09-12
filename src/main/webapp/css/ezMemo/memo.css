@@ -20,7 +20,7 @@ select::-ms-expand {
 .memoHeaderUL li.memoExpand{ margin:5px 15px 0px 0px; padding:0px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
 .memo_main{clear:both; margin-left: 10px;}
 .memo_main .memoLay{ width:260px; height:310px; float:left; margin:0px 10px 10px 0px; position:relative;}
-#boardMemoList { margin: 10px; }
+#boardMemoList { margin: 10px; pointer-events : auto;}
 #boardMemoList .memoLay{ width:260px; height:310px; float:left; margin:0px 10px 10px 0px; position:relative;}
 .mamo01{ background:url(../../images/ezMemo/memo01.png) no-repeat left center; overflow:hidden;}
 .mamo02{ background:url(../../images/ezMemo/memo02.png) no-repeat left center; overflow:hidden;}
@@ -31,7 +31,7 @@ select::-ms-expand {
 .memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
 .memoTit input{ width: 13px; height: 13px; vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
 .memoTit .mtitText{ margin:0px; padding:0px; font-family:Gulim; color:#696969; font-size:11px; float:left;}
-.memoTit .pallete{ margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
+.memoTit .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-16px 0px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoPlus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoMinus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-80px 0px; width:16px; height:16px; cursor:pointer;}
