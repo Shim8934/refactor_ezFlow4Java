@@ -60,9 +60,9 @@ function createMemo(memo, flag) {
 	textarea.style.fontSize = fontSize + "px";
 	
 	if(memo.contents != null) {
-		textarea.innerHTML = memo.contents;
+		textarea.value = memo.contents;
 	}
-	
+		
 	var ul = document.createElement("ul");
 	ul.setAttribute("class", "color_popup");
 	ul.style.visibility = "hidden";

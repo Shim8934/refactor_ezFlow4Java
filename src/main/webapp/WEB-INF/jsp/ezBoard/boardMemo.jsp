@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     	<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
+    	<link rel="stylesheet" href="${util.addVer('/css/ezMemo/boardMemo.css')}">
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
@@ -41,8 +42,8 @@
         	// 폰트 사이즈 미리보기
         	function preview() {
         		var previewSize;
-        		$("#setFontSize").on("change", function(){
-        			previewSize = $("#setFontSize option:selected").val() + "px";
+        		$(".setFontSize").on("change", function(){
+        			previewSize = $(".setFontSize option:selected").val() + "px";
         			
         			if(previewSize === "12px") {
             			$(".preview").text("<spring:message code='ezMemo.t0010' />");
@@ -64,14 +65,14 @@
     				traditional: true,
     				async : false,
     				data: {
-    					"use_date": $("#setDateFlag option:selected").val(),
-    					"use_gadget": $("#setQuickFlag option:selected").val(),
-    					"font_size" : $("#setFontSize option:selected").val() 
+    					"use_date": $(".setDateFlag option:selected").val(),
+    					"use_gadget": $(".setQuickFlag option:selected").val(),
+    					"font_size" : $(".setFontSize option:selected").val() 
     				},
     				success: function() {
-    					use_date = $("#setDateFlag option:selected").val();
-    					use_gadget = $("#setQuickFlag option:selected").val();
-    					font_size = $("#setFontSize option:selected").val();
+    					use_date = $(".setDateFlag option:selected").val();
+    					use_gadget = $(".setQuickFlag option:selected").val();
+    					font_size = $(".setFontSize option:selected").val();
     					
     					alert("<spring:message code='ezMemo.t0025' />");
     					parent.parent.parent.quickMemoDisplay();
@@ -85,9 +86,9 @@
         	
         	// 취소
         	function Cancel_Click() {
-        		$("#setDateFlag").val(use_date).attr("selected", "selected");
-        		$("#setQuickFlag").val(use_gadget).attr("selected", "selected");
-        		$("#setFontSize").val(font_size).attr("selected", "selected");
+        		$(".setDateFlag").val(use_date).attr("selected", "selected");
+        		$(".setQuickFlag").val(use_gadget).attr("selected", "selected");
+        		$(".setFontSize").val(font_size).attr("selected", "selected");
         		
         		if(font_size === "12") {
         			$(".preview").text("<spring:message code='ezMemo.t0010' />");
@@ -111,11 +112,11 @@
         	<br />
         	<span class="txt">▒ <spring:message code="ezMemo.t004" /></span>
         	<br />
-        	<table class="content" style="width: 623px;margin-top:5px">
+        	<table class="content">
             	<tr>
                 	<th><spring:message code="ezMemo.t005" /></th>
                 	<td> 
-						<select id="setQuickFlag" style="margin-left: 5px;">
+						<select class="setQuickFlag">
 							<option value="1" <c:if test = "${memoConfigVO.use_gadget eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
 							<option value="2" <c:if test = "${memoConfigVO.use_gadget eq '2' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>
 						</select>
@@ -124,7 +125,7 @@
             	<tr>
                 	<th><spring:message code="ezMemo.t006" /></th>
                 	<td>
-                		<select id="setDateFlag" style="margin-left: 5px;">							
+                		<select class="setDateFlag">							
 							<option value="1" <c:if test = "${memoConfigVO.use_date eq '1' }" >selected="selected"</c:if>><spring:message code="ezMemo.t008"/></option>
 							<option value="2" <c:if test = "${memoConfigVO.use_date eq '2' }" >selected="selected"</c:if>><spring:message code="ezMemo.t009"/></option>							
 						</select>
@@ -133,16 +134,16 @@
             	<tr>
                 	<th><spring:message code="ezMemo.t007" /></th>
                 	<td>
-               			<select id="setFontSize" style="margin-left: 5px;">							
+               			<select class="setFontSize">							
 							<option value="12" <c:if test = "${memoConfigVO.font_size eq '12' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0010"/></option>
 							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
 							<option value="16" <c:if test = "${memoConfigVO.font_size eq '16' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
 						</select>
-						<span class="preview" style="padding-left:50px;" ></span>
+						<span class="preview"></span>
                 	</td>
             	</tr>
         	</table>
-    		<div class="btnpositionJsp" style="width:609px;">      
+    		<div class="btnpositionJsp">      
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
         		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezBoard.t15" /></span></a>
     		</div>
