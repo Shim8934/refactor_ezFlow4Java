@@ -83,13 +83,21 @@ function createMemo(memo, flag) {
 function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
+	$(".memo_add").remove();
 	$(".memo_main").html('');
 	
 	if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
-		var img = document.createElement("dd");
-		img.setAttribute("class", "mamo01 memoLay");
 		
-		$("#boardMemoList").prepend(img);
+		var div = document.createElement("div");
+		div.setAttribute("class", "memo_add");
+		div.style.margin = "10px";
+		
+		var span = document.createElement("span");
+		span.innerHTML = strLang7;
+		
+		div.appendChild(span);
+		
+		$("#boardMemoList").parent().prepend(div);
 		
 		return;
 	} else if(memoList.length == 0 && flag == 'layer') {
