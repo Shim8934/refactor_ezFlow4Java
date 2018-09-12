@@ -118,6 +118,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+    
+    @Autowired
+	private Properties globals;
 
     @PostConstruct
 	public void init() throws Exception {
@@ -2366,6 +2369,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");
    		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
    		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
+   		
+   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
    		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
    		logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);

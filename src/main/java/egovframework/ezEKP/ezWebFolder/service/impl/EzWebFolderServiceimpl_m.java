@@ -1037,7 +1037,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@Override
 	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
 		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
-
+		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("primary", primary);
