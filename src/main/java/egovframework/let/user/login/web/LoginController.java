@@ -191,98 +191,115 @@ public class LoginController {
         	return "forward:/user/login/login.do";
         // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
-			// 사용자 ID를 사용해 로그인하는 경우
-			if (_uid.equals(resultVO.getId())) {
-				
-				// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
-				if (useMasteradminLogin.equals("YES")) {
-					displayName1 = resultVO.getDisplayName1();
-					_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
+			
+			resultVO.setIp(ClientUtil.getClientIP(request));
+			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			resultVO.setTenantId(tenantId);
 					
-					loginVO.setId("masteradmin");
-		        	loginVO.setPassword(_pwd);
-		            loginVO.setDn("PASSWORD");
-					
-		            resultVO = loginService.selectUser(loginVO);
-		            
-		            // masteradmin 암호가 맞는 경우
-		            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-		            	logger.debug("masteradmin password correct.");
-		            	masteradminLogin = true;
-		            }
-				}
-				
-				if (!masteradminLogin) {
-					//User uses his/her username to login
-					loginVO.setId(_uid);
-					_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-		        	loginVO.setPassword(_pwd);
-		            loginVO.setDn("PASSWORD");
-		            
-		            if (!_uid.equalsIgnoreCase("MASTERADMIN")) {
-			            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
-			            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
-			            	// true 이면 그룹웨어 암호 변경
-			            	// false 이면 그냥 로그인 금지
-			            	chkADpass = loginService.chkADAndUpdatePassword(_uid, rpwd, tenantId);	            	
-			            	
-			            	if (chkADpass.equalsIgnoreCase("false")) {
-			            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
-			            		loginVO.setPassword(null);	            		
-			            	}
-			            }
-		            }
-		            
-		            // 암호가 맞는 지 확인한다.
-		            resultVO = loginService.selectUser(loginVO);
-				}
-				
-	        // 사원번호를 사용해 로그인하는 경우
-			} else {
-				//Check if his/her tenant allows using employeeID to login				
-				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
-				
-				// 사원번호를 사용한 로그인을 허용하는 경우
-				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
-					
-					String orgId = resultVO.getId();
-					
-					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
-					if (useMasteradminLogin.equals("YES")) {
-						displayName1 = resultVO.getDisplayName1();
-						_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
-						
-						loginVO.setId("masteradmin");
-			        	loginVO.setPassword(_pwd);
-			            loginVO.setDn("PASSWORD");
-						
-			            resultVO = loginService.selectUser(loginVO);
-			            
-			            // masteradmin 암호가 맞는 경우
-			            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-			            	logger.debug("masteradmin password correct.");
-			            	masteradminLogin = true;
-			            }
-					}
-					
-					if (!masteradminLogin) {
-						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
-						_uid = orgId;
-						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-			        	loginVO.setId(_uid);
-			        	loginVO.setPassword(_pwd);
-			            loginVO.setDn("PASSWORD");
-			            
-			            resultVO = loginService.selectUser(loginVO);
-					}
-					
-		         // 사원번호를 사용한 로그인을 허용하지 않는 경우
-				} else {
-					//This kind of login is not allowed in his/her tenant
-			        model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
-			        return "forward:/user/login/login.do";
-				}
-			}
+			// 로그인 후 IP 주소 체크
+        	boolean ipAddressChk = ipAccessCheck(resultVO);
+        	logger.debug("ipAddressChk=" + ipAddressChk);
+        	
+        	if (ipAddressChk == true) {
+        		// 사용자 ID를 사용해 로그인하는 경우
+    			if (_uid.equals(resultVO.getId())) {
+    				
+    				// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
+    				if (useMasteradminLogin.equals("YES")) {
+    					displayName1 = resultVO.getDisplayName1();
+    					_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
+    					
+    					loginVO.setId("masteradmin");
+    		        	loginVO.setPassword(_pwd);
+    		            loginVO.setDn("PASSWORD");
+    					
+    		            resultVO = loginService.selectUser(loginVO);
+    		            
+    		            // masteradmin 암호가 맞는 경우
+    		            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+    		            	logger.debug("masteradmin password correct.");
+    		            	masteradminLogin = true;
+    		            }
+    				}
+    				
+    				if (!masteradminLogin) {
+    					//User uses his/her username to login
+    					loginVO.setId(_uid);
+    					_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+    		        	loginVO.setPassword(_pwd);
+    		            loginVO.setDn("PASSWORD");
+    		            
+    		            if (!_uid.equalsIgnoreCase("MASTERADMIN")) {
+    			            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
+    			            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+    			            	// true 이면 그룹웨어 암호 변경
+    			            	// false 이면 그냥 로그인 금지
+    			            	chkADpass = loginService.chkADAndUpdatePassword(_uid, rpwd, tenantId);	            	
+    			            	
+    			            	if (chkADpass.equalsIgnoreCase("false")) {
+    			            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
+    			            		loginVO.setPassword(null);	            		
+    			            	}
+    			            }
+    		            }
+    		            
+    		            // 암호가 맞는 지 확인한다.
+    		            resultVO = loginService.selectUser(loginVO);
+    				}
+    				
+    	        // 사원번호를 사용해 로그인하는 경우
+    			} else {
+    				//Check if his/her tenant allows using employeeID to login				
+    				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+    				
+    				// 사원번호를 사용한 로그인을 허용하는 경우
+    				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
+    					
+    					String orgId = resultVO.getId();
+    					
+    					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
+    					if (useMasteradminLogin.equals("YES")) {
+    						displayName1 = resultVO.getDisplayName1();
+    						_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
+    						
+    						loginVO.setId("masteradmin");
+    			        	loginVO.setPassword(_pwd);
+    			            loginVO.setDn("PASSWORD");
+    						
+    			            resultVO = loginService.selectUser(loginVO);
+    			            
+    			            // masteradmin 암호가 맞는 경우
+    			            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+    			            	logger.debug("masteradmin password correct.");
+    			            	masteradminLogin = true;
+    			            }
+    					}
+    					
+    					if (!masteradminLogin) {
+    						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
+    						_uid = orgId;
+    						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+    			        	loginVO.setId(_uid);
+    			        	loginVO.setPassword(_pwd);
+    			            loginVO.setDn("PASSWORD");
+    			            
+    			            resultVO = loginService.selectUser(loginVO);
+    					}
+    					
+    		         // 사원번호를 사용한 로그인을 허용하지 않는 경우
+    				} else {
+    					//This kind of login is not allowed in his/her tenant
+    			        model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+    			        return "forward:/user/login/login.do";
+    				}
+    			}
+        	} else {
+        		actionLogout(request, response, model);
+        		return "cmm/error/accessDenied";
+        	}
+			
 		}
 		
 		int numberOfLoginFailPermit = 0;
@@ -305,11 +322,7 @@ public class LoginController {
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
         	if (masteradminLogin) {
         		//접속 로그정보 저장
-				resultVO.setIp(ClientUtil.getClientIP(request));
-				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-				resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-				resultVO.setTenantId(tenantId);
+				
 
 				if (resultVO.getTitle2() == null) {
 					resultVO.setTitle2("");
@@ -323,16 +336,8 @@ public class LoginController {
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
-	        	
-	        	// 로그인 후 IP 주소 체크
-	        	boolean ipAddressChk = ipAccessCheck(resultVO);
-	        	logger.debug("ipAddressChk=" + ipAddressChk);
-	        	
-	        	if (ipAddressChk == true) {
-	        		return "redirect:/ezPortal/portalMain.do";
-	        	} else {
-	        		return "cmm/error/accessDenied";
-	        	}
+	        
+	        	return "redirect:/ezPortal/portalMain.do";
         		
         	} else {
         		//Check login state of the user
@@ -417,15 +422,8 @@ public class LoginController {
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
     		        	
-    		        	// 로그인 후 IP 주소 체크
-    		        	boolean ipAddressChk = ipAccessCheck(resultVO);
-    		        	logger.debug("ipAddressChk=" + ipAddressChk);
+    		        	return "redirect:/ezPortal/portalMain.do";
     		        	
-    		        	if (ipAddressChk == true) {
-    		        		return "redirect:/ezPortal/portalMain.do";
-    		        	} else {
-    		        		return "cmm/error/accessDenied";
-    		        	}
     				}
     			// 해당 사용자의 로그인이 블록된 경우
                 } else {
@@ -669,7 +667,7 @@ public class LoginController {
     /**
 	 * 로그아웃한다.
 	 * @return String
-	 * @exception Exception
+	 * @exception ExceptionactionLogout
 	 */
     @RequestMapping(value="/user/login/actionLogout.do")
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
