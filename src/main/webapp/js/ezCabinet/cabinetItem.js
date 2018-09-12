@@ -1275,6 +1275,7 @@ var CabinetItem = function() {
 			divInform.className  = "divInform";
 			var spanElmt         = document.createElement("span");
 			spanElmt.textContent = CabinetMessages.strNoAttach;
+			spanElmt.className   = "nofile";
 			divInform.appendChild(spanElmt);
 			fileList.appendChild(divInform);
 		}
