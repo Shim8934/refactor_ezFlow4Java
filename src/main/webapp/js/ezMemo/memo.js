@@ -92,6 +92,16 @@ function loadMemoList(flag) {
 		$("#boardMemoList").prepend(img);
 		
 		return;
+	} else if(memoList.length == 0 && flag == 'layer') {
+		var div = document.createElement("div");
+		div.setAttribute("class", "memo_add");
+		div.id = "addFirstMemo";
+		var span = document.createElement("span");
+		span.innerHTML = "메모를 추가해주세요";
+		
+		div.appendChild(span);
+		
+		$(".memo_main").prepend(div);
 	}
 	
 	for(var i=0; i<memoList.length; i++) {
