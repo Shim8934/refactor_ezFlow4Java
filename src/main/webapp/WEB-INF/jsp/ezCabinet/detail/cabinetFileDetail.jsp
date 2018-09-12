@@ -295,6 +295,7 @@
 						case "mkv"  : urlImg   = "/images/cabinet/mkv.png"  ; break;
 						case "iso"  : urlImg   = "/images/cabinet/iso.png"  ; break;
 						case "rar"  : urlImg   = "/images/cabinet/rar.png"  ; break;
+						case "zip"  : urlImg   = "/images/cabinet/zip.png"  ; break;
 						default     : urlImg   = "/images/cabinet/none.png" ; break;
 					}
 					

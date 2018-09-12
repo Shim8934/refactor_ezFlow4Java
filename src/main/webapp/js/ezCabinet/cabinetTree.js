@@ -47,7 +47,7 @@ function CabinetTree() {
 		_minusImg      = data["minus"]      ? data["minus"]      : "/images/OrganTree_cross/minus.gif";
 		_errorHandler  = data["errHandler"] ? data["errHandler"] : null;
 		_userIcon      = "/images/cabinet/icon_user.png";
-		_cabinetIcon   = "/images/cabinet/left_cabinet.png";
+		_cabinetIcon   = "/images/cabinet/carbinet_popup.png";
 		_relatedUrl    = "/ezCabinet/cabinetRelatedTreeNotFound.do";
 		_shareErrUrl   = "/ezCabinet/cabinetShareTreeNotFound.do";
 		_myshareErrUrl = "/ezCabinet/myShareTreeNotFound.do";
@@ -274,7 +274,7 @@ function CabinetTree() {
 	function generateAddRelatedTree(divTree, divElmt, list, strName) {
 		var imgElmt2       = document.createElement("img");
 		imgElmt2.className = "cabinetImg";
-		imgElmt2.src       = _userIcon;
+		imgElmt2.src       = _cabinetIcon;
 		
 		var spanDeptName         = document.createElement("span");
 		spanDeptName.textContent = strName;
