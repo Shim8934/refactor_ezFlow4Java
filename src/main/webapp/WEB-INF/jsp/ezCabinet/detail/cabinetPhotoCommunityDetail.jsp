@@ -39,7 +39,7 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><c:out value="${commuWriter.columnName}"/></th>
-					<td colspan="3" id="commuCreator" class="cursor overfl wide"></td>
+					<td colspan="3" id="commuCreator" class="cursor overfl wide2"></td>
 				</tr>
 				<tr>
 					<th><c:out value="${commuTitle.columnName}"/></th>

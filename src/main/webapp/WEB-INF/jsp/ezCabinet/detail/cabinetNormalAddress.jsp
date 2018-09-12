@@ -39,7 +39,7 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>
-					<td id="addrCreator" colspan="3" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
+					<td id="addrCreator" colspan="3" class="overfl cursor wide2" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${createdate.columnName}"/></th>
@@ -47,7 +47,7 @@
 				</tr>
 				<tr>
 					<th><c:out value="${modifier.columnName}"/></th>
-					<td id="addrMod" colspan="3" class="overfl cursor wide" title="<c:out value="${modifierUser.userName}"/>"><c:out value="${modifierUser.userName}"/></td>
+					<td id="addrMod" colspan="3" class="overfl cursor wide2" title="<c:out value="${modifierUser.userName}"/>"><c:out value="${modifierUser.userName}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${modifydate.columnName}"/></th>
