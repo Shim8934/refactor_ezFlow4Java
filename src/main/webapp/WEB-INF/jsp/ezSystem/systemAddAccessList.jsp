@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>접속 허용 리스트 추가</title>
+		<title><spring:message code='ezSystem.jje20'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
@@ -795,7 +795,7 @@
 		    function OK_Click() {
 		    	
 		    	if (document.getElementById("lvAddjobList") == null || document.getElementById("lvAddjobList") == undefined) {
-		    		alert("사원을 선택하세요.");
+		    		alert("<spring:message code='ezAttitude.t52'/>");
 		    		return;
 		    	}
 		    	
@@ -803,7 +803,7 @@
 	            var strCnList = "";
 	            
 	            if (accessList.length == 0 || accessList == null) {
-	            	alert("사원을 선택하세요.");
+	            	alert("<spring:message code='ezAttitude.t52'/>");
 	            	return;
 	            }
 	             
@@ -815,16 +815,14 @@
 	            	}
 	            }
 	            
-	            console.log(strCnList);
-	            
 	            $.ajax({
 					type : "POST",
 					url : "/ezSystem/insertAccessId?strCnList=" + strCnList,
 					error : function(data) {
-						console.log("error");
+						console.log("<spring:message code='ezSystem.jje17'/>");
 					},
 					complete : function(data) {
-						alert("저장하였습니다.");
+						alert("<spring:message code='ezApprovalG.t1581'/>");
 						window.opener.IPBandListRemove();
 						window.opener.getAccessList_http(window.opener.document.getElementById("ListCompany").value);
 						window.close();
@@ -995,7 +993,7 @@
 		    	var deptname = selectedDept.getAttribute("nodename");
 		    	
 		    	if (selectedDept == null) {
-		    		alert("부서를 선택하세요");
+		    		alert("<spring:message code='ezApprovalG.t1126'/>");
 		    		return;
 		    	}
 		    	
@@ -1144,7 +1142,7 @@
 		    
 	        function infoview_click() {
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	                alert("직원을 먼저 선택해주세요.");
+	                alert("<spring:message code='ezSchedule.t1053'/>");
 	                return;
 	            }
 	            
@@ -1221,8 +1219,8 @@
 	                                </td>    
 	                                <td>
 	                                	<div style="float: right; margin-right: 5px; position: relative;">
-                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10">부서선택</span></a>
-                                            <a href="#" class="imgbtn"><span onclick="infoview_click()">직원정보보기</span></a>
+                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezAttitude.t60'/></span></a>
+                                            <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597'/></span></a>
                                         </div>
                                     </td>
 	                            </tr>
@@ -1278,7 +1276,7 @@
 	                    <tr>
 	                        <td>
 	                            <h2 id="Addjob" class="receiver_tltype01">
-	                                <span style="min-width: 45px;" id="AddjobStr">접속 허용 리스트</span>
+	                                <span style="min-width: 45px;" id="AddjobStr"><spring:message code='ezSystem.jje2'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
 	                                <div id="UserAddJobList" style="width: 230px; Height: 473px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>

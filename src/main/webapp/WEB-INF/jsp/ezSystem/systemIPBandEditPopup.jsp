@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title></title>
+		<title><spring:message code='ezSystem.jje12'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />
@@ -72,7 +72,7 @@
 				}
 				
 				if (!textChk(formData[i]) || formData[i].length == 0 || formData[i] == "") {
-					alert("IP주소를 정확히 입력해주세요.");
+					alert("<spring:message code='ezSystem.jje14'/>");
 					return;
 				}
 				
@@ -85,7 +85,7 @@
 			
 			for (var i = 0; i < allIPList.length; i++) {
 				if (allIPList[i].ipAddress == ipAddress && ipAddress != _ipAddress) { // IP 중복 되었을때
-					alert("IP주소가 중복되었습니다.");
+					alert("<spring:message code='ezSystem.jje15'/>");
 					return;
 				}
 			}
@@ -98,7 +98,7 @@
 			explanation = document.getElementById("explanText").value;
 			
 			if (explanation.length > 100) {
-				alert("설명은 최대 100글자 입니다.");
+				alert("<spring:message code='ezSystem.jje16'/>");
 				return;
 			}
 			
@@ -117,11 +117,11 @@
 				cache : false,
 				data : formData,
 				error : function(data) {
-					alert("저장을 실패하였습니다.");
+					alert("<spring:message code='ezSystem.jje17'/>");
 					console.log(data);
 				},
 				complete : function(data) {
-					alert("저장하였습니다.");
+					alert("<spring:message code='ezWebFolder.t182'/>");
 					window.close();
 					window.opener.IPBandListRemove(); // 리스트 삭제 후 다시 refresh -> 삭제 안하면 이어서 붙여짐
 					window.opener.getIPList_http();
@@ -144,23 +144,23 @@
             </ul>
         </div>
         <div id="leTop">			
-			<div class="leTitle" style="padding-left:10px">IP 주소 설정</div>
+			<div class="leTitle" style="padding-left:10px"><spring:message code='ezSystem.jje12'/></div>
 			
 			<table class="content" style="width:95%; margin:auto; margin-top: 2px;">
 				<tr>
-					<th>허용여부</th>
+					<th><spring:message code='ezSystem.jje3'/></th>
 					<td>
-						<label id="la1"><input type="radio" id="ipAllow1" name="ipAllow" Checked>&nbsp;<span style="vertical-align:middle;">허용</span></label>
-	                	<label id="la2"><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;<span style="vertical-align:middle;">거부</span></label>
+						<label id="la1"><input type="radio" id="ipAllow1" name="ipAllow" Checked>&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAttitude.t29'/></span></label>
+	                	<label id="la2"><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezCommunity.t44'/></span></label>
 	                </td>
 			    </tr>
 			    <tr>
-					<th>IP주소</th>
+					<th><spring:message code='ezSystem.jje5'/></th>
 					<td><form id="myForm"><input name="ipBand" type="text" size="3" maxlength="3" id="ipBand1">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand2">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand3">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand4"></form>
-						&nbsp;<span>예)10.0.0.* 또는 127.0.0.1</span>
+						&nbsp;<span><spring:message code='ezSystem.jje13'/></span>
 			    </tr>
 			    <tr>
-					<th>설명</th>
+					<th><spring:message code='ezBoard.t155'/></th>
 					<td><input type="text" id="explanText" size="56"></td>
 					<!-- <td><textarea style="width:96%;resize:none;"id="explanText" rows="3"> </textarea></td> -->
 			    </tr>

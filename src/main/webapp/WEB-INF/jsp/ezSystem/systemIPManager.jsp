@@ -138,11 +138,11 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="height: 95%; overflow:hidden;">
-	    <h1>접속 IP 관리</h1>
+	    <h1><spring:message code='ezSystem.jje1' /></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	        	<p><span id="tagsub1">접속 IP 관리</span></p>
-			    <p><span id="tagsub2">접속 허용 리스트</span></p>
+	        	<p><span id="tagsub1"><spring:message code='ezSystem.jje1' /></span></p>
+			    <p><span id="tagsub2"><spring:message code='ezSystem.jje2' /></span></p>
 	        </div>
 	    </div>
 	    <iframe id="ipManager_ifrm" style="width: 1200px; height:780px;" frameborder="0"></iframe> 

@@ -70,7 +70,7 @@
 			var accessNo = "";
 			
 			if (selectedList.length == 0) {
-				alert("삭제할 리스트를 선택해주세요.");
+				alert("<spring:message code='ezSystem.jje18'/>");
 				return;
 			} else if (selectedList.length == 1) {
 				accessNo = selectedList[0].getAttribute("accessno");
@@ -84,17 +84,17 @@
 				}
 			}
 			
-			var con = confirm("삭제하시겠습니까?");
+			var con = confirm("<spring:message code='ezCircular.t46'/>");
 			
 			if (con) {
 				$.ajax({
 					type : "POST",
 					url : "/ezSystem/deleteAccessList.do?accessNo=" + accessNo,
 					error : function(data) {
-						alert("삭제 실패");
+						alert("<spring:message code='ezSystem.jje11'/>");
 					},
 					complete : function(data) {
-						alert("삭제하였습니다.");
+						alert("<spring:message code='ezAttitude.t161'/>");
 						IPBandListRemove();
 						getAccessList_http(document.getElementById("ListCompany").value);
 				    }
@@ -112,7 +112,7 @@
 				var _NODATA = document.createElement("TD");
                 _NODATA.colSpan = "3";
                 _NODATA.style.textAlign = "center";
-                _NODATA.innerHTML = "데이터가 없습니다.";
+                _NODATA.innerHTML = "<spring:message code='ezJournal.t125'/>";
                 
 				_TR.appendChild(_NODATA);
                 _TBODY.appendChild(_TR);
@@ -261,11 +261,11 @@
            	</c:forEach>
 	    </select>
     </span><br>
-	<br><span class="txt">▒ 거부된 IP(IP대역)에서도 접속 가능한 사용자 및 부서 리스트</span><br><br>
+	<br><span class="txt">▒ <spring:message code='ezSystem.jje19'/></span><br><br>
 	<div id="mainmenu">
 	    <ul class="on">
-	        <li><span onclick="ipListAddPopUp()">추가</span></li>
-	        <li><span onclick="deleteAccessList()">삭제</span></li>
+	        <li><span onclick="ipListAddPopUp()"><spring:message code='ezBoard.t602'/></span></li>
+	        <li><span onclick="deleteAccessList()"><spring:message code='ezBoard.t89'/></span></li>
 	    </ul>
 	</div>
 	
@@ -274,8 +274,8 @@
 			<thead id="accessHeader">
 				<tr>
 	 			<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
-	 			<th width="45%;">이름(ID)</th>
-	 			<th>부서</th>
+	 			<th width="45%;"><spring:message code='ezEmail.t31'/>(ID)</th>
+	 			<th><spring:message code='ezOrgan.t68'/></th>
 			</tr>
 			</thead>
 		</table>

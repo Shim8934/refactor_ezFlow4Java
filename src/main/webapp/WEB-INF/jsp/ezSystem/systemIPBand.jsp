@@ -36,7 +36,7 @@
 				var btnList = $("body [id^=btn]");
 				
 				for (var i = 0; i < btnList.length; i++) {
-					btnList[i].onclick = function() { alert("전체관리자만 수정 가능합니다"); return; };
+					btnList[i].onclick = function() { alert("<spring:message code='ezSystem.jje7' />"); return; };
 				}
 			}
 			
@@ -56,10 +56,10 @@
 				cache : false,
 				error : function(data) {
 					console.log(data);
-					alert("실패하였습니다.");
+					alert("<spring:message code='ezCommunity.t283'/>");
 				},
 				complete : function(data) {
-					alert("저장하였습니다.");
+					alert("<spring:message code='ezCommunity.t282'/>");
 					
 					if (useIPAccess == "NO") {
 						useIPAccess = "YES";
@@ -107,7 +107,7 @@
 				var _NODATA = document.createElement("TD");
                 _NODATA.colSpan = "4";
                 _NODATA.style.textAlign = "center";
-                _NODATA.innerHTML = "데이터가 없습니다.";
+                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
                 
 				_TR.appendChild(_NODATA);
                 _TBODY.appendChild(_TR);
@@ -123,7 +123,7 @@
 				_TR.onmouseout = function () { event_listMout(this); };
 				_TR.ondblclick = function () {
 					if (!permission) {
-						alert("전체관리자만 수정 가능합니다");
+						alert("<spring:message code='ezSystem.jje7'/>");
 						return;
 					}
 					ipBandUpdateInfo(this); 
@@ -154,7 +154,7 @@
                 
                 var _ACCESS = document.createElement("TD");
                 _ACCESS.style.width = "100px";
-                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "허용" : "거부";
+                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "<spring:message code='ezBoard.t95'/>" : "<spring:message code='ezCommunity.t44'/>";
                 _TR.appendChild(_ACCESS);
                 
                 var _EXPLANATION = document.createElement("TD");
@@ -190,10 +190,10 @@
 			} else {
 				var selectedList = $("#tblIP tbody tr[selected=true]");
 				if (selectedList.length > 1) {
-					alert("수정할 IP대역 리스트를 한개만 선택해주세요.");
+					alert("<spring:message code='ezSystem.jje8'/>");
 					return;
 				} else if (selectedList.length == 0) {
-					alert("수정할 IP대역 리스트를 선택해주세요.");
+					alert("<spring:message code='ezSystem.jje9'/>");
 					return;
 				} else {
 					ipBandUpdateInfo(selectedList[0]);
@@ -218,7 +218,7 @@
 			var ipNo = "";
 			
 			if (selectedList.length == 0) {
-				alert("삭제할 IP대역 리스트를 선택해주세요.");
+				alert("<spring:message code='ezSystem.jje10'/>");
 				return;
 			} else if (selectedList.length == 1) {
 				ipNo = selectedList[0].getAttribute("ipno");
@@ -232,7 +232,7 @@
 				}
 			}
 			
-			var con = confirm("삭제하시겠습니까?");
+			var con = confirm("<spring:message code='ezCircular.t46'/>");
 			
 			if (con) {
 				$.ajax({
@@ -240,10 +240,10 @@
 					url : "/ezSystem/deleteIPBand.do",
 					data : "ipNo=" + ipNo,
 					error : function(data) {
-						alert("삭제 실패");
+						alert("<spring:message code='ezSystem.jje11'/>");
 					},
 					complete : function(data) {
-						alert("삭제하였습니다.");
+						alert("<spring:message code='ezAttitude.t161'/>");
 						IPBandListRemove();
 						getIPList_http();
 				    }
@@ -337,11 +337,11 @@
 	</script>
 </head>
 <body class="mainbody" style="overflow:hidden;" >
-	<br><span class="txt">▒ IP 주소를 사용하여 허용된 IP(IP대역)에서만 접속 할 수 있습니다.</span><br><br>
+	<br><span class="txt">▒ <spring:message code='ezSystem.jje6'/></span><br><br>
 	
 	<table class="content" style="width:600px;">
 		<tr>
-			<th rowspan="2" style="width: 60px;">사용여부선택</th>
+			<th rowspan="2" style="width: 60px;"><spring:message code='ezSystem.jje4'/></th>
 			<td>&nbsp;<label id="radioFalse"><input name="ipRadio" type="radio" id="ipRadio0"><span style="vertical-align:middle;">&nbsp;사용안함</span></label></td>
 	    </tr>
 	    <tr>
@@ -351,15 +351,15 @@
 	
 	<div style="width:600px;">
 		<div class="btnpositionJsp">
-	    	<a id="btn1" class="imgbtn" onClick="saveBtn()"><span>저장</span></a>
-	    	<a id="btn2" class="imgbtn" onClick="cancleBtn()"><span>취소</span></a>
+	    	<a id="btn1" class="imgbtn" onClick="saveBtn()"><span><spring:message code='main.sp09'/></span></a>
+	    	<a id="btn2" class="imgbtn" onClick="cancleBtn()"><span><spring:message code='main.t135'/></span></a>
 	    </div>
 	</div> 
 	<div id="mainmenu">
 	    <ul class="on">
-	        <li><span id="btn3" onclick="ipBandEidtPopUp('add')">추가</span></li>
-	        <li><span id="btn4" onclick="ipBandEidtPopUp('modify')">수정</span></li>
-	        <li><span id="btn5" onclick="deleteIPBand()">삭제</span></li>
+	        <li><span id="btn3" onclick="ipBandEidtPopUp('add')"><spring:message code='ezBoard.t602'/></span></li>
+	        <li><span id="btn4" onclick="ipBandEidtPopUp('modify')"><spring:message code='ezQuestion.t480'/></span></li>
+	        <li><span id="btn5" onclick="deleteIPBand()"><spring:message code='ezEmail.t95'/></span></li>
 	    </ul>
 	</div>
 	
@@ -368,9 +368,9 @@
 			<thead id="ipHeader">
 				<tr>
 					<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
-		 			<th width="230px;">IP 주소</th>
-		 			<th width="100px; text-algin:center;">허용여부</th>
-		 			<th>설명</th>
+		 			<th width="230px;"><spring:message code='ezSystem.jje5'/></th>
+		 			<th width="100px; text-algin:center;"><spring:message code='ezSystem.jje3'/></th>
+		 			<th><spring:message code='ezCommunity.t383'/></th>
 				</tr>
 			</thead>
 		</table>
