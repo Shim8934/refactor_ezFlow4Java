@@ -138,7 +138,7 @@
 							<option value="14" <c:if test = "${memoConfigVO.font_size eq '14' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0011"/></option>
 							<option value="16" <c:if test = "${memoConfigVO.font_size eq '16' }" >selected="selected"</c:if>><spring:message code="ezMemo.t0012"/></option>							
 						</select>
-						<span class="preview" style="padding-left:50px;" ></span>
+						<span class="preview" style="padding-left:17px;" ></span>
                 	</td>
             	</tr>
         	</table>
