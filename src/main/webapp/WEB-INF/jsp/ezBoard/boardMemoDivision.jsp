@@ -201,6 +201,7 @@
 			    			"folder_ids" : deleteList.join()
 			    		}, success: function() {
 			    			memoFoldersInfo();
+			    			parent.parent.parent.parent.memoFoldersInfo("delete");
 			    		}, error: function(err) {
 			    			alert("<spring:message code='ezMemo.t0045' />");
 			    		}

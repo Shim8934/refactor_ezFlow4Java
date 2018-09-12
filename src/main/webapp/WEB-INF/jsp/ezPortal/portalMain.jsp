@@ -226,14 +226,16 @@
 		        $(".memo_main").on("click", ".memoLay .pallete2", function() {
 		        	modifyMemo(this);
 		        });
-		        
-		        // 메모 분류함 클릭 시, 해당 메모 리스트 호출
+		    });
+		    
+		    function changeFolder() {
+		    	// 메모 분류함 클릭 시, 해당 메모 리스트 호출
 		        $(".changeFolder").click(function(event) {
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
 		        	getMemoList();
 		        });
-		    });
+		    }
 		    
 		    // 모달 삭제 || 메모지 삭제
 		    function modalDelete(memoId) {
@@ -791,6 +793,7 @@
 	                	layerFlag : layerFlag
 	                },
 	                cache: false,
+	                async: false,
 	                success: function(result) {
 	                	memoColor = result["colorList"].split(";");
 	                	memoList = result["memoList"];
@@ -818,7 +821,7 @@
 		    }
 		    
 		    // 메모함 리스트 출력
-		    function memoFoldersInfo() {
+		    function memoFoldersInfo(type) {
 		    	selFolderId="";
 				selFolderName="";
 		    	$.ajax({
@@ -844,8 +847,12 @@
 						$('#memoFolderList option').remove();
 						$('#memoFolderList').html(html);
 						
-						$('select').wrap('<div class="select_wrapper"></div>')
-						$('select').parent().prepend('<span>'+ $("select option:selected").text() +'</span>');
+						$(".select_inner").remove();
+						$(".select_tag").remove();
+						if(type !== "delete" && "update" && "insert" ){
+							$('select').wrap('<div class="select_wrapper"></div>');
+						}
+						$('select').parent().prepend('<span class="select_tag">'+ $("select option:selected").text() +'</span>');
 						$('select').css('display', '');		
 						$('select').parent().append('<ul class="select_inner"></ul>');
 						$('select').children().each(function(){
@@ -860,9 +867,13 @@
 							$('select').children().removeAttr('selected');
 							$('select').children('[value="'+cur+'"]').attr('selected','selected');					
 						});
-						$('select').parent().on('click', function (){
-							$(this).find('ul').slideToggle('fast');
-						});
+						if(type !== "delete" && "update" && "insert" ){
+							$('select').parent().on('click', function (){
+								$(this).find('ul').slideToggle('fast');
+							});
+						}
+						getMemoList();
+						changeFolder();
 					}     			
 				});
 		    }
