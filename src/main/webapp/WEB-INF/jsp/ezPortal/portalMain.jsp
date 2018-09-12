@@ -38,19 +38,11 @@
 			}
 
 			.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
-			.draggingMemo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
-			#memo-btn{text-align:right; height:40px; }
 			#slider-range{width:70px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			
-			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
-			.memo-color-list {display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se {background-image: url("");}
-			.write-date {font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
-			#btn-bundle {text-align: right; margin:8px; height: 16px;}
-			
 			.memoSelect{position:absolute; height:500px;}
 			#memoFolderList{display:none;}
 			.memoPlus{margin-left:250px;} //임시
@@ -73,7 +65,6 @@
 			var defaultColor;
 	    	var layerRight;
 	    	
-	    	
 			topHeight = "56";
 
 		 	window.onresize = function () {
@@ -92,73 +83,6 @@
 		 		
 		 	});
 		 	
-		    function setLayerSizeOnResize() {
-		    	
-		    	var stringTop = $("#layer-popup").css("top");
-	        	var stringLeft = $("#layer-popup").css("left");
-	        	
-	        	var windowHeight = parseInt(window.innerHeight);
-	        	var windowWidth = parseInt(window.innerWidth);
-	        	
-	        	var pIndex = stringTop.indexOf("p");
-	        	var pIndex = stringLeft.indexOf("p");
-	        	
-	        	var width = parseInt($("#layer-popup").width());
-	        	var height = parseInt($("#layer-popup").height());
-	        	var left = parseInt(stringLeft.substr(0, pIndex));
-	        	var top = parseInt(stringTop.substr(0, pIndex));
-	        	
-	        	if (height > windowHeight) {
-	        		
-	        		height = windowHeight - 30;
-	        		$("#layer-popup").css("height", height + "px");
-	        		$(".memoListBox").css("height", height - 35 + "px");
-	        		$(".memo_main").css("height", height - 35 + "px");
-	        	}
-	        	
-	        	if (width > windowWidth) {
-	        		width = windowWidth - 30;
-	        		$("#layer-popup").css("width", width + "px");
-	        		$(".memoListBox").css("width", width + "px");
-	        		$(".memo_main").css("width", width + "px");
-	        	}
-	        	
-	        	
-        		var leftZero;
-        		
-	        	if (windowWidth > width) {
-	        		leftZero = windowWidth - width;
-	        	}
-	        	
-	        	var bottomZero;
-	        	
-	        	if (windowHeight > height) {
-	        		bottomZero = windowHeight - height;
-	        	}
-	        	
-        		if (top > windowHeight) {
-        			$("#layer-popup").css("top", bottomZero - 10);
-        			
-        		} else if (top < windowHeight) {
-        			if (top + height > windowHeight) {
-        				$("#layer-popup").css("top", bottomZero - 10);
-        			}
-        		}
-        		
-	        	if (left > windowWidth) {
-	        		$("#layer-popup").css("left", leftZero - 10);
-	        		
-	        	} else if (left < windowWidth) {
-	        		if (left + width > windowWidth) {
-		        		$("#layer-popup").css("left", leftZero - 10);
-		        		
-	        		 }
-	        	}
-	        	
-	        	setLayerPosition();
-	    		setLayerArea();
-		    }
-		    
 		    $(function() {
 		    	defaultPointer();
 		    	setPanelPointer();
@@ -175,6 +99,7 @@
 		    		
 		    	});
 		    	
+		    	// 레이어 닫기 버튼 클릭
 		        $(".memoClose").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
@@ -238,6 +163,7 @@
 		        	 }
 		        	
 		        });
+		        
 		        // 메모 레이어 리사이즈
 		        $(".layerControl").resizable({
 		        	
@@ -254,15 +180,6 @@
 		        	}
 		        });
 		        
-		        
-		        $(".layerControl").resize(function(e) {
-		        	
-		        	var layerHeight = $(this).height();
-		        	var btnBundle = $("#btn-bundle").height();
-		        	
-		        	var memoListHeight = $(".memo_main").css("height", layerHeight-btnBundle-10);
-		        	
-		        });
 		        
 		        $("#memoMove").click(function() {
 
@@ -302,15 +219,12 @@
 		        });
 		        
 		        
-		        /* 메모 내용 변경 click 이벤트 */
+		        // 메모 내용 변경 
 		        $(".memo_main").on("click", ".memoLay .pallete2", function() {
 		        	modifyMemo(this);
 		        });
 		        
-		        $("#memoFolderList").change(function() {
-		        	getMemoList();
-		        });
-		        
+		        // 메모 분류함 클릭 시, 해당 메모 리스트 호출
 		        $(".changeFolder").click(function(event) {
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
@@ -429,6 +343,7 @@
 		        });
 	        }
 		    
+		    // 메모 설정값 가져오기
 		    function getMemoConfig() {
 		    	
 		    	$.ajax({
@@ -591,6 +506,74 @@
 		 		}
 	        }
 		    
+			 // 윈도우 리사이즈 시, 레이어 위치 및 사이즈 조절
+		    function setLayerSizeOnResize() {
+		    	
+		    	var stringTop = $("#layer-popup").css("top");
+	        	var stringLeft = $("#layer-popup").css("left");
+	        	
+	        	var windowHeight = parseInt(window.innerHeight);
+	        	var windowWidth = parseInt(window.innerWidth);
+	        	
+	        	var pIndex = stringTop.indexOf("p");
+	        	var pIndex = stringLeft.indexOf("p");
+	        	
+	        	var width = parseInt($("#layer-popup").width());
+	        	var height = parseInt($("#layer-popup").height());
+	        	var left = parseInt(stringLeft.substr(0, pIndex));
+	        	var top = parseInt(stringTop.substr(0, pIndex));
+	        	
+	        	if (height > windowHeight) {
+	        		
+	        		height = windowHeight - 30;
+	        		$("#layer-popup").css("height", height + "px");
+	        		$(".memoListBox").css("height", height - 35 + "px");
+	        		$(".memo_main").css("height", height - 35 + "px");
+	        	}
+	        	
+	        	if (width > windowWidth) {
+	        		width = windowWidth - 30;
+	        		$("#layer-popup").css("width", width + "px");
+	        		$(".memoListBox").css("width", width + "px");
+	        		$(".memo_main").css("width", width + "px");
+	        	}
+	        	
+	        	
+        		var leftZero;
+        		
+	        	if (windowWidth > width) {
+	        		leftZero = windowWidth - width;
+	        	}
+	        	
+	        	var bottomZero;
+	        	
+	        	if (windowHeight > height) {
+	        		bottomZero = windowHeight - height;
+	        	}
+	        	
+        		if (top > windowHeight) {
+        			$("#layer-popup").css("top", bottomZero - 10);
+        			
+        		} else if (top < windowHeight) {
+        			if (top + height > windowHeight) {
+        				$("#layer-popup").css("top", bottomZero - 10);
+        			}
+        		}
+        		
+	        	if (left > windowWidth) {
+	        		$("#layer-popup").css("left", leftZero - 10);
+	        		
+	        	} else if (left < windowWidth) {
+	        		if (left + width > windowWidth) {
+		        		$("#layer-popup").css("left", leftZero - 10);
+		        		
+	        		 }
+	        	}
+	        	
+	        	setLayerPosition();
+	    		setLayerArea();
+		    }
+		    
 		    // 퀵메모 버튼 변경된 위치 저장 (단, display가 none이 아닐 때)
 		    function setGadgetPosition() {
 				var gadgetStatus = $("#open-memo").css("display");
@@ -639,7 +622,7 @@
 		    	
 		    }
 		    
-		    // 리사이즈 시, 퀵메모 위치 변경 
+		    // 윈도우 리사이즈 시, 퀵메모 위치 변경 
 		    function setGadgetPositionOnResize() {
 		    	
 	        	var stringBottom = $("#open-memo").css("bottom");
@@ -803,11 +786,10 @@
 		    // 메모 리스트 사이즈 변경
 		    function setMemoListSize() {
 		    	
-		    	var btnBundlHeight = $("#btn-bundle").height();
 			    var layerHeight = $("#layer-popup").height();
 			    var layerWidth = $("#layer-popup").width();
-			    var memoListHeight = layerHeight - btnBundlHeight - 70;
-			    
+			    var memoListHeight = layerHeight - 70;
+
 			    $(".memoListBox").css({"height" : memoListHeight, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight});
 			    
@@ -842,7 +824,6 @@
 						
 						$('select').wrap('<div class="select_wrapper"></div>')
 						$('select').parent().prepend('<span>'+ $("select option:selected").text() +'</span>');
-						//$('select').parent().children('span').width($('select').width());	
 						$('select').css('display', '');		
 						$('select').parent().append('<ul class="select_inner"></ul>');
 						$('select').children().each(function(){
