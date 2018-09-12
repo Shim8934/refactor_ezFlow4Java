@@ -8,11 +8,11 @@
 		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
-	<body class="mainbody overY" style="height: 100%; min-width: 450px; min-height: 450px;">
+	<body class="mainbody overY blankBody">
 		<h1 id="cabInfo"><spring:message code='ezCabinet.t162'/></h1>
-		<div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+		<div class="cabBlankMain">
 			<div class="blankDiv">
-				<img src="/images/cabinet/cabinettree.png" style="height: 200px; width: 200px;">
+				<img src="/images/cabinet/cabinettree.png">
 				<div class="blankMsg"><spring:message code="${message}"/></div>
 			</div>
 		</div>
