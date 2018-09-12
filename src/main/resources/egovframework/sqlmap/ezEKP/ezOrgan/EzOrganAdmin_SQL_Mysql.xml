@@ -3132,6 +3132,8 @@
            		TBL_USERMASTER_RETIRE 
            WHERE
                 TENANT_ID = #v_TENANT_ID#
+           AND 
+           		PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
         <include refid="EzOrganAdminDAO.searchQuery"/>
         <![CDATA[

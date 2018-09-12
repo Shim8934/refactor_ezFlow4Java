@@ -2359,9 +2359,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+   		
+   		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("companylist", companylist);
    		
    		logger.debug("retireUserManage ended");
    		
@@ -2388,12 +2391,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");
    		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
    		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
+   		String searchCompanyID = (request.getParameter("searchCompanyID") != null ? request.getParameter("searchCompanyID") : "");
    		
    		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
    		logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		
-   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword, searchCompanyID);
    		int totalPage = 1;
 
 		if (totalCount > 0) {
@@ -2408,7 +2412,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, offset, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, offset, searchStartDate, searchEndDate, searchKeycode, searchKeyword, searchCompanyID);
 		
    		model.addAttribute("lang", strLang);
    		model.addAttribute("list", list);

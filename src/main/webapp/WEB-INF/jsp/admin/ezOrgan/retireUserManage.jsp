@@ -301,11 +301,12 @@
 			}
 			
 			function selectCompanyID() {
-				var tempCompanyId = document.getElementById("ListCompany").value;
+				retireUserList();
+// 				var tempCompanyId = document.getElementById("ListCompany").value;
 				
-				if (companyId != tempCompanyId) {
-					window.location.href = "/admin/ezOrgan/retireUserManage.do?companyId=" + tempCompanyId;
-		        }
+// 				if (companyId != tempCompanyId) {
+// 					window.location.href = "/admin/ezOrgan/retireUserManage.do?companyId=" + tempCompanyId;
+// 		        }
 			}
 	  
 			//2018-07-20 천성준 - 페이지 네이션 변경 
@@ -493,7 +494,8 @@
 						 "searchStartDate" : $('#startDatepicker').val(),
 						 "searchEndDate" : $('#endDatepicker').val(),
 						 "searchKeycode" : $('#searchKeycode').val(),
-						 "searchKeyword" : $('#searchKeyword').val()
+						 "searchKeyword" : $('#searchKeyword').val(),
+						 "searchCompanyID" : $("#ListCompany").val()
 					 },
 					 success : function(data) {
 						 CurPage = data.pPage;

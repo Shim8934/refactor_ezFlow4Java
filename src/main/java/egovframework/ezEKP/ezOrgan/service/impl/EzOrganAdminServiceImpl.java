@@ -150,12 +150,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID)	throws Exception {
         logger.debug("getRetireList started");
         logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
         logger.debug("tenantID=" + tenantID + ",offset=" + offset);
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		logger.debug("searchCompanyID=" + searchCompanyID );
 	    
 		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
@@ -170,6 +171,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("searchEndDate", searchEndDate);
 		map.put("search_keycode", searchKeycode);
 		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -538,11 +540,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception {
 	    logger.debug("getRetireListCount started");
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		logger.debug("searchCompanyID=" + searchCompanyID );
 	    
    		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
@@ -556,6 +559,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("searchEndDate", searchEndDate);
 		map.put("search_keycode", searchKeycode);
 		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
 		
 		logger.debug("getRetireListCount ended");
 		
