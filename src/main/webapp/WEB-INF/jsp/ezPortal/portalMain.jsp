@@ -107,7 +107,6 @@
 	        	var height = parseInt($("#layer-popup").height());
 	        	var left = parseInt(stringLeft.substr(0, pIndex));
 	        	var top = parseInt(stringTop.substr(0, pIndex));
-
 	        	
 	        	if (height > windowHeight) {
 	        		
@@ -164,10 +163,10 @@
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
-		    	setDetailMemoPosition();
 		    	checkDefaultFolder();
 		    	memoFoldersInfo();
 	    		checkMemoConfig();
+	    		getMemoList();
 
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
@@ -179,7 +178,6 @@
 		        $(".memoClose").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        	$("#open-memo" ).css("display", "");
-		        	$("#detailMemo").css("display", "none");
 		        });
 		        
 		        // 메모 정렬
@@ -257,25 +255,6 @@
 		        });
 		        
 		        
-		        // 메모 디테일 리사이즈
-		        $("#detailMemo").resizable({
-		        	
-		        	handles : "n, e, s, w, ne, se, sw, nw",
-		        	containment:".noteBlock",
-		        	minWidth: 310,
-		        	minHeight: 310,
-		        	resize : function() {
-		        	
-			    	var detailMemoHeight = $(".bigTop").height();
-			        var detailHeaderHeight = $(".memoTit").height();
-			        
-			        
-			        var textareaHeight = detailMemoHeight - detailHeaderHeight;
-			        $("#detailMemoContents").css("height", parseInt(textareaHeight) +"px");
-			        
-				    }
-		        });
-		        
 		        $(".layerControl").resize(function(e) {
 		        	
 		        	var layerHeight = $(this).height();
@@ -285,12 +264,12 @@
 		        	
 		        });
 		        
-		        
 		        $("#memoMove").click(function() {
 
 		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        });
+		        
 		        // 메모 레이어 전체화면, 사이즈 조절
 		        $(".memoExpand").click(function() {
 		        	
@@ -321,8 +300,6 @@
 		        $("#addMemo").click(function() {
 		        	newMemo();
 		        });
-				
-		        getMemoList();
 		        
 		        
 		        /* 메모 내용 변경 click 이벤트 */
@@ -334,10 +311,6 @@
 		        	getMemoList();
 		        });
 		        
-		        $(".memoX").click(function() {
-		        	$("#detailMemo").css("display", "none");
-		        });
-		
 		        $(".changeFolder").click(function(event) {
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
@@ -422,7 +395,6 @@
 	    		var winHeight = window.innerHeight;
 	    		
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
-		    		
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
 		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-125});
 		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
@@ -448,8 +420,8 @@
 		        		if (result.memoConfigVO != null) {
 		        			getMemoConfig();
 		        			quickMemoDisplay();
-		        		} else {
 		        			
+		        		} else {
 		        			insertMemoConfig();
 		        			
 		        		}
@@ -508,27 +480,13 @@
     			});
 		    }
 		    
-		    // 메모 디테일 default값 세팅
-		    function setDetailMemoPosition () {
-		    	
-		    	var winWidth = $(window).width();
-		    	var winHeight = $(window).height();
-		    	
-		    	var detalMemWidth = $("#detailMemo").width();
-		    	var detalMemHeight = $("#detailMemo").height();
-		    	
-		    	var top = winHeight/2 - detalMemHeight/2;  
-		    	var left = winWidth/2 - detalMemWidth/2;
-		    	
-		    	$("#detailMemo").css({"top" : top, "left" : left });
-		    }
-		    
 		    // 초기 pointet-event set
 		    function defaultPointer() {
 		    	
 		    	$(".noteBlock").css("pointer-events", "none");
 	        	$("#open-memo").css("pointer-events", "auto");
 		    }
+		    
 		    /**
 		     * noteBlock(노트패널), layer-popup(노트판), open-memo(노트 아이콘)의 포인터 set
 		     */
@@ -557,10 +515,10 @@
 		        	}
 		       	});
 		     
-		        $('.memo_wrap, #detailMemo').on("mouseup", function() {
+		        $('.memo_wrap').on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
 		        	$("#open-memo").css("pointer-events", "auto");
-		        	$("#layer-popup, #detailMemo").css("pointer-events", "auto");
+		        	$("#layer-popup ").css("pointer-events", "auto");
 		        }).on("mousedown", function() {
 		        	$(".noteBlock").css("pointer-events", "auto");
 		       	}).draggable({
@@ -569,7 +527,7 @@
 		       		stop : function() {
 		       			$(".noteBlock").css("pointer-events", "none");
 			        	$("#open-memo").css("pointer-events", "auto");
-			        	$("#layer-popup, #detailMemo").css("pointer-events", "auto");
+			        	$("#layer-popup ").css("pointer-events", "auto");
 			        	
 			        	setLayerPosition();
 		       		}
@@ -633,37 +591,40 @@
 		 		}
 	        }
 		    
-		    // 퀵메모 버튼 위치 변경
+		    // 퀵메모 버튼 변경된 위치 저장 (단, display가 none이 아닐 때)
 		    function setGadgetPosition() {
-
-		    	var topString = $("#open-memo").css("top");
-		    	var leftString = $("#open-memo").css("left");
-        		
-		    	var topPIndex = topString.indexOf("p");
-        		var leftPIndex = leftString.indexOf("p");
-        		
-        		var windowHeight = parseInt(window.innerHeight);
-	        	var windowWidth = parseInt(window.innerWidth);
-        		
-	        	var outHeight = parseInt($("#open-memo").height());
-	        	var outWidth = parseInt($("#open-memo").width());
-        		
-        		var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
-        		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));
-		    	
-				$.ajax({
-        			type : "POST",
-        			data : {
-        				gadgetBottom: gadgetBottom,
-        				gadgetRight : gadgetRight
-        			}, 
-        			dataType: "JSON",
-        			url : "/ezMemo/setGadgetPosition.do",
-        			success : function(result) {
-        				
-        			}
-        			
-        		});
+				var gadgetStatus = $("#open-memo").css("display");
+				
+		    	if (gadgetStatus != "none") {
+			    	var topString = $("#open-memo").css("top");
+			    	var leftString = $("#open-memo").css("left");
+	        		
+			    	var topPIndex = topString.indexOf("p");
+	        		var leftPIndex = leftString.indexOf("p");
+	        		
+	        		var windowHeight = parseInt(window.innerHeight);
+		        	var windowWidth = parseInt(window.innerWidth);
+	        		
+		        	var outHeight = parseInt($("#open-memo").height());
+		        	var outWidth = parseInt($("#open-memo").width());
+	        		
+	        		var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
+	        		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));
+			    	
+					$.ajax({
+	        			type : "POST",
+	        			data : {
+	        				gadgetBottom: gadgetBottom,
+	        				gadgetRight : gadgetRight
+	        			}, 
+	        			dataType: "JSON",
+	        			url : "/ezMemo/setGadgetPosition.do",
+	        			success : function(result) {
+	        				
+	        			}
+	        			
+	        		});
+		    	}
         		
 		    }
 		    
@@ -705,9 +666,7 @@
 	        		$("#open-memo").css({"left" : "auto", "right" : 10 });
 	        		
 	        	}
-	        	
 		    	setGadgetPosition();
-
 		    }
 		    
 		    /**
@@ -742,6 +701,7 @@
 		            }
 		        });
 		    }
+		    
 		    // 기본 메모함 체크
 		    function checkDefaultFolder() {
 		    	$.ajax({
@@ -751,6 +711,7 @@
 					url : "/ezMemo/hasMemoFolder.do"
 				});
 		    }
+		    
 		    // 메모 추가
 			function newMemo() {
 				
@@ -782,26 +743,6 @@
 				});
 			}
 			
-		    /* function addremove() {	        
-		        $(".pallete").mouseenter(function(){
-		        	$(this).parent().nextAll(".color_popup").css("visibility", "");
-		        });
-		        
-		        $(".color_popup").mouseleave(function(){
-			        	$(this).css("visibility", "hidden");
-			    });
-			    
-			    $(".color_list").click(function(){
-			    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-		        });
-		        
-		        $(".memoLay").mouseleave(function(){
-		        	if($(this).children(".color_popup").css("visibility") == "visible") {
-		        		$(this).children(".color_popup").css("visibility", "hidden");
-		        	}
-		        });
-		    } */
-		    
 		 	// 메모 색상 변경
 		    function modifyMemoColor(obj, idx) {
 		 		
@@ -858,6 +799,7 @@
 				     }
 				});
 			}
+		    
 		    // 메모 리스트 사이즈 변경
 		    function setMemoListSize() {
 		    	
@@ -870,6 +812,7 @@
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight});
 			    
 		    }
+		    
 		    // 메모함 리스트 출력
 		    function memoFoldersInfo() {
 		    	selFolderId="";
@@ -957,26 +900,11 @@
 		
 		<!-- memo note -->
 		<div class="noteBlock">
-			<!-- <div id="layer-popup" style="display: none" class="layerControl">
-
-				메모 리스트
-				<div style="text-align: center">
-					<div id="btn-bundle">
-						<select id="memoFolderList" name="memoFolderList"></select>
-						<button id="changeMode">모</button>
-						<button id="newMemo">추</button>
-						<button id="close-button">닫</button>
-					</div>
-					<div class="memoListBox" style="overflow:hidden;">
-						<div id="memoList" style="height: 50%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
-						<div id="memoList" style="height:100%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
-						<div id="memoList" style="height:100%; position:relative;"></div>
-					</div>
-				</div>
-			</div> -->
 			
+			<!-- 메모 레이어 -->
 			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
 				<div class="memo_header_wrapper">
+					<input type="hidden" id="layerFlag" value="layer" />
 				 	<div class="memo_header">
 				     	<ul class="memoHeaderUL">
 				         	<li class="memoSelect">
@@ -996,38 +924,10 @@
 			     <div class="memobgBar">
 			     	<div id="slider-range"></div>
 			     </div>
-			     <!-- <div class="memobgBar"><img id="slider-range" src="/images/ezMemo/memoBar.png"></div> -->
 			</div>
-						
-			<!-- 하나 클릭 -->
-			<!-- <div class="selected-memoWrapper">
-				<div class="detailMemo" style="display: none">
-					<input type="hidden" id="layerFlag" value="layer" />
-					<div id="memo-btn">
-						<button id="font-up">폰트+</button> 
-					    <button id="font-down">폰트-</button>
-						<div id="detailClose" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
-					</div>
-					<textarea id="detailMemoContents" style="resize:none;"></textarea>
-	        	</div>
-			</div> -->
 			
-			<div id="detailMemo" style="display:none; ">
-		 		<input type="hidden" id="layerFlag" value="layer" />
-			 	<div class="bigTop">
-			    	<dl class="memoTit">
-			            <dt class="mtitText"></dt>
-			            <dd class="memoIcon memoX"></dd>
-			            <dd class="memoIcon memoPlus"></dd>
-			            <dd class="memoIcon memoMinus"></dd>
-			        </dl>
-				<textarea id="detailMemoContents" style="resize:none;"></textarea>
-			    </div>
-			    <div class="bigBottom_left"></div>
-			    <div class="bigBottom_right"></div>
-			</div>
-			<!-- <div id="open-memo" style="display: none;"><img src="/images/cmtFile.png" width="60px"></div> -->
 			<div id="open-memo" class="memoBtn" style="display: none;"><span>메모</span></div>
+			
 		</div>
 		
 	</body>
