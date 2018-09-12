@@ -39,10 +39,10 @@ function createMemo(memo, flag) {
 	dd2.setAttribute("class", "memoIcon pallete");
 	
 	var dd3 = document.createElement("dd");
-	dd3.setAttribute("class", "pallete2");
+	dd3.setAttribute("class", "memoIcon saveBtn");
 	dd3.setAttribute("memoid", memo.memo_id);
-	dd3.style.cursor= "pointer";
-	dd3.innerHTML = "+";
+	/*dd3.style.cursor= "pointer";
+	dd3.innerHTML = "+";*/
 	
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon memoX");
@@ -269,7 +269,7 @@ function addremove() {
    	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
    });
    
-    $(".pallete2").click(function(){
+    $(".saveBtn").click(function(){
     	  var obj = $(this).parent().next();
     	  modifyMemo(obj[0]);
     });
