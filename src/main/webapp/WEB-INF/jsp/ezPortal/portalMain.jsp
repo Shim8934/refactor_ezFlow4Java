@@ -64,6 +64,7 @@
 	    	var useDate;
 			var defaultColor;
 	    	var layerRight;
+	    	var memoList;
 	    	
 			topHeight = "56";
 
@@ -220,9 +221,9 @@
 		        
 		        
 		        // 메모 내용 변경 
-		        $(".memo_main").on("click", ".memoLay .pallete2", function() {
+		        /* $(".memo_main").on("click", ".memoLay .pallete2", function() {
 		        	modifyMemo(this);
-		        });
+		        }); */
 		        
 		        // 메모 분류함 클릭 시, 해당 메모 리스트 호출
 		        $(".changeFolder").click(function(event) {
@@ -260,22 +261,23 @@
 		 	// 메모 내용 변경	    
 		    function modifyMemo(obj) {
 
-		 		var memoId, beforeContents, afterContents;
-		 		
-		 		if (obj.getAttribute("memoid") != null) {
+		    	var memoId = obj.getAttribute("memoid");
+				var afterContents = $(".memoText[memoid=" + memoId + "]").val();
+
+		 		/*if (obj.getAttribute("memoid") != null) {
 		 			
 					memoId = obj.getAttribute("memoid");
-					beforeContents = obj.innerHTML;
+					console.log(memoList[index].contents);
+					beforeContents = memoList[index].contents;
 					afterContents = $(".memoText[memoid=" + memoId + "]").val();
 					
-		 		} else {
+		 		}  else {
 		 			
 		 			memoId = obj.getAttribute("textareaMemoid");
-					beforeContents = obj.innerHTML;
+					beforeContents = memoList[index].contents;
 					afterContents = $("textarea[textareamemoid=" + memoId + "]").val();
-		 		}
+		 		} */
 				
-				if(beforeContents != afterContents) {
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
 		 			   	type : 'POST',
@@ -298,7 +300,6 @@
 		                	
 		                }
 					}); 
-				}
 		    }
 		 	
 		    // 모드 변경 시 레이어 넓이 변경
