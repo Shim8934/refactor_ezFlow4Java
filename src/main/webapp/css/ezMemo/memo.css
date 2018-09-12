@@ -3,7 +3,7 @@
 
 
 .memoIcon{display:inline-block; background:url(../../images/ezMemo/memo_icon.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
-.memoIcon30{display:inline-block; background:url(../images/kr/memo/memo_icon_30.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
+.memoIcon30{display:inline-block; background:url(../../images/ezMemo/memo_icon_30.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
 
 /* .memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#e0e3e4; border:1px solid #ccc; float:right; position:absolute; text-align:center; z-index: 1001; overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; } */
 .memo_wrap{ margin:0px; padding:10px 25px 10px 20px; box-sizing:border-box; overflow:hidden; background:rgba(0, 0, 0, 0.30);}
@@ -110,7 +110,7 @@ select::-ms-expand {
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
 .memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
-.memo_add{ background:url(../images/ezMemo/memo_add.png) no-repeat center; margin:0px auto; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
+.memo_add{ background:url(../../images/ezMemo/memo_add.png) no-repeat center; margin:0px auto; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
 .memo_add span{ font-size:13px; color:#fff; display:inline-block; margin:0px; padding:200px 0px 0px 0px;}
 
 /* 09-05 추가  */
