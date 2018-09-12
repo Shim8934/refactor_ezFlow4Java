@@ -171,14 +171,12 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
-		        var selectedCount = listview.GetSelectedIndexes().length;
+		        var selectedCount = listview.GetSelectedRows().length;
 		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if(ret) {
+		        if (ret) {
 			        if (selectedCount > 0) {
-				        for (i = 0; i < selectedCount; i++) {
-				            createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
-				        }
+				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
 				        
 				        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
 				        xmlHTTP.send(xmlDom);
@@ -189,7 +187,7 @@
 				            return;
 				        }
 				        
-				        alert(listview.GetSelectedIndexes().length + "<spring:message code='ezEmail.t54' />");
+				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
 				        company_change();
 			        } else {
 			            alert("<spring:message code='ezEmail.t51' />");		            
