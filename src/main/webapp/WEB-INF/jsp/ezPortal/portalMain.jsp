@@ -64,6 +64,7 @@
 	    	var useDate;
 			var defaultColor;
 	    	var layerRight;
+	    	var userGadget;
 	    	
 			topHeight = "56";
 
@@ -74,13 +75,8 @@
 		 	
 		 	$(window).resize(function() {
 		 		
- 		 		var layerClass = $("#layer-popup").attr("class");
-		 		
-		 		if (layerClass.indexOf("layerControl") != -1) {
-		        	setLayerSizeOnResize();
-			        setGadgetPositionOnResize();
-		 		}
-		 		
+ 		 		layerResize();
+		        setGadgetPositionResize();
 		 	});
 		 	
 		    $(function() {
@@ -102,7 +98,14 @@
 		    	// 레이어 닫기 버튼 클릭
 		        $(".memoClose").click(function() {
 		        	$("#layer-popup").css("display", "none")
-		        	$("#open-memo" ).css("display", "");
+					$(".select_inner").css("display", "none");
+		        	
+		        	if (userGadget == 1) {
+		        		$("#open-memo").css("display", "");
+		        	} else {
+		        		$("#open-memo").css("display", "none");
+		        	}
+		        	
 		        });
 		        
 		        // 메모 정렬
@@ -150,7 +153,7 @@
 		        				
 		        				if (result.status == 1) {
 		        					
-			        				getMemoList();
+//			        				getMemoList();
 			        				
 			        				if(window.frames["main"].frames["right"] != undefined) {			
 					                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
@@ -507,7 +510,7 @@
 	        }
 		    
 			 // 윈도우 리사이즈 시, 레이어 위치 및 사이즈 조절
-		    function setLayerSizeOnResize() {
+		    function layerResize() {
 		    	
 		    	var stringTop = $("#layer-popup").css("top");
 	        	var stringLeft = $("#layer-popup").css("left");
@@ -523,55 +526,74 @@
 	        	var left = parseInt(stringLeft.substr(0, pIndex));
 	        	var top = parseInt(stringTop.substr(0, pIndex));
 	        	
-	        	if (height > windowHeight) {
+	        	var layerClass = $("#layer-popup").attr("class");
+	        	
+	        	if (layerClass.indexOf("layerControl") != -1) {
+		        	
+		        	if (height > windowHeight) {
+		        		
+		        		height = windowHeight - 30;
+		        		$("#layer-popup").css("height", height + "px");
+		        		$(".memoListBox").css("height", height - 35 + "px");
+		        		$(".memo_main").css("height", height - 35 + "px");
+		        	}
+		        	
+		        	if (width > windowWidth) {
+		        		width = windowWidth - 30;
+		        		$("#layer-popup").css("width", width + "px");
+		        		$(".memoListBox").css("width", width + "px");
+		        		$(".memo_main").css("width", width + "px");
+		        	}
+		        	
+	        		var leftZero;
 	        		
-	        		height = windowHeight - 30;
-	        		$("#layer-popup").css("height", height + "px");
-	        		$(".memoListBox").css("height", height - 35 + "px");
-	        		$(".memo_main").css("height", height - 35 + "px");
-	        	}
-	        	
-	        	if (width > windowWidth) {
-	        		width = windowWidth - 30;
-	        		$("#layer-popup").css("width", width + "px");
-	        		$(".memoListBox").css("width", width + "px");
-	        		$(".memo_main").css("width", width + "px");
-	        	}
-	        	
-	        	
-        		var leftZero;
-        		
-	        	if (windowWidth > width) {
-	        		leftZero = windowWidth - width;
-	        	}
-	        	
-	        	var bottomZero;
-	        	
-	        	if (windowHeight > height) {
-	        		bottomZero = windowHeight - height;
-	        	}
-	        	
-        		if (top > windowHeight) {
-        			$("#layer-popup").css("top", bottomZero - 10);
-        			
-        		} else if (top < windowHeight) {
-        			if (top + height > windowHeight) {
-        				$("#layer-popup").css("top", bottomZero - 10);
-        			}
-        		}
-        		
-	        	if (left > windowWidth) {
-	        		$("#layer-popup").css("left", leftZero - 10);
+		        	if (windowWidth > width) {
+		        		leftZero = windowWidth - width;
+		        	}
+		        	
+		        	var bottomZero;
+		        	
+		        	if (windowHeight > height) {
+		        		bottomZero = windowHeight - height;
+		        	}
+		        	
+	        		if (top > windowHeight) {
+	        			$("#layer-popup").css("top", bottomZero - 10);
+	        			
+	        		} else if (top < windowHeight) {
+	        			if (top + height > windowHeight) {
+	        				$("#layer-popup").css("top", bottomZero - 10);
+	        			}
+	        		}
 	        		
-	        	} else if (left < windowWidth) {
-	        		if (left + width > windowWidth) {
+		        	if (left > windowWidth) {
 		        		$("#layer-popup").css("left", leftZero - 10);
 		        		
-	        		 }
-	        	}
-	        	
-	        	setLayerPosition();
-	    		setLayerArea();
+		        	} else if (left < windowWidth) {
+		        		if (left + width > windowWidth) {
+			        		$("#layer-popup").css("left", leftZero - 10);
+			        		
+		        		 }
+		        	}
+		        	
+		        	setLayerPosition();
+		    		setLayerArea();
+	    		
+	        	} else if (layerClass.indexOf("layerFullScreen") != -1) {
+	        		
+	        		$("#layer-popup").css("width", windowWidth + "px");
+		        	$("#layer-popup").css("height", windowHeight-56 + "px");
+		        	
+		        	$(".memoListBox").css("height", windowHeight-56-50-16 + "px");
+	        		$(".memo_main").css("height", windowHeight-56+ "px");
+
+	        		$(".memoListBox").css("width", windowWidth + "px");
+	        		$(".memo_main").css("width", windowWidth + "px");
+		 		}
+		    }
+			 
+		    function fullScreenLayerResize() {
+		    	
 		    }
 		    
 		    // 퀵메모 버튼 변경된 위치 저장 (단, display가 none이 아닐 때)
@@ -623,7 +645,7 @@
 		    }
 		    
 		    // 윈도우 리사이즈 시, 퀵메모 위치 변경 
-		    function setGadgetPositionOnResize() {
+		    function setGadgetPositionResize() {
 		    	
 	        	var stringBottom = $("#open-memo").css("bottom");
 		    	var stringRight = $("#open-memo").css("right");
@@ -853,11 +875,15 @@
 		        	async : false,
 		        	url : "/ezMemo/getMemoConfig.do",
 		        	success : function(result) {
-		        		var userGadget = result.memoConfigVO.use_gadget;
+		        		userGadget = result.memoConfigVO.use_gadget;
 		        		var memoConfig = result.memoConfigVO;
 		        		if (userGadget == 1) {
-		        			getGadgetPosition(memoConfig);
-		        			$("#open-memo").css("display", "");
+		        			var layerStatus = $("#layer-popup").css("display");
+
+		        			if (layerStatus.indexOf("none") != -1) {
+			        			getGadgetPosition(memoConfig);
+			        			$("#open-memo").css("display", "");
+		        			}
 		        			
 		        		} else {
 		        			$("#open-memo").css("display", "none");
