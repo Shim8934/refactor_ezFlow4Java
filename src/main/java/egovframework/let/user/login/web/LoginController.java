@@ -35,6 +35,9 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,6 +80,9 @@ public class LoginController {
     
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+    
+    @Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
         
     /** CRYPTO */
     @Resource(name="crypto") 
@@ -317,8 +323,28 @@ public class LoginController {
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
-        		
-        		return "redirect:/ezPortal/portalMain.do";
+	        	
+	        	// 로그인 후 IP 주소 체크
+	        	
+	        	String strIp = request.getHeader("X-FORWARDED-FOR");
+	        	if (strIp == null) {
+	        		strIp = request.getRemoteAddr();
+	        	}
+	        	
+	        	boolean ipAddressChk = ipAccessCheck(resultVO);
+	        	logger.debug("ipAddressChk=" + ipAddressChk);
+	        	
+	        	if (ipAddressChk == true) {
+	        		return "redirect:/ezPortal/portalMain.do";
+	        	} else {
+	        		// 쿠키 삭제
+	        		cookieName.setValue("");
+	        		cookieName.setMaxAge(0);
+	        		cookieName.setPath("/");
+	        		response.addCookie(cookieName);
+	        		
+	        		return "cmm/error/accessDenied";
+	        	}
         		
         	} else {
         		//Check login state of the user
@@ -401,7 +427,7 @@ public class LoginController {
     		        	response.addCookie(cookieName);
     		        	
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
-    		        	//session = request.getSession();       	
+    		        	//session = request.getSession();
     		        	
     		        	return "redirect:/ezPortal/portalMain.do";
     				}
@@ -484,6 +510,81 @@ public class LoginController {
         			}
         	}
         } 
+    }
+    
+    public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
+    	logger.debug("ipAccessCheck start");
+    	
+    	String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", loginVO.getTenantId());
+    	
+    	if (useIPAccess.equals("NO")) {
+    		logger.debug("ipAccessCheck ended");
+    		return true;
+    	} else { // useIPAccess 사용하면 IP, ID 체크
+    		
+    		String topID = loginVO.getRollInfo().indexOf("c=1") != -1 ? "Top" : loginVO.getCompanyID();
+    		String clientIP[] = loginVO.getIp().split("\\.");
+        	List<AccessIdVO> accessIdList = ezSystemAdminService.getAllAccessList(loginVO.getPrimary(), loginVO.getTenantId(), topID);
+        	List<AccessIdVO> accessDeptList = ezSystemAdminService.getAllAccessListDept(loginVO.getPrimary(), loginVO.getTenantId(), topID);
+        	List<IPBandVO> ipBandList = ezSystemAdminService.getAllIPBand(loginVO.getTenantId());
+    		
+    		 
+        	// ID 먼저 체크
+        	if (!(accessIdList.size() == 0 || accessIdList == null)) {
+        		for (int i = 0; i < accessIdList.size(); i++) {
+        			String getListId = accessIdList.get(i).getCn().substring(accessIdList.get(i).getCn().indexOf("(") + 1, accessIdList.get(i).getCn().indexOf(")"));
+        			if (loginVO.getId().equals(getListId)) {
+        				logger.debug("id checked");
+        				return true;
+        			}
+        		}
+        	}
+        	
+        	// 부서 체크
+        	if (!(accessDeptList.size() == 0 || accessDeptList == null)) {
+        		for (int i = 0; i < accessDeptList.size(); i++) {
+        			String getListDept = accessDeptList.get(i).getCn().substring(accessDeptList.get(i).getCn().indexOf("(") + 1, accessDeptList.get(i).getCn().indexOf(")"));
+        			if (topID.equals(getListDept)) {
+        			logger.debug("dept checked");
+        				return true;
+        			}
+        		}
+        	}
+        	
+        	// IP 대역 체크
+        	boolean returnValue = false;
+        	String getAccess = "NO";
+        	int checkCnt = 0;
+        	if (!(ipBandList.size() == 0 || ipBandList == null)) {
+        		for (int i = 0; i < ipBandList.size(); i++) {
+        			String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+        			for (int j = 0; j < clientIP.length; j++) {
+        				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
+        					checkCnt++;
+        				}
+        			}
+        			
+        			if (checkCnt == 4) {
+        				getAccess = ipBandList.get(i).getAccess();
+        				
+        				if (getAccess == "NO") { // 허용, 거부 중 거부가 우선 (검사하다 거부가 나오면 바로 return)
+        					return false;
+        				}
+        			}
+        			checkCnt = 0;
+        		}
+        		
+        		if (getAccess.equals("YES")) { 
+        			returnValue = true;
+        		}
+        		
+        	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
+        		return false;
+        	}
+        	
+        	logger.debug("ipAccessCheck ended");
+        	return returnValue;
+    	}
     }
     
     public void createLoginCookie(
