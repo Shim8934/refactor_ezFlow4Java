@@ -2693,8 +2693,10 @@ public class EzEmailUtil {
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", tenantId);
 		String[] innerDomainArr = mailInnerDomain.split(";");
 		
-		for (int i=0; i<innerDomainArr.length; i++) {
-			innerDomainList.add(innerDomainArr[i]);
+		for (int i = 0; i < innerDomainArr.length; i++) {
+			if (innerDomainArr[i] != null && !innerDomainArr[i].trim().equals("")) {
+				innerDomainList.add(innerDomainArr[i]);
+			}
 		}
 		
 		return innerDomainList;
