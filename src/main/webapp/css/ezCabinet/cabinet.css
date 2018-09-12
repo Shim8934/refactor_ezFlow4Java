@@ -432,4 +432,4 @@
 .popup_noti_btnarea.cabdelpp {border-radius: 0px 0px 4px 4px !important;}
 .cabcolor th {background-color: #eff6ff !important; color:#333;}
 
-@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .overfl {white-space: normal !important;}}
+@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .wide {width: 40% !important;} .wide2 {width: 84% !important;} .overfl {white-space: normal !important;} .tblFileInf tr td, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {line-height: 21px !important;} }
