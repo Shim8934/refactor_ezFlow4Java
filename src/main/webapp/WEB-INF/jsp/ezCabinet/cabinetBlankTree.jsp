@@ -12,7 +12,7 @@
 		<h1 id="cabInfo"><spring:message code='ezCabinet.t162'/></h1>
 		<div class="cabBlankMain">
 			<div class="blankDiv">
-				<img src="/images/cabinet/cabinettree.png">
+				<img src="/images/cabinet/notree.png">
 				<div class="blankMsg"><spring:message code="${message}"/></div>
 			</div>
 		</div>
