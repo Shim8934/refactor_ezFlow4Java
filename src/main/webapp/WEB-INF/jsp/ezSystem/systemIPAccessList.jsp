@@ -122,7 +122,6 @@
 			for (var Cnt = 0; Cnt < json.length; Cnt++) {
 				var _TR = document.createElement("TR");
 				var cn = json[Cnt].cn;
-				cn = cn.substring(cn.indexOf("(") + 1, cn.indexOf(")"));
 				_TR.setAttribute("id", "AccessId_" + Cnt);
 				_TR.setAttribute("accessno", json[Cnt].accessNo);
 				_TR.setAttribute("cn", cn);
@@ -150,7 +149,7 @@
                 
                 var _CN = document.createElement("TD");
                 _CN.style.width = "45%";
-                _CN.innerText = json[Cnt].cn;
+                _CN.innerText = json[Cnt].name + "(" + json[Cnt].cn + ")";
                 _TR.appendChild(_CN);
                 
                 var _DEPARTMENT = document.createElement("TD");

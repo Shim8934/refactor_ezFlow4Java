@@ -532,7 +532,7 @@ public class LoginController {
         	// ID 먼저 체크
         	if (!(accessIdList.size() == 0 || accessIdList == null)) {
         		for (int i = 0; i < accessIdList.size(); i++) {
-        			String getListId = accessIdList.get(i).getCn().substring(accessIdList.get(i).getCn().indexOf("(") + 1, accessIdList.get(i).getCn().indexOf(")"));
+        			String getListId = accessIdList.get(i).getCn();
         			if (loginVO.getId().equals(getListId)) {
         				logger.debug("id checked");
         				return true;
@@ -543,7 +543,7 @@ public class LoginController {
         	// 부서 체크
         	if (!(accessDeptList.size() == 0 || accessDeptList == null)) {
         		for (int i = 0; i < accessDeptList.size(); i++) {
-        			String getListDept = accessDeptList.get(i).getCn().substring(accessDeptList.get(i).getCn().indexOf("(") + 1, accessDeptList.get(i).getCn().indexOf(")"));
+        			String getListDept = accessDeptList.get(i).getCn();
         			if (topID.equals(getListDept)) {
         			logger.debug("dept checked");
         				return true;

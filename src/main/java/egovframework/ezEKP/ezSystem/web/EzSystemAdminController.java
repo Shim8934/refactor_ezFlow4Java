@@ -780,6 +780,7 @@ public class EzSystemAdminController {
 			JSONObject obj = new JSONObject();
 			obj.put("accessNo", userList.get(i).getAccessNo());
 			obj.put("cn", userList.get(i).getCn());
+			obj.put("name", userList.get(i).getName());
 			obj.put("department", userList.get(i).getDepartment());
 			returnJsonArr.add(obj);
 		}
@@ -788,6 +789,7 @@ public class EzSystemAdminController {
 			JSONObject obj = new JSONObject();
 			obj.put("accessNo", deptList.get(i).getAccessNo());
 			obj.put("cn", deptList.get(i).getCn());
+			obj.put("name", deptList.get(i).getName());
 			obj.put("department", deptList.get(i).getDepartment());
 			returnJsonArr.add(obj);
 		}
