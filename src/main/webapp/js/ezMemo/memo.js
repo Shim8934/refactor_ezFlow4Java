@@ -274,3 +274,53 @@ function addremove() {
     	  modifyMemo(obj[0]);
     });
 }
+
+function memoFoldersInfo() {
+	selFolderId="";
+	selFolderName="";
+	$.ajax({
+		type : "GET",
+		dataType : "json",
+		async : false,
+		url : "/ezMemo/getMemoFoldersInfo.do",
+		success: function(result){
+			
+			var folderList = result["folders"];
+			var html="";
+			html += "<option value='0'>전체</option>";
+			folderList.forEach(function(list, index){
+				var folderName = list.folder_name;
+				
+				if (folderName.length > 11) {
+					folderName = folderName.substr(0, 10);
+					folderName += "...";
+				}
+				html += "<option value='"+list.folder_id+"'>"+ folderName +"</option>"
+
+			});
+			$('#memoFolderList option').remove();
+			$('#memoFolderList').html(html);
+			
+			$('select').wrap('<div class="select_wrapper"></div>')
+			$('select').parent().prepend('<span>'+ $("select option:selected").text() +'</span>');
+			//$('select').parent().children('span').width($('select').width());	
+			$('select').css('display', '');		
+			$('select').parent().append('<ul class="select_inner"></ul>');
+			$('select').children().each(function(){
+			  var opttext = $(this).text();
+			  var optval = $(this).val();
+			  $('select').parent().children('.select_inner').append('<li class="changeFolder" id="' + optval + '">' + opttext + '</li>');
+			});
+			
+			$('select').parent().find('li').on('click', function (){
+				var cur = $(this).attr('id');
+				$('select').parent().children('span').text($(this).text());
+				$('select').children().removeAttr('selected');
+				$('select').children('[value="'+cur+'"]').attr('selected','selected');					
+			});
+			$('select').parent().on('click', function (){
+				$(this).find('ul').slideToggle('fast');
+			});
+		}     			
+	});
+}
