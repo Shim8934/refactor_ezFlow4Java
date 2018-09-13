@@ -26030,11 +26030,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strAttachYN = "Y";
 			}
 			
+			//regnumber
+			Document relayXML = commonUtil.xmlLod(config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
+			
+			String regNumber = relayXML.getElementsByTagName("regnumber").item(0).getTextContent();
+			logger.debug("#문서번호: " + regNumber);
+			
 			strNewID = getNewID(strCompanyID, tenantID);
 
 			map.put("NEWID", strNewID);
     		map.put("FORMID", strFormID);
     		map.put("DOCTITLE", strDocTitle);
+    		map.put("regNumber", regNumber);
     		map.put("ATTACHYN", strAttachYN);
     		map.put("strWriterName", strWriterName);
     		map.put("strWriterDept", strWriterDept);

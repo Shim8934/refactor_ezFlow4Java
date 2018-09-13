@@ -99,7 +99,7 @@
 						alert("<spring:message code='ezMemo.t0037' />");	
 					}
 				});
-				opener.location.reload();
+				opener.memoFoldersInfo();
 	        }
 	        
 	        function btn_cancel_onclick() {
