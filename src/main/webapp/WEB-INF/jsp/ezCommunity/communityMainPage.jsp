@@ -270,6 +270,7 @@
 						},
 						success: function(result){
 							event_get_myCommunity(result);
+							commuTitleWidth(); //타이틀 너비 조정
 						}
 				});
 	        }
@@ -525,6 +526,7 @@
 	            CurPage = Value;
 	            makePageSelPage();
 	            movePage(CurPage);
+	            commuTitleWidth();//타이틀 너비 조정
 	        }
 	        
 	        function selbeforeBlock() {
@@ -1351,10 +1353,16 @@
 	        
 			function commuTitleWidth() {
 				var titleWidth = "";
-				
-				titleWidth = $(".tabpartMycommunityTitle").eq(1).width() - $(".tabpartMycommunityTitle dd").width() - 35;
-				
-				$(".tabpartMycommunityTitle dt").css("width", titleWidth + "px");
+
+				if (document.getElementById("tagsub1").className != "") {
+					if ($(".tabpartMycommunityTitle").eq(1).width() != null) { //커뮤니티가 2개일 경우 화면을 줄였을때 카테고리별 커뮤니티탭이 아래로 내려왔을경우 짤리는 현상 없게 하기 위해 2번째 커뮤니티 타이틀 너비를 이용한다.
+						titleWidth = $(".tabpartMycommunityTitle").eq(1).width() - $(".tabpartMycommunityTitle dd").eq(1).width() - 40; // 40은 커뮤니티명 앞에 이미지 너비때문에 빼는것. 
+					} else {
+						titleWidth = $(".tabpartMycommunityTitle").eq(0).width() - $(".tabpartMycommunityTitle dd").eq(0).width() - 40;
+					}
+					
+					$(".tabpartMycommunityTitle dt").css("width", titleWidth + "px");
+				}
 			}
 		</script>
 	</head>
