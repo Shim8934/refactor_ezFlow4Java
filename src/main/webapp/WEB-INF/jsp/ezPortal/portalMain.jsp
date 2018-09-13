@@ -196,6 +196,8 @@
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
 		        	if (layerClass.indexOf("layerControl") != -1) {
+		        		$("#fullScreen").css("display", "none");
+		        		$("#controllable").css("display", "");
 		        		
 		        		$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
 		        		$(".ui-resizable-handle").css("display", "none");
@@ -212,6 +214,8 @@
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
 		        	if (layerClass.indexOf("layerFullScreen") != -1) {
+		        		$("#controllable").css("display", "none");
+		        		$("#fullScreen").css("display", "");
 		        		
 		        		$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
 		        		$(".ui-resizable-handle").css("display", "");
@@ -926,7 +930,7 @@
 				            	<select id="memoFolderList"></select>
 				            </li>
 							<li class="memoClose memoIcon30"></li>
-			                <li class="memoExpand_s memoIcon30" id="controllable"></li>
+			                <li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
 			                <li class="memoExpand memoIcon30" id="fullScreen"></li>
 			                <li class="memoPlus memoIcon30" id="addMemo"></li>
 				         </ul>
