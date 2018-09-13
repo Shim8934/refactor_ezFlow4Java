@@ -321,7 +321,7 @@
 	    		
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-125});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-112});
 		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
 		    		$("#layer-popup").css({"height" : winHeight-45});
 
@@ -819,7 +819,7 @@
 		    	
 			    var layerHeight = $("#layer-popup").height();
 			    var layerWidth = $("#layer-popup").width();
-			    var memoListHeight = layerHeight - 70;
+			    var memoListHeight = layerHeight - 56;
 
 			    $(".memoListBox").css({"height" : memoListHeight, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight});

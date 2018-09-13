@@ -9,7 +9,7 @@
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
 .memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; text-align:center; z-index: 1001; overflow:hidden; height: 50%;}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
-.memoHeaderUL{ margin:0px; padding:0px; list-style:none; overflow:hidden;}
+.memoHeaderUL{ margin: 0px 4px 0px 9px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
 .memoHeaderUL li.memoSelect{  float:left; margin:0px 4px 0px 5px; padding:0px;}
 .memoHeaderUL li.memoSelect select{ background:#fff url(../../images/ezMemo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
@@ -106,7 +106,7 @@ select::-ms-expand {
 .color_popup li.color04{background:#519ef0; border:1px solid #4592e4;}
 .color_popup li.color05{background:#8e74f6; border:1px solid #8167ec;}
 .color_popup li.color06{background:#f261d0; border:1px solid #e752c4;}
-.memobgBar{ float:right; clear:both; overflow:hidden;}
+.memobgBar{ float:left; clear:both; overflow:hidden; margin-top: 3px;}
 
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
