@@ -167,7 +167,12 @@
    				success : function(result){
    					var opts = "<option value='0'><spring:message code='ezLadder.t011'/></option>";;
    					$(result.folders).each(function() {
-   						opts += "<option value=" + this.folder_id + ">" + this.folder_name + "</option>";
+   						var folderName = this.folder_name;
+   						if (folderName.length > 11) {
+   							folderName = folderName.substr(0, 10);
+   							folderName += "...";
+   						}
+   						opts += "<option value=" + this.folder_id + ">" + folderName + "</option>";
    					})
    					$("#memoType").html(opts);
    				}

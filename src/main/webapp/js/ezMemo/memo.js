@@ -108,7 +108,7 @@ function loadMemoList(flag) {
 		div.style.margin = "10px";
 		
 		var span = document.createElement("span");
-		span.innerHTML = strLang7;
+		span.innerHTML = strLangMemo7;
 		
 		div.appendChild(span);
 		
@@ -120,7 +120,7 @@ function loadMemoList(flag) {
 		div.setAttribute("class", "memo_add");
 		div.id = "addFirstMemo";
 		var span = document.createElement("span");
-		span.innerHTML = strLang7;
+		span.innerHTML = strLangMemo7;
 		
 		div.appendChild(span);
 		
@@ -183,7 +183,7 @@ function addRemoveButton(memoId) {
 	
 	var popHeader = document.createElement('div');
 	popHeader.setAttribute("class", "memoPopHeader");
-	popHeader.innerHTML = "<span>"+strLang4+"</span>";
+	popHeader.innerHTML = "<span>"+strLangMemo4+"</span>";
 	
 	var popContainer = document.createElement('div');
 	popContainer.setAttribute("class", "popContainer");
@@ -193,7 +193,7 @@ function addRemoveButton(memoId) {
 	
 	var footBtn = document.createElement('p');
 	footBtn.setAttribute("class", "footBtn");
-	//footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLang5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+strLang6+"</span></div>";
+	//footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLangMemo5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+strLangMemo6+"</span></div>";
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "modRm-wrap");
@@ -202,7 +202,7 @@ function addRemoveButton(memoId) {
 	span.setAttribute("class", "modRm");
 	span.setAttribute("id", "modRm"+memoId);
 	span.setAttribute("onclick", "modalDelete("+memoId+")");
-	span.innerHTML = strLang5;
+	span.innerHTML = strLangMemo5;
 
 	var div2 = document.createElement("div");
 	div2.setAttribute("class", "close-wrap");
@@ -211,7 +211,7 @@ function addRemoveButton(memoId) {
 	span2.setAttribute("class", "close");
 	span2.setAttribute("id", "close"+memoId);
 	span2.setAttribute("onclick", "$('#modal"+memoId+"').remove()");
-	span2.innerHTML = strLang6;
+	span2.innerHTML = strLangMemo6;
 	
 	div.appendChild(span);
 	div2.appendChild(span2);
@@ -372,7 +372,7 @@ function addEmptyMemo(flag) {
 		div.style.margin = "10px";
 		
 		var span = document.createElement("span");
-		span.innerHTML = strLang7;
+		span.innerHTML = strLangMemo7;
 		
 		div.appendChild(span);
 		
@@ -384,7 +384,7 @@ function addEmptyMemo(flag) {
 		div.setAttribute("class", "memo_add");
 		div.id = "addFirstMemo";
 		var span = document.createElement("span");
-		span.innerHTML = strLang7;
+		span.innerHTML = strLangMemo7;
 		
 		div.appendChild(span);
 		
