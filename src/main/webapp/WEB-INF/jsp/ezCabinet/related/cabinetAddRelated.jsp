@@ -639,7 +639,7 @@
 					var listChildren    = attach.children;
 					for (var i = 0, len = listChildren.length; i < len; i++) {
 						var inputElmt   = listChildren[i].firstElementChild;
-						var filePath    = inputElmt.getAttribute("filepath");
+						var filePath    = inputElmt.getAttribute("filepath").replace(/\+/g, " ");
 						var fileName    = inputElmt.getAttribute("filename");
 						
 						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName)});
