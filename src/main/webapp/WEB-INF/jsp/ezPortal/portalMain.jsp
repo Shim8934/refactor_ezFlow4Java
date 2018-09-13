@@ -809,11 +809,18 @@
 	                cache: false,
 	                async: false,
 	                success: function(result) {
+	                	
 	                	memoColor = result["colorList"].split(";");
 	                	memoList = result["memoList"];
-	                	layer = result["layerFlag"];
+	                	layerFlag = result["layerFlag"];
 	                	
 						loadMemoList(layerFlag);
+						
+						var memoLength = $(".memo_main .memoLay").length;
+		            	if (memoLength == 0) {
+
+		            		addEmptyMemo(layerFlag);
+		            	}
 						
 					    addremove();
 					    
