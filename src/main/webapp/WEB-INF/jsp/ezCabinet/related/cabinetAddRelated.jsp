@@ -642,7 +642,7 @@
 						var filePath    = inputElmt.getAttribute("filepath");
 						var fileName    = inputElmt.getAttribute("filename");
 						
-						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName)});
+						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName).replace(/\+/g, " ")});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedOption.do";
