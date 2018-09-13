@@ -80,6 +80,7 @@
 		    	memoFoldersInfo();
 	    		checkMemoConfig();
 	    		getMemoList();
+	    		addremove();			// 메모지 이벤트 추가
 
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
@@ -752,6 +753,7 @@
 	                	
 	                	$("#addFirstMemo").remove();
 	                	insertMemo(memo, layerFlag);
+	                	addremove();
 	                
 	                	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
@@ -830,6 +832,13 @@
 			    $(".memoListBox").css({"height" : memoListHeight-25, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight-20});
 			    
+			    var layerClass = $("#layer-popup").attr("class");
+	        	
+	        	if (layerClass.indexOf("layerFullScreen") != -1) {
+	        		$(".memoListBox").css({"height" : memoListHeight-27, "width" : layerWidth});	        		
+	        	} else {
+	        		$(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
+	        	}
 		    }
 		    
 		    // 메모함 리스트 출력
