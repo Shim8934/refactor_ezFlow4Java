@@ -372,7 +372,7 @@ function addEmptyMemo(flag) {
 		div.style.margin = "10px";
 		
 		var span = document.createElement("span");
-		span.innerHTML = strLang7;
+		span.innerHTML = strLangMemo7;
 		
 		div.appendChild(span);
 		
@@ -384,7 +384,7 @@ function addEmptyMemo(flag) {
 		div.setAttribute("class", "memo_add");
 		div.id = "addFirstMemo";
 		var span = document.createElement("span");
-		span.innerHTML = strLang7;
+		span.innerHTML = strLangMemo7;
 		
 		div.appendChild(span);
 		
