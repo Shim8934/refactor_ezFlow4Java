@@ -596,7 +596,7 @@
 						for (var i = 0, len = listAttach.length; i < len; i++) {
 							var inputElmt = listAttach[i].firstElementChild;
 							var filePath  = inputElmt.getAttribute("filepath");
-							var fileName  = javaURLDecode(inputElmt.getAttribute("filename"));
+							var fileName  = javaURLDecode(inputElmt.getAttribute("filename")).replace(/\+/g, " ");
 							
 							attachList.push({filePath : filePath, fileName : fileName});
 						}
