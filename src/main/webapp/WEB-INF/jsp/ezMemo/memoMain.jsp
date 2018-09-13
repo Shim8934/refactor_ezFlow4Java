@@ -133,7 +133,7 @@
 		        			success : function(result) {
 		        				
 		        				if (result.status == 1) {
-			        				getMemoList();
+			        				//getMemoList();
 			        				parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		        				}
 		        			}
@@ -415,7 +415,7 @@
 				if($(this).attr("display") == 0){
 					memo_ids.push($(this).val());
 					$(this).attr("display", "1");
-					$(this).parent().parent().attr("style", "opacity : 0.6");
+					$(this).parent().parent().attr("style", "opacity : 0.5");
 				} 
 			});
 			
