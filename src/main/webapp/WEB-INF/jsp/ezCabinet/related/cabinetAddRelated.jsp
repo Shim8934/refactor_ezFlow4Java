@@ -347,7 +347,7 @@
 								
 								attachList.push({
 									filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "),
-									fileName : javaURLDecode(params["fileName"])
+									fileName : javaURLDecode(params["fileName"]).replace(/\+/g, " ")
 								}); 
 								
 							}
@@ -507,7 +507,7 @@
 						var hrefStr = listChildren[i].getAttribute("filehref");
 						var params  = getAllUrlParams(hrefStr);
 						
-						attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : javaURLDecode(params["fileName"])});
+						attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : javaURLDecode(params["fileName"]).replace(/\+/g, " ")});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedCommunity.do";
@@ -640,7 +640,7 @@
 					for (var i = 0, len = listChildren.length; i < len; i++) {
 						var inputElmt   = listChildren[i].firstElementChild;
 						var filePath    = inputElmt.getAttribute("filepath").replace(/\+/g, " ");
-						var fileName    = inputElmt.getAttribute("filename");
+						var fileName    = inputElmt.getAttribute("filename").replace(/\+/g, " ");
 						
 						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName)});
 					}
@@ -687,7 +687,7 @@
 						var hrefStr = listChildren[i].getAttribute("href");
 						var params  = getAllUrlParams(hrefStr);
 						
-						attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : javaURLDecode(params["fileName"])});
+						attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : javaURLDecode(params["fileName"]).replace(/\+/g, " ")});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedJournal.do";
