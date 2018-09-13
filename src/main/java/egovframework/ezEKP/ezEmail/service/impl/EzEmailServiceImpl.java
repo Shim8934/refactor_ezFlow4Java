@@ -700,7 +700,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		inputParams += receiverEmailParam.toString();
 		logger.debug("inputParams=" + inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailRecall", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailRecall2", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		//get recallIdx
@@ -759,7 +759,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("inputParams=" + inputParams.toString());
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailRecallDetail", inputParams.toString());
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailRecallDetail2", inputParams.toString());
 		logger.debug("strJson=" + strJson);
 		
 		JSONParser parser = new JSONParser();

@@ -312,8 +312,8 @@ function event_searchRecurMail() {
         
     } else {
         HiddenMailProgress();
-
-        alert(strLang158 + g_searchHttp.status)
+	//  검색 도중 다른곳 선택시 에러가 발생했다는 에러가 뜨지 않도록 주석처리. 
+	//	alert(strLang158 + g_searchHttp.status);
         g_searchHttp = null;
     }
 }

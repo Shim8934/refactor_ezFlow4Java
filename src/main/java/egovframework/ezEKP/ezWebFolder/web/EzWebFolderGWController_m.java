@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +57,9 @@ public class EzWebFolderGWController_m {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private Properties globals;
+	
 	/**
 	 * 공유한 리스트 조회
 	 */
@@ -68,10 +72,19 @@ public class EzWebFolderGWController_m {
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
-		SearchVO searchInfo = new SearchVO();
-		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
-		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
-		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		String searchExt = orElse(request.getParameter("searchExt"), "");
+		String searchFileName = orElse(request.getParameter("searchFileName"), "");
+		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
+		
+   		SearchVO searchInfo = new SearchVO();
+		searchInfo.setSearchExt(searchExt);
+		searchInfo.setSearchFileName(searchFileName);
+		searchInfo.setSearchCreateName(searchCreatorName);
 		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
@@ -265,10 +278,19 @@ public class EzWebFolderGWController_m {
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
+		String searchExt = orElse(request.getParameter("searchExt"), "");
+		String searchFileName = orElse(request.getParameter("searchFileName"), "");
+		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
+		
 		SearchVO searchInfo = new SearchVO();
-		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
-		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
-		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchExt(searchExt);
+		searchInfo.setSearchFileName(searchFileName);
+		searchInfo.setSearchCreateName(searchCreatorName);
 		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
@@ -750,10 +772,19 @@ public class EzWebFolderGWController_m {
 		int startIndex = Integer.parseInt(orElse(request.getParameter("startIndex"), "0"));
 		int listCount = Integer.parseInt(orElse(request.getParameter("listCount"), "0"));
 		
+		String searchExt = orElse(request.getParameter("searchExt"), "");
+		String searchFileName = orElse(request.getParameter("searchFileName"), "");
+		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
+		
 		SearchVO searchInfo = new SearchVO();
-		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
-		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
-		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchExt(searchExt);
+		searchInfo.setSearchFileName(searchFileName);
+		searchInfo.setSearchCreateName(searchCreatorName);
 		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
@@ -983,6 +1014,11 @@ public class EzWebFolderGWController_m {
 		String order            = orElse(request.getParameter("order"), "");
 		String mode 		    = orElse(request.getParameter("mode"), "");
 		String realColumn        = "";
+		
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);
 		
 		// TODO primary 수정
 		String primary;
