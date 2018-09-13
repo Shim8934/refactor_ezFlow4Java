@@ -1356,6 +1356,11 @@
 				
 				$(".tabpartMycommunityTitle dt").css("width", titleWidth + "px");
 			}
+			
+			/* 2018-09-13 홍승비 - 커뮤니티 메인홈의 새로고침 함수 추가 */
+			function refresh_onclick() {
+				window.location.reload(false);	
+			}
 		</script>
 	</head>
 	<body>
