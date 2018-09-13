@@ -296,7 +296,10 @@ function addremove() {
    });
    
    $(".color_list").click(function(){
-   	modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+	   defaultColor = $(this).index()+1;
+   		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+   		var obj = $(this).parent().parent();
+   		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
    });
    
     $(".saveBtn").click(function(){

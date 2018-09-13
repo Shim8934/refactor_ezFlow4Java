@@ -275,7 +275,6 @@
                 	var memo = result["memo"];
                 	
                 	insertMemo(memo);
-                	//getMemoList("new");
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
@@ -298,8 +297,6 @@
                 },  
                 cache: false,
                 success: function(result) {
-                	defaultColor = idx;
-                	getMemoList();
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
@@ -323,7 +320,6 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	getMemoList();
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {
@@ -355,7 +351,10 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	getMemoList();
+	                	$(":checkbox[name=memo]:checked").each(function(){
+	                		$("#memo"+$(this).val()).remove();
+	        			});
+	                	setMemoCount($(".memoLay").length);
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {

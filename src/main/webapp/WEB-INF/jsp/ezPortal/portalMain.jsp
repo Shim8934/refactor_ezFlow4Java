@@ -294,7 +294,7 @@
 		                cache: false,
 		                success: function(result) {
 		                	
-		                	getMemoList();
+		                	//getMemoList();
 		                	
 		                	if(window.frames["main"].frames["right"] != undefined) {			
 			                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
@@ -739,7 +739,6 @@
 	                	var memo = result["memo"];
 	                	
 	                	insertMemo(memo, layerFlag);
-	                	//getMemoList("new");
 	                
 	                	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
@@ -767,8 +766,6 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	defaultColor = idx;
-	                	getMemoList();
 	                	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 		                		window.frames["main"].frames["right"].getMemoList();
