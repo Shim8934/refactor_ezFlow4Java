@@ -9,7 +9,7 @@
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
 .memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; text-align:center; z-index: 1001; overflow:hidden; height: 50%;}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
-.memoHeaderUL{ margin: 0px 4px 0px 4px; padding:0px; list-style:none; overflow:hidden;}
+.memoHeaderUL{ margin: 10px 4px 9px 9px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
 .memoHeaderUL li.memoSelect{  float:left; padding:0px;}
 .memoHeaderUL li.memoSelect select{ background:#fff url(../../images/ezMemo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
@@ -111,7 +111,7 @@ select::-ms-expand {
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
 .memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
-.memo_add{ background:url(../../images/ezMemo/memo_add.png) no-repeat center; margin:5px 0px 0px 10px; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
+.memo_add{ background:url(../../images/ezMemo/memo_add.png) no-repeat center; margin:0 auto; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
 .memo_add span{ font-size:13px; color:#fff; display:inline-block; margin:0px; padding:200px 0px 0px 0px;}
 
 /* 09-05 추가  */
@@ -140,11 +140,11 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 
 
 /* portalMain 메모분류함  */
-.select_wrapper {text-align: left; padding-left: 10px;color:#fff; background: #6a8547 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;border-radius: 3px;cursor: pointer;position: relative; width:210px; margin: 5px 0px 0px 9px;}
-.select_wrapper:hover { background: #566c3a url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
+.select_wrapper {text-align: left; padding-left: 10px;color:#fff; background: #494949 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;cursor: pointer;position: relative; width:150px; margin: 5px 0px 0px 0px; border-radius:40px;}
+.select_wrapper:hover { background: #696969 url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
 .select_wrapper .select_inner {font-family: arial;font-size: 13px; background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 100%;z-index: 15000;list-style: none; text-align:left; padding:0px;}
 .select_wrapper .select_inner li {padding-left: 10px; border-bottom: 1px solid #eee;}
 .select_wrapper .select_inner li:hover { background: #eee; }
 .select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
 .select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
-.select_wrapper span {display: block; width:200px; font-size:13px;}
+.select_wrapper span {display: block; width:140px; font-size:13px;}

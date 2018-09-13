@@ -27,7 +27,6 @@
 	    			success: function(result){
 	    				var html="";
 						var folderList = result["folders"];
-						$('#memoFolderList').html(html);
 						memoFolderList = "<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>";							
 							 
 						folderList.forEach(function(list, index){
@@ -183,7 +182,6 @@
 			    			"folder_ids" : deleteList.join()
 			    		}, success: function() {
 			    			memoFoldersInfo();
-			    			parent.parent.parent.parent.memoFoldersInfo("delete");
 			    		}, error: function(err) {
 			    			alert("<spring:message code='ezMemo.t0045' />");
 			    		}
