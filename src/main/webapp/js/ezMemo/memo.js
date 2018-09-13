@@ -203,7 +203,7 @@ function addRemoveButton(memoId) {
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "modRm-wrap");
-
+	
 	var span = document.createElement("span");
 	span.setAttribute("class", "modRm");
 	span.setAttribute("id", "modRm"+memoId);
