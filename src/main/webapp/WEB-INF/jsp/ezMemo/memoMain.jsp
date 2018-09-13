@@ -75,6 +75,7 @@
 			getMemoConfig();
 			getFolderList();
 			getMemoList();
+			addremove();		// 메모지 이벤트 추가
 			
 			$($(window.parent.frames['left'].document)).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);
@@ -236,7 +237,6 @@
                 	
 					loadMemoList();
 					setMemoCount(memoList.length);
-				    addremove();
 			     },
 	             error : function() {
 	                	
@@ -283,6 +283,7 @@
                 	var memo = result["memo"];
                 	insertMemo(memo);
                 	setMemoCount($(".memoLay").length);
+                	addremove();
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
