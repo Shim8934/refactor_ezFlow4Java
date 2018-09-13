@@ -11,7 +11,7 @@
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
 .memoHeaderUL{ margin: 10px 4px 9px 9px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
-.memoHeaderUL li.memoSelect{  float:left; margin:0px 4px 0px 5px; padding:0px;}
+.memoHeaderUL li.memoSelect{  float:left; padding:0px;}
 .memoHeaderUL li.memoSelect select{ background:#fff url(../../images/ezMemo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
 select::-ms-expand {
     display: none;

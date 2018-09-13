@@ -193,28 +193,33 @@
 		        
 		        // 메모 레이어 전체화면, 사이즈 조절
 		        $("#fullScreen").click(function() {
-		        	
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
 		        	if (layerClass.indexOf("layerControl") != -1) {
+		        		
 		        		$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
 		        		$(".ui-resizable-handle").css("display", "none");
 		        		
 		        		$("#layer-popup").draggable({
 		        			disabled: true
 		        		});
-		        	} else if (layerClass.indexOf("layerFullScreen") != -1) {
+		        	}
+		        	setLayerSize();
+		        	
+		        });
+		        
+		        $("#controllable").click(function() {
+		        	var layerClass = $("#layer-popup").attr("class");
+		        	
+		        	if (layerClass.indexOf("layerFullScreen") != -1) {
+		        		
 		        		$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
 		        		$(".ui-resizable-handle").css("display", "");
 		        		$("#layer-popup").draggable({
 		        			disabled: false
 		        		});
-		        		
-		        		//setPanelPointer();
 		        	}
-		        	
 		        	setLayerSize();
-		        	
 		        });
 		        
 		        // 새 메모 추가 
@@ -274,20 +279,6 @@
 		    	var memoId = obj.getAttribute("memoid");
 				var afterContents = $(".memoText[memoid=" + memoId + "]").val();
 
-		 		/*if (obj.getAttribute("memoid") != null) {
-		 			
-					memoId = obj.getAttribute("memoid");
-					console.log(memoList[index].contents);
-					beforeContents = memoList[index].contents;
-					afterContents = $(".memoText[memoid=" + memoId + "]").val();
-					
-		 		}  else {
-		 			
-		 			memoId = obj.getAttribute("textareaMemoid");
-					beforeContents = memoList[index].contents;
-					afterContents = $("textarea[textareamemoid=" + memoId + "]").val();
-		 		} */
-				
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
 		 			   	type : 'POST',

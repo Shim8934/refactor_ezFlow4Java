@@ -574,7 +574,7 @@
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
-		        <li><select id="memoType" style="height: 20px; width:80px;" onchange="getMemoList('folder')"></select></li>
+		        <li><select id="memoType" style="height: 20px; width:160px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
 		        </li>
