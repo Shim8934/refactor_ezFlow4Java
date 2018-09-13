@@ -322,6 +322,11 @@ public class LoginController {
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
         	if (masteradminLogin) {
         		//접속 로그정보 저장
+        		resultVO.setIp(ClientUtil.getClientIP(request));
+    			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+    			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+    			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+    			resultVO.setTenantId(tenantId);
 				
 
 				if (resultVO.getTitle2() == null) {
