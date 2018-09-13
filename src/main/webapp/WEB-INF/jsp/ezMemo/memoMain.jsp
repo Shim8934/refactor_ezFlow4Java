@@ -272,8 +272,9 @@
                 },  
                 cache: false,
                 success: function(result) {
+                	$(".memo_add").remove();
+
                 	var memo = result["memo"];
-                	
                 	insertMemo(memo);
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
@@ -380,6 +381,10 @@
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
+		            	var memoLength = $("#boardMemoList .memoLay").length;
+		            	if (memoLength == 0) {
+		            		addEmptyMemo();
+		            	}
 		            	setMemoCount($(".memoLay").length);
 		            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		            },

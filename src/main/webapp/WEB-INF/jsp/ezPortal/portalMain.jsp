@@ -78,7 +78,7 @@
 		 		
  		 		layerResize();
 		        setGadgetPositionResize();
-		        setAddFirstMemo();
+		        emptyMemoResize();
 		 	});
 		 	
 		    $(function() {
@@ -178,7 +178,7 @@
 		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
-		        		setAddFirstMemo();
+		        		emptyMemoResize();
 		        	},
 		        	stop : function () {
 		        		
@@ -186,14 +186,13 @@
 		        	}
 		        });
 		        
-		        
 		        $("#memoMove").click(function() {
 
 		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        });
 		        
-		        // 메모 레이어 전체화면, 사이즈 조절
+		        // 메모 레이어 최대화 시
 		        $("#fullScreen").click(function() {
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
@@ -209,9 +208,10 @@
 		        		});
 		        	}
 		        	setLayerSize();
-		        	setAddFirstMemo();
+		        	emptyMemoResize();
 		        });
-		        
+		     	
+		        // 메모 레이어 이전크기 시
 		        $("#controllable").click(function() {
 		        	var layerClass = $("#layer-popup").attr("class");
 		        	
@@ -227,7 +227,7 @@
 		        		});
 		        	}
 		        	setLayerSize();
-		        	setAddFirstMemo();
+		        	emptyMemoResize();
 		        });
 		        
 		        // 새 메모 추가 
@@ -247,7 +247,6 @@
 		        });*/
 		    });
 		    
-		    
 		    // 셀렉트 박스 마우스 포인터 벗어날 경우
 		    function closeSelectInner() {
 		    	var selectInner = document.getElementById("select_inner");	    	
@@ -262,12 +261,14 @@
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
 		        	getMemoList();
-		        	setAddFirstMemo();
+		        	emptyMemoResize();
 		        });
 		    }
 		    
 		    // 모달 삭제 || 메모지 삭제
 		    function modalDelete(memoId) {
+		    	var flag = $("#layerFlag").val();
+		    	
 	    		$.ajax ({  	
 		        	url : '/ezMemo/memoDelete.do',
 		 			type : 'POST',
@@ -279,6 +280,12 @@
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
+		            	
+		            	var memoLength = $(".memo_main .memoLay").length;
+		            	if (memoLength == 0) {
+
+		            		addEmptyMemo(flag);
+		            	}
 		            	
 		            	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
@@ -525,21 +532,7 @@
 	        		});
 		 		}
 	        }
-//		    
-		    function setAddFirstMemo() {
-		    	
-		    	var mainHeight = $(".memo_main").height();
-		    	var mainWidth = $(".memo_main").width();
-		    	
-		    	var firstHeight = $("#addFirstMemo").height();
-		    	var firstWidth = $("#addFirstMemo").width();
-		    	
-		    	var top = mainHeight/2 - firstHeight/2;
-		    	var left = mainWidth/2 - firstWidth/2;
-
-		    	$("#addFirstMemo").css({"position" : "absolute", "top" : top, "left" : left})
-		    	
-		    }
+		    
 			 // 윈도우 리사이즈 시, 레이어 위치 및 사이즈 조절
 		    function layerResize() {
 		    	
@@ -763,6 +756,7 @@
 	                success: function(result) {
 	                	var memo = result["memo"];
 	                	
+	                	$("#addFirstMemo").remove();
 	                	insertMemo(memo, layerFlag);
 	                
 	                	if(window.frames["main"].frames["right"] != undefined) {			
@@ -929,7 +923,23 @@
 		        	}
 	    		});
 	    	}
-			
+		 	
+		 	// 투명한 메모 위치 세팅
+		    function emptyMemoResize() {
+		    	
+		    	var mainHeight = $(".memo_main").height();
+		    	var mainWidth = $(".memo_main").width();
+		    	
+		    	var firstHeight = $("#addFirstMemo").height();
+		    	var firstWidth = $("#addFirstMemo").width();
+		    	
+		    	var top = mainHeight/2 - firstHeight/2;
+		    	var left = mainWidth/2 - firstWidth/2;
+
+		    	$("#addFirstMemo").css({"position" : "absolute", "top" : top, "left" : left})
+		    	
+		    }
+		 	
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">

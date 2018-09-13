@@ -98,7 +98,10 @@ function loadMemoList(flag) {
 	$(".memo_add").remove();
 	$(".memo_main").html('');
 	
-	if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
+	if(memoList.length == 0) {
+		addEmptyMemo(flag);
+	}
+	/*if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
 		
 		var div = document.createElement("div");
 		div.setAttribute("class", "memo_add");
@@ -122,7 +125,7 @@ function loadMemoList(flag) {
 		div.appendChild(span);
 		
 		$(".memo_main").prepend(div);
-	}
+	}*/
 	
 	for(var i=0; i<memoList.length; i++) {
 		if ('layer' != flag) {
@@ -357,4 +360,36 @@ function memoFoldersInfo() {
 			});
 		}     			
 	});
+}
+
+// 메모 없을 때 투명한 메모 생성
+function addEmptyMemo(flag) {
+	
+	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
+		
+		var div = document.createElement("div");
+		div.setAttribute("class", "memo_add");
+		div.style.margin = "10px";
+		
+		var span = document.createElement("span");
+		span.innerHTML = strLang7;
+		
+		div.appendChild(span);
+		
+		$("#boardMemoList").parent().prepend(div);
+		
+		return;
+	} else if(flag == 'layer') {
+		var div = document.createElement("div");
+		div.setAttribute("class", "memo_add");
+		div.id = "addFirstMemo";
+		var span = document.createElement("span");
+		span.innerHTML = strLang7;
+		
+		div.appendChild(span);
+		
+		$(".memo_main").prepend(div);
+		
+		emptyMemoResize();
+	}
 }
