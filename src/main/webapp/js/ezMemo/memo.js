@@ -179,6 +179,7 @@ function addRemoveButton(memoId) {
 	var modal = document.createElement('div');
 	modal.setAttribute("class", "memoModal");
 	modal.setAttribute("id", "modal" + memoId);
+	modal.setAttribute("onclick", "$('#modal"+memoId+"').remove()");
 	
 	var alertPopup = document.createElement('div');
 	alertPopup.setAttribute("class", "alertPopup");
@@ -200,7 +201,7 @@ function addRemoveButton(memoId) {
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "modRm-wrap");
-
+	
 	var span = document.createElement("span");
 	span.setAttribute("class", "modRm");
 	span.setAttribute("id", "modRm"+memoId);

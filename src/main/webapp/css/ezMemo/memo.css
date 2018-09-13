@@ -148,3 +148,17 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
 .select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
 .select_wrapper span {display: block; width:155px; font-size:13px;}
+
+
+.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
+.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
+#slider-range{background: #7e7e7e; width:70px;float:left; margin-left:15px; height:5px; border-radius:0px; border:none;}
+.ui-widget-header {background: #d5d5d5; border:none;}
+#slider-range .ui-slider-handle {border:none; background: #0470e4; height: 15px; width: 15px; margin-top:-1px;}		
+.ui-resizable-se {background-image: url("");}
+.memoSelect{position:absolute; height:500px;}
+#memoFolderList{display:none;}
+.memoPlus{margin-left:250px;}
+.ui-widget-content {border:none; background: #727272; border-radius:0px;}
+.ui-slider-handle:active, .ui-slider-handle:hover, .ui-slider-handle:focus, .ui-slider-handle:default{background: #0470e4; height: 13px; width: 13px; margin-top:-1px; outline: none; border:none;}
+.ui-slider-horizontal, .ui-slider-range {border-radius:0px;}	
