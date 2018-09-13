@@ -133,7 +133,7 @@
 		        			success : function(result) {
 		        				
 		        				if (result.status == 1) {
-			        				getMemoList();
+			        				//getMemoList();
 			        				parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		        				}
 		        			}
