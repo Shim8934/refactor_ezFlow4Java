@@ -516,6 +516,10 @@ public class LoginController {
     	
     	String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", loginVO.getTenantId());
     	
+    	if (useIPAccess == null || useIPAccess.equals("")) {
+    		useIPAccess = "NO";
+    	}
+    	
     	if (useIPAccess.equals("NO")) {
     		logger.debug("ipAccessCheck ended");
     		return true;
