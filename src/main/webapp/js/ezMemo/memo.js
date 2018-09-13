@@ -5,7 +5,7 @@ function createMemo(memo, flag) {
 	div.id  = "memo" + memo.memo_id;
 	div.setAttribute("orders", memo.orders)
 	if(memo.display_flag == 1) {
-		div.style.opacity = 0.6;
+		div.style.opacity = 0.5;
 	}
 	
 	var dl = document.createElement("dl");
@@ -179,6 +179,7 @@ function addRemoveButton(memoId) {
 	var modal = document.createElement('div');
 	modal.setAttribute("class", "memoModal");
 	modal.setAttribute("id", "modal" + memoId);
+	modal.setAttribute("onclick", "$('#modal"+memoId+"').remove()");
 	
 	var alertPopup = document.createElement('div');
 	alertPopup.setAttribute("class", "alertPopup");
@@ -228,6 +229,10 @@ function addRemoveButton(memoId) {
 		
 	//modal.addEventListener('click', modalDelete, false);
 	$("#memo" + memoId).prepend(modal);
+	
+	$(".alertPopup").click(function(e){
+		e.stopPropagation();
+	})
 }
 
 //날짜 초기화

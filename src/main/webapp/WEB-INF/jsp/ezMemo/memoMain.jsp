@@ -415,7 +415,7 @@
 				if($(this).attr("display") == 0){
 					memo_ids.push($(this).val());
 					$(this).attr("display", "1");
-					$(this).parent().parent().attr("style", "opacity : 0.6");
+					$(this).parent().parent().attr("style", "opacity : 0.5");
 				} 
 			});
 			
