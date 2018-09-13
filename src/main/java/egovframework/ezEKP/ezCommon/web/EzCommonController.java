@@ -431,6 +431,7 @@ public class EzCommonController extends EgovFileMngUtil{
 					literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 				}
 				
+				/* 2018-09-13 홍승비 - 사원 정보 보기 시 담당업무 자기소개 특수문자 처리 */
 				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 				literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 				literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
@@ -440,7 +441,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
 				literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
 				literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
-				literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
+				literalInfo = commonUtil.cleanValue(xmldom.getElementsByTagName("INFO").item(0).getTextContent());
 			}
 		} else {
 			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
