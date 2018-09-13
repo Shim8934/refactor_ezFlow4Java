@@ -811,7 +811,7 @@
 	                	memoList = result["memoList"];
 	                	layer = result["layerFlag"];
 	                	
-						loadMemoList(layer);
+						loadMemoList(layerFlag);
 						
 					    addremove();
 					    
