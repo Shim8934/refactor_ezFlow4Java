@@ -428,17 +428,19 @@ function MakeListInfoHTML(ConentObject) {
                     }
                     _TR.appendChild(_TDColum);
                     
-                    // 180514 보낸사람 클릭 시 메일 작성
-                    if (ssNodeValue == "sender" && useMailWriteSenderClick == "YES") { 
+                 // 180514 보낸사람 클릭 시 메일 작성
+                    if (ssNodeValue == "sender" ) { 
                     	var _TDColumSpan = document.createElement("span");
-
                     	_TDColumSpan.style.padding = "7px 0";
-                        _TDColumSpan.innerHTML = innerHTML;
-                        _TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
-                        _TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
-                        
-                        _TR.lastChild.innerHTML = "";
-                        _TR.lastChild.appendChild(_TDColumSpan);
+                    	_TDColumSpan.innerHTML = innerHTML;
+                    	
+                    	if(useMailWriteSenderClick == "YES") {
+                    		_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                    		_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    	}
+                    	
+                    	_TR.lastChild.innerHTML = "";
+                    	_TR.lastChild.appendChild(_TDColumSpan);
                     }
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
