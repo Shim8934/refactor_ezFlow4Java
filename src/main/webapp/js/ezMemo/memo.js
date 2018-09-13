@@ -287,7 +287,7 @@ function addremove() {
 		e = e || event;
 		var goingto = e.relatedTarget || e.toElement;
 		if (!goingto || goingto.className != "color_popup") {
-			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); //메뉴에서 마우스가 빠질때 마우스가 이동한 영역이 서브메뉴가 아니라면 서브메뉴 감추고
+			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
 		}
 	});
 	
@@ -300,6 +300,7 @@ function addremove() {
    		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
    		var obj = $(this).parent().parent();
    		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
+   		$(this).parent().css("visibility", "hidden");
    });
    
     $(".saveBtn").click(function(){
