@@ -167,7 +167,11 @@
 	            ListTypeChangeIcon();
 	
 	            if (ReturnFunction == null)
-	                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	if (CrossYN()) {
+                        g_fnaddReceiver = opener.addReceiver;
+	            	} else {
+		                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	}
 	            try {
 	                var xmlpara = createXmlDom();
 	                var xmlTree = createXmlDom();

@@ -3084,4 +3084,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void moveRecord2(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.moveRecord2", map);
 	}
+
+	public String getDocSendType(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocSendType", map);
+	}
 }

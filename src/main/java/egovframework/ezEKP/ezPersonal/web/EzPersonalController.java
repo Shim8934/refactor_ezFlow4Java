@@ -975,11 +975,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			radBirthType2 = messageSource.getMessage("ezPersonal.t2002", locale);
 		}*/
 		
+		/* 2018-09-13 홍승비 - 개인정보관리 담당업무 자기소개 특수문자 처리 */
 		String pInfo = xmlDom.getElementsByTagName("INFO").item(0).getTextContent();
-		pInfo = pInfo.replace("&quot;", "\"");
-		pInfo = pInfo.replace("&gt;", ">");
-		pInfo = pInfo.replace("&lt;", "<");
-		pInfo = pInfo.replace("&amp;", "&");
+		pInfo = commonUtil.cleanValue(pInfo);
 		
 		if (xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
 			literalPhoto = "<img id=myimg " + messageSource.getMessage("ezPersonal.i1",locale) + ">";

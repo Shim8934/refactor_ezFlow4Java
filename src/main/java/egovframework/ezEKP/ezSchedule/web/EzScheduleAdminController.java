@@ -218,6 +218,7 @@ public class EzScheduleAdminController {
 		model.addAttribute("primary", primary);
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("lang", userInfo.getLang());
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}
