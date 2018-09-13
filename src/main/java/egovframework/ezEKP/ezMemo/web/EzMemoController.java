@@ -247,8 +247,8 @@ public class EzMemoController {
 		logger.debug("memoWrite ended");	
 		
 		if (status.equals("ok")) {		
-			int memoId = Integer.parseInt(resultBody.get("memoId").toString());
-			model.addAttribute("memoId", memoId);
+			JSONObject memo = (JSONObject) resultBody.get("memo");
+			model.addAttribute("memo", memo);
 			if (layerFlag != null) {
 				model.addAttribute("layerFlag", layerFlag);
 			}

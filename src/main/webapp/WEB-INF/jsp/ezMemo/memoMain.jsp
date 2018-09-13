@@ -272,9 +272,10 @@
                 },  
                 cache: false,
                 success: function(result) {
-                	var memoId = result["memoId"];
+                	var memo = result["memo"];
                 	
-                	getMemoList("new");
+                	insertMemo(memo);
+                	//getMemoList("new");
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {

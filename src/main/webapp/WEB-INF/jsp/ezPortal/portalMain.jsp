@@ -741,9 +741,10 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	var memoId = result["memoId"];
+	                	var memo = result["memo"];
 	                	
-	                	getMemoList("new");
+	                	insertMemo(memo, layerFlag);
+	                	//getMemoList("new");
 	                
 	                	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
