@@ -7,7 +7,7 @@
 
 /* .memo_wrap{ margin:0px; padding:10px 25px 10px 20px; box-sizing:border-box; overflow:hidden; background:rgba(0, 0, 0, 0.30);}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
-.memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; text-align:center; z-index: 1001; overflow:hidden; height: 50%;}
+.memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; z-index: 1001; overflow:hidden; height: 50%;}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
 .memoHeaderUL{ margin: 10px 4px 9px 9px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
@@ -98,7 +98,7 @@ select::-ms-expand {
 .memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point06.png) no-repeat;}
 .memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.color_popup{ margin:0px; padding:6px; list-style:none; width:86px; height:63px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:38px; top:34px; background:#fff;}
+.color_popup{ margin:10px; padding:6px; list-style:none; width:86px; height:63px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:38px; top:34px; background:#fff;}
 .color_popup li{ margin:2px; padding:0px; width:18px; height:18px; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; float:left; cursor:pointer;}
 .color_popup li.color01{background:#f0e468; border:1px solid #e2d657;}
 .color_popup li.color02{background:#5feab0; border:1px solid #54e2a7;}
