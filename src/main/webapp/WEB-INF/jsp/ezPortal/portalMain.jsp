@@ -826,9 +826,6 @@
 	                	layer = result["layerFlag"];
 	                	
 						loadMemoList(layer);
-						
-					    addremove();
-					    
 				    	setMemoListSize();
 				     }
 				});

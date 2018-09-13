@@ -236,7 +236,6 @@
                 	
 					loadMemoList();
 					setMemoCount(memoList.length);
-				    addremove();
 			     },
 	             error : function() {
 	                	
