@@ -78,6 +78,7 @@
 		 		
  		 		layerResize();
 		        setGadgetPositionResize();
+		        setAddFirstMemo();
 		 	});
 		 	
 		    $(function() {
@@ -177,6 +178,7 @@
 		        	minHeight: 380,
 		        	resize : function() {
 		        		setMemoListSize();
+		        		setAddFirstMemo();
 		        	},
 		        	stop : function () {
 		        		
@@ -207,7 +209,7 @@
 		        		});
 		        	}
 		        	setLayerSize();
-		        	
+		        	setAddFirstMemo();
 		        });
 		        
 		        $("#controllable").click(function() {
@@ -219,11 +221,13 @@
 		        		
 		        		$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
 		        		$(".ui-resizable-handle").css("display", "");
+		        		
 		        		$("#layer-popup").draggable({
 		        			disabled: false
 		        		});
 		        	}
 		        	setLayerSize();
+		        	setAddFirstMemo();
 		        });
 		        
 		        // 새 메모 추가 
@@ -249,6 +253,7 @@
 		        	$("select option:selected").val();
 		        	$("select").val(event.target.id).prop("selected", true);
 		        	getMemoList();
+		        	setAddFirstMemo();
 		        });
 		    }
 		    
@@ -316,8 +321,8 @@
 	    		
 		    	if (layerClass.indexOf("layerFullScreen") != -1) {
 		    		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
-		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-112});
-		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-40});
+		    		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-130});
+		    		$(".memo_main").css({"width" : winWidth, "height" : winHeight-150});
 		    		$("#layer-popup").css({"height" : winHeight-45});
 
 		    	} else if (layerClass.indexOf("layerControl") != -1) {
@@ -511,7 +516,21 @@
 	        		});
 		 		}
 	        }
-		    
+//		    
+		    function setAddFirstMemo() {
+		    	
+		    	var mainHeight = $(".memo_main").height();
+		    	var mainWidth = $(".memo_main").width();
+		    	
+		    	var firstHeight = $("#addFirstMemo").height();
+		    	var firstWidth = $("#addFirstMemo").width();
+		    	
+		    	var top = mainHeight/2 - firstHeight/2;
+		    	var left = mainWidth/2 - firstWidth/2;
+
+		    	$("#addFirstMemo").css({"position" : "absolute", "top" : top, "left" : left})
+		    	
+		    }
 			 // 윈도우 리사이즈 시, 레이어 위치 및 사이즈 조절
 		    function layerResize() {
 		    	
@@ -526,6 +545,7 @@
 	        	
 	        	var width = parseInt($("#layer-popup").width());
 	        	var height = parseInt($("#layer-popup").height());
+	        	
 	        	var left = parseInt(stringLeft.substr(0, pIndex));
 	        	var top = parseInt(stringTop.substr(0, pIndex));
 	        	
@@ -534,47 +554,52 @@
 	        	if (layerClass.indexOf("layerControl") != -1) {
 		        	
 		        	if (height > windowHeight) {
-		        		
-		        		height = windowHeight - 30;
-		        		$("#layer-popup").css("height", height + "px");
-		        		$(".memoListBox").css("height", height - 35 + "px");
-		        		$(".memo_main").css("height", height - 35 + "px");
+		        		if (height > 380) {
+		        			
+			        		height = windowHeight - 30;
+			        		$("#layer-popup").css("height", height);
+			        		$(".memoListBox").css("height", height - 90);
+			        		$(".memo_main").css("height", height - 90);
+		        		}
 		        	}
 		        	
 		        	if (width > windowWidth) {
-		        		width = windowWidth - 30;
-		        		$("#layer-popup").css("width", width + "px");
-		        		$(".memoListBox").css("width", width + "px");
-		        		$(".memo_main").css("width", width + "px");
+		        		if (width > 340) {
+		        			
+			        		width = windowWidth - 30;
+			        		$("#layer-popup").css("width", width);
+			        		$(".memoListBox").css("width", width);
+			        		$(".memo_main").css("width", width);
+		        		}
 		        	}
 		        	
-	        		var leftZero;
+	        		var leftPosition;
 	        		
 		        	if (windowWidth > width) {
-		        		leftZero = windowWidth - width;
+		        		leftPosition = windowWidth - width - 10;
 		        	}
 		        	
-		        	var bottomZero;
+		        	var bottomPosition;
 		        	
 		        	if (windowHeight > height) {
-		        		bottomZero = windowHeight - height;
+		        		bottomPosition = windowHeight - height - 10;
 		        	}
 		        	
 	        		if (top > windowHeight) {
-	        			$("#layer-popup").css("top", bottomZero - 10);
+	        			$("#layer-popup").css("top", bottomPosition);
 	        			
 	        		} else if (top < windowHeight) {
 	        			if (top + height > windowHeight) {
-	        				$("#layer-popup").css("top", bottomZero - 10);
+	        				$("#layer-popup").css("top", bottomPosition);
 	        			}
 	        		}
 	        		
 		        	if (left > windowWidth) {
-		        		$("#layer-popup").css("left", leftZero - 10);
+		        		$("#layer-popup").css("left", leftPosition);
 		        		
 		        	} else if (left < windowWidth) {
 		        		if (left + width > windowWidth) {
-			        		$("#layer-popup").css("left", leftZero - 10);
+			        		$("#layer-popup").css("left", leftPosition);
 			        		
 		        		 }
 		        	}
@@ -584,21 +609,14 @@
 	    		
 	        	} else if (layerClass.indexOf("layerFullScreen") != -1) {
 	        		
-	        		$("#layer-popup").css("width", windowWidth + "px");
-		        	$("#layer-popup").css("height", windowHeight-56 + "px");
+	        		$("#layer-popup").css("width", windowWidth);
+		        	$("#layer-popup").css("height", windowHeight-56);
 		        	
-		        	$(".memoListBox").css("height", windowHeight-56-50-16 + "px");
-	        		$(".memo_main").css("height", windowHeight-56+ "px");
-
-	        		$(".memoListBox").css("width", windowWidth + "px");
-	        		$(".memo_main").css("width", windowWidth + "px");
+		        	$(".memoListBox").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
+					$(".memo_main").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
 		 		}
 		    }
 			 
-		    function fullScreenLayerResize() {
-		    	
-		    }
-		    
 		    // 퀵메모 버튼 변경된 위치 저장 (단, display가 none이 아닐 때)
 		    function setGadgetPosition() {
 				var gadgetStatus = $("#open-memo").css("display");
@@ -641,10 +659,8 @@
 		    	
 		    	var gadgetBottom = memoConfigVO.gadget_bottom;
 		    	var gadgetRight = memoConfigVO.gadget_right;
-		    	
-		    	$("#open-memo").css("bottom", gadgetBottom + "px");
-		    	$("#open-memo").css("right", gadgetRight + "px");
-		    	
+
+		    	$("#open-memo").css({"bottom" : gadgetBottom, "right" : gadgetRight})
 		    }
 		    
 		    // 윈도우 리사이즈 시, 퀵메모 위치 변경 
@@ -816,8 +832,8 @@
 			    var layerWidth = $("#layer-popup").width();
 			    var memoListHeight = layerHeight - 56;
 
-			    $(".memoListBox").css({"height" : memoListHeight, "width" : layerWidth});
-			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight});
+			    $(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
+			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight-20});
 			    
 		    }
 		    
