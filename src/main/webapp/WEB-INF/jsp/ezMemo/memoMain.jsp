@@ -272,9 +272,9 @@
                 },  
                 cache: false,
                 success: function(result) {
-                	var memoId = result["memoId"];
+                	var memo = result["memo"];
                 	
-                	getMemoList("new");
+                	insertMemo(memo);
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
@@ -297,8 +297,6 @@
                 },  
                 cache: false,
                 success: function(result) {
-                	defaultColor = idx;
-                	getMemoList();
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
@@ -322,7 +320,6 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	getMemoList();
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {
@@ -354,7 +351,10 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	getMemoList();
+	                	$(":checkbox[name=memo]:checked").each(function(){
+	                		$("#memo"+$(this).val()).remove();
+	        			});
+	                	setMemoCount($(".memoLay").length);
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {
@@ -574,7 +574,7 @@
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
-		        <li><select id="memoType" style="height: 20px; width:80px;" onchange="getMemoList('folder')"></select></li>
+		        <li><select id="memoType" style="height: 20px; width:175px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
 		        </li>

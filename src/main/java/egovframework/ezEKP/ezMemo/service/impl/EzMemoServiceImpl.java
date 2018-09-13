@@ -140,7 +140,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		return memoList;
 	}
 	
-	public int memoWrite(MemoVO memo) throws Exception {
+	public MemoVO memoWrite(MemoVO memo) throws Exception {
 		logger.debug("memoWrite started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -152,13 +152,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("color_id", memo.getColor_id());
 
 		int orders = ezMemoDAO.getMaxOrder(map);
-		
 		map.put("orders", orders);
 		
 		int memoId = ezMemoDAO.insertMemo(map);
+		map.put("memo_id", memoId);
+		
+		MemoVO newMemo = ezMemoDAO.getMemo(map);
 		
 		logger.debug("memoWrite ended.");
-		return memoId;
+		return newMemo;
 	}
 
 	@Override

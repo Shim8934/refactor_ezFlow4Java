@@ -504,10 +504,10 @@ public class EzMemoGWController {
 				memoVO.setFolder_id(ezMemoService.getMemoDefaultFolder(memoFolderVO));
 			}
 			
-			int memoId = ezMemoService.memoWrite(memoVO);
+			MemoVO memo = ezMemoService.memoWrite(memoVO);
 			
 			result.put("status", "ok");
-			result.put("memoId", memoId);
+			result.put("memo", memo);
 		} catch(Exception e) {
 			result.put("status", "error");
 		}
