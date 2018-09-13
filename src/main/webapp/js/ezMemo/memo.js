@@ -81,6 +81,9 @@ function createMemo(memo, flag) {
 }
 
 function insertMemo(memo, layerFlag) {
+	
+	$(".memo_add").remove();
+	
 	var div = createMemo(memo, layerFlag);
 	
 	if (layerFlag == 'layer') {

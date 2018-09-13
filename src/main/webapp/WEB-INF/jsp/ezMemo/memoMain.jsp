@@ -267,6 +267,7 @@
 			}
 		}
 		
+		// 메모 추가
 		function newMemo() {
 			$.ajax ({
  			   	url : '/ezMemo/memoWrite.do',
@@ -281,6 +282,7 @@
 
                 	var memo = result["memo"];
                 	insertMemo(memo);
+                	setMemoCount($(".memoLay").length);
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
@@ -360,7 +362,11 @@
 	                	$(":checkbox[name=memo]:checked").each(function(){
 	                		$("#memo"+$(this).val()).remove();
 	        			});
-	                	setMemoCount($(".memoLay").length);
+	        			var memoLength = $("#boardMemoList .memoLay").length;
+		            	if (memoLength == 0) {
+		            		addEmptyMemo();
+		            	}
+	                	setMemoCount(memoLength);
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {
@@ -390,7 +396,7 @@
 		            	if (memoLength == 0) {
 		            		addEmptyMemo();
 		            	}
-		            	setMemoCount($(".memoLay").length);
+		            	setMemoCount(memoLength);
 		            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		            },
 		            error : function() {
