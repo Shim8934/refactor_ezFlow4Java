@@ -77,8 +77,6 @@ function createMemo(memo, flag) {
 	div.appendChild(textarea);
 	div.appendChild(ul);
 	
-	addremove();
-	
 	return div;
 }
 

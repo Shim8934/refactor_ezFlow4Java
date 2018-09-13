@@ -80,6 +80,7 @@
 		    	memoFoldersInfo();
 	    		checkMemoConfig();
 	    		getMemoList();
+	    		addremove();			// 메모지 이벤트 추가
 
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
@@ -752,6 +753,7 @@
 	                	
 	                	$("#addFirstMemo").remove();
 	                	insertMemo(memo, layerFlag);
+	                	addremove();
 	                
 	                	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
