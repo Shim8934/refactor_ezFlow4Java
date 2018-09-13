@@ -6,7 +6,7 @@ function copy() {
 
 function copyToClip() {
 	if(content === "") {
-		alert(strLang1);
+		alert(strLangMemo1);
 		return;
 	}
 	var tempTextArea = document.createElement('textarea');
@@ -19,7 +19,7 @@ function copyToClip() {
 
 function copyToMemo() {
 	if(content === "") {
-		alert(strLang1);
+		alert(strLangMemo1);
 		return;
 	}
 
@@ -31,10 +31,10 @@ function copyToMemo() {
 		data : {
 			"contents" : content
 		}, success: function() {
-			alert(strLang2);
+			alert(strLangMemo2);
 			parent.opener.parent.parent.getMemoList();
 		}, error: function(err) {
-			alert(strLang3);
+			alert(strLangMemo3);
 		}
 	});		
 }

@@ -40,11 +40,11 @@
 				    if (typeof(window.parent.g_rejectWord) == "string") {
 				        window.parent.g_rejectWord = g_rejectWord;
 				    }
-				    /* 마우스 오른쪽 메뉴 변수 */
-					var conObject = document.getElementById("context-menus");
 					sizeBtnAppend();
 					sentDateView();
 					
+					/* 마우스 오른쪽 메뉴 변수 */
+					var conObject = document.getElementById("context-menus");
 					init();
 					
 					/* 마우스 클릭 리스너를 초기 실행시킨다. */
@@ -121,7 +121,7 @@
 				}
 				
 				function btnPrint_onClick() {
-			        window.self.focus();	
+			        window.open.focus();	
 			        window.self.print();
 				}
 				
@@ -446,7 +446,7 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 		<!-- 마우스 오른쪽 메뉴 -->
 	  	<div id="context-menus" class="context-menus">
-	   		<table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
+	   		<table cellpadding="2" cellspacing="1" border="0" style="width:150px;" class="popuplist">
 	   			<tr>
 	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextCopy.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0060' /></span></td>
 	      		</tr>
