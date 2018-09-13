@@ -8,9 +8,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.text.SimpleDateFormat;
 
 import org.json.simple.JSONObject;
@@ -61,6 +63,9 @@ public class EzWebFolderGWController_y {
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private Properties globals;
 	
 	/**
 	 * root 폴더 존재 여부 확인 - 존재하지 않을 경우 생성
@@ -376,17 +381,26 @@ public class EzWebFolderGWController_y {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
 	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request)  {
-		LOGGER.debug("fileList method start ");
+		LOGGER.debug("fileList method started");
+		
 		JSONObject jsonObj = new JSONObject();
 		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
 		String userId = request.getParameter("userId");
 		String searchExt = request.getParameter("searchExt")			 	!= null ? request.getParameter("searchExt") 		: "" ;
 		String searchFileName = request.getParameter("searchFileName") 		!= null ? request.getParameter("searchFileName")	: "" ;
+		String searchFileType = request.getParameter("searchFileType") 		!= null ? request.getParameter("searchFileType") 	: "" ;
+		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	: "" ;
 		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
-		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	: "" ;
-		String searchFileType = request.getParameter("searchFileType") 		!= null ? request.getParameter("searchFileType") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
+		
+		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);
+		
+		LOGGER.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName);
+		LOGGER.debug("searchFileType : " + searchFileType + " || searchCreateName : " + searchCreateName);
 		
 		int totalCount = request.getParameter("totalCount") 				!= null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
 		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
@@ -394,6 +408,7 @@ public class EzWebFolderGWController_y {
 		
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		JSONObject data = new JSONObject();
+		
 		if (folderId.equals("") || userId.equals("") ) {
 			LOGGER.debug("Parameter error!");
 			jsonObj.put("status", "error");
@@ -433,7 +448,7 @@ public class EzWebFolderGWController_y {
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset , primary);
 			
-			LOGGER.debug("fileListSize : " + cnt + ", searchStartDate" +searchStartDate+", searchEndDate"+searchEndDate );
+			LOGGER.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
 			
 			int fileCnt = cnt.get("fileTotalCnt");
 			int fldCnt  = cnt.get("fldTotalCnt");
@@ -455,6 +470,7 @@ public class EzWebFolderGWController_y {
 			fileList = service.getFileList(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary);
+			
 			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
 			
@@ -502,8 +518,11 @@ public class EzWebFolderGWController_y {
 					}
 				}
 			}
+			
 			FolderVO fldDetail = service.getFolderDetail(folderId, userId, tenantId, comId);
+			
 			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
+			
 			data.put("folderUpp", fldDetail.getFolderUpper());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
@@ -518,6 +537,7 @@ public class EzWebFolderGWController_y {
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
 			jsonObj.put("data", data);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.debug(" fail ");
@@ -525,7 +545,8 @@ public class EzWebFolderGWController_y {
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
 		}
-		LOGGER.debug("fileList method start ");
+		
+		LOGGER.debug("fileList method ended");
 		return jsonObj;
 	}
 	

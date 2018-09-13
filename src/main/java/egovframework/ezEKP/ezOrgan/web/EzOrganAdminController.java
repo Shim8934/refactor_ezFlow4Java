@@ -118,6 +118,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+    
+    @Autowired
+	private Properties globals;
 
     @PostConstruct
 	public void init() throws Exception {
@@ -940,11 +943,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
 		String adminPassword = userCookieInfo.get(1);
         
-        int tenantID = userInfo.getTenantId();        
+        int tenantID = userInfo.getTenantId();
+        String offset = userInfo.getOffset();
         
         String cnList = request.getParameter("cn");
         
-        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
+        logger.debug("tenantID=" + tenantID + ",offset=" + offset +",cnList=" + cnList);
         	    
 		String cn[] = cnList.split(",");
 		String result = "OK";
@@ -976,7 +980,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
 					try {
 						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
-						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID);
+						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID, offset);
 					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);
@@ -2334,22 +2338,47 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-        int tenantID = user.getTenantId();        
+   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+   		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+
+   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+   		
+   		logger.debug("retireUserManage ended");
+   		
+		return "admin/ezOrgan/retireUserManage";
+	}	
+	
+	/**
+	 * 조직도관리 퇴직자 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getRetireUserList.do")	
+	public String getRetireUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("getRetireUserList started");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+        int tenantID = user.getTenantId(); 
+        String strLang = user.getPrimary();
+        String offset = user.getOffset();
         
-        logger.debug("tenantID=" + tenantID);
+        logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
 		
-		String strLang = user.getPrimary();
 		int pPageRow = 20;
-   		int pPage = 1;
+   		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
+   		String searchStartDate = (request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "");
+   		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");
+   		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
+   		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
    		
-   		if (request.getParameter("page") != null) {
-   			pPage = Integer.parseInt(request.getParameter("page"));
-   		}
+   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
-   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		
-   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID);
-   		int totalPage = 0;
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
+   		int totalPage = 1;
    		
 		if (totalCount > 0) {
 			if (totalCount > pPageRow) {
@@ -2358,33 +2387,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (totalCount % pPageRow != 0) {
 				    totalPage++;
 				}
-			} else {
-				totalPage = 1;
 			}
-		} else {
-			totalPage = 1;
 		}
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID);
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, offset, searchStartDate, searchEndDate, searchKeycode, searchKeyword);
 		
-		model.addAttribute("lang", strLang);
+   		model.addAttribute("lang", strLang);
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
    		model.addAttribute("totalCount", totalCount);
-   		model.addAttribute("pPageRow", pPageRow);
 		
-   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
-   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+   		logger.debug("getRetireUserList ended");
    		
-		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
-		model.addAttribute("dotNetIntegration", dotNetIntegration);
-   		
-   		logger.debug("retireUserManage ended");
-   		
-		return "admin/ezOrgan/retireUserManage";
+		return "json";
 	}	
 	
 	/**
@@ -2404,10 +2422,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
         
         int tenantID = userInfo.getTenantId();        
-        
         String cnList = request.getParameter("cn");
+        String offset = userInfo.getOffset();
         
-        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
+        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList + ",offset=" + offset);
 	    
 		String deptID = request.getParameter("deptID");
 		String[] cn = cnList.split(",");
@@ -2439,7 +2457,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc == 0) { // updateGroupAdd 성공
 					try {
 						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
-						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID);
+						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID, offset);
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.retireUser(mailAddr);

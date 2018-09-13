@@ -81,25 +81,25 @@
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
 				<![CDATA[
-					(LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%'))
+					(LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%') ESCAPE '\')
 				]]>
 			</isNotEqual>
 			
 			<isNotEqual property="fileName" compareValue="" prepend="AND">
 				<![CDATA[
-					l.FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
+					l.FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%') ESCAPE '\'
 				]]>
 			</isNotEqual>
 			
 			<isNotEqual property="userName" compareValue="" prepend="AND">
 				<isEqual property="primary" compareValue="1">
 					<![CDATA[
-						l.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
+						l.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%') ESCAPE '\'
 					]]>
 				</isEqual>
 				<isEqual property="primary" compareValue="2">
 					<![CDATA[
-						l.CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
+						l.CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%') ESCAPE '\'
 					]]>
 				</isEqual>
 			</isNotEqual>

@@ -148,6 +148,9 @@ public class EzEmailMailSearchController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("searchCheck", request.getParameter("searchCheck"));
+		model.addAttribute("keywordFromList", request.getParameter("keywordFromList"));
+		model.addAttribute("searchFromList", request.getParameter("searchFromList"));
 		
 		logger.debug("mailSearchView ended.");
 		

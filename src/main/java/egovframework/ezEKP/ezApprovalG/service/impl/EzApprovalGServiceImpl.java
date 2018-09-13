@@ -22782,49 +22782,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String deptID = xmlDom.getElementsByTagName("DEPTID").item(0).getTextContent();
-		String companyID =xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		int WCount = 0;
 		boolean rtn = true;
-		for( int i=0; i<xmlDom.getElementsByTagName("RECEIPTPOINTID").getLength(); i++ ) {
-			if( xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent().toUpperCase().trim().equals("W")) {
-				Map<String , Object> map = new HashMap<String, Object>();
-	        	map.put("v_DOCID", docID);
-	        	map.put("v_TENANTID", tenantID);
-	        	map.put("companyID", companyID);
-	        	map.put("v_RECEIPTPOINTID", xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent());
-	        	map.put("v_RECEIPTPOINTNAME", xmlDom.getElementsByTagName("RECEIPTPOINTNAME").item(i).getTextContent());
-	        	map.put("v_RECEIPTPOINTNAME2", xmlDom.getElementsByTagName("RECEIPTPOINTNAME2").item(i).getTextContent());
-	        	map.put("v_EXTRECEPTYN", xmlDom.getElementsByTagName("EXTRECEPTYN").item(i).getTextContent());
-	        	map.put("v_PROCESSYN", xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent());
-	        	map.put("v_PROCESSSN", xmlDom.getElementsByTagName("PROCESSSN").item(i).getTextContent());
-	        	map.put("v_CANEDITYN", xmlDom.getElementsByTagName("CANEDITYN").item(i).getTextContent());
-	        	map.put("v_EXTRECEPTEMAIL", xmlDom.getElementsByTagName("EXTRECEPTEMAIL").item(i).getTextContent());
-	        	map.put("v_RECEIPTMEMBERID", xmlDom.getElementsByTagName("RECEIPTMEMBERID").item(i).getTextContent());
-	        	map.put("v_RECEIPTMEMBERNAME", xmlDom.getElementsByTagName("RECEIPTMEMBERNAME").item(i).getTextContent());
-	        	map.put("v_RECEIPTMEMBERNAME2", xmlDom.getElementsByTagName("RECEIPTMEMBERNAME2").item(i).getTextContent());
-	        	map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-	        	map.put("v_RECEIPTMEMBERJOBTITLE", xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(i).getTextContent());
-	        	map.put("v_RECEIPTMEMBERJOBTITLE2", xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(i).getTextContent());
-	        	map.put("v_DEPTMEMBERSN", xmlDom.getElementsByTagName("DEPTMEMBERSN").item(i).getTextContent());
+		for (int i = 0; i < xmlDom.getElementsByTagName("RECEIPTPOINTID").getLength(); i++) {
+			if (xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent().toUpperCase().trim().equals("W")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("v_DOCID", docID);
+				map.put("v_TENANTID", tenantID);
+				map.put("companyID", companyID);
+				map.put("v_RECEIPTPOINTID", xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent());
+				map.put("v_RECEIPTPOINTNAME", xmlDom.getElementsByTagName("RECEIPTPOINTNAME").item(i).getTextContent());
+				map.put("v_RECEIPTPOINTNAME2", xmlDom.getElementsByTagName("RECEIPTPOINTNAME2").item(i).getTextContent());
+				map.put("v_EXTRECEPTYN", xmlDom.getElementsByTagName("EXTRECEPTYN").item(i).getTextContent());
+				map.put("v_PROCESSYN", xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent());
+				map.put("v_PROCESSSN", xmlDom.getElementsByTagName("PROCESSSN").item(i).getTextContent());
+				map.put("v_CANEDITYN", xmlDom.getElementsByTagName("CANEDITYN").item(i).getTextContent());
+				map.put("v_EXTRECEPTEMAIL", xmlDom.getElementsByTagName("EXTRECEPTEMAIL").item(i).getTextContent());
+				map.put("v_RECEIPTMEMBERID", xmlDom.getElementsByTagName("RECEIPTMEMBERID").item(i).getTextContent());
+				map.put("v_RECEIPTMEMBERNAME", xmlDom.getElementsByTagName("RECEIPTMEMBERNAME").item(i).getTextContent());
+				map.put("v_RECEIPTMEMBERNAME2", xmlDom.getElementsByTagName("RECEIPTMEMBERNAME2").item(i).getTextContent());
+				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+				map.put("v_RECEIPTMEMBERJOBTITLE", xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(i).getTextContent());
+				map.put("v_RECEIPTMEMBERJOBTITLE2", xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(i).getTextContent());
+				map.put("v_DEPTMEMBERSN", xmlDom.getElementsByTagName("DEPTMEMBERSN").item(i).getTextContent());
 
 				ezApprovalGDAO.deleteReSendEndReceiptPointInfo(map);
 				ezApprovalGDAO.insertReSendEndReceiptPointInfo(map);
-//				strSQL2.append(xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent()) + ";'\n");
+				
 				WCount++;
 			}
 		}
-		
-		if( WCount <= 0 ) {
+
+		if (WCount <= 0) {
 			return "<RESULT>TRUE</RESULT>";
 		}
-		
+
 		if (rtn) {
 			strSQL = doReSendEndDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, tenantID);
 		} else {
 			return "<RESULT>FALSE</RESULT>";
 		}
 
-		if( strSQL.equals("FALSE") ) {
+		if (strSQL.equals("FALSE")) {
 			return "<RESULT>FALSE</RESULT>";
 		} else {
 			return "<RESULT>TRUE</RESULT>";
@@ -22835,206 +22835,176 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	// 완료문서 Table을 가지고 재발송하는 함수. 발송 부분의 쿼리만 리턴한다.
 	// pDeptID : 보내는 부서, pDocState 문서의 DocState.
 	private String doReSendEndDoc(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
-        boolean rtnVal = true;
-        Document receiptXML =null;
-        Map<String,Object> map = new HashMap<String, Object>();
-        map.put("v_DOCID", docID);
-        map.put("companyID", companyID);
-        map.put("v_TENANTID", tenantID);
+		Document receiptXML = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 
-        List<ApprGReceiptVO> docList2 = ezApprovalGDAO.doResendEndDoc1(map);
-        StringBuffer sb = new StringBuffer();
-        sb.append("<DATA>");
-       
-        for (int i = 0; i < docList2.size(); i++) {
-       	   sb.append(commonUtil.getQueryResult(docList2.get(i)));
+		List<ApprGReceiptVO> docList2 = ezApprovalGDAO.doResendEndDoc1(map);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+
+		for (int i = 0; i < docList2.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList2.get(i)));
 		}
-		   sb.append("</DATA>");
-		
-		   Document docXML2 = commonUtil.convertStringToDocument(sb.toString());
-		   
-		for(int k=0; k<docXML2.getElementsByTagName("ROW").getLength(); k++) {
+		sb.append("</DATA>");
+
+		Document docXML2 = commonUtil.convertStringToDocument(sb.toString());
+
+		for (int k = 0; k < docXML2.getElementsByTagName("ROW").getLength(); k++) {
 			map.put("v_RECEIPTPOINTID", docXML2.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent());
-			map.put("v_DEPTMEMBERSN", k+1 );
-			
-	        ezApprovalGDAO.doResendEndDoc2(map);
+			map.put("v_DEPTMEMBERSN", k + 1);
+
+			ezApprovalGDAO.doResendEndDoc2(map);
 		}
-		
-        List<ApprGReceiptVO> docList = ezApprovalGDAO.doResendEndDoc3(map);
-        StringBuffer sb2 = new StringBuffer();
-        sb2.append("<DATA>");
-       
-        for (int i = 0; i < docList.size(); i++) {
-       	   sb2.append(commonUtil.getQueryResult(docList.get(i)));
+
+		List<ApprGReceiptVO> docList = ezApprovalGDAO.doResendEndDoc3(map);
+		StringBuffer sb2 = new StringBuffer();
+		sb2.append("<DATA>");
+
+		for (int i = 0; i < docList.size(); i++) {
+			sb2.append(commonUtil.getQueryResult(docList.get(i)));
 		}
-		   sb2.append("</DATA>");
-		
-		   Document docXML = commonUtil.convertStringToDocument(sb2.toString());
-		   
-		   boolean isGroup = false;
-		   int GroupCount = 0;
-		   
-		   String strReceiptPointID = "";
-		   String strReceiptPointName = "";
-           // 2010.08.03 다국어 
-		   String strReceiptPointName2 = "";
-		   String strReceiptMemberID = "";
-		   String strReceiptMemberName = "";
-           // 2010.08.03 다국어 
-		   String strReceiptMemberName2 = "";
-		   String strReceiptMemberJobTitle = "";
-           // 2010.08.03 다국어 
-		   String strReceiptMemberJobTitle2 = "";
-		   String strReceiptCompanyID = "";
-		   String SusinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
-		   
-		   for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++) {
-			   strReceiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
-               strReceiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
-               strReceiptPointName2 = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME2").item(j).getTextContent());
-			   strReceiptMemberID = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERID").item(j).getTextContent());
-               strReceiptMemberName = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(j).getTextContent());
-               strReceiptMemberName2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(j).getTextContent());
-               strReceiptMemberJobTitle = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(j).getTextContent());
-               strReceiptMemberJobTitle2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(j).getTextContent());
-			   strReceiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
-			   isGroup = false;
-			   GroupCount = 1;
-				if( strReceiptPointID.indexOf(SusinGroupIcon.trim()) > -1) {
-					map.put("v_MAINID", strReceiptPointID.substring(SusinGroupIcon.length() , strReceiptPointID.length() - SusinGroupIcon.length()));
-                    List<ApprGRecordVO> rList = ezApprovalGDAO.doSendDoc_ReceiptGroupSub(map);
+		sb2.append("</DATA>");
 
-                    StringBuffer sb3 = new StringBuffer();
-                    sb3.append("<DATA>");
-                   
-                    for (int i = 0; i < rList.size(); i++) {
-                   	   sb3.append(commonUtil.getQueryResult(rList.get(i)));
-            		}
-            		   sb3.append("</DATA>");
-            		
-            		    receiptXML = commonUtil.convertStringToDocument(sb3.toString());
+		Document docXML = commonUtil.convertStringToDocument(sb2.toString());
 
-						if (receiptXML.getElementsByTagName("ROW").getLength() > 0) {
-							isGroup = true;
-							GroupCount = receiptXML.getElementsByTagName("ROW").getLength();
-						}
+		boolean isGroup = false;
+		int GroupCount = 0;
+
+		String strReceiptPointID = "";
+		String strReceiptPointName = "";
+		String strReceiptMemberID = "";
+		String strReceiptMemberName = "";
+		String strReceiptMemberJobTitle = "";
+		String strReceiptCompanyID = "";
+		String SusinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
+
+		for (int j = 0; j < docXML.getElementsByTagName("ROW").getLength(); j++) {
+			strReceiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
+			strReceiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
+			strReceiptMemberID = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERID").item(j).getTextContent());
+			strReceiptMemberName = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(j).getTextContent());
+			strReceiptMemberJobTitle = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(j).getTextContent());
+			strReceiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
+			isGroup = false;
+			GroupCount = 1;
+			if (strReceiptPointID.indexOf(SusinGroupIcon.trim()) > -1) {
+				map.put("v_MAINID", strReceiptPointID.substring(SusinGroupIcon.length(), strReceiptPointID.length() - SusinGroupIcon.length()));
+				List<ApprGRecordVO> rList = ezApprovalGDAO.doSendDoc_ReceiptGroupSub(map);
+
+				StringBuffer sb3 = new StringBuffer();
+				sb3.append("<DATA>");
+
+				for (int i = 0; i < rList.size(); i++) {
+					sb3.append(commonUtil.getQueryResult(rList.get(i)));
 				}
-				for( int i = 0 ; i < GroupCount ; i++ ) {
-					if( rtnVal ) {
-						if( isGroup ) {
-							strReceiptPointID = makeListField(receiptXML.getElementsByTagName("DEPTID").item(i).getTextContent());
-                            strReceiptPointName = makeListField(receiptXML.getElementsByTagName("DEPTNAME").item(i).getTextContent());
-                            strReceiptPointName2 = makeListField(receiptXML.getElementsByTagName("DEPTNAME2").item(i).getTextContent());
-							strReceiptMemberID = "";
-                            strReceiptMemberName = "";
-                            strReceiptMemberName2 = "";
-                            strReceiptMemberJobTitle = "";
-                            strReceiptMemberJobTitle2 = "";
-							strReceiptCompanyID = makeListField(receiptXML.getElementsByTagName("COMPANYID").item(i).getTextContent());
-						}
-						
-//						map.put("company", strReceiptCompanyID);
-						String maxDoc = ezApprovalGDAO.selectAprGetNewID(map);
-						ezApprovalGDAO.aprGetNewID(map);
-						String newID = ezApprovalGDAO.selectAprGetNewID(map);
-						int tmplen=20;
-						int strlen = tmplen - newID.trim().length();
-						for(int k = 0; k< strlen; k++) {
-							newID = "0" + newID.trim();
-						}
-						
-						map.put("v_FLAG", "END");
+				sb3.append("</DATA>");
 
-						String fileName = ezApprovalGDAO.getDocInfoHref(map);
-						
-						// 2018.08.28 KLIB ezd 확장자 처리
-						if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-							fileName = fileName.substring(0, fileName.length() - EzApprovalGKlibService.ENCRYPTED_FILE_EXT.length() - 1);
-						}
-						
-						String extFileName = getExtendedFileName(fileName);
-                        
-                        // 2011.03.29 년도별 폴더 변경 
-                        String[] arry = fileName.split(extFileName, '/');
-                        String oldyear = commonUtil.getTodayUTCTime("").substring(0, 4);
-                        if (arry.length >= 7 && arry[4].length() == 4) {
-                            oldyear = arry[4];
-                        }
+				receiptXML = commonUtil.convertStringToDocument(sb3.toString());
 
-						String pUrl = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strReceiptCompanyID + "/doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
-				
-                        //2011.04.04  수신부서가 많을 경우 속도 개선을 위해 접수기에서 문서 copy되도록 수정
-                        //rtnVal = copyFile(pDirPath + companyID + "\\Doc\\" + oldyear + "\\" + getDocDir(pDocID) + "\\" + pDocID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID) + "\\" + newID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID));
-						
-						if( rtnVal ) {
-						    map.put("v_NEWID", newID);
-						    map.put("v_DOCSTATE", docState);
-						    map.put("v_STAASDOJAK", staASDoJak);
-						    map.put("v_URL", pUrl);
-						    
-					    	ezApprovalGDAO.insertReSendAprDocInfo(map);
-					    	ezApprovalGDAO.insertReSendExpAprDocInfo(map);
-					    	ezApprovalGDAO.insertReSendAprAttachInfo(map);
-					    	ezApprovalGDAO.insertReSendAprDocAttachInfo(map);
-					    	
-                            map.put("v_FLAG", "END");
-                            
-                            int pSusinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map);
-
-							pSusinSN += 1;
-
-							// 사람에게 보낼때는 staASJiJung 으로 해야 한다.
-                            if (strReceiptMemberID.trim().equals("")) {
-                            	map.put("v_ReceiveSN", Integer.toString(pSusinSN));
-                            	map.put("v_NEWID", newID);
-                            	map.put("v_ReceivedDeptID", strReceiptPointID);
-                            	map.put("v_strReceiptPointName", strReceiptPointName);
-                            	map.put("v_DocState", docState);
-                            	//여기
-                            	map.put("v_AprState", staASDoJak);
-                            	map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-                            	map.put("v_ProcessorID", strReceiptMemberID);
-                            	map.put("v_ProcessorName", strReceiptMemberName);
-                            	map.put("v_ProcessorJobTitle", strReceiptMemberJobTitle);
-
-                            	ezApprovalGDAO.insertReSendAprReceiptProcessInfo(map);
-                            }
-                            else {
-                            	map.put("v_ReceiveSN", Integer.toString(pSusinSN));
-                            	map.put("v_NEWID", newID);
-                            	map.put("v_ReceivedDeptID", strReceiptPointID);
-                            	map.put("v_strReceiptPointName", strReceiptPointName);
-                            	map.put("v_DocState", docState);
-                            	map.put("v_AprState", staASJiJung);
-                            	map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-                            	map.put("v_ProcessorID", strReceiptMemberID);
-                            	map.put("v_ProcessorName", strReceiptMemberName);
-                            	map.put("v_ProcessorJobTitle", strReceiptMemberJobTitle);
-                            	
-                            	ezApprovalGDAO.insertReSendAprReceiptProcessInfo(map);
-                            }
-                        	map.put("v_RECEIPTPOINTID",  strReceiptPointID);
-
-                        	ezApprovalGDAO.updateReSendEndReceiptPointInfo(map);
-
-							if( strReceiptMemberID.trim().equals("") ) {
-								sendRecvMsg(strReceiptPointID, newID, "SUSIN", strReceiptCompanyID, lang, tenantID);
-							}
-							else {
-								sendMsg(newID, strReceiptMemberID, "SUSIN", strReceiptCompanyID, lang, tenantID);
-							}
-						}
-					}
+				if (receiptXML.getElementsByTagName("ROW").getLength() > 0) {
+					isGroup = true;
+					GroupCount = receiptXML.getElementsByTagName("ROW").getLength();
+				}
+			}
+			for (int i = 0; i < GroupCount; i++) {
+				if (isGroup) {
+					strReceiptPointID = makeListField(receiptXML.getElementsByTagName("DEPTID").item(i).getTextContent());
+					strReceiptPointName = makeListField(receiptXML.getElementsByTagName("DEPTNAME").item(i).getTextContent());
+					strReceiptMemberID = "";
+					strReceiptMemberName = "";
+					strReceiptMemberJobTitle = "";
+					strReceiptCompanyID = makeListField(receiptXML.getElementsByTagName("COMPANYID").item(i).getTextContent());
 				}
 
-				if( rtnVal ) {
-					return "TRUE";
+				ezApprovalGDAO.aprGetNewID(map);
+				String newID = ezApprovalGDAO.selectAprGetNewID(map);
+				int tmplen = 20;
+				int strlen = tmplen - newID.trim().length();
+				for (int k = 0; k < strlen; k++) {
+					newID = "0" + newID.trim();
 				}
-				else {
-					return "FALSE";
+
+				map.put("v_FLAG", "END");
+
+				String fileName = ezApprovalGDAO.getDocInfoHref(map);
+
+				// 2018.08.28 KLIB ezd 확장자 처리
+				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+					fileName = fileName.substring(0, fileName.length() - EzApprovalGKlibService.ENCRYPTED_FILE_EXT.length() - 1);
 				}
-		   }
-		 return "TRUE";
+
+				String extFileName = getExtendedFileName(fileName);
+
+				// 2011.03.29 년도별 폴더 변경
+				String[] arry = fileName.split(extFileName, '/');
+				String oldyear = commonUtil.getTodayUTCTime("").substring(0, 4);
+				if (arry.length >= 7 && arry[4].length() == 4) {
+					oldyear = arry[4];
+				}
+
+				String pUrl = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strReceiptCompanyID + "/doc/" + oldyear + "/1000/"
+						+ getDocDir(newID) + "/" + newID + "." + extFileName;
+
+				map.put("v_NEWID", newID);
+				map.put("v_DOCSTATE", docState);
+				map.put("v_STAASDOJAK", staASDoJak);
+				map.put("v_URL", pUrl);
+
+				ezApprovalGDAO.insertReSendAprDocInfo(map);
+				ezApprovalGDAO.insertReSendExpAprDocInfo(map);
+				ezApprovalGDAO.insertReSendAprAttachInfo(map);
+				ezApprovalGDAO.insertReSendAprDocAttachInfo(map);
+
+				map.put("v_FLAG", "END");
+
+				int pSusinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map);
+
+				pSusinSN += 1;
+
+				// 사람에게 보낼때는 staASJiJung 으로 해야 한다.
+				if (strReceiptMemberID.trim().equals("")) {
+					map.put("v_ReceiveSN", Integer.toString(pSusinSN));
+					map.put("v_NEWID", newID);
+					map.put("v_ReceivedDeptID", strReceiptPointID);
+					map.put("v_strReceiptPointName", strReceiptPointName);
+					map.put("v_DocState", docState);
+					map.put("v_AprState", staASDoJak);
+					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+					map.put("v_ProcessorID", strReceiptMemberID);
+					map.put("v_ProcessorName", strReceiptMemberName);
+					map.put("v_ProcessorJobTitle", strReceiptMemberJobTitle);
+
+					ezApprovalGDAO.insertReSendAprReceiptProcessInfo(map);
+				} else {
+					map.put("v_ReceiveSN", Integer.toString(pSusinSN));
+					map.put("v_NEWID", newID);
+					map.put("v_ReceivedDeptID", strReceiptPointID);
+					map.put("v_strReceiptPointName", strReceiptPointName);
+					map.put("v_DocState", docState);
+					map.put("v_AprState", staASJiJung);
+					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+					map.put("v_ProcessorID", strReceiptMemberID);
+					map.put("v_ProcessorName", strReceiptMemberName);
+					map.put("v_ProcessorJobTitle", strReceiptMemberJobTitle);
+
+					ezApprovalGDAO.insertReSendAprReceiptProcessInfo(map);
+				}
+				map.put("v_RECEIPTPOINTID", strReceiptPointID);
+
+				ezApprovalGDAO.updateReSendEndReceiptPointInfo(map);
+
+				if (strReceiptMemberID.trim().equals("")) {
+					sendRecvMsg(strReceiptPointID, newID, "SUSIN", strReceiptCompanyID, lang, tenantID);
+				} else {
+					sendMsg(newID, strReceiptMemberID, "SUSIN", strReceiptCompanyID, lang, tenantID);
+				}
+			}
+		}
+
+		return "TRUE";
 	}
 	@Override
 	public String getRecSCInfo(Document xmlDom,String langType,LoginVO userInfo) throws Exception {
@@ -26060,11 +26030,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strAttachYN = "Y";
 			}
 			
+			//regnumber
+			Document relayXML = commonUtil.xmlLod(config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
+			
+			String regNumber = relayXML.getElementsByTagName("regnumber").item(0).getTextContent();
+			logger.debug("#문서번호: " + regNumber);
+			
 			strNewID = getNewID(strCompanyID, tenantID);
 
 			map.put("NEWID", strNewID);
     		map.put("FORMID", strFormID);
     		map.put("DOCTITLE", strDocTitle);
+    		map.put("regNumber", regNumber);
     		map.put("ATTACHYN", strAttachYN);
     		map.put("strWriterName", strWriterName);
     		map.put("strWriterDept", strWriterDept);

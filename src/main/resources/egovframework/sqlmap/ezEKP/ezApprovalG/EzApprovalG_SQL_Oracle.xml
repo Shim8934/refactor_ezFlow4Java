@@ -20161,6 +20161,8 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		WHERE 
    			DocID = #v_DOCID#
+   		AND
+   			RECEIPTPOINTID = #v_RECEIPTPOINTID#
    		AND 
    			TENANT_ID = #v_TENANTID#
    		AND
@@ -24234,7 +24236,7 @@
 	  	INSERT INTO TBL_APRDOCINFO 
 	  		(DOCID,   FORMID, ORGDOCID, DOCTYPE, DOCSTATE, FUNCTIONTYPE, HREF, DOCTITLE, DOCNO, HASATTACHYN, HASOPINIONYN, STARTDATE, ENDDATE, WRITERID, WRITERNAME, WRITERNAME2, WRITERJOBTITLE, WRITERJOBTITLE2, WRITERDEPTID, WRITERDEPTNAME, WRITERDEPTNAME2, ISPUBLIC, COMPANYID, TENANT_ID)
 		VALUES 
-			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',   #strWriterName#, #strWriterName#, '',    '',              '',            #strWriterDept#, #strWriterDept#, 'Y',    #companyID#, #v_TENANTID#)
+			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, #regNumber#,   #ATTACHYN#,    'N',          NULL,     NULL,      '',   #strWriterName#, #strWriterName#, '',    '',              '',            #strWriterDept#, #strWriterDept#, 'Y',    #companyID#, #v_TENANTID#)
 	  </insert>
 		  
 	  <insert id="EzApprovalG.insertRelayExpAprDocInfo" parameterClass="Map">

@@ -1730,6 +1730,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String linkLocation = "";
 		String parentUID = "";
 		String pageID = "";
+		//2018-09-12 배현상, createNewLogoItem에 insert시 한국어, 일본어 적용
+		String primaryLang = ezCommonService.getTenantConfig("primaryLang", userInfo.getTenantId());
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -1752,7 +1754,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				parentUID = req.getParameter("parentUID");
 			}
 			
-			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID, userInfo.getTenantId());
+			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID, primaryLang, userInfo.getTenantId());
 		}
 		
 		List<PortalMenuItemItemsImageVO> result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
@@ -2152,6 +2154,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String imageDataLinkURL = "";
 		String imageDataLinkLocation = "";
 		String imageDataWindowOption = "";
+		//2018-09-12 배현상, createNewMenuItem에 insert시 한국어, 일본어 적용
+		String primaryLang = ezCommonService.getTenantConfig("primaryLang", userInfo.getTenantId());
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -2173,7 +2177,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
 				parentUID = req.getParameter("parentUID");
 			}
-			uID = ezPortalAdminService.createNewMenuItem(parentUID, pageID, userInfo.getTenantId());
+			uID = ezPortalAdminService.createNewMenuItem(parentUID, pageID, primaryLang, userInfo.getTenantId());
 		} else {
 			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
 				menuType = req.getParameter("parentUID");
@@ -2812,6 +2816,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String imageDataLinkURL = "";
 		String imageDataLinkLocation = "";
 		String imageDataWindowOption = "";
+		//2018-09-12 배현상, createNewSubMenuItem에 insert시 한국어, 일본어 적용
+		String primaryLang = ezCommonService.getTenantConfig("primaryLang", userInfo.getTenantId());
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -2834,7 +2840,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				parentUID = req.getParameter("parentUID");
 			}
 			
-			uID = ezPortalAdminService.createNewSubMenuItem(parentUID, pageID, userInfo.getTenantId());
+			uID = ezPortalAdminService.createNewSubMenuItem(parentUID, pageID, primaryLang, userInfo.getTenantId());
 		}
 		
 		String strXML = ezPortalAdminService.loadSubMenuItemConfig(uID, pageID, userInfo.getTenantId());
