@@ -9,9 +9,9 @@
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
 .memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; text-align:center; z-index: 1001; overflow:hidden; height: 50%;}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
-.memoHeaderUL{ margin: 0px 4px 0px 9px; padding:0px; list-style:none; overflow:hidden;}
+.memoHeaderUL{ margin: 0px 4px 0px 4px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
-.memoHeaderUL li.memoSelect{  float:left; margin:0px 4px 0px 5px; padding:0px;}
+.memoHeaderUL li.memoSelect{  float:left; padding:0px;}
 .memoHeaderUL li.memoSelect select{ background:#fff url(../../images/ezMemo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
 select::-ms-expand {
     display: none;
