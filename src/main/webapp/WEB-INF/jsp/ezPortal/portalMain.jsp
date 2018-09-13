@@ -39,15 +39,19 @@
 
 			.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
-			#slider-range{width:70px;float:left; margin-left:15px;}
-			.ui-widget-header{background: #0470e4}
-			.ui-slider-handle{background: #eeeeee; margin-top:2px}
+			#slider-range{background: #7e7e7e; width:70px;float:left; margin-left:15px; height:5px;}
+			.ui-widget-header {background: #d5d5d5;}
+			.ui-slider-handle {background: #0470e4; height: 13px; width: 13px; margin-top:-1px;}
 			.ui-resizable-se {background-image: url("");}
 			.memoSelect{position:absolute; height:500px;}
 			#memoFolderList{display:none;}
 			.memoPlus{margin-left:250px;} //임시
-			
+			.ui-widget-content {border:none; background: #727272;}
+			.ui-slider-handle:active, .ui-slider-handle:hover, .ui-slider-handle:focus, .ui-slider-handle:default{background:#0470e4;}
+    
+
     	</style>
+
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
 			var topUrl = "${topUrl}";
@@ -700,7 +704,7 @@
 		     */
 		    function layerPopupOpacity(){
 		    	
-		    	var defaultValue = 3;
+		    	var defaultValue = 2;
 		    	$("#layer-popup").css("background-color", "rgba(0,0,0,0.4)");
 		    	
 		    	$("#slider-range").slider({
