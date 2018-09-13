@@ -92,6 +92,7 @@
 						"methodType" : method
 					},
 					success : function() {
+						opener.parent.parent.parent.parent.memoFoldersInfo(method);
 						window.close();
 					},
 					error : function() {

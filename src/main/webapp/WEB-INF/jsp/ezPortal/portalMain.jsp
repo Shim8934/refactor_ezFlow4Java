@@ -855,7 +855,7 @@
 						
 						$(".select_inner").remove();
 						$(".select_tag").remove();
-						if(type !== "delete" && "update" && "insert" ){
+						if((type !== "delete") && (type !== "put") && (type !== "post")){
 							$('select').wrap('<div class="select_wrapper"></div>');
 						}
 						$('select').parent().prepend('<span class="select_tag">'+ $("select option:selected").text() +'</span>');
@@ -873,7 +873,7 @@
 							$('select').children().removeAttr('selected');
 							$('select').children('[value="'+cur+'"]').attr('selected','selected');					
 						});
-						if(type !== "delete" && "update" && "insert" ){
+						if((type !== "delete") && (type !== "put") && (type !== "post")){
 							$('select').parent().on('click', function (){
 								$(this).find('ul').slideToggle('fast');
 							});
