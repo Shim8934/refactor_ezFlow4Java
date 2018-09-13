@@ -346,7 +346,7 @@
 								var params = getAllUrlParams(hrefStr);
 								
 								attachList.push({
-									filePath : javaURLDecode(params["filePath"]),
+									filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "),
 									fileName : javaURLDecode(params["fileName"])
 								}); 
 								
@@ -438,7 +438,7 @@
 							var params   = getAllUrlParams(hrefStr);
 							var fileName = listChildren2[i].getAttribute("value");
 							
-							attachList.push({filePath : javaURLDecode(params["filePath"]), fileName : fileName});
+							attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : fileName});
 						}
 					}
 					
@@ -507,7 +507,7 @@
 						var hrefStr = listChildren[i].getAttribute("filehref");
 						var params  = getAllUrlParams(hrefStr);
 						
-						attachList.push({filePath : javaURLDecode(params["filePath"]), fileName : javaURLDecode(params["fileName"])});
+						attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : javaURLDecode(params["fileName"])});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedCommunity.do";
@@ -642,7 +642,7 @@
 						var filePath    = inputElmt.getAttribute("filepath");
 						var fileName    = inputElmt.getAttribute("filename");
 						
-						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName).replace(/\+/g, " ")});
+						attachList.push({filePath : filePath, fileName : javaURLDecode(fileName)});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedOption.do";
@@ -687,7 +687,7 @@
 						var hrefStr = listChildren[i].getAttribute("href");
 						var params  = getAllUrlParams(hrefStr);
 						
-						attachList.push({filePath : javaURLDecode(params["filePath"]), fileName : javaURLDecode(params["fileName"])});
+						attachList.push({filePath : javaURLDecode(params["filePath"]).replace(/\+/g, " "), fileName : javaURLDecode(params["fileName"])});
 					}
 					
 					var url  = "/ezCabinet/saveRelatedJournal.do";
