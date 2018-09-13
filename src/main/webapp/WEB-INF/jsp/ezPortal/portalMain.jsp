@@ -243,6 +243,15 @@
 		        });*/
 		    });
 		    
+		    
+		    // 셀렉트 박스 마우스 포인터 벗어날 경우
+		    function closeSelectInner() {
+		    	var selectInner = document.getElementById("select_inner");	    	
+		    	selectInner.addEventListener('mouseleave', function() {
+		    		selectInner.style.display = "none";
+		    	});
+		    }
+		    
 		    function changeFolder() {
 		        // 메모 분류함 클릭 시, 해당 메모 리스트 호출
 		        $(".changeFolder").click(function(event) {
@@ -853,7 +862,7 @@
 						}
 						$('select').parent().prepend('<span class="select_tag">'+ $("select option:selected").text() +'</span>');
 						$('select').css('display', '');		
-						$('select').parent().append('<ul class="select_inner"></ul>');
+						$('select').parent().append('<ul class="select_inner" id="select_inner"></ul>');
 						$('select').children().each(function(){
 						  var opttext = $(this).text();
 						  var optval = $(this).val();
@@ -872,6 +881,7 @@
 							});
 						}
 						getMemoList();
+						closeSelectInner();
 						changeFolder();
 					}     			
 				});
