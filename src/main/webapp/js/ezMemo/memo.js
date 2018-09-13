@@ -377,6 +377,7 @@ function addEmptyMemo(flag) {
 		
 		var div = document.createElement("div");
 		div.setAttribute("class", "memo_add");
+		div.setAttribute("onclick", "newMemo()");
 		div.style.margin = "10px";
 		
 		var span = document.createElement("span");
