@@ -887,8 +887,9 @@
 				});
 		    }
 		    
-		    // 퀵메모 디스플레이
+		 	// 퀵메모 디스플레이
 		    function quickMemoDisplay() {
+		    	var openMemo = document.getElementById("open-memo");
 	    		$.ajax({
 	    			type : "GET",
 		        	dataType : "JSON",
@@ -902,12 +903,12 @@
 
 		        			if (layerStatus.indexOf("none") != -1) {
 			        			getGadgetPosition(memoConfig);
-			        			$("#open-memo").css("display", "");
+			        			openMemo.style.display = "block";
 		        			}
 		        			
 		        		} else {
-		        			$("#open-memo").css("display", "none");
-		        			
+		        			openMemo.style.display = "none";
+		        			document.getElementById("layer-popup").style.display = "none";
 		        		}
 		        	}
 	    		});
