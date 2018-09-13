@@ -259,7 +259,7 @@
 		    
 		    // 모달 삭제 || 메모지 삭제
 		    function modalDelete(memoId) {
-		    	var flag = $("#layerFlag").val();
+		    	layerflag = $("#layerFlag").val();
 		    	
 	    		$.ajax ({  	
 		        	url : '/ezMemo/memoDelete.do',
@@ -279,7 +279,7 @@
 		            	var memoLength = $(".memo_main .memoLay").length;
 		            	if (memoLength == 0) {
 
-		            		addEmptyMemo(flag);
+		            		addEmptyMemo(layerflag);
 		            	}
 		            	
 		            	if(window.frames["main"].frames["right"] != undefined) {			
@@ -813,7 +813,10 @@
 	                	memoList = result["memoList"];
 	                	layer = result["layerFlag"];
 	                	
-						loadMemoList(layer);
+						loadMemoList(layerFlag);
+						
+					    addremove();
+					    
 				    	setMemoListSize();
 				     }
 				});
@@ -826,9 +829,16 @@
 			    var layerWidth = $("#layer-popup").width();
 			    var memoListHeight = layerHeight - 56;
 
-			    $(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
+			    $(".memoListBox").css({"height" : memoListHeight-25, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight-20});
 			    
+			    var layerClass = $("#layer-popup").attr("class");
+	        	
+	        	if (layerClass.indexOf("layerFullScreen") != -1) {
+	        		$(".memoListBox").css({"height" : memoListHeight-27, "width" : layerWidth});	        		
+	        	} else {
+	        		$(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
+	        	}
 		    }
 		    
 		    // 메모함 리스트 출력
