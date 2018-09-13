@@ -58,7 +58,7 @@
 			
 			<div id="searchPanel" class="cabSearchPanel2 off">
 				<div class="popup cabsearch">
-					<h1><spring:message code='ezCabinet.t54'/></h1>
+					<h1><spring:message code='ezCabinet.t164'/></h1>
 					<div id="cabSearchClose" class="cabClose"><ul><li><span></span></li></ul></div>
 					<table class="content cabtable">
 						<tr>
