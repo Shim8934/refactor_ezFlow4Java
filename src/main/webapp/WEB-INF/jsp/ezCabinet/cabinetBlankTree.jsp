@@ -9,11 +9,11 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
 	<body class="mainbody overY blankBody">
-		<h1 id="cabInfo"><spring:message code='ezCabinet.t162'/></h1>
+		<h1 id="cabInfo"><spring:message code='${message}'/></h1>
 		<div class="cabBlankMain">
 			<div class="blankDiv">
 				<img src="/images/cabinet/notree.png">
-				<div class="blankMsg"><spring:message code="${message}"/></div>
+				<div class="blankMsg"><spring:message code="${message}"/> <spring:message code="ezCabinet.t163"/></div>
 			</div>
 		</div>
 	</body>

@@ -224,7 +224,6 @@ public class EzCabinetController {
 	@RequestMapping(value = "/ezCabinet/getPreviewPhoto.do")
 	public String jspGetPreviewPhotoPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetPreviewPhotoPage started");
-		
 		logger.debug("jspGetPreviewPhotoPage ended");
 		return "ezCabinet/preview/cabinetPrevPhoto";
 	}
@@ -232,7 +231,7 @@ public class EzCabinetController {
 	@RequestMapping(value = "/ezCabinet/cabinetRelatedTreeNotFound.do")
 	public String jspGetRelatedTreeNotFound(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedTreeNotFound started");
-		model.addAttribute("message", "ezCabinet.t165");
+		model.addAttribute("message", "ezCabinet.t32");
 		logger.debug("jspGetRelatedTreeNotFound ended");
 		return "ezCabinet/cabinetBlankTree";
 	}
@@ -240,7 +239,7 @@ public class EzCabinetController {
 	@RequestMapping(value = "/ezCabinet/cabinetShareTreeNotFound.do")
 	public String jspGetShareTreeNotFound(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareTreeNotFound started");
-		model.addAttribute("message", "ezCabinet.t164");
+		model.addAttribute("message", "ezCabinet.t05");
 		logger.debug("jspGetShareTreeNotFound ended");
 		return "ezCabinet/cabinetBlankTree";
 	}
@@ -248,7 +247,7 @@ public class EzCabinetController {
 	@RequestMapping(value = "/ezCabinet/myShareTreeNotFound.do")
 	public String jspGetMyShareTreeNotFound(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetMyShareTreeNotFound started");
-		model.addAttribute("message", "ezCabinet.t163");
+		model.addAttribute("message", "ezCabinet.t157");
 		logger.debug("jspGetMyShareTreeNotFound ended");
 		return "ezCabinet/cabinetBlankTree";
 	}
