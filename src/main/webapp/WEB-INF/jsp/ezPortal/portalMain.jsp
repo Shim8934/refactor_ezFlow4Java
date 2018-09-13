@@ -70,6 +70,7 @@
 	    	var layerRight;
 	    	var memoList;
 	    	var userGadget;
+	    	var layerFlag;
 	    	
 			topHeight = "56";
 
@@ -284,6 +285,9 @@
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
+		            	if($(".memoLay").length == 0) {
+	                		loadMemoList(layerflag);
+	                	}
 		            	
 		            	var memoLength = $(".memo_main .memoLay").length;
 		            	if (memoLength == 0) {
@@ -746,7 +750,7 @@
 			function newMemo() {
 				
 				var folderId = $("select option:selected").val();
-		    	var layerFlag = $("#layerFlag").val();
+		    	layerFlag = $("#layerFlag").val();
 		    	
 				$.ajax ({
 	 			   	url : '/ezMemo/memoWrite.do',
@@ -804,7 +808,7 @@
 		    function getMemoList(type) {
 		    	
 		    	var folderId = $("select option:selected").val();
-		    	var layerFlag = $("#layerFlag").val();
+		    	layerFlag = $("#layerFlag").val();
 				
 				$.ajax ({
 	 			   	url : '/ezMemo/getMemoList.do',
