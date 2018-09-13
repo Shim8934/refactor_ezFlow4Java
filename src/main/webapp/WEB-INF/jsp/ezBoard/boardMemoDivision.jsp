@@ -27,6 +27,7 @@
 	    			success: function(result){
 	    				var html="";
 						var folderList = result["folders"];
+						$('#memoFolderList').html(html);
 						memoFolderList = "<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>";							
 							 
 						folderList.forEach(function(list, index){
