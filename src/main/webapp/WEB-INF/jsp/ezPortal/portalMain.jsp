@@ -827,9 +827,15 @@
 			    var layerWidth = $("#layer-popup").width();
 			    var memoListHeight = layerHeight - 56;
 
-			    $(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
 			    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight-20});
 			    
+			    var layerClass = $("#layer-popup").attr("class");
+	        	
+	        	if (layerClass.indexOf("layerFullScreen") != -1) {
+	        		$(".memoListBox").css({"height" : memoListHeight-27, "width" : layerWidth});	        		
+	        	} else {
+	        		$(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
+	        	}
 		    }
 		    
 		    // 메모함 리스트 출력
