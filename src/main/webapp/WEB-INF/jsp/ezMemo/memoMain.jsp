@@ -414,6 +414,8 @@
 				checkList.push($(this).val());
 				if($(this).attr("display") == 0){
 					memo_ids.push($(this).val());
+					$(this).attr("display", "1");
+					$(this).parent().parent().attr("style", "opacity : 0.6");
 				} 
 			});
 			
@@ -433,11 +435,10 @@
 		              },  
 		              cache: false,
 		              success: function(result) {
-		                getMemoList();
 		                parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		              },
 		              error : function() {
-		                	
+		            	  
 		              }
 				}); 
 			}
@@ -455,6 +456,8 @@
 				checkList.push($(this).val());
 				if($(this).attr("display") == 1){
 					memo_ids.push($(this).val());
+					$(this).attr("display", "0");
+					$(this).parent().parent().attr("style", "");
 				} 
 			});
 			
@@ -474,7 +477,6 @@
 		              },  
 		              cache: false,
 		              success: function(result) {
-		                getMemoList();
 		                parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		              },
 		              error : function() {
@@ -603,7 +605,7 @@
 		 		</div>
  		 	</table>
  		 </div>
- 		 
+ 		<div style="width:100%; border-top: 1px solid #e8e8e8;"></div>
  	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
  		 <div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
