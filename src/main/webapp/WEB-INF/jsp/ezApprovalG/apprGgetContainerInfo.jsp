@@ -534,9 +534,33 @@
 //	                             if (GetAttribute(tr,"data4") == "file")
 //	                                 window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
 //	                             else
-	                                window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+								//2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
+								try {
+									if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
+	                                	var tempStr = AttachUrlA1.split("/");
+	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+	                                    var openLocation;
+	                                    
+	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    	if (isIE()) {
+	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                                    	} else {
+	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                		                	alert(pAlertContent);
+	                		                	return;
+	                                    	}
+	                                    } else {
+	                                    	openLocation = "/ezApprovalG/contDocView.do";
+	                                    }
+	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
+	                                    openwindow(openLocation, "", 880, 570);
+									} else {
+	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+	                                }
+								} catch(e) {
+									console.log(e);
+								}
 	                        }
-
 	                    }
 		            }
 		        }
@@ -599,7 +623,13 @@
 		            }
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
-		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		            var tempURL = pURL;
+		            
+		            if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
+	                	tempURL = tempURL.substr(0, tempURL.length - 4);
+	                }
+		            
+		            if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
 		            	if (isIE()) {
 			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
@@ -960,7 +990,7 @@
 	            	} */
 	            	
 	            	if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
-	            		period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
+	            		period = condition[5].substring(0, 4) + strLang1028 + " " + parseInt(condition[5].substring(5, 7)) + strLang1029 + " " + parseInt(condition[5].substring(8,10)) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + parseInt(condition[6].substring(5, 7)) + strLang1029 + " " + parseInt(condition[6].substring(8, 10)) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "" && condition[6] != null && condition[6] != "" && condition[3].length <= 4 && condition[6].length <= 4) {
 	            		period = condition[3]+strLang1028+" "+condition[4]+strLang1029+" "+condition[5]+strLang1030+" ~ "+condition[6]+strLang1028+" "+condition[7]+strLang1029+" "+condition[8]+strLang1030;
 	            	} else if (condition[9] != null && condition[9] != "" && condition[12] != null && condition[12] != "" && condition[9].length <= 4 && condition[12].length <= 4) {

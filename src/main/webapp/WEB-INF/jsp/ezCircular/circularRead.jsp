@@ -37,6 +37,10 @@
 				cursor: pointer;
 			}
 			
+			#divCross p {
+				margin-top: 0px; margin-bottom: 0px;
+			}
+			
 		</style>
 		
 		<script type="text/javascript" >
@@ -69,6 +73,7 @@
 				titleSpace();
 				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
 				titleHeight();
+				
 	        });
 			
 			window.onresize = function () {

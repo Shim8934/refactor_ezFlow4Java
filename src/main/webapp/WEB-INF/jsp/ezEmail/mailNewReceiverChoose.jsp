@@ -80,7 +80,8 @@
 	        var strLang_2 = "<spring:message code='ezEmail.t655' />";
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
-	        var tabSel = "";
+	        var selTab = "";
+	        var selSpan = "";
 	        var divListArry = [];
 	        
 	        document.onselectstart = function () {
@@ -166,7 +167,11 @@
 	            ListTypeChangeIcon();
 	
 	            if (ReturnFunction == null)
-	                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	if (CrossYN()) {
+                        g_fnaddReceiver = opener.addReceiver;
+	            	} else {
+		                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	}
 	            try {
 	                var xmlpara = createXmlDom();
 	                var xmlTree = createXmlDom();
@@ -519,6 +524,7 @@
 		    function orgTabButton_onClick() {
 		    	methodForTabAction(1);
 		        selTab = "orglistView";
+		        selSpan = "orgSpan";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "normal";
@@ -535,6 +541,7 @@
 		    function contactTabButton_onClick() {
 		    	methodForTabAction(2);
 		        selTab = "AddressListView";
+		        selSpan = "contactSpan";
 		        if (g_bContactLoaded == false) {
 		            g_bContactLoaded = true;
 		            LoadAddressTree();
@@ -554,6 +561,7 @@
 		    function dlTabButton_onClick() {
 		    	methodForTabAction(3);
 		    	selTab = "DistributionList";
+		    	selSpan = "dlSpan";
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -607,6 +615,7 @@
 	        function inputTabButton_onClick() {
 	        	methodForTabAction(4);
 	            gubunpage = "direct";
+	            selSpan = "inputSpan";
 	            if (g_binputLoaded == false) {
 	                g_binputLoaded = true;
 	            }
@@ -3406,6 +3415,17 @@
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
 	        }
+	        
+	        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3485,16 +3505,16 @@
 	            	<div class="portlet_tabpart01" style="margin:0px;">
 	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton">
-	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+	            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
 	            			</p>
 	            			<p id="contactTabButton">
-	            				<span onclick="contactTabButton_onClick()"><spring:message code='ezEmail.t592' /></span>
+	            				<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
 	            			</p>
 	            			<p id="dlTabButton">
-	            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
+	            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
 	            			</p>
 	            			<p id="inputTabButton" style="display: none;">
-	            				<span onclick="inputTabButton_onClick()"><spring:message code='ezEmail.t244' /></span>
+	            				<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
 	            			</p>
 	            		</div>
 	            	</div>

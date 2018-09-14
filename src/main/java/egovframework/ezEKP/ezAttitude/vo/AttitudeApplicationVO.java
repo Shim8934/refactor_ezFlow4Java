@@ -4,7 +4,7 @@ public class AttitudeApplicationVO {
 	/** 근태 아이디 */
 	private String attitudeId;
 	/** 계열사 아이디 */
-	private String companuId;
+	private String companyId;
 	/** 고객사 아이디 */
 	private int tenantId;
 	/** 신청자 아이디 */
@@ -65,11 +65,11 @@ public class AttitudeApplicationVO {
 	public void setAttitudeId(String attitudeId) {
 		this.attitudeId = attitudeId;
 	}
-	public String getCompanuId() {
-		return companuId;
+	public String getcompanyId() {
+		return companyId;
 	}
-	public void setCompanuId(String companuId) {
-		this.companuId = companuId;
+	public void setcompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	public int getTenantId() {
 		return tenantId;
@@ -190,7 +190,7 @@ public class AttitudeApplicationVO {
 	@Override
 	public String toString() {
 		return "AttitudeApplicationVO [attitudeId=" + attitudeId
-				+ ", companuId=" + companuId + ", tenantId=" + tenantId
+				+ ", companyId=" + companyId + ", tenantId=" + tenantId
 				+ ", writerId=" + writerId + ", WriterName=" + writerName
 				+ ", WriterName2=" + writerName2 + ", writerTitle="
 				+ writerTitle + ", writerTitle2=" + writerTitle2

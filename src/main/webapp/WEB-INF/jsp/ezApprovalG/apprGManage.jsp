@@ -457,10 +457,16 @@
 		                openViewDocInfo();
 		            } else {
 		                var para = new Array();
+		                var tempURL = pURL;
+		                
 		                para[0] = pDocID;
 		                para[1] = pURL;
 		                
-		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
+		                	tempURL = tempURL.substr(0, tempURL.length - 4);
+		                }
+		                
+		                if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
 		                	if (isIE()) {
 			                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                	} else {
@@ -520,7 +526,7 @@
                             var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
                             var AttachUrlA1 = GetAttribute(tr,"DATA1");
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
-                            var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
+                            var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length).toLowerCase(); //fileExt(.hwp, .ezd, .mht)
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
                           
                             if (AttachfilenameN1 < 0) {
@@ -543,13 +549,39 @@
                                 else
                                     tempINGFlag = "APR"
                                     
-                                if (GetAttribute(tr,"data4") == "file") {
+                                /* if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
                                 } else {
-                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+                                	window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+                                } */ 
+                                
+                                //2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
+                                try {
+	                                if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
+	                                	var tempStr = AttachUrlA1.split("/");
+	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+	                                    var openLocation;
+	                                    
+	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    	if (isIE()) {
+	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                                    	} else {
+	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                		                	alert(pAlertContent);
+	                		                	return;
+	                                    	}
+	                                    } else {
+	                                    	openLocation = "/ezApprovalG/contDocView.do";
+	                                    }
+	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
+	                                    openwindow(openLocation, "", 880, 570);
+									} else {
+	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+	                                }
+                                } catch(e) {
+                                	console.log(e);
                                 }
                             }
-
                         }
 		            	break;
 		            default:
@@ -603,7 +635,9 @@
 		            para[0] = pDocID;
 		            para[1] = pURL;
 		            var openLocation;
-		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		            var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+		            // 2018.07.26 (KLIB) - ezd 확장자 처리
+		            if (ext == "hwp" || ext == "ezd") {
 		            	if (isIE()) {
 			            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
@@ -654,7 +688,8 @@
 		
 		            Html1 = Html.substring(Html.length - 3);
 		
-		            if (Html1 == "hwp") {
+		            // 2018.07.26 (KLIB) - ezd 확장자 처리
+		            if (Html1 == "hwp" || Html1 == 'ezd') {
 		                if (FunctionType == "000")                   //한글양식 미결 문서
 		                    openServerDraftUI("REDRAFT", pCurSelRow);
 		                else
@@ -720,10 +755,11 @@
 		                var pDocID = pCurSelRow.getAttribute("DATA1");
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
+		                var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
 		                
-		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
+		                if (ext == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
-		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                } else if (ext == "hwp" || ext == "ezd") { // 2018.07.26 (KLIB) - ezd 확장자 처리
 		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
@@ -1121,7 +1157,11 @@
 		        var pOrgDocID = tr.getAttribute("DATA7");
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
-		        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
+		        
+		        // 2018.07.06 (KLIB) - ezd 확장자 처리
+		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
+		        
+		        if (pHrefExt === "hwp" || pHrefExt === "ezd") {
 		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;

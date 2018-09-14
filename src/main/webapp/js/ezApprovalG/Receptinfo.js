@@ -81,7 +81,12 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptOrgan").style.display = "none";
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "";
-        document.getElementById("btnaddressChange").style.display = "";
+        if (useReceiveInfoName == '1') {
+//        	document.getElementById("btnaddressChange").style.display = "";
+        } else {
+        	document.getElementById("btnaddressChange").style.display = "";
+        }
+        
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "none";
         document.getElementById("AprDeptOuterAdd").style.display = "";
@@ -130,12 +135,15 @@ function initReceptListView() {
 		}        			
 	});
 
-    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 9) {
-        document.getElementById("inputSummaryOuterReceiverList").focus();
-        document.getElementById("trSummaryOuterReceiverList").style.display = "";
-        document.getElementById("btnaddress").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+    //시행문
+    if (pDocType != null && pDocType != undefined && pDocType == "001") {
+	    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
+	    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 8) {
+	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	        document.getElementById("btnaddress").style.display = "none";
+	        document.getElementById("btnaddressChange").style.display = "none";
+	    }
     }
 
     document.getElementById('RECEPTLIST').innerHTML = "";
@@ -1107,7 +1115,12 @@ function btnSearchDept_onClick() {
                         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                         document.getElementById("inputSummaryOuterReceiverList").value = "";
                         document.getElementById("btnaddress").style.display = "";
-                        document.getElementById("btnaddressChange").style.display = "";
+                        if (useReceiveInfoName == '1') {
+//                        	document.getElementById("btnaddressChange").style.display = "";
+                        } else {
+                        	document.getElementById("btnaddressChange").style.display = "";
+                        }
+                        
                     }
 
                 } else {
@@ -1270,7 +1283,11 @@ function btnSearchDept_onClick() {
                             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                             document.getElementById("inputSummaryOuterReceiverList").value = "";
                             document.getElementById("btnaddress").style.display = "";
-                            document.getElementById("btnaddressChange").style.display = "";
+                            if (useReceiveInfoName == '1') {
+//                            	document.getElementById("btnaddressChange").style.display = "";
+                            } else {
+                            	document.getElementById("btnaddressChange").style.display = "";
+                            }
                         }
 
                     } else {
@@ -1446,7 +1463,11 @@ function btnSearchDept_onClick_Complete(reParam) {
                 document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                 document.getElementById("inputSummaryOuterReceiverList").value = "";
                 document.getElementById("btnaddress").style.display = "";
-                document.getElementById("btnaddressChange").style.display = "";
+                if (useReceiveInfoName == '1') {
+//                	document.getElementById("btnaddressChange").style.display = "";
+                } else {
+                	document.getElementById("btnaddressChange").style.display = "";
+                }
             }
         } else {
             var pAlertContent = strLang247 + "<br>  " + strLang248;
@@ -1608,7 +1629,11 @@ function btnSearchDept_onClick_Complete(reParam) {
                     document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                     document.getElementById("inputSummaryOuterReceiverList").value = "";
                     document.getElementById("btnaddress").style.display = "";
-                    document.getElementById("btnaddressChange").style.display = "";
+                    if (useReceiveInfoName == '1') {
+//                    	document.getElementById("btnaddressChange").style.display = "";
+                    } else {
+                    	document.getElementById("btnaddressChange").style.display = "";
+                    }
                 }
 
             } else {
@@ -1888,6 +1913,7 @@ function AprLineAddDeptG(nodeIdx, tr) {
 
     DeptAddIndex = DeptAddIndex + 1;
 
+    InitTr = listview.GetDataRows();
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
     if (InitTr.length > 8) {
         document.getElementById("inputSummaryOuterReceiverList").focus();
@@ -1898,7 +1924,11 @@ function AprLineAddDeptG(nodeIdx, tr) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
-        document.getElementById("btnaddressChange").style.display = "";
+        if (useReceiveInfoName == '1') {
+//        	document.getElementById("btnaddressChange").style.display = "";
+        } else {
+        	document.getElementById("btnaddressChange").style.display = "";
+        }
     }
 
 }
@@ -1991,7 +2021,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length < 10) {
+    if (listview.GetDataRows().length < 9) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
@@ -2748,7 +2778,11 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
             document.getElementById("inputSummaryOuterReceiverList").value = "";
             document.getElementById("btnaddress").style.display = "";
-            document.getElementById("btnaddressChange").style.display = "";
+            if (useReceiveInfoName == '1') {
+//            	document.getElementById("btnaddressChange").style.display = "";
+            } else {
+            	document.getElementById("btnaddressChange").style.display = "";
+            }
         }
 
     } catch (e) {

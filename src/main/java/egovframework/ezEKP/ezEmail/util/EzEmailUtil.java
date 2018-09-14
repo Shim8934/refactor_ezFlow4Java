@@ -838,11 +838,13 @@ public class EzEmailUtil {
 			} else {
 				filename = "";
 			}
+            
+            if (filename != null) {
+            	filename = commonUtil.normalizeFileName(filename);
+            }
 			
 			if (attachedFileList != null) {
 				Map<String, String> attachedFileInfo = new HashMap<String, String>();
-				
-				filename = commonUtil.normalizeFileName(filename);
 				
 				attachedFileInfo.put("filename", filename);
 				attachedFileInfo.put("size", String.valueOf(size));
@@ -851,7 +853,7 @@ public class EzEmailUtil {
 				attachedFileInfo.put("index", String.valueOf(bodyPartIndex));
 				
 				attachedFileList.add(attachedFileInfo);
-			}
+			} 
 			
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
@@ -2691,8 +2693,10 @@ public class EzEmailUtil {
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", tenantId);
 		String[] innerDomainArr = mailInnerDomain.split(";");
 		
-		for (int i=0; i<innerDomainArr.length; i++) {
-			innerDomainList.add(innerDomainArr[i]);
+		for (int i = 0; i < innerDomainArr.length; i++) {
+			if (innerDomainArr[i] != null && !innerDomainArr[i].trim().equals("")) {
+				innerDomainList.add(innerDomainArr[i]);
+			}
 		}
 		
 		return innerDomainList;

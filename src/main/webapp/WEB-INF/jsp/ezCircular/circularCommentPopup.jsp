@@ -89,9 +89,11 @@
 			var commentStatus = "${vo.commentStatus}";
 			var shareStatus = "${vo.shareStatus}";
 			var commentType = "totalComment";
+			var selSpan = "";
 			
 			$(document).ready(function(){
 				getCircularComment();
+				selSpan = "selSpan1";
 				
 				if (commentStatus == "1" || shareStatus == "1") {
 					$(".commentConfirmDiv").show();
@@ -114,6 +116,7 @@
 		        	//$("#tab2").attr("class", "off");
 		        	$("#tab1").children("span").attr("class" , "tabon");
 		        	$("#tab2").children("span").attr("class" , "");
+		        	selSpan = "selSpan1";
 		        	
 		        	commentType = type;
 		        	
@@ -125,6 +128,7 @@
 		        	//$("#tab1").attr("class", "off");
 		        	$("#tab1").children("span").attr("class" , "");
 		        	$("#tab2").children("span").attr("class" , "tabon");
+		        	selSpan = "selSpan2";
 		        	
 		        	commentType = type;
 		        	
@@ -136,9 +140,19 @@
 				getCircularComment();
 			}
 			
-			function getCommentCount() {
-				
+			function getCommentCount() {				
 			}
+			
+			/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 		</script>
 		
 	</head>
@@ -190,8 +204,8 @@
 			
 			<div class="portlet_tabpart01" style="margin-top:10px;padding-right:5px">
 	       		<div class="portlet_tabpart01_top">
-	       			<p id="tab1"><span onclick="swapTab('totalComment')" class="tabon"><spring:message code='ezCircular.t141' /></span></p>
-	       			<p id="tab2"><span onclick="swapTab('myComment')"><spring:message code='ezCircular.t142' /></span></p>
+	       			<p id="tab1"><span id="selSpan1" onclick="swapTab('totalComment')" class="tabon" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezCircular.t141' /></span></p>
+	       			<p id="tab2"><span id="selSpan2" onclick="swapTab('myComment')" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezCircular.t142' /></span></p>
 	       			<div id="commentSendMail">
 	       				<a id="" class="imgbtn imgbck"><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></a>
 	       			</div>

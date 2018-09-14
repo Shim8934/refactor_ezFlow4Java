@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -53,6 +54,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -6550,33 +6552,33 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("uploadApprovFile started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String strXML = "";
+		String strXML = "<ROOT><NODES>";
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String boardID = xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent();
 		String realPath = commonUtil.getRealPath(request);
 		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
 		
-		String[] fileName = new String[cnt];
-		String[] orgFileName = new String[cnt];
-		String[] fileSize = new String[cnt];
-		String[] fileLocation = new String[cnt];
-		String[] type = new String[cnt];
+		String[] fileNames = new String[cnt];
+		String[] orgFileNames = new String[cnt];
+		String[] fileSizes = new String[cnt];
+		String[] fileLocations = new String[cnt];
+		String[] types = new String[cnt];
 		String[] uploadSN = new String[cnt];
 		
 		for (int k = 0; k < cnt; k++) {
-			fileName[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
-			fileLocation[k] = xmlDom.getElementsByTagName("FILEPATH").item(k).getTextContent();
-			fileSize[k] = xmlDom.getElementsByTagName("FILESIZE").item(k).getTextContent();
-			orgFileName[k] = xmlDom.getElementsByTagName("ORGFILEPATH").item(k).getTextContent();
-			type[k] = xmlDom.getElementsByTagName("TYPE").item(k).getTextContent();
+			fileNames[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
+			fileLocations[k] = xmlDom.getElementsByTagName("FILEPATH").item(k).getTextContent();
+			fileSizes[k] = xmlDom.getElementsByTagName("FILESIZE").item(k).getTextContent();
+			orgFileNames[k] = xmlDom.getElementsByTagName("ORGFILEPATH").item(k).getTextContent();
+			types[k] = xmlDom.getElementsByTagName("TYPE").item(k).getTextContent();
 			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
 		}
 		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String dirPath2 = "";
 		
-		if (type[0].equals("APPROVAL")) {
+		if (types[0].equals("APPROVAL")) {
 			dirPath2 = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		} else {
 			dirPath2 = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
@@ -6592,33 +6594,55 @@ public class EzBoardController extends EgovFileMngUtil{
 			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
-		for (int k = 0; k < fileName.length; k++) {
-			if (orgFileName[k].substring(orgFileName[k].lastIndexOf(".")).toUpperCase().indexOf("MHT") > -1 ||
-					orgFileName[k].substring(orgFileName[k].lastIndexOf(".")).toUpperCase().indexOf("HWP") > -1 ||
-					orgFileName[k].substring(orgFileName[k].lastIndexOf(".")).toUpperCase().indexOf("DOC") > -1 ) {
-				
-				fileName[k] = fileName[k] + orgFileName[k].substring(orgFileName[k].lastIndexOf("."));
-				
-				file = new File(dirPath2 + commonUtil.separator + fileLocation[k]);
-				fileSize[k] = String.valueOf(file.length());
+		for (int k = 0; k < cnt; k++) {
+			String fileName = fileNames[k];
+			String fileLocation = fileLocations[k];
+			String fileSize = fileSizes[k];
+			String puploadSN;
+			
+			String uploadLocation;
+			
+			// 2018.07.04 - KLIB 암호화된 .ezd 확장자 파일일때 처리
+			fileLocation = fileLocations[k];
+			
+			int extIndex = fileLocation.lastIndexOf(".");
+			String fileExt = fileLocation.substring(extIndex);
+			boolean isEncryptedForKlib = fileExt.endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+			
+			// ezd 확장자라면 그 뒤의 확장자로 설정
+			if (isEncryptedForKlib) {
+				fileExt = fileLocation.substring(fileLocation.lastIndexOf(".", extIndex - 1), extIndex);
+			}
+						
+			// 결재 본문 처리
+			if (fileExt.equalsIgnoreCase(".mht") || fileExt.equalsIgnoreCase(".hwp") || fileExt.equalsIgnoreCase(".doc")) {
+				// fileName 에 확장자가 포함되지 않으면 확장자 붙여줌
+				if (!fileName.endsWith(fileExt)) {
+					fileName += fileExt;
+					file = new File(dirPath2 + commonUtil.separator + fileLocation);
+					fileSize = String.valueOf(file.length());
+				}
 			}
 			
-			file = new File(dirPath2 + commonUtil.separator + fileLocation[k]);
+			file = new File(dirPath2 + commonUtil.separator + fileLocation);
+			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName.replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+					replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+			puploadSN = uploadSN[k] + "_" + fileName;
+			
+			if (isEncryptedForKlib) {
+				uploadLocation += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+				puploadSN += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
+			}
 			
 			if (file.exists()) {
-				FileUtils.copyFile(file, new File(dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-						replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "")));
+				FileUtils.copyFile(file, new File(uploadLocation));
 			}
-		}
-		
-		strXML = "<ROOT><NODES>";
-		
-		for (int k = 0; k < cnt; k++) {
-			strXML += "<NODE><PUPLOADSN><![CDATA[" + uploadSN[k] + "_" + fileName[k] + "]]></PUPLOADSN>";
+			
+			strXML += "<NODE><PUPLOADSN><![CDATA[" + puploadSN + "]]></PUPLOADSN>";
 			strXML += "<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>";
-			strXML += "<PFILENAME><![CDATA[" + fileName[k] + "]]></PFILENAME>";
-			strXML += "<FILESIZE>" + fileSize[k] + "</FILESIZE>";
-			strXML += "<FILELOCATION><![CDATA[" + dirPath + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName[k] + "]]></FILELOCATION>";
+			strXML += "<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>";
+			strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
+			strXML += "<FILELOCATION><![CDATA[" + uploadLocation + "]]></FILELOCATION>";
 			strXML += "</NODE>";
 		}
 		

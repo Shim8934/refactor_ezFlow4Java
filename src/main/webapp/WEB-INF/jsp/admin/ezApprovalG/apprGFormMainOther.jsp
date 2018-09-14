@@ -20,8 +20,7 @@
 	    	<c:when test="${approvalFlag eq 'G'}">
 		    	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 				<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}" ></script>
-	    	</c:when>
-	    	<c:otherwise>
+	    	</c:when>	    	<c:otherwise>
 			    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/TreeView.js')}" ></script>
 			    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrlS_Cross.js')}"></script>
 	    	</c:otherwise>
@@ -883,6 +882,61 @@
 		        
 		        return ReceiveDocument;
 		    }
+		    
+		    //2018-09-04 수신자명변경
+		    var aprdeptname_cross_dialogArguments = new Array();
+		    function btnaddressChange() {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtForm");
+		        var CurSelRow = listview.GetSelectedRows();
+		        var windowName = "/admin/ezApprovalG/aprDeptName.do";
+		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
+		
+		        if (CurSelRow[0] == undefined) {
+		            alert("<spring:message code='ezApprovalG.t10501'/>");
+		            return;
+		        }
+		        
+		        var dialogValue = CurSelRow[0].cells[0].innerText;
+		        if (CrossYN()) {
+		            aprdeptname_cross_dialogArguments[0] = dialogValue;
+		            aprdeptname_cross_dialogArguments[1] = btnaddressChange_Complete;
+		            
+		            var feature = "width=360, height=220, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
+		            feature = feature + GetOpenPosition(360, 220);
+		            window.open(windowName, "", feature);
+		            
+// 		            DivPopUpShow(360, 220, windowName);
+		        } else {
+		            parameter = parameter + GetShowModalPosition(330, 205);
+		            var AddressName = window.showModalDialog(windowName, dialogValue, parameter);
+		            if (AddressName == "cancel" || AddressName == undefined)
+		                return;
+		            if (CrossYN()) {
+		                CurSelRow[0].cells[0].textContext = AddressName;
+		                CurSelRow[0].cells[0].innerText = AddressName;
+		            }
+		            else {
+		                CurSelRow[0].cells[0].innerText = AddressName;
+		            }
+		        }
+		    }
+		
+		    function btnaddressChange_Complete(AddressName) {
+		        if (AddressName == "cancel" || AddressName == undefined)
+		            return;
+		
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtForm");
+		        var CurSelRow = listview.GetSelectedRows();
+		
+		        if (CrossYN()) {
+		            CurSelRow[0].cells[0].textContext = AddressName;
+		            CurSelRow[0].cells[0].innerText = AddressName;
+		        } else {
+		            CurSelRow[0].cells[0].innerText = AddressName;
+		        }
+		    }
 		</script>
 		<style>
 			#mainmenu ul li {float:right !important}
@@ -1084,7 +1138,7 @@
                         <img style="cursor:pointer;margin-bottom:50px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
-                        <h2><spring:message code='ezApproval.t61'/></h2>
+                        <h2><spring:message code='ezApproval.t61'/><c:if test="${useReceiveInfoName == '1' }"><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></c:if></h2>
                         <div class="div_scroll" style="border:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>

@@ -179,14 +179,14 @@
     <sql id="searchAll">
     	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
-				LOWER(t.FILE_EXT) LIKE LOWER('%'|| #searchExt# || '%')
+				LOWER(t.FILE_EXT) LIKE LOWER('%'|| #searchExt# || '%') ESCAPE '\'
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 			<![CDATA[
-				(LOWER(t.CREATE_NAME1) LIKE LOWER('%' || #searchCreateName# || '%')
-				or
-				LOWER(t.CREATE_NAME2) LIKE LOWER('%' || #searchCreateName# || '%'))
+				(LOWER(t.CREATE_NAME1) LIKE LOWER('%' || #searchCreateName# || '%') ESCAPE '\'
+					or
+				LOWER(t.CREATE_NAME2) LIKE LOWER('%' || #searchCreateName# || '%') ESCAPE '\') 
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -196,7 +196,7 @@
 		</isNotEqual>		
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
-				LOWER(t.FILE_NAME) LIKE LOWER('%' || #searchFileName# || '%')
+				LOWER(t.FILE_NAME) LIKE LOWER('%' || #searchFileName# || '%') ESCAPE '\'
        		]]> 
        		
 		</isNotEqual>
@@ -679,14 +679,14 @@
 	         
 			<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					type.FILE_EXT LIKE '%'|| #searchExt# || '%'
+					type.FILE_EXT LIKE '%'|| #searchExt# || '%' ESCAPE '\'
 	       		]]> 
 			</isNotEqual>		
 			<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
-					(folder.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
-					or
-					folder.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%')
+					(folder.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%' ESCAPE '\'
+						or
+					folder.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%' ESCAPE '\') 
 	       		]]> 
 			</isNotEqual>		
 			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -696,9 +696,9 @@
 			</isNotEqual>	
 			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-						(folder.folder_name1 LIKE '%' || #searchFileName# || '%'
-					or
-						folder.folder_name2 LIKE '%' || #searchFileName# || '%')
+					(folder.folder_name1 LIKE '%' || #searchFileName# || '%' ESCAPE '\'
+						or
+					folder.folder_name2 LIKE '%' || #searchFileName# || '%' ESCAPE '\') 
 	       		]]> 
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">

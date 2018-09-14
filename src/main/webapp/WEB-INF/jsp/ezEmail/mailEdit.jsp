@@ -397,7 +397,12 @@
 			    var type = "config";
 			    var receiverData = new Array();
 			    receiverData["window"] = this;
-			    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+			    if (CrossYN()) {
+				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=970,height=655,status=no');
+		            try { OpenWin.focus(); } catch (e) { }
+			    } else {
+				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+                }
 		        Simple_Choice();
 		    }
 		    function Simple_Choice()
@@ -907,7 +912,7 @@
 		        </tr>
                 <c:if test="${isCrossBrowser == true}">          
 		        <tr>
-		            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
+		            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
 		                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 		                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" frameborder="0" src="/ezEmail/dragAndDrop.do"></iframe>
 		            </td>

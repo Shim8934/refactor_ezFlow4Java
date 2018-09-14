@@ -414,6 +414,7 @@ function getExtInfo()
 		{
 			if( !needDoubleFormFlag )
 			{
+				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 				needDoubleFormFlag = true;
 				var URL = document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pRelayURL2);
 	  			var isTrue = HwpCtrl.LoadFile(URL, true);
@@ -430,9 +431,9 @@ function getExtInfo()
 					for( var i = 0 ; i < tempNodes(0).childNodes.length ; i++ )
 					{
 						if( i == 0 )
-							bodySTR = tempNodes(0).childNodes(i).xml;
+							bodySTR = getNodeText(tempNodes(0).childNodes(i));
 						else
-							bodySTR = bodySTR + tempNodes(0).childNodes(i).xml;
+						    bodySTR = bodySTR + getNodeText(tempNodes(0).childNodes(i));
 					}
 					
 					if( bodySTR.indexOf("<![CDATA[") > -1 )
@@ -827,15 +828,33 @@ function getExtInfo()
 		{
 		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
 			var signWidth, signHeight;
-			if (GetAttribute(Nodes(0).childNodes(0),"width") == "" || GetAttribute(Nodes(0).childNodes(0),"width") == null)
+			if (GetAttribute(Nodes(0).childNodes(0),"width") == "" || GetAttribute(Nodes(0).childNodes(0),"width") == null) {
 				signWidth = 20;
-			else
-			    signWidth = GetAttribute(Nodes(0).childNodes(0),"width").replace("mm", "");
+			} else {
+				signWidth = GetAttribute(Nodes(0).childNodes(0),"width");
+				//px로 들어오거나 pt로 들어올경우 mm 단위로 변환
+				if (signWidth.indexOf("px") > -1) {
+					signWidth = signWidth.replace("px", "") / 3.779;
+				} else if (signWidth.indexOf("pt") > -1) {
+					signWidth = signWidth.replace("pt", "") / 2.834;
+				} else {
+					signWidth = signWidth.replace("mm", "");
+				}
+			}
 	  		
-			if (GetAttribute(Nodes(0).childNodes(0),"height") == "" || GetAttribute(Nodes(0).childNodes(0),"height") == null)
-	  			signHeight = 20;
-	  		else
-			    signHeight = GetAttribute(Nodes(0).childNodes(0),"height").replace("mm", "");
+			if (GetAttribute(Nodes(0).childNodes(0),"height") == "" || GetAttribute(Nodes(0).childNodes(0),"height") == null) {
+				signHeight = 20;
+			} else {
+				signHeight = GetAttribute(Nodes(0).childNodes(0),"height")
+				
+				if (signHeight.indexOf("px") > -1) {
+					signHeight = signHeight.replace("px", "") / 3.779;
+				} else if (signHeight.indexOf("pt") > -1) {
+					signHeight = signHeight.replace("pt", "") / 2.834;
+				} else {
+					signHeight = signHeight.replace("mm", "");
+				}
+			}
 	  		
 			HwpCtrl.SetFieldText("symbol", "");
 			HwpCtrl.SetFieldImage("symbol", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
@@ -862,7 +881,7 @@ function getExtInfo()
 			    signWidth = GetAttribute(Nodes(0).childNodes(0),"width").replace("mm", "");
 
 			if (GetAttribute(Nodes(0).childNodes(0),"height") == "" || GetAttribute(Nodes(0).childNodes(0),"height") == null)
-	  			signHeight = 70;
+	  			signHeight = 20;
 	  		else
 			    signHeight = GetAttribute(Nodes(0).childNodes(0),"height").replace("mm", "");
 	  		
@@ -1022,6 +1041,14 @@ function getSignURL(SignURL) {
         if (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase() == SignURL.toLowerCase())
             rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
     }
+    
+    //경로에 / 포함된경우 비교가 안되는 케이스로 인해 추가
+    if (rtnVal == null || rtnVal == "") {
+    	for (var i = 0 ; i < pRelayDocInfo.getElementsByTagName("SignName").length ; i++) {
+            if (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase().indexOf(SignURL.toLowerCase()) > -1)
+                rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
+        }
+    }
 
     return rtnVal;
 }
@@ -1071,7 +1098,7 @@ function convertDate(datestring) {
 }
 
 function btnReqReSend_onclick() {
-    var url = "/myoffice/ezApprovalG/ezRETOPINION.aspx";
+    var url = "/ezApprovalG/ezRetOpinon.do";
     var feature = "status:no;dialogWidth:420px;dialogHeight:270px;help:no;scroll:no"
     var ret = window.showModalDialog(url, null, feature);
 

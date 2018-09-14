@@ -260,6 +260,7 @@
 	            }
 	        }
 	
+	        /* 2018-09-03 홍승비 - 관리자 권한 체크 시 모든 동작 '허용'으로 고정 */
 	        function checkbox_onclick(e) {
 	            if (CrossYN()) {
 	                srcElementID = e.target.id;
@@ -267,7 +268,7 @@
 	                srcElementID = window.event.srcElement.id;
 	            }
 	            toggle(srcElementID);
-	            if (srcElementID == "admin_OK" && admin_OK.checked) {
+	            if (admin_OK.checked == true) {
 	                access_OK.checked = true;
 	                list_OK.checked = true;
 	                read_OK.checked = true;
@@ -282,25 +283,53 @@
 	                write_NO.checked = false;
 	                reply_NO.checked = false;
 	                delete_NO.checked = false;
-	
-	                if (pParentBoardID == "top") {
-	                    list_OK.checked = false;
-	                    list_NO.checked = true;
-	                    read_OK.checked = false
-	                    read_NO.checked = true;
-	                    write_OK.checked = false;
-	                    write_NO.checked = true;
-	                    reply_OK.checked = false;
-	                    reply_NO.checked = true;
-	                    delete_OK.checked = false;
-	                    delete_NO.checked = true;
-	                    PostNotice.checked = false;
-	                }
-	
-	                return;
+	                
+	                access_NO.disabled = true;
+	                list_NO.disabled = true;
+	                read_NO.disabled = true;
+	                write_NO.disabled = true;
+	                reply_NO.disabled = true;
+	                delete_NO.disabled = true;
 	            }
+	            else if (admin_NO.checked == true) {
+	            	access_NO.disabled = false;
+                    list_NO.disabled = false;
+                    read_NO.disabled = false;
+                    write_NO.disabled = false;
+                    reply_NO.disabled = false;
+                    delete_NO.disabled = false;
+                    PostNotice.checked = false;
+                    PostSpan.style.display = "none";
+	            }
+	            
+	         // 게시판 그룹의 경우, 오직 '관리자'와 '접근' 권한만 설정 가능.
+                if (pParentBoardID == "top") {
+					list_OK.checked = false;
+                    list_NO.checked = true;
+                    read_OK.checked = false
+                    read_NO.checked = true;
+                    write_OK.checked = false;
+                    write_NO.checked = true;
+                    reply_OK.checked = false;
+                    reply_NO.checked = true;
+                    delete_OK.checked = false;
+                    delete_NO.checked = true;
+                    PostNotice.checked = false;
+                    
+					list_OK.disabled = true;
+                    list_NO.disabled = true;
+                    read_OK.disabled = true
+                    read_NO.disabled = true;
+                    write_OK.disabled = true;
+                    write_NO.disabled = true;
+                    reply_OK.disabled = true;
+                    reply_NO.disabled = true;
+                    delete_OK.disabled = true;
+                    delete_NO.disabled = true;
+	                PostNotice.disabled = true;
+                }	            
 	        }
-	
+	        
 	        function toggle(pSrcElementID) {
 	            if (pSrcElementID == "inherit_OK" && inherit_OK.checked) inherit_NO.checked = false;
 	            if (pSrcElementID == "inherit_OK" && inherit_OK.checked == false) inherit_NO.checked = true;
@@ -343,21 +372,7 @@
 	            if (pSrcElementID == "reply_NO" && reply_NO.checked == false) reply_OK.checked = true;
 	            if (pSrcElementID == "delete_NO" && delete_NO.checked) delete_OK.checked = false;
 	            if (pSrcElementID == "delete_NO" && delete_NO.checked == false) delete_OK.checked = true;
-	
-	            if (pParentBoardID == "top") {
-	                list_OK.checked = false;
-	                list_NO.checked = true;
-	                read_OK.checked = false
-	                read_NO.checked = true;
-	                write_OK.checked = false;
-	                write_NO.checked = true;
-	                reply_OK.checked = false;
-	                reply_NO.checked = true;
-	                delete_OK.checked = false;
-	                delete_NO.checked = true;
-	                PostNotice.checked = false;
-	            }
-	
+	            
 	            if (access_NO.checked) {
 	                read_OK.checked = false;
 	                list_OK.checked = false;
@@ -449,7 +464,7 @@
 	                selectTargetListXML += "</DATA>";
 	            }
 	        }
-	
+	        
 	        function CheckBoxInit() {
 	            admin_OK.checked = false;
 	            access_OK.checked = false;
@@ -461,8 +476,7 @@
 	            inherit_OK.checked = false;
 	            PostSpan.style.display = "none";
 	            PostNotice.checked = false;
-	
-	
+	            
 	            admin_NO.checked = false;
 	            access_NO.checked = false;
 	            list_NO.checked = false;
@@ -471,8 +485,15 @@
 	            reply_NO.checked = false;
 	            delete_NO.checked = false;
 	            inherit_NO.checked = false;
+	            
+	            access_NO.disabled = false;
+                list_NO.disabled = false;
+                read_NO.disabled = false;
+                write_NO.disabled = false;
+                reply_NO.disabled = false;
+                delete_NO.disabled = false;
 	        }
-	
+	        
 	        function CheckBoxInit2() {
 	            admin_OK.checked = false;
 	            access_OK.checked = false;
@@ -493,8 +514,15 @@
 	            reply_NO.checked = true;
 	            delete_NO.checked = true;
 	            inherit_NO.checked = true;
+	            
+	            access_NO.disabled = false;
+                list_NO.disabled = false;
+                read_NO.disabled = false;
+                write_NO.disabled = false;
+                reply_NO.disabled = false;
+                delete_NO.disabled = false;
 	        }
-	
+	        
 	        function FillACLTable() {
 	            CheckBoxInit();
 	
@@ -561,7 +589,32 @@
 	            }
 	
 	            xmldom = null;
+	            
+	            /* 2018-09-03 홍승비 - 관리자 권한을 가진 경우 모든 권한 '허용'에 고정 */
+	            if (admin_OK.checked == true) {
+					access_OK.checked = true;
+	                list_OK.checked = true;
+	                read_OK.checked = true;
+	                write_OK.checked = true;
+	                reply_OK.checked = true;
+	                delete_OK.checked = true;
 	
+	                access_NO.checked = false;
+	                list_NO.checked = false;
+	                read_NO.checked = false;
+	                write_NO.checked = false;
+	                reply_NO.checked = false;
+	                delete_NO.checked = false;
+	                
+	                access_NO.disabled = true;
+	                list_NO.disabled = true;
+	                read_NO.disabled = true;
+	                write_NO.disabled = true;
+	                reply_NO.disabled = true;
+	                delete_NO.disabled = true;
+	            }
+	
+	            // 게시판 그룹의 경우, 오직 '관리자'와 '접근' 권한만 설정 가능.
 	            if (pParentBoardID == "top") {
 	                list_OK.checked = false;
 	                list_NO.checked = true;
@@ -574,6 +627,18 @@
 	                delete_OK.checked = false;
 	                delete_NO.checked = true;
 	                PostNotice.checked = false;
+	                
+	                list_OK.disabled = true;
+                    list_NO.disabled = true;
+                    read_OK.disabled = true
+                    read_NO.disabled = true;
+                    write_OK.disabled = true;
+                    write_NO.disabled = true;
+                    reply_OK.disabled = true;
+                    reply_NO.disabled = true;
+                    delete_OK.disabled = true;
+                    delete_NO.disabled = true;
+	                PostNotice.disabled = true;
 	            }
 	        }
 	
@@ -608,6 +673,7 @@
 	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	        }
+	        /* 2018-09-03 홍승비 - 권한복사팝업 열리는 위치 수정 */
 	        function AclCopy() {
 	            var listview = new ListView();
 	            listview.LoadFromID("AccessListView");
@@ -620,8 +686,8 @@
 	            var pwidth = window.screen.availWidth;
 	            pheigth = parseInt(pheigth) / 2;
 	            pwidth = parseInt(pwidth) / 2;
-	            pheigth = pheigth - 192;
-	            pwidth = pwidth - 260;
+	            pheigth = pheigth - 330;
+	            pwidth = pwidth - 350;
 	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	        function UnderBoardCopy() {

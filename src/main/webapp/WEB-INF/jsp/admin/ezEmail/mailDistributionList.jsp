@@ -62,8 +62,6 @@
 		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
 		            alert("<spring:message code='ezEmail.t50' />");
 		        else {
-		
-		
 		            var headerData = createXmlDom();
 		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 		
@@ -171,28 +169,30 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
-		        var selectedCount = listview.GetSelectedIndexes().length;
+		        var selectedCount = listview.GetSelectedRows().length;
+		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if (selectedCount > 0) {
-			        for (i = 0; i < selectedCount; i++) {
-			            createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+		        if (ret) {
+			        if (selectedCount > 0) {
+				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+				        
+				        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
+				        xmlHTTP.send(xmlDom);
+				        
+				        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+				            alert("<spring:message code='ezEmail.t53' />");
+				            company_change();
+				            return;
+				        }
+				        
+				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
+				        company_change();
+			        } else {
+			            alert("<spring:message code='ezEmail.t51' />");		            
 			        }
-			        
-			        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
-			        xmlHTTP.send(xmlDom);
-			        
-			        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-			            alert("<spring:message code='ezEmail.t53' />");
-			            company_change();
-			            return;
-			        }
-			        
-			        alert(listview.GetSelectedIndexes().length + "<spring:message code='ezEmail.t54' />");
-			        company_change();
-		        } else {
-		            alert("<spring:message code='ezEmail.t51' />");		            
 		        }
 		    }
+		    
 		    var mail_add_distributionlist_cross_dialogArguments = new Array();
 		    function add_dl() {
 		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
