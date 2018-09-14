@@ -4590,6 +4590,8 @@
                 TENANT_ID = #tenantID#
               AND
                 BOARDID = #boardId#
+              AND
+              	APPRFLAG = 'Y'
       ]]>
   </select>
   
