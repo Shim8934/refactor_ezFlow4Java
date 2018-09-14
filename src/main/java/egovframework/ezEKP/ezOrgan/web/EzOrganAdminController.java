@@ -2372,7 +2372,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
    		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
    		
-   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
    		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
