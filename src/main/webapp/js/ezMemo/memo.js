@@ -104,31 +104,6 @@ function loadMemoList(flag) {
 	if(memoList.length == 0) {
 		addEmptyMemo(flag);
 	}
-	/*if(memoList.length == 0 && flag != 'layer') {		// 메모 게시판 게시물 없을 때
-		
-		var div = document.createElement("div");
-		div.setAttribute("class", "memo_add");
-		div.style.margin = "10px";
-		
-		var span = document.createElement("span");
-		span.innerHTML = strLangMemo7;
-		
-		div.appendChild(span);
-		
-		$("#boardMemoList").parent().prepend(div);
-		
-		return;
-	} else if(memoList.length == 0 && flag == 'layer') {
-		var div = document.createElement("div");
-		div.setAttribute("class", "memo_add");
-		div.id = "addFirstMemo";
-		var span = document.createElement("span");
-		span.innerHTML = strLangMemo7;
-		
-		div.appendChild(span);
-		
-		$(".memo_main").prepend(div);
-	}*/
 	
 	for(var i=0; i<memoList.length; i++) {
 		if ('layer' != flag) {
