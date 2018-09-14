@@ -91,12 +91,14 @@
 
 		        var xmlhttp_getBoardList_NewBoardSTD = createXMLHttpRequest();
 		        
+		        /* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
 		        function getBoardList_NewBoardSTD() {
 		            $.ajax({
 	    	        	type : "POST",
 	    	        	dataType : "text",
 	    	        	url : "/ezBoard/getBoardList.do",
 	    	        	data : {
+	    	        		type : "portletBoard",
 	    	        		boardType   : "1", 
 						 	boardId 	 : pBoardID_NewBoardSTD, 
 						    pageNum 	 : "1", 
