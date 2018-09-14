@@ -103,30 +103,30 @@ function loadMemoList(flag) {
 	$(".memo_none").remove();
 	$(".memo_main").html('');
 	
-	if(memoList.length == 0) {
-		addEmptyMemo(flag);
-	}
-	
-	for(var i=0; i<memoList.length; i++) {
-		if ('layer' != flag) {
-			var hColor = memoColor[memoList[i].color_id-1];
-			var bColor = memoColor[memoList[i].color_id+5];
-			var div = createMemo(memoList[i]);
-			
-			$("#boardMemoList").prepend(div);
-		} else {
-			if (memoList[i].display_flag != 1) {
-				
+		if(memoList.length == 0) {
+			addEmptyMemo(flag);
+		}
+		
+		for(var i=0; i<memoList.length; i++) {
+			if ('layer' != flag) {
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
-				var div = createMemo(memoList[i], flag);
+				var div = createMemo(memoList[i]);
 				
-				$(".memo_main").prepend(div);
+				$("#boardMemoList").prepend(div);
+			} else {
+				if (memoList[i].display_flag != 1) {
+					
+					var hColor = memoColor[memoList[i].color_id-1];
+					var bColor = memoColor[memoList[i].color_id+5];
+					var div = createMemo(memoList[i], flag);
+					
+					$(".memo_main").prepend(div);
+				}
 			}
+			if(useDate == 1)
+				addDateInfo(memoList[i].write_date.substring(0,10));
 		}
-		if(useDate == 1)
-			addDateInfo(memoList[i].write_date.substring(0,10));
-	}
 }
 
 function addDateInfo(date) {

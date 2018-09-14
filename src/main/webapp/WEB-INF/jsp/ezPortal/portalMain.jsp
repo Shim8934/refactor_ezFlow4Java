@@ -77,9 +77,8 @@
 		    	setPanelPointer();
 		    	layerPopupOpacity();
 		    	checkDefaultFolder();
-		    	memoFoldersInfo();
 	    		checkMemoConfig();
-	    		getMemoList();
+		    	memoFoldersInfo();
 	    		addremove();			// 메모지 이벤트 추가
 
 		    	// 스크롤바 디자인 변경
@@ -147,8 +146,6 @@
 		        				
 		        				if (result.status == 1) {
 		        					
-//			        				getMemoList();
-			        				
 			        				if(window.frames["main"].frames["right"] != undefined) {			
 					                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 					                		window.frames["main"].frames["right"].getMemoList();
@@ -311,8 +308,6 @@
 		                cache: false,
 		                success: function(result) {
 		                	
-		                	//getMemoList();
-		                	
 		                	if(window.frames["main"].frames["right"] != undefined) {			
 			                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 			                		window.frames["main"].frames["right"].getMemoList();
@@ -380,10 +375,13 @@
 						useDate = result.memoConfigVO.use_date;
 						defaultColor = result.memoConfigVO.default_color;
 	        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
+	        			
 	        			if((result.memoConfigVO.layer_top == 55) && (result.memoConfigVO.layer_left == 0) && (result.memoConfigVO.layer_width == 340) && (result.memoConfigVO.layer_height == 380)) {
 	        				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
 	        				if(firstDBLayerSize=="yes") {
 		        				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
+		        				$("#fullScreen").css("display", "none");
+				        		$("#controllable").css("display", "");
 				        		$(".ui-resizable-handle").css("display", "none");
 				        		
 				        		$("#layer-popup").draggable({
@@ -400,6 +398,7 @@
 			        		firstDBLayerSize="no";
 			        		setLayerSize();
 	        			}
+						emptyMemoResize();
 			        	layerResize();
 		        	}
 		    	});
@@ -815,12 +814,12 @@
 	                	memoList = result["memoList"];
 	                	layerFlag = result["layerFlag"];
 	                	
-						loadMemoList(layerFlag);
-						
+				    	setMemoListSize();
+
+				    	loadMemoList(layerFlag);
 						
 					    addremove();
 					    
-				    	setMemoListSize();
 						var memoLength = $(".memo_main .memoLay").length;
 		            	if (memoLength == 0) {
 
