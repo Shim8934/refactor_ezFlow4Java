@@ -52,7 +52,6 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	        var companyID = "${userInfo.companyID}";
 	        var pUserID = arr_userinfo[1];
-	        var SignCheckFlag = "${SignCheck}";
 	        var pUse_Editor = "${useEditor}";
 			var ext = "hwp";
 			
@@ -128,9 +127,6 @@
 	                            btnOpinion_onclick();
 	                        }
 	                    }
-	
-	                    if (SignCheckFlag == "N")
-	                        SignCheck();
 	
 	                    HwpCtrl.SetImgReg();
 	                }
