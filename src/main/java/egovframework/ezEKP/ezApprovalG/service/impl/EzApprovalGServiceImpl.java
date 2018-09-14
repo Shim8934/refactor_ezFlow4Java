@@ -16231,6 +16231,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String susinSN = getSusinSNInside(docID, companyID, tenantID);
 		int cnt = 1;
 		String aprSN = "";
+		String signField = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -16268,9 +16269,42 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FLAG", "APR");
 		String docHref = ezApprovalGDAO.getDocInfoHref(map);
 		
-		HWPFile hwpFile = HWPReader.fromFile(realPath + docHref);
-		setHwpText(susinSN + "sign" + aprSN, messageSource.getMessage("ezApprovalG." + absentReason, locale), hwpFile);
-		HWPWriter.toFile(hwpFile, realPath + docHref);
+		if (aprType.toUpperCase().equals("APR")) {
+			signField = susinSN + "sign" + aprSN;
+		} else {
+			signField = susinSN + "habyuisign" + aprSN;
+		}
+		
+		if (docHref != null) {
+			if (docHref.indexOf(".hwp") > -1) {
+				HWPFile hwpFile = HWPReader.fromFile(realPath + docHref);
+				setHwpText(signField, messageSource.getMessage("ezApprovalG." + absentReason, locale), hwpFile);
+				HWPWriter.toFile(hwpFile, realPath + docHref);
+			} else {//mht 구현
+				String loadMht = ezCommonService.loadMHTFile(realPath + docHref); // 결재문서 가져오기
+				// HTML -> MHT
+				String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
+				//HTML 파싱 document 클래스 겹쳐서 임포트 못함
+				org.jsoup.nodes.Document doc = Jsoup.parse(content);
+				
+				doc.getElementById(signField).html(messageSource.getMessage("ezApprovalG." + absentReason, locale));
+				
+				String tempHtml = doc.outerHtml();
+				
+				try (OutputStream outputStream = new FileOutputStream(new File(realPath + docHref)); 
+						OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
+					String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+					
+					output.write(convertedMHT);
+				} catch (FileNotFoundException fnfe) {
+					logger.debug("fnfe: {}", fnfe);
+				} catch (IOException ioe) {
+					logger.debug("ioe: {}", ioe);
+				} catch (Exception e) {
+					logger.debug("e: {}", e);
+				}  
+			}
+		}
 		
 		resultXML.append("<SIGNINFOS>");
 		

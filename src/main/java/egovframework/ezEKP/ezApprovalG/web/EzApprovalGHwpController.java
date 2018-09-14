@@ -590,7 +590,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String endDir = "";
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
-        String SignCheck = "N";
         String pass = "";
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -643,14 +642,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
                     "</DEPTNAME2></PARAMETER>";
 
             ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
-
-            String rtnXML = ezApprovalGService.getDocInfo(docID, "END", "SignCheck", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
-
-    		Document xmlDom2 = commonUtil.convertStringToDocument(rtnXML);
-
-            if (xmlDom2.getElementsByTagName("SIGNCHECK").getLength() > 0) {
-            	SignCheck = xmlDom2.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
-            }
         }
 		
 		if (sendType == null || sendType.equals("")) {
@@ -665,7 +656,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("endDir", endDir);
 		model.addAttribute("docTitle", docTitle);
 		model.addAttribute("susinAdmin", susinAdmin);
-		model.addAttribute("SignCheck", SignCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
