@@ -132,8 +132,10 @@
 		                var RowCnt = xmldom.getElementsByTagName("ROW").length;
 
 		                if (RowCnt > 0) {
-		                    if (RowCnt > 6)
-		                        RowCnt = 6;
+		                  /*   if (RowCnt > 6)
+		                        RowCnt = 6; */
+	                        if (RowCnt > 5)
+		                        RowCnt = 5;
 
 		                    var pfirstItemID = "";
 		                    if (RowCnt > 0) {
