@@ -541,7 +541,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * PC에서 메일 가져오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailImportUpload.do")
+	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
 	public String mailImportUpload(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, MultipartHttpServletRequest request) throws Exception{
 		logger.debug("mailImportUpload started.");
 		
@@ -615,11 +616,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("strResult", strResult);
-		
-		logger.debug("mailImportUpload ended.");
-		
-		return "ezEmail/mailImportUpload";
+		logger.debug("mailImportUpload ended. strResult=" + strResult);
+		return strResult;
 	}
 	
 	/**

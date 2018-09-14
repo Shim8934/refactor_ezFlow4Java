@@ -567,7 +567,9 @@
 	            		return;
 	            	}
 	            }
+	            /* 2018-09-03 홍승비 - 간단추가 완료 이후 추가한 정보 td에서 제거 */
 	            else {
+	            	quick_add_close();
 	            	$.modal.close();
 	            	Get_AddressList();
 	            }	            
@@ -914,27 +916,30 @@
 			--%>
 			</div>
 		</ul>
-		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
-			<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
-			    <tr>
-					<th style="cursor:pointer;text-align:center;width:20px;">
-				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
-					</th>
-					<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
-					<th id="CompanyName" style="padding-left:5px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
-					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
-					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
-					<th id="width2" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_MOBILE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
-					<th style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_EMAIL" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
-					<th id="FolderType" style="CURSOR:pointer;width:10%;white-space:nowrap;display:none;padding:0px" _OrderOption="0" _OrderName="S_TYPE" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
-				</tr>
-			</table>
-			<div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
+		<div style="vertical-align:top;border:0px solid red; white-space:nowrap; overflow-x:auto; overflow-y:hidden;" id="list_Layer">
+			<div style="min-width:700px;">
+				<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
+				    <tr>
+						<th style="cursor:pointer;text-align:center;width:20px;">
+					    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
+						</th>
+						<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
+						<th id="CompanyName" style="padding-left:5px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
+						<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
+						<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
+						<th id="width2" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_MOBILE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
+						<th style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_EMAIL" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
+						<th id="FolderType" style="CURSOR:pointer;width:10%;white-space:nowrap;display:none;padding:0px" _OrderOption="0" _OrderName="S_TYPE" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
+					</tr>
+				</table>
+			</div>
+			<div id="contentlist" name="contentlist" style="min-width:700px;border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
 				<table class="mainlist" style="width: 100%; table-layout: fixed;" id="MailList" ></table>
 				<div style="height:100%;display:none;" id="MailListCard" ></div>
 			</div>
-			<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>
+			
 		</div>
+		<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>
 		<div style="width:100%;height:100%;position:absolute;top:0px;left:0px;display:none;z-index:5000;" id="mailPanel" onclick="ShowQuickAddres();" >&nbsp;</div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>

@@ -159,12 +159,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				logger.debug("messageId = " + messageId);
 				
-				//TODO: 외부용 메일 처리
-//				String outerReadCheck = "NONE";
-//				if (message.ExtendedProperties.Count > 0) {
-//              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
-//          	}
-				
 				//get readList(수신확인)
 				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
@@ -487,11 +481,23 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String messageId = readInfoArray[1];
 		String readerAddress = readInfoArray[2];
 		String readerName = readInfoArray[3];
-		
+				
 		logger.debug("senderAddress=" + senderAddress);
 		logger.debug("messageId=" + messageId);
 		logger.debug("readerAddress=" + readerAddress);
 		logger.debug("readerName=" + readerName);
+		
+		List<String> senderAddressList = new ArrayList<String>();
+		senderAddressList.add(senderAddress);
+				
+		// alias address인 경우 real address로 바꾼다.
+		senderAddressList = getMember(senderAddressList);
+		
+		if (senderAddressList.size() == 1) {
+			senderAddress = (String)senderAddressList.get(0);
+			
+			logger.debug("Real senderAddress=" + senderAddress);
+		}
 		
 		// 수신 여부를 체크하기 위해서 두개만 넣음 (getMailReadList 스펙)
 		StringBuilder inputParams = new StringBuilder();

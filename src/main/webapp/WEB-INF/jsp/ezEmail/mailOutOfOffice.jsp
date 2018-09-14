@@ -313,7 +313,7 @@
 	<br>
 	<span class="txt">▒ <spring:message code='ezEmail.t204' /><br>
 	▒ <spring:message code='ezEmail.t205' /></span>
-	<table style="width:720px;margin-top:5px;" class="box">
+	<table style="width:768px;margin-top:5px;" class="box">
 	  <tr>
 	    <td style="padding:5px">
 	       <input name="SetRadio0" type="radio" onclick="SetToggle('0')" id = "SetRadio0">
@@ -324,7 +324,7 @@
 	      <spring:message code='ezEmail.t208' /></td>
 	  </tr>
 	</table>
-	<table class="content" style="width:720px;margin-top:5px;">
+	<table class="content" style="width:768px;margin-top:5px;">
 	  <tr>
 	    <th><spring:message code='ezEmail.t209' /></th>
 	    <td>
@@ -338,10 +338,10 @@
 	    </td>
 	  </tr>
 	</table>
-	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
+	<div class="nobox" style="width:768px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div>
-	<table id="externalTable" style="width:720px; margin-top:10px;" class="box">
+	<table id="externalTable" style="width:768px; margin-top:10px;" class="box">
 	  <tr>
 	    <td style="padding:5px"><input type="checkbox" name="chkOut" onclick="CheckOut()" id="chkOut">
 	      <spring:message code='ezEmail.t218' /><br>
@@ -351,10 +351,10 @@
 	      <spring:message code='ezEmail.t220' /></td>
 	  </tr>
 	</table>
-	<div id="externalDiv" class="nobox" style="width:720px; height:500px;margin-top:5px;">
+	<div id="externalDiv" class="nobox" style="width:768px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 
-	<div style="width:700px;text-align:center;">
+	<div style="width:735px;text-align:center;">
 		<div class="btnpositionJsp">
 	    	<a class="imgbtn" onClick="Save()"><span><spring:message code='main.sp09' /></span></a>
 	    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>

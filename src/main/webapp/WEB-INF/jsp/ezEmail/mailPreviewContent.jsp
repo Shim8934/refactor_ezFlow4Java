@@ -39,6 +39,10 @@
 	        	
 			    sentDateView();
 	        });
+	        
+	        function frameClick(){
+	        	parent.event_secondRightClick();
+	        }
 		    
 		    function AttachDetail_view(obj) {
 		       
@@ -292,9 +296,9 @@
 	        function sentDateView(msg) {
 	     		var preViewInfoParent = $(".previewmail_info", parent.document).parent();
 	     		preViewInfoParent.find(".sentDateStr").remove();
-
+				
 	     		if (sentDateMsg != "") {
-	     			preViewInfoParent.prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+	     			preViewInfoParent.prepend("<div class='sentDateStr' id='sentDateStr'>" + sentDateMsg + "</div>");
 	     			preViewInfoParent.find(".sentDateStr").css({
 			    		"height" : "27px",
 			        	"box-sizing" : "border-box",
@@ -315,7 +319,7 @@
 	    </script> 
 	</head>
 
-	<body style="margin:10px 13px" onload="javascript:window_onload()">
+	<body style="margin:10px 13px" onload="javascript:window_onload()" onclick="frameClick();">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span style="float:right;">

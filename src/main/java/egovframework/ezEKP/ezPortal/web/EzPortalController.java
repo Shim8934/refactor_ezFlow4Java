@@ -564,6 +564,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//HWP사용유무
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		//브라우저체크
 		String browser = ClientUtil.getClientInfo(req, "browser");
@@ -591,6 +592,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("script1", script1);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("useHWP", useHWP);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("topMenu ended");
 		return "/ezPortal/portalTopMenu";

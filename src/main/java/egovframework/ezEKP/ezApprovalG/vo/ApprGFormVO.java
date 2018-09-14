@@ -35,6 +35,8 @@ public class ApprGFormVO {
 	private String deptID;
 	/** 양식별 고정수신처 순번*/
 	private String deptSn;
+	/** 양식별 고정수신처 이름*/
+	private String deptName;
 	/** 캐비넷아이디*/
 	private String cabinetID;
 	
@@ -161,6 +163,12 @@ public class ApprGFormVO {
 	}
 	public void setDeptSn(String deptSn) {
 		this.deptSn = deptSn;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 	public String getCode() {
 		return code;

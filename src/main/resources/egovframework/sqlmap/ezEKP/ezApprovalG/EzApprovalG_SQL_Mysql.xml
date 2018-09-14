@@ -3536,6 +3536,7 @@
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
 				DEPTID ,
+				deptname,
                 DEPTSN 
            FROM 
            		TBL_FormRecv 
@@ -16801,7 +16802,8 @@
 				   			DEPTID, 
 				   			REMARK, 
 				   			ORGDOCNUMCODE, 
-				   			DOCTITLE
+				   			DOCTITLE,
+				   			ORGANUSERNAME
 				   		FROM 
 				   			TBL_DOCDELIVERY 
 				   		WHERE 
@@ -20082,6 +20084,8 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		WHERE 
    			DocID = #v_DOCID#
+   		AND
+   			RECEIPTPOINTID = #v_RECEIPTPOINTID#
    		AND 
    			TENANT_ID = #v_TENANTID#
    		AND
@@ -21002,9 +21006,9 @@
 	<insert id="EzApprovalG.insertBebuDocDelivery" parameterClass="Map">
 		INSERT INTO 
 			TBL_DOCDELIVERY 
-		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID) 
+		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID, ORGANUSERNAME) 
 		(SELECT 
-			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID 
+			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID, #v_OrganUserName# 
          FROM 
          	TBL_APRDOCINFO a 
          INNER JOIN 
@@ -23569,7 +23573,7 @@
 				SELECT 
 					COUNT(CABINETID) AS CNT 
 				FROM 
-					TBL_EXPENDAPRDOCINFO 
+					TBL_SEPERATEATTACH 
 				WHERE 
 					CABINETID = #v_CABINETID# 
 		UNION 
@@ -25219,4 +25223,46 @@
 		AND
 			TENANT_ID = #tenantID#
    </delete>
+   <select id="EzApprovalG.isBebuDocExist" parameterClass="Map" resultClass="String">
+    	SELECT
+    		IFNULL(HREF,'NULL') as HREF
+    	FROM
+    		TBL_DOCDELIVERY
+    	WHERE
+    		DOCID = #v_DOCID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+    <update id="EzApprovalG.updateDocDeliveryHref" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_DOCDELIVERY
+	  		SET 
+	  			HREF = #v_HREF#
+		  	WHERE 
+		  		TENANT_ID = #v_TENANTID#
+		  	AND
+		  		COMPANYID = #companyID#
+		  	AND
+		  		DOCID = #v_DOCID#
+	  </update>
+	  <update id="EzApprovalG.moveRecord2" parameterClass="Map">
+			UPDATE 
+				TBL_EXPENDAPRDOCINFO
+	        SET 
+	         	CABINETID = #v_CABINETID#
+	        WHERE 
+                DOCID =
+               		(SELECT 
+                    	DOCID
+                	FROM
+                    	TBL_RECORD
+                	WHERE
+	       				RECORDID = #v_RECORDID#
+                	AND
+	         			TENANT_ID = #v_TENANTID#
+                	AND
+   						COMPANYID = #companyID#)
+	</update>
 </sqlMap>

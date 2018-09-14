@@ -164,14 +164,7 @@
 				}
 				
 				//See result before Voting
-				var _seeResultFirst = "<c:out value='${question.resultFirst}'/>";
-				if (_seeResultFirst == 0) {
-					$('#seeResultFirst ').attr('checked', false);
-				}else if(_seeResultFirst === "2"){
-					$('#seeResultFirst ').attr('checked', false);
-					$("#seeResultCreatorDiv").css("display", "inline-block");
-					$("#seeResultCreator").attr("checked", true);
-				}
+				seeResultOptSetting();
 				
 				//Allow secret vote
 				var _secretVote = "<c:out value='${question.secretVote}'/>";
@@ -326,6 +319,7 @@
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
+				document.getElementById("seeResultFirst").checked = true;
 				//$('#isSorting').removeAttr('checked');
 				//$('#receiverBttn').hide();										
 			}
@@ -724,17 +718,11 @@
     			$('#hidSecreteVote').val("0");
     		} 
     		
-    		if ($('#seeResultFirst').is(':checked')) {
-    			$('#hidResultFirst').val("1");
-    		}
-    		else {
-    			if($("#seeResultCreator").is(":checked")){
-	    			$('#hidResultFirst').val("2");
-    			}
-    			else{
-	    			$('#hidResultFirst').val("0");
-    			}
-    		} 
+			var seeResultInput = document.querySelectorAll("div.seeResult input");
+			var seeResultInputChecked = Array.prototype.filter.call(seeResultInput, function(elem){
+				return elem.checked == true;
+			});
+			$('#hidResultFirst').val(seeResultInputChecked[0].value);
     		
 	        if ($('#multipleCheck').is(':checked')) {
 	        	var myListSelected = document.getElementById("myList").selectedIndex;
@@ -1152,15 +1140,23 @@
 			}
 	  	}
 	  	
-	  	function seeResultOptAdd(chkBox){
-	  		if(chkBox.checked !== true){
-		  		$("#seeResultCreatorDiv").css("display", "inline-block");	  			
-	  		}
-	  		else{
-		  		$("#seeResultCreatorDiv").css("display", "none");	  			
-		  		$("#seeResultCreator").prop("checked", false);
-	  		}
-	  	}
+		function seeResultOptSetting(){
+			var _seeResultFirst = "<c:out value='${question.resultFirst}'/>";
+			var seeResultInput = document.querySelectorAll("div.seeResult input");
+			seeResultInput[0].checked = false;
+			seeResultInput[1].checked = false;
+			seeResultInput[2].checked = false;
+			
+			if (_seeResultFirst == 0) {
+				seeResultInput[1].checked = true;
+			}
+			else if (_seeResultFirst === "1") {
+				seeResultInput[0].checked = true;
+			}
+			else {
+				seeResultInput[2].checked = true;
+			}
+		}
 	  	
 	</script>
 </head>
@@ -1242,112 +1238,115 @@
 			</div>
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
-					<td>
-					<div class="qstSetting">
-						<input id="multipleCheck" type="checkbox"> <span><spring:message code="ezPoll.t154"/></span>
-						<div id="numberOfMultiSelect" style="display: none; margin-left: 5px;">
-							<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
-							<select id="myList">
-								<option value="1"><spring:message code = 'ezEmail.lhm67'/></option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-							</select>
+					<td class="qstSettingTd">
+						<div class="qstSetting">
+							<span class="qstSettingSpan"><spring:message code="ezPoll.hdp10"/></span>
+							<input id="multipleCheck" type="checkbox"> <span><spring:message code="ezPoll.t154"/></span>
+							<div id="numberOfMultiSelect" style="display: none; margin-left: 5px;">
+								<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
+								<select id="myList">
+									<option value="1"><spring:message code = 'ezEmail.lhm67'/></option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+								</select>
+							</div>
 						</div>
-					</div>
-
-					<div class="qstSetting">
-						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd(this)" checked> 
-						<span><spring:message code="ezPoll.t157"/></span>
-						<div id="seeResultCreatorDiv" style="display:none;">
-							<input id="seeResultCreator" type="checkbox">
-							<span><spring:message code="ezPoll.hdp07"/></span>
+	
+						<div class="qstSetting seeResult">
+							<span class="qstSettingSpan"><spring:message code="ezPoll.hdp11"/></span>
+							<input id="seeResultFirst" name="seeResult" type="radio" value="1">
+							<span><spring:message code="ezPoll.hdp13"/></span>
+							<input id="seeResultLast" name="seeResult" type="radio" value="0">
+							<span><spring:message code="ezPoll.hdp14"/></span>
+							<input id="seeResultCreator" name="seeResult" type="radio" value="2">
+							<span><spring:message code="ezPoll.hdp15"/></span>
 						</div>
-					</div>
-					
-					<div class="qstSetting">
-						<input id="anonymousVote" type="checkbox">
-						<span><spring:message code="ezPoll.t253"/></span>
 						
-						<input id="isSorting" type="checkbox">
-						<span><spring:message code = 'ezPoll.t259'/></span>
+						<div class="qstSetting">
+							<span class="qstSettingSpan"><spring:message code="ezPoll.hdp12"/></span>
+							<input id="anonymousVote" type="checkbox">
+							<span><spring:message code="ezPoll.t253"/></span>
+							
+							<input id="isSorting" type="checkbox">
+							<span><spring:message code = 'ezPoll.t259'/></span>
+							
+							<input id="isSelOnlyOnce" type="checkbox">
+							<span><spring:message code = 'ezPoll.t260'/></span>
+							
+							<input id="endDate" type="checkbox">
+							<span><spring:message code="ezPoll.t159"/></span>
+							
+							<div id="_dateTimePicker" style="display: none;">										
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
+								<select id="sTimePicker"></select>
+								<span>~</span>
+								<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
+								<select id="eTimePicker"></select>						
+							</div>
+							
+							<div id="openToAllDiv" class="qstSettingInnerDivRight">
+								<input id="openToAll" type="checkbox" >
+								<span><spring:message code="ezPoll.hdp09"/></span>
+							</div>
+							
+						</div>
+	<%-- 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+							<input id="anonymousVote" type="checkbox">
+							<span><spring:message code="ezPoll.t158"/></span>
+						</div>
 						
-						<input id="isSelOnlyOnce" type="checkbox">
-						<span><spring:message code = 'ezPoll.t260'/></span>
+						<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+							<input id="endDate" type="checkbox">
+							<span><spring:message code="ezPoll.t159"/></span>
+						</div>	
 						
-						<input id="endDate" type="checkbox">
-						<span><spring:message code="ezPoll.t159"/></span>
-						
-						<div id="_dateTimePicker" style="display: none;">										
+						<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px; display: none;">		
+							<span><spring:message code="ezPoll.t160"/></span>			
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
 							<select id="sTimePicker"></select>
-							<span>~</span>
+							<span><spring:message code="ezPoll.t161"/></span>
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 							<select id="eTimePicker"></select>						
 						</div>
-						
-						<div id="openToAllDiv" class="qstSettingInnerDivRight">
-							<input id="openToAll" type="checkbox" >
-							<span><spring:message code="ezPoll.hdp09"/></span>
+	--%>
+						<div id="target_select" class="qstSetting">
+							<span class="qstSettingSpan"><spring:message code="ezPoll.t162"/></span>
+							<select id="set_Target" style="height:22px">
+								<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
+								<option value="1"><spring:message code="ezPoll.t238" /></option>
+							</select>	
+							<a class="pollImgbtn1" id="receiverBttn" style="display: none;background-color: #e8e8e8;height:21px"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
+							<div style="display:none;" id="newTargetDiv"></div>																		
+							<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
+								<input id="sendPostMail" type="checkbox">
+								<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
+							</div>
 						</div>
-						
-					</div>
-<%-- 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-						<input id="anonymousVote" type="checkbox">
-						<span><spring:message code="ezPoll.t158"/></span>
-					</div>
-					
-					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-						<input id="endDate" type="checkbox">
-						<span><spring:message code="ezPoll.t159"/></span>
-					</div>	
-					
-					<div id="_dateTimePicker" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px; display: none;">		
-						<span><spring:message code="ezPoll.t160"/></span>			
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
-						<select id="sTimePicker"></select>
-						<span><spring:message code="ezPoll.t161"/></span>
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
-						<select id="eTimePicker"></select>						
-					</div>
---%>
-					<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px; position: relative;">
-						<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
-						<select id="set_Target" style="height:23px">
-							<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
-							<option value="1"><spring:message code="ezPoll.t238" /></option>
-						</select>	
-						<a class="pollImgbtn1" id="receiverBttn" style="display: none;background-color: #e8e8e8;height:21px"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
-						<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 60%; white-space: nowrap;" id="newTargetDiv"></div>																		
-						<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
-							<input id="sendPostMail" type="checkbox">
-							<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
+						<div style="display:none">
+							<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
+		                    <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
+		                    <input type="text" name="selectYN" id="select_YN" style="display:none">	
+		                    <input type="text" name="itemNo" id="item_no" style="display:none"> 
+							<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
+							<input type="text" name="numberOfOptions" id="numberOfOptions" style="display:none">
+							<input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
+							<input type="text" name="multiSelectNumber" id="multiSelectNumber" value="0" style="display:none"> 
+							<input type="text" name="hidSecreteVote" id="hidSecreteVote" value="" style="display:none"> 
+							<input type="text" name="hidResultFirst" id="hidResultFirst" value="" style="display:none"> 
+							<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
+							<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
+							<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
+							<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">
+							<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
+							<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
+							<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
+							<input type="text" name="hidOptImgFilePath" id="hidOptImgFilePath" value="" style="display:none">		
+							<input type="text" name="hidSendPostNotice" id="hidSendPostNotice" value="" style="display:none">		
+							<input type="text" name="hidOpenToAll" id="hidOpenToAll" value="" style="display:none">		
+							
 						</div>
-					</div>
-					<div style="display:none">
-						<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
-	                    <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
-	                    <input type="text" name="selectYN" id="select_YN" style="display:none">	
-	                    <input type="text" name="itemNo" id="item_no" style="display:none"> 
-						<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
-						<input type="text" name="numberOfOptions" id="numberOfOptions" style="display:none">
-						<input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
-						<input type="text" name="multiSelectNumber" id="multiSelectNumber" value="0" style="display:none"> 
-						<input type="text" name="hidSecreteVote" id="hidSecreteVote" value="" style="display:none"> 
-						<input type="text" name="hidResultFirst" id="hidResultFirst" value="" style="display:none"> 
-						<input type="text" name="hidModifyInfo" id="hidModifyInfo" value="" style="display:none"> 
-						<textarea name="hidContent" id="hidContent" style="display:none"></textarea>
-						<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
-						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">
-						<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
-						<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
-						<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
-						<input type="text" name="hidOptImgFilePath" id="hidOptImgFilePath" value="" style="display:none">		
-						<input type="text" name="hidSendPostNotice" id="hidSendPostNotice" value="" style="display:none">		
-						<input type="text" name="hidOpenToAll" id="hidOpenToAll" value="" style="display:none">		
-						
-					</div>
 					</td>
 				</tr>						
 			</table>			

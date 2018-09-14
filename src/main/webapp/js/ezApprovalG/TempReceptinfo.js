@@ -401,7 +401,10 @@ function btn_AprDeptTempletAdd_onclick()
     else {
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
         pAprDeptTempletUseFlag = false;
-        checkOuterReceiver();
+        //시행문
+        if (pDocType != null && pDocType != undefined && pDocType == "001") {
+        	checkOuterReceiver();
+        }
     }
 }
 function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
@@ -657,19 +660,27 @@ function checkOuterReceiver() {
 		var checkOuter = row[0].getAttribute("DATA3");
 		var checkAddress = row[0].getAttribute("DATA1");
 		
-		if (cnt > 9 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+		if (cnt > 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
 	        document.getElementById("inputSummaryOuterReceiverList").focus();
 	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	        document.getElementById("btnaddress").style.display = "none";
 	        document.getElementById("btnaddressChange").style.display = "none";
-		} else if (cnt <= 9 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
 	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	        document.getElementById("btnaddress").style.display = "";
-	        document.getElementById("btnaddressChange").style.display = "";
+	        if (useReceiveInfoName == '1') {
+//            	document.getElementById("btnaddressChange").style.display = "";
+            } else {
+            	document.getElementById("btnaddressChange").style.display = "";
+            }
 		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	        document.getElementById("btnaddress").style.display = "";
-	        document.getElementById("btnaddressChange").style.display = "";
+	        if (useReceiveInfoName == '1') {
+//            	document.getElementById("btnaddressChange").style.display = "";
+            } else {
+            	document.getElementById("btnaddressChange").style.display = "";
+            }
 		} else {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	        document.getElementById("btnaddress").style.display = "";

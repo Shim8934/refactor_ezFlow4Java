@@ -1304,4 +1304,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("deleteCompanyConfig ended");
 	}
+
+	@Override
+	public void addAddJobMasterOrderBy() throws Exception {
+		ezCommonDAO.addAddJobMasterOrderBy();
+	}
 }

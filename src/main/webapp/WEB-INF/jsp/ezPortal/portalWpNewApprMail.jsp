@@ -7,6 +7,129 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		<%-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		
+		<section  class="body_bg1">
+			<article id="appr_article" class="appr_mail">
+				<div class="tab">
+    				<ul>
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
+    				</ul>
+    			</div>
+    			<!-- graph -->
+    			<section class="apprgraph">
+    				<div class="apprgraph_area">
+    					<dl>
+    						<dt><spring:message code='main.t00006' /></dt>
+    							<dd>
+    								<div class="nomal_count">
+        								<span id="SIXHGAP">0</span>
+        							</div>
+     							</dd>
+    					</dl>
+    					<dl>
+    						<dt><spring:message code='main.t00007' /></dt>
+    						<dd>
+    							<div class="nomal_count">
+        							<span id="ONEDGAP">0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    					<dl>
+    						<dt><spring:message code='main.t00008' /></dt>
+    						<dd>
+    							<div class="nomal_count">
+        							<span id="SEVENDGAP">0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    					<dl>
+    						<dt><spring:message code='main.t00009' /></dt>
+    						<dd>
+    							<div class="nomal_count">
+        							<span id="ONEMGAP">0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    					<dl>
+    						<c:choose>
+    							<c:when test="${userLang != '3'}">
+    								<dt><spring:message code='main.t00010' /></dt>
+    							</c:when>
+    							<c:otherwise>
+    								<dt><spring:message code='main.t00010' /></dt>
+    							</c:otherwise>
+    						</c:choose>
+    						
+    						<dd>
+    							<div class="point_count">
+        							<span id="OTHER" >0</span>
+        						</div>
+        					</dd>
+    					</dl>
+    				</div>
+    			</section>
+     			<!-- /graph -->
+    			<!-- list -->
+  				<section class="portletbox appr_mailbox"  style="">
+          			<div class="title">
+          				<span class="tr"></span>
+            			<!-- tab -->
+            			<dl class="portlet_tab">
+              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on" onmouseover="tabover(this)" onmouseout="tabout(this)"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="rejectTab" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="draftTab" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
+            			</dl>
+            			<!-- /tab -->
+           				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
+            		</div>
+          			<div id ="ApprList" class="appr_mailcont">            
+              			<ul class="listtype_txt">
+            			</ul>
+          			</div>
+        		</section>
+ 				<!-- list -->
+ 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
+			</article>
+
+    		<article id="mail_article" style="display:none;" class="appr_mail">
+				<div class="tab">
+    				<ul>
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
+    				</ul>
+    			</div>
+    			<!-- graph -->
+    			<section class="apprgraph">
+    				<div class="mailgraph_area">
+    					2018-05-25 홍승비 - 메일 용량 표시 변경
+    					<div id="mailquatersize" style="width:168px; height:134px;margin-top:-20px;margin-left:-9px;margin-bottom:10px;"></div>
+    					<ul>
+    						<li><spring:message code='main.t00012' /><strong id="UseMailBox" class="rtxt"></strong></li>
+    						<li><spring:message code='main.t00013' /><strong id="MailBoxSize"></strong></li>
+    					</ul>
+  					</div>
+    			</section>
+     			<!-- /graph -->
+    			<!-- list -->
+  				<section class="portletbox appr_mailbox"  style="">
+          			<div class="title">
+          				<span class="tr"></span>
+            				<!-- tab -->
+            				<dl class="portlet_tab">
+              					<dt  class="on"><span><spring:message code='main.t00014' /><span id="InBoxCNT" class="tab_num">(0)</span></span></dt>
+				            </dl>
+            				<!-- /tab -->
+            				<span class="btn_more"><img onclick="Mailmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="more"></span>
+            		</div>
+          			<div id="MailList" class="appr_mailcont"></div>
+        		</section>
+ 				<!-- list -->
+ 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
+			</article>
+		</section>
+		 --%>
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
@@ -94,6 +217,7 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "${noneActiveX}";
 		    var MailQuater;
+		    var selTab = "";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -113,7 +237,9 @@
 		        } else if("${type}" == "favo") {
 		        	getApprFavo();
 		        }
-
+		       /*  getApprGraph();
+		        selTab = "doingTab"; */
+		        
 		        try { top.onresize() } catch (e) { }
 		    }
 	
@@ -647,6 +773,7 @@
 		        switch (obj.id) {
 		            case "doingTab":
 		                pListTypeValue = "1";
+		                selTab = "doingTab";
 		                document.getElementById("doingTab").className = "on";
 		                document.getElementById("rejectTab").className = "";
 		                document.getElementById("draftTab").className = "";
@@ -654,6 +781,7 @@
 	
 		            case "rejectTab":
 		                pListTypeValue = "4";
+		                selTab = "rejectTab";
 		                document.getElementById("doingTab").className = "";
 		                document.getElementById("rejectTab").className = "on";
 		                document.getElementById("draftTab").className = "";
@@ -661,6 +789,7 @@
 	
 		            case "draftTab":
 		                pListTypeValue = "2";
+		                selTab = "draftTab";
 		                document.getElementById("doingTab").className = "";
 		                document.getElementById("rejectTab").className = "";
 		                document.getElementById("draftTab").className = "on";
@@ -845,6 +974,18 @@
 
 		        openwindow(openLocation, "", 890, 560);
 		    }
+		    
+		    /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        /* function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "on");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selTab) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	
+		    window_onload_NewApprMail(); */
 		</script>
 	</head>
 	<body>
