@@ -20811,6 +20811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 * 반송문서(type == 4)
 		 * 기안한 문서(type == 2)
 		 * */
+		logger.debug("param.toString() : " + param.toString());
 		if(type.equalsIgnoreCase("1")) {
 			param.put("limit", 3); // 출력 갯수 제한
 			list = ezApprovalGDAO.getAprPortletList_progress(param);

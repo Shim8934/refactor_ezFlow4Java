@@ -345,7 +345,7 @@
 		    	for(var i=0; i<listSize; i++){
 		    		
 		    		console.log("img", dtl[i].ext2);
-		    		var imgsrc = dtl[i].ext2 !== null && dtl[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath="+path+"thumbnail/"+dtl[i].ext2 : "/images/kr/main/info_pic_none.png";
+		    		var imgsrc = dtl[i].ext2 !== null && dtl[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath="+path+"thumbnail/"+dtl[i].ext2 : "/images/kr/main/bestEmployee_pic_none.png";
 		    		var apprTextColor = "";
 		    		
 		    		// 승인 003, 진행 002, 대기, 001
@@ -362,7 +362,12 @@
 			    	str += '		<dl class="apprDL">';
 			    	str += '			<dt class="apprPic"><img src="'+ imgsrc +'"></dt>';
 			    	str += '			<dd class="apprName">'+ dtl[i].aprMemberName +'</dd>';
-			    	str += '			<dd class="'+ apprTextColor +'"><span>'+ dtl[i].ext1 +'</span></dd>';
+			    	
+			    	if(i==0) {
+			    		str += '			<dd class="'+ apprTextColor +'"><span><spring:message code="ezApprovalG.t30"/></span></dd>';
+			    	} else {
+			    		str += '			<dd class="'+ apprTextColor +'"><span>'+ dtl[i].ext1 +'</span></dd>';
+			    	}
 			    	str += '		</dl>';			
 			    	
 			    	if(i !== listSize-1) {
