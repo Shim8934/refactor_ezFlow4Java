@@ -2172,6 +2172,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		//2018-07-31 김보미 - 근태 추가
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
 		if (use_attitude == null || use_attitude.equals("")) {
 			use_attitude = "YES";
 		}
@@ -2196,6 +2197,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("approvalForDoc", approvalForDoc);
         //2018-07-31 김보미 - 근태 추가
         model.addAttribute("use_attitude", use_attitude);
+        model.addAttribute("useWebfolder", useWebfolder);
 		
 		logger.debug("permissionsList ended.");
 		
@@ -2370,7 +2372,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
    		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
    		
-   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+   		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
    		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);

@@ -76,7 +76,7 @@ public class EzWebFolderGWController_m {
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
    		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
    		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
@@ -282,7 +282,7 @@ public class EzWebFolderGWController_m {
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
    		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
    		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
@@ -776,7 +776,7 @@ public class EzWebFolderGWController_m {
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
    		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
    		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
@@ -1015,7 +1015,7 @@ public class EzWebFolderGWController_m {
 		String mode 		    = orElse(request.getParameter("mode"), "");
 		String realColumn        = "";
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
    		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
    		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);

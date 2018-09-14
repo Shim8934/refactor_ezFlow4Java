@@ -206,17 +206,22 @@ public class EzScheduleAdminController {
 		
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
+		StringBuffer companyList = new StringBuffer();
+		
 		for (int i =0 ; i < list.size() ; i++) {
 			OrganDeptVO vo = list.get(i);
 			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
+				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
 			}
 		}
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("companyList", companyList);
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}
