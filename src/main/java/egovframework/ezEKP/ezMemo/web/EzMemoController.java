@@ -283,9 +283,11 @@ public class EzMemoController {
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("memo_id", memoId);
 		param.put("write_date", regDate);
-		param.put("contents", contents);
 		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/memo/" + memoId, param, request, "put", null);		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("contents", contents);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/memo-list/memo/" + memoId, param, request, "post", jsonParam);		
 		
 		String status = resultBody.get("status").toString();
 		

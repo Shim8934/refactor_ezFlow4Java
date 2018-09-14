@@ -298,7 +298,8 @@
 
 		    	var memoId = obj.getAttribute("memoid");
 				var afterContents = $(".memoText[memoid=" + memoId + "]").val();
-
+				console.log(afterContents);
+				
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
 		 			   	type : 'POST',
@@ -399,8 +400,7 @@
 			        		firstDBLayerSize="no";
 			        		setLayerSize();
 	        			}
-		        		layerResize();
-			        		
+			        	layerResize();
 		        	}
 		    	});
 		    }
