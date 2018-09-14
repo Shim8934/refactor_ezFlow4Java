@@ -1384,7 +1384,7 @@
 		SELECT 
 		     lineinfo.APRMEMBERSN          AS APRMEMBERSN
 		    ,lineinfo.APRSTATE             AS APRSTATE
-		    ,codeinfo.NAME                 AS EXT1
+		    ,codeinfo.NAME$lang$           AS EXT1
 		    ,codeinfo.NAME2                AS NAME2
 		    ,codeinfo.NAME3                AS NAME3
 		    ,codeinfo.NAME4                AS NAME4

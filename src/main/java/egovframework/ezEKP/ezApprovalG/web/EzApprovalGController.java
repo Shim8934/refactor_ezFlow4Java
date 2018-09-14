@@ -6559,11 +6559,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String imgPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/";
+		String lang = userInfo.getLang().equalsIgnoreCase("1") ? "" : userInfo.getLang();
 		
 		logger.debug("paramData : " + paramData.toString());
 		paramData.put("tenantID", userInfo.getTenantId());                         
 		paramData.put("approvalFlag", approvalFlag);
 		paramData.put("imgPath", imgPath);
+		paramData.put("lang", lang);
 		
 		Map<String, Object> portletList = ezApprovalGService.getPortletAprList(paramData);
 		logger.debug("getPortletAprList is ended");
