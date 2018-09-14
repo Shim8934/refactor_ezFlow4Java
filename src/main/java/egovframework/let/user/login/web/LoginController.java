@@ -297,7 +297,7 @@ public class LoginController {
     			}
         	} else {
         		actionLogout(request, response, model);
-        		return "cmm/error/accessDenied";
+        		return "cmm/error/accessBlock";
         	}
 			
 		}
