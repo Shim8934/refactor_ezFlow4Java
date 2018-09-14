@@ -163,7 +163,7 @@
 									
 									// mht 내부에 사진이 없는 경우, 디폴트 이미지 사용함
 									if (imgSrc == "") {
-										imgSrc = "/images/kr/main/photo0" + (i + 1) + ".png";
+										imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";
 									}
 									
 									listHTML += "<li class='notiLI'><dl class='notiDL0'" + (i + 1) + "' style='background-image:url(\"" + imgSrc + "\");' onclick=\"openDoc('" + pItemID + "')\">";
@@ -177,7 +177,7 @@
                      // 게시물이 3개 미만이라면, 디폴트 게시물 이미지를 대신 표출한다.
                      if (RowCnt < 3) {
 						for (i = RowCnt; i < 3; i++) {
-							imgSrc = "/images/kr/main/photo0" + (i + 1) + ".png";                 		 
+							imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";                 		 
 							listHTML += "<li class='notiLI'><dl class='notiDL0'" + (i + 1) + "' style='background-image:url(\"" + imgSrc + "\"); cursor:default;'></dl></li>";
                     	 }
                      }
