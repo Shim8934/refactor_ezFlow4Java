@@ -9413,6 +9413,21 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="EzApprovalG.getDocSendType" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+			    PROCESSYN
+			FROM    
+			    TBL_ENDRECEIPTPOINTINFO
+			WHERE
+			    DOCID = #docID#
+			AND
+			    COMPANYID = #companyID#
+			AND
+			    TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETDOCINFO_YEAR(#v_PDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->

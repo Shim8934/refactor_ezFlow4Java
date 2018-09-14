@@ -6575,6 +6575,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgUID = "";
 		String realPath = commonUtil.getRealPath(request);
 		
+		userInfo.setRealPath(realPath);
+		
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
 			totCnt = xmlDom.getElementsByTagName("DOCID").getLength(); // 결재 체크된 문서 갯수 확인
 			
