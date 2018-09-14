@@ -24878,6 +24878,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (doc.getElementsByTag("span").get(i).hasAttr("style")) {
 						
 					String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+					if(!spanStyle.endsWith(";")){
+						spanStyle += ";";
+					}
+					
 					if (spanStyle.indexOf("font-weight") > -1) {
 						if (spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).substring(spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).indexOf(":")+1, spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).indexOf(";")).equals("bold")) {
 							strInnerHtml = "<br>" + strInnerHtml + "</b>";
@@ -24925,6 +24929,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     }
                 } else if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("p")) {
                 	String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+                	if(spanStyle.endsWith(";")){
+                		spanStyle += ";";
+                	}
                 	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
 
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
@@ -24932,19 +24939,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         if (doc.getElementsByTag("span").get(i).parent().text().trim() == doc.getElementsByTag("span").get(i).text().trim()) {
                         	if (spanStyle.indexOf("font-family") > -1) {
                         		if (parentSpanStyle.indexOf("font-family") > -1) {
-                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-family"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-family"))+1));
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-family"), spanStyle.indexOf(";", spanStyle.indexOf("font-family"))+1));
                         		}
         					}
 
                             if (spanStyle.indexOf("font-size") > -1) {
                         		if (parentSpanStyle.indexOf("font-size") > -1) {
-                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-size"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-size"))+1));
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";", spanStyle.indexOf("font-size"))+1));
                                 }
                             }
 
                             if (spanStyle.indexOf("line-height") > -1) {
                             	if (parentSpanStyle.indexOf("line-height") > -1) {
-                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("line-height"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("line-height"))+1));
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("line-height"), spanStyle.indexOf(";", spanStyle.indexOf("line-height"))+1));
                                 }
                             }
                             doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());

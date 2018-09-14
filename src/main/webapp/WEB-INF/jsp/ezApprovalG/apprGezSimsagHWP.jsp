@@ -1112,7 +1112,12 @@
 
                 var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
                 rtnVal = rtnVal.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
-                return rtnVal;
+                
+                var nodeText = getNodeText(pTemp.getElementsByTagName("CONTENT")[0]);
+                nodeText = nodeText.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
+                nodeText = nodeText.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
+                
+                return nodeText;
 
                 //return Content.innerHTML;
             } catch (e) {
