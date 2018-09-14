@@ -585,7 +585,6 @@
 		    	inputkeyword.value = keywordFromList;
 	            
 		        SearchKeyword = searchField + "=" + inputkeyword.value;
-		        goToPageByNum("1");
 	        }
 		    
 		    function reloadReadContent(url) {
