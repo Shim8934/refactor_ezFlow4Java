@@ -264,15 +264,17 @@
                 var Ans = OpenInformationUI(pInformationContent);
                 if (!Ans) return;
 
-                var chkpass = chk_Passwd(pUserID);
-                if (chkpass == "False") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
-                } else if (chkpass == "cancel" || chkpass == undefined) {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
+                if ("${approvalPWD}" != "N") {
+	                var chkpass = chk_Passwd(pUserID);
+	                if (chkpass == "False") {
+	                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                } else if (chkpass == "cancel" || chkpass == undefined) {
+	                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                }
                 }
                 
                 SaveFile();

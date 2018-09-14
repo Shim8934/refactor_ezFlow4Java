@@ -822,6 +822,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
+	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 
 	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
@@ -835,6 +836,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("hwpToolbar", hwpToolbar);
 	    model.addAttribute("useEditor", useEditor);
 	    model.addAttribute("approvalRoot", approvalRoot);
+	    model.addAttribute("approvalPWD", approvalPWD);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");
