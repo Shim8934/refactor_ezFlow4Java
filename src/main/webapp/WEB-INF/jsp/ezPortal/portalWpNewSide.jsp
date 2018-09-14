@@ -158,7 +158,9 @@
 		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
 		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
 		                        
-		                        for (var i = 1; i < RowCnt; i++) {
+		                        /* 2018-09-14 홍승비 - 게시물 표출하는 로직 수정 */
+		                      //  for (var i = 1; i < RowCnt; i++) {
+		                        for (var i = 0; i < RowCnt; i++) {
 		                            if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		                                var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
 		                            } else {
