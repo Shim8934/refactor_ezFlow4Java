@@ -90,6 +90,7 @@
 					
 					var strName1 = document.getElementById("cabNameTxt1").value.replace(/\s/g,'');
 					if (!strName1) {alert("<spring:message code='ezCabinet.t83'/>"); return;}
+					if (strName1.length > 50) {alert("<spring:message code='ezCabinet.t165'/>"); return;}
 					if (checkCabinetName(strName1)) {alert('<spring:message code="ezCabinet.t82"/>'); return;}
 					
 					var handleFunct = mode == "add" ? addCabinet : changeCabinet;
