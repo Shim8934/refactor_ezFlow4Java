@@ -28,7 +28,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
-public class EzCabinetServiceImpl_m implements EzCabinetService_m{
+public class EzCabinetServiceImpl_m implements EzCabinetService_m {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl_m.class);
 	@Autowired
 	private CommonUtil commonUtil;

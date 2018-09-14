@@ -59,7 +59,7 @@ public class EzCabinetController_m {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/saveRelatedJournal.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonSaveRelatedJournal(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception{
+	public String jsonSaveRelatedJournal(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedJournal is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String mode            = request.getParameter("mode")           != null? request.getParameter("mode")            : "";
@@ -87,12 +87,5 @@ public class EzCabinetController_m {
 		
 		logger.debug("jsonSaveRelatedJournal finishes!");
 		return resultObj.toString();
-	}
-	
-	@RequestMapping(value="/ezCabinet/cabinetRelatedFileDetail.do")
-	public String jspGetCabinetRelatedFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		logger.debug("jspGetCabinetFileDetail started");
-		logger.debug("jspGetCabinetFileDetail ended");
-		return "ezCabinet/cabinetFileDetail";
 	}
 }

@@ -25,7 +25,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @SuppressWarnings("unchecked")
 @Controller
 public class EzCabinetController_h {
-	
 	@Autowired
 	private CommonUtil commonUtil;
 	

@@ -57,12 +57,12 @@ public class EzCabinetGWController_m {
 		}
 		
 		try {
-			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
-			int dstCabinetId       = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			String realPath        = request.getServletContext().getRealPath("");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
 			
 			//Save approval item
-			result                 = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, title, summary, attach, other, locale, userInfo);
+			result           = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, title, summary, attach, other, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -101,12 +101,12 @@ public class EzCabinetGWController_m {
 		}
 		
 		try {
-			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
-			int dstCabinetId       = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			String realPath        = request.getServletContext().getRealPath("");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
 			
 			//Save receiver list
-			result                 = cabinetService_m.saveJournalItem(realPath, dstCabinetId, title, summary, mode, journalTitle, createDate, journalWriter, journalType, journalContent, formName, attach, locale, userInfo);
+			result           = cabinetService_m.saveJournalItem(realPath, dstCabinetId, title, summary, mode, journalTitle, createDate, journalWriter, journalType, journalContent, formName, attach, locale, userInfo);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
