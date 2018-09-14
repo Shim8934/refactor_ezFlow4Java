@@ -544,14 +544,6 @@
 				 })
    				makePageSelPage();
 			}
-			 
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 192;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        }
 		    
 		   //2018-08-06 김보미 - 페이지 위치 고정
 		    $(window).on("resize", function(){
@@ -559,7 +551,7 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 192;
+	        	var height = document.documentElement.clientHeight - 244;
 
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
@@ -647,7 +639,7 @@
 		</div>
      	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
-     	<br/>
+<!--      	<br/> -->
 		<div id="tblPageRayer"></div>
 	</body>
 </html>
