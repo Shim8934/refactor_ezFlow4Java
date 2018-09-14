@@ -73,9 +73,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private Properties config;
     
-    @Autowired
-	private Properties globals;
-    
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
@@ -544,9 +541,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
-   		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1: 2;
-   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
-   		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
