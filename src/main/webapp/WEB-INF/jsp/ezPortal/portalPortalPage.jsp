@@ -1656,6 +1656,20 @@
 			window.onresize = function() {
 				leftResize();
 			}
+			
+			function viewQuick() {
+       			if (document.getElementById("quickSide").style.width == "0px") {
+       				$(document.getElementById("quickSide")).animate({width: '100px'});
+       				$(".linkBtn_close").animate({right: '82px'}, function(){
+       					$(".linkBtn_close").attr("class", "linkBtn_open");
+       				});
+       			} else {
+       				$(document.getElementById("quickSide")).animate({width: '0px'});
+       				$(".linkBtn_open").animate({right: '3px'}, function(){
+       					$(".linkBtn_open").attr("class", "linkBtn_close");
+       				});
+       			}
+       		}
 		</script>
 	</head>
 	

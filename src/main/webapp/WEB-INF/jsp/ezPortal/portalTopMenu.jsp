@@ -1136,12 +1136,22 @@
 				var sh = screen.height;
 				
 				if (parent.document.getElementById("topFrame").style.position == "") {
+					$("#topMenuFull").fadeOut(0, function(){
+						$("#topMenuFull").attr("class", "full_nav on");
+						$("#topMenuFull").fadeIn(100);
+					});					
+					
 					parent.document.getElementById("topFrame").style.position = "relative";
 					parent.document.getElementById("topFrame").style.minHeight = sh+"px";
 					parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0.3)";
 					//$(".full_menu_toggle").css("display", "");
 					$(".full_menu_toggle").slideDown(200);
 				} else {
+					$("#topMenuFull").fadeOut(100, function(){
+						$("#topMenuFull").attr("class", "full_nav off");
+						$("#topMenuFull").fadeIn(100);
+					});
+					
 					parent.document.getElementById("topFrame").style.minHeight = "260px";
 					parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0)";
 					$(".full_menu_toggle").slideUp(200, function(){
@@ -1582,20 +1592,6 @@
 				    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezCircular/circularIndex.do", "main", " ");
 				        break; 
-	        	}
-	        }
-	        
-	        function viewQuick() {
-	        	var pFrame = parent.document.getElementById("mainFrame");
-
-	        	if (pFrame != null) {
-	        		if (pFrame.contentWindow.document.getElementById("quickSide")) {
-	        			if (pFrame.contentWindow.document.getElementById("quickSide").style.width == "0px") {
-	        				$(pFrame.contentWindow.document.getElementById("quickSide")).animate({width: '100px'})
-	        			} else {
-	        				$(pFrame.contentWindow.document.getElementById("quickSide")).animate({width: '0px'})
-	        			}
-	        		}
 	        	}
 	        }
 		</script>

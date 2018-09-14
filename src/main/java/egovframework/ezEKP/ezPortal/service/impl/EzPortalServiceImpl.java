@@ -2178,7 +2178,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		StringBuilder sb = new StringBuilder();		
 		sb.append("<li class='contentlayout_none'><ul class='contentlayout topmenu'><li class='contentlayout_none' style='margin:0 auto'>");
-		sb.append("<nav id='topNav' class='topNavCls'><div id='topMenuFull' class='full_nav on' onclick='subMenuClick()'><span class='icon_topmenu full_menu'></span></div>");
+		sb.append("<nav id='topNav' class='topNavCls'><div id='topMenuFull' class='full_nav off' onclick='subMenuClick()'><span class='icon_topmenu full_menu'></span></div>");
 		sb.append("<div class='countBox'><span class='hidden_nav_count'>+0</span><span class='icon_topmenu icon_count_arrow'></span></div>");
 		sb.append("<ul class='navUL'>");		
 		
@@ -2969,7 +2969,7 @@ System.out.println("portletDisplayName : " +portletDisplayName );
 					if (i == 0) {
 						sb.append("<section class='section_left'>\n");
 					} else if (i == 1) {
-						sb.append("<aside id='quickSide'><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
+						sb.append("<aside id='quickSide'><p class='linkBtn_open' onclick='javascript:viewQuick()'><img src='/images/kr/main/linkBtn_open.png'></p><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
 						sb.append("<li><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
 						sb.append("<li><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
 						sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");

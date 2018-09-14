@@ -156,8 +156,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
 
 /* portlet_list */
-.portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.portlet_list li{ margin:0px; padding:0px 0px 0px 17px; background:url(../images/kr/main/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} 
+.portlet_list li{ margin:0px; padding:0px 0px 0px 17px; background:url(../images/kr/main/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor: pointer;}
 .portlet_list li:last-child{ border-bottom:none;}
 .portlet_list li .txt { float:left; padding:0px 0px 0px 0px; width:61%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing: -0.5;}
 .portlet_list li .name {width:55px; text-align:right;overflow:hidden; font-size:12px; letter-spacing: -0.5; float:right; display:inline-block; white-space:nowrap; text-overflow:ellipsis}
@@ -304,10 +304,12 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
 .scheduleUL{ margin:0px; padding:0px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:202px;} /*장진혁 */
-.scheduleUL .scheduleLi{margin:0px; padding:3px 0px 12px 0px;}
+.scheduleUL .scheduleLi{margin:0px; padding:3px 0px 12px 0px; cursor: pointer;}
 .scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px; line-height: 16px;}
-.scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
-.scheduleUL .scheduleLi .scheduleTime .Tindividual{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#018bfa; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:rgb(244, 221, 14); border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.scheduleUL .scheduleLi .scheduleTime .Tindividual{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#018bfa; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.scheduleUL .scheduleLi .scheduleTime .Tdept{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.scheduleUL .scheduleLi .scheduleTime .Tcompany{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#ff1c71; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .timeText{margin:0px; padding:0px 0px 0px 5px; font-size:13px; color:#333;}
 .scheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333;}
 .scheduleUL .scheduleLi .scheduleText .reservation{margin:0px; padding:0px; font-size:13px; color:#000; font-weight:bold;}
@@ -419,8 +421,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* aside */
 aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index:9; overflow:visible; background: #fff; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.linkBtn_open{ margin:0px; padding:0px; position:absolute; right:87px; top:76px; cursor:pointer;}
-.linkBtn_close{margin:0px; padding:0px; position:absolute; right:87px; top:76px; cursor:pointer;}
+.linkBtn_open{ margin:0px; padding:0px; position:absolute; right:82px; top:7px; cursor:pointer;}
+.linkBtn_close{margin:0px; padding:0px; position:absolute; right:82px; top:7px; cursor:pointer;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:46px; background:#0470e4; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 .aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}
