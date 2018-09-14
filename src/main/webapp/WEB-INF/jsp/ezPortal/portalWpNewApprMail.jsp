@@ -343,7 +343,9 @@
 		    	str += '	<div class="approval_content">';
 		    	
 		    	for(var i=0; i<listSize; i++){
-		    		var imgsrc = dtl[i].ext2 !== null ? "/ezCommon/downloadAttach.do?filePath="+path+"thumbnail/"+dtl[i].ext2 : "/images/kr/main/info_pic_none.png";
+		    		
+		    		console.log("img", dtl[i].ext2);
+		    		var imgsrc = dtl[i].ext2 !== null && dtl[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath="+path+"thumbnail/"+dtl[i].ext2 : "/images/kr/main/info_pic_none.png";
 		    		var apprTextColor = "";
 		    		
 		    		// 승인 003, 진행 002, 대기, 001
