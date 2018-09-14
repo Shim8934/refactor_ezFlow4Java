@@ -21,7 +21,11 @@
 			}
 			.noticeSpan {
 				display:block;
-			}		
+			}
+			.noti_portlet_list .notiLI dl {
+				background-repeat:no-repeat;
+				background-size:cover;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<%-- <section  class="body_bg1">
@@ -105,14 +109,14 @@
 	                var RowCnt = xmldom.getElementsByTagName("ROW").length;
                 
     	            if (RowCnt > 0) {
-    	            	/* 2018-09-11 홍승비 - 포틀릿에 표시되는 게시물의 수는 최대 3개(아래에서 i=1부터 시작함)로 고정 */
+    	            	/* 2018-09-11 홍승비 - 포틀릿에 표시되는 게시물의 수는 3개로 고정 */
         	            /* if (RowCnt > 6) {
-            	            RowCnt = 6;
-        	            } */
-        	            if (RowCnt > 4) {
-            	            RowCnt = 4;
-        	            }
-
+            	            	RowCnt = 6;
+            	            }*/
+						if (RowCnt > 3) {
+        	            	RowCnt = 3;
+    	            	}
+            	        
         	            /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */
                 	    /* var pfirstItemID = "";                    
                         pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                       	
@@ -133,7 +137,14 @@
                         for (var i = 1; i < RowCnt; i++) {
                             var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
+                            var newItemFlag = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA7").item(0));
+                            var notiNewText = "";
                             var imgSrc = "";
+                            
+                            if (newItemFlag == "Y") {
+                            	notiNewText = "N";
+                            	newItemFlag = "noti_new";
+                            }
                             
                           //  listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
                           /* 2018-09-11 홍승비 - 게시물의 이미지와 제목을 화면에 뿌려주도록 수정 */
@@ -145,22 +156,31 @@
 								data : { type   : "BOARDCONTENT",
 										 docID   : pItemID 
 									   },
-								success: function(filePath){	
+								success: function(filePath){
 									imgSrc = getMhtImg(pItemID, filePath);
 									
 									// mht 내부에 사진이 없는 경우, 디폴트 이미지 사용함
 									if (imgSrc == "") {
-										imgSrc = "/images/kr/main/photo0" + i + ".png";
+										imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";
 									}
 									
-									listHTML += "<li><img class='noticeImg'  src='" + imgSrc + "' onclick=\"openDoc('" + pItemID + "')\">";
-									listHTML += "<span class='noticeSpan' onclick=\"openDoc('" + pItemID + "')\">" + DOCTITLE + "</span></li>"; 							
+									listHTML += "<li class='notiLI'><dl class='notiDL0'" + (i + 1) + "' style='background-image:url(\"" + imgSrc + "\");' onclick=\"openDoc('" + pItemID + "')\">";
+									listHTML += "<dt class='noti_num'>" + (i + 1) + "</dt><dt class='" + newItemFlag + "'>" + notiNewText + "</dt>";
+									listHTML += "<dd class='noti_text'>" + DOCTITLE + "</dd></dl></li>";
 								}
 							});
                         }
                      //   listHTML += "</ul>";
+                     
+                     // 게시물이 3개 미만이라면, 디폴트 게시물 이미지를 대신 표출한다.
+                     if (RowCnt < 3) {
+						for (i = RowCnt; i < 3; i++) {
+							imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";                 		 
+							listHTML += "<li class='notiLI'><dl class='notiDL0'" + (i + 1) + "' style='background-image:url(\"" + imgSrc + "\"); cursor:default;'></dl></li>";
+                    	 }
+                     }
                         
-                        document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
+					document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
                         
                         /* 2018-09-11 홍승비 - 게시물의 내용(content)을 화면에 표출하는 부분 주석처리 */
 						/* 
@@ -347,7 +367,8 @@
 	        	}
 	        }
 	        
-        	window_onload_Newboard();
+	        // window.onload로 해당 함수기능 이동하여 주석처리 
+        	// window_onload_Newboard();
 		</script>
 	</head>
 	<body>

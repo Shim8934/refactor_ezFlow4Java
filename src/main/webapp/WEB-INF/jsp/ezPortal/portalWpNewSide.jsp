@@ -183,6 +183,7 @@
 		                            
 		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));		                            
 		                            var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("GUBUN").item(0));
+		                            var newItemFlag = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA7").item(0));
 		                          	//2016-10-31
 		                          	//boardType이 아무 값도 들어가지 않아서, 보드타입이0일때, 메인컨텐츠에 내용이 있을때 보트타입3을넣어줌.
 		                             /* var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
@@ -197,7 +198,12 @@
 			                        
 			                        /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리  */
 		                            //listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" ><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
-			                        listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" >" + DOCTITLE + "</li>";
+			                        listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" >";			                        
+			                        /* 2018-09-14 홍승비 - 새게시물 표시 태그 추가 */
+			                        if (newItemFlag == "Y") {
+			                        	listHTML += "<span class='boardNew'>N</span>";
+			                        }
+			                        listHTML += DOCTITLE + "</li>";
 		                        }
 		                        
 		                        listHTML += "</ul>";
