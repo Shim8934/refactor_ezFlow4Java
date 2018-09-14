@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -50,6 +51,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
@@ -6477,6 +6479,49 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getPortletAprDocList ended");
 
 		return result;
+	}
+	
+	/**
+	 * 전자결재G 포틀릿 결재리스트 표출 Method - 수정버전
+	 * 박종균
+	 */
+	@RequestMapping(value = "/ezApprovalG/getPortletAprList.do")
+	@ResponseBody
+	public Object getPortletAprList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception{
+		logger.debug("getPortletAprList is started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String imgPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/";
+		
+		logger.debug("paramData : " + paramData.toString());
+		paramData.put("tenantID", userInfo.getTenantId());                         
+		paramData.put("approvalFlag", approvalFlag);
+		paramData.put("imgPath", imgPath);
+		
+		Map<String, Object> portletList = ezApprovalGService.getPortletAprList(paramData);
+		logger.debug("getPortletAprList is ended");
+		
+		logger.debug("portletList : " + portletList.toString());
+
+		return portletList;
+	}
+	
+	/**
+	 * 전자결재 포틀릿 결재할 문서 시간 표시 Method
+	 * */
+	@RequestMapping(value = "/ezApprovalG/getPortletApprGapTime.do")
+	@ResponseBody
+	public Object getPortletApprGapTime(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception {
+		logger.debug("getPortletApprGapTime is started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		paramData.put("tenantID", userInfo.getTenantId());     
+		
+		Map<String, Object> ret = ezApprovalGService.getPortletApprGapTime(paramData);
+		logger.debug("ret.toString() " + ret.toString());
+		logger.debug("getPortletApprGapTime is ended.");
+		return ret;
 	}
 
 	/**

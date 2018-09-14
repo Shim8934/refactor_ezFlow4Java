@@ -1410,6 +1410,8 @@ System.out.println(strHTML);
 		String searchName = "";
 		String type = req.getParameter("type");
 		
+		logger.debug("wpNewApprMail type : " + type);
+		
 		if (type.equals("favo")) {
 			List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 			

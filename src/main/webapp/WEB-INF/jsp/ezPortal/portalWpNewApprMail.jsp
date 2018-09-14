@@ -12,6 +12,69 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
 		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
+		<style type="text/css">
+			.apprBox {
+			  border: 1px solid #e0e3e4;
+			  width: 450px;
+			  font-size: 13px;
+			  margin-left: 15px;
+			}
+			.upperBox {
+			  width: 100%;
+			  height: 20px;
+			  background: #e0e3e4
+			}
+			.upperBox #title {
+			  font-weight: bold;
+			  text-align: left;
+			  width: 70%;
+			  float: left
+			}
+			.upperBox #info {
+			  text-align: right;
+			  width: 30%;
+			  float: left;
+			}
+			.lowerBox {
+			  height: 100px;
+			}
+			.aprmemInfo {
+			  border: 1px solid #e0e3e4;
+			  margin-top: 20px;
+			  margin-left: 15px;
+			  width: 103px;
+			  height: 70px;
+			  float: left;
+			}
+			.aprmemInfo .userImg {
+			  float: left;
+			  width: 60px;
+			}
+			.aprmemInfo .userStatus {
+			  float: right;
+			  margin-top: 15px;
+			  width: 40px;
+			}
+			.userStatus #aprstate {
+			  width: 35px;
+			  margin-top: 3px;
+			  padding: 2px;
+			  border-radius: 5px;
+			  background: #0470e4;
+			  text-align: center;
+			  color: white;
+			}
+			.lowerBox .arrowImg {
+			  /* border: 1px solid black; */
+			  margin-top: 20px;
+			  margin-left: 10px;
+			  width: 25px;
+			  height: 70px;
+			  float: left;
+			  display: flex;
+			  align-items: center;
+			}
+		</style>
 		<script type="text/javascript">
 		    var arr_userinfo = new Array();
 		    
@@ -42,16 +105,21 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        
-		        if ("${type}" != "mail") {
-		        	getApprGraph();
-		        } else {		        		        
+
+  		        if ("${type}" == "appr") {
+		        	getApprGraph("${type}"); 
+		        } else if("${type}" == "mail") {		        		        
 		        	getMailGraph();
+		        } else if("${type}" == "favo") {
+		        	getApprFavo();
 		        }
-		        
+
 		        try { top.onresize() } catch (e) { }
 		    }
 	
+		    /**
+		    	기존 포탈에서 결재/메일 선택하는 탭
+		    */
 		    function change_article(flag) {
 		        if (flag == "appr") {
 		            document.getElementById("appr_article").style.display = "";
@@ -66,7 +134,146 @@
 	
 		    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
 		    
-	 	    function getApprGraph() {
+////// 작업 중인 function 모아두기 start
+		    function getApprFavo() {
+		    	$.ajax({
+		    		type: "post",
+		    		dataType: "JSON",
+		    		contentType: "application/json",
+		    		async: false,
+		    		url: "/ezApprovalG/getPortletApprGapTime.do",
+		    		data: JSON.stringify({
+			 	        pUserID: pUserID, 
+			 	        companyID: companyID		    			
+		    		}),
+		    		success: function(res) {
+
+		    			// 0붙이는게 맞으면 empty삭제하기
+		    			$("#SIXHGAP").empty();
+		    			$("#ONEDGAP").empty();
+		    			$("#SEVENDGAP").empty();
+		    			$("#ONEMGAP").empty();
+		    			$("#OTHER").empty();
+		    			
+		    			$("#SIXHGAP").append(res.six > 99 ? '99' : res.six);
+		    			$("#ONEDGAP").append(res.day > 99 ? '99' : res.day);
+		    			$("#SEVENDGAP").append(res.week > 99 ? '99' : res.week);
+		    			$("#ONEMGAP").append(res.month > 99 ? '99' : res.month);
+		    			$("#OTHER").append(res.other > 99 ? '99' : res.other);
+		    		}
+		    	});
+		    }
+		    
+	 	    function getApprGraph(type) {
+	 	    	
+	 	    	// type이 favo, appr 두가지
+	 	    	if(type === "favo") {
+			 	    		
+	 	    	} else if(type === "appr") {
+					$.ajax({
+			 	    	type : "POST",
+			 	        dataType : "JSON",
+			 	        contentType: "application/json",
+			 	        async: "false",
+			 	        url : "/ezApprovalG/getPortletAprList.do",
+			 	        data : JSON.stringify({
+			 	        	pListTypeName: pListTypeValue, // 1. 결재할문서, 4. 반송문서, 2. 기안문서  
+			 	        	pUserID: pUserID, 
+			 	        	companyID: companyID
+						}),
+						success : function(res){
+							$('#ApprList').empty();
+							if(pListTypeValue === "1") {
+								$(res.list).each(function(index, element) {
+									index === 0 ? $('#ApprList').append(dataAssemblerApprLine(element, res.listDtl, res.imgPath)) : $('#ApprList').append(dataAssembler(element)); 
+								});													
+							} else {
+								$(res.list).each(function(index, element) {
+									$('#ApprList').append(dataAssembler(element));
+								});								
+							}
+							
+							// 데이터가 없는 경우
+							if(res.list.length < 1) {
+								$('#ApprList').append(noData());
+							}
+							
+							$('#ApprList li').css("cursor", "pointer");
+			 	        },
+			 	        error : function(error){
+			 	        	console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
+			 	        }
+					});	 	    		
+	 	    	}
+		    } 		
+		    
+		    //결재할 문서 첫번째 결재라인 디테일 구성
+		    function dataAssemblerApprLine(data, dtl, path) {
+		    	var listSize = dtl.length > 3 ? 3 : dtl.length;
+		    	var str = "";
+		    	
+				str += '<div class="apprBox">';
+				str += '  <div class="upperBox" onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'")\'">';
+				str += '    <div id="title">'+ data.docTitle+'</div>';
+				str += '    <div id="info">'+ data.writerName +'  '+ data.startDate.substr(5, 11).replace(/-/gi, ".") +'</div>';
+				str += '  </div>';
+				str += '  <div class="lowerBox">';
+				
+				for(var i=0; i<listSize; i++){
+					
+					var imgsrc = dtl[i].ext2 !== null ? "/ezCommon/downloadAttach.do?filePath="+path+"thumbnail/"+dtl[i].ext2 : "/images/kr/main/info_pic_none.png";
+					console.log(imgsrc);
+					
+					str += '    <div class="aprmemInfo">';
+					str += '      <div class="userImg">';
+					//str += '        <img id="myimg" src="/ezCommon/downloadAttach.do?filePath='+path+'thumbnail/'+dtl[i].ext2+'" width="60" height="60">';
+					str += '        <img id="myimg" src='+imgsrc+' width="60" height="60">';
+					str += '      </div>';
+					str += '      <div class="userStatus">';
+					str += '        <span>'+ dtl[i].aprMemberName +'</span>';
+					str += '        <span id="aprstate">'+ dtl[i].ext1 +'</span>';
+					str += '      </div>';
+					str += '    </div>';
+					
+					if(i !== listSize-1) {
+						str += '    <div class="arrowImg"> --> </div>';
+					}
+				}
+
+				str += '  </div>';
+				str += '</div>';		    	
+		    	
+		    	return str;
+		    }
+
+			// aprmemberID, aprmemberName, aprmemberDeptID 필요하면 넣기.
+			function dataAssembler(data) {
+				var str = "";
+				
+				str += '<li onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'")\'>';
+				str += '	<span class="txt">'+ data.docTitle +'</span>';
+				str += '	<span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi,'.')+'</span>';				
+				str += '	<span class="name">'+ data.writerName +'</span>';
+				str += '</li>';
+				
+				return str;
+			}
+			
+			function noData(){
+				var str = "";
+				
+           	    str += "<dl class='nodata'>";
+               	str += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+               	str += '<dd>"' + strLang1_NewApprMail + '"</dd>';
+               	str += "</dl>";
+               	
+               	return str;
+			}
+
+////// 작업 중인 function 모아두기 end
+
+	 	    // 이 함수 살리면 기존으로 돌아감.
+/*    	 	    function getApprGraph() {
 				$.ajax({
 		 	    	type : "POST",
 		 	        dataType : "text",
@@ -91,7 +298,7 @@
 		 	        	console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
 		 	        }
 				});
-		    } 
+		    }  */
 	
 		    function getDocList_after(xml) {
 		        if (xml == null) return;
@@ -107,7 +314,7 @@
 		                    document.getElementById("draftCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT2").item(0)) + ")";
 		                    document.getElementById("rejectCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT3").item(0)) + ")"; */
 		                
-					if ("${type}" == "favo") {		                    
+					if ("${type}" == "favo") {	
 						var sixhgap = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
 	                    document.getElementById("SIXHGAP").innerHTML = (sixhgap > 99 ? '99' : sixhgap);
 	                    
@@ -125,8 +332,12 @@
 					}
                     
 	                /* } */
-
-	                if ("${type}" == "appr") {
+					
+	                /**
+	                	2018.09.11
+	                	결재할 문서 텍스트 ver. 
+	                */
+  	                if ("${type}" == "appr") {
 	                	document.getElementById("ApprList").innerHTML = "";
 	                	
 		                if (xmldom.getElementsByTagName("CELL").length > 0) {
@@ -155,9 +366,9 @@
 		                     }
 		                    //listHTML += "</ul>";
 		                } else {
-		                    /* listHTML = "<div class='nodata_portlet '>";
-		                    listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
-		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>"; */
+		                    //listHTML = "<div class='nodata_portlet '>";
+		                    //listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
+		                    //listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 		            	    listHTML += "<dl class='nodata'>";
 		                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
 		                	listHTML += '<dd>"' + strLang1_NewApprMail + '"</dd>';
@@ -438,7 +649,7 @@
 		                pListTypeValue = "1";
 		                document.getElementById("doingTab").className = "on";
 		                document.getElementById("rejectTab").className = "";
-		                document.getElementById("draftTab").className = "";                
+		                document.getElementById("draftTab").className = "";
 		                break;
 	
 		            case "rejectTab":
@@ -455,7 +666,7 @@
 		                document.getElementById("draftTab").className = "on";
 		                break;
 		        }
-		        getApprGraph();
+		        getApprGraph('appr');
 		    }
 	
 		    function Appmore_btnClick() {
@@ -583,8 +794,11 @@
 		        window.open("/ezEmail/mailMain.do", "main");
 		    }
 		    
+		    /*
+		    	기존포탈 소스인가?? 주석처리
+		    */
 		    function refresh_onclick() {
-		        change_article('mail');
+		        // change_article('mail');
 		    }
 		    
 		    function openergetDocInfo() { 

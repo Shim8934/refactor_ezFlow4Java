@@ -138,6 +138,31 @@ public class ApprGDocListVO {
 	private String formFileLocation;
 	private String formDocType;
 	
+	/* 다른 테이블과의 JOIN을 염두해서 여분 추가*/
+	
+	private String ext1;
+	private String ext2;
+	private String ext3;
+	
+	
+	public String getExt1() {
+		return ext1;
+	}
+	public void setExt1(String ext1) {
+		this.ext1 = ext1;
+	}
+	public String getExt2() {
+		return ext2;
+	}
+	public void setExt2(String ext2) {
+		this.ext2 = ext2;
+	}
+	public String getExt3() {
+		return ext3;
+	}
+	public void setExt3(String ext3) {
+		this.ext3 = ext3;
+	}
 	public String getFormFileLocation() {
 		return formFileLocation;
 	}
@@ -552,5 +577,50 @@ public class ApprGDocListVO {
 	public void setProcessYN(String processYN) {
 		this.processYN = processYN;
 	}
+	@Override
+	public String toString() {
+		return "ApprGDocListVO [docID=" + docID + ", formID=" + formID
+				+ ", orgDocID=" + orgDocID + ", docType=" + docType
+				+ ", docState=" + docState + ", functionType=" + functionType
+				+ ", href=" + href + ", docTitle=" + docTitle + ", docNo="
+				+ docNo + ", hasAttachYn=" + hasAttachYn + ", hasOpinionYn="
+				+ hasOpinionYn + ", startDate=" + startDate + ", endDate="
+				+ endDate + ", writerID=" + writerID + ", writerName="
+				+ writerName + ", writerJobTitle=" + writerJobTitle
+				+ ", writerDeptID=" + writerDeptID + ", writerDeptName="
+				+ writerDeptName + ", isPublic=" + isPublic + ", writerName2="
+				+ writerName2 + ", writerJobTitle2=" + writerJobTitle2
+				+ ", writerDeptName2=" + writerDeptName2 + ", aprMemberSN="
+				+ aprMemberSN + ", aprType=" + aprType + ", aprState="
+				+ aprState + ", aprMemberID=" + aprMemberID
+				+ ", aprMemberName=" + aprMemberName + ", aprMemberName2="
+				+ aprMemberName2 + ", aprMemberJobTitle=" + aprMemberJobTitle
+				+ ", aprMemberJobTitle2=" + aprMemberJobTitle2
+				+ ", aprMemberDeptID=" + aprMemberDeptID
+				+ ", aprMemberDeptName=" + aprMemberDeptName
+				+ ", aprMemberDeptName2=" + aprMemberDeptName2 + ", formName="
+				+ formName + ", formName2=" + formName2 + ", urgentApproval="
+				+ urgentApproval + ", receivedDate=" + receivedDate
+				+ ", securityCode=" + securityCode + ", storagePeriod="
+				+ storagePeriod + ", keyword=" + keyword + ", companyID="
+				+ companyID + ", itemCode=" + itemCode + ", itemName="
+				+ itemName + ", securityApproval=" + securityApproval
+				+ ", tempAttribute=" + tempAttribute + ", status=" + status
+				+ ", specialRecordCode=" + specialRecordCode
+				+ ", publicityCode=" + publicityCode + ", publicityYN="
+				+ publicityYN + ", limitRange=" + limitRange + ", pageNum="
+				+ pageNum + ", cabinetID=" + cabinetID + ", taskCode="
+				+ taskCode + ", docNumCode=" + docNumCode + ", orgDocNumCode="
+				+ orgDocNumCode + ", seperateAttachXML=" + seperateAttachXML
+				+ ", summary=" + summary + ", itemName2=" + itemName2
+				+ ", signCheck=" + signCheck + ", edmsYN=" + edmsYN
+				+ ", containerID=" + containerID + ", receiptPointName="
+				+ receiptPointName + ", receiptPointName2=" + receiptPointName2
+				+ ", processYN=" + processYN + ", linkDate=" + linkDate
+				+ ", sendFlag=" + sendFlag + ", docstateName=" + docstateName
+				+ ", formFileLocation=" + formFileLocation + ", formDocType="
+				+ formDocType + "]";
+	}
+	
 	
 }

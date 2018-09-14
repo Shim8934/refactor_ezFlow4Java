@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20704,6 +20705,89 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getAprDocList ended");
 		
 		return resultXML.toString();
+	}
+	
+	public Map<String, Object> getPortletAprList(Map<String, Object> param) throws Exception {
+	
+		String type = (String) param.get("pListTypeName");
+		Map<String, Object> ret = new HashMap<String, Object>();
+		List<ApprGDocListVO> list = new ArrayList<ApprGDocListVO>();
+		List<ApprGDocListVO> detail = new ArrayList<ApprGDocListVO>();
+		
+		if(param.get("approvalFlag").toString().equalsIgnoreCase("S")) {
+			param.put("code1", "SA04");
+		} else {
+			param.put("code1", "A04");
+		}		
+		/**
+		 * 결재할 문서(type == 1)인 경우 화면상에서 결재라인 정보를 보여주는 부분이 있음.
+		 * 반송문서(type == 4)
+		 * 기안한 문서(type == 2)
+		 * */
+		if(type.equalsIgnoreCase("1")) {
+			param.put("limit", 3); // 출력 갯수 제한
+			list = ezApprovalGDAO.getAprPortletList_progress(param);
+			ret.put("list", list);
+			logger.debug("list.toString() : " + list.toString());
+			
+			if(list.size() > 0) {
+				param.put("docID", list.get(0).getDocID()); // 첫 번째 결재문서의 라인 정보만 필요함.
+	
+				// 화면에 출력될 3명 조합하기.
+				detail = assembleApprPortletList(param);
+				ret.put("listDtl", detail); 
+				ret.put("imgPath", param.get("imgPath"));				
+			}
+		} else if(type.equalsIgnoreCase("2")) {
+			param.put("limit", 5);
+			list = ezApprovalGDAO.getAprPortletList_draft(param);
+			ret.put("list", list);
+		} else if(type.equalsIgnoreCase("4")) {
+			param.put("limit", 5);
+			list = ezApprovalGDAO.getAprPortletList_reject(param);
+			ret.put("list", list);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * 포틀릿에 출력할 최대 3개의 결재라인 조합.
+	 * */
+	public List<ApprGDocListVO> assembleApprPortletList(Map<String, Object> param) throws Exception {
+	
+		List<ApprGDocListVO> ret = new ArrayList<ApprGDocListVO>();
+		int index = 0;
+		boolean isUser = false;
+		
+		Iterator<ApprGDocListVO> it = ezApprovalGDAO.getAprPortletList_progressDtl(param).iterator();
+		while(it.hasNext() && index < 3) {
+			ApprGDocListVO vo = it.next();
+			if (index == 0 && vo.getAprMemberSN().equalsIgnoreCase("1")) {
+				ret.add(vo);
+			} else {
+				if(isUser && ret.size() < 3) {
+					ret.add(vo);
+				}				
+				// 현재 유저 결재선 정보와 바로 뒷 사람 정보까지 넣고 while문 종료!
+				if(param.get("pUserID").toString().equalsIgnoreCase(vo.getAprMemberID())) {
+					ret.add(vo);
+					isUser = true;
+				}
+
+			}
+			index++;
+		}
+		
+		logger.debug("ret.toString() : " + ret.toString());
+		
+		return ret;
+	}
+	
+	public Map<String, Object> getPortletApprGapTime(Map<String, Object> param) throws Exception {
+		Map<String, Object> ret = ezApprovalGDAO.getPortletApprGapTime(param);
+		logger.debug("gapTime.toString() : " + ret.toString());
+		return ret;
 	}
 	
 	private int getAprPortletDocCount (String pListType, String pUserDeptID, String pUserID, String pUserIDs, String pUserFlag, String pSubQuery, String companyID, int tenantID) throws Exception {
