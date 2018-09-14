@@ -344,7 +344,7 @@
 .popup.cabRelatedFile, .popup.cabAddMain, .popup.cabShareFile, .popup.cabDetail {overflow: hidden;}
 .popup >h3 {font-size: 11pt; font-weight: bold; color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
 .popup.cabChgoff, .popup.cabChgon {overflow: hidden; width: 300px; height: 173px; position: fixed; z-index: 2000;}
-.popup .addRlWrapper {min-height: 345px; height: 345px; display: flex; flex-flow: column;}
+.popup .addRlWrapper {min-height: 335px; height: 335px; display: flex; flex-flow: column;}
 .popup.cabPhotooff, .popup.cabPhotoon {overflow: hidden; width: 410px; height: 450px; position: fixed; z-index: 2000;}
 .cabphoselect {padding: 0px 10px; overflow-y: auto; background-color: #fff; margin: 0px; border: none; height: 355px; list-style: none;}
 .cabphoselect li {float: left; width: 33.33%; display: flex; height: 120px; justify-content: center; align-items: center;}
