@@ -288,6 +288,7 @@
                 	setMemoCount($(".memoLay").length);
                 	addremove();
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+               		alert("<spring:message code='ezMemo.t0052'/>");
                 },
                 error : function() {
                 	
@@ -332,6 +333,7 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
+	                	alert("<spring:message code='ezMemo.t0025'/>");
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {
