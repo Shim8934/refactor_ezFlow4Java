@@ -139,6 +139,7 @@ function loadMemoList(flag) {
 			$("#boardMemoList").prepend(div);
 		} else {
 			if (memoList[i].display_flag != 1) {
+				
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
 				var div = createMemo(memoList[i], flag);
@@ -389,6 +390,9 @@ function addEmptyMemo(flag) {
 		
 		return;
 	} else if(flag == 'layer') {
+		
+		$("#addFirstMemo").remove();
+		
 		var div = document.createElement("div");
 		div.setAttribute("class", "memo_add");
 		div.id = "addFirstMemo";

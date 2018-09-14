@@ -399,6 +399,7 @@
 			        		firstDBLayerSize="no";
 			        		setLayerSize();
 	        			}
+		        		layerResize();
 			        		
 		        	}
 		    	});
@@ -809,15 +810,22 @@
 	                cache: false,
 	                async: false,
 	                success: function(result) {
+	                	
 	                	memoColor = result["colorList"].split(";");
 	                	memoList = result["memoList"];
-	                	layer = result["layerFlag"];
+	                	layerFlag = result["layerFlag"];
 	                	
 						loadMemoList(layerFlag);
+						
 						
 					    addremove();
 					    
 				    	setMemoListSize();
+						var memoLength = $(".memo_main .memoLay").length;
+		            	if (memoLength == 0) {
+
+		            		addEmptyMemo(layerFlag);
+		            	}
 				     }
 				});
 			}
@@ -839,6 +847,7 @@
 	        	} else {
 	        		$(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
 	        	}
+//	        	emptyMemoResize();
 		    }
 		    
 		    // 메모함 리스트 출력
