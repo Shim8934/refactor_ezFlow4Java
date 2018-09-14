@@ -399,6 +399,7 @@
 			        		firstDBLayerSize="no";
 			        		setLayerSize();
 	        			}
+		        		layerResize();
 			        		
 		        	}
 		    	});

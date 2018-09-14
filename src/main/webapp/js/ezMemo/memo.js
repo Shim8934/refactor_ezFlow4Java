@@ -139,7 +139,7 @@ function loadMemoList(flag) {
 			$("#boardMemoList").prepend(div);
 		} else {
 			if (memoList[i].display_flag != 1) {
-				console.log(memoList[i].display_flag);
+				
 				var hColor = memoColor[memoList[i].color_id-1];
 				var bColor = memoColor[memoList[i].color_id+5];
 				var div = createMemo(memoList[i], flag);
