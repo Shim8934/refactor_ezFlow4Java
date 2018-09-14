@@ -356,7 +356,7 @@
                 <dt class="portletText">${pCompanyBDNM}</dt>
                 <dd class="portletPlus" onclick='Boardmore_NewBoard_btnClick()'><img src="/images/kr/main/portlet_Plus.png"></dd>
             </dl>
-            <ul class="portlet_list" id="BoardList_NewBoard">
+            <ul class="noti_portlet_list" id="BoardList_NewBoard">
                 
             </ul>
         </div>

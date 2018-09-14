@@ -1061,9 +1061,8 @@
 						</c:forEach>
 	            	</c:when>
 	            	<c:otherwise>
-		            	<img src="/images/WebPartSliderCI/rolling01.png" width="280" height="515" />
-			    		<img src="/images/WebPartSliderCI/rolling01.png" width="280" height="515" />
-			    		<img src="/images/WebPartSliderCI/rolling01.png" width="280" height="515" />
+		            	<img src="/images/kr/main/rolling01.png" width="280" height="515" />
+		            	<img src="/images/kr/main/rolling01.png" width="280" height="515" />
 	            	</c:otherwise>
 	            </c:choose>
             </div>
@@ -1147,17 +1146,21 @@
         	<p class="emPic"><img src="${filePath}"></p>
             <dl class="emDL">
             	<dt class="emTit"><spring:message code='main.t68' /></dt>
-                <dd class="emName">
-                <c:if test="${displayNameBirth != ''}">"</c:if>${displayNameBirth}
-                <%-- <c:if test="${titleBirth != ''}"> ${titleBirth}</c:if>
-                <c:if test="${(titleBirth != '' && displayNameBirth != '') || titleBirth == '' && displayNameBirth != ''}">"</c:if> --%>
-                <c:choose>
-				        <c:when test = "${!empty displayNameBirth && empty titleBirth}">"</c:when>
-				        <c:when test = "${!empty titleBirth && displayNameBirth != ''}">${titleBirth}"</c:when>
-				        <c:otherwise></c:otherwise>
-				</c:choose>
-                </dd>
-                <dd class="emTeam">${description}</dd>
+            	<c:if test="${displayNameBirth != ''}">
+	                <dd class="emName">"${displayNameBirth}
+		                <c:choose>
+							<c:when test = "${!empty displayNameBirth && empty titleBirth}">"</c:when>
+							<c:when test = "${!empty titleBirth && displayNameBirth != ''}">${titleBirth}"</c:when>
+						    <c:otherwise></c:otherwise>
+						</c:choose>
+	                </dd>                
+	                <dd class="emTeam">${description}</dd>
+                </c:if>
+                <c:if test="${displayNameBirth == ''}">
+                	<dl class="nodata" style="margin-top:8px">
+		            	<dd>"<spring:message code="main.t00026" />"</dd>
+	            	</dl>
+                </c:if>
             </dl>
         </article>
         
