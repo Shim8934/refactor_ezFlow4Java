@@ -213,7 +213,8 @@
 				
 				BoardSearchOptionHidden();
 			}
-			else if(type=="folder" || type=="new") {
+			else if(type=="folder") {
+				checkOpt="off";
 				searchInput = "";
 				startDate = "";
 				endDate = "";
@@ -237,6 +238,8 @@
                 	
 					loadMemoList();
 					setMemoCount(memoList.length);
+					
+					addremove();
 			     },
 	             error : function() {
 	                	
