@@ -338,7 +338,7 @@
 .popup.cabMag {padding-bottom: 0px !important; overflow: hidden;}
 .popup.cabAddoff, .popup.cabAddon {overflow: hidden; width: 300px; height: 150px; position: fixed; z-index: 2000; border-radius: 4px;}
 .popup.cabMoveoff, .popup.cabMoveon {overflow: hidden; width: 320px; height: 395px; position: fixed; z-index: 2000; border-radius: 4px;}
-.popup .cabMoveTree {margin: 0px 3px; border: 1px solid #ddd; min-height: 293px; height: 293px; overflow: auto; padding-top: 5px;}
+.popup .cabMoveTree {margin: 0px 3px; border: 1px solid #ddd; min-height: 293px; height: 293px; overflow: auto; padding-top: 5px; white-space: nowrap;}
 .cabDeloff, .cabDelon {overflow: hidden; border-radius: 4px; width: 330px; height: 205px; position: fixed; z-index: 2000;}
 .popup .cabDelInf {height: 46px; border: 1px solid #ddd; font-size: 12px; padding: 10px;}
 .popup.cabRelatedFile, .popup.cabAddMain, .popup.cabShareFile, .popup.cabDetail {overflow: hidden;}
