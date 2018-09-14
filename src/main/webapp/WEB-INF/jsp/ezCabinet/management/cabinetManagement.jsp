@@ -194,10 +194,13 @@
 				}
 				
 				function moveCabinet(mode) {
-					var url       = "/ezCabinet/moveCabinet.do";
-					var cabinetId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
-					var parentId  = document.getElementById("cabinetMoveTree").querySelector("span[class='selectedNode']").getAttribute("role");
+					var url        = "/ezCabinet/moveCabinet.do";
+					var cabinetId  = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
 					
+					var parentNode = document.getElementById("cabinetMoveTree").querySelector("span[class='selectedNode']");
+					if (!parentNode) {alert(CabinetMessages.strSelect); return;}
+					
+					var parentId   = parentNode.getAttribute("role");
 					if (cabinetId == parentId) {alert(CabinetMessages.strMovErr1); return;}
 					
 					var data = {
