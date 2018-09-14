@@ -86,7 +86,7 @@
 							btnPrint_onClick();
 							break;
 						case "menu3":
-							copyToMemo();
+							copyToMemo("preview");
 							break;
 					}
 				});
