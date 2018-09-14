@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">		    
 		    var userlang = "<c:out value='${primary}'/>";
-		    var companylist = "${companyList}";
+		    var companylist = "<c:out value='${companyList}'/>"; //(ex. S907001,가온아이A;S907000,가온아이B;)
 		    var lang = "<c:out value='${lang}'/>";
 		    
 			document.onselectstart = function () {

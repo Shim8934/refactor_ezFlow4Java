@@ -394,7 +394,7 @@ public class EzWebFolderGWController_y {
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
    		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
    		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);

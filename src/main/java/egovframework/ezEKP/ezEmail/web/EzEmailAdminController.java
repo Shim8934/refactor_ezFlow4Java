@@ -883,8 +883,8 @@ public class EzEmailAdminController {
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
-
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
 		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
@@ -985,7 +985,7 @@ public class EzEmailAdminController {
 			startRow = -1;
 		}
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
 
 		// 모든 사용자의 목록을 가져온다.
