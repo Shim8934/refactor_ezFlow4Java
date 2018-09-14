@@ -338,7 +338,42 @@
 		    	var listSize = dtl.length > 3 ? 3 : dtl.length;
 		    	var str = "";
 		    	
-				str += '<div class="apprBox">';
+		    	str += '<li class="first_approval">';
+		    	str += '	<p class="approval_tit"><span class="txt">'+ data.docTitle +'</span><span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi, ".") +'</span><span class="name">'+ data.writerName +'</span></p>';
+		    	str += '	<div class="approval_content">';
+		    	
+		    	for(var i=0; i<listSize; i++){
+		    		var imgsrc = dtl[i].ext2 !== null ? "/ezCommon/downloadAttach.do?filePath="+path+"thumbnail/"+dtl[i].ext2 : "/images/kr/main/info_pic_none.png";
+		    		var apprTextColor = "";
+		    		
+		    		// 승인 003, 진행 002, 대기, 001
+		    		if(dtl[i].aprState === "003") {
+		    			apprTextColor = "apprText_blue";
+		    		} else if (dtl[i].aprState === "002") {
+		    			apprTextColor = "apprText_green";
+		    		} else if (dtl[i].aprState === "001") {
+		    			apprTextColor = "apprText_orange";
+		    		} else {
+		    			apprTextColor = "apprText_blue";
+		    		}
+		    		
+			    	str += '		<dl class="apprDL">';
+			    	str += '			<dt class="apprPic"><img src="'+ imgsrc +'"></dt>';
+			    	str += '			<dd class="apprName">'+ dtl[i].aprMemberName +'</dd>';
+			    	str += '			<dd class="'+ apprTextColor +'"><span>'+ dtl[i].ext1 +'</span></dd>';
+			    	str += '		</dl>';			
+			    	
+			    	if(i !== listSize-1) {
+			    		str += '		<p class="appr_arrow"><img src="/images/kr/main/approval_arrow.png"></p>';	
+			    	}			    	
+			    	
+		    	}
+		    	
+		    	str += '	</div>';
+		    	str += '</li>';
+		    		
+		    	
+/* 				str += '<div class="apprBox">';
 				str += '  <div class="upperBox" onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'")\'">';
 				str += '    <div id="title">'+ data.docTitle+'</div>';
 				str += '    <div id="info">'+ data.writerName +'  '+ data.startDate.substr(5, 11).replace(/-/gi, ".") +'</div>';
@@ -367,7 +402,7 @@
 				}
 
 				str += '  </div>';
-				str += '</div>';		    	
+				str += '</div>';	 */	    	
 		    	
 		    	return str;
 		    }
