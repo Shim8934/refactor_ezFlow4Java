@@ -83,6 +83,7 @@ function createMemo(memo, flag) {
 function insertMemo(memo, layerFlag) {
 	
 	$(".memo_add").remove();
+	$(".memo_none").remove();
 	
 	var div = createMemo(memo, layerFlag);
 	
@@ -99,6 +100,7 @@ function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
 	$(".memo_add").remove();
+	$(".memo_none").remove();
 	$(".memo_main").html('');
 	
 	if(memoList.length == 0) {
@@ -375,16 +377,15 @@ function memoFoldersInfo() {
 function addEmptyMemo(flag) {
 	
 	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
-		
 		var div = document.createElement("div");
-		div.setAttribute("class", "memo_add");
-		div.setAttribute("onclick", "newMemo()");
+		div.setAttribute("class", "memo_none");
 		div.style.margin = "10px";
 		
-		var span = document.createElement("span");
-		span.innerHTML = strLangMemo7;
+		var div2 = document.createElement("div");
+		div2.style.textAlign = "center";
+		div2.innerHTML = strLangMemo7;
 		
-		div.appendChild(span);
+		div.appendChild(div2);
 		
 		$("#boardMemoList").parent().prepend(div);
 		
