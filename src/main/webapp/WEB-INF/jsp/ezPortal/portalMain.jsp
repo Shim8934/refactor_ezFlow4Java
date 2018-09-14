@@ -816,20 +816,20 @@
 	                	
 						loadMemoList(layerFlag);
 						
+						
+					    addremove();
+					    
+				    	setMemoListSize();
 						var memoLength = $(".memo_main .memoLay").length;
 		            	if (memoLength == 0) {
 
 		            		addEmptyMemo(layerFlag);
 		            	}
-						
-					    addremove();
-					    
-				    	setMemoListSize();
 				     }
 				});
 			}
 		    
-//		    // 메모 리스트 사이즈 변경
+		    // 메모 리스트 사이즈 변경
 		    function setMemoListSize() {
 		    	
 			    var layerHeight = $("#layer-popup").height();
@@ -846,7 +846,7 @@
 	        	} else {
 	        		$(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
 	        	}
-	        	emptyMemoResize();
+//	        	emptyMemoResize();
 		    }
 		    
 		    // 메모함 리스트 출력
