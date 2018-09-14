@@ -366,7 +366,7 @@ public class EzWebFolderGWController {
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		String listCnt    = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")                       : "";
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
    		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
    		userName = commonUtil.getWildcardEscapedString(userName, dbName);
@@ -461,7 +461,7 @@ public class EzWebFolderGWController {
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
    		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
    		userName = commonUtil.getWildcardEscapedString(userName, dbName);
@@ -1590,7 +1590,7 @@ public class EzWebFolderGWController {
 		String realColmn  = "";
 		JSONObject result = new JSONObject();
 		
-		int dbName = globals.getProperty("Globals.DbType") == "mysql" ? 1 : 2;
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
    		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
    		userName = commonUtil.getWildcardEscapedString(userName, dbName);

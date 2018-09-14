@@ -31,7 +31,7 @@ body
 .cke_editable
 {
 	font-size: 13px;
-	line-height: 1.6;
+	/* line-height: 1.6; */		/*  18-09-14 김민성 - 본문과 에디터간 줄간격 다른 현상 수정 */
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
 	word-wrap: break-word;
