@@ -174,13 +174,7 @@
 		        		setLayerArea();
 		        	}
 		        });
-		        
-		        $("#memoMove").click(function() {
-
-		        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
-		            try { OpenWin.focus(); } catch (e) { }
-		        });
-		        
+		        		        
 		        // 메모 레이어 최대화 시
 		        $("#fullScreen").click(function() {
 		        	var layerClass = $("#layer-popup").attr("class");
@@ -229,11 +223,6 @@
 		        	newMemo();
 		        });
 		        
-		        // 메모 내용 변경 
-		        /* $(".memo_main").on("click", ".memoLay .pallete2", function() {
-		        	modifyMemo(this);
-
-		        });*/
 		    });
 		    
 		    // 셀렉트 박스 마우스 포인터 벗어날 경우
@@ -307,7 +296,7 @@
 		                },  
 		                cache: false,
 		                success: function(result) {
-		                	
+		                	alert("<spring:message code='ezMemo.t0025'/>");
 		                	if(window.frames["main"].frames["right"] != undefined) {			
 			                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 			                		window.frames["main"].frames["right"].getMemoList();

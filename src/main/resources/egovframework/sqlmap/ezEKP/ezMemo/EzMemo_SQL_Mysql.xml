@@ -229,10 +229,6 @@
 				MAX(FOLDER_ID)+1 
 			FROM 
 				TBL_MEMO_FOLDER
-			WHERE 
-				TENANT_ID = #tenant_id#
-			AND 
-				COMPANY_ID = #company_id# 
 		</selectKey>
 	</insert>
 	
