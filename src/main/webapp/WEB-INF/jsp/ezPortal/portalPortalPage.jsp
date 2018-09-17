@@ -24,7 +24,6 @@
 		
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script> <!-- 추구 변경해야함 -->					
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -51,7 +50,6 @@
 			var g_ClassID = "${classID}";
 			var g_ClassName = "${className}";
 			var g_UserID = "${userInfo.id}";
-			var pUserID = "${userInfo.id}";                // 추후 변경
 			var g_UserName = "${userInfo.displayName}";
 			var g_UserDeptID = "${userInfo.deptID}";	
 			var MyPortalPageID = "${myPortalPageID}"; //
@@ -59,7 +57,6 @@
 			var g_CompanyID = "${userInfo.companyID}";
 			var TableViewOption = "${tableViewOption}";
 			var lang = "${userInfo.lang}";
-			var pListTypeValue = "1"; // 추후 변경
 
 			document.onselectstart = function(){
 				event.cancelBubble = true;
@@ -172,7 +169,204 @@
 				}
 			}
 			
-			function openQuickMenu(id) {
+		    function btnWrite_onclick(objThis) {
+		        switch (objThis.id) {
+		            case "mailwrite":
+		                new_mail_onclick();
+		                break;
+
+		            case "approvalwrite":
+		                openForm();
+		                break;
+
+		            case "schedulewrite":
+	                    var wWeight = "790";
+	                    var wHeight = "830";
+
+	                    var heigth = window.screen.availHeight;
+	                    var width = window.screen.availWidth;
+
+	                    var left = (width - wWeight) / 2;
+	                    var top = (heigth - wHeight) / 2;
+	                    
+	                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	                    
+		                break;
+
+		            case "addresswrite":
+		                var wWeight = "600";
+		                var wHeight = "500";
+
+		                var heigth = window.screen.availHeight;
+		                var width = window.screen.availWidth;
+
+		                var left = (width - wWeight) / 2;
+		                var top = (heigth - wHeight) / 2;
+		                window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent("jongp1") + "&folderid=&foldertype=", "",
+		                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                break;
+
+		            case "resourcewrite":
+		                if (CrossYN()) {
+		                    var url = "/ezResource/scheduleAddSelect.do";
+
+		                    schedule_add_select_cross_dialogArguments[0] = "";
+		                    schedule_add_select_cross_dialogArguments[1] = btnWrite_onclick_Complete;
+		                    var Schedule_Add_Select_Cross = GetOpenWindow(url, "Schedule_Add_Select_Cross", 552, 435);
+		                    try { Schedule_Add_Select_Cross.focus(); } catch (e) {
+		                    }
+		                } else {
+		                    var url = "/ezResource/scheduleAddSelect.do";
+		                    var feature = "status:no;dialogWidth:552px;dialogHeight:430px;help:no;scroll:no;edge:sunken";
+		                    feature = feature + GetShowModalPosition(552, 422);
+		                    var ret = window.showModalDialog(url, "", feature);
+
+		                    if (ret != undefined && ret[0][0] != undefined) {
+		                        url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
+		                        feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
+		                        feature = feature + GetShowModalPosition(700, 700);
+		                        window.showModalDialog(url, ret, feature);
+		                    }
+		                }
+		                break;
+
+		            case "boardwrite":
+		                var wWeight = "460";
+		                var wHeight = "600";
+
+		                var heigth = window.screen.availHeight;
+		                var width = window.screen.availWidth;
+
+		                var left = (width - wWeight) / 2;
+		                var top = (heigth - wHeight) / 2;
+		                window.open("/ezBoard/writeBoardSelect.do", "",
+		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                break;
+		        }
+		    }	    
+		    
+		    function new_mail_onclick() {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        
+		        if (conWidth > 890)
+		            conWidth = 890;
+		        
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+
+                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		    } 
+		    
+		    var formURL = "";
+		    var formDocType = "";
+		    var getformcont_cross_dialogArguments = new Array();
+		    var url = "";		    
+		    
+		    function openForm() {
+		        var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+
+		        if ("YES" == ("YES")) {
+		            url = "/ezApprovalG/getFormCont.do";
+		        } else {
+		            url = "/ezApproval/getFormCont.do";
+		        }
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+		    }	
+		    
+		    function openForm_Complete(ret) {
+		        formURL = ret[0];
+		        formDocType = ret[1];
+
+		        if (formURL != "cancel") {
+		            openDraftUI();
+		        }
+		    }
+
+		    function openDraftUI() {
+		        var pArgument = new Array();
+		        var gb = "";
+		        
+		        if ("YES" == ("YES"))
+		            gb = "G";
+		        
+	        	pArgument[0] = "jongp";
+	            pArgument[1] = formURL;
+	            pArgument[2] = "DRAFT";
+	            pArgument[3] = formDocType;
+	            pArgument[4] = "0"
+	            pArgument[5] = ""
+	            pArgument[6] = ""
+	            pArgument[7] = "";
+
+	            var openLocation = "";
+	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                if (!isIE()) {
+	                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+	                    return;
+	                } else {
+	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
+	                }
+	            } else {
+	                var openLocation = "/ezApprovalG/draftui.do";
+	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+                
+	            openwindow(openLocation, "", 890, 620);
+	        }
+
+		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+		        try {
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+
+		            var left = 0;
+		            var top = 0;
+
+		            if (window.screen.width > 800) {
+		                var pleftpos;
+
+		                pleftpos = parseInt(width) - 967;
+		                heigth = parseInt(heigth) - 30;
+		                width = parseInt(width) - pleftpos;
+
+		                left = pleftpos / 2;
+		            } else {
+
+		                heigth = parseInt(heigth) - 30;
+		                width = parseInt(width) - 10;
+		            }
+		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+
+		        } catch (e) {}
+		    }		    
+					 
+			
+/* 			function openQuickMenu(id) {
 				console.log("openQuickMenu", id);
 				
 				if(id === 'mail'){ // "http://jongp1.com:8080/ezEmail/mailWrite.do"
@@ -186,84 +380,7 @@
 					window.open("/ezPersonal/personSearch.do", "", GetOpenWindowfeature(750, 550));
 				}
 					
-			}
-			
-			/**
-				추후 세부기능 작동 확인해야함
-			*/
-			var getformcont_cross_dialogArguments = new Array();
-			var getformcont_Cross_OpenWin = "";
-			function openForm() {
-			    var parameter = new Array();
-			    parameter[0] = g_UserDeptID;
-			    parameter[1] = "000";
-			    var url = "/ezApprovalG/getFormCont.do";
-			    var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-			    feature = feature + GetShowModalPosition(713, 570);
-			
-			    getformcont_cross_dialogArguments[0] = parameter;
-			    getformcont_cross_dialogArguments[1] = openForm_Complete;
-			    getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
-			    
-			    //try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
-			}		
-	
-			function openForm_Complete(ret) {
-			    getformcont_Cross_OpenWin.close();
-			    formURL = ret[0];
-			    formDocType = ret[1];
-			    if (formURL != "cancel") {
-			        openDraftUI("DRAFT", "");
-			    }
-			}			
-			
-			/**
-				추후 세부 기능 작동 확인해야함
-			*/
-			function new_mail_onclick(fromE) {
-				var msgto = "";
-				
-			
-/* 				if (useMailWriteSenderClick == "YES" && typeof fromE != "undefined" && $(fromE).attr("data-msgto") != "" && fromE.innerHTML != "") {
-					msgto = $(fromE).attr("data-msgto");
-				} */
-				
-				var msgStr = msgto !== "" ? msgto : "" ;
-				//pUrl = "/ezEmail/mailWrite.do?cmd=NEW" + msgStr;
-				var myForm = document.mailWriteSenderClick;
-				
-				//pUrl = "/ezEmail/mailWrite.do?cmd=NEW"
-				/*if (CrossYN() || pNoneActiveX == "YES") {
-			        pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
-			    }
-			    else {
-			        if (pUse_Editor == "")
-			            pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
-			        else
-			            pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
-			    }*/
-			    var newwin = GetOpenWindow("", "mailWriteSender", 890, 840, "yes");
-			    //myForm.target = "mailWriteSender";
-			    //myForm.msgto.value = msgStr;
-			    //myForm.submit();
-			    
-			    newwin.focus();
-			    newwin.name = "";
-			}			
-						
-			/**
-				추후 세부 기능 작동 확인해야함.
-			*/
-		    function writeSchedule() {
-		        var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 760) / 2;
-		        var pLeft = (pwidth - 790) / 2;
-		        
-		        var index = 0;
-		        var feature = GetOpenPosition(790, 760);
-		        window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index, "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		    }			
+			} */
 
 		    function QuickLinkCheck() {
 		        var xmlpara = createXmlDom();
