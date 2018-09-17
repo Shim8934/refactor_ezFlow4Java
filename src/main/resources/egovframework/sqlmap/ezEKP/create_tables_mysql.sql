@@ -10475,6 +10475,28 @@ CREATE TABLE `tbl_webfolder_user` (
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 
+DROP TABLE IF EXISTS `tbl_access_id`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_access_id` (
+  `ACCESSNO` INT(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` MEDIUMINT(5) NOT NULL DEFAULT 0,
+  `CN` VARCHAR(80) NOT NULL,
+  PRIMARY KEY (`ACCESSNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  
+DROP TABLE IF EXISTS `tbl_access_ip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_access_ip` (
+  `IPNO` INT NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` MEDIUMINT(5) NOT NULL DEFAULT 0,
+  `IPADDRESS` VARCHAR(100) NOT NULL,
+  `ACCESS` VARCHAR(10) NULL DEFAULT 'YES',
+  `EXPLANATION` VARCHAR(200) NULL,
+  PRIMARY KEY (`IPNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 DROP TABLE IF EXISTS `vaprdoingdoclist`;
 /*!50001 DROP VIEW IF EXISTS `vaprdoingdoclist`*/;
 SET @saved_cs_client     = @@character_set_client;

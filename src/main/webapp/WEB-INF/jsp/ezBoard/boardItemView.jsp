@@ -1245,8 +1245,8 @@
 										</c:otherwise>
 									</c:choose>
 								<!-- 직위 end -->
-								<!-- 전화번호 -->
-									<th><spring:message code='ezBoard.t38' /></th>
+								<!-- 사내전화 -->
+									<th><spring:message code='ezPersonal.t177' /></th>
 									<c:choose>
 										<c:when test="${guBun != '2'}">
 											<td id="Telephone"><span>${boardItem.extensionAttribute4} </span> </td>

@@ -45,6 +45,9 @@
 	    	case "LOGINHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
+	    	case "IPMANAGER":
+	    		parent.frames[1].location.href = "/admin/ezSystem/systemIPManager.do";
+	    		break;
 	    	case "SYSMONITOR":
 	    		//parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
 	    		parent.frames[1].location.href = "/admin/ezSystem/sysREST.do";
@@ -77,6 +80,9 @@
             </h2>
             </c:if>
             <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span>
+            <ul class="on"></ul>
+            </h2>
+            <h2><span id="IPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.jje1'/></span>
             <ul class="on"></ul>
             </h2>
             <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span>

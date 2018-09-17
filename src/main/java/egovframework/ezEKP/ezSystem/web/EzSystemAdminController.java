@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,11 +38,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -609,5 +613,277 @@ public class EzSystemAdminController {
 		
 		return jObj.toString();
 	}
+	
+	// 이하 재은 수정중
+	@RequestMapping(value="/admin/ezSystem/systemIPManager.do")
+	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPManager started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("systemIPManager ended");
+		 
+		return "/ezSystem/systemIPManager";
+	}
+	
+	@RequestMapping(value="/ezSystem/systemIPBand.do")
+	public String systemIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
+		
+		if (useIPAccess == null || useIPAccess.equals("")) {
+			useIPAccess = "NO"; // 기본값은 사용안함
+		}
+				
+		model.addAttribute("useIPAccess", useIPAccess);
+		model.addAttribute("rollInfo", userInfo.getRollInfo());
+		
+		logger.debug("systemIPBand ended");
+		return "/ezSystem/systemIPBand";
+	}
+	
+	@RequestMapping(value="/ezSystem/setUseIPAccess.do")
+	public String setUseIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
+		logger.debug("setUseIPAccess started");
+		
+		// input 체크된 값으로 전달되기 때문에 tbl_tenant_config value에 맞게 변경
+		if (allowResult.equals("true")) {
+			allowResult = "YES";
+		} else {
+			allowResult = "NO";
+		}
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.updateSystemIPAllow(allowResult, userInfo.getTenantId());
+		
+		logger.debug("setUseIPAccess ended");
+		return "/ezSystem/systemIPBand";
+	}
+	
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getAllIPBands.do")
+	public JSONArray getAllIPBands(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("setUseIPAccess started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<IPBandVO> list = ezSystemAdminService.getAllIPBand(userInfo.getTenantId());
+		
+		if (list == null) {
+			return null;
+		}
+		
+		JSONArray returnJsonArr = new JSONArray();
+		
+		for (int i = 0; i < list.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("ipNo", list.get(i).getIpNo());
+			obj.put("ipAddress", list.get(i).getIpAddress());
+			obj.put("access", list.get(i).getAccess());
+			obj.put("explanation", list.get(i).getExplanation());
+			returnJsonArr.add(obj);
+		}
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAllIPBands ended");
+		return returnJsonArr;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertIPBand.do")
+	public void insertIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("insertIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.insertIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
+		
+		logger.debug("insertIPBand ended");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/updateIPBand.do")
+	public void updateIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("updateIPBand started");
+		logger.debug("ipNo=" + ipBand.getIpNo() + ", ipAddress=" + ipBand.getIpAddress() + ", access=" + ipBand.getAccess() + ", explanation=" + ipBand.getExplanation());
+		
+		ezSystemAdminService.updateIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
+		
+		logger.debug("updateIPBand ended");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteIPBand.do")
+	public void deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+		logger.debug("deleteIPBand started");
+		logger.debug("ipNo=" + ipNo);
+		
+		ezSystemAdminService.deleteIPBand(ipNo);
+		
+		logger.debug("deleteIPBand ended");
+	}
+	
+	
+	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do")
+	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model, String type, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("systemIPBandEditPopup started");
+		
+		String ipAddress = "";
+		String access = "";
+		String explanation = "";
+		
+		if (type.equals("modify")) {
+			IPBandVO getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
+			
+			ipAddress = getIPBand.getIpAddress();
+			access = getIPBand.getAccess();
+			explanation = getIPBand.getExplanation();
+			explanation = explanation.replaceAll("\\\\", "\\\\\\\\");
+			
+			logger.debug("explanation=" + explanation);
+		}
+		
+		model.addAttribute("ipNo", ipBand.getIpNo() == null ? "" : ipBand.getIpNo());
+		model.addAttribute("ipAddress", ipAddress);
+		model.addAttribute("access", access);
+		model.addAttribute("explanation", explanation);
+		model.addAttribute("type", type);
+				
+		logger.debug("systemIPBandEditPopup ended");
+		return "/ezSystem/systemIPBandEditPopup";
+	}
+	 
+	
+	
+	@RequestMapping(value="/ezSystem/systemIPAccessList.do")
+	public String systemIPAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemIPAccessList started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+				
+		logger.debug("systemIPAccessList ended");
+		return "/ezSystem/systemIPAccessList";
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/getAllAccessList.do")
+	public JSONArray getAllAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String companyID) throws Exception {
+		logger.debug("getAllAccessList started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<AccessIdVO> userList = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
+		List<AccessIdVO> deptList = ezSystemAdminService.getAllAccessListDept(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
+		JSONArray returnJsonArr = new JSONArray();
+		
+		for (int i = 0; i < userList.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("accessNo", userList.get(i).getAccessNo());
+			obj.put("cn", userList.get(i).getCn());
+			obj.put("name", userList.get(i).getName());
+			obj.put("department", userList.get(i).getDepartment());
+			returnJsonArr.add(obj);
+		}
+		
+		for (int i = 0; i < deptList.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("accessNo", deptList.get(i).getAccessNo());
+			obj.put("cn", deptList.get(i).getCn());
+			obj.put("name", deptList.get(i).getName());
+			obj.put("department", deptList.get(i).getDepartment());
+			returnJsonArr.add(obj);
+		}
+		
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAllAccessList ended");
+		
+		return returnJsonArr;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/getAllAccessListCom.do")
+	public JSONArray getAllAccessListCom(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getAllAccessListCom started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		List<String> allList = ezSystemAdminService.getAllAccessListCom(userInfo.getTenantId());
+		JSONArray returnJsonArr = new JSONArray();
+		
+		for (int i = 0; i < allList.size(); i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("cn", allList.get(i));
+			returnJsonArr.add(obj);
+		}
+		
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAllAccessListCom ended");
+		
+		return returnJsonArr;
+	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertAccessId")
+	public void insertAccessId(@CookieValue("loginCookie") String loginCookie, Model model, String strCnList) throws Exception {
+		logger.debug("insertAccessId started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		ezSystemAdminService.insertAccessId(userInfo.getTenantId(), strCnList);
+		logger.debug("insertAccessId ended");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteAccessList.do")
+	public void deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
+		logger.debug("deleteAccessList started. accessNo=" + accessNo);
+		
+		ezSystemAdminService.deleteAccessId(accessNo);
+		
+		logger.debug("deleteAccessList ended");
+	}
+	
+	@RequestMapping(value="/ezSystem/systemAddAccessList.do")
+	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemAddAccessList started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String topID = userInfo.getCompanyID();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
+			topID = "Top";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("topID", topID);
+		logger.debug("systemAddAccessList ended");
+		return "/ezSystem/systemAddAccessList";
+	}
+	
+	
 
 }

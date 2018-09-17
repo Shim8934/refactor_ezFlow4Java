@@ -3623,7 +3623,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        try {
 		        	cos = new CountOutputStream();
 		        	message.writeTo(cos);
-		        	messageSize = cos.getSize() / 1024.0;
+		        	messageSize = cos.getSize() / 1000.0;
 		        } catch(Exception e) {
 		        	e.printStackTrace();
 		        } finally {

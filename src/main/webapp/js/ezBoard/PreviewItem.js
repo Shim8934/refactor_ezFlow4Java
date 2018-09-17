@@ -104,8 +104,9 @@ function PreviewRayerChange(pGubun) {
             }
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
+            /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
             if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
+            	document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
             } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
             }
@@ -654,10 +655,12 @@ function MailPreviewEnd(e) {
             document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-            else
+            /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+				document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+            } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+            }
             pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
             pMailPreVDiv = (pMailPreHeightW / CurrentHeight) * 100;
         }
@@ -808,10 +811,12 @@ function Window_resize() {
                 	document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
                 document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-                if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
-                    document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-                else
+                /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
+                if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+                    document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+                } else {
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+                }
                 document.getElementById("PreW_subject").style.width = (CurrenWidth - 200) + "px";
                 pPreviewShow_HOW = "W";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);

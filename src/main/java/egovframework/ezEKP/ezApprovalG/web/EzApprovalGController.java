@@ -8041,20 +8041,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String filePath = config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExOpinion" + commonUtil.separator + docID + "return.txt";
+		List<String> reqDeptIDs = ezApprovalGService.getRelayReqDeptID(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		StringBuffer sb = new StringBuffer();
 		
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
-			String readLine = "";
+		for (String deptID : reqDeptIDs) {
+			String filePath = config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExOpinion" + commonUtil.separator + docID + deptID.split(":")[0] + "return.txt";
+			//기관명 명시해주기 
+			sb.append(deptID.split(":")[1] + " : ");
 			
-			while ((readLine = br.readLine()) != null) {
-				sb.append(readLine);
+			try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+				String readLine = "";
+				
+				while ((readLine = br.readLine()) != null) {
+					sb.append(new String(Base64.decodeBase64(readLine), "euc-kr"));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			
+			sb.append("<br/>");
+			sb.append("<br/>");
 		}
 		
-		String textOpinion = new String(Base64.decodeBase64(sb.toString()), "euc-kr");
+		String textOpinion = sb.toString();
 		
 		if (textOpinion == null || textOpinion.equals("")) {
 			textOpinion = "의견정보가 없습니다.";
