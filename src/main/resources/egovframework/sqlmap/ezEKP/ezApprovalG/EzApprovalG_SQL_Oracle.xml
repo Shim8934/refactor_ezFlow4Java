@@ -5201,8 +5201,8 @@
 				TBL_CABINETCLASS.COMPANYID = #companyID#
 			AND
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
-			ORDER BY 
-				TBL_CABINETCLASS.Title 
+			<!-- ORDER BY 
+				TBL_CABINETCLASS.Title  -->
 		</isNotEmpty>		
 	</select>
 	
