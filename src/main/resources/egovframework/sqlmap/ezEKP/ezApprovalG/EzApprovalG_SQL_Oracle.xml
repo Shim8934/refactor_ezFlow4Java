@@ -5201,8 +5201,8 @@
 				TBL_CABINETCLASS.COMPANYID = #companyID#
 			AND
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
-			ORDER BY 
-				TBL_CABINETCLASS.Title 
+			<!-- ORDER BY 
+				TBL_CABINETCLASS.Title  -->
 		</isNotEmpty>		
 	</select>
 	
@@ -22297,7 +22297,7 @@
    		<isEqual property="v_LANGTYPE" compareValue="1">
    		<![CDATA[
    			SELECT 
-   				tbl_taskcode.TASKNAME, TBL_EXPENDAPRDOCINFO.taskcode , tbl_taskcode.taskcode
+   				TBL_TASKCODE.taskname, keepingperiod , TBl_EXPENDAPRDOCINFO.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
@@ -22309,7 +22309,7 @@
 			AND
 				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
 			JOIN 
-				tbl_taskcode            
+				TBL_TASKCODE            
 			ON 
 				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
 			AND
@@ -22337,7 +22337,7 @@
            AND
            		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
-		   		TBL_EXPENDAPRDOCINFO.taskcode, tbl_taskcode.TASKNAME, tbl_taskcode.taskcode
+		   		TBL_EXPENDAPRDOCINFO.taskcode, TBL_TASKCODE.taskname, keepingperiod
            ORDER BY 
            		TBL_EXPENDAPRDOCINFO.taskcode 
           ]]>
@@ -22345,7 +22345,7 @@
    	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
-   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+   				TBL_TASKCODE.taskname2 taskname, keepingperiod, TBl_EXPENDAPRDOCINFO.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
@@ -22384,7 +22384,7 @@
            AND
            		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
-		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2
+		   		TBL_EXPENDAPRDOCINFO.taskcode, TBL_TASKCODE.taskname2, keepingperiod
            ORDER BY 
            		TBL_EXPENDAPRDOCINFO.taskcode 
            ]]> 

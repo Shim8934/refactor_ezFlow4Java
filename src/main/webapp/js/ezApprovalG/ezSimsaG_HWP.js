@@ -219,6 +219,14 @@ function covBody(pbody) {
     BodyStr = BodyStr.replace(/:'  /g, ":");
     BodyStr = BodyStr.replace(/';'/g, ";'");
     
+    //2018-09-14 홍대표	 불필요한 속성과 단위 변경.
+    var pxToMm = function(str, p1, p2, offset, s){
+    	return p1 + (p2 * 0.264583) + "mm";
+    }
+    
+    BodyStr = BodyStr.replace(/[^-]height='height:\d+'/ig, "");
+    BodyStr = BodyStr.replace(/([^-]height:)(\d+)/ig, pxToMm).replace(/(width:)(\d+)/ig, pxToMm);
+    BodyStr = BodyStr.replace(/(border-)(left|right|top|bottom):[\w\d\s#.(),]*;/g, "");
     //BodyStr = BodyStr.replace(/width="(.*?)[0-9]*/ig, " $&mm");
     //BodyStr = BodyStr.replace(/width='(.*?)[0-9]*/ig, " $&mm");
     //BodyStr = BodyStr.replace(/hight="(.*?)[0-9]*/ig, " $&mm");
@@ -227,26 +235,26 @@ function covBody(pbody) {
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
     
-    // rgb to hex
-    var rgbRegexp = /rgb[(](\d), (\d), (\d)[)]/g;
-    var rgbMatch = rgbRegexp.exec(BodyStr);
-    
-    var rgbToHex = function(regexpResult) {
-    	var out = "#";
-    	var integer;
-    	
-    	regexpResult.slice(1).forEach(function(color) {
-    		integer = parseInt(color);
-    		out += (integer < 16 ? '0' : '') + integer.toString(16);
-    	});
-    	
-    	return out;
-    };
-    
-    while (rgbMatch !== null) {
-    	BodyStr = [BodyStr.slice(0, rgbMatch.index), rgbToHex(rgbMatch), BodyStr.slice(rgbMatch.index + rgbMatch[0].length)].join('');
-    	rgbMatch = rgbRegexp.exec(BodyStr);
-    }
+//    // rgb to hex
+//    var rgbRegexp = /rgb[(](\d), (\d), (\d)[)]/g;
+//    var rgbMatch = rgbRegexp.exec(BodyStr);
+//    
+//    var rgbToHex = function(regexpResult) {
+//    	var out = "#";
+//    	var integer;
+//    	
+//    	regexpResult.slice(1).forEach(function(color) {
+//    		integer = parseInt(color);
+//    		out += (integer < 16 ? '0' : '') + integer.toString(16);
+//    	});
+//    	
+//    	return out;
+//    };
+//    
+//    while (rgbMatch !== null) {
+//    	BodyStr = [BodyStr.slice(0, rgbMatch.index), rgbToHex(rgbMatch), BodyStr.slice(rgbMatch.index + rgbMatch[0].length)].join('');
+//    	rgbMatch = rgbRegexp.exec(BodyStr);
+//    }
     
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
@@ -329,7 +337,7 @@ function makeXML(newDocID) {
 	
 	var Nodes = eNodes.selectNodes("body");	
     if (HwpCtrl.CheckFieldExist("body")) {
-		var strBody = GetHTMLBody(HwpCtrl.GetCloneData("body", "HTML"));
+    	var strBody = HwpCtrl.GetCloneData("body", "HTML");
 		var pBody = Encode(strBody);
 		
         if (pBody == "</ERROR>") {
