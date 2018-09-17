@@ -3687,7 +3687,7 @@ CREATE TABLE IF NOT EXISTS `tbl_cb_attach_file` (
   `company_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   PRIMARY KEY (`attach_id`,`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3720,7 +3720,7 @@ CREATE TABLE IF NOT EXISTS `tbl_cb_cabinet` (
   `company_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   PRIMARY KEY (`cabinet_id`,`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3786,7 +3786,7 @@ CREATE TABLE IF NOT EXISTS `tbl_cb_item` (
   `company_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   PRIMARY KEY (`item_id`,`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
