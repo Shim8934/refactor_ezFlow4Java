@@ -224,22 +224,7 @@
 	<select id="EzSystemAdminDAO.getAllAccessList" parameterClass="Map" resultClass="AccessIdVO">
 		<![CDATA[
 			SELECT
-				TBL_ACCESS_ID.ACCESSNO, TBL_USERMASTER.DISPLAYNAME NAME, TBL_ACCESS_ID.CN CN, TBL_USERMASTER.DESCRIPTION DEPARTMENT 
-			FROM 
-				TBL_ACCESS_ID
-			INNER JOIN
-				TBL_USERMASTER
-			ON 
-				TBL_ACCESS_ID.CN=TBL_USERMASTER.CN AND TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME=#companyID# 
-			AND	
-				TBL_USERMASTER.TENANT_ID=#tenantID#
-		]]>
-	</select>
-	
-	<select id="EzSystemAdminDAO.getAllAccessList2" parameterClass="Map" resultClass="AccessIdVO">
-		<![CDATA[
-			SELECT
-				TBL_ACCESS_ID.ACCESSNO, TBL_USERMASTER.DISPLAYNAME2 NAME, TBL_ACCESS_ID.CN CN, TBL_USERMASTER.DESCRIPTION2 DEPARTMENT
+				TBL_ACCESS_ID.ACCESSNO, TBL_USERMASTER.DISPLAYNAME$lang$ NAME, TBL_ACCESS_ID.CN CN, TBL_USERMASTER.DESCRIPTION$lang$ DEPARTMENT 
 			FROM 
 				TBL_ACCESS_ID
 			INNER JOIN
@@ -254,7 +239,7 @@
 	<select id="EzSystemAdminDAO.getAllAccessListDept" parameterClass="Map" resultClass="AccessIdVO">
 		<![CDATA[
 			SELECT
-				TBL_ACCESS_ID.ACCESSNO, TBL_DEPTMASTER.DISPLAYNAME NAME, TBL_ACCESS_ID.CN CN, TBL_DEPTMASTER.DISPLAYNAME DEPARTMENT 
+				TBL_ACCESS_ID.ACCESSNO, TBL_DEPTMASTER.DISPLAYNAME$lang$ NAME, TBL_ACCESS_ID.CN CN, TBL_DEPTMASTER.DISPLAYNAME$lang$ DEPARTMENT 
 			FROM 
 				TBL_ACCESS_ID
 			INNER JOIN
@@ -266,22 +251,7 @@
 		]]>
 	</select>
 	
-	<select id="EzSystemAdminDAO.getAllAccessListDept2" parameterClass="Map" resultClass="AccessIdVO">
-		<![CDATA[
-			SELECT
-				TBL_ACCESS_ID.ACCESSNO, TBL_DEPTMASTER.DISPLAYNAME2 NAME, TBL_ACCESS_ID.CN CN, TBL_DEPTMASTER.DISPLAYNAME2 DEPARTMENT 
-			FROM 
-				TBL_ACCESS_ID
-			INNER JOIN
-				TBL_DEPTMASTER
-			ON 
-				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE2=#companyID# 
-			AND	
-				TBL_DEPTMASTER.TENANT_ID=#tenantID#
-		]]>
-	</select>
-	
-	<select id="EzSystemAdminDAO.getAllAccessListCom" parameterClass="Integer" resultClass="String">
+	<select id="EzSystemAdminDAO.getAllAccessListUserComapre" parameterClass="Integer" resultClass="String">
 		<![CDATA[
 			SELECT
 				TBL_ACCESS_ID.CN
@@ -296,7 +266,7 @@
 		]]>
 	</select>
 	
-	<select id="EzSystemAdminDAO.getAllAccessListCom2" parameterClass="Integer" resultClass="String">
+	<select id="EzSystemAdminDAO.getAllAccessListDeptCompare" parameterClass="Integer" resultClass="String">
 		<![CDATA[
 			SELECT
 				TBL_ACCESS_ID.CN

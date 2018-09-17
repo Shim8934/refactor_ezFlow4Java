@@ -71,28 +71,18 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
     }
 	
 	@SuppressWarnings("unchecked")
-	public List<AccessIdVO> getAllAccessList2(Map<String, Object> map) throws Exception {
-		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList2", map);
-    }
-	
-	@SuppressWarnings("unchecked")
 	public List<AccessIdVO> getAllAccessListDept(Map<String, Object> map) throws Exception {
 		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessListDept", map);
     }
 	
 	@SuppressWarnings("unchecked")
-	public List<AccessIdVO> getAllAccessListDept2(Map<String, Object> map) throws Exception {
-		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessListDept2", map);
+	public List<String> getAllAccessListUserCompare(int tenantID) throws Exception {
+		return (List<String>) list("EzSystemAdminDAO.getAllAccessListUserCompare", tenantID);
     }
 	
 	@SuppressWarnings("unchecked")
-	public List<String> getAllAccessListCom(int tenantID) throws Exception {
-		return (List<String>) list("EzSystemAdminDAO.getAllAccessListCom", tenantID);
-    }
-	
-	@SuppressWarnings("unchecked")
-	public List<String> getAllAccessListCom2(int tenantID) throws Exception {
-		return (List<String>) list("EzSystemAdminDAO.getAllAccessListCom2", tenantID);
+	public List<String> getAllAccessListDeptCompare(int tenantID) throws Exception {
+		return (List<String>) list("EzSystemAdminDAO.getAllAccessListDeptCompare", tenantID);
     }
 	
 	

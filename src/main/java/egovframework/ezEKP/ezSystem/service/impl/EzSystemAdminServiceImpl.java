@@ -404,19 +404,16 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAllAccessList started.");
 		logger.debug("primaryLang=" + primaryLang + ", tenantID=" + tenantID + ", companyID=" + companyID);
 		
-		if (!primaryLang.equals("1")) {
-			primaryLang = "2";
+		if (primaryLang.equals("1")) {
+			primaryLang = "";
 		}
 		List<AccessIdVO> list;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("tenantID", tenantID);
 		params.put("companyID", companyID);
+		params.put("lang", primaryLang);
 		
-		if (primaryLang.equals("1")) {
-			list = ezSystemAdminDAO.getAllAccessList(params);
-		} else {
-			list = ezSystemAdminDAO.getAllAccessList2(params);
-		}
+		list = ezSystemAdminDAO.getAllAccessList(params);
 		
 		logger.debug("getAllAccessList ended.");
 		return list;
@@ -444,19 +441,16 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAllAccessListDept started.");
 		logger.debug("primaryLang=" + primaryLang + ", tenantID=" + tenantID + ", companyID=" + companyID);
 		
-		if (!primaryLang.equals("1")) {
-			primaryLang = "2";
+		if (primaryLang.equals("1")) {
+			primaryLang = "";
 		}
 		List<AccessIdVO> list;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("tenantID", tenantID);
 		params.put("companyID", companyID);
+		params.put("lang", primaryLang);
 		
-		if (primaryLang.equals("1")) {
-			list = ezSystemAdminDAO.getAllAccessListDept(params);
-		} else {
-			list = ezSystemAdminDAO.getAllAccessListDept2(params);
-		}
+		list = ezSystemAdminDAO.getAllAccessListDept(params);
 		
 		logger.debug("getAllAccessListDept ended.");
 		return list;
@@ -467,8 +461,8 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAllAccessListCom started.");
 		logger.debug("tenantID=" + tenantID);
 		
-		List<String> allUser = ezSystemAdminDAO.getAllAccessListCom(tenantID);
-		List<String> allDept = ezSystemAdminDAO.getAllAccessListCom2(tenantID);
+		List<String> allUser = ezSystemAdminDAO.getAllAccessListUserCompare(tenantID);
+		List<String> allDept = ezSystemAdminDAO.getAllAccessListDeptCompare(tenantID);
 		List<String> allList = new ArrayList<String>();
 		
 		for (int i = 0; i < allUser.size(); i++) {

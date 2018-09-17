@@ -607,19 +607,6 @@ public class EzSystemAdminController {
 		if (useIPAccess == null || useIPAccess.equals("")) {
 			useIPAccess = "NO"; // 기본값은 사용안함
 		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);
-
-			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
-				resultList.add(vo);
-			}
-
-		}
-		
 				
 		model.addAttribute("useIPAccess", useIPAccess);
 		model.addAttribute("rollInfo", userInfo.getRollInfo());

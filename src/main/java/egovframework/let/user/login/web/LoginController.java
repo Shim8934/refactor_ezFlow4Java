@@ -561,25 +561,23 @@ public class LoginController {
         	int checkCnt = 0;
         	if (!(ipBandList.size() == 0 || ipBandList == null)) {
         		for (int i = 0; i < ipBandList.size(); i++) {
-        			String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
-        			for (int j = 0; j < clientIP.length; j++) {
-        				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
-        					checkCnt++;
-        				}
-        			}
+        			getAccess = ipBandList.get(i).getAccess();
         			
-        			if (checkCnt == 4) {
-        				getAccess = ipBandList.get(i).getAccess();
-        				
-        				if (getAccess == "NO") { // 허용, 거부 중 거부가 우선 (검사하다 거부가 나오면 바로 return)
-        					return false;
-        				}
+        			if (!getAccess.equals("NO")) {
+        				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+            			for (int j = 0; j < clientIP.length; j++) {
+            				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
+            					checkCnt++;
+            				}
+            			}
+            			
+            			if (checkCnt == 4) {
+            				returnValue = true;
+            			}
+            			checkCnt = 0;
+        			} else {
+        				return false;
         			}
-        			checkCnt = 0;
-        		}
-        		
-        		if (getAccess.equals("YES")) { 
-        			returnValue = true;
         		}
         		
         	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
