@@ -157,7 +157,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} 
-.portlet_list li{ margin:0px; padding:0px 0px 0px 17px; background:url(../images/kr/main/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor: pointer;}
+.portlet_list li{ margin:0px; padding:0px 8px 0px 17px; background:url(../images/kr/main/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor: pointer;}
 .portlet_list li:last-child{ border-bottom:none;}
 .portlet_list li .txt { float:left; padding:0px 0px 0px 0px; width:61%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing: -0.5;}
 .portlet_list li .name {width:55px; text-align:right;overflow:hidden; font-size:12px; letter-spacing: -0.5; float:right; display:inline-block; white-space:nowrap; text-overflow:ellipsis}

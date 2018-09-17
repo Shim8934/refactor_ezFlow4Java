@@ -1082,10 +1082,10 @@
 			    </div>
 	            <div id="atti_area" class="main_time">
 	            	<dl class="timeCheckIn">
-	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">출근</dd>
+	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)"><spring:message code="ezPortal.pjg04" /></dd>
 	                </dl>
 	                <dl class="timeCheckOut">
-	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)">퇴근</dd>
+	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)"><spring:message code="ezPortal.pjg05" /></dd>
 	                </dl>
 		    	</div>
 			</article>
