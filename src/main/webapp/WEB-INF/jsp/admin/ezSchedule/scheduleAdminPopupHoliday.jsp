@@ -30,6 +30,7 @@
 		    var holidaydate = "<c:out value='${date}'/>";
 		    var isrepeat = "<c:out value='${isRepeat}'/>";
 		    var isrest = "<c:out value='${isRest}'/>";
+		    var lang = "<c:out value='${lang}'/>";
 	
 		    window.onload = function () {
 		        if (holidayid != "") {
@@ -45,6 +46,9 @@
 		            if (isrest == "1")
 		                document.getElementById("rest").checked = true;
 		        }
+		        //음력 양력 숨기기
+		        if (lang != "1")
+	            	$(".onlyUseKo").css("display", "none");
 		    }
 	
 		    $(function () {
@@ -208,10 +212,12 @@
 		        <tr>
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4008' /></th>
 		            <td>
+		            	<span class="onlyUseKo">
 		                <input id="date" type="radio" name="date" checked style="margin:0px 0px 0px 4px" />
 		                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
 		                <input id="date2" type="radio" name="date" style="margin:0px 0px 0px 4px" />
 		                <label for="date2"><spring:message code='ezSchedule.t101' /></label>
+		            	</span>
 		                <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
 		            </td>
 		        </tr>

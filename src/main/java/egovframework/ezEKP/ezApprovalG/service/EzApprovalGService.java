@@ -576,6 +576,10 @@ public interface EzApprovalGService {
 	
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
 	
+	public String getDocSendType(String docID, String companyID, int tenantID) throws Exception;
+	
+	public List<String> getRelayReqDeptID(String docID, String companyID, int tenantID) throws Exception;
+	
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 
 }

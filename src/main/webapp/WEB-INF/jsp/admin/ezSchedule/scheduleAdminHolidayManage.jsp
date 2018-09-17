@@ -15,7 +15,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">		    
 		    var userlang = "<c:out value='${primary}'/>";
-		    var companylist = "${companyList}";
+		    var companylist = "<c:out value='${companyList}'/>"; //(ex. S907001,가온아이A;S907000,가온아이B;)
+		    var lang = "<c:out value='${lang}'/>";
 		    
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -79,9 +80,9 @@
 		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent) + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
-		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
 		                        else
-		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 	
 		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10) + "</td>";
 	
@@ -135,9 +136,9 @@
 		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text) + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text == "1")
-		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
 		                        else
-		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 	
 		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10) + "</td>";
 	
@@ -172,6 +173,9 @@
 		        } catch (e) {
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang263 + "</td></tr></table>";
 		        }
+		      	//음력 양력 숨기기
+		        if (lang != "1")
+	            	$(".onlyUseKo").css("display", "none");
 		    }
 	
 		    function event_Mover(obj) {
@@ -320,7 +324,7 @@
 		                        <tr>
 		                            <th style="width: 5%;"><span><spring:message code='ezSchedule.t403' /></span></th>
 		                            <th style="width: 30%;"><span><spring:message code='ezSchedule.t9990003' /></span></th>
-		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></span></th>
+		                            <th style="width: 15%;" class="onlyUseKo"><span><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></span></th>
 		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4008' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4007' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4009' /></span></th>

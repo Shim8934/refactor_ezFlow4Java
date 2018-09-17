@@ -13532,27 +13532,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.updateAprLineInfo(map3);
 					
 					if (approvalFlag.equals("G")) {
-					absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset());
-					
-					if (absentReason.trim().equals("")) {
-						sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-						whileFlag = false;
-					} else {
-						subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId());
+						absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset());
 						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
+						if (absentReason.trim().equals("")) {
+							sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 							whileFlag = false;
 						} else {
+							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
 							
-							map3.put("v_APRSTATE", staASSungIn);
-							map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
-							
-							ezApprovalGDAO.updateAprLineInfo3(map3);
-							
-	                        k += 1;
+							if (subSQL.toUpperCase().equals("FALSE")) {
+								rtnVal = false;
+								whileFlag = false;
+							} else {
+								
+								map3.put("v_APRSTATE", staASSungIn);
+								map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
+								
+								ezApprovalGDAO.updateAprLineInfo3(map3);
+								
+		                        k += 1;
+							}
 						}
-					}
 					} else {
 						sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 						whileFlag = false;
@@ -13573,7 +13573,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								if (absentReason.trim().equals("")) {
 									sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 								} else {
-									subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId());
+									subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
 									
 									if (subSQL.toUpperCase().equals("FALSE")) {
 										rtnVal = false;
@@ -13751,7 +13751,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						whileFlag = false;
 						
 					} else {
-						subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId());
+						subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
 						
 						if (subSQL.toUpperCase().equals("FALSE")) {
 							rtnVal = false;
@@ -16224,7 +16224,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return "TRUE";
 	}
 
-	public String setBujaeInfo(String docID, String aprMemberID, String aprMemberDeptID, String absentReason, String aprType, String companyID, String lang, int tenantID) throws Exception {
+	public String setBujaeInfo(String docID, String aprMemberID, String aprMemberDeptID, String absentReason, String aprType, String companyID, String lang, int tenantID, Locale locale, String realPath) throws Exception {
 		logger.debug("setBujaeInfo started");
 
 		String strSQL = "";
@@ -16232,6 +16232,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String susinSN = getSusinSNInside(docID, companyID, tenantID);
 		int cnt = 1;
 		String aprSN = "";
+		String signField = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -16262,6 +16263,47 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					cnt += 1;
 				}
+			}
+		}
+		
+		//부재사유 문서에 넣어주기
+		map.put("v_FLAG", "APR");
+		String docHref = ezApprovalGDAO.getDocInfoHref(map);
+		
+		if (aprType.toUpperCase().equals("APR")) {
+			signField = susinSN + "sign" + aprSN;
+		} else {
+			signField = susinSN + "habyuisign" + aprSN;
+		}
+		
+		if (docHref != null) {
+			if (docHref.indexOf(".hwp") > -1) {
+				HWPFile hwpFile = HWPReader.fromFile(realPath + docHref);
+				setHwpText(signField, messageSource.getMessage("ezApprovalG." + absentReason, locale), hwpFile);
+				HWPWriter.toFile(hwpFile, realPath + docHref);
+			} else {//mht 구현
+				String loadMht = ezCommonService.loadMHTFile(realPath + docHref); // 결재문서 가져오기
+				// HTML -> MHT
+				String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
+				//HTML 파싱 document 클래스 겹쳐서 임포트 못함
+				org.jsoup.nodes.Document doc = Jsoup.parse(content);
+				
+				doc.getElementById(signField).html(messageSource.getMessage("ezApprovalG." + absentReason, locale));
+				
+				String tempHtml = doc.outerHtml();
+				
+				try (OutputStream outputStream = new FileOutputStream(new File(realPath + docHref)); 
+						OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
+					String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+					
+					output.write(convertedMHT);
+				} catch (FileNotFoundException fnfe) {
+					logger.debug("fnfe: {}", fnfe);
+				} catch (IOException ioe) {
+					logger.debug("ioe: {}", ioe);
+				} catch (Exception e) {
+					logger.debug("e: {}", e);
+				}  
 			}
 		}
 		
@@ -24944,9 +24986,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (doc.getElementsByTag("span").get(i).hasAttr("style")) {
 						
 					String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+					if(!spanStyle.endsWith(";")){
+						spanStyle += ";";
+					}
+					
 					if (spanStyle.indexOf("font-weight") > -1) {
 						if (spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).substring(spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).indexOf(":")+1, spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).indexOf(";")).equals("bold")) {
-							strInnerHtml = "<br>" + strInnerHtml + "</b>";
+							strInnerHtml = "<b>" + strInnerHtml + "</b>";
 						}
 					}
 					
@@ -24991,6 +25037,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     }
                 } else if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("p")) {
                 	String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+                	if(!spanStyle.endsWith(";")){
+                		spanStyle += ";";
+                	}
                 	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
 
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
@@ -24998,19 +25047,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         if (doc.getElementsByTag("span").get(i).parent().text().trim() == doc.getElementsByTag("span").get(i).text().trim()) {
                         	if (spanStyle.indexOf("font-family") > -1) {
                         		if (parentSpanStyle.indexOf("font-family") > -1) {
-                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-family"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-family"))+1));
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-family"), spanStyle.indexOf(";", spanStyle.indexOf("font-family"))+1));
                         		}
         					}
 
                             if (spanStyle.indexOf("font-size") > -1) {
                         		if (parentSpanStyle.indexOf("font-size") > -1) {
-                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-size"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("font-size"))+1));
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";", spanStyle.indexOf("font-size"))+1));
                                 }
                             }
 
                             if (spanStyle.indexOf("line-height") > -1) {
                             	if (parentSpanStyle.indexOf("line-height") > -1) {
-                        			htmlStyle.append(doc.getElementsByTag("span").get(i).attr("style").toString().substring(doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("line-height"), doc.getElementsByTag("span").get(i).attr("style").toString().indexOf(";", doc.getElementsByTag("span").get(i).attr("style").toString().indexOf("line-height"))+1));
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("line-height"), spanStyle.indexOf(";", spanStyle.indexOf("line-height"))+1));
                                 }
                             }
                             doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());
@@ -26138,11 +26187,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strAttachYN = "Y";
 			}
 			
+			//regnumber
+			Document relayXML = commonUtil.xmlLod(config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
+			
+			String regNumber = relayXML.getElementsByTagName("regnumber").item(0).getTextContent();
+			logger.debug("#문서번호: " + regNumber);
+			
 			strNewID = getNewID(strCompanyID, tenantID);
 
 			map.put("NEWID", strNewID);
     		map.put("FORMID", strFormID);
     		map.put("DOCTITLE", strDocTitle);
+    		map.put("regNumber", regNumber);
     		map.put("ATTACHYN", strAttachYN);
     		map.put("strWriterName", strWriterName);
     		map.put("strWriterDept", strWriterDept);
@@ -27469,6 +27525,46 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see egovframework.ezEKP.ezApprovalG.service.EzApprovalGService#getDocSendType(java.lang.String, java.lang.String, int)
+	 * 전자결재 발송 상태값 가져오는
+	 */
+	@Override
+	public String getDocSendType(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getDocSendType started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID",  docID);
+		map.put("tenantID",  tenantID);
+		map.put("companyID",  companyID);
+		
+		String sendType = ezApprovalGDAO.getDocSendType(map);
+
+		logger.debug("getDocSendType ended");
+		
+		return sendType;
+	}
+	
+	/* (non-Javadoc)
+	 * @see egovframework.ezEKP.ezApprovalG.service.EzApprovalGService#getRelayReqDeptID(java.lang.String, java.lang.String, int)
+	 * 전자결재 재발송대기 중인 deptID 가져오기
+	 */
+	@Override
+	public List<String> getRelayReqDeptID(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getRelayReqDeptID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID",  docID);
+		map.put("tenantID",  tenantID);
+		map.put("companyID",  companyID);
+		
+		List<String> deptIDs = ezApprovalGDAO.getRelayReqDeptID(map);
+
+		logger.debug("getRelayReqDeptID ended");
+		
+		return deptIDs;
+	}
+
 	@Override
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception{
 		
