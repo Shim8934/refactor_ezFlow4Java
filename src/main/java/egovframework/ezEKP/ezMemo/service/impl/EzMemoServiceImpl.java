@@ -220,7 +220,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("use_date", memoConfigVO.getUse_date());
 		map.put("use_gadget", memoConfigVO.getUse_gadget());
 		map.put("default_color", memoConfigVO.getDefault_color());
-		map.put("color_name", memoConfigVO.getColor_name());
 		map.put("gadget_right", memoConfigVO.getGadget_right());
 		map.put("gadget_bottom", memoConfigVO.getGadget_bottom());
 		map.put("layer_height", memoConfigVO.getLayer_height());

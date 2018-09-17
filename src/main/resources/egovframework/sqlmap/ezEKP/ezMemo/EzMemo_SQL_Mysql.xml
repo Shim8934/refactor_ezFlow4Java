@@ -295,9 +295,9 @@
 	
 	<insert id="EzMemoDAO.insertMemoConfig" parameterClass="map">
 		insert into tbl_memo_config 
-			(user_id, font_size, use_date, use_gadget, default_color, color_name, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, company_id, tenant_id)
+			(user_id, font_size, use_date, use_gadget, default_color, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, company_id, tenant_id)
 		values
-			(#user_id#, #font_size#, #use_date#, #use_gadget#, #default_color#, #color_name#, #gadget_right#, #gadget_bottom#, #layer_left#, #layer_top#, #layer_width#, #layer_height#, #company_id#, #tenant_id#)
+			(#user_id#, #font_size#, #use_date#, #use_gadget#, #default_color#, #gadget_right#, #gadget_bottom#, #layer_left#, #layer_top#, #layer_width#, #layer_height#, #company_id#, #tenant_id#)
 	</insert>
 	
 	<select id="EzMemoDAO.hasMemoFolder" resultClass="Integer">
