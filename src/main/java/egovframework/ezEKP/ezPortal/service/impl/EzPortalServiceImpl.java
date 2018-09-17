@@ -2970,10 +2970,10 @@ System.out.println("portletDisplayName : " +portletDisplayName );
 						sb.append("<section class='section_left'>\n");
 					} else if (i == 1) {
 						sb.append("<aside id='quickSide'><p class='linkBtn_open' onclick='javascript:viewQuick()'><img src='/images/kr/main/linkBtn_open.png'></p><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
-						sb.append("<li><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
-						sb.append("<li><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
-						sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");
-						sb.append("<li><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezAddress.t351", userInfo.getLocale())+"</span></li></ul></div>");
+						sb.append("<li id='mail' onclick='javascript:openQuickMenu(this.id)'><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
+						sb.append("<li id='appr' onclick='javascript:openQuickMenu(this.id)'><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
+						sb.append("<li id='schedule' onclick='javascript:openQuickMenu(this.id)'><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");
+						sb.append("<li id='organ' onclick='javascript:openQuickMenu(this.id)'><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezAddress.t351", userInfo.getLocale())+"</span></li></ul></div>");
 						sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu' id='QuickUl'></ul>");
 						sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre' id='preBtn' onclick='QuickMove(1)'><img src='/images/kr/main/link_preBtn_dis.png'></span><span class='linkBtn_next' id='nextBtn' onclick='QuickMove(2)'><img src='/images/kr/main/link_nextBtn_dis.png'></span></p></div></div></aside>");
 						
