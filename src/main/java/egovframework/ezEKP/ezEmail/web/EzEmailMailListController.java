@@ -1490,15 +1490,11 @@ public class EzEmailMailListController {
 	        
 	        Message[] messages = null;
 	        
-	        // set mailCount
  			int mailCount = 7;
  			int unreadCount = ia.getUnreadCount(folderPath);
- 			if (unreadCount < mailCount) {
- 				mailCount = unreadCount;
- 			}
  			
 	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
-	        		true, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
+	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
