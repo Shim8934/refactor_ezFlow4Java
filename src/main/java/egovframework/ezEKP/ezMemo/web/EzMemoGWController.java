@@ -298,6 +298,7 @@ public class EzMemoGWController {
 			memoFolderVO.setUser_id(userId);
 			memoFolderVO.setTenant_id(info.getTenantId());
 			memoFolderVO.setCompany_id(info.getCompanyId());
+			memoFolderVO.setOffset(info.getOffSet());
 			
 			List<MemoFolderVO> memoFolders  = ezMemoService.getMemoFolderInfo(memoFolderVO);
 			String folderNameList = "";

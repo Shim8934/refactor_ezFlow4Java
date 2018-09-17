@@ -49,7 +49,7 @@ function copyToClip() {
 		return; 
 	} 
 	var tempTextArea = document.createElement('textarea'); 
-	tempTextArea.value = content; 
+	tempTextArea.value = content;
 	document.body.appendChild(tempTextArea); 
 	tempTextArea.select(); 
 	document.execCommand('copy', false, null); 
