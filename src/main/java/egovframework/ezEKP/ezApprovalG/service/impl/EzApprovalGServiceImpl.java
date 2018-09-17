@@ -27401,6 +27401,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return sendType;
 	}
+	
+	/* (non-Javadoc)
+	 * @see egovframework.ezEKP.ezApprovalG.service.EzApprovalGService#getRelayReqDeptID(java.lang.String, java.lang.String, int)
+	 * 전자결재 재발송대기 중인 deptID 가져오기
+	 */
+	@Override
+	public List<String> getRelayReqDeptID(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getRelayReqDeptID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID",  docID);
+		map.put("tenantID",  tenantID);
+		map.put("companyID",  companyID);
+		
+		List<String> deptIDs = ezApprovalGDAO.getRelayReqDeptID(map);
+
+		logger.debug("getRelayReqDeptID ended");
+		
+		return deptIDs;
+	}
 
 	@Override
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception{

@@ -9294,11 +9294,15 @@
 	<select id="EzApprovalG.getDocSendType" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-			    PROCESSYN
+			    DISTINCT PROCESSYN
 			FROM    
 			    TBL_ENDRECEIPTPOINTINFO
 			WHERE
 			    DOCID = #docID#
+			AND
+				EXTRECEPTYN = 'Y'
+			AND
+				PROCESSYN = 'T'
 			AND
 			    COMPANYID = #companyID#
 			AND
@@ -9306,6 +9310,25 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalG.getRelayReqDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+			    CONCAT(CONCAT(RECEIPTPOINTID, ':'), RECEIPTPOINTNAME)
+			FROM    
+			    TBL_ENDRECEIPTPOINTINFO
+			WHERE
+			    DOCID = #docID#
+			AND
+				EXTRECEPTYN = 'Y'
+			AND
+				PROCESSYN = 'T'
+			AND
+			    COMPANYID = #companyID#
+			AND
+			    TENANT_ID = #tenantID#
+		]]>
+	</select>
+		
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
 		SELECT 
 			CASE  WHEN HREF = ' ' THEN 
