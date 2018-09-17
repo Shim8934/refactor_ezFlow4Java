@@ -339,7 +339,8 @@
 		    	var str = "";
 		    	
 		    	str += '<li class="first_approval">';
-		    	str += '	<p class="approval_tit"><span class="txt">'+ data.docTitle +'</span><span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi, ".") +'</span><span class="name">'+ data.writerName +'</span></p>';
+		    	str += '	<p class="approval_tit" onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'")\'>'
+		    	str += '	<span class="txt">'+ data.docTitle +'</span><span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi, ".") +'</span><span class="name">'+ data.writerName +'</span></p>';
 		    	str += '	<div class="approval_content">';
 		    	
 		    	for(var i=0; i<listSize; i++){

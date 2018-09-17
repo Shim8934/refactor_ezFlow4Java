@@ -1304,7 +1304,7 @@
 		    ,docinfo.DOCTITLE          AS DOCTITLE
 		    ,docinfo.STARTDATE         AS STARTDATE
 		    ,docinfo.WRITERID          AS WRITERID
-		    ,docinfo.WRITERNAME$lang$  AS WRITERNAME
+		    ,docinfo.WRITERNAME        AS WRITERNAME
 		    ,docinfo.WRITERNAME2       AS WRITERNAME2
 		    ,docinfo.HREF              AS HREF
             ,lineinfo.APRMEMBERDEPTID  AS APRMEMBERDEPTID
@@ -1341,7 +1341,7 @@
 		    ,DOCTITLE          AS DOCTITLE
 		    ,STARTDATE         AS STARTDATE
 		    ,WRITERID          AS WRITERID
-		    ,WRITERNAME$lang$  AS WRITERNAME
+		    ,WRITERNAME        AS WRITERNAME
 		    ,WRITERNAME2       AS WRITERNAME2
 		    ,HREF              AS HREF
 		FROM 
@@ -1365,7 +1365,7 @@
 		    ,DOCTITLE          AS DOCTITLE
 		    ,STARTDATE         AS STARTDATE
 		    ,WRITERID          AS WRITERID
-		    ,WRITERNAME$lang$  AS WRITERNAME
+		    ,WRITERNAME        AS WRITERNAME
 		    ,WRITERNAME2       AS WRITERNAME2
 		    ,HREF              AS HREF
 		FROM 
