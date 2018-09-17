@@ -1101,7 +1101,8 @@
                 </dl>
                 <dl id="AprSign" onClick="btnSumming_click(this)">
                     <dt class="iconImg"><img src="/images/kr/main/countingIcon03.png"></dt>
-                    <dd class="iconText"><spring:message code="main.t00018" /></dd>
+                    <%-- <dd class="iconText"><spring:message code="main.t00018" /></dd> --%>
+                    <dd class="iconText"><spring:message code="ezPortal.pgj03" /></dd>
                     <dd class="iconCount_none" id="aprnum">0</dd>
                 </dl>
                 <dl id="Schedule" onClick="btnSumming_click(this)">
