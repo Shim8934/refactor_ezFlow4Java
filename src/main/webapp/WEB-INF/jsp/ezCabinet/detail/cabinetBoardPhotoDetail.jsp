@@ -113,8 +113,10 @@
 					document.getElementById("cabDownClose").onclick = function(e) {closeDownloadPopup();};
 					
 					//Add list of images
-					var cabPhotoUl = document.getElementById("photoSelect");
-					var attachList  = getIframeContent().attach;
+					var cabPhotoUl       = document.getElementById("photoSelect");
+					cabPhotoUl.innerHTML = "";
+					var attachList       = getIframeContent().attach;
+					
 					for (var i = 0, len = attachList.length; i < len; i++) {
 						var liElmt    = document.createElement("li");
 						var divElmt   = document.createElement("div");
