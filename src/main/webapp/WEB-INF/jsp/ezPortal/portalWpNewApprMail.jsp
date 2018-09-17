@@ -917,11 +917,18 @@
 		                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
 		                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i)).substring(5);
 		                    var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
-		                    
+		                    var READ = getNodeText(xmldom.getElementsByTagName("READ").item(i));
+
 		                    _SubjectColumSpan.innerText = SUBJECT;
-		                    SUBJECT = _SubjectColumSpan.innerHTML;
+		                    SUBJECT = _SubjectColumSpan.innerHTML;		                    
+		                    
+		                    if (READ == 0) {
+		                    	READ = "mail_close";
+		                    } else {
+		                    	READ = "mail_open";
+		                    }
 							
-		                    listHTML += "<li class='mail_close' onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
+		                    listHTML += "<li class='" + READ + "' onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 		                }
 	
 		                //listHTML += "</ul>";
