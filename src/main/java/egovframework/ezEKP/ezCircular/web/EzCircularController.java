@@ -1177,6 +1177,24 @@ public class EzCircularController extends EgovFileMngUtil {
 			model.addAttribute("result", result);
 			model.addAttribute("listSize", list.size());
 		}
+		
+		if(mode.equals("write")) {
+			// 2018-09-17 김민성 - 회람판 editorFontStyle 관련 추가
+			String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "'";
+			
+			//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+			if (userInfo.getLang().equals("1")) {
+				String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+				
+				if (!editorFontStyle.equals("")) {
+					String fontFamily = editorFontStyle.split("\\|")[0];
+					String fontSize = editorFontStyle.split("\\|")[1];
+					
+					defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+				}
+			}
+			model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		}
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userID", userID);
@@ -1186,7 +1204,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userMyName", userMyName);
 		model.addAttribute("userMyName2", userMyName2);
 		model.addAttribute("mode", mode);
-
+		
 		return "/ezCircular/circularWrite";
 	}
 	
