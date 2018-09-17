@@ -126,10 +126,8 @@ public class EzMemoController {
 		
 		if (status.equals("ok")) {		
 				JSONArray memoList = (JSONArray) resultBody.get("memoList");
-				String colorList = resultBody.get("colorList").toString();
 				
 				model.addAttribute("memoList", memoList);
-				model.addAttribute("colorList", colorList);
 				
 				if (layerFlag != null) {
 					model.addAttribute("layerFlag", layerFlag);
@@ -575,7 +573,6 @@ public class EzMemoController {
 
 		if ("ok".equals(status)) {
 			model.addAttribute("memo", resultBody.get("data"));
-			model.addAttribute("memoList", resultBody.get("colorList").toString());
 		}
 		
 		logger.debug("getMemoDetail ended");

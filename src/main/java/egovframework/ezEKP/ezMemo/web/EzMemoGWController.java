@@ -97,7 +97,6 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", "");
 			result.put("memoList", memoList);
-			result.put("colorList", config.getColor_name());
 			result.put("defaultColor", config.getDefault_color()-1);
 			result.put("folderId", folderId);
 		} catch(Exception e) {
@@ -677,7 +676,6 @@ public class EzMemoGWController {
 			result.put("status", "ok"); 
 			result.put("code", 0); 
 			result.put("data", memo); 
-			result.put("colorList", config.getColor_name());
 			 
 		} catch(Exception e) { 
 		 

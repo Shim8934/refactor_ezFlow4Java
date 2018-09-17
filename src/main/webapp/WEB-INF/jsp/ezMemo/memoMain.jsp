@@ -233,7 +233,6 @@
                 },
                 cache: false,
                 success: function(result) {
-                	memoColor = result["colorList"].split(";");
                 	memoList = result["memoList"];
                 	
 					loadMemoList();

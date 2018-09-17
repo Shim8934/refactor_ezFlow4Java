@@ -109,8 +109,8 @@ function loadMemoList(flag) {
 		
 		for(var i=0; i<memoList.length; i++) {
 			if ('layer' != flag) {
-				var hColor = memoColor[memoList[i].color_id-1];
-				var bColor = memoColor[memoList[i].color_id+5];
+				//var hColor = memoColor[memoList[i].color_id-1];
+				//var bColor = memoColor[memoList[i].color_id+5];
 				var div = createMemo(memoList[i]);
 				
 				$("#boardMemoList").prepend(div);

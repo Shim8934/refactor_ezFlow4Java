@@ -13,8 +13,6 @@ public class MemoConfigVO {
 	private int use_gadget;
 	/** 메모지 초기 색상 */
 	private int default_color;
-	/** 메모지 색상 배열 */
-	private String color_name;
 	/** 퀵메모 x좌표*/
 	private int gadget_right;
 	/** 퀵메모 y좌표*/
@@ -60,12 +58,6 @@ public class MemoConfigVO {
 	}
 	public void setDefault_color(int default_color) {
 		this.default_color = default_color;
-	}
-	public String getColor_name() {
-		return color_name;
-	}
-	public void setColor_name(String color_name) {
-		this.color_name = color_name;
 	}
 	public int getGadget_right() {
 		return gadget_right;
