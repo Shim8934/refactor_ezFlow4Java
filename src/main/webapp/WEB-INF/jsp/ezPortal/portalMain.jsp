@@ -258,16 +258,16 @@
 		            cache: false,
 		            success: function(result) {
 		            	$("#memo"+memoId).remove();
-		            	if($(".memoLay").length == 0) {
-	                		loadMemoList(layerflag);
-	                	}
 		            	
 		            	var memoLength = $(".memo_main .memoLay").length;
 		            	if (memoLength == 0) {
 
 		            		addEmptyMemo(layerflag);
 		            	}
-		            	
+		            	setMemoCount(memoLength);
+		            	if($(".memoLay").length == 0) {
+	                		loadMemoList(layerflag);
+	                	}
 		            	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 		                		window.frames["main"].frames["right"].getMemoList();
@@ -284,7 +284,6 @@
 
 		    	var memoId = obj.getAttribute("memoid");
 				var afterContents = $(".memoText[memoid=" + memoId + "]").val();
-				console.log(afterContents);
 				
 			    	$.ajax ({
 		 			   	url : '/ezMemo/memoModify.do',
@@ -799,7 +798,7 @@
 	                async: false,
 	                success: function(result) {
 	                	
-	                	memoColor = result["colorList"].split(";");
+	                	//memoColor = result["colorList"].split(";");
 	                	memoList = result["memoList"];
 	                	layerFlag = result["layerFlag"];
 	                	

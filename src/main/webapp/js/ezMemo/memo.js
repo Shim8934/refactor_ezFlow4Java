@@ -117,8 +117,8 @@ function loadMemoList(flag) {
 			} else {
 				if (memoList[i].display_flag != 1) {
 					
-					var hColor = memoColor[memoList[i].color_id-1];
-					var bColor = memoColor[memoList[i].color_id+5];
+					//var hColor = memoColor[memoList[i].color_id-1];
+					//var bColor = memoColor[memoList[i].color_id+5];
 					var div = createMemo(memoList[i], flag);
 					
 					$(".memo_main").prepend(div);
