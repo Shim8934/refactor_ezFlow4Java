@@ -24884,7 +24884,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (spanStyle.indexOf("font-weight") > -1) {
 						if (spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).substring(spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).indexOf(":")+1, spanStyle.substring(spanStyle.indexOf("font-weight"), spanStyle.indexOf(";",spanStyle.indexOf("font-weight"))+1).indexOf(";")).equals("bold")) {
-							strInnerHtml = "<br>" + strInnerHtml + "</b>";
+							strInnerHtml = "<b>" + strInnerHtml + "</b>";
 						}
 					}
 					
@@ -24929,7 +24929,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     }
                 } else if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("p")) {
                 	String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
-                	if(spanStyle.endsWith(";")){
+                	if(!spanStyle.endsWith(";")){
                 		spanStyle += ";";
                 	}
                 	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
