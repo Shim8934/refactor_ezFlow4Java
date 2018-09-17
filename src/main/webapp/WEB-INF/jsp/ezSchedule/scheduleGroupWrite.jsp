@@ -992,8 +992,6 @@
 		                    }
 		                }
 		            }
-		            //초기화
-		            listContentArry = new Array();
 		        }
 		        else {
 		            if (p_ListOrderObject == "") {		              
