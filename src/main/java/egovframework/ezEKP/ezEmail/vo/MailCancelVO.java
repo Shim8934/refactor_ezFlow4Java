@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.vo;
 public class MailCancelVO {
 	
 	private String readerEmail;
+	private String readerName;
 	private String status;
 	
 	public String getReaderEmail() {
@@ -10,6 +11,12 @@ public class MailCancelVO {
 	}
 	public void setReaderEmail(String readerEmail) {
 		this.readerEmail = readerEmail;
+	}
+	public String getReaderName() {
+		return readerName;
+	}
+	public void setReaderName(String readerName) {
+		this.readerName = readerName;
 	}
 	public String getStatus() {
 		return status;
@@ -20,7 +27,7 @@ public class MailCancelVO {
 	
 	@Override
 	public String toString() {
-		return "MailCancelVO [readerEmail=" + readerEmail + ", status=" + status + "]";
+		return "MailCancelVO [readerEmail=" + readerEmail + ", readerName=" + readerName + ", status=" + status + "]";
 	}
 	
 }

@@ -534,26 +534,17 @@
    				makePageSelPage();
 			}
 			 
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 192;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        }
-		    
 		   //2018-08-06 김보미 - 페이지 위치 고정
 		    $(window).on("resize", function(){
 	            windowResize();
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 192;
+	        	var height = document.documentElement.clientHeight - 204;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
 	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 		    
 		    $(function(){

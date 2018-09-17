@@ -10,11 +10,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -82,6 +86,9 @@ public class EzWebFolderGWController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private Properties globals;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController.class);
 
@@ -359,6 +366,11 @@ public class EzWebFolderGWController {
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		String listCnt    = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")                       : "";
 		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
+   		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
+   		userName = commonUtil.getWildcardEscapedString(userName, dbName);
+   		
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
@@ -449,6 +461,11 @@ public class EzWebFolderGWController {
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
+   		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
+   		userName = commonUtil.getWildcardEscapedString(userName, dbName);
+   		
 		String searchChk  = "1";
 		String realColmn  = "";
 		
@@ -1572,6 +1589,11 @@ public class EzWebFolderGWController {
 		int startPoint    = 0;
 		String realColmn  = "";
 		JSONObject result = new JSONObject();
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
+   		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
+   		userName = commonUtil.getWildcardEscapedString(userName, dbName);
 		
 		logger.debug("FolderId: " + folderId + " || serverName: " + serverName + " || Current Page: " + currPage + " || UserId: " + userId + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || FileName: " + fileName + " || UserName: " + userName + " || File Type: " + fileType + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt);
 		

@@ -228,7 +228,7 @@
 		                        pDocID = createNewDoc();
 		                    }
 		                }
-		                SignCheck();
+// 		                SignCheck();
 		            }
 		        }
 		        catch (e) {
