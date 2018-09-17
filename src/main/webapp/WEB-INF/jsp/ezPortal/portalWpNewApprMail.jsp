@@ -1059,7 +1059,7 @@
 		<c:if test="${type == 'favo'}">
 	        <div class="layDIV">
 	        	<dl class="portlet_title">
-	                <dt class="portletText">즐겨찾기양식</dt>
+	                <dt class="portletText"><spring:message code='ezPortal.pjg09' /></dt>
 	                <dd class="portletPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
 	            </dl>
 	             <ul class="bookmark">
