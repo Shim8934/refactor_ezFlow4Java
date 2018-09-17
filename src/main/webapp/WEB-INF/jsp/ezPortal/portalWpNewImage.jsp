@@ -106,9 +106,9 @@
 		                if(SCHEDULETYPE == 1) {
 		                	listHTML += "<span class='Tindividual'><spring:message code='ezSchedule.t221' /></span>";
 		                } else if (SCHEDULETYPE == 2) {
-		                	listHTML += "<span class='Tindividual'><spring:message code='ezSchedule.t222' /></span>";
+		                	listHTML += "<span class='Tdept'><spring:message code='ezSchedule.t222' /></span>";
 		                } else if (SCHEDULETYPE == 3) {
-		                	listHTML += "<span class='Tindividual'><spring:message code='ezSchedule.t223' /></span>";
+		                	listHTML += "<span class='Tcompany'><spring:message code='ezSchedule.t223' /></span>";
 		                } else if (SCHEDULETYPE == 7) {
 		                	listHTML += "<span class='Tgroup'><spring:message code='main.t00022' /></span>";
 		                } else {

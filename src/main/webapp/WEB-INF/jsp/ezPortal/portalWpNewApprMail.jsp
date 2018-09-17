@@ -914,13 +914,13 @@
 		                	var _SubjectColumSpan = document.createElement("span");
 		                	var SUBJECT = getNodeText(xmldom.getElementsByTagName("SUBJECT").item(i));
 		                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
-		                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i));
+		                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i)).substring(5);
 		                    var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
 		                    
 		                    _SubjectColumSpan.innerText = SUBJECT;
 		                    SUBJECT = _SubjectColumSpan.innerHTML;
-	
-		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
+							
+		                    listHTML += "<li class='mail_close' onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 		                }
 	
 		                //listHTML += "</ul>";

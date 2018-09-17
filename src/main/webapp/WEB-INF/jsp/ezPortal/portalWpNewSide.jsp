@@ -91,12 +91,14 @@
 
 		        var xmlhttp_getBoardList_NewBoardSTD = createXMLHttpRequest();
 		        
+		        /* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
 		        function getBoardList_NewBoardSTD() {
 		            $.ajax({
 	    	        	type : "POST",
 	    	        	dataType : "text",
 	    	        	url : "/ezBoard/getBoardList.do",
 	    	        	data : {
+	    	        		type : "portletBoard",
 	    	        		boardType   : "1", 
 						 	boardId 	 : pBoardID_NewBoardSTD, 
 						    pageNum 	 : "1", 
@@ -132,8 +134,10 @@
 		                var RowCnt = xmldom.getElementsByTagName("ROW").length;
 
 		                if (RowCnt > 0) {
-		                    if (RowCnt > 6)
-		                        RowCnt = 6;
+		                  /*   if (RowCnt > 6)
+		                        RowCnt = 6; */
+	                        if (RowCnt > 5)
+		                        RowCnt = 5;
 
 		                    var pfirstItemID = "";
 		                    if (RowCnt > 0) {
@@ -158,7 +162,9 @@
 		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
 		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
 		                        
-		                        for (var i = 1; i < RowCnt; i++) {
+		                        /* 2018-09-14 홍승비 - 게시물 표출하는 로직 수정 */
+		                      //  for (var i = 1; i < RowCnt; i++) {
+		                        for (var i = 0; i < RowCnt; i++) {
 		                            if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		                                var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
 		                            } else {

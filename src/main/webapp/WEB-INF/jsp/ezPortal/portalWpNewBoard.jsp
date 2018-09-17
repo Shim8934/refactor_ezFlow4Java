@@ -69,12 +69,14 @@
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();
         	
+        	/* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
         	function getBoardList_NewBoard() {
                 $.ajax({
     	        	type : "POST",
     	        	dataType : "text",
     	        	url : "/ezBoard/getBoardList.do",
     	        	data : {
+    	        		type : "portletBoard",
     	        		boardType   : "1", 
 					 	boardId 	 : pBoardID_NewBoard, 
 					    pageNum 	 : "1", 
@@ -134,7 +136,8 @@
                         var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
                         boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
                         
-                        for (var i = 1; i < RowCnt; i++) {
+                        //for (var i = 1; i < RowCnt; i++) {
+                        for (var i = 0; i < RowCnt; i++) {
                             var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
                             var newItemFlag = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA7").item(0));
