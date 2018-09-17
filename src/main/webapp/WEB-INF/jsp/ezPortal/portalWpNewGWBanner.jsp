@@ -29,9 +29,9 @@
 		<div class="layDIV">
         	<span class="leftImg"><img src="/images/kr/main/bannerImg_left.png"></span>
             <dl class="bannerText">
-            	<dt class="bText">그룹웨어 쉽게 활용하기</dt>
-                <dt class="sText">그룹웨어 알아보기 등 활용도를<br>높일 수 있는 메뉴얼입니다.</dt>
-                <dd class="bannerBtn" onclick="Img_OnClick()">자세히보기</dd>
+            	<dt class="bText"><spring:message code="ezPortal.pjg06" /></dt>
+                <dt class="sText"><spring:message code="ezPortal.pjg07" /><br><spring:message code="ezPortal.pjg08" /></dt>
+                <dd class="bannerBtn" onclick="Img_OnClick()"><spring:message code="ezPortal.pjg09" /></dd>
             </dl>
             <span class="rightImg"><img src="/images/kr/main/bannerImg_right.png"></span>
         </div>

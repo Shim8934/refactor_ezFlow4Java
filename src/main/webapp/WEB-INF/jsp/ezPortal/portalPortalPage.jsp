@@ -366,21 +366,12 @@
 		    }		    
 					 
 			
-/* 			function openQuickMenu(id) {
-				console.log("openQuickMenu", id);
-				
-				if(id === 'mail'){ // "http://jongp1.com:8080/ezEmail/mailWrite.do"
-					window.open("/ezEmail/mailWrite.do", "", GetOpenWindowfeature(890, 840));
-					//new_mail_onclick();
-				} else if(id === 'appr'){
-					openForm();
-				} else if(id === 'schedule') {
-					writeSchedule();
-				} else if(id === 'organ') {
+ 			function openQuickMenu(id) {
+				if(id === 'organ') {
 					window.open("/ezPersonal/personSearch.do", "", GetOpenWindowfeature(750, 550));
 				}
 					
-			} */
+			}
 
 		    function QuickLinkCheck() {
 		        var xmlpara = createXmlDom();
