@@ -14,8 +14,6 @@ public class MemoFolderVO {
 	private String delete_date;
 	/** 메모함 순서*/
 	private int orders;
-	/** 메모함 아이콘 아이디*/
-	private String icon_id;
 	/** 메모 갯수*/
 	private int count;
 	/** 메모 삭제 플래그*/
@@ -63,12 +61,6 @@ public class MemoFolderVO {
 	}
 	public void setOrders(int orders) {
 		this.orders = orders;
-	}
-	public String getIcon_id() {
-		return icon_id;
-	}
-	public void setIcon_id(String icon_id) {
-		this.icon_id = icon_id;
 	}
 	public int getCount() {
 		return count;

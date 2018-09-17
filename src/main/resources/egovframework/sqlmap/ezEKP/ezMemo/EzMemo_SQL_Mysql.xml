@@ -319,9 +319,9 @@
 	
 	<insert id="EzMemoDAO.setDefaultMemoFolder" parameterClass="map">
 		INSERT INTO 
-			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ORDERS, ICON_ID, DELETE_FLAG)
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ORDERS, DELETE_FLAG)
 		VALUES
-			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#, #orders#, #icon_id#, #delete_flag#)
+			(#folder_id#, #folder_name#, #reg_date#, #user_id#, #company_id#, #tenant_id#, #orders#, #delete_flag#)
 		<selectKey keyProperty="folder_id" resultClass="Integer" type="pre">
 			SELECT 
 				MAX(FOLDER_ID)+1 

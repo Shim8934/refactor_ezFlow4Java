@@ -255,7 +255,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("folder_name", "기본메모함");
 		map.put("reg_date", commonUtil.getTodayUTCTime(""));
 		map.put("orders", 0);
-		map.put("icon_id", 1);
 		map.put("delete_flag", 0);
 		ezMemoDAO.setDefaultMemoFolder(map);
 		logger.debug("setDefaultMemoFolder ended");
