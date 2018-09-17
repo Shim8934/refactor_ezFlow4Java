@@ -1434,9 +1434,6 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
-	 if (pAprLineType == "009") {
-		   SignCheck();
-	  }
     SaveFile();
     SignSave();
 

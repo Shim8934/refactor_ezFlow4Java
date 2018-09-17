@@ -471,7 +471,7 @@ public class EzApprovalGRelayScheduler {
         						 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
         						 
         						 //인코딩 안풀고 그냥 저장
-        						 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strCont_Name);
+        						 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strSendID + strCont_Name);
         						 logger.debug("#재발송요청 의견 생성=" + writeReqResendOpinion);
         					 }
         					 

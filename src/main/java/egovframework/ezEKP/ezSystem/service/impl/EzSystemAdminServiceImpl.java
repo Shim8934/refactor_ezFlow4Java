@@ -26,8 +26,10 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
 @Service("EzSystemAdminService")
@@ -311,5 +313,185 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getSysMonitorInfo started.");
 		
 		return result;
+	}
+	
+	@Override
+	public void updateSystemIPAllow(String allowResult, int tenantID) throws Exception {
+		logger.debug("updateSystemIPAllow started. tenantID=" + tenantID + ", allowResult=" + allowResult);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("value", allowResult);
+		
+		ezSystemAdminDAO.updateSystemIPAllow(params);
+		
+		logger.debug("updateSystemIPAllow ended");
+	}
+	
+	@Override
+	public List<IPBandVO> getAllIPBand(int tenantID) throws Exception {
+		logger.debug("getAllIPBand started. tenantID=" + tenantID);
+		
+		List<IPBandVO> list = ezSystemAdminDAO.getAllIPBand(tenantID);
+		
+		logger.debug("getAllIPBand ended.");
+		return list;
+	}
+	
+	@Override
+	public void insertIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("insertIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.insertIPBand(params);
+		
+		logger.debug("insertIPBand ended.");
+	}
+	
+	@Override
+	public IPBandVO getSystemIPBand(String ipNo) throws Exception {
+		logger.debug("getSystemIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+		
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemIPBand(ipNo);
+		
+		logger.debug("getSystemIPBand ended.");
+		
+		return ipBand;
+	}
+	
+	@Override
+	public void updateIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateIPBand started.");
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ipNo", ipNo);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.updateIPBand(params);
+		
+		logger.debug("updateIPBand ended.");
+	}
+	
+	@Override
+	public void deleteIPBand(String ipNo) throws Exception {
+		logger.debug("deleteIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+		
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+		
+		ezSystemAdminDAO.deleteIPBand(list);
+		
+		logger.debug("deleteIPBand ended.");
+	}
+	
+	@Override
+	public List<AccessIdVO> getAllAccessList(String primaryLang, int tenantID, String companyID) throws Exception {
+		logger.debug("getAllAccessList started.");
+		logger.debug("primaryLang=" + primaryLang + ", tenantID=" + tenantID + ", companyID=" + companyID);
+		
+		if (primaryLang.equals("1")) {
+			primaryLang = "";
+		}
+		List<AccessIdVO> list;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("companyID", companyID);
+		params.put("lang", primaryLang);
+		
+		list = ezSystemAdminDAO.getAllAccessList(params);
+		
+		logger.debug("getAllAccessList ended.");
+		return list;
+	}
+	
+	@Override
+	public void deleteAccessId(String accessNo) throws Exception {
+		logger.debug("deleteAccessId started.");
+		logger.debug("accessNo=" + accessNo);
+		
+		String[] accessNoList = accessNo.split(",");
+		List<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < accessNoList.length; i++) {
+			list.add(accessNoList[i]);
+		}
+		
+		ezSystemAdminDAO.deleteAccessId(list);
+		
+		logger.debug("deleteAccessId ended.");
+	}
+	
+	@Override
+	public List<AccessIdVO> getAllAccessListDept(String primaryLang, int tenantID, String companyID) throws Exception {
+		logger.debug("getAllAccessListDept started.");
+		logger.debug("primaryLang=" + primaryLang + ", tenantID=" + tenantID + ", companyID=" + companyID);
+		
+		if (primaryLang.equals("1")) {
+			primaryLang = "";
+		}
+		List<AccessIdVO> list;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("companyID", companyID);
+		params.put("lang", primaryLang);
+		
+		list = ezSystemAdminDAO.getAllAccessListDept(params);
+		
+		logger.debug("getAllAccessListDept ended.");
+		return list;
+	}
+	
+	@Override
+	public List<String> getAllAccessListCom (int tenantID) throws Exception {
+		logger.debug("getAllAccessListCom started.");
+		logger.debug("tenantID=" + tenantID);
+		
+		List<String> allUser = ezSystemAdminDAO.getAllAccessListUserCompare(tenantID);
+		List<String> allDept = ezSystemAdminDAO.getAllAccessListDeptCompare(tenantID);
+		List<String> allList = new ArrayList<String>();
+		
+		for (int i = 0; i < allUser.size(); i++) {
+			allList.add(allUser.get(i));
+		}
+		
+		for (int i = 0; i <allDept.size(); i++) {
+			allList.add(allDept.get(i));
+		}
+		
+		logger.debug("allList=" + allList.toString());
+		logger.debug("getAllAccessListCom ended.");
+		return allList;
+	}
+	
+	@Override
+	public void insertAccessId(int tenantID, String cn) throws Exception {
+		logger.debug("insertAccessId started.");
+		logger.debug("tenantID=" + tenantID + ", cn=" + cn);
+		
+		String[] cnList = cn.split(";");
+		
+		for (int i = 0; i < cnList.length; i++) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("tenantID", tenantID);
+			params.put("cn", cnList[i]);
+			ezSystemAdminDAO.insertAccessId(params);
+		}
+		
+		logger.debug("insertAccessId ended.");
 	}
 }

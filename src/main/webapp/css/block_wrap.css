@@ -1,0 +1,7 @@
+@charset "utf-8";
+/* CSS Document */
+
+.block_wrap{text-align:center;}
+.block_wrap .block_box{width: 380px; height: 380px; margin:15% auto 0px; padding:0px;}
+.block_wrap .block_box dt{margin:0px 0px 50px 0px; padding:0px;}
+.block_wrap .block_box dd{display:inline-block; margin:0px; padding:6px 20px; background:#eb5d5d; border-radius:30px; font-size:18px; color:#FFF;}
