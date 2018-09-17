@@ -31,7 +31,7 @@
             <dl class="bannerText">
             	<dt class="bText"><spring:message code="ezPortal.pjg06" /></dt>
                 <dt class="sText"><spring:message code="ezPortal.pjg07" /><br><spring:message code="ezPortal.pjg08" /></dt>
-                <dd class="bannerBtn" onclick="Img_OnClick()"><spring:message code="ezPortal.pjg09" /></dd>
+                <dd class="bannerBtn" onclick="Img_OnClick()"><spring:message code="ezPortal.pjg10" /></dd>
             </dl>
             <span class="rightImg"><img src="/images/kr/main/bannerImg_right.png"></span>
         </div>
