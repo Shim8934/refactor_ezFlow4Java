@@ -567,9 +567,8 @@
 		                }
 		            }		
 		        }
- 		        <%--2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 사인칸에 표기안되서 주석해제 --%>
-		        //없이 테스트
- 		        SignCheck(); 
+		        
+//  		        SignCheck(); 
 		        
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);

@@ -51,6 +51,13 @@
 			<groupId>egovframework.rte</groupId>
 			<artifactId>egovframework.rte.ptl.mvc</artifactId>
 			<version>${egovframework.rte.version}</version>
+			
+			<exclusions>
+			  <exclusion>
+			    <artifactId>spring-modules-validation</artifactId>
+			    <groupId>org.springmodules</groupId>
+			  </exclusion>
+			</exclusions>			
 		</dependency>
 		<dependency>
 			<groupId>egovframework.rte</groupId>
