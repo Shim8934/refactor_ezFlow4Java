@@ -555,6 +555,7 @@
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
+	        	
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        }
 		    
