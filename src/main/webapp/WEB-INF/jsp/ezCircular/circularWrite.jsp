@@ -39,6 +39,7 @@
 	    	var userMyName = "${userMyName}";
 	    	var userMyName2 = "${userMyName2}";
 	    	var listSize = "${listSize}";
+	    	var defaultFontAndSize  = "${defaultFontAndSize}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -315,8 +316,12 @@
 	    		}
 	    	}
 
+	    	/* 2018-09-17 김민성 - 에디터 폰트 설정값 로직 수정 */
 			function Editor_Complete() {
-    	    	message.SetEditorContent(sigBody.innerHTML);
+    	    	if(mode != "write")
+		    		message.SetEditorContent(sigBody.innerHTML);
+    	    	else
+					message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
     	    }
 			
 			function btn_Close() {
