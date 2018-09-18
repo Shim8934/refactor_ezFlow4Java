@@ -20,6 +20,18 @@ var CabinetFile = function() {
 		if (evt != undefined) {
 			evt.stopPropagation();
 			evt.preventDefault();
+			
+			if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
+				if (evt.dataTransfer.files.length == 0) {alert(CabinetMessages.strUpFolder); return;}
+			}
+			else {
+				var length = evt.dataTransfer.items.length;
+				
+				for (var i = 0; i < length; i++) {
+					var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
+					if (entry.isDirectory) {alert(CabinetMessages.strUpFolder);return;}
+				}
+			}
 		}
 		
 		var filelist = (evt == undefined) ? document.getElementById("fileBttn").files : evt.dataTransfer.files;
