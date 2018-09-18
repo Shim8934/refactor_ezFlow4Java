@@ -1205,7 +1205,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 의견얼러트 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezAprOpinion.do")
-	public String ezAprOpinion(){
+	public String ezAprOpinion(HttpServletRequest req, Model model){
+		
+		if (req.getParameter("type") != null) {
+			String type = req.getParameter("type");
+			model.addAttribute("type", type);
+		}
+		
+		if (req.getParameter("formURL") != null) {
+			String formURL = req.getParameter("formURL");
+			model.addAttribute("formURL", formURL);
+		}
+		
+		if (req.getParameter("formDocType") != null) {
+			String formDocType = req.getParameter("formDocType");
+			model.addAttribute("formDocType", formDocType);
+		}
+		
+		
 		return "ezApprovalG/apprGezAprOpinion";
 	}
 	

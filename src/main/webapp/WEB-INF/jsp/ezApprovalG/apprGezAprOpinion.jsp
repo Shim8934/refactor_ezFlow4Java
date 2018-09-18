@@ -13,6 +13,9 @@
 			var RetValue;
 		    var ReturnFunction;
 		    var winFlag;
+		    var type = '${type}';
+		    var formURL = '${formURL}';
+		    var formDocType = '${formDocType}';
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.ezapropinion_cross_dialogArguments[0];
@@ -53,7 +56,7 @@
 		    }
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
-		            ReturnFunction(true);
+		            ReturnFunction(true, type, formURL, formDocType);
 		            
 		            if (winFlag) {
 			            window.close();

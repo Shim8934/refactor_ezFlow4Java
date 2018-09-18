@@ -1411,6 +1411,9 @@ System.out.println(strHTML);
 		String searchType = "";
 		String searchName = "";
 		String type = req.getParameter("type");
+		int listType = 1;
+		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+		nowDate = nowDate.substring(0, 16);
 		
 		logger.debug("wpNewApprMail type : " + type);
 		
@@ -1422,16 +1425,11 @@ System.out.println(strHTML);
 			model.addAttribute("result", result);
 		}
 		
-//		//구해안 잠시 결과물 로그 찍어봄
-//		int count1 =0;
-//		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
-//		for (ApprGFormVO fL : result) {
-//			count1++;
-//			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
-//			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
-//			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
-//		}
-//		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
+		//2018-09-18 구해안 부재자 정보 가져오기
+		String buJaeInfo = "";
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(result);
+		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		
 		/* 2018-08-24 새로운 포틀릿 */
 		model.addAttribute("type", type);
@@ -1439,6 +1437,9 @@ System.out.println(strHTML);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("host", userInfo.getServerName());
+		model.addAttribute("buJaeInfo", buJaeInfo);
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("listType", listType);
 
 		logger.debug("wpNewApprMail ended");
 		return "/ezPortal/portalWpNewApprMail";
