@@ -420,7 +420,9 @@
 					var postTd        = boardOpener.document.getElementById("PostDate");
 					var titleTd       = boardOpener.document.getElementById("cTitle");
 					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
+					var notRealName   = writerSpan.textContent;
 					var boardWriter   = getUserIdFromInline(writerSpan, "'");
+					boardWriter       = boardWriter ? boardWriter : notRealName;
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame  = boardOpener.document.getElementById("message");
@@ -447,8 +449,8 @@
 						mode       : saveMode,
 						title      : moduleTitle,
 						summary    : moduleSummary,
-						boardTitle : boardTitle, 
-						writer     : boardWriter,
+						boardTitle : boardTitle,
+						writer     : boardWriter ? boardWriter : CabinetMessages.strAnonymous,
 						date       : postDate,
 						attach     : JSON.stringify(attachList),
 						content    : boardContent

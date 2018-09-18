@@ -700,7 +700,7 @@ public class EzCabinetGWController_h {
 		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
 		
 		if (writerVO == null) {
-			writerVO = new SimpleUserInfoVO(writerId, writerId);
+			writerVO = new SimpleUserInfoVO(writerId, "");
 		}
 		
 		result.put("boardType", typeColumn.getColumnValue());
