@@ -199,4 +199,6 @@ public interface EzMemoService {
 	 * @throws Exception
 	 */
 	public void setGadgetConfig(MemoConfigVO memoConfigVO) throws Exception;
+
+	public void setMemoLayerMode(MemoConfigVO memoConfigVO);
 }

@@ -519,4 +519,17 @@
 			AND 
 				USER_ID = #user_id#
 	</update>
+	
+	<update id="EzMemoDAO.setMemoLayerMode" parameterClass="hashmap">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			FULL_MODE = #full_mode#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
 </sqlMap>
