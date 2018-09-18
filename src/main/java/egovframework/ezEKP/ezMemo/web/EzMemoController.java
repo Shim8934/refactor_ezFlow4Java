@@ -744,7 +744,7 @@ public class EzMemoController {
 	 */
 	@RequestMapping(value = "/ezMemo/setGadgetPosition.do")
 	public String setGadgetPosition(@CookieValue("loginCookie") String loginCookie,  String gadgetBottom, String gadgetRight, HttpServletRequest request) throws Exception {
-		logger.debug("setLayerPosition started");
+		logger.debug("setGadgetPosition started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -759,7 +759,7 @@ public class EzMemoController {
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setGadgetPosition/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
 		
-		logger.debug("setLayerPosition ended");
+		logger.debug("setGadgetPosition ended");
 		return "json";
 	}
 	
