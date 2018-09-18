@@ -484,6 +484,7 @@ public class EzMemoController {
 		param.put("layer_width", 340);
 		param.put("layer_height", 380);
 		param.put("fold_status", 1);
+		param.put("full_mode", 1);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/createMemoConfig/users/" + userInfo.getId(), param, request, "post", null);
 		String status = resultBody.get("status").toString();
@@ -762,5 +763,4 @@ public class EzMemoController {
 		logger.debug("setGadgetPosition ended");
 		return "json";
 	}
-	
 }

@@ -391,7 +391,7 @@
 						defaultColor = result.memoConfigVO.default_color;
 	        			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
 	        			
-	        			if((result.memoConfigVO.layer_top == 55) && (result.memoConfigVO.layer_left == 0) && (result.memoConfigVO.layer_width == 340) && (result.memoConfigVO.layer_height == 380)) {
+	        			if(result.memoConfigVO.full_mode == 1) {
 	        				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
 	        				if(firstDBLayerSize=="yes") {
 		        				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
@@ -962,7 +962,6 @@
 		    	$("#addFirstMemo").css({"position" : "absolute", "top" : top, "left" : left})
 		    	
 		    }
-		 	
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
