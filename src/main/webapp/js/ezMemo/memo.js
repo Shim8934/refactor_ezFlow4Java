@@ -83,7 +83,7 @@ function createMemo(memo, flag) {
 function insertMemo(memo, layerFlag) {
 	
 	$(".memo_add").remove();
-	$(".memo_none").remove();
+	$(".emptyDiv").remove();
 	
 	var div = createMemo(memo, layerFlag);
 	
@@ -100,7 +100,7 @@ function loadMemoList(flag) {
 	
 	$("#boardMemoList").html('');
 	$(".memo_add").remove();
-	$(".memo_none").remove();
+	$(".emptyDiv").remove();
 	$(".memo_main").html('');
 	
 		if(memoList.length == 0) {
@@ -324,14 +324,18 @@ function addEmptyMemo(flag) {
 	
 	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
 		var div = document.createElement("div");
-		div.setAttribute("class", "memo_none");
-		div.style.margin = "10px";
+		div.setAttribute("class", "emptyDiv");
+		div.style.textAlign = "center";
 		
-		var div2 = document.createElement("div");
-		div2.style.textAlign = "center";
-		div2.innerHTML = strLangMemo7;
+		var div2 = document.createElement("img");
+		div2.setAttribute("src", "/images/kr/main/nodata_plan.png");
 		
+		var div3 = document.createElement("div");
+		div3.style.marginTop = "10px";
+		div3.innerHTML = strLangMemo7;
+			
 		div.appendChild(div2);
+		div.appendChild(div3);
 		
 		$("#boardMemoList").parent().prepend(div);
 		
