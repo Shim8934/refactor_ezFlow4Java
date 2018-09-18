@@ -122,6 +122,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			startDate += " 00:00:00";
 			endDate += " 23:59:59";
 		}
+		
+		if(!searchInput.equals("")) {
+			searchInput = searchInput.replace("\\","\\\\");
+			searchInput = searchInput.replace("%", "\\%");
+			searchInput = searchInput.replace("_", "\\_");
+		}
 
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("tenant_id", vo.getTenant_id());
@@ -401,7 +407,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoColor endeded.");
 	}
 	
-	public Map<String, Object> compareOrders(String draggedElId, String compareElId, String userId, MemoConfigVO memoConfigVO) {
+	public Map<String, Object> compareOrders(String draggedElId, String compareElId, String userId, MemoConfigVO memoConfigVO) throws Exception {
 		logger.debug("comparOrders started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -437,7 +443,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public List<MemoVO> getMemoListForReOrder(int draggedMemoOrder, int nextMemoOrder, MemoConfigVO memoConfigVO) {
+	public List<MemoVO> getMemoListForReOrder(int draggedMemoOrder, int nextMemoOrder, MemoConfigVO memoConfigVO) throws Exception {
 		logger.debug("getMemoListForReOrder ended.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -461,7 +467,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void setMemoOrders(MemoVO memoVO) {
+	public void setMemoOrders(MemoVO memoVO) throws Exception {
 		logger.debug("setMemoOrders started");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -478,7 +484,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 	}
 
 	@Override
-	public void setGadgetConfig(MemoConfigVO memoConfigVO) {
+	public void setGadgetConfig(MemoConfigVO memoConfigVO) throws Exception {
 		logger.debug("setGadgetConfig started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoConfigVO.getUser_id());
