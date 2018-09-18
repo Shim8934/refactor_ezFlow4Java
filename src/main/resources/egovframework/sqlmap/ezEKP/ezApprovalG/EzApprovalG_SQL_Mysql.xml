@@ -22340,7 +22340,7 @@
    			 TBL_USERCONTLIST
         ( DOCID, USERCONTID, LINKDATE, DESCRIPTION, COMPANYID, TENANT_ID )
         VALUES 
-        ( #v_DOCID#, #v_CONTID#, #v_SYSDATE#, #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
+        ( #v_DOCID#, #v_CONTID#, DATE_FORMAT(#v_SYSDATE#, '%Y-%m-%d %H:%i:%s'), #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
    	</insert>
    	
    	<select id="EzApprovalG.docAttachLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
