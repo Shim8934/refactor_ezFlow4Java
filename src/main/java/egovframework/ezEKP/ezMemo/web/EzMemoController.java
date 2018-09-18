@@ -763,4 +763,27 @@ public class EzMemoController {
 		logger.debug("setGadgetPosition ended");
 		return "json";
 	}
+	
+	/**
+	 * 메모 레이어모드 창모드/전체 모드 저장
+	 * @param loginCookie
+	 * @param full_mode
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/setMemoLayerMode.do")
+	public String setMemoLayerMode(@CookieValue("loginCookie") String loginCookie, String full_mode, HttpServletRequest request) throws Exception {
+		logger.debug("setMemoLayerMode started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("full_mode", full_mode);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setMemoLayerMode/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+				
+		logger.debug("setMemoLayerMode ended");
+		return "json";
+	}
 }

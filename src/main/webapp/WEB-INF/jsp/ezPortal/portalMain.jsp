@@ -188,6 +188,7 @@
 		        		$("#layer-popup").draggable({
 		        			disabled: true
 		        		});
+		        		setMemoLayerMode(1);
 		        	}
 		        	setLayerSize();
 		        	emptyMemoResize();
@@ -207,6 +208,7 @@
 		        		$("#layer-popup").draggable({
 		        			disabled: false
 		        		});
+		        		setMemoLayerMode(0);
 		        	}
 		        	setLayerSize();
 		        	emptyMemoResize();
@@ -962,6 +964,22 @@
 		    	$("#addFirstMemo").css({"position" : "absolute", "top" : top, "left" : left})
 		    	
 		    }
+		 	
+		 	// 메모 레이어모드 창모드/전체 모드 저장
+		 	function setMemoLayerMode(mode) {
+		 		$.ajax({	
+			 		type : "POST",
+		        	dataType : "text",
+		        	async : false,
+		        	url : "/ezMemo/setMemoLayerMode.do",
+		        	data: {
+		        		"full_mode" : mode
+		        	},
+		        	success : function(result) {
+		        		
+		        	}
+	        	});
+		 	}
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">

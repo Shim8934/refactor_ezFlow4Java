@@ -492,4 +492,18 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setGadgetConfig ended.");
 	}
 
+	@Override
+	public void setMemoLayerMode(MemoConfigVO memoConfigVO) {
+		logger.debug("setMemoLayerMode started");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+		map.put("full_mode", memoConfigVO.getFull_mode());
+		
+		ezMemoDAO.setMemoLayerMode(map);
+
+		logger.debug("setMemoLayerMode ended");
+	}
+
 }

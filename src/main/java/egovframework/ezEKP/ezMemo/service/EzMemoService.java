@@ -29,8 +29,8 @@ public interface EzMemoService {
 	public void otherModuleCopy(MemoVO memoVO) throws Exception;
 	public void setMemoColor(MemoVO memoVO) throws Exception;
 	public Map<String, Object> compareOrders(String draggedElId, String compareElId, String userId, MemoConfigVO memoConfigVO);
-	public List<MemoVO> getMemoListForReOrder(int draggedMemoOrder,
-			int nextMemoOrder, MemoConfigVO memoConfigVO);
+	public List<MemoVO> getMemoListForReOrder(int draggedMemoOrder, int nextMemoOrder, MemoConfigVO memoConfigVO);
 	public void setMemoOrders(MemoVO memoVO);
 	public void setGadgetConfig(MemoConfigVO memoConfigVO);
+	public void setMemoLayerMode(MemoConfigVO memoConfigVO);
 }
