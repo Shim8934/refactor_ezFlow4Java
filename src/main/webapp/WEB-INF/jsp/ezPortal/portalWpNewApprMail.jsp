@@ -207,6 +207,8 @@
 		    arr_userinfo[3] = "${userInfo.title1}";
 		    arr_userinfo[4] = "${userInfo.deptID}";
 		    arr_userinfo[5] = "${userInfo.deptName1}";
+		    //2018-09-18 구해안 부재자정보 추가
+		    arr_userinfo[7] = "${buJaeInfo}";
 		    arr_userinfo[6] = "${userInfo.jikChek}";
 		    arr_userinfo[8] = "${userInfo.email}";  
 		    
@@ -984,8 +986,30 @@
 		    	/* 장진혁 - 지우면 스크립트 오류남 공통호출됨 */
 		    }
 		    
-		    function openDraftUI(formURL, formDocType) {		       
-
+		    function checkBujaeOpenForm(){
+		    	var BString = arr_userinfo[7];
+		    	if (!checkBujaeInfo('form')) {
+		    		return;
+		    	} 
+		    	
+		    	/* if (!BString || BString == "") {
+		    		openForm();
+		    	} */
+		    }
+		    
+		    function checkBujaeOpenDraftUI(formURL, formDocType) {
+		    	var BString = arr_userinfo[7];
+		    	if (!checkBujaeInfo('draft', formURL, formDocType)) {
+		    		return;
+		    	}
+		    	
+		    	/* if (!BString || BString == "") {
+		    		openDraftUI(formURL, formDocType);
+		    	} */
+		    }
+		    
+		    function openDraftUI(formURL, formDocType) {
+		    	
 		        var pArgument = new Array();
 		        pArgument[0] = arr_userinfo[1];
 		        pArgument[1] = formURL;
@@ -1024,6 +1048,162 @@
 
 		        openwindow(openLocation, "", 890, 560);
 		    }
+		    
+		    function checkBujaeInfo(type, formURL, formDocType) {
+		        var BString = arr_userinfo[7];
+		        if (BString != "") {
+		            var BDim = new Array("");
+		            BDim = BString.split(":");
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+		
+		            tmpStartDate = tmpStartDate.replace("/", ":");
+		            tmpEndDate = tmpEndDate.replace("/", ":");
+		            if (tmpEndDate < "${nowDate}") {
+		                setBujaeOff();
+		                checkBujaeInfo_Complete(true, type, formURL, formDocType);
+		                return true;
+
+		            } else if (tmpStartDate > "${nowDate}") {
+		            	checkBujaeInfo_Complete(true);
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN", type, formURL, formDocType);
+		            return;
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true, type, formURL, formDocType);
+		                return;
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false, type, formURL, formDocType);
+		                return;
+		            }
+		        } else {
+		            checkBujaeInfo_Complete(true, type, formURL, formDocType);
+		            return true;
+		        }
+		    }
+		
+		    function checkBujaeInfo_Complete(Rtnval, type, formURL, formDocType) {
+	            if (Rtnval == true) {
+	                setBujaeOff();
+		            if (type == "form") {
+		            	openForm();
+		            } else {
+		            	openDraftUI(formURL, formDocType);
+		            }
+	            } else {
+	                return;
+	            }
+	            
+	        }
+		    
+		        
+		    function setBujaeOff() {
+		    	var result = "";
+		    	
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/saveBujae.do",
+		    		data : {
+		    				buJae  : "",
+		    				proxy  : ""
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+		        
+		        arr_userinfo[7] = "";
+		    }
+		    
+		    var formURL = "";
+		    var formDocType = "";
+		    var getformcont_cross_dialogArguments = new Array();
+		    var url = "";
+		    var getformcont_Cross_OpenWin = "";
+		    
+		    function openForm() {		    	
+		    	
+		        var parameter = new Array();
+		        parameter[0] = "${userInfo.deptID}";
+		        parameter[1] = "A01000";
+
+		        if ("${userApprovalG}" == ("YES")) {
+		            url = "/ezApprovalG/getFormCont.do";
+		        } else {
+		            url = "/ezApproval/getFormCont.do";
+		        }
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            getformcont_Cross_OpenWin = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getformcont_Cross_OpenWin.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+		    }
+		    
+		    function openForm_Complete(ret) {
+		        getformcont_Cross_OpenWin.close();
+		        formURL = ret[0];
+		        formDocType = ret[1];
+		        if (formURL != "cancel") {
+		            openDraftUI(formURL, formDocType);
+		        }
+		    }
+		    
+		    //2018-09-18 구해안 팝업창 가져오기 위해 OpenInformationUI 함수 복붙
+		    var ezapropinion_cross_dialogArguments = new Array();
+		    function OpenInformationUI(pInformationContent, CompleteFunction, type, type2, formURL, formDocType) {
+			var parameter = pInformationContent;
+		    var url = "/ezApprovalG/ezAprOpinion.do";
+		    if (CrossYN() && (CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
+		        ezapropinion_cross_dialogArguments[0] = parameter;
+		        if (type == undefined && CompleteFunction != undefined) {
+		            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else if (type == undefined && CompleteFunction == undefined) {
+		            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else if (type != undefined && CompleteFunction != "") {
+		            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            ezapropinion_cross_dialogArguments[2] = true;
+		            var OpenWin = window.open(url + "?type="+type2+"&formURL="+formURL+"&formDocType="+formDocType, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		        else if (type != undefined && CompleteFunction == "") {
+		        	ezapropinion_cross_dialogArguments[2] = true;
+		            var OpenWin = window.open(url + "?type="+type2+"&formURL="+formURL+"&formDocType="+formDocType, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+			    } else {
+			        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+			        feature = feature + GetShowModalPosition(330, 205);
+			        var RtnVal = window.showModalDialog(url, parameter, feature);
+			    }
+			    return RtnVal;
+			}
+			
+			function OpenInformationUI_Complete() {
+			    DivPopUpHidden();
+			}
+			    
 		    
 		    /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
 	        /* function tabover(tabObj) {
@@ -1067,7 +1247,7 @@
 	        <div class="layDIV">
 	        	<dl class="portlet_title">
 	                <dt class="portletText"><spring:message code='ezPortal.pjg09' /></dt>
-	                <dd class="portletPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
+	                <dd class="portletPlus" onclick="checkBujaeOpenForm()"><img src="/images/kr/main/portlet_Plus.png"></dd>
 	            </dl>
 	             <ul class="bookmark">
 	             	<c:choose>
@@ -1079,7 +1259,7 @@
 				       
 				        <c:otherwise>
 			             	<c:forEach var="form" begin="0" end="4" items="${result}" varStatus="i">
-			             		<li class="bookmarkLi" onclick="openDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
+			             		<li class="bookmarkLi" onclick="checkBujaeOpenDraftUI('${form.formFileLocation}','${form.formDocType}' )"><span>${form.formName}</span></li>
 							</c:forEach>
 		             		<c:if test="${fn:length(result) < 5 }">
 		             			<c:forEach begin="0" end="${4 - fn:length(result)}">
