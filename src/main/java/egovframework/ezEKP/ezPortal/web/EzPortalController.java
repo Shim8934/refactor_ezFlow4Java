@@ -722,14 +722,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (mode.trim().equals("new")) {
+System.out.println("======================fomace");			
 			strHTML = ezPortalService.getDefaultPortalPage();
 		} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 			if (editMode.equals("new_inherit")) {
+System.out.println("======================fomace1");				
 				logger.debug("new_inherit");
 				strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
+//				logger.debug("strHTML="+strHTML);
 			} else {
+System.out.println("======================fomace2");				
 				logger.debug("no new_inherit");
 				strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId());
@@ -771,7 +775,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			portalPageCategoryXML += "</DATA>";
 			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 		}
-
+System.out.println(strHTML);		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
@@ -918,6 +922,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			resp.setCharacterEncoding("UTF-8");
 			resp.setContentType("text/html; charset=UTF-8");
 			resp.getWriter().write(commentHtml);
+			//resp.getWriter().flush();
 			resp.getWriter().close();
 		}
 		
@@ -1406,9 +1411,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String searchType = "";
 		String searchName = "";
 		String type = req.getParameter("type");
-		int listType = 1;
-		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
-		nowDate = nowDate.substring(0, 16);
 		
 		logger.debug("wpNewApprMail type : " + type);
 		
@@ -1420,11 +1422,16 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("result", result);
 		}
 		
-		//2018-09-18 구해안 부재자 정보 가져오기
-		String buJaeInfo = "";
-		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
-		Document doc = commonUtil.convertStringToDocument(result);
-		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+//		//구해안 잠시 결과물 로그 찍어봄
+//		int count1 =0;
+//		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
+//		for (ApprGFormVO fL : result) {
+//			count1++;
+//			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
+//			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
+//			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
+//		}
+//		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
 		
 		/* 2018-08-24 새로운 포틀릿 */
 		model.addAttribute("type", type);
@@ -1432,9 +1439,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("host", userInfo.getServerName());
-		model.addAttribute("buJaeInfo", buJaeInfo);
-		model.addAttribute("nowDate", nowDate);
-		model.addAttribute("listType", listType);
 
 		logger.debug("wpNewApprMail ended");
 		return "/ezPortal/portalWpNewApprMail";
@@ -1517,6 +1521,108 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 설문참여 화면 호출 함수
 	 */
+/*	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("wpNewPoll Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		String pPollResultContent = "";
+		
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
+		
+		if (result != null) {
+			if (result.getResult() > 0) {
+				if (result.getResult() != 0) {
+					votePoll = Integer.toString(result.getResult());
+				}
+			} else {
+				votePoll = "";
+			}	
+			
+			if (result.getItemSeq() > 0) {
+				if (result.getItemSeq() != 0) {
+					pPollItemSeq = result.getItemSeq();
+					int maxAns = Integer.parseInt(result.getPollSelectionCount());
+					pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+					
+					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
+					
+					int pTotalCnt = 0;
+					
+					for (int i=0; i<list.size(); i++) {
+						pTotalCnt = pTotalCnt + list.get(i).getCount();
+					}
+					
+					List<Integer> pPollResultList = new ArrayList<Integer>();
+					int resultPrintCnt = 0;
+					
+					for (int i=0; i<list.size(); i++) {
+						if (i >= 4) {
+							break;
+						} else {
+							float poolRstCnt = list.get(i).getCount();
+							float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
+							String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
+							String titleString = strAnswer;
+							if (strAnswer.length() > 11) {
+								strAnswer = strAnswer.substring(0, 11) + "…";
+							}
+							pPollResultList.add(list.get(i).getResult());
+							pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+							"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+							"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+							"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+							"</dl>";
+	                        resultPrintCnt++;
+						}
+					}
+					
+					if (resultPrintCnt < 4) {
+						for (int i=1; i<=maxAns; i++) {
+							boolean isDuplication = false;
+							for (int j=0; j<pPollResultList.size(); j++) {
+								if (i == pPollResultList.get(j)) {
+									isDuplication = true;
+									break;
+								}
+							}
+							
+							if (!isDuplication) {
+								String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
+								String titleString = strAnswer;
+								if (strAnswer.length() > 13) {
+									strAnswer = strAnswer.substring(0, 13) + "...";
+								}
+								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+	                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+																resultPrintCnt++;
+								if (resultPrintCnt == 4) {
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		model.addAttribute("pPollTitle", pPollTitle);
+		model.addAttribute("votePoll", votePoll);
+		model.addAttribute("pPollItemSeq", pPollItemSeq);
+		model.addAttribute("pPollResultContent", pPollResultContent);
+		model.addAttribute("userLang", userInfo.getLang());
+		
+		logger.debug("wpNewPoll End");
+		return "/ezPortal/portalWpNewPoll";
+	}*/
+	
 	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewVote is running!");
@@ -1642,6 +1748,9 @@ public class EzPortalController extends EgovFileMngUtil {
 						List<Integer> pPollResultList = new ArrayList<Integer>();
 						int resultPrintCnt = 0;
 						
+						/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
+						/*pPollResultContent.append("<ul class='voteList'>");*/
+				
 						for (int i=0; i<list.size(); i++) {
 							if (i >= 4) {
 								break;
@@ -1650,12 +1759,38 @@ public class EzPortalController extends EgovFileMngUtil {
 								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
 								String titleString = strAnswer;
+								// 2018-07-25 김보미 - 주석
+//								if (strAnswer.length() > 11) {
+//									strAnswer = strAnswer.substring(0, 11) + "…";
+//								}
+								pPollResultList.add(list.get(i).getResult());
+								// 2018-07-25 김보미 - content부분 변경
+//								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+//								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+//								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+//								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+//								"</dl>";
 								
-								pPollResultList.add(list.get(i).getResult());								
-								
-								pPollResultContent.append("<li class='voteList_0"+ (i+1) +"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
+								pPollResultContent.append("<li class='voteList_0"+(list.get(i).getResult())+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
 								pPollResultContent.append("<div class='percent'>" + String.format("%.1f", poolRstPer) + "%</div>");
 								pPollResultContent.append("<div class='voteGraph'><span style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%'></span></div></li>");
+								
+										
+								/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
+								/*"<div class='poll_list1'>" + 								    
+									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
+										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+										"<div id='info" + list.get(i).getResult() + "' class='Pt_QstInfoDiv'>&nbsp" + 
+											 "<span class='Pt_QstInfoVotes'>"+ list.get(i).getCount() + "</span>" +
+											 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+											 "<span class='Pt_QstInfoPercent'>" + String.format("%.1f", poolRstPer) + "</span>" +
+										"%</div>" +
+									"</div>" +
+									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
+										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
+									"</div>"+	
+								"</div>";*/
 								
 		                        resultPrintCnt++;
 							}
@@ -1674,11 +1809,35 @@ public class EzPortalController extends EgovFileMngUtil {
 								if (!isDuplication) {
 									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 									String titleString = strAnswer;
+									// 2018-07-25 김보미 - 주석
+//									if (strAnswer.length() > 13) {
+//										strAnswer = strAnswer.substring(0, 13) + "...";
+//									}
+									// 2018-07-25 김보미 - content부분 변경
+//									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+//		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+//		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
 									
 									/* 2018-09-10 홍승비 - 비어있는 설문조사 보기 생성 */
-									pPollResultContent.append("<li class='voteList_0"+(resultPrintCnt+1)+"'><div class='voteT'><span class='Vnum'>"+ i + "</span><span class='Vtext'>" + titleString + "</span></div>");
+									pPollResultContent.append("<li class='voteList_0"+(i)+"'><div class='voteT'><span class='Vnum'>"+ i + "</span><span class='Vtext'>" + titleString + "</span></div>");
 									pPollResultContent.append("<div class='percent'>0%</div>");
 									pPollResultContent.append("<div class='voteGraph'><span style='width:0%'></span></div></li>");
+											
+									/*2018-08-21 장진혁 포틀릿 변경으로 주석처리*/
+									/*"<div class='poll_list1'>" + 								    
+										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
+											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+											"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+												 "<span class='Pt_QstInfoVotes'>0</span>" +
+												 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+												 "<span class='Pt_QstInfoPercent'>0.0</span>" +
+											"%</div>" +
+										"</div>" +
+										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
+											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
+										"</div>"+
+									"</div>";*/
 									
 									resultPrintCnt++;
 									
@@ -1890,6 +2049,7 @@ public class EzPortalController extends EgovFileMngUtil {
 						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
 						realList.add(getQuickLinkMenu.get(k));						
 						cnt ++;
+						//result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
 					}
 				}
 			}

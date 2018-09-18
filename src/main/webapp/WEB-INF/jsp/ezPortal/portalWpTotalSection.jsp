@@ -962,9 +962,9 @@
 	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
 	        	        
 	        	        if (userPic == "") {
-	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/kr/main/birth_none.png' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/kr/main/birth_none.png' width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
 	        	        } else {
-	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='36' height='36'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
 	        	        }
 	            	    
 	                	document.getElementById("userlist").appendChild(_li);

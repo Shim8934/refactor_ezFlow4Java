@@ -187,7 +187,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_list approval */
 .approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(../images/kr/main/list_bul.png) no-repeat 15px 13px; font-size:13px; color:#555555; height:30px; line-height:28px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px 10px 0px 10px; padding:0px; background:#fff; border:1px solid #e7e7e7; height:117px; box-sizing:border-box;}
+.portlet_list li.first_approval{margin:0px 10px 7px 10px; padding:0px; background:#fff; border:1px solid #e7e7e7; height:117px; box-sizing:border-box;}
 .first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; border-bottom:1px solid #e7e7e7; background:#f8f8f8; line-height:25px;}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
 .first_approval .approval_content{margin:15px 0px; padding:0px; overflow:hidden;}
@@ -239,7 +239,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* countingIcon */
 .countingIcon{ margin:0px; padding:30px 0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white;} /* 장진혁 추가 */
 .countingIcon01{ overflow:hidden; padding:0px 0px; margin:0 auto; width:258px;}
-.countingIcon02{ overflow:hidden; padding:30px 0px 0px 0px; margin:0 auto; width:181px;}
+.countingIcon02{ overflow:hidden; padding:30px 0px 0px 0px; margin:0 auto; width:258px;}
 .countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer;}
 .countingIcon dl dt.iconImg{ margin:0px; padding:0px;}
 .countingIcon dl dd.iconText{ margin:0px; padding:0px; font-size:12px; color:#333; text-align:center;}
@@ -382,7 +382,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .voteList .voteList_03 .voteGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
 .voteList .voteList_03 .voteGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900;}
 .voteList .voteList_03 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
-.voteList .voteList_04{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.voteList .voteList_04{overflow:hidden; height:20px; line-height:20px;}
 .voteList .voteList_04 .voteT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
 .voteList .voteList_04 .voteT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff; font-size:13px; font-weight:bold; color:#fff;}
 .voteList .voteList_04 .voteT .Vtext{ font-size:13px; color:#555;}

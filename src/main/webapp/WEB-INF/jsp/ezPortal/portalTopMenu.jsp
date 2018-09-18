@@ -1220,7 +1220,7 @@
 				
 				if (cnt > 0) {
 					$("nav > .countBox").css("display", "block");
-					$("#topNav").css("max-width", "1212px");
+					$("#topNav").css("max-width", "1102px");
 					$(".hidden_nav_count").html("+" + cnt);
 				} else {
 					$("#topNav").css("max-width", "1102px");

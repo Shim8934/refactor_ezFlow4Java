@@ -1431,10 +1431,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else { 
 				if (menuItemMenuItemType.equals("0")) {
-					/*System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());*/
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
-					/*System.out.println("######################################### " + sb.toString());*/
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
@@ -2803,7 +2801,6 @@ System.out.println("result.size() :" + result.size());
                 }
         	} else {
         		if (userInfo.getTableViewOption().equals("D")) {
-System.out.println("iam D");
 					if (number == 4) {
 						sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, Integer.parseInt(pageColumnLength) - i, pMode, userInfo, number));
 					} else {
@@ -2921,9 +2918,6 @@ System.out.println("iam D");
 			return "";
 		}
 		
-System.out.println("strSQL : " + strSQL);
-System.out.println("result : " + result);
-		
 		boolean loadFlag = true;
 		
 		for (int i=0; i<result.size(); i++) {
@@ -2943,10 +2937,7 @@ System.out.println("result : " + result);
 			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
 			String portletMandatory = result.get(i).getMandatory();
 			String portletMoveURL = "";
-			
-System.out.println("portletUID : " + portletUID);
-System.out.println("portletDisplayName : " +portletDisplayName );
-			
+
 			if (pMode.equals("edit")) {
 				if (portletHeight != 0) {
 					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");
