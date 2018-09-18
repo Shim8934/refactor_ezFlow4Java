@@ -14908,58 +14908,77 @@
 <!-- 		{CALL EZSP_CREATENEWDOC(#v_DOCID#, #v_FORMID#, #v_COMPANYID#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.createNewDoc" parameterClass="Map">
-	 INSERT 
-	 	INTO TBL_APRDOCINFO
-     	( DOCID, FORMID, DOCTYPE, DOCSTATE, TENANT_ID, COMPANYID  )
-	     	( SELECT 
-	     			#v_DOCID# ,
-	              	#v_FORMID# ,
-	              	FORMDOCTYPE ,
-	              	'001' ,
-	              	TENANT_ID,
-	              	COMPANYID
-	       	FROM 
-	       		TBL_FormInfo 
-	        WHERE  
-	        	FORMID = #v_FORMID#
-	        AND
-	        	TENANT_ID = #v_TENANTID#
-	        AND
-	        	COMPANYID = #companyID#  )
+		<isEmpty property="v_NONELECYN">
+			 INSERT 
+			 	INTO TBL_APRDOCINFO
+		     	( DOCID, FORMID, DOCTYPE, DOCSTATE, TENANT_ID, COMPANYID  )
+			     	( SELECT 
+			     			#v_DOCID# ,
+			              	#v_FORMID# ,
+			              	FORMDOCTYPE ,
+			              	'001' ,
+			              	TENANT_ID,
+			              	COMPANYID
+			       	FROM 
+			       		TBL_FormInfo 
+			        WHERE  
+			        	FORMID = #v_FORMID#
+			        AND
+			        	TENANT_ID = #v_TENANTID#
+			        AND
+			        	COMPANYID = #companyID#  )
+		</isEmpty>
+		<isNotEmpty property="v_NONELECYN">
+			INSERT 
+			 	INTO TBL_APRDOCINFO
+		     		( DOCID, FORMID, DOCTYPE, DOCSTATE, TENANT_ID, COMPANYID )
+		     	VALUES
+		     		( #v_DOCID#, #v_FORMID#, '003', '001', #v_TENANTID#, #companyID# )
+		</isNotEmpty>
 	</insert>
 		
 	<insert id="EzApprovalG.createNewDoc2" parameterClass="Map">
-		INSERT 
-	   		INTO TBL_EXPAPRDOCINFO
-        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
-        		( 
-        			SELECT 
-        				#v_DOCID# ,
-                 		FORMNAME ,
-                 		FORMNAME2 ,
-		                #companyID# ,
-		                 'N' ,
-		                 999 ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 0 ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' , 
-		                 TENANT_ID
-			         FROM 
-			          	TBL_FormInfo 
-			         WHERE  
-		           		FORMID = #v_FORMID#
-		           	 AND 
-		           	 	TENANT_ID =#v_TENANTID#
-		           	 AND
-		           	 	COMPANYID = #companyID#) 
+		<isEmpty property="v_NONELECYN">
+			INSERT 
+		   		INTO TBL_EXPAPRDOCINFO
+	        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+	        		( 
+	        			SELECT 
+	        				#v_DOCID# ,
+	                 		FORMNAME ,
+	                 		FORMNAME2 ,
+			                #companyID# ,
+			                 'N' ,
+			                 999 ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 0 ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' , 
+			                 TENANT_ID
+				         FROM 
+				          	TBL_FormInfo 
+				         WHERE  
+			           		FORMID = #v_FORMID#
+			           	 AND 
+			           	 	TENANT_ID =#v_TENANTID#
+			           	 AND
+			           	 	COMPANYID = #companyID#) 
+		</isEmpty>
+		<isNotEmpty property="v_NONELECYN">
+			INSERT 
+		   		INTO TBL_EXPAPRDOCINFO
+	        		( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+	        	VALUES
+	        		(#v_DOCID#, '비전자등록양식', '비전자등록양식', #companyID#, 'N', '999', ' ', ' ', ' ', ' ', 0, ' ', ' ', ' ', ' ', ' ', ' ', #v_TENANTID#)
+		</isNotEmpty>
+	
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.doSendOfferApprove1" parameterClass="Map"> -->
