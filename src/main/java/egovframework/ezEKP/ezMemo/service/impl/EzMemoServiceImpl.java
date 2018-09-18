@@ -226,6 +226,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("layer_left", memoConfigVO.getLayer_left());
 		map.put("layer_top", memoConfigVO.getLayer_top());
 		map.put("layer_width", memoConfigVO.getLayer_width());
+		map.put("full_mode", memoConfigVO.getFull_mode());
 		
 		ezMemoDAO.insertMemoConfig(map);
 		logger.debug("insertMemoConfig ended");

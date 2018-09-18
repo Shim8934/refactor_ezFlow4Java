@@ -71,7 +71,7 @@
 		<![CDATA[
 			SELECT
 				USER_ID, FONT_SIZE, USE_DATE, USE_GADGET, DEFAULT_COLOR, GADGET_RIGHT, 
-				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, COMPANY_ID, TENANT_ID
+				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, COMPANY_ID, TENANT_ID, FULL_MODE
 			FROM
 				TBL_MEMO_CONFIG
 			WHERE 
@@ -208,6 +208,9 @@
 				</isNotNull>
 				<isNotNull property="layer_left" prepend=",">
 				layer_left = #layer_left#
+				</isNotNull>
+				<isNotNull property="full_mode" prepend=",">
+				full_mode = #full_mode#
 				</isNotNull>
 			</dynamic>
 			WHERE 

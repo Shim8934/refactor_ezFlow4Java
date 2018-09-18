@@ -29,6 +29,9 @@ public class MemoConfigVO {
 	private String company_id;
 	/** 테넌트 아이디*/
 	private int tenant_id;
+	/** 레이어 창 전체화면 모드 */
+	private int full_mode;
+	
 	public String getUser_id() {
 		return user_id;
 	}
@@ -107,5 +110,10 @@ public class MemoConfigVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
-
+	public int getFull_mode() {
+		return full_mode;
+	}
+	public void setFull_mode(int full_mode) {
+		this.full_mode = full_mode;
+	}
 }
