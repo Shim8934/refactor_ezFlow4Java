@@ -12116,7 +12116,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertBebuExpAprDocInfo(map);
 				ezApprovalGDAO.insertBebuAprAttachInfo(map);
 				ezApprovalGDAO.insertBebuAprDocAttachInfo(map);
-				ezApprovalGDAO.insertBebuAprOpinionInfo(map);
+				//배부할때 의견까지 복사안하는게 맞을거같음. 초기접수부서의 의견이나 원문서의 의견은 들어갈필요가없음. 원문서의 의견은 본문에 들어갈거고 초기접수부서는 처리부서가 아닌데 의견이 있을필요가 없음.
+//				ezApprovalGDAO.insertBebuAprOpinionInfo(map);
 				
 				map.put("v_DEPTNAME", deptName.trim());
 				map.put("v_DEPTNAME2", deptName2.trim());
