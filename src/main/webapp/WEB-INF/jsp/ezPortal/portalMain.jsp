@@ -696,14 +696,13 @@
 	        	var right = parseInt(stringRight.substr(0, rightPIndex));
 	        	
 	        	if (bottom < 0) {
-        			$("#open-memo").css({"top" : "auto", "bottom" : 10 });
-        			
+        			$("#open-memo").css({"top" : "auto", "bottom" : 15 });
         		} 
 
 	        	if (right < 0) {
-	        		$("#open-memo").css({"left" : "auto", "right" : 10 });
-	        		
+	        		$("#open-memo").css({"left" : "auto", "right" : 15 });
 	        	}
+	        	
 		    	setGadgetPosition();
 		    }
 		    
