@@ -1233,7 +1233,7 @@
 	        </div>
         </c:if>
         <c:if test="${type == 'appr'}">
-        	<div class="layDIV">
+        	<div class="layDIV approval">
 	            <dl class="portlet_tab">
 	                <dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
 	                <dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
