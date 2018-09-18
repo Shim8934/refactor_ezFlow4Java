@@ -320,7 +320,7 @@
 	    // 메모 색상 변경
 	    function modifyMemoColor(obj, idx) {
 	    	var memoId = obj.attr("id").replace("memo", "");
-	    	console.log('너도 여러번 뜨는거였니');
+	    	
 	    	$.ajax ({
  			   	url : '/ezMemo/memoColorModify.do',
  			   	type : 'POST',
