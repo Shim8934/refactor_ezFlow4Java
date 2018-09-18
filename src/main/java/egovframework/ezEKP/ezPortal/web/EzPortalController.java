@@ -563,6 +563,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//HWP사용유무
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		//브라우저체크
 		String browser = ClientUtil.getClientInfo(req, "browser");
@@ -590,6 +591,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("script1", script1);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("useHWP", useHWP);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("topMenu ended");
 		return "/ezPortal/portalTopMenu";
@@ -3462,6 +3464,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		moduleList.put("/ezResource/resMain.do", "res");
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
+		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
 		
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
 		
@@ -3477,6 +3480,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("isResUsed", usedList.get("res"));
 		model.addAttribute("isCircularUsed", usedList.get("circular"));
 		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
 
 		model.addAttribute("topMenuID", topMenuID);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -3738,6 +3742,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/help/leftSchedule";
 	}
 	
+	@RequestMapping(value = "/ezPortal/help/leftTask.do")
+	public String leftTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftTask started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftTask ended");
+		return "/ezPortal/help/leftTask";
+	}
+	
 	/**
 	 * 포탈 - 도움말 leftCircular 화면 호출 함수
 	 */
@@ -3751,6 +3767,21 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		logger.debug("leftCircular ended");
 		return "/ezPortal/help/leftCircular";
+	}
+
+	/**
+	 * 포탈 - 도움말 leftleftWebfolder 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftWebfolder.do")
+	public String leftWebfolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftWebfolder started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftWebfolder ended");
+		return "/ezPortal/help/leftWebfolder";
 	}
 	
 	/**

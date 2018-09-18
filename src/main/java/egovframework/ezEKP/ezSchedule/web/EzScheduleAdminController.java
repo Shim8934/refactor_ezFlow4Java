@@ -73,9 +73,17 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 왼쪽화면 호출함수
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleLeft.do")
-	public String  scheduleAdminLeft() throws Exception {
+	public String  scheduleAdminLeft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminLeft started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang = userInfo.getLang();
+		
+		logger.debug("lang : " + lang);
+		
+		model.addAttribute("lang", lang);
 		
 		return "/admin/ezSchedule/scheduleLeft";
 	}
@@ -198,17 +206,22 @@ public class EzScheduleAdminController {
 		
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
+		StringBuffer companyList = new StringBuffer();
+		
 		for (int i =0 ; i < list.size() ; i++) {
 			OrganDeptVO vo = list.get(i);
 			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
+				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
 			}
 		}
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("companyList", companyList);
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}

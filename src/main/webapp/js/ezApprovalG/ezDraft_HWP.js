@@ -715,6 +715,8 @@ function openFormUI()
 		{
 	  		if(pFormHref != "cancel")
 	  		{
+	  			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+	  			
 	  			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref), false);
 	  			
 	  			pReadPC = false;
@@ -1152,7 +1154,7 @@ function openOpinionUI(pOpinionFlag)
 	var feature = "status:no;dialogWidth:530px;dialogHeight:495px;edge:sunken;scroll:no"
 	var ret = window.showModalDialog(url,parameter,feature);
 	
-	if (ret != "cancel") {
+	if (ret != "cancel" && ret != undefined) {
 	    var NodeList;
 	    var objXML = new ActiveXObject("Microsoft.XMLDOM");
 	    

@@ -3417,9 +3417,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public void updateTaskStatusScheduler(String UTCTimeStr) throws Exception {
+	public void updateProjectStatusScheduler() throws Exception {
+		LOGGER.debug("[SERVICE] ezPMS updateProjectStatusScheduler Started");
+		ezPMSDAO.updateProjectStatusScheduler();
+		LOGGER.debug("[SERVICE] ezPMS updateProjectStatusScheduler Ended");
+	}
+	
+	@Override
+	public void updateTaskStatusScheduler() throws Exception {
 		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Started");
-		ezPMSDAO.updateTaskStatusScheduler(UTCTimeStr);
+		ezPMSDAO.updateTaskStatusScheduler();
 		LOGGER.debug("[SERVICE] ezPMS updateTaskStatusScheduler Ended");
 	}
 

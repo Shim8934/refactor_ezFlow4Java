@@ -61,7 +61,7 @@
     <prop>urn:schemas:httpmail:displayto</prop>
     <sortable>1</sortable>
     <bitmap>0</bitmap>
-    <width>30%</width>
+    <width>24%</width>
     <multivalued>0</multivalued>
     <visible>1</visible>
     <align>left</align>
@@ -75,7 +75,7 @@
     <bitmap>0</bitmap>
     <multivalued>0</multivalued>
     <visible>1</visible>
-    <width>70%</width>
+    <width>56%</width>
     <align>left</align>
   </column>
   <column>
@@ -87,7 +87,7 @@
     <bitmap>0</bitmap>
     <multivalued>0</multivalued>
     <visible>1</visible>
-    <width>150px</width>
+    <width>20%</width>
     <align>center</align>
   </column>
   <column>

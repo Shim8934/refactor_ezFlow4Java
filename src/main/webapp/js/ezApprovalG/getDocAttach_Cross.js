@@ -140,8 +140,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
                     strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
                     strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
-                } else if (FileExt == "hwp") {
-                	if (isIE()) {
+                } else if (FileExt == "hwp" || FileExt == "ezd") {
+                	//2018-09-12 천성준 - mht결재문서에 hwp문서를 문서첨부 하고 IE가 아닌 chrome으로 mht결재문서를 문서보기 하면 알럿이 뜨면서 첨부파일 정보가 공백이 되어서 IE검사 주석처리함. 대신 문서보기 하단 문서첨부를 클릭해서 열때 hwp이면 IE검사를 하게 로직 추가함
+                	/*if (isIE()) {
                 		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
                 		"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
                 		strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
@@ -152,7 +153,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     	alert(pAlertContent);
                         
                         return;
-                    }
+                    }*/ 
+                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
+                	"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+                	strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
+                	strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                	strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
                     openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
@@ -194,7 +200,18 @@ function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
             heigth = parseInt(heigth) - 30;
             width = parseInt(width) - 10;
         }
-        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        //2018-09-12 천성준 - 결재문서 문서보기 시, 첨부파일 중 hwp문서첨부를 열때 IE인지 검사하는 로직 추가
+        if (wfileLocation.toLowerCase().indexOf(".hwp") > -1 || wfileLocation.toLowerCase().indexOf(".ezd") > -1) {
+        	if (isIE()) {
+        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        	} else {
+        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                return;
+        	}
+        } else {
+        	window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        }
     } catch (e) {
         alert("openAttachView :: " + e.description);
     }

@@ -3381,6 +3381,7 @@
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
 				DEPTID ,
+				deptname,
                 DEPTSN 
            FROM 
            		TBL_FormRecv 
@@ -8087,7 +8088,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -9289,7 +9290,45 @@
               		COMPANYID = #companyID# 
 		</isNotEqual>
 	</select>
+		
+	<select id="EzApprovalG.getDocSendType" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+			    DISTINCT PROCESSYN
+			FROM    
+			    TBL_ENDRECEIPTPOINTINFO
+			WHERE
+			    DOCID = #docID#
+			AND
+				EXTRECEPTYN = 'Y'
+			AND
+				PROCESSYN = 'T'
+			AND
+			    COMPANYID = #companyID#
+			AND
+			    TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
+	<select id="EzApprovalG.getRelayReqDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+			    CONCAT(CONCAT(RECEIPTPOINTID, ':'), RECEIPTPOINTNAME)
+			FROM    
+			    TBL_ENDRECEIPTPOINTINFO
+			WHERE
+			    DOCID = #docID#
+			AND
+				EXTRECEPTYN = 'Y'
+			AND
+				PROCESSYN = 'T'
+			AND
+			    COMPANYID = #companyID#
+			AND
+			    TENANT_ID = #tenantID#
+		]]>
+	</select>
+		
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
 		SELECT 
 			CASE  WHEN HREF = ' ' THEN 
@@ -12124,7 +12163,7 @@
 	   	</isEqual>
 	   	LIKE 'ADDRESS%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -14823,57 +14862,75 @@
 <!-- 		{CALL EZSP_CREATENEWDOC(#v_DOCID#, #v_FORMID#, #v_COMPANYID#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.createNewDoc" parameterClass="Map">
-	 INSERT 
-	 	INTO TBL_APRDOCINFO
-     	( DOCID, FORMID, DOCTYPE, DOCSTATE, TENANT_ID, COMPANYID )
-	     	( SELECT 
-	     			#v_DOCID# ,
-	              	#v_FORMID# ,
-	              	FORMDOCTYPE ,
-	              	'001' ,
-	              	TENANT_ID,
-	              	COMPANYID
-	       	FROM 
-	       		TBL_FormInfo 
-	        WHERE  
-	        	FORMID = #v_FORMID#
-	        AND
-	        	TENANT_ID = #v_TENANTID#
-	        AND
-	        	COMPANYID = #companyID# )
+		<isEmpty property="v_NONELECYN">
+			 INSERT 
+			 	INTO TBL_APRDOCINFO
+		     	( DOCID, FORMID, DOCTYPE, DOCSTATE, TENANT_ID, COMPANYID )
+			     	( SELECT 
+			     			#v_DOCID# ,
+			              	#v_FORMID# ,
+			              	FORMDOCTYPE ,
+			              	'001' ,
+			              	TENANT_ID,
+			              	COMPANYID
+			       	FROM 
+			       		TBL_FormInfo 
+			        WHERE  
+			        	FORMID = #v_FORMID#
+			        AND
+			        	TENANT_ID = #v_TENANTID#
+			        AND
+			        	COMPANYID = #companyID# )
+		</isEmpty>
+		<isNotEmpty property="v_NONELECYN">
+			INSERT 
+			 	INTO TBL_APRDOCINFO
+		     		( DOCID, FORMID, DOCTYPE, DOCSTATE, TENANT_ID, COMPANYID )
+		     	VALUES
+		     		( #v_DOCID#, #v_FORMID#, '003', '001', #v_TENANTID#, #companyID# )
+		</isNotEmpty>
 	</insert>
 	<insert id="EzApprovalG.createNewDoc2" parameterClass="Map">
-		INSERT 
-	   		INTO TBL_EXPAPRDOCINFO
-        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
-        		( 
-        			SELECT 
-        				#v_DOCID# ,
-                 		FORMNAME ,
-                 		FORMNAME2 ,
-		                #companyID# ,
-		                 'N' ,
-		                 999 ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 0 ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' , 
-		                 TENANT_ID
-			         FROM 
-			          	TBL_FORMINFO 
-			         WHERE  
-		           		FORMID = #v_FORMID#
-		           	 AND 
-		           	 	TENANT_ID = #v_TENANTID#
-		           	 AND
-		           	 	COMPANYID = #companyID#) 
+		<isEmpty property="v_NONELECYN">
+			INSERT 
+		   		INTO TBL_EXPAPRDOCINFO
+	        	( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+	        		( 
+	        			SELECT 
+	        				#v_DOCID# ,
+	                 		FORMNAME ,
+	                 		FORMNAME2 ,
+			                #companyID# ,
+			                 'N' ,
+			                 999 ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 0 ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' ,
+			                 ' ' , 
+			                 TENANT_ID
+				         FROM 
+				          	TBL_FORMINFO 
+				         WHERE  
+			           		FORMID = #v_FORMID#
+			           	 AND 
+			           	 	TENANT_ID = #v_TENANTID#
+			           	 AND
+			           	 	COMPANYID = #companyID#) 
+		</isEmpty>
+		<isNotEmpty property="v_NONELECYN">
+			INSERT 
+		   		INTO TBL_EXPAPRDOCINFO
+	        		( DOCID, FORMNAME, FORMNAME2, COMPANYID, STATUS, SECURITYCODE, SPECIALRECORDCODE, PUBLICITYCODE, PUBLICITYYN, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, TENANT_ID)
+	        	VALUES
+	        		(#v_DOCID#, '비전자등록양식', '비전자등록양식', #companyID#, 'N', '999', ' ', ' ', ' ', ' ', 0, ' ', ' ', ' ', ' ', ' ', ' ', #v_TENANTID#)
+		</isNotEmpty>
 	</insert>
 <!-- 	<procedure id="EzApprovalG.doSendOfferApprove1" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_DOSENDOFFERAPPROVE1(#v_DOCID#, #v_ORGDOCID#, #v_GFLAG#, #v_USERID#)} -->
@@ -16646,7 +16703,8 @@
 				   			DEPTID, 
 				   			REMARK, 
 				   			ORGDOCNUMCODE, 
-				   			DOCTITLE
+				   			DOCTITLE,
+				   			ORGANUSERNAME
 				   		FROM 
 				   			TBL_DOCDELIVERY 
 				   		WHERE 
@@ -17738,7 +17796,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T','0' )
+           		 PROCESSYN IN ( 'N','E','T' )
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
@@ -19182,7 +19240,7 @@
 		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID) 
 	   			VALUES 
 	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
-					#v_REGYEAR#, #v_SYSDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
+					#v_REGYEAR#, #v_REGISTERDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
 					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, IF(#v_EXECUTEDATE# = '', NULL, #v_EXECUTEDATE#), #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
 	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
 	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
@@ -19927,6 +19985,8 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		WHERE 
    			DocID = #v_DOCID#
+   		AND
+   			RECEIPTPOINTID = #v_RECEIPTPOINTID#
    		AND 
    			TENANT_ID = #v_TENANTID#
    		AND
@@ -20847,9 +20907,9 @@
 	<insert id="EzApprovalG.insertBebuDocDelivery" parameterClass="Map">
 		INSERT INTO 
 			TBL_DOCDELIVERY 
-		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID) 
+		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID, ORGANUSERNAME) 
 		(SELECT 
-			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID 
+			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID, #v_OrganUserName# 
          FROM 
          	TBL_APRDOCINFO a 
          INNER JOIN 
@@ -22280,7 +22340,7 @@
    			 TBL_USERCONTLIST
         ( DOCID, USERCONTID, LINKDATE, DESCRIPTION, COMPANYID, TENANT_ID )
         VALUES 
-        ( #v_DOCID#, #v_CONTID#, #v_SYSDATE#, #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
+        ( #v_DOCID#, #v_CONTID#, DATE_FORMAT(#v_SYSDATE#, '%Y-%m-%d %H:%i:%s'), #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
    	</insert>
    	
    	<select id="EzApprovalG.docAttachLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
@@ -23414,7 +23474,7 @@
 				SELECT 
 					COUNT(CABINETID) AS CNT 
 				FROM 
-					TBL_EXPENDAPRDOCINFO 
+					TBL_SEPERATEATTACH 
 				WHERE 
 					CABINETID = #v_CABINETID# 
 		UNION 
@@ -23928,9 +23988,9 @@
 			AND 
 				XTOCODE = #XTOCODE#
 			AND 
-				DOCID = ''
+				(DOCID = ''
 			OR 
-				DOCID IS NULL
+				DOCID IS NULL)
 	  </select>
 	  
 	  <select id="EzApprovalG.relayGetAttachInfo" parameterClass="Map" resultClass="ApprGRelayVO">
@@ -23950,7 +24010,7 @@
 	  	INSERT INTO TBL_APRDOCINFO 
 	  		(DOCID,   FORMID, ORGDOCID, DOCTYPE, DOCSTATE, FUNCTIONTYPE, HREF, DOCTITLE, DOCNO, HASATTACHYN, HASOPINIONYN, STARTDATE, ENDDATE, WRITERID, WRITERNAME, WRITERNAME2, WRITERJOBTITLE, WRITERJOBTITLE2, WRITERDEPTID, WRITERDEPTNAME, WRITERDEPTNAME2, ISPUBLIC, COMPANYID, TENANT_ID)
 		VALUES 
-			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, '',   #ATTACHYN#,    'N',          NULL,     NULL,      '',   #strWriterName#, #strWriterName#, '',    '',              '',            #strWriterDept#, #strWriterDept#, 'Y',    #companyID#, #v_TENANTID#)
+			(#NEWID#, #FORMID#,  '',      '001',   '011',       '011',     '', #DOCTITLE#, #regNumber#,   #ATTACHYN#,    'N',          NULL,     NULL,      '',   #strWriterName#, #strWriterName#, '',    '',              '',            #strWriterDept#, #strWriterDept#, 'Y',    #companyID#, #v_TENANTID#)
 	  </insert>
 	  
 	  <insert id="EzApprovalG.insertRelayExpAprDocInfo" parameterClass="Map">
@@ -25064,4 +25124,46 @@
 		AND
 			TENANT_ID = #tenantID#
    </delete>
+   <select id="EzApprovalG.isBebuDocExist" parameterClass="Map" resultClass="String">
+    	SELECT
+    		IFNULL(HREF,'NULL') as HREF
+    	FROM
+    		TBL_DOCDELIVERY
+    	WHERE
+    		DOCID = #v_DOCID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+    <update id="EzApprovalG.updateDocDeliveryHref" parameterClass="Map">
+	  		UPDATE 
+	  			TBL_DOCDELIVERY
+	  		SET 
+	  			HREF = #v_HREF#
+		  	WHERE 
+		  		TENANT_ID = #v_TENANTID#
+		  	AND
+		  		COMPANYID = #companyID#
+		  	AND
+		  		DOCID = #v_DOCID#
+	  </update>
+	  <update id="EzApprovalG.moveRecord2" parameterClass="Map">
+			UPDATE 
+				TBL_EXPENDAPRDOCINFO
+	        SET 
+	         	CABINETID = #v_CABINETID#
+	        WHERE 
+                DOCID =
+               		(SELECT 
+                    	DOCID
+                	FROM
+                    	TBL_RECORD
+                	WHERE
+	       				RECORDID = #v_RECORDID#
+                	AND
+	         			TENANT_ID = #v_TENANTID#
+                	AND
+   						COMPANYID = #companyID#)
+	</update>
 </sqlMap>

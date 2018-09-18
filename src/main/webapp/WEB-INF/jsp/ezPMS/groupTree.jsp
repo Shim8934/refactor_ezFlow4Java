@@ -121,6 +121,8 @@
 			$("li[aria-selected='true'] a").removeClass("jstree-clicked");
 			$("li[aria-selected='true'] div").removeClass("jstree-wholerow-clicked");
 			$("li[aria-selected='true']").attr("aria-selected", false);
+			parent.groupName = "";
+			parent.groupId = "";
 			return false;
 		}
 		// jstree에서는 최상위가 1이나 모듈에서는 0으로 관리하고 있음

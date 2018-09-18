@@ -402,6 +402,11 @@
 	            	g_SepAttachLVXml = RetValue[49];
 	            	g_szSCListXml = RetValue[50];
 	            	sepAttachCheckYN = RetValue[51];
+	            	
+	            	if (pIniGubun == "1") {
+		        		document.title = "문서정보";
+	                    document.getElementById("h1_header").innerHTML = "문서정보";
+		        	}
 	            }
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
@@ -1499,7 +1504,7 @@
 		            return;
 		        }
 		
-		        if (CurSelRow[0].getAttribute("DATA6") != "") {
+		        if (CurSelRow[0].getAttribute("DATA6") != "" && useReceiveInfoName != '1') {
 		            alert("<spring:message code='ezApprovalG.t10500'/>");
 		            return;
 		        }
@@ -1757,13 +1762,13 @@
 	    </style>
 	</head>
 	<body id="bodytag" class="popup" style="background-color: #ffffff; overflow: hidden">
-	    <h1>
-	    	<spring:message code='ezApprovalG.t1742'/>
+		<div>
+	    	<h1 id="h1_header"><spring:message code='ezApprovalG.t1742'/></h1>
 	        <div id="btnArea" style="display:none;float:right;">
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
 	        </div>	        
-	    </h1>
+		</div>
 	    <div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
@@ -2203,11 +2208,11 @@
 	                                <a style="margin-top: 10px; display: none;" class="imgbtn imgbck" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
 	                            	<!-- 2018-08-08 천성준 - 외부수신자요약 UI때문에 이동 -->
 	                            	<span style="display: inline-block; margin-top: 8px;">
-	                            		<a class="h2_dot" style="display: none;" id="trSummaryOuterReceiverList">외부수신자 요약:&nbsp;<input id="inputSummaryOuterReceiverList" value="" style="width: 470px; height: 22px;"/></a>
+	                            		<a class="h2_dot" style="display: none;" id="trSummaryOuterReceiverList">외부수신자 요약:&nbsp;<input id="inputSummaryOuterReceiverList" value="" style="width: 280px; height: 22px;"/></a>
 	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">
-	                            	<%-- <c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btn_AprDeptTempletModify_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code = 'ezApprovalG.lhj20' /></c:if></span></a></c:if> --%>
+	                            	<c:if test="${useReceiveInfoName == '1'}"><a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code = 'ezApprovalG.lhj20' /></c:if></span></a></c:if>
 	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
@@ -2752,7 +2757,7 @@
 								<tr id="trOriginSN" style="display: none;">
 								    <th>문서번호</th><!-- 문서번호 -->
 									<td>
-							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="9">
+							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
 								    </td>
 								</tr>
 								<c:if test="${guBun ne '1'}">

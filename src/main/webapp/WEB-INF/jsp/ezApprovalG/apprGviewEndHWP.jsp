@@ -18,7 +18,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    <script type="text/javascript">
-<%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
 	        var pDocID = "${docID}";
 	        var docHref = "${docHref}";
 	        var pListSusin = "${listSusin}";
@@ -53,7 +52,6 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	        var companyID = "${userInfo.companyID}";
 	        var pUserID = arr_userinfo[1];
-	        var SignCheckFlag = "${SignCheck}";
 	        var pUse_Editor = "${useEditor}";
 			var ext = "hwp";
 			
@@ -102,6 +100,7 @@
 	        function window_onload() {
 	            window.onresize();
 	
+	            HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 	            HwpCtrl.SetSaveMode(1);
 				
 	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
@@ -128,9 +127,6 @@
 	                            btnOpinion_onclick();
 	                        }
 	                    }
-	
-	                    if (SignCheckFlag == "N")
-	                        SignCheck();
 	
 	                    HwpCtrl.SetImgReg();
 	                }
@@ -242,8 +238,8 @@
 			}
 	
 			function getHistory() {
-				 var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
-					centerOpenWindow(URL, 730, 430);
+				var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + ext;
+				centerOpenWindow(URL, 730, 430);
 			}
 	
 			function centerOpenWindow(wfileLocation, wWeight, wHeight) {
@@ -297,12 +293,6 @@
 		            return;
 		        }
 		        return;
-		        SignXML = result;
-		        var rtnVal = putSignXML(SignXML);
-		        if (rtnVal) {
-		            SaveFile();
-		            SaveSignCheck();
-		        }
 		    }
 	
 			function putSignXML(SignXML) {
@@ -348,6 +338,28 @@
 			        return false;
 			    }
 			    return retVal;
+			}
+			
+			function btnReqOpinion_onclick() {
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/getRelayReqOpinion.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(text){
+		    			result = text.opinion;
+		    		}
+		    	});
+		    	
+				var url = "/ezApprovalG/ezAprAlertLong.do";
+				var feature = "status:no;dialogWidth:330px;dialogHeight:305px;help:no;scroll:no;edge:sunken";
+				
+				window.showModalDialog(url, result, feature);
 			}
 	
 			function SaveFile() {
@@ -397,6 +409,9 @@
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()">PC<spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+	                        <c:if test="${sendType eq 'T'}">
+		                        <li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
+	                        </c:if>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -419,12 +434,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

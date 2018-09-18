@@ -10,11 +10,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -82,6 +86,9 @@ public class EzWebFolderGWController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private Properties globals;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController.class);
 
@@ -359,6 +366,11 @@ public class EzWebFolderGWController {
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		String listCnt    = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")                       : "";
 		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
+   		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
+   		userName = commonUtil.getWildcardEscapedString(userName, dbName);
+   		
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
@@ -449,6 +461,11 @@ public class EzWebFolderGWController {
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
+   		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
+   		userName = commonUtil.getWildcardEscapedString(userName, dbName);
+   		
 		String searchChk  = "1";
 		String realColmn  = "";
 		
@@ -776,8 +793,7 @@ public class EzWebFolderGWController {
 			
 			String realPath = request.getServletContext().getRealPath("");
 			result          = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
@@ -1391,7 +1407,7 @@ public class EzWebFolderGWController {
 			int tenantId          = userInfo.getTenantId();
 			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, tenantId);
 			if (mode.equals("1") && folder.getFolderLevel() == 0) {
-				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), tenantId);
+				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), userInfo.getCompanyID(), tenantId);
 				folder.setListSubFolders(listCompSubFolders);
 			}
 			else {
@@ -1573,6 +1589,11 @@ public class EzWebFolderGWController {
 		int startPoint    = 0;
 		String realColmn  = "";
 		JSONObject result = new JSONObject();
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
+   		fileName = commonUtil.getWildcardEscapedString(fileName, dbName);
+   		userName = commonUtil.getWildcardEscapedString(userName, dbName);
 		
 		logger.debug("FolderId: " + folderId + " || serverName: " + serverName + " || Current Page: " + currPage + " || UserId: " + userId + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || FileName: " + fileName + " || UserName: " + userName + " || File Type: " + fileType + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt);
 		
@@ -1873,10 +1894,18 @@ public class EzWebFolderGWController {
 			Date date                  = new Date();
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
+			// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+			SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+		    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
+		
+		    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
+		    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
+			
 			folder.setFolderName1(folderName);
 			folder.setFolderName2(folderName2);
 			folder.setUpdateId(userId);
 			folder.setUpdateDate(timeUTC);
+			folder.setCreateDate(timeUTCCreate);
 			
 			ezWebFolderAdminService.insertFolder(folder);
 			
@@ -2026,7 +2055,7 @@ public class EzWebFolderGWController {
 					}
 					else {
 						company                                 = ezWebFolderService.getCompanySimpleFolder(userInfo.getCompanyID(), userInfo);
-						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), tenantId);
+						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), userInfo.getCompanyID(), tenantId);
 						
 						if (listCompSubFolders != null && listCompSubFolders.size() > 0) {
 							company.setHasSubFolder(1);

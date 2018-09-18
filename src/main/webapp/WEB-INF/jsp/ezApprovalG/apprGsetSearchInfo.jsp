@@ -74,8 +74,10 @@
 		        if (Type == "APR") {
 		            document.getElementById("displayTR1").style.display = "none";
 		            document.getElementById("displayTR2").style.display = "none";
+		            //2018-09-10 이효진 진행중페이지에서 검색 시 문서번호 숨김
+		            document.getElementById("displayTR3").style.display = "none";
 		            //window.resizeBy(0, -60);
-		            window.resizeTo(510, 375);
+		            window.resizeTo(510, 355);
 		        }
 				if (openPageInfo == "usercontlist") {
 					$("#displayTR2").css("display", "none");
@@ -694,7 +696,7 @@
 			        if (Type == "APR") {
 			            RtnVal[3] = sYear;
 			            RtnVal[4] = sMonth;
-			            RtnVal[5] = "01";
+			            RtnVal[5] = sDay;
 			            RtnVal[6] = sYear2;
 			            RtnVal[7] = sMonth2;
 			            RtnVal[8] = sDay2;
@@ -714,7 +716,7 @@
 			            RtnVal[8] = "";
 			            RtnVal[9] = sYear;
 			            RtnVal[10] = sMonth;
-			            RtnVal[11] = "01";
+			            RtnVal[11] = sDay;
 			            RtnVal[12] = sYear2;
 			            RtnVal[13] = sMonth2;
 			            RtnVal[14] = sDay2;
@@ -884,7 +886,7 @@
 		    	</c:otherwise>
 		    </c:choose>
 		  </tr>
-		  <tr>
+		  <tr id="displayTR3">
 		    <th ><spring:message code='ezApprovalG.t440'/></th>
 		    <td ><input type="text" id="DocNumber" name="DocNumber" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>

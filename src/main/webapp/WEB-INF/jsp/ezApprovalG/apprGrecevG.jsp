@@ -102,6 +102,7 @@
 		    var arrDelFiles = new Array();
 		    var junGyulFlag = "${junGyulFlag}";
 			var dirPath = "${approvalROOT}";
+			var ext = "hwp";
 			var approvalFlag = "${approvalFlag}";
 			
 		    function process_AfterOpen() {
@@ -473,7 +474,7 @@
 		    
 		    function btnReAssign_onclick() {
 		        var ret = openOpinionUI("BanSong");
-		        if (ret != "cancel") {
+		        if (ret != "cancel" && ret != undefined) {
 		            var xmlpara = createXmlDom();
 		            var xmlhttp = createXMLHttpRequest();
 		
@@ -495,7 +496,7 @@
 		    }
 		    function btnReDistribute_onclick() {
 		        var ret = openOpinionUI("BanSong");
-		        if (ret != "cancel") {
+		        if (ret != "cancel" && ret != undefined) {
 		            var xmlpara = createXmlDom();
 		            var xmlhttp = createXMLHttpRequest();
 		
@@ -1191,7 +1192,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

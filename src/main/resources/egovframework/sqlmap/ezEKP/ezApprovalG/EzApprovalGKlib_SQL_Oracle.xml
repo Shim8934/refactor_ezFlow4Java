@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalGKlib">
+	<typeAlias alias="ApprGAttachInfoVO" type="egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO"/>
+	<typeAlias alias="ApprGHistoryDocVO" type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO"/>
+	<typeAlias alias="ApprGHistoryAttachVO" type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO"/>
+
+	<select id="EzApprovalGKlib.getEndDocHref" resultClass="String">
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE
+			DOCID = #docId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalGKlib.getEndAttachInfoList" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+		SELECT
+			ATTACHFILESN,
+			ATTACHFILEHREF
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			DOCID = #docId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalGKlib.getHistoryDocList" parameterClass="Map" resultClass="ApprGHistoryDocVO">
+		SELECT
+			CHANGESN,
+			URL
+		FROM
+			TBL_HISTORYDOCINFO
+		WHERE
+			DOCID = #docId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalGKlib.getHistoryAttachList" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
+		SELECT
+			ATTACHFILESN,
+			MODIFYSN,
+			ATTACHFILEHREF
+		FROM
+			TBL_HISTORYATTACHINFO
+		WHERE
+			DOCID = #docId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzApprovalGKlib.updateEndDocHref" parameterClass="Map">
+		UPDATE
+			TBL_ENDAPRDOCINFO
+		SET
+			HREF = #href#
+		WHERE
+			DOCID = #docId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzApprovalGKlib.updateEndAttachInfoHref" parameterClass="Map">
+		UPDATE
+			TBL_ENDATTACHINFO
+		SET
+			ATTACHFILEHREF = #href#
+		WHERE
+			DOCID = #docId#
+			AND ATTACHFILESN = #attachFileSN#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzApprovalGKlib.updateAprAttachInfoHref" parameterClass="Map">	
+		UPDATE
+		    TBL_APRATTACHINFO
+		SET
+		    ATTACHFILEHREF = #href#
+		WHERE
+		    TBL_APRATTACHINFO.DOCID IN (
+		        SELECT
+		            DOCID
+		        FROM
+		            TBL_APRDOCINFO
+		        WHERE
+		            ORGDOCID = #docId#
+		            AND COMPANYID = TBL_APRATTACHINFO.COMPANYID
+		            AND TENANT_ID = TBL_APRATTACHINFO.TENANT_ID
+		    )
+		    AND TBL_APRATTACHINFO.ATTACHFILESN = #attachFileSN#
+		    AND TBL_APRATTACHINFO.COMPANYID = #companyId#
+		    AND TBL_APRATTACHINFO.TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzApprovalGKlib.updateHistoryDocHref" parameterClass="Map">
+		UPDATE
+			TBL_HISTORYDOCINFO
+		SET
+			URL = #url#
+		WHERE
+			DOCID = #docId#
+			AND CHANGESN = #changeSN#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzApprovalGKlib.updateHistoryAttachHref" parameterClass="Map">
+		UPDATE
+			TBL_HISTORYATTACHINFO
+		SET
+			ATTACHFILEHREF = #href#
+		WHERE
+			DOCID = #docId#
+			AND ATTACHFILESN = #attachFileSN#
+			AND MODIFYSN = #modifySN#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</update>
+</sqlMap>

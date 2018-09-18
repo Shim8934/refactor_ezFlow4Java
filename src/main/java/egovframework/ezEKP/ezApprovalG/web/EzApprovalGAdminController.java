@@ -109,11 +109,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGLeft started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
+		String useAdminBujae = "";
+        if (ezCommonService.getTenantConfig("useAdminBujae", tenantID).equalsIgnoreCase("YES")) {
+        	useAdminBujae = "YES";
+        }
+        else {
+        	useAdminBujae = "NO";
+        }
+		
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useAdminBujae", useAdminBujae);
 		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
+		logger.debug("apprGLeft ended. useAdminBujae = " + useAdminBujae);
 		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
@@ -469,6 +481,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
@@ -519,6 +532,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		
 		logger.debug("formMainOther ended.");
 		
@@ -771,10 +785,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag, useReceiveInfoName);
 		
 		logger.debug("getFormRecvAdmin ended. result = " + result);
 		
@@ -997,8 +1012,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 		
-		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, primary, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, primary, userInfo.getTenantId(), lang);
 		
 		logger.debug("apprGMLgetDoctype ended.");
 		
@@ -1060,8 +1076,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 		
-		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag, lang);
 		
 		logger.debug("apprGGetContDocType ended.");
 		
@@ -1337,6 +1354,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
 		String serverName = userInfo.getServerName();
 		String topID = "";
 		
@@ -1368,6 +1386,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		
 		logger.debug("apprGReceiveGroup ended.");
 		
@@ -1394,7 +1413,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			pcompanyID = doc.getDocumentElement().getChildNodes().item(2).getTextContent();
 		}
 		
-		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		//2018-09-06 김보미 - primary에서 lang으로 변경
+		//String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		logger.debug("getAdminReceivGroup ended.");
 		
@@ -1421,6 +1442,28 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
 		
 		logger.debug("setGroupSubItemInfo ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 부서명변경
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/updateGroupSubItemInfo.do")
+	@ResponseBody
+	public String updateGroupSubItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("updateGroupSubItemInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String groupID = request.getParameter("node1");
+		String deptID = request.getParameter("node2");
+		String deptName = request.getParameter("node3");
+		String companyID = request.getParameter("node4");
+		String deptName2 = request.getParameter("node6");
+		
+		String result = ezApprovalGAdminService.updateReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
+		
+		logger.debug("updateGroupSubItemInfo ended.");
 		
 		return result;
 	}
@@ -2730,7 +2773,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2875,7 +2918,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "");
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "", userInfo.getLocale());
 		
 		logger.debug("getStatReceiptList ended.");
 
@@ -2935,7 +2978,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3830,5 +3873,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		logger.debug("manageBujae ended");
 		return mapJson;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
+	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("aprDeptName started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("aprDeptName ended");
+		return "/admin/ezApprovalG/apprGaprDeptName";
 	}
 }

@@ -159,33 +159,38 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				logger.debug("messageId = " + messageId);
 				
-				//TODO: 외부용 메일 처리
-//				String outerReadCheck = "NONE";
-//				if (message.ExtendedProperties.Count > 0) {
-//              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
-//          	}
-				
-				//get readList(수신확인)
+				// get readList(수신확인)
+				// readList의 reader 주소에는 alias 주소가 들어올 수 있다.
 				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
-				//get cancelList(회수)
+				// get cancelList(회수)
+				//cancelList의 reader 주소에는 real(account) 주소만 들어온다.
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
 				
-				//get all recipients from email message(메일)
+				// get all recipients from email message(메일)
+				// addresses에는 alias 주소가 들어올 수 있다.
 				Address[] addresses = message.getAllRecipients();
 				
-				//get aliasAddressList from recipients
+				// get aliasAddressMap from addresses and readList
+				// alias 주소가 들어올 수 있는 addresses와 readList reader 주소로부터 real 주소를 가져온다.
 				List<String> addressList = new ArrayList<String>();
+				
 				for (Address address : addresses) {
 					if (((InternetAddress)address).getAddress() != null) {
 						addressList.add(((InternetAddress)address).getAddress());
 					}
 				}
-				Map<String, String> aliasAddressList = ezEmailService.getAliasAddressMap(addressList, loginInfo.getTenantId());
 				
+				for (MailReadVO vo : readList) {
+					addressList.add(vo.getReaderEmail());
+				}
+				
+				Map<String, String> aliasAddressMap = ezEmailService.getAliasAddressMap(addressList, loginInfo.getTenantId());
+				
+				// tempMailList는 중복을 제거하기 위해 이미 처리한 메일주소를 담는다. 메일주소는 real 주소로만 들어간다.
 				List<String> tempMailList = new ArrayList<String>();
 				
-				//recipients from email message
+				// recipients from email message
 				for (Address address : addresses) {
 					String email = ((InternetAddress)address).getAddress();
 					String name = ((InternetAddress)address).getPersonal() == null ? 
@@ -197,20 +202,33 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						tempSb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
 						tempSb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
 						
-						if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
-							email = aliasAddressList.get(email);
+						// 메일 수신자의 주소가 alias 주소인 경우 real(account) 주소로 바꾼다.
+						if (aliasAddressMap.containsKey(email)) {
+							email = aliasAddressMap.get(email);
 						}
 						
 						String readDate = "UNREAD";
+						
 						for (MailReadVO vo : readList) {
-							if (vo.getReaderEmail().equals(email)) {
-								readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
-								break;
+							
+							// readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+							if (aliasAddressMap.containsKey(vo.getReaderEmail())) {
+								if (aliasAddressMap.get(vo.getReaderEmail()).equals(email)) {
+									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
+									break;
+								}
+							} else {
+								if (vo.getReaderEmail().equals(email)) {
+									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
+									break;
+								}
 							}
 						}
+						
 						tempSb.append("<READDATE><![CDATA[" + readDate + "]]></READDATE>");
 						
 						String status = "";
+						
 						for (MailCancelVO vo : cancelList) {
 							if (vo.getReaderEmail().equals(email)) {
 								if (vo.getStatus() != null && !vo.getStatus().equals("")) {
@@ -221,8 +239,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 								break;
 							}
 						}
-						tempSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
+						tempSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						tempSb.append("</ROW>");
 						
 						if (readDate.equals("UNREAD")) {
@@ -235,9 +253,16 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					}
 				}
 				
-				//readList
+				// readList
 				for (MailReadVO vo : readList) {
-					if (!tempMailList.contains(vo.getReaderEmail())) {
+					String realEmailAddress = vo.getReaderEmail();
+					
+					// readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+					if (aliasAddressMap.containsKey(realEmailAddress)) {
+						realEmailAddress = aliasAddressMap.get(realEmailAddress);
+					}
+					
+					if (!tempMailList.contains(realEmailAddress)) {
 						String readerEmail = vo.getReaderEmail();
 						String readerName = vo.getReaderName();
 					
@@ -250,7 +275,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						
 						String status = "";
 						for (MailCancelVO cvo : cancelList) {
-							if (cvo.getReaderEmail().equals(vo.getReaderEmail())) {
+							if (cvo.getReaderEmail().equals(realEmailAddress)) {
 								if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
 									status = cvo.getStatus();
 								} else {
@@ -259,32 +284,34 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 								break;
 							}
 						}
-						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
+						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						sb.append("</ROW>");
 						
-						tempMailList.add(readerEmail);
+						tempMailList.add(realEmailAddress);
 					}
 				}
 				
-				//cancelList
+				// cancelList
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
+						String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
 						
 						unreadSb.append("<ROW>");
 						unreadSb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
-						unreadSb.append("<READERNAME><![CDATA[" + readerEmail + "]]></READERNAME>");
+						unreadSb.append("<READERNAME><![CDATA[" + readerName + "]]></READERNAME>");
 						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
 						
 						String status = "";
+						
 						if (vo.getStatus() != null && !vo.getStatus().equals("")) {
 							status = vo.getStatus();
 						} else {
 							status = "0";
 						}
-						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
+						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						unreadSb.append("</ROW>");
 					}
 				}
@@ -337,7 +364,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String uidStr = url.split("/")[1];
 		long uid = Long.parseLong(uidStr);
 		
-		//넘어온 folderPath가 보낸편지함이 아닐경우
+		// 넘어온 folderPath가 보낸편지함이 아닐 경우
 		if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
 			logger.debug(egovMessageSource.getMessage("ezEmail.lhm22", locale));
 			logger.debug("mailCancelSend ended.");
@@ -366,7 +393,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.lhm23", locale);
 			}
 			
-			//메시지의 from이 user의 계정인지(또는 user의 alias mail)인지 검사
+			// 메시지의 sender가 user의 계정(또는 user의 alias mail)인지 검사
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 			
@@ -386,41 +413,37 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.lhm24", locale);
 			}
 			
-			//수신자 수가 max를 넘는 메일은 회수가 불가능
-			int maxRecAllCount = 500;
-			Address[] addresses = message.getAllRecipients();
-			if (addresses.length > maxRecAllCount) {
-				logger.debug(egovMessageSource.getMessage("ezEmail.lhm25", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.lhm26", locale));
-				logger.debug("mailCancelSend ended.");
-				return egovMessageSource.getMessage("ezEmail.lhm25", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.lhm26", locale);
-			}
 			
-			String internetMessageId = ((MimeMessage)message).getMessageID();
-			String subject = message.getSubject();
+			// get arrAddress
+			List<String> addressList = new ArrayList<String>();
 			
-			//get arrAddress
-			String[] arrAddress = null;
 			if (pEachCancel.equals("NO")) {
-				arrAddress = new String[addresses.length];
-				for (int i=0; i<addresses.length; i++) {
-					arrAddress[i] = ((InternetAddress)addresses[i]).getAddress();
+				Address[] addresses = message.getAllRecipients();
+				
+				for (Address address : addresses) {
+					addressList.add(((InternetAddress)address).getAddress());
 				}
 			} else {
-				arrAddress = pEachCancel.split("\\|!\\|");
+				String[] arrAddress = pEachCancel.split("\\|!\\|");
+				
+				for (String address : arrAddress) {
+					addressList.add(address);
+				}
 			}
 			
-			//get innerAddresses(내부사용자)
+			// get innerAddresses(내부사용자)
 			List<String> innerDomainList = ezEmailUtil.getInnerDomain(loginInfo.getTenantId());
 			List<String> innerAddresses = new ArrayList<String>();
 			
-			for (String address : arrAddress) {
+			for (String address : addressList) {
 				int index = address.indexOf("@");
 				String domain = "";
+				
 				if (index > -1) {
 					domain = address.substring(index + 1);
 				}
 				
-				for (int i=0; i<innerDomainList.size(); i++) {
+				for (int i = 0; i < innerDomainList.size(); i++) {
 					if (domain.equals(innerDomainList.get(i))) {
 						innerAddresses.add(address);
 						break;
@@ -428,17 +451,17 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 			}
 			
-			//alias address(부서 address, 개인 alias address 등)가 있으면 real address로 바꾼다.
-			innerAddresses = getMember(innerAddresses);
-			
-			//내부사용자 없을 경우 리턴
+			// 내부사용자 없을 경우 리턴
 			if (innerAddresses.size() == 0) {
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm27", locale));
 				logger.debug("mailCancelSend ended.");
 				return egovMessageSource.getMessage("ezEmail.lhm27", locale);
 			}
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, innerAddresses);
+			String messageId = ((MimeMessage)message).getMessageID();
+			String subject = message.getSubject();
+			
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, loginInfo.getId(), subject, innerAddresses);
 			
 			folder.close(true);
 			
@@ -487,11 +510,23 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String messageId = readInfoArray[1];
 		String readerAddress = readInfoArray[2];
 		String readerName = readInfoArray[3];
-		
+				
 		logger.debug("senderAddress=" + senderAddress);
 		logger.debug("messageId=" + messageId);
 		logger.debug("readerAddress=" + readerAddress);
 		logger.debug("readerName=" + readerName);
+		
+		List<String> senderAddressList = new ArrayList<String>();
+		senderAddressList.add(senderAddress);
+				
+		// alias address인 경우 real address로 바꾼다.
+		senderAddressList = getMember(senderAddressList);
+		
+		if (senderAddressList.size() == 1) {
+			senderAddress = (String)senderAddressList.get(0);
+			
+			logger.debug("Real senderAddress=" + senderAddress);
+		}
 		
 		// 수신 여부를 체크하기 위해서 두개만 넣음 (getMailReadList 스펙)
 		StringBuilder inputParams = new StringBuilder();

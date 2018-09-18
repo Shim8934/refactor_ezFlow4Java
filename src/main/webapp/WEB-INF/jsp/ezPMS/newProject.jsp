@@ -37,7 +37,7 @@ var planEndDate = "${project.planEndDate}";
 var managerList = [];
 var participantList = [];
 var viewerList = [];
-var overview = "<c:out value='${project.overview}'/>";
+var projectOverview = "<c:out value='${project.overview}'/>";
 var endAlamStatus = "${project.alamMailStatus}";
 var headManagerId = "${project.headManagerId}";
 var headManagerName = "${project.headManagerName}";
@@ -69,7 +69,7 @@ var headManagerObj = {};
 		//사이즈 재정의
 		$(".nameList").css("height", "58px");
 		$("#overview").css("height", "60px");
-		
+
 		//참여 멤버 넣기
 		var memberList = JSON.parse('${project.projectMember}');
 		var memberListCount = memberList.length;
@@ -110,8 +110,7 @@ var headManagerObj = {};
 		$("#mailRepeat").val(mailRepeat).attr("seleced", "selected");
 		$("#Sdatepicker").val(planStartDate);
 		$("#Edatepicker").val(planEndDate);
-		
-		$("#overview").val(replaceString(overview));
+		$("#overview").val(replaceTextAreaString(replaceTextAreaString(projectOverview)));
 		
 		if (endAlamStatus == -1) {
 			$("#endAlam").prop("checked", false);
@@ -237,7 +236,7 @@ var headManagerObj = {};
 	 var calcType = $("input[name=weightInput]:checked").val();
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
-	 overview = convertString($("#overview").val().trim());
+	 overview = revertString($("#overview").val().trim());
 	 mailRepeat = $("#mailRepeat option:selected").val();
 	 
 	 //parent.userRole은 프로젝트 수정 때 사용.

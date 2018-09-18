@@ -69,7 +69,9 @@
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
 		    var pNoneActiveX = "YES";
 		    var useRunTime = "${useRunTime}"
+			var window_onunload_Event = false;
 		    
+			window.onunload = Window_onunload;
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -86,6 +88,7 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
+		        window_onunload_Event = true;
 		    }
 		    
 		    $(document).ready(function() {
@@ -121,6 +124,50 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    });
+		    
+		    /* 2018-09-17 홍승비 - 새게시물탭에서 설정한 미리보기 비율 저장 */
+		    var Save_unloadSave = false;
+		    function Window_onunload() {
+		        if (window_onunload_Event && !Save_unloadSave) {
+		            var divStyle;
+		            var listCount = 0;
+		            
+		            if (document.getElementById("listcount") != null){
+		            	listCount = document.getElementById("listcount").value;
+		            } else {
+		            	listCount = 20;
+		            }
+		            
+		            if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H);
+		            } else {
+		                divStyle = 0;
+		            }
+		            
+		            if (divStyle < 24) {
+		                divStyle = 24;
+		            }
+		
+		            $.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezBoard/boardGeneralListSave2.do",
+						data : { userID 	 : SSUserID, 
+								 listCount 	 : listCount, 
+								 previewMode : pPreviewShow_HOW,
+								 list 		 : divStyle,
+								 content 	 : (100 - divStyle)
+								},
+						success: function(){
+						}        			
+					});
+		            
+				    Save_unloadSave = true;
+		        }
+		    }
 		
 		    function getBoardList() {
 		        starttime = new Date().getTime();
@@ -156,6 +203,13 @@
 		            var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
 		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+		            
+		            /* 2018-09-17 홍승비 - 새게시물탭에서도 저장된 미리보기 비율 적용 */
+		            pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));
+		
 		            pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 		            if (listNode == null) return;
 
@@ -195,7 +249,6 @@
 		            DocList.DataSource(xmlDoc);
 		            DocList.DataBind("lvBoardList");
 		            DocList = null;
-		              
 
 		            allListCnt = GetElementsByTagName(xmlDoc, "ROW").length;
 
@@ -700,7 +753,7 @@
 		    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 		
 		    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-		        <div style="width:100%; overflow:AUTO;" id="divList">
+		        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 		            <div id="lvBoardList"></div>
 		        </div>
 		        <div id='runtime' style="color:#666;padding-top:5px"></div>

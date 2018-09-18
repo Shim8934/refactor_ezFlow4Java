@@ -105,21 +105,21 @@ function MailPreviewEnd(e) {
         if (g_foldertype != "sent") {
             if (SmallSizeList) {
                 if (p_ListorderValue == "" || p_ListorderValue == "UNREAD") {
-                    BasicViewHeaderChange(SmallSizeList);
+                    BasicViewHeaderChange(SmallSizeList, g_foldertype);
                     OldSmallSizeList = SmallSizeList;
                 }
             }
             else {
                 if (p_ListorderValue == "" && OldSmallSizeList) {
-                    BasicViewHeaderChange(SmallSizeList);
+                    BasicViewHeaderChange(SmallSizeList, g_foldertype);
                 }
                 else if (p_ListorderValue == "UNREAD" && OldSmallSizeList) {
-                    BasicViewHeaderChange(SmallSizeList);
+                    BasicViewHeaderChange(SmallSizeList, g_foldertype);
                 }
             }
         } else {
         	if (pPreviewShow_HOW == "H" && !useReceivingChk) {
-                BasicViewHeaderChange(SmallSizeList);
+                BasicViewHeaderChange(SmallSizeList, g_foldertype);
             }
         }
     }
@@ -693,6 +693,15 @@ function prevShow() {
 
     try {
         if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+        	var sentDateStr = document.querySelector("#PreContent_Rayer" + pPreviewShow_HOW).getElementsByClassName("sentDateStr")[0];
+        	
+        	document.getElementById("ifrmPreView" + pPreviewShow_HOW).src = strLangLHM18;
+            document.getElementById("Preview_Header" + pPreviewShow_HOW).style.display = "none";
+            
+            if (sentDateStr != null) {
+            	sentDateStr.style.display = "none";
+            }
+            
             return;
         }
         else {
@@ -953,12 +962,22 @@ function MailList_ChangeStatus(obj) {
 }
 function prevShow_Clear() {
     if (pPreviewShow_HOW == "W") {
+    	var sentDateStr = document.body.querySelector("#PreContent_RayerW #sentDateStr");
         document.getElementById("Preview_HeaderW").style.display = "none";
         document.getElementById("ifrmPreViewW").src = strLangLHM18;
+        
+        if (sentDateStr != null) {
+        	sentDateStr.style.display = "none";
+        }
     }
     else {
+    	var sentDateStr = document.body.querySelector("#PreContent_RayerH #sentDateStr");
         document.getElementById("Preview_HeaderH").style.display = "none";
         document.getElementById("ifrmPreViewH").src = strLangLHM18;
+        
+        if (sentDateStr != null) {
+        	sentDateStr.style.display = "none";
+        }
     }
 }
 function ReceiverDetail_view(obj) {
@@ -1038,9 +1057,9 @@ function PreviewRayerChange(pGubun) {
             CurrenWidth = document.documentElement.clientWidth - 20;
             if (!useReceivingChk) {
 	            if (CurrenWidth < 470) {
-	                BasicViewHeaderChange(true);
+	                BasicViewHeaderChange(true, g_foldertype);
 	            } else {
-	                BasicViewHeaderChange(false);
+	                BasicViewHeaderChange(false, g_foldertype);
 	            }
             }
         }
@@ -1080,9 +1099,9 @@ function PreviewRayerChange(pGubun) {
                         CurrenWidth = document.documentElement.clientWidth - 20;
                         
                         if (CurrenWidth < 470) {
-                            BasicViewHeaderChange(true);
+                            BasicViewHeaderChange(true, g_foldertype);
                         } else {
-                            BasicViewHeaderChange(false);
+                            BasicViewHeaderChange(false, g_foldertype);
                         }
                         /*if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
                             p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
@@ -1146,9 +1165,9 @@ function PreviewRayerChange(pGubun) {
                         }
             			
                         if (pMailListWidthH < 470) {
-                            BasicViewHeaderChange(true);
+                            BasicViewHeaderChange(true, g_foldertype);
                         } else {
-                            BasicViewHeaderChange(false);
+                            BasicViewHeaderChange(false, g_foldertype);
                         }
                 		
                 		/*if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
@@ -1231,9 +1250,9 @@ function Window_resize() {
                 CurrenWidth = document.documentElement.clientWidth - 20;
                 if (!useReceivingChk) {
 	                if (CurrenWidth < 470) {
-	                    BasicViewHeaderChange(true);
+	                    BasicViewHeaderChange(true, g_foldertype);
 	                } else {
-	                    BasicViewHeaderChange(false);
+	                    BasicViewHeaderChange(false, g_foldertype);
 	                }
                 }
             }
@@ -1283,9 +1302,9 @@ function Window_resize() {
                 // 중요도, 책갈피, 첨부파일, 크기 컬럼을 제거한다.
                 if (!useReceivingChk) {
 	                if (pMailListWidthH < 470) {
-	                    BasicViewHeaderChange(true);
+	                    BasicViewHeaderChange(true, g_foldertype);
 	                } else {
-	                    BasicViewHeaderChange(false);
+	                    BasicViewHeaderChange(false, g_foldertype);
 	                }
                 }
 	                
@@ -1311,9 +1330,9 @@ function Window_resize() {
 
                 if (!useReceivingChk) {
 	                if (CurrenWidth < 470) {
-	                    BasicViewHeaderChange(true);
+	                    BasicViewHeaderChange(true, g_foldertype);
 	                } else {
-	                    BasicViewHeaderChange(false);
+	                    BasicViewHeaderChange(false, g_foldertype);
 	                }
                 }
             }
@@ -1751,6 +1770,7 @@ function MailOptionHidden() {
     document.getElementById("layer_popup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    ContextMenuHidden();
 }
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
 function MailOptionHiddenOutside(e) {
@@ -1772,9 +1792,10 @@ function mailOpenPopup(btn, event) {
 
 function mailPrevIframeSize() {
 	var previewmail_info = $("#PreContent_Rayer" + pPreviewShow_HOW).find(".previewmail_info").outerHeight();
+	var sentDateStr = $("#PreContent_Rayer" + pPreviewShow_HOW).find(".sentDateStr").outerHeight();
 	var pPreview = pPreviewShow_HOW == "H" ? CurrentHeight : pMailPreHeightW;
 	
-	previewmail_info = (Math.ceil(previewmail_info/10) * 10) + 10;
+	previewmail_info = (Math.ceil((previewmail_info + sentDateStr)/10) * 10) + 10;
 	
 	$("#ifrmPreView" + pPreviewShow_HOW).height(pPreview - previewmail_info);
 }

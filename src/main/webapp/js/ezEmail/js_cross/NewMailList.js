@@ -358,7 +358,7 @@ function MakeListInfoHTML(ConentObject) {
                             	if (g_bdraft == true) {
 	                            	p_Subject = p_Subject
 	                            } else {
-                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
 	                            }
                             }
                             
@@ -428,17 +428,19 @@ function MakeListInfoHTML(ConentObject) {
                     }
                     _TR.appendChild(_TDColum);
                     
-                    // 180514 보낸사람 클릭 시 메일 작성
-                    if (ssNodeValue == "sender" && useMailWriteSenderClick == "YES") { 
+                 // 180514 보낸사람 클릭 시 메일 작성
+                    if (ssNodeValue == "sender" ) { 
                     	var _TDColumSpan = document.createElement("span");
-
                     	_TDColumSpan.style.padding = "7px 0";
-                        _TDColumSpan.innerHTML = innerHTML;
-                        _TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
-                        _TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
-                        
-                        _TR.lastChild.innerHTML = "";
-                        _TR.lastChild.appendChild(_TDColumSpan);
+                    	_TDColumSpan.innerHTML = innerHTML;
+                    	
+                    	if(useMailWriteSenderClick == "YES") {
+                    		_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                    		_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    	}
+                    	
+                    	_TR.lastChild.innerHTML = "";
+                    	_TR.lastChild.appendChild(_TDColumSpan);
                     }
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
@@ -1078,7 +1080,7 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
-	
+	ContextMenuHidden();
 	if (typeof (searchMode) != "undefined" && typeof (importExportMode) != "undefined") {
 		if (searchMode || importExportMode) {
 			return;
@@ -1133,18 +1135,18 @@ function MailListRefresh() {
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
-function BasicViewHeaderChange(pGubun) {
-    if (pGubun) {
-        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml")
+function BasicViewHeaderChange(pGubun, pFolderType) {
+	var viewXmlFile = pGubun ? "viewXMLFile1_1.xml" : "viewXMLFile1.xml";
+	
+	if (pFolderType == "draft" ||  pFolderType == "sent") {
+		viewXmlFile = pGubun ? "viewXMLFile2_1.xml" : "viewXMLFile2.xml";
+	}
+	
+    if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile)
             return;
 
-        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-    } else {
-        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml")
-            return;
+    p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile;
 
-        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
-    }
     listContentArry = new Array();
     listSubContentArry = new Array();
     var HeaderObject = document.getElementById("MailHeader");
@@ -1253,14 +1255,30 @@ function makePageSelPage() {
     PagingHTML += "</div>";
     td_Create1(PagingHTML);
 }
+
+function event_secondRightClick() {
+	 if (document.getElementById("ContextMenuDiv").style.display == "") {
+		 HiddenContextMenu();
+	 } else {
+		 return;
+	 }
+	
+}
+
 function event_listContextMenu(event) {
+	if (document.getElementById("mailPanel").style.display == "none") {
+		 if (document.getElementById("ContextMenuDiv").style.display == "") {
+			 $("mailPanel").css("display","none");
+			 HiddenContextMenu();
+		 }
+	}
     if (!event) event = window.event;
     var EventMouseX = event.clientX;
     var EventMouseY = event.clientY;
 
     var listsizeheight = document.documentElement.clientHeight;
     var listsizewidth = document.documentElement.clientWidth;
-    var EventDivSize = EventMouseY + 240;
+    var EventDivSize = EventMouseY + 400;
     if (listsizeheight < EventDivSize) {
         var Div_ = EventDivSize - listsizeheight;
         EventMouseY = EventMouseY - Div_;
@@ -1274,12 +1292,26 @@ function event_listContextMenu(event) {
     if (g_foldertype == "draft") {
     	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
     }
-    //document.getElementById("mailPanel").style.display = "";
+    
+    var target = event.target ? event.target : event.srcElement;
+    var targetTag = target.tagName;
+
+    if (targetTag == 'SPAN'){ 
+		$("#ContextMenuDiv tbody :nth-child(9)").css("display","");
+		$("#ContextMenuDiv tbody :nth-child(10)").css("display","");
+		$("#ContextMenuDiv tbody :nth-child(11)").css("display","");
+	} else {
+		$("#ContextMenuDiv tbody :nth-child(9)").css("display","none");
+	    $("#ContextMenuDiv tbody :nth-child(10)").css("display","none");
+	    $("#ContextMenuDiv tbody :nth-child(11)").css("display","none"); 	
+	}
+//    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
     document.getElementById("ContextMenuDiv").style.display = "";
 }
 function event_listMover(obj) {
+	currentMoverId = obj.id;
     if (pGroupListClickObject != obj && !obj.childNodes.item(0).childNodes.item(0).checked) {
         obj.style.backgroundColor = m_strColorOver;
     }

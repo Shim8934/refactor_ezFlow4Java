@@ -268,6 +268,7 @@
              	QUICKLINKNAME2 ,
              	QUICKLINKNAME3 ,
              	LINKTYPE ,
+             	LINKTYPEURL,
              	URL ,
              	REGUSERID ,
              	SIZE_ 

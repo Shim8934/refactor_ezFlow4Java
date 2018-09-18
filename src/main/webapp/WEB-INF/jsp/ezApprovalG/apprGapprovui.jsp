@@ -567,9 +567,8 @@
 		                }
 		            }		
 		        }
- 		        <%--2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 사인칸에 표기안되서 주석해제 --%>
-		        //없이 테스트
- 		        SignCheck(); 
+		        
+//  		        SignCheck(); 
 		        
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
@@ -1428,9 +1427,9 @@
 			                    }
 			                }
 		                }
-		
+		                
 		                if (pSuSinFlag == "Y") {
-		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                    	$.ajax({
 		                    		type : "POST",
 		                    		dataType : "text",
@@ -1598,7 +1597,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

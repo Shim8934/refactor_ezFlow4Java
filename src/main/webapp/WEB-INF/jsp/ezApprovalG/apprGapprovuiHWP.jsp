@@ -132,6 +132,7 @@
 	        var isHWP = "${isHWP}";
 	        var approvalFlag = "${approvalFlag}";
 	        var ext = "hwp";
+	        var aprDocTimeStamp = "";
 	        var docState = "${docState}";
 	        var nonElecRec = "${nonElecRec}";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
@@ -239,7 +240,7 @@
 		            GetExchInfo();
 		
 		            if (pDocHref != "") {
-		                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
+		                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
 		                var isTrue = HwpCtrl.LoadFile(URL, false);
 		
 		                FieldsAvailable(isTrue);
@@ -309,8 +310,8 @@
 		            	if (!((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1)) {
 		            		throw "hwp";
 		            	}
-		                HwpCtrl.SetImgReg();
 		                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+		                HwpCtrl.SetImgReg();
 		                HwpCtrl.SetSaveMode(1);
 		
 		                getApprovInfo();
@@ -327,9 +328,8 @@
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
-		
-		
+		                    
+				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
 
 				        FieldsAvailable(isTrue);
@@ -823,7 +823,7 @@
 			        }
 			
 			        var ret = openOpinionUI("BanSong");
-			        if (ret != "cancel") {
+			        if (ret != "cancel" && ret != undefined ) {
 			            UpdateLineHistory();
 			
 			            OrgHtml = HwpCtrl.GetCloneData("", "HWPML2X");
@@ -880,7 +880,7 @@
 			
 			        var ret = openOpinionUI("BoRyu");
 			
-			        if (ret != "cancel") {
+			        if (ret != "cancel" && ret != undefined) {
 			            UpdateLineHistory();
 			            var RtnVal = SaveApproveInfo("3");
 			
@@ -1024,10 +1024,12 @@
 			    }
 	
 			    function btnSave_onclick() {
-			        HwpCtrl.SetSaveMode(1);
+			       /*  HwpCtrl.SetSaveMode(1);
 			        HwpCtrl.SetDocumentInfo(pFormID);
 			        HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
-			        HwpCtrl.ChangeMode(3);
+			        HwpCtrl.ChangeMode(3); */
+			        
+			    	window.open("/ezApprovalG/downloadHWPdoc.do?DocId=" + pDocID);
 			    }
 			
 			    function btnMail_onclick() {
@@ -1091,7 +1093,7 @@
 					para[3] = ext;
 					
 			        var url = "/ezApprovalG/insSepAttach.do";
-				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+				    var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			
 			        if (url != "")
 			            var rtn = window.showModalDialog(url, para, feature);
@@ -1343,12 +1345,12 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height: 70px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0"></iframe>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

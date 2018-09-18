@@ -615,7 +615,7 @@
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
-		        		<NAME><spring:message code='ezBoard.t38' /></NAME>
+		        		<NAME><spring:message code='ezPersonal.t177' /></NAME>
 		        		<WIDTH>100</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>		     

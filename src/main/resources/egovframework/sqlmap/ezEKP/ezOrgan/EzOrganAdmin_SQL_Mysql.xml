@@ -59,15 +59,22 @@
 	<sql id="EzOrganAdminDAO.searchQuery">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
-					<isEqual property="search_keycode" compareValue="1">
+					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="2">
+					<isEqual property="search_keycode" compareValue="dpetName">
 						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="3">
+					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate" prepend="AND">
+			<isNotEmpty property="searchEndDate">
+				<![CDATA[
+					(UPDATEDT >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND UPDATEDT <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+				]]>
 			</isNotEmpty>
 		</isNotEmpty>
 	</sql>
@@ -541,6 +548,21 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
+	
+	<update id="EzOrganAdminDAO.updateProperty_addJob" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				$v_PROPNAME$ = #v_PROPVALUE# 
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				DEPTID = #V_DEPTID#
+		]]>
+	</update>
 		
 	<!-- <procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
@@ -593,7 +615,7 @@
                     EXTENSIONATTRIBUTE14 ,
                     EXTENSIONATTRIBUTE15 ,
                     ADSPATH ,
-                    #nowDate# ,
+                    #timeUTC# ,
                     MOBILE_ENABLE ,
                     MOBILE_NOTUSE ,
                     MOBILE_PIN ,
@@ -1025,7 +1047,7 @@
                  ('A03','018','기안','1','기안','Draft','起案','起草',#tenantID#, #companyID#),
                  ('A03','019','검토','1','검토','Examination','検討','评论',#tenantID#, #companyID#),
                  ('A04','0  ','결재처리상태','0','결재처리상태','결재처리상태',null,null,#tenantID#, #companyID#),
-                 ('A04','000','미결','1','기안처리하지 않은 문서','Not approved','決裁処理進行状況','审批处理状态',#tenantID#, #companyID#),
+                 ('A04','000','미결','1','기안처리하지 않은 문서','Not approved','未決','未決',#tenantID#, #companyID#),
                  ('A04','001','대기','1','대기','Waiting','待機','待机',#tenantID#, #companyID#),
                  ('A04','002','진행','1','진행','In progress','進行','进行中',#tenantID#, #companyID#),
                  ('A04','003','승인','1','승인','Approved','決裁','审批',#tenantID#, #companyID#),
@@ -1287,7 +1309,7 @@
 			('ST01', '0  ', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '1', '재기안시 반송의견 삭제 유/무( Y : 삭제 or N : 삭제안함 )', #companyID#, #tenantID#),
 			('ST01', '001', 'N', 'N', 'N', 'N', '1', '재기안시 반송의견 삭제 유/무( Y : 삭제 or N : 삭제안함 )', #companyID#, #tenantID#),
 			('SA04','0  ','결재처리상태','결재처리상태','결재처리상태',null,null,'0', #companyID#,#tenantID#),
-            ('SA04','000','미결','Not approved','決裁処理進行状況','审批处理状态','1','기안처리하지 않은 문서', #companyID#,#tenantID#),
+            ('SA04','000','미결','Not approved','未決','未決','1','기안처리하지 않은 문서', #companyID#,#tenantID#),
             ('SA04','001','대기','Waiting','待機','待机', '1','대기',#companyID#,#tenantID#),
             ('SA04','002','진행','In progress','進行','进行中', '1','진행',#companyID#,#tenantID#),
             ('SA04','003','승인','Approved','決裁','审批', '1','승인',#companyID#,#tenantID#),
@@ -2545,6 +2567,7 @@
             WHERE
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
+		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
@@ -2566,14 +2589,17 @@
                 EXTENSIONATTRIBUTE10 ,
                 EXTENSIONATTRIBUTE102 ,
                 EXTENSIONATTRIBUTE14 ,
-                REPLACE(SUBSTR(UpdateDT,1,10),'-','') UPDATEDT  
+				DATE_FORMAT(DATE_ADD(UPDATEDT, INTERVAL #offset# MINUTE), '%Y-%m-%d') AS UPDATEDT
            FROM
            		TBL_USERMASTER_RETIRE 
            WHERE
                 TENANT_ID = #v_TENANT_ID#
+		]]>
+        <include refid="EzOrganAdminDAO.searchQuery"/>
+        <![CDATA[
            ORDER BY UPDATEDT DESC
            LIMIT #v_STARTROW#, #v_ROWPERPAGE#                	
-		]]>
+        ]]>  
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
@@ -2705,7 +2731,8 @@
                 DESCRIPTION2 = (SELECT DISPLAYNAME2 FROM (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 PHYSICALDELIVERYOFFICENAME = (SELECT EXTENSIONATTRIBUTE2 FROM (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 COMPANY = (SELECT EXTENSIONATTRIBUTE3 FROM (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
-                COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA)
+                COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
+                UPDATEDT = #timeUTC#
             WHERE
                 CN = #v_CN#
             AND

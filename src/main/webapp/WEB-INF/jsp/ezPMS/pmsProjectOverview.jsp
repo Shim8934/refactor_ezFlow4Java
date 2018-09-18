@@ -42,6 +42,7 @@ var listNumber = 3;
 var position = "overview";
 var groupId = "${project.groupId}";
 var headManagerId = "${project.headManagerId}";
+var projectOverview = "<c:out value='${project.overview}'/>";
 
 //내가 담당인 업무 완료/보류/진행 시키기 위한 변수
 var beforePosition = "";
@@ -59,7 +60,8 @@ $(function() {
 			updateOrderStatus();
 		}
 	}).disableSelection();
-
+	
+	$(".overview_textbox").html(replaceString(projectOverview));
 });
 
 function initProgressBar() {
@@ -95,6 +97,7 @@ function initProgressBar() {
 	
 	$("#circleProgress").circleProgress({
 		value: Number(projectProgress * 0.01).toFixed(1),
+		duration : 0,
 		fill : {color : circleColor},
 		size : 130
 	}).on('circle-animation-progress', function(event, progress) {
@@ -474,6 +477,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				$("#" + targetPosition).find(".progressArea" + task.taskId).LineProgressbar({
 					percentage : Number(task.realProgress).toFixed(1),
 					fillBackgroundColor : statusColor,
+					duration : 0,
 					height : '15px',
 					radius : '15px',
 					width : '50%'
@@ -570,14 +574,19 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 
 			if (targetStatus.indexOf("M") == -1 && targetStatus.indexOf("B") == -1 && userRole != 3) {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_allwork.png' alt='"+ title +"' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+
+				var totalTaskCNT = result.totalTaskCNT;
+				$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			} else if (targetStatus.indexOf("M") != -1 && targetStatus.indexOf("B") == -1 && userRole != 3) {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dd><img src='/images/ezPMS/icon_mywork.png' alt='"+ title +"' onclick='moreTaskList(\"" + targetStatus.slice(-1) + "\", \"" + targetPosition +"\", 0, \"new\")'></dd><dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+
+				var totalTaskCNT = result.totalTaskCNT;
+				$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			} else {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
+				$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1);
 			}
 			
-			var totalTaskCNT = result.totalTaskCNT;
-			$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			
 			updateOrderStatus();	
 		},
@@ -740,7 +749,7 @@ function getTaskDetails(elem) {
 				</ul>
 				<div class="btnStyle_center"></div>
 			</div>
-			<div class="overview_textbox"><c:out value="${project.overview }"/></div>
+			<div class="overview_textbox"></div>
 			<ul class="overview_infomationBox">
 				<li onclick="menuQst_DetailUserInfo('${project.headManagerId }')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }"/><c:out value="${project.headManagerName }"/></li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>

@@ -80,7 +80,7 @@
 			}
 			
 			$('#title').val(replaceString(title));
-			$('#writeOverview').val(writeOverview);
+			$('#writeOverview').val(replaceTextAreaString(writeOverview));
 			
 		} else if (mode == 'reply') {
 			

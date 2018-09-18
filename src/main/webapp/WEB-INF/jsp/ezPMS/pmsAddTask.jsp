@@ -197,7 +197,7 @@ function addTask() {
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
 	 weight = $("#weight").val();
-	 overview = convertString($("#overview").val().trim());
+	 overview = revertString($("#overview").val().trim());
 	 
 	 //업무 이름 길이 제한
 	 if (taskName.length == 0) {
@@ -457,7 +457,7 @@ function setDefaultGroup(){
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
-				<td colspan="3" style="height:70px" id="managers"></td>
+				<td class="nameList" colspan="3" style="height:70px"><div style="overflow-y:auto; max-height:100%; width:100%" id="managers"></div></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t267' /></th>

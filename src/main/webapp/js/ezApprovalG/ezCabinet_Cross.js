@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -21,6 +21,13 @@ var g_OtherDeptDocViewRight = false;
 var g_CabListXmlhttp = null;
 var totalPage = "";
 var pTotalCnt = "";
+
+var g_isSearching = false;
+var g_searchDate = {
+	startDate: null,
+	endDate: null
+}
+
 function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
@@ -541,6 +548,27 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+    } else if (g_isSearching) {
+    	var searchParamXml = loadXMLString(g_RecSearchParamXml);
+        var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
+        var endDate = SelectSingleNodeValue(searchParamXml.firstChild, "EREGDATE");
+        
+    	if (startDate == "") {
+    		var date = new Date();
+    		date.setFullYear(date.getFullYear() - 1);
+    		
+    		g_searchDate.startDate = date;
+    	} else {
+    		g_searchDate.startDate = new Date(startDate);
+    	}
+    	
+        if (endDate == "") {
+        	g_searchDate.endDate = new Date();
+        } else {
+        	g_searchDate.endDate = new Date(endDate);
+        }
+        
+        
     }
 
     switch (ListTypeFlag) {
@@ -1171,8 +1199,11 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (trim_Cross(pURL) == "") {
             if (trim_Cross(DocID) == "") {
                 OpenAlertUI(strLang260);
-            }
-            else {
+            } else if (g_uFlag == "m03") {
+            	var pAlertContent = "배부문서는 최초접수시 생성되므로 배부받은 부서에서 접수를 하여야 열람할 수 있습니다.";
+                OpenAlertUI(pAlertContent);
+                return "";
+            } else {
                 var para2 = new Array();
                 para2[0] = selRow.getAttribute("DATA6");
                 para2[1] = selRow.getAttribute("DATA8");
@@ -1198,10 +1229,16 @@ function ViewDoc_onclick_Complete(Rtn) {
             var para = new Array();
             DocID = selRow.getAttribute("DATA1");
             pURL = selRow.getAttribute("DATA2");
+            
+            var tempUrl = pURL;
 
             var openLocation = "";
             
-            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+            if (tempUrl.substr(tempUrl.length - 4, tempUrl.length).toLowerCase() == ".ezd") {
+            	tempUrl = tempUrl.substr(0, tempUrl.length - 4);
+            }
+            
+            if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
             	if (isIE()) {
                 	if (g_uFlag == "m03") {
                 		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
@@ -1436,6 +1473,7 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
 
+        g_isSearching = true;
         g_RecSearchParamXml = rtnVal[1];
         GetRecordList();
     }
@@ -1588,7 +1626,15 @@ function makePageSelPage(pTotalCnt) {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
-        if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
+    	if (g_isSearching) {
+    	    g_isSearching = false;
+    	    
+    		var startDate = g_searchDate.startDate;
+    		var endDate = g_searchDate.endDate;
+    		
+    		period = startDate.getFullYear() + strLang1028 + " " + (startDate.getMonth() + 1) + strLang1029 + " " + startDate.getDate() + strLang1030 + " ~ ";
+    		period += endDate.getFullYear() + strLang1028 + " " + (endDate.getMonth() + 1) + strLang1029 + " " + endDate.getDate() + strLang1030;
+    	} else if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
             var nowyear = new Date().getFullYear();
             var nowmonth = new Date().getMonth() + 1;
             var nowday = new Date().getDate();

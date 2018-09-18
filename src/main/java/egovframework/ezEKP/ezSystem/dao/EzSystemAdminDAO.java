@@ -8,7 +8,9 @@ import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
 import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -38,5 +40,58 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
         delete("EzSystemAdminDAO.deleteLoginHist", map);
     }
 	
+	public void updateSystemIPAllow(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateSystemIPAllow", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<IPBandVO> getAllIPBand(int tenantID) throws Exception {
+	    return (List<IPBandVO>) list("EzSystemAdminDAO.getSystemAllIPBand", tenantID);
+    }
+	
+	public void insertIPBand(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertIPBand", map);
+	}
+	
+	public IPBandVO getSystemIPBand(String ipNo) throws Exception {
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemIPBand", ipNo);
+	}
+	
+	public void updateIPBand(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateIPBand", map);
+	}
+	
+	public void deleteIPBand(List<String> ipNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteIPBand", ipNoList);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AccessIdVO> getAllAccessList(Map<String, Object> map) throws Exception {
+		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessList", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<AccessIdVO> getAllAccessListDept(Map<String, Object> map) throws Exception {
+		return (List<AccessIdVO>) list("EzSystemAdminDAO.getAllAccessListDept", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAllAccessListUserCompare(int tenantID) throws Exception {
+		return (List<String>) list("EzSystemAdminDAO.getAllAccessListUserCompare", tenantID);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAllAccessListDeptCompare(int tenantID) throws Exception {
+		return (List<String>) list("EzSystemAdminDAO.getAllAccessListDeptCompare", tenantID);
+    }
+	
+	
+	public void deleteAccessId(List<String> accessNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteAccessId", accessNoList);
+	}
+	
+	public void insertAccessId(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertAccessId", map);
+	}
 	
 }

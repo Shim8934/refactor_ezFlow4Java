@@ -1036,11 +1036,15 @@
 		    }
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        //2018-08-24 김보미 - 팝업창 가운데로 위치하게끔 조정
+ 		        //var heigth = window.screen.availHeight;
+ 		        //var width = window.screen.availWidth;
+ 		        //var left = (width - 500) / 2;
+ 		        //var top = (heigth - 400) / 2;
+ 		        //window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		        feature = feature + GetOpenPosition(420, 450);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
@@ -1346,7 +1350,7 @@
 		    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 		
 		    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-		        <div style="width:100%; overflow:AUTO;" id="divList">
+		        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 		            <div id="lvBoardList"></div>
 		        </div>
 		        <div id='runtime' style="color:#666;padding-top:5px"></div>

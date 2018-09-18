@@ -53,6 +53,16 @@
 	        };
 	
 	        function bt_OK_onclick() {
+	        	/*
+	        		기록물철 인계할 때 인계부서 단위업무 체크 로직 추가
+	        	*/
+	        	var isEmptyCode = $("#tdSTaskCode").text().trim();
+	        	
+	        	if(isEmptyCode === "" || isEmptyCode === null) {
+	        		alert("<spring:message code='ezApprovalG.pjg05'/>");
+	        		return;
+	        	}
+	        	
 	            var SelCabinetList = new ListView();
 	            SelCabinetList.LoadFromID("DivSelCabinetList");
 	            var length = SelCabinetList.GetRowCount();

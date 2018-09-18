@@ -146,16 +146,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword)	throws Exception {
         logger.debug("getRetireList started");
-        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
+        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+        logger.debug("tenantID=" + tenantID + ",offset=" + offset);
+        logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
 	    
+   		
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		
 		map.put("v_TENANT_ID", tenantID);
-		map.put("v_PAGE", pPage);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("v_ROWPERPAGE", pPageRow);
 		map.put("v_STARTROW", pPageRow*(pPage - 1));
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -293,6 +301,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         // 사원의 경우
     	if (pClass.toLowerCase().equals("user")) {
     		ezOrganAdminDao.updateProperty(map);
+    	} else if (pClass.toLowerCase().equals("addJob")) {
+    		ezOrganAdminDao.updateProperty_addJob(map);
     	// 부서의 경우
     	} else {
     		ezOrganAdminDao.updateProperty_U(map);
@@ -300,7 +310,34 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("updateProperty ended");
 	}
-
+	
+	@Override
+	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String deptID) throws Exception {
+	    logger.debug("updateProperty started");
+	    logger.debug("cn=" + cn + ",column=" + column + ",number=" + number + ",pClass=" + pClass + ",tenantID=" + tenantID + ",deptID=" + deptID);
+	    
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("v_CLASS", pClass);
+		map.put("v_PROPNAME", column);
+		map.put("v_PROPVALUE", number);
+		map.put("V_DEPTID", deptID);
+		
+        // 사원의 경우
+    	if (pClass.toLowerCase().equals("user")) {
+    		ezOrganAdminDao.updateProperty(map);
+    	} else if (pClass.toLowerCase().equals("addjob")) {
+    		ezOrganAdminDao.updateProperty_addJob(map);
+    	// 부서의 경우
+    	} else {
+    		ezOrganAdminDao.updateProperty_U(map);
+    	}       
+		
+		logger.debug("updateProperty ended");
+	}
+	
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
         logger.debug("moveDBData started");
         logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
@@ -441,24 +478,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID) throws Exception {
+	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception {
 	    logger.debug("retireEntry started");
-	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID);
+	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID + ",offset=" + offset);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_TENANT_ID", tenantID);
-		map.put("v_CN", cn);
 		
 		// 퇴직자의 암호를 현재 관리자의 암호와 동일하게 변경한다.
 		// 이후 과정에서 에러가 발생했을 때 암호를 롤백할 방법이 없는 문제가 있다. 
 		setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
-		
-		map.put("nowDate", nowDate);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+	
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
 	    ezOrganAdminDao.retireDBData(map);
@@ -496,15 +532,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception {
 	    logger.debug("getRetireListCount started");
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
-	    
+	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
 		
 		logger.debug("getRetireListCount ended");
 		
@@ -1090,17 +1132,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }
     
 	@Override
-	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
+	public void restoreRetireEntry(String cn, String deptID, int tenantID, String offset) throws Exception {
 	    logger.debug("restoreRetireEntry started");
-	    logger.debug("cn=" + cn + ",deptID=" + deptID + ",tenantID=" + tenantID);
+	    logger.debug("cn=" + cn + ",deptID=" + deptID); 
+	    logger.debug("tenantID=" + tenantID + ",offset=" + offset);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	    date.setTimeZone(TimeZone.getTimeZone("GMT"));
-	    String nowDate = date.format(new Date()); 
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
-		map.put("nowDate", nowDate);
+		map.put("timeUTC", timeUTC);
 	    map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_PARENTCN", deptID);
@@ -1152,7 +1195,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Override
     public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
     	logger.debug("getUserCount started");
-    	
+   		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);

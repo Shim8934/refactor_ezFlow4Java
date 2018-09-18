@@ -215,6 +215,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void insertReceiveGroupItemInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertReceiveGroupItemInfo", map);
 	}
+	public void updateReceiveGroupItemInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.updateReceiveGroupItemInfo", map);
+	}
 	
 	public void insertReceiveGroupInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertReceiveGroupInfo", map);

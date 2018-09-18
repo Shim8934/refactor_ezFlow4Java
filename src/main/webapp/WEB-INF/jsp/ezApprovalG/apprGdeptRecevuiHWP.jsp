@@ -90,6 +90,7 @@
 	        var pDocSN = "1";
 	        var pUse_Editor = "${useEditor}";
 			var DocNumCode = "";
+			var ext = "hwp";
 			var isHWP = "${isHWP}";
 			var dirPath = "${dirPath}";
 			
@@ -190,6 +191,8 @@
 			}
 	
 			function window_onload() {
+				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+				
 			    try {
 			        var ezUtil = new ActiveXObject("ezUtil.MiscFunc.1");
 			        ezUtil.ChangeIME(1);
@@ -317,7 +320,7 @@
 				            OpenAlertUI(pAlertContent);
 				            return;
 				        }
-				        else if (chkpass == "cancel") {
+				        else if (chkpass == "cancel"  || chkpass == undefined) {
 				            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>.";
 				    	        OpenAlertUI(pAlertContent);
 				    	        return;

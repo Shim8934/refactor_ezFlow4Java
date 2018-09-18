@@ -83,7 +83,7 @@
 	    opacity: 1;
 	}
 	
-	#managers, #participants{max-height: 100%;overflow-y: auto;}
+	#managers, #participants{overflow-y: auto; height:70px;}
 </style>
 <script>
 var projectId = "<c:out value='${taskDetails.projectId}'/>";
@@ -115,7 +115,7 @@ var userRoleId = parent.userRoleId;
  $(function() {
 	 taskDetails = ${taskDetails};
 	 $("#taskName").val(replaceString(revertString(taskDetails.taskName || taskDetails.groupName)));
-	 $("#overview").val(replaceString(revertString(taskDetails.overview)));
+	 $("#overview").val(replaceTextAreaString(taskDetails.overview));
 	 
 	 if (target == "task") {
 		 initMemberList = '${taskDetails.taskMember}';
@@ -174,11 +174,11 @@ function openMemberList(type) {
 	
 	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
 	if(treeDepth == '0') {
-		DivPopUpShow(608, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
-				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		DivPopUpShow(608, 420, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + type, "",
+				"height = 420px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 	} else {
-		DivPopUpShow(608, 404, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + type, "",
-				"height = 408px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+		DivPopUpShow(608, 420, "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + type, "",
+				"height = 420px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 	}
 }
 
@@ -203,7 +203,7 @@ function openPreTaskTree() {
 	 var managerNameList = "";
 	 var managerListCount = managerList.length;
 	 
-	 for (var i = 0; i < managerList; i++) {
+	 for (var i = 0; i < managerListCount; i++) {
 		var manager = managerList[i];
 		
 		managerNameList += manager.userName;
@@ -259,7 +259,8 @@ function updateTaskInfo() {
 	
 	if (target == "task") {		
 		 weight = document.getElementById("weight").value.trim();
-		 overview = convertString(document.getElementById("overview").value.trim());
+		 overview = revertString(document.getElementById("overview").value.trim());
+		 
 		 var weightInput = 1; // 수정해야함.
 		 var remainingWeight = '${weightData.remainingWeight}';
 		 var projectStartDate = "${taskDetails.planStartDate}";
@@ -364,7 +365,7 @@ function updateTaskInfo() {
 			}
 		});
 	} else if (target == "group") {
-		 overview = convertString(document.getElementById("overview").value.trim());
+		 overview = revertString(document.getElementById("overview").value.trim());
 		 
 		//업무 이름 길이 제한
 		 if (taskName.length == 0) {
@@ -534,7 +535,7 @@ function initPreTask() {
 					</tr>
 					<tr>
 						<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
-						<td id="managers"></td>
+						<td><div id="managers"></div></td>
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t181' /></th>

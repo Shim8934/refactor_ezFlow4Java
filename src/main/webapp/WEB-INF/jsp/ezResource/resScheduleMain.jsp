@@ -65,6 +65,7 @@
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
+	    var getLang = "<c:out value='${userInfo.lang}'/>";
 	    var ApproveFlag     = "${approveFlag}";
 	    var brd_NM = "<c:out value='${brdNm}' />";
 	    var ResID = "${resID}";
@@ -187,6 +188,11 @@
 	            LunarUse = true;
 	        else
 	            LunarUse = false;
+	        
+	     	// #13470 uselang이 3인 경우 음력사용 금지
+			if(getLang == "3") {
+				LunarUse = false;
+			}
 
 	        schedule_get_holiday();
 	    }
@@ -336,6 +342,21 @@
 	        } else {
 	            selsd = GetAttribute(srcEl, "dispDate");
             	seled = GetAttribute(srcEl, "dispDate");
+	        }
+			//2018-09-13 천성준 - #13590
+	        if (selsd == "" && seled == "") {
+	        	var date = new Date();
+	        	var year = date.getFullYear();	//2018
+	        	var month = date.getMonth()+1;	//0~11
+	        	var day = date.getDate(); 		//1~31
+	        	
+	        	if (month < 10)
+	        		month = "0" + month;
+	        	if (day < 10)
+	        		day = "0" + day;
+	        	
+	        	selsd = year + "-" + month + "-" + day;
+	        	seled = year + "-" + month + "-" + day;
 	        }
 	       
 	        var feature = GetOpenPosition(820, 700);

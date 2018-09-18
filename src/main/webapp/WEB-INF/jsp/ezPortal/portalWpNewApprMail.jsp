@@ -75,9 +75,9 @@
           				<span class="tr"></span>
             			<!-- tab -->
             			<dl class="portlet_tab">
-              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num">(0)</span></span></dt>
-              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num">(0)</span></span></dt>
-              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on" onmouseover="tabover(this)" onmouseout="tabout(this)"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="rejectTab" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="draftTab" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
            				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
@@ -152,6 +152,7 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "${noneActiveX}";
 		    var MailQuater;
+		    var selTab = "";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -165,6 +166,7 @@
 		        }
 		        
 		        getApprGraph();
+		        selTab = "doingTab";
 		        
 		        try { top.onresize() } catch (e) { }
 		    }
@@ -536,6 +538,7 @@
 		        switch (obj.id) {
 		            case "doingTab":
 		                pListTypeValue = "1";
+		                selTab = "doingTab";
 		                document.getElementById("doingTab").className = "on";
 		                document.getElementById("rejectTab").className = "";
 		                document.getElementById("draftTab").className = "";                
@@ -543,6 +546,7 @@
 	
 		            case "rejectTab":
 		                pListTypeValue = "4";
+		                selTab = "rejectTab";
 		                document.getElementById("doingTab").className = "";
 		                document.getElementById("rejectTab").className = "on";
 		                document.getElementById("draftTab").className = "";
@@ -550,6 +554,7 @@
 	
 		            case "draftTab":
 		                pListTypeValue = "2";
+		                selTab = "draftTab";
 		                document.getElementById("doingTab").className = "";
 		                document.getElementById("rejectTab").className = "";
 		                document.getElementById("draftTab").className = "on";
@@ -688,6 +693,16 @@
 		            apprChangeTab(document.getElementById("draftTab"));
 		        }
 		    }
+		    
+		    /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "on");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selTab) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
 	
 		    window_onload_NewApprMail();
 		</script>
