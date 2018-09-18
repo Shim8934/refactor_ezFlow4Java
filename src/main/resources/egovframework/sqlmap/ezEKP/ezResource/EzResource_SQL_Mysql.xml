@@ -840,7 +840,9 @@
 			AND
 				A.OWNERID = #v_POWNERID#
 			AND
-				REFLAG = '1'
+				A.DEPTNM = BB.DEPTNM
+			AND
+				REFLAG = '1'				
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			AND
