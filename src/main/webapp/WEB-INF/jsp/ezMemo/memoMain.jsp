@@ -75,7 +75,6 @@
 			getMemoConfig();
 			getFolderList();
 			getMemoList();
-			addremove();		// 메모지 이벤트 추가
 			
 			$($(window.parent.frames['left'].document)).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);
@@ -87,6 +86,35 @@
 	    	
 	    	$(document).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);
+	    	});
+	    	
+	    	$(document).on("click", ".saveBtn", function(){
+			    	  var obj = $(this).parent().next();
+			    	  modifyMemo(obj[0]);
+			});
+	    	
+	    	$(document).on("click", ".color_list", function(){
+	    		   defaultColor = $(this).index()+1;
+	    	   		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+	    	   		var obj = $(this).parent().parent();
+	    	   		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
+	    	   		$(this).parent().css("visibility", "hidden");
+	    	});
+	    	
+	    	$(document).on("mouseleave", ".color_popup", function(){
+	           	$(this).css("visibility", "hidden");
+	       	});
+	    	
+	    	$(document).on("mouseenter", ".pallete", function(){
+	    		$(this).parent().nextAll(".color_popup").css("visibility", "");
+	    	});
+	    	
+	    	$(document).on("mouseleave", ".pallete", function(e){
+	    		e = e || event;
+	    		var goingto = e.relatedTarget || e.toElement;
+	    		if (!goingto || goingto.className != "color_popup") {
+	    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
+	    		}
 	    	});
 
 	    }
@@ -237,8 +265,6 @@
                 	
 					loadMemoList();
 					setMemoCount(memoList.length);
-					
-					addremove();
 			     },
 	             error : function() {
 	                	
@@ -280,12 +306,9 @@
                 },  
                 cache: false,
                 success: function(result) {
-                	$(".memo_add").remove();
-
                 	var memo = result["memo"];
                 	insertMemo(memo);
                 	setMemoCount($(".memoLay").length);
-                	addremove();
                 	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
                 },
                 error : function() {
@@ -297,7 +320,7 @@
 	    // 메모 색상 변경
 	    function modifyMemoColor(obj, idx) {
 	    	var memoId = obj.attr("id").replace("memo", "");
-	    	
+	    	console.log('너도 여러번 뜨는거였니');
 	    	$.ajax ({
  			   	url : '/ezMemo/memoColorModify.do',
  			   	type : 'POST',

@@ -79,7 +79,6 @@
 		    	checkDefaultFolder();
 	    		checkMemoConfig();
 		    	memoFoldersInfo();
-	    		addremove();			// 메모지 이벤트 추가
 
 		    	// 스크롤바 디자인 변경
 		    	$(".memoListBox").mCustomScrollbar({
@@ -222,7 +221,35 @@
 		        $(".memo_main").on("click", "#addFirstMemo", function() {
 		        	newMemo();
 		        });
+		     	
+		        $(document).on("click", ".saveBtn", function(){
+			    	  var obj = $(this).parent().next();
+			    	  modifyMemo(obj[0]);
+				});
+	    	
+		    	$(document).on("click", ".color_list", function(){
+		    		   defaultColor = $(this).index()+1;
+		    	   		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
+		    	   		var obj = $(this).parent().parent();
+		    	   		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
+		    	   		$(this).parent().css("visibility", "hidden");
+		    	});
 		        
+		    	$(document).on("mouseleave", ".color_popup", function(){
+		           	$(this).css("visibility", "hidden");
+		       	});
+		    	
+		    	$(document).on("mouseenter", ".pallete", function(){
+		    		$(this).parent().nextAll(".color_popup").css("visibility", "");
+		    	});
+		    	
+		    	$(document).on("mouseleave", ".pallete", function(e){
+		    		e = e || event;
+		    		var goingto = e.relatedTarget || e.toElement;
+		    		if (!goingto || goingto.className != "color_popup") {
+		    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
+		    		}
+		    	});
 		    });
 		    
 		    // 셀렉트 박스 마우스 포인터 벗어날 경우
@@ -741,7 +768,6 @@
 	                	
 	                	$("#addFirstMemo").remove();
 	                	insertMemo(memo, layerFlag);
-	                	addremove();
 	                
 	                	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
@@ -805,8 +831,6 @@
 				    	setMemoListSize();
 
 				    	loadMemoList(layerFlag);
-						
-					    addremove();
 					    
 						var memoLength = $(".memo_main .memoLay").length;
 		            	if (memoLength == 0) {

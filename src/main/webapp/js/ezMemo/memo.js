@@ -268,35 +268,6 @@ function MailOptionHiddenOutside(e) {
 		}
 	}
 }
-// 메모지 이벤트 추가
-function addremove() {
-	$(".pallete").hover(function (e) {
-		$(this).parent().nextAll(".color_popup").css("visibility", "");
-	}, function (e) {
-		e = e || event;
-		var goingto = e.relatedTarget || e.toElement;
-		if (!goingto || goingto.className != "color_popup") {
-			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
-		}
-	});
-	
-   $(".color_popup").mouseleave(function(){
-       	$(this).css("visibility", "hidden");
-   });
-   
-   $(".color_list").click(function(){
-	   defaultColor = $(this).index()+1;
-   		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-   		var obj = $(this).parent().parent();
-   		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
-   		$(this).parent().css("visibility", "hidden");
-   });
-   
-    $(".saveBtn").click(function(){
-    	  var obj = $(this).parent().next();
-    	  modifyMemo(obj[0]);
-    });
-}
 
 function memoFoldersInfo() {
 	selFolderId="";
