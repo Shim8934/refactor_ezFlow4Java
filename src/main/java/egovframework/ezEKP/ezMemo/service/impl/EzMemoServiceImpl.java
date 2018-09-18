@@ -491,9 +491,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("tenant_id", memoConfigVO.getTenant_id());
 		map.put("company_id", memoConfigVO.getCompany_id());
 
-		map.put("gadget_bottom", memoConfigVO.getGadget_bottom());
-		map.put("gadget_right", memoConfigVO.getGadget_right());
-		
+		// gadget 위치 back-end 예외처리, 초기화
+		if(memoConfigVO.getGadget_bottom() < 0 || memoConfigVO.getGadget_right() < 0) {
+			map.put("gadget_bottom", 15);
+			map.put("gadget_right", 15);
+		} else { // 정상
+			map.put("gadget_bottom", memoConfigVO.getGadget_bottom());
+			map.put("gadget_right", memoConfigVO.getGadget_right());
+		}
 		ezMemoDAO.setGadgetConfig(map);
 		logger.debug("setGadgetConfig ended.");
 	}

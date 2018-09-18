@@ -200,5 +200,11 @@ public interface EzMemoService {
 	 */
 	public void setGadgetConfig(MemoConfigVO memoConfigVO) throws Exception;
 
-	public void setMemoLayerMode(MemoConfigVO memoConfigVO);
+	
+	/**
+	 * 메모 레이어 창모드,전체모드 플래그 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setMemoLayerMode(MemoConfigVO memoConfigVO) throws Exception;
 }
