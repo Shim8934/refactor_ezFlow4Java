@@ -3401,6 +3401,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMID", formID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+
+		//2018-09-18 천성준 - 비전자등록 팝업 호출 시, TBL_FORMINFO에서 양식정보를 참조하여 문서정보 인서트 하는것 때문에 비전자등록 전용 양식일 경우 구분값을 가지고 고정데이터로 인서트 한다.
+		if (formID != null && formID.equals("2018000000")) {
+			map.put("v_NONELECYN", "Y");
+		}
 		
 		logger.debug("createNewDoc param = v_DOCID = " + tmpDocID.trim() + " v_FORMID = " + formID + " companyID = " + companyID + " v_TENANTID =" + tenantID );
 		
@@ -23968,13 +23973,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for(int k = dlength-1; k >=0; k-- ) {
 			resultXML.append("<ROW>");
 			for(i=0; i<hlength; i++) {
-				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
-				FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
+				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
+				FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
+				
+				if (FieldName.equals("LINKDATE")) {
+					resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet).substring(0, 10) + "]]></VALUE>");
+				} else {
+					resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
+				}
 			
 				if ( i == 0) {
-
 					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
 					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
 					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
@@ -23984,7 +23993,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA7>");
 					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
 					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
-
 				}
 				
 				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {

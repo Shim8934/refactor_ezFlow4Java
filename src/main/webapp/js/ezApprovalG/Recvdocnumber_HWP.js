@@ -11,7 +11,7 @@ function setDocNumFormat() {
         return;
 
     var fieldValue = trim(HwpCtrl.GetFieldText("receiptnumber"));
-    if (fieldValue != "" && fieldValue.replace("@", "") == fieldValue) {
+    if (fieldValue != "" && fieldValue.replace("@", "") == fieldValue && useReceiveDocNo != 'NO') {
         pDocNo = fieldValue;
         var tempString = pDocNo.split("-");
 

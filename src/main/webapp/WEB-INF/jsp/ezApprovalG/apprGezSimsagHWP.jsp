@@ -391,7 +391,7 @@
             }
 
             var ret = openOpinionUI("BanSong");
-            if (ret != "cancel") {
+            if (ret != "cancel" && ret != undefined) {
                 SaveFile();
 
               	var result = "";
