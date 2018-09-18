@@ -159,7 +159,7 @@
 		        });
 		        
 		        // 메모 레이어 리사이즈
-		        $(".layerControl").resizable({
+		        $("#layer-popup").resizable({
 		        	
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock",
@@ -184,7 +184,7 @@
 		        		$("#controllable").css("display", "");
 		        		
 		        		$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
-		        		$(".ui-resizable-handle").css("display", "none");
+		        		$("#layer-popup .ui-resizable-handle").css("display", "none");
 		        		
 		        		$("#layer-popup").draggable({
 		        			disabled: true
@@ -203,7 +203,7 @@
 		        		$("#fullScreen").css("display", "");
 		        		
 		        		$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
-		        		$(".ui-resizable-handle").css("display", "");
+		        		$("#layer-popup .ui-resizable-handle").css("display", "");
 		        		
 		        		$("#layer-popup").draggable({
 		        			disabled: false
@@ -370,14 +370,14 @@
 		        				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
 		        				$("#fullScreen").css("display", "none");
 				        		$("#controllable").css("display", "");
-				        		$(".ui-resizable-handle").css("display", "none");
+				        		$("#layer-popup .ui-resizable-handle").css("display", "none");
 				        		
 				        		$("#layer-popup").draggable({
 				        			disabled: true
 				        		});
 	        				} else {
 	        					$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
-	    		        		$(".ui-resizable-handle").css("display", "");
+	    		        		$("#layer-popup .ui-resizable-handle").css("display", "");
 	    		        		$("#layer-popup").draggable({
 	    		        			disabled: false
 	    		        		});
