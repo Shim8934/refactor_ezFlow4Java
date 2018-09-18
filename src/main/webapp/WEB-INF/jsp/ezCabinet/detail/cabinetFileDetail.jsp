@@ -437,6 +437,8 @@
 				}
 				
 				function saveItem() {
+					if (CabinetFile.check() == 1) {alert(CabinetMessages.strUploading); return;}
+					
 					var title   = document.getElementById("itemTtl").value;
 					var summary = document.getElementById("itemSum").value;
 					

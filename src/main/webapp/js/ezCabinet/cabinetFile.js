@@ -131,7 +131,7 @@ var CabinetFile = function() {
 				}
 			},
 			error : function(error) {
-				alert(CabinetMessages.strError);
+				//alert(CabinetMessages.strError);
 			}
 		});
 	}
@@ -170,10 +170,10 @@ var CabinetFile = function() {
 				var code = data.code;
 				
 				switch(code) {
-					case 0 : afterDeleteSuccessfully(liElmt)    ; break;
-					case 1 : alert(CabinetMessages.strParamErr) ; break;
-					case 2 : alert(CabinetMessages.strError)    ; break;
-					default: alert(CabinetMessages.strError)    ; return;
+					case 0 : afterDeleteSuccessfully(liElmt)   ; break;
+					case 1 : alert(CabinetMessages.strParamErr); break;
+					case 2 : alert(CabinetMessages.strError)   ; break;
+					default: alert(CabinetMessages.strError)   ; return;
 				}
 			},
 			error : function(error) {
@@ -197,6 +197,14 @@ var CabinetFile = function() {
 		}
 		
 		return result;
+	}
+	
+	function checkUploadStatus() {
+		var check         = 0;
+		var fileListElmt  = document.getElementById("fileDiv");
+		var fileUploading = fileListElmt.querySelector("canvas");
+		if (fileUploading) {check = 1;}
+		return check;
 	}
 	
 	function isImage(fileName) {
@@ -238,6 +246,7 @@ var CabinetFile = function() {
 		upload     : onStartUpload,
 		dragEnter  : onDragEnter,
 		dragOver   : onDragOver,
-		deleteFile : deleteFile
+		deleteFile : deleteFile,
+		check      : checkUploadStatus
 	};
 }();

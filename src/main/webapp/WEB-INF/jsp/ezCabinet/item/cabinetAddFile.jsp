@@ -95,6 +95,8 @@
 				}
 				
 				function saveItem() {
+					if (CabinetFile.check() == 1) {alert(CabinetMessages.strUploading); return;}
+					
 					var title   = document.getElementById("itemTtl").value;
 					var summary = document.getElementById("itemSum").value;
 					
@@ -199,7 +201,7 @@
 				
 				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}
 				function startUpload() {document.getElementById("fileBttn").click();}
-				function closeWindow() {window.close();}
+				function closeWindow() {if (CabinetFile.check() == 1) {alert(CabinetMessages.strUpCancel);} window.close();}
 				
 				function afterSaveSuccessfully() {
 					alert(CabinetMessages.strSave);

@@ -101,5 +101,7 @@ var CabinetMessages = {
 	strApproval  : "전자결재에 내용이 없어 캐비넷 등록을 할 수 없습니다.",
 	strMycabinet : "나의 캐비넷",
 	strRelatedTr : "연동 캐비넷",
-	strAnonymous : "홍길동"
+	strAnonymous : "홍길동",
+	strUploading : "아직 업로드 되지 않은 파일이 있습니다.",
+	strUpCancel  : "업로드가 사용자에 의해 취소되었거나 브라우저가 연결을 끊었습니다."
 }
