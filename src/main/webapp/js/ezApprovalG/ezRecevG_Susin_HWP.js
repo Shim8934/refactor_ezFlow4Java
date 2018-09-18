@@ -864,7 +864,7 @@ function openOpinionUI(pOpinionFlag) {
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
 	var ret     = window.showModalDialog(url,parameter,feature);
 	
-	 if (ret != "cancel" && ret!= "Clear") {
+	 if (ret != "cancel" && ret!= "Clear" && ret != undefined) {
 	        var Rtnxml = createXmlDom();
 	        Rtnxml = loadXMLString(ret);
 
