@@ -36,6 +36,15 @@
 	 			padding:2px 2px;
 	 			border:1px solid #ffffff;
 			}	
+			
+			.toastArea {
+			  	position : absolute;
+			  	background : #000000;
+				display : block;
+				color : #ffffff;		 
+    			font-size: 10px;
+    			border-radius: 2px;
+			}
     	</style>
 
 		<script type="text/javascript">
@@ -324,7 +333,7 @@
 		                },  
 		                cache: false,
 		                success: function(result) {
-		                	alert("<spring:message code='ezMemo.t0025'/>");
+		                	saveMemoToast(memoId);
 		                	if(window.frames["main"].frames["right"] != undefined) {			
 			                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 			                		window.frames["main"].frames["right"].getMemoList();
@@ -978,6 +987,23 @@
 		        		
 		        	}
 	        	});
+		 	}
+		 	
+		 	// 저장 toast 팝업
+		 	function saveMemoToast(memoId) {
+		  		var doc = window.document;
+		  		
+		  		var toastArea = doc.createElement("div");
+		  		toastArea.innerHTML = "<spring:message code='ezMemo.t0025'/>";
+		  		toastArea.setAttribute("class", "toastArea");
+		  		toastArea.style.top = "150px";
+		  		toastArea.style.left = "100px";
+		  		toastArea.style.display = "block";
+		  		$("#memo" + memoId).prepend(toastArea);
+		  		
+		  		setTimeout(function(){
+   					toastArea.remove();
+   				}, 1500);
 		 	}
 		</script>
 	</head>
