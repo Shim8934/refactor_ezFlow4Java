@@ -38,10 +38,6 @@
 			
 			<table class="tblEmailInf">
 				<tr>
-					<th><c:out value="${groupName.columnName}"/></th>
-					<td class="overfl" colspan="3"><c:out value="${groupName.columnValue}"/></td>
-				</tr>
-				<tr>
 					<th><c:out value="${creator.columnName}"/></th>
 					<td id="addrCreator" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
 					<th><c:out value="${createdate.columnName}"/></th>
@@ -52,6 +48,10 @@
 					<td id="addrMod" class="overfl cursor wide" title="<c:out value="${modifierUser.userName}"/>"><c:out value="${modifierUser.userName}"/></td>
 					<th><c:out value="${modifydate.columnName}"/></th>
 					<td class="nowrap"><c:out value="${fn:substring(modifydate.columnValue, 0, 19)}"/></td>
+				</tr>
+				<tr>
+					<th><c:out value="${groupName.columnName}"/></th>
+					<td class="overfl" colspan="3"><c:out value="${groupName.columnValue}"/></td>
 				</tr>
 			</table>
 		</div>
