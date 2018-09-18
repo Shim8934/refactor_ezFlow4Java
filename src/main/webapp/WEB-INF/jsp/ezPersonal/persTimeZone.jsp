@@ -20,7 +20,9 @@
 			    document.getElementById("TimeZone").value = TimeZone;
 			}
 			if (Lang != "") {
-			    flagValue = Lang;
+			    document.getElementsByName('rad_flag')[Lang - 1].checked = true;
+			    //flagValue = Lang;			   
+				flagValue = $("input:radio[name=rad_flag]:checked").attr("id");
 			}
 		}
 		

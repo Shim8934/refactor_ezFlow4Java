@@ -305,5 +305,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void addMyBoardsComp(Map<String, Object> map) {
 		insert("EzBoardAdminDAO.addMyBoardsComp", map);
 	}
+	
+	/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
+	public void saveBoardProperty3(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBoardProperty3", map);
+	}
 
 }

@@ -664,8 +664,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
+		/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
 		ezBoardAdminDAO.saveBoardProperty(map);
 		ezBoardAdminDAO.saveBoardProperty2(map);
+		ezBoardAdminDAO.saveBoardProperty3(map);
 		
 		if (boardPropertyVO.getPortlet() != null) {
 			if (boardPropertyVO.getPortlet().equals("Y")) {

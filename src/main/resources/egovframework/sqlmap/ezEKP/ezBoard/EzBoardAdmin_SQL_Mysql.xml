@@ -1300,6 +1300,19 @@
 		]]>
 	</update>
 	
+	<update id="EzBoardAdminDAO.saveBoardProperty3" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_MyTree
+      		SET 
+      			TREENAME = #v_PBOARDNAME#,
+          		TREENAME2 = #v_PBOARDNAME2#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			TREEBOARDID = #v_PBOARDID#
+		]]>
+	</update>
+	
 	<update id="EzBoardAdminDAO.saveACL_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_Board_BoardManage

@@ -475,7 +475,7 @@
 		    
 		    function btnReAssign_onclick() {
 		        var ret = openOpinionUI("BanSong");
-		        if (ret != "cancel") {
+		        if (ret != "cancel" && ret != undefined) {
 		            var xmlpara = createXmlDom();
 		            var xmlhttp = createXMLHttpRequest();
 		
@@ -497,7 +497,7 @@
 		    }
 		    function btnReDistribute_onclick() {
 		        var ret = openOpinionUI("BanSong");
-		        if (ret != "cancel") {
+		        if (ret != "cancel" && ret != undefined) {
 		            var xmlpara = createXmlDom();
 		            var xmlhttp = createXMLHttpRequest();
 		
