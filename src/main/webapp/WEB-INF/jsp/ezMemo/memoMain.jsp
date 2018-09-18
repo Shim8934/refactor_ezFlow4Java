@@ -354,7 +354,7 @@
 	                },  
 	                cache: false,
 	                success: function(result) {
-	                	alert("<spring:message code='ezMemo.t0025'/>");
+	                	saveMemoToast(memoId);
 	                	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 	                },
 	                error : function() {

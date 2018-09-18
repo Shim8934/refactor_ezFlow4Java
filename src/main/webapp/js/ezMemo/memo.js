@@ -357,3 +357,22 @@ function addEmptyMemo(flag) {
 		emptyMemoResize();
 	}
 }
+
+//저장 toast 팝업
+	
+function saveMemoToast(memoId) {
+	var doc = window.document;
+	var alertMessage = strLangMemo8;
+	var toastArea = doc.createElement("div");
+		
+	toastArea.innerHTML = alertMessage;
+	toastArea.setAttribute("class", "toastArea");
+	toastArea.style.top = "150px";
+	toastArea.style.left = "100px";
+	toastArea.style.display = "block";	
+	$("#memo" + memoId).prepend(toastArea);
+
+	setTimeout(function(){
+		toastArea.remove();
+	}, 1500);	
+}
