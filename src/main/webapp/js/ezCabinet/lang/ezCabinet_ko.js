@@ -100,5 +100,6 @@ var CabinetMessages = {
 	strSummLen   : "요약은 250 글자 이내이어야 합니다.",
 	strApproval  : "전자결재에 내용이 없어 캐비넷 등록을 할 수 없습니다.",
 	strMycabinet : "나의 캐비넷",
-	strRelatedTr : "연동 캐비넷"
+	strRelatedTr : "연동 캐비넷",
+	strAnonymous : "홍길동"
 }
