@@ -22433,100 +22433,201 @@
 	</delete>
 	
 	<insert id="EzApprovalG.insertBebuAprDocInfo" parameterClass="Map">
-		INSERT INTO 
-			TBL_APRDOCINFO 
-		(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
-		(SELECT 
-			#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
-		  FROM 
-		  	TBL_APRDOCINFO A 
-		  WHERE 
-		  	DocID = #v_DOCID# 
-		  AND 
-		  	TENANT_ID = #v_TENANTID#
-		  AND 
-        	COMPANYID = #companyID#)
+		<isEqual property="v_FLAG" compareValue="APR">
+			INSERT INTO 
+				TBL_APRDOCINFO 
+			(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+			(SELECT 
+				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+			  FROM 
+			  	TBL_APRDOCINFO 
+			  WHERE 
+			  	DocID = #v_DOCID# 
+			  AND 
+			  	TENANT_ID = #v_TENANTID#
+			  AND 
+	        	COMPANYID = #companyID#)
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="APR">
+			INSERT INTO 
+				TBL_APRDOCINFO 
+			(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+			(SELECT 
+				#v_NEWID#, FormID, DocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+			  FROM 
+			  	TBL_ENDAPRDOCINFO 
+			  WHERE 
+			  	DocID = #v_DOCID# 
+			  AND 
+			  	TENANT_ID = #v_TENANTID#
+			  AND 
+	        	COMPANYID = #companyID#)
+		  </isNotEqual>  
 	</insert>
 	
 	<insert id="EzApprovalG.insertBebuExpAprDocInfo" parameterClass="Map">
+			<isEqual property="v_FLAG" compareValue="APR">
+				INSERT INTO 
+					TBL_EXPAPRDOCINFO 
+				(     DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+	            (SELECT 
+	            	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+	             FROM 
+	             	TBL_EXPAPRDOCINFO 
+				 WHERE 
+				 	DocID = #v_DOCID# 
+				 AND 
+				 	TENANT_ID = #v_TENANTID#
+				 AND 
+	        		COMPANYID = #companyID#)
+			</isEqual>
+			<isNotEqual property="v_FLAG" compareValue="APR">
+				INSERT INTO 
+					TBL_EXPAPRDOCINFO 
+				(     DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+	            (SELECT 
+	            	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+	             FROM 
+	             	TBL_EXPENDAPRDOCINFO 
+				 WHERE 
+				 	DocID = #v_DOCID# 
+				 AND 
+				 	TENANT_ID = #v_TENANTID#
+				 AND 
+	        		COMPANYID = #companyID#)
+			</isNotEqual>
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuAprAttachInfo" parameterClass="Map">
+			<isEqual property="v_FLAG" compareValue="APR">
+				INSERT INTO 
+					TBL_APRATTACHINFO 
+				(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(SELECT 
+					#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+				 FROM 
+		            TBL_APRATTACHINFO 
+		         WHERE 
+		         	DocID = #v_DOCID# 
+		         AND 
+		         	TENANT_ID = #v_TENANTID#
+		         AND 
+		        	COMPANYID = #companyID#)
+		    </isEqual>
+		    <isNotEqual property="v_FLAG" compareValue="APR">
+				INSERT INTO 
+					TBL_APRATTACHINFO 
+				(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(SELECT 
+					#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+				 FROM 
+		            TBL_ENDATTACHINFO 
+		         WHERE 
+		         	DocID = #v_DOCID# 
+		         AND 
+		         	TENANT_ID = #v_TENANTID#
+		         AND 
+		        	COMPANYID = #companyID#)
+		    </isNotEqual>
+	</insert>
+	 
+	<insert id="EzApprovalG.insertBebuAprDocAttachInfo" parameterClass="Map">
+		<isEqual property="v_FLAG" compareValue="APR">
 			INSERT INTO 
-				TBL_EXPAPRDOCINFO 
-			(     DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
-            (SELECT 
-            	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
-             FROM 
-             	TBL_EXPAPRDOCINFO A 
+				TBL_APRDOCATTACHINFO 
+			(	DocID,     AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID) 
+			(SELECT 
+				#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID 
+			 FROM 
+	            TBL_APRDOCATTACHINFO 
+	         WHERE 
+	         	DocID = #v_DOCID#  
+	         AND 
+	         	TENANT_ID = #v_TENANTID#
+	         AND 
+	        	COMPANYID = #companyID#)
+	    </isEqual>
+	    <isNotEqual property="v_FLAG" compareValue="APR">
+			INSERT INTO 
+				TBL_APRDOCATTACHINFO 
+			(	DocID,     AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID) 
+			(SELECT 
+				#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID 
+			 FROM 
+	            TBL_ENDAPRDOCATTACHINFO 
+	         WHERE 
+	         	DocID = #v_DOCID#  
+	         AND 
+	         	TENANT_ID = #v_TENANTID#
+	         AND 
+	        	COMPANYID = #companyID#)
+	    </isNotEqual>
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuAprOpinionInfo" parameterClass="Map">
+		<isEqual property="v_FLAG" compareValue="APR">
+			INSERT INTO 
+				TBL_APROPINIONINFO 
+			(	DocID,     UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID, COMPANYID) 
+			(SELECT 
+				#v_NEWID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID, COMPANYID 
+			 FROM 
+			 	TBL_APROPINIONINFO  
 			 WHERE 
 			 	DocID = #v_DOCID# 
 			 AND 
 			 	TENANT_ID = #v_TENANTID#
 			 AND 
-        		COMPANYID = #companyID#)
-	</insert>
-	
-	<insert id="EzApprovalG.insertBebuAprAttachInfo" parameterClass="Map">
-		INSERT INTO 
-			TBL_APRATTACHINFO 
-		(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
-		(SELECT 
-			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
-		 FROM 
-            TBL_APRATTACHINFO A
-         WHERE 
-         	DocID = #v_DOCID# 
-         AND 
-         	TENANT_ID = #v_TENANTID#
-         AND 
-        	COMPANYID = #companyID#)
-	</insert>
-	
-	<insert id="EzApprovalG.insertBebuAprDocAttachInfo" parameterClass="Map">
-		INSERT INTO 
-			TBL_APRDOCATTACHINFO 
-		(	DocID,     AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID) 
-		(SELECT 
-			#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID 
-		 FROM 
-            TBL_APRDOCATTACHINFO A 
-         WHERE 
-         	DocID = #v_DOCID#  
-         AND 
-         	TENANT_ID = #v_TENANTID#
-         AND 
-        	COMPANYID = #companyID#)
-
-	</insert>
-	
-	<insert id="EzApprovalG.insertBebuAprOpinionInfo" parameterClass="Map">
-		INSERT INTO 
-			TBL_APROPINIONINFO 
-		(	DocID,     UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID, COMPANYID) 
-		(SELECT 
-			#v_NEWID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID, COMPANYID 
-		 FROM 
-		 	TBL_APROPINIONINFO A
-		 WHERE 
-		 	DocID = #v_DOCID# 
-		 AND 
-		 	TENANT_ID = #v_TENANTID#
-		 AND 
-        	COMPANYID = #companyID#)
+	        	COMPANYID = #companyID#)
+	    </isEqual>
+		<isNotEqual property="v_FLAG" compareValue="APR">
+			INSERT INTO 
+				TBL_APROPINIONINFO 
+			(	DocID,     UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID, COMPANYID) 
+			(SELECT 
+				#v_NEWID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID, COMPANYID 
+			 FROM 
+			 	TBL_ENDAPROPINIONINFO  
+			 WHERE 
+			 	DocID = #v_DOCID# 
+			 AND 
+			 	TENANT_ID = #v_TENANTID#
+			 AND 
+	        	COMPANYID = #companyID#)
+	    </isNotEqual>
 	</insert>
 	
 	<insert id="EzApprovalG.insertBebuAprReceiptProcessInfo" parameterClass="Map">
-	 	INSERT INTO 
-	 		TBL_APRRECEIPTPROCESSINFO 
-	 	(	ReceiveSN, DocID,     SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate,                                ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
-	 	(SELECT 	
-	 		'1',      #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, #v_SYSDATE#, 'N',           NULL,           NULL,         NULL,              NULL,             NULL,                NULL,               DocID, TENANT_ID, COMPANYID 
-	 	 FROM 
-	 	 	TBL_APRDOCINFO A
-	 	 WHERE 
-	 	 	DocID = #v_DOCID# 
-	 	 AND 
-	 	 	TENANT_ID = #v_TENANTID#
-	 	 AND 
-        	COMPANYID = #companyID#)
+		<isEqual property="v_FLAG" compareValue="APR">
+		 	INSERT INTO 
+		 		TBL_APRRECEIPTPROCESSINFO 
+		 	(	ReceiveSN, DocID,     SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate,                                ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+		 	(SELECT 	
+		 		'1',      #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, #v_SYSDATE#, 'N',           '',           '',         '',              '',             '',                '',               DocID, TENANT_ID, COMPANYID 
+		 	 FROM 
+		 	 	TBL_APRDOCINFO 
+		 	 WHERE 
+		 	 	DocID = #v_DOCID# 
+		 	 AND 
+		 	 	TENANT_ID = #v_TENANTID#
+		 	 AND 
+	        	COMPANYID = #companyID#)
+	    </isEqual>
+	    <isNotEqual property="v_FLAG" compareValue="APR">
+		 	INSERT INTO 
+		 		TBL_APRRECEIPTPROCESSINFO 
+		 	(	ReceiveSN, DocID,     SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate,                                ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+		 	(SELECT 	
+		 		'1',      #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, #v_SYSDATE#, 'N',           '',           '',         '',              '',             '',                '',               DocID, TENANT_ID, COMPANYID 
+		 	 FROM 
+		 	 	TBL_ENDAPRDOCINFO 
+		 	 WHERE 
+		 	 	DocID = #v_DOCID# 
+		 	 AND 
+		 	 	TENANT_ID = #v_TENANTID#
+		 	 AND 
+	        	COMPANYID = #companyID#)
+	    </isNotEqual>
 	</insert>
 	
 	<insert id="EzApprovalG.insertBebuAprReceiptProcessInfoS" parameterClass="Map">
