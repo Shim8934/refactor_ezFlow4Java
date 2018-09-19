@@ -659,36 +659,18 @@
 		            }
 		            try {
 		                // 공람할문서
-		                if(approvalFlag =="G") {
-			                if (pListTypeValue != "99") {
-			                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-			                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-			                    else
-			                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-			                }
-		                } else {
-		                	 if (pListTypeValue != "99") {
-				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-				                    else
-				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-				                }
+		                if (pListTypeValue != "99") {
+		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
+		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+		                    else
+		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 		                }
 		                // 공람한문서
-		                if(approvalFlag =="G") {
-			                if (pListTypeValue != "10") {
-			                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-			                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-			                    else
-			                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-			                }
-		                } else {
-		                	 if (pListTypeValue != "10") {
-				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-				                    else
-				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-				                }
+		                if (pListTypeValue != "10") {
+		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
+		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+		                    else
+		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 		                }
 		            } catch (e) { }
 		            try {
