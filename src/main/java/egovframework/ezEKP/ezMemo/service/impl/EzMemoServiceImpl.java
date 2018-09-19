@@ -100,13 +100,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 			map.put("font_size", memoConfigVO.getFont_size());
 		}
 		
-		if (memoConfigVO.getLayer_width() >= 330 && memoConfigVO.getLayer_height() >= 370) {
-
-			map.put("layer_width", memoConfigVO.getLayer_width());
-			map.put("layer_height", memoConfigVO.getLayer_height());
-
-		} else if (memoConfigVO.getLayer_top() >= 0 && memoConfigVO.getLayer_left() >= 0) {
-			
+		if (memoConfigVO.getLayer_top() >= 0 && memoConfigVO.getLayer_left() >= 0) {		
 			map.put("layer_top", memoConfigVO.getLayer_top());
 			map.put("layer_left", memoConfigVO.getLayer_left());
 		}
@@ -515,4 +509,24 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		logger.debug("setMemoLayerMode ended");
 	}
 
+	@Override
+	public void setMemoLayerArea(MemoConfigVO memoConfigVO) throws Exception {
+		logger.debug("setLayerArea started.");
+	
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfigVO.getUser_id());
+		map.put("tenant_id", memoConfigVO.getTenant_id());
+		map.put("company_id", memoConfigVO.getCompany_id());
+
+		if (memoConfigVO.getLayer_width() >= 330 && memoConfigVO.getLayer_height() >= 370) {
+			map.put("layer_width", memoConfigVO.getLayer_width());
+			map.put("layer_height", memoConfigVO.getLayer_height());
+		}  else {
+			return;
+		}
+		
+		ezMemoDAO.setMemoLayerArea(map);
+
+		logger.debug("setLayerArea ended");
+	}
 }

@@ -132,4 +132,8 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public void setMemoLayerMode(Map<String, Object> map) {
 		update("EzMemoDAO.setMemoLayerMode", map);
 	}
+	
+	public void setMemoLayerArea(Map<String, Object> map) {
+		update("EzMemoDAO.setMemoLayerArea", map);
+	}
 }

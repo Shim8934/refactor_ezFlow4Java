@@ -209,4 +209,12 @@ public interface EzMemoService {
 	 * @throws Exception
 	 */
 	public void setMemoLayerMode(MemoConfigVO memoConfigVO) throws Exception;
+	
+	
+	/**
+	 * 메모 레이어의 넓이를 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setMemoLayerArea(MemoConfigVO memoConfigVO) throws Exception;
 }
