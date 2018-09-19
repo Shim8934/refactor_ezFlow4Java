@@ -1224,7 +1224,7 @@
 					$(".hidden_nav_count").html("+" + cnt);
 				} else {
 					$("#topNav").css("max-width", "1102px");
-					$("nav > .countBox").css("display", "none");					
+					$("nav > .countBox").css("display", "none");
 				}
 			}
 			
