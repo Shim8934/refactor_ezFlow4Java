@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.concat.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 		<style>
 			.layerpopup {

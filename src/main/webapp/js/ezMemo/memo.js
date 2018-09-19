@@ -375,5 +375,5 @@ function saveMemoToast(memoId) {
 	setTimeout(function(){
 		var parent = doc.getElementById('memo' + memoId);
 		parent.removeChild(toastArea);
-	}, 1500);	
+	}, 700);	
 }
