@@ -11,7 +11,7 @@ var CabinetMessages = {
 	strTtlMove   : "캐비넷 이동",
 	strTtlCopy   : "캐비넷 복사",
 	strInvalid   : "정수 값을 입력하세요.",
-	strParamErr  : "파라메터가 부족합니다.",
+	strParamErr  : "파라미터가 부족합니다.",
 	strSave      : "저장하였습니다.",
 	strNoData    : "데이터가 없습니다.",
 	strNoInput   : "검색어를 입력하세요.",
