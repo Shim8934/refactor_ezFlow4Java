@@ -2948,25 +2948,30 @@
 	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
-				SELECT 
-					COUNT(ACCESSID)  cnt  
-	            FROM 
-	            	TBL_Board_BoardManage 
-	            WHERE
-	            	TENANT_ID = #v_TENANTID#
-	            AND  
-	            	READ_FG = 'FALSE'
-	            AND 
-	            	ACCESSID = #v_ACCESSID#
-	            AND 
-	            	BOARDID = ( SELECT 
-	            					BOARDID
-	                 			FROM 
-	                 				TBL_Board_Item 
-	                 			WHERE
-	                 				TENANT_ID = #v_TENANTID#
-	                 			AND  
-	                 				ITEMID = #v_ITEMID# )
+				SELECT
+					CASE
+					WHEN
+						COUNT(ACCESSID) = 0
+					THEN
+						999
+					ELSE
+						IF(READ_FG = 'FALSE', 1, 0)
+					END
+				FROM 
+					TBL_Board_BoardManage 
+				WHERE
+					TENANT_ID = #v_TENANTID#
+				AND 
+					ACCESSID = #v_ACCESSID#
+				AND 
+					BOARDID = ( SELECT 
+									BOARDID
+								FROM 
+									TBL_Board_Item 
+								WHERE
+									TENANT_ID = #v_TENANTID#
+								AND  
+									ITEMID = #v_ITEMID# )
 			]]>
 		</isNotEqual>
 		<isEqual property="v_BOARDTYPE" compareValue="TEMP">
