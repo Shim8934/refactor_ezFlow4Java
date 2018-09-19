@@ -243,8 +243,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String memoFlag = "";
         if (ezCommonService.getTenantConfig("useMemo", tenantID).equalsIgnoreCase("YES")) {
         	memoFlag = "YES";
-        }
-        else {	// 개발시에만 YES로 추후 NO로 변경
+        } else {
         	memoFlag = "NO";
         }
 		

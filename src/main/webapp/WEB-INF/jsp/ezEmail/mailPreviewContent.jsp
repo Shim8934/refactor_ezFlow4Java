@@ -21,75 +21,78 @@
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
+		    var memoFlag = "<c:out value='${memoFlag}' />";
 		    
 	        function window_onload() {
-	        	/* 마우스 오른쪽 메뉴 변수 */
-				var conObject = document.getElementById("context-menus");
-				init();
+	        	if(memoFlag === "YES") {
+		        	/* 마우스 오른쪽 메뉴 변수 */
+					var conObject = document.getElementById("context-menus");
+					init();
+					
+					/* 마우스 클릭 리스너를 초기 실행시킨다. */
+					function init() {
+						rightMouseListener();
+						leftMouseListener();
+					}
+	
+					/* 마우스 왼클릭 감지 */
+					function leftMouseListener() {
+						document.addEventListener("click", function(e) {
+							toggleOnOff(0);
+						})
+					}
+	
+					/* 마우스 우클릭 감지 */
+					function rightMouseListener() {
+						document.addEventListener("contextmenu", function(e) {
+							event.preventDefault();
+							toggleOnOff(1);
+							copy();
+							showMenu(event.pageX, event.pageY);
+						});
+					}
+	
+					/* 마우스 메뉴 on & off */
+					function toggleOnOff(num) {
+						num === 1 ? conObject.classList.add("active") : conObject.classList.remove("active");
+					}
+	
+					/* 마우스 클릭한 지점에서 메뉴 보여줌 */
+					function showMenu(contextLeft, contextTop) {
+						var contextmenu = document.getElementById("context-menus");
+						var frameX = document.body.scrollWidth > 800 ? document.body.scrollWidth : window.innerWidth;
+						var frameY = document.body.scrollHeight > 610 ? document.body.scrollHeight : window.innerHeight;
+						var conWidth = contextmenu.offsetWidth;
+						var conHeight = contextmenu.offsetHeight;
 				
-				/* 마우스 클릭 리스너를 초기 실행시킨다. */
-				function init() {
-					rightMouseListener();
-					leftMouseListener();
-				}
-
-				/* 마우스 왼클릭 감지 */
-				function leftMouseListener() {
-					document.addEventListener("click", function(e) {
+						// 컨텍스트의 위치가 프레임의 범위를 벗어날 경우 위치 조정
+						if(contextLeft + conWidth >= frameX) {
+							contextLeft = frameX - conWidth + 9;
+						}
+						if(contextTop + conHeight >= frameY) {
+							contextTop = frameY - conHeight;
+						}
+						conObject.style.left = contextLeft + "px";
+						conObject.style.top = contextTop + "px";
+					}
+					
+					$(".menus").click(function(){
+						var rightId = $(this).attr('id');
 						toggleOnOff(0);
-					})
-				}
-
-				/* 마우스 우클릭 감지 */
-				function rightMouseListener() {
-					document.addEventListener("contextmenu", function(e) {
-						event.preventDefault();
-						toggleOnOff(1);
-						copy();
-						showMenu(event.pageX, event.pageY);
+				  		
+				  		switch(rightId) {
+							case "menu1":
+								copyToClip();
+								break;
+							case "menu2":
+								btnPrint_onClick();
+								break;
+							case "menu3":
+								copyToMemo("preview");
+								break;
+						}
 					});
-				}
-
-				/* 마우스 메뉴 on & off */
-				function toggleOnOff(num) {
-					num === 1 ? conObject.classList.add("active") : conObject.classList.remove("active");
-				}
-
-				/* 마우스 클릭한 지점에서 메뉴 보여줌 */
-				function showMenu(contextLeft, contextTop) {
-					var contextmenu = document.getElementById("context-menus");
-					var frameX = document.body.scrollWidth > 800 ? document.body.scrollWidth : window.innerWidth;
-					var frameY = document.body.scrollHeight > 610 ? document.body.scrollHeight : window.innerHeight;
-					var conWidth = contextmenu.offsetWidth;
-					var conHeight = contextmenu.offsetHeight;
-			
-					// 컨텍스트의 위치가 프레임의 범위를 벗어날 경우 위치 조정
-					if(contextLeft + conWidth >= frameX) {
-						contextLeft = frameX - conWidth + 9;
-					}
-					if(contextTop + conHeight >= frameY) {
-						contextTop = frameY - conHeight;
-					}
-					conObject.style.left = contextLeft + "px";
-					conObject.style.top = contextTop + "px";
-				}
-				
-				$(".menus").click(function(){
-					var rightId = $(this).attr('id');
-					toggleOnOff(0);
-			  		
-			  		switch(rightId) {
-						case "menu1":
-							copyToClip();
-							break;
-						case "menu2":
-							btnPrint_onClick();
-							break;
-						case "menu3":
-							copyToMemo("preview");
-							break;
-					}
-				});
+	        	}
 		    }
 		    
 	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
