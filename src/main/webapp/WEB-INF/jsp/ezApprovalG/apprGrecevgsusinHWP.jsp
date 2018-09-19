@@ -606,7 +606,7 @@
 			                    ret = openSignUI(parameter);
 			                }
 			
-			                if (ret == "cancel") {
+			                if (ret == "cancel" || ret == undefined) {
 			                    var pAlertContent = "[<spring:message code='ezApprovalG.t1413'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    return;

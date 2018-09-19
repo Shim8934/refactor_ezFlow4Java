@@ -578,8 +578,6 @@ public class LoginController {
             				returnValue = true;
             			}
             			checkCnt = 0;
-        			} else {
-        				return false;
         			}
         		}
         		
