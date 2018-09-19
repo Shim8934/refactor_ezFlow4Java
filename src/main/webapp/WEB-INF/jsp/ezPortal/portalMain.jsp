@@ -293,10 +293,7 @@
 
 		            		addEmptyMemo(layerflag);
 		            	}
-		            	setMemoCount(memoLength);
-		            	if($(".memoLay").length == 0) {
-	                		loadMemoList(layerflag);
-	                	}
+		            	
 		            	if(window.frames["main"].frames["right"] != undefined) {			
 		                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
 		                		window.frames["main"].frames["right"].getMemoList();
