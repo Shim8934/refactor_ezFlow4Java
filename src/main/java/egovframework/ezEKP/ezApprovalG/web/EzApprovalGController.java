@@ -6584,7 +6584,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		paramData.put("imgPath", imgPath);
 		paramData.put("lang", lang);
 		
-		Map<String, Object> portletList = ezApprovalGService.getPortletAprList(paramData);
+		Map<String, Object> portletList = ezApprovalGService.getPortletAprList(paramData, userInfo.getOffset());
 		logger.debug("getPortletAprList is ended");
 		
 		logger.debug("portletList : " + portletList.toString());

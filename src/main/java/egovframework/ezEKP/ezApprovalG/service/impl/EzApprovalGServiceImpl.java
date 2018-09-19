@@ -20836,12 +20836,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return resultXML.toString();
 	}
 	
-	public Map<String, Object> getPortletAprList(Map<String, Object> param) throws Exception {
+	public Map<String, Object> getPortletAprList(Map<String, Object> param, String offset) throws Exception {
 	
 		String type = (String) param.get("pListTypeName");
 		Map<String, Object> ret = new HashMap<String, Object>();
 		List<ApprGDocListVO> list = new ArrayList<ApprGDocListVO>();
 		List<ApprGDocListVO> detail = new ArrayList<ApprGDocListVO>();
+		// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+        SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");                  // db에서 가져온 folder의 timeUTC를 적용한 -9시간
+        SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");               // 우리가 지원하는 형식으로 다시 포맷
 		
 		if(param.get("approvalFlag").toString().equalsIgnoreCase("S")) {
 			param.put("code1", "SA04");
@@ -20857,6 +20860,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(type.equalsIgnoreCase("1")) {
 			param.put("limit", 3); // 출력 갯수 제한
 			list = ezApprovalGDAO.getAprPortletList_progress(param);
+			if (list != null) {
+		        for (ApprGDocListVO apr : list) {
+		        	Date date1 = formatter2.parse(apr.getStartDate());                                   
+		        	apr.setStartDate(commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, false));
+				}
+			}
 			ret.put("list", list);
 			logger.debug("list.toString() : " + list.toString());
 			
@@ -20865,16 +20874,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 				// 화면에 출력될 3명 조합하기.
 				detail = assembleApprPortletList(param);
+				
 				ret.put("listDtl", detail); 
 				ret.put("imgPath", param.get("imgPath"));				
 			}
 		} else if(type.equalsIgnoreCase("2")) {
 			param.put("limit", 5);
 			list = ezApprovalGDAO.getAprPortletList_draft(param);
+			if (list != null) {
+				for (ApprGDocListVO apr : list) {
+					if (apr.getStartDate() != null) {
+						Date date1 = formatter2.parse(apr.getStartDate());                                   
+						apr.setStartDate(commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, false));
+					}
+				}
+			}
+			
 			ret.put("list", list);
 		} else if(type.equalsIgnoreCase("4")) {
 			param.put("limit", 5);
 			list = ezApprovalGDAO.getAprPortletList_reject(param);
+			if (list != null) {
+				for (ApprGDocListVO apr : list) {
+		        	Date date1 = formatter2.parse(apr.getStartDate());                                   
+		        	apr.setStartDate(commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, false));
+				}
+			}
 			ret.put("list", list);
 		}
 		

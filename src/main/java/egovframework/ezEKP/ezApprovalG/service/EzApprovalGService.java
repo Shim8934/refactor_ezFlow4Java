@@ -345,7 +345,7 @@ public interface EzApprovalGService {
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang, int tenantID, String offset) throws Exception;
 	
-	public Map<String, Object> getPortletAprList(Map<String, Object> param) throws Exception;
+	public Map<String, Object> getPortletAprList(Map<String, Object> param, String offset) throws Exception;
 	
 	public Map<String, Object> getPortletApprGapTime(Map<String, Object> param) throws Exception;
 	
