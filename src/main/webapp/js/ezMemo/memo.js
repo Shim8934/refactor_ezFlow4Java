@@ -368,10 +368,12 @@ function saveMemoToast(memoId) {
 	toastArea.setAttribute("class", "toastArea");
 	toastArea.style.top = "150px";
 	toastArea.style.left = "100px";
-	toastArea.style.display = "block";	
+	toastArea.style.display = "block";
+	toastArea.id = "tos"+memoId;
 	$("#memo" + memoId).prepend(toastArea);
 
 	setTimeout(function(){
-		toastArea.remove();
+		var parent = doc.getElementById('memo' + memoId);
+		parent.removeChild(toastArea);
 	}, 1500);	
 }
