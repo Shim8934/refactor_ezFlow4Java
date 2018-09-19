@@ -3194,11 +3194,18 @@ public class EzBoardController extends EgovFileMngUtil{
 				result = ezBoardService.getCheckItemID(itemID, boardType, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 				
 				if (boardType.toUpperCase().equals("GENERAL")) {
-					if (result > 0) {
-						rtv = false;
-						break;
+					//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
+					if (result != 999) {
+						//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
+						if (result > 0) {
+							rtv = false;
+							break;
+						} else {
+							rtv = true;
+							break;
+						}
 					} else {
-						rtv = true;
+						rtv = false;
 					}
 				} else {
 					if (result > 0) {
