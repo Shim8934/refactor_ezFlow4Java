@@ -21,7 +21,8 @@
 			}
 			if (Lang != "") {
 			    document.getElementsByName('rad_flag')[Lang - 1].checked = true;
-			    flagValue = Lang;
+			    //flagValue = Lang;			   
+				flagValue = $("input:radio[name=rad_flag]:checked").attr("id");
 			}
 		}
 		
