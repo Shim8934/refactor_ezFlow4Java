@@ -123,7 +123,7 @@ function layerClose() {
  */
 function memoSortable() {
 	 $(".memo_main").sortable({
-		 containment: '.memoListBox',
+		 containment: '.mCSB_container',
 		 opacity : 0.5,
 		 update : function (event, ui) {
 			 var compareElId; 
