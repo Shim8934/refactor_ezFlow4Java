@@ -332,10 +332,20 @@ public class EzPortalController extends EgovFileMngUtil {
 		} else if (userInfo.getLang().equals("4")) {
 			
 		}
+		
+		// 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        }
+        else {	// 개발시에만 YES로 추후 NO로 변경
+        	memoFlag = "NO";
+        }
 
 		model.addAttribute("mainUrl", mainUrl);
 		model.addAttribute("topUrl", topUrl);
 		model.addAttribute("topHeight", topHeight);
+		model.addAttribute("memoFlag", memoFlag);
 		
 		return "/ezPortal/portalMain";
 	}
