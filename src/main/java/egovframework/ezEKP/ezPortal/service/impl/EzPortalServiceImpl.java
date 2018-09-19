@@ -1794,10 +1794,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		switch (result) {
 		case 1:
-			/*strHTML = "<div class='logo'>";
-			strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
-			strHTML += "</div>";*/
-			
 			strHTML = "<ul class='contentlayout'><li class='contentlayout_left'>";
 			strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
 			strHTML += "</li>";
@@ -2016,9 +2012,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("<li class='contentlayout_right'><ul class='util'>");
-		/*sb.append("<article class='utmenu'>\n");
-		sb.append("<ul>\n");*/
+		sb.append("<li class='contentlayout_right'><ul class='util'>");		
 		
 		String lastLogout = "";
 		logger.debug("resultSize="+result.size());
@@ -2057,32 +2051,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
 			} else {
 				if (menuitemLinkURL != null && !menuitemLinkURL.equals("")) {
-					/* 2018-03-06 장진혁 유틸메뉴 이미지화 작업 */
+					
 					String defaultIcon = "";
-					
-					/*if (menuitemLinkURL.equals("/admin/main.do")) {
-						defaultIcon = "/images/kr/main/admin.png";
-					} else if (menuitemLinkURL.equals("/ezPersonal/personSearch.do")) {
-						defaultIcon = "/images/kr/main/person.png";
-					} else if (menuitemLinkURL.equals("/ezPortal/environmentMain.do")) {
-						defaultIcon = "/images/kr/main/env.png";
-					} else if (menuitemLinkURL.equals("/ezPortal/help/help.do")) {
-						defaultIcon = "/images/kr/main/help.png";
-					} else if (menuitemLinkURL.equals("/user/login/actionLogout.do")) {
-						defaultIcon = "/images/kr/main/logout.png";
-					} else {
-						defaultIcon = "/images/kr/main/common.png";
-					}
-					
-					if (i == result.size() - 1) {
-						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");						
-						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"' title='" + menuitemDisplayName +"' /></li>\n");
-					} else {
-						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-						sb.append(", \"" + menuitemLinkLocation + "\"");
-                        //sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
-						sb.append(", \"" + menuitemWindowOption + "\")' title='" + menuitemDisplayName + "' /></li>\n");
-					}*/
 					
 					if (menuitemLinkURL.equals("/admin/main.do")) {
 						defaultIcon = "icon_topmenu util_admin";
@@ -2106,7 +2076,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 			}
 		}
-		
+		/* 2018-09-19 Quick 메뉴 */
 		//sb.append("<li><span class='icon_topmenu util_systemlink' onclick='javascript:viewQuick()' /></span></li>\n");
 		
 		sb.append("</ul></li>\n");
@@ -2153,6 +2123,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			str ="icon_topmenu icon_nav_laddergame";
 		} else if (url.equals("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO")) { //협업
 			str ="icon_topmenu icon_nav_collaboration";
+		} else if (url.equals("/ezCabinet/cabinetMain.do")) { //캐비넷
+			str ="icon_topmenu icon_nav_cabinet";
+		} else if (url.equals("/ezBoard/boardMain.do?func=5")) { //메모
+			str ="icon_topmenu icon_nav_memo";
 		} 
 		
 		return str;
@@ -2365,58 +2339,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 
-/* 		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
-  
-System.out.println("result.size() :" + result.size());		
-		for (int i=0; i<result.size(); i++) {
-			String leftMargin = result.get(i).getLeftMargin();
-			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID(), userInfo.getTenantId());
-			
-			if (result2.size() == 0) {
-				sb.append("<ul id=\"menu" + result.get(i).getParentMenuID() + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\"></ul>");
-				continue;
-			}
-			
-			String parentMenuID = result2.get(0).getParentMenuID();
-			sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover(this)\" onmouseout=\"submenuout(this)\"><li class=\"left\">");
-			
-			for (int j=0; j<result2.size(); j++) {
-				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
-					continue;
-				}
-				
-				String menuitemDisplayName = result2.get(j).getDisplayName();
-				String menuitemImageUID = result2.get(j).getImageUId();
-				String menuitemLinkURL = result2.get(j).getLinkURL();
-				
-				//baonk 추가
-				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=3")) {
-					if (!ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
-			        	continue;
-			        }
-				}
-				//end
-				
-				// 2018-07-27 황윤호 추가 
-				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
-				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=4")) {
-					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
-			        	continue;
-			        }
-				}
-				
-				String menuitemLinkLocation = result2.get(j).getLinkLocation();
-				String menuitemWindowOption = result2.get(j).getWindowOption();
-				
-				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
-					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
-				} else {
-					//sb.append("<li onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
-					sb.append("<li><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\"><dt><span class='icon_topmenu icon_nav_mail'></span></dt><dd>" + menuitemDisplayName + "</dd></dl></li>\n");
-				}
-			}
-			//sb.append("</ul>");
-		}*/
 		sb.append("</ul></div></nav></li></ul></li></ul></header></div>\n");
 
 		logger.debug("getSubMenuHTML ended");
@@ -2737,7 +2659,7 @@ System.out.println("result.size() :" + result.size());
             sb.append("style=\"table-layout:fixed;\">\n");
             sb.append("<tr id=\"main_row\">\n");
         }
-/* ccc */        
+        
         if (number == 1) {
 			sb.append("<div class='mainLayout_left'>");
 		} else if (number == 2) {
@@ -2970,55 +2892,7 @@ System.out.println("result.size() :" + result.size());
 						
 						sb.append("<section class='section_main'>\n");
 					}
-/* abc */					
-					/*if (i == 0) {
-						sb.append("<section class='section_left'>\n");
-						sb.append("<iframe width='100%' height='815px' border=0 src='/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c' frameborder=0 scrolling=no></iframe>\n");
-						sb.append("<iframe width='100%' height='197px' border=0 src='/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4' frameborder=0 scrolling=no></iframe>\n");
-						sb.append("<iframe width='100%' height='110px' border=0 src='/ezPortal/urlPortlet.do?uID=c1479aa0-824d-43ff-a7f6-999ad660378a' frameborder=0 scrolling=no></iframe>\n");
-					} else {
-						logger.debug("userInfo getTheme="+userInfo.getTheme());
-						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
-							sb.append("<div id='Center'>");
-							loadFlag = false;
-						}
-						
-						if (i == 1) {
-							sb.append("<aside id='quickSide'><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
-							sb.append("<li><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>메일작성</span></li>");
-							sb.append("<li><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>결재작성</span></li>");
-							sb.append("<li><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");
-							sb.append("<li><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezAddress.t351", userInfo.getLocale())+"</span></li></ul></div>");
-							sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu' id='QuickUl'></ul>");
-							sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre' id='preBtn' onclick='QuickMove(1)'><img src='/images/kr/main/link_preBtn_dis.png'></span><span class='linkBtn_next' id='nextBtn' onclick='QuickMove(2)'><img src='/images/kr/main/link_nextBtn_dis.png'></span></p></div></div></aside>");
-						} else {
-							sb.append("<section class='section_main'>\n");
-							
-							for (int j=0; j < 3; j++) {
-								if (j==0) {
-									sb.append("<div class='mainLayout_left'>");
-									sb.append("<article class='notice box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683&companyBoardID={67d0a0e4-ad24-1be6-9b5f-64a16cf6dca2}&deptBoardID={80ef430a-39cd-ee7f-cd81-157faa4979aa}' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='schedule box_shadow'><iframe class='mainIframe' width='100%' height='544px' border=0 src='/ezPortal/urlPortlet.do?uID=69f68282-5617-45ca-9118-27b6170df5c3' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='board box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e&ffdgdfg=dfgdfgdfg' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("</div>");
-								} else if (j==1) {
-									sb.append("<div class='mainLayout_middle'>");
-									sb.append("<article class='mail box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=mail' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='approval box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=appr' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='bookmark_approval box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd&type=favo' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='community box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("</div>");
-								} else if (j==2) {
-									sb.append("<div class='mainLayout_right'>");
-									sb.append("<article class='vote box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d' frameborder=0 scrolling=no></iframe></article>\n");									
-									sb.append("<article class='photo_board box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac&photoGalleryID={9d5dfc7f-5f5e-ec24-1009-6c47991926cc}' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='stats_graph box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("<article class='groupware_banner box_shadow'><iframe class='mainIframe' width='100%' height='270px' border=0 src='/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b&boardID1={8beb7d4d-3f07-c739-859d-762af6a6b61a}' frameborder=0 scrolling=no></iframe></article>\n");
-									sb.append("</div>");
-								}
-							}
-						}
-					}*/
+
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
@@ -3181,17 +3055,7 @@ System.out.println("result.size() :" + result.size());
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
-							
-							/*if (result.size() != 1) {							
-								if (i==0) {
-									sb.append("<div class='mainLayout_left'>");
-								} else if (i==1) {
-									sb.append("<div class='mainLayout_middle'>");
-								} else if (i==2) {
-									sb.append("<div class='mainLayout_right'>");
-								}
-							}*/							
-/* aaa */					portletHeight = 270;
+							portletHeight = 270;
 							String cls = "box_shadow";
 
 							if (number == 0) {
@@ -3222,7 +3086,6 @@ System.out.println("result.size() :" + result.size());
 									sb.append("<article class='" + cls +"'><iframe class='mainIframe' width='100%' height=" + portletHeight + " border=0 src='" + portletMoveURL + newPotletParam(portletMoveURL, paramVal)  + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></article>\n");
 								}
 							}
-							//sb.append("</div>");
 						}
 					} else {
 						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
@@ -3465,45 +3328,7 @@ System.out.println("result.size() :" + result.size());
 		} else {
 			strData.append("");
 		}
-				/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
-				/*if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
-				strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
-			}
-			else {
-				strData.append("<dl class='listtype_photo'>");
-			}
-			
-			strData.append("<dt class='tit' style='cursor:pointer'");
-			
-			if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-			} else {
-				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-			}
-			
-			strData.append("<strong>");
-			strData.append(list.get(i).getC_ClubName());
-			strData.append("</strong></dt>");
-			strData.append("<dd class='photo'>");
-			
-			String bannerSrc = "";
-			
-			if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-				bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
-			} else {
-				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
-			}
-			
-			logger.debug("bannerSrc="+bannerSrc);
-			
-			strData.append("<img src='" + bannerSrc + "' width='86' height='61'>");
-			strData.append("<span class='iconbest'></span>");
-			strData.append("</dd'>");
-			strData.append("<dd  class='txt'>");
-			strData.append(list.get(i).getC_ClubDesc());
-			strData.append("</dd>");
-			strData.append("</dl>");*/
-				
+		
 		return strData.toString();
 	}
 	
