@@ -359,7 +359,6 @@ function addEmptyMemo(flag) {
 }
 
 //저장 toast 팝업
-	
 function saveMemoToast(memoId) {
 	var doc = window.document;
 	var alertMessage = strLangMemo8;

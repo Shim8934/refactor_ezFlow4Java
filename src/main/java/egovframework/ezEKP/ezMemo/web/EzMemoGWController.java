@@ -216,7 +216,7 @@ public class EzMemoGWController {
 			memoConfig.setTenant_id(info.getTenantId());
 			memoConfig.setUser_id(info.getUserId());
 
-			ezMemoService.setMemoConfig(memoConfig);
+			ezMemoService.setMemoLayerArea(memoConfig);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -531,6 +531,7 @@
 	        		
 	        		$.ajax({
 	        			type:"POST",
+	        			async:false,
 	        			data : {
 	        				"layerWidth" : layerWidth,
 	        				"layerHeight" : layerHeight
