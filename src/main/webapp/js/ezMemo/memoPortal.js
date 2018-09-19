@@ -123,7 +123,7 @@ function layerClose() {
  */
 function memoSortable() {
 	 $(".memo_main").sortable({
-		 containment: '.memoListBox',
+		 containment: '#memoListBox',
 		 opacity : 0.5,
 		 update : function (event, ui) {
 			 var compareElId; 
@@ -171,7 +171,7 @@ function memoSortable() {
 /**
  * 메모 레이어 리사이즈 메서드
  */
-function layerResize(){
+function layerPopupResize(){
     $("#layer-popup").resizable({
     	handles : "n, e, s, w, ne, se, sw, nw",
     	containment:".noteBlock",

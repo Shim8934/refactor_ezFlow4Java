@@ -86,7 +86,7 @@
 			    	scrollUI();
 			    	layerClose();
 			    	memoSortable();
-			    	layerResize();
+			    	layerPopupResize();
 			    	layerExpand();
 			    	memoAdd();
 			    
