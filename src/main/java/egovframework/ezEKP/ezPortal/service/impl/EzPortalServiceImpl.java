@@ -2166,12 +2166,17 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
 		
 		if (use_attitude == null || use_attitude.equals("")) {
 			use_attitude = "YES";
 		}
 		if (use_journal == null || use_journal.equals("")) {
 			use_journal = "YES";
+		}
+		if (use_community == null || use_community.equals("")) {
+			use_community = "YES";
 		}
 		
 		StringBuilder sb = new StringBuilder();		
@@ -2201,6 +2206,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				continue;
 			}
 			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
+			/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+			if (menuitemLinkURL.equals("/ezCommunity/communityMain.do") && use_community.equals("NO")) {
 				continue;
 			}
 			
@@ -2287,12 +2296,17 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
 		
 		if (use_attitude == null || use_attitude.equals("")) {
 			use_attitude = "YES";
 		}
 		if (use_journal == null || use_journal.equals("")) {
 			use_journal = "YES";
+		}
+		if (use_community == null || use_community.equals("")) {
+			use_community = "YES";
 		}
 		
 		for (int i=0; i<result.size(); i++) {
@@ -2311,6 +2325,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				continue;
 			}
 			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
+			/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+			if (menuitemLinkURL.equals("/ezCommunity/communityMain.do") && use_community.equals("NO")) {
 				continue;
 			}
 			

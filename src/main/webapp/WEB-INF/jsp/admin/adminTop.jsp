@@ -174,7 +174,9 @@
 		      				
                     	<c:if test="${packageType == 'standard'}">
 							<%-- 커뮤니티 --%>
+							<c:if test="${use_community == 'YES'}">
 		      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
+		      				</c:if>
 							<%-- 자원관리 --%>
 		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
 							<%-- 업무일지 --%>
