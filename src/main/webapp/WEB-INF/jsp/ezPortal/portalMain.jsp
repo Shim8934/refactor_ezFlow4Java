@@ -89,6 +89,7 @@
 			    	layerPopupResize();
 			    	layerExpand();
 			    	memoAdd();
+			    	noteClearSelection();
 			    
 			     	// 메모함 비어있을 시, 추가 이미지 클릭으로 새 메모 추가 
 			        $(".memo_main").on("click", "#addFirstMemo", function() {

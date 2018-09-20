@@ -946,3 +946,23 @@ function setMemoLayerMode(mode) {
     	}
 	});
 }
+
+
+/**
+ * 음영처리 삭제
+ */
+function clearSelection() {
+	var sel = window.getSelection ? window.getSelection() : document.selection;
+	if (sel) {
+	    if (sel.removeAllRanges) {
+	        sel.removeAllRanges();
+	    } else if (sel.empty) {
+	        sel.empty();
+	    }
+	}
+}
+
+function noteClearSelection() {
+	var noteBlock = document.getElementsByClassName('noteBlock');
+	noteBlock[0].addEventListener("dblclick", clearSelection, false);
+}
