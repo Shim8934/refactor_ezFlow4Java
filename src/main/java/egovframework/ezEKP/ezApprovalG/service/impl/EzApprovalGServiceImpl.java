@@ -3401,6 +3401,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMID", formID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+
+		//2018-09-18 천성준 - 비전자등록 팝업 호출 시, TBL_FORMINFO에서 양식정보를 참조하여 문서정보 인서트 하는것 때문에 비전자등록 전용 양식일 경우 구분값을 가지고 고정데이터로 인서트 한다.
+		if (formID != null && formID.equals("2018000000")) {
+			map.put("v_NONELECYN", "Y");
+		}
 		
 		logger.debug("createNewDoc param = v_DOCID = " + tmpDocID.trim() + " v_FORMID = " + formID + " companyID = " + companyID + " v_TENANTID =" + tenantID );
 		
@@ -12072,6 +12077,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
+		
+		if (fileName == null || fileName.equals("")) {
+			map.put("v_FLAG", "END");
+			fileName = ezApprovalGDAO.getDocInfoHref(map);
+		}
+		
 		String extFileName = getExtendedFileName(fileName);
 		String url = "";
 		
@@ -12105,7 +12116,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertBebuExpAprDocInfo(map);
 				ezApprovalGDAO.insertBebuAprAttachInfo(map);
 				ezApprovalGDAO.insertBebuAprDocAttachInfo(map);
-				ezApprovalGDAO.insertBebuAprOpinionInfo(map);
+				//배부할때 의견까지 복사안하는게 맞을거같음. 초기접수부서의 의견이나 원문서의 의견은 들어갈필요가없음. 원문서의 의견은 본문에 들어갈거고 초기접수부서는 처리부서가 아닌데 의견이 있을필요가 없음.
+//				ezApprovalGDAO.insertBebuAprOpinionInfo(map);
 				
 				map.put("v_DEPTNAME", deptName.trim());
 				map.put("v_DEPTNAME2", deptName2.trim());
@@ -22718,13 +22730,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiveDeptID = xmlDom.getDocumentElement().getAttribute("ReceivedDeptID").trim();
 		String subSQL ="";
 		
+		//2018-09-18 배현상, 추가배부 시 수신문의 docid를 orgdocid로 변경
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		String orgDocID = ezApprovalGDAO.getOrgDocID(map);
+		
 		for(int i = 0; i<xmlDom.getDocumentElement().getChildNodes().getLength(); i++) {
-			subSQL = doBebuDoc(docID, xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(0).getTextContent(),xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(1).getTextContent(),xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(2).getTextContent(),dirpath,sentDeptID,companyID,lang, tenantID, offSet, userInfo);
+			subSQL = doBebuDoc(orgDocID, xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(0).getTextContent(),xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(1).getTextContent(),xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(2).getTextContent(),dirpath,sentDeptID,companyID,lang, tenantID, offSet, userInfo);
 		
 			if(subSQL.toUpperCase().equals("FALSE")) {
 				return "<RESULT>FALSE</RESULT>";
 			} else {
-				sendRecvMsg(receiveDeptID,docID, "BEBU", companyID, lang, tenantID);
+				sendRecvMsg(receiveDeptID,orgDocID, "BEBU", companyID, lang, tenantID);
 			}
 		}
 		return "<RESULT>TRUE</RESULT>";

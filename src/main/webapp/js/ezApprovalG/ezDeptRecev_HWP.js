@@ -1051,7 +1051,7 @@ function openOpinionUI(pOpinionFlag) {
     var url = "/ezApprovalG/aprOpinion.do";
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
 	var ret = window.showModalDialog(url,parameter,feature);
-	 if (ret != "cancel" && ret!= "Clear") {
+	 if (ret != "cancel" && ret!= "Clear" && ret != undefined) {
 	    var NodeList;
 	    var objXML = createXmlDom();
 	    objXML = loadXMLString(ret);

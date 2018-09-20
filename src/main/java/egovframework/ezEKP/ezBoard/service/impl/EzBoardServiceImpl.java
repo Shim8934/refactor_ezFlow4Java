@@ -2442,7 +2442,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return retValue;
 		}
 		
-		String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
+		String pAccessID = pUserID;
+		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
+		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
+			pAccessID += "," + reverseDeptPath[i];
+			if (i == 0) {
+				pAccessID += ",everyone"; 
+			}
+		}
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
@@ -2481,8 +2488,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				if (boardTreeList.size() > 0) {
 					for (int r = 0; r < boardTreeList.size(); r++) {
-						boardID = boardTreeList.get(r).getBoardId().split(",")[0];
-						strForbiddenBoardIDList += boardID.trim();
+						boardID = boardTreeList.get(r).getBoardId();
+						if (strForbiddenBoardIDList.indexOf(boardID.split(",")[0]) == -1) {
+							strForbiddenBoardIDList += boardID.trim(); 
+						}
 					}
 				}
 			}
@@ -2507,7 +2516,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for (int i = 0; i < brdBoardTreeList.size(); i++) {
 			if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
 				if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
-					continue;
+					//boardID의 accessID를 가져옴 (boardID1,access_;boardID2,access_;)
+					int boardAccessIndex = strForbiddenBoardIDList.indexOf(",", strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()));
+					if (strForbiddenBoardIDList.substring(boardAccessIndex + 1, boardAccessIndex + 2).equals("0")) {
+						continue;
+					}
 				}
 			}
 			
