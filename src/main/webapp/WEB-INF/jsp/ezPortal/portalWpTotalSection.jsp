@@ -1027,7 +1027,7 @@
 	            	</c:when>
 	            	<c:otherwise>
 		            	<img src="/images/kr/main/rolling01.png" width="280" height="515" />
-		            	<img src="/images/kr/main/rolling01.png" width="280" height="515" />
+		            	<img src="/images/kr/main/rolling02.png" width="280" height="515" />
 	            	</c:otherwise>
 	            </c:choose>
             </div>
