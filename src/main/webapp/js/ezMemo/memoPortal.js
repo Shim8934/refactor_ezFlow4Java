@@ -413,10 +413,11 @@ function getMemoConfig() {
 			if(result.memoConfigVO.full_mode == 1) {
 				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
 				if(firstDBLayerSize=="yes") {
-    				$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
-    				$("#fullScreen").css("display", "none");
-	        		$("#controllable").css("display", "");
-	        		$("#layer-popup .ui-resizable-handle").css("display", "none");
+					$("#fullScreen").css("display", "none");
+					$("#controllable").css("display", "");
+					
+					$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
+	        		$(".noteBlock .ui-resizable-handle").css("display", "none");
 	        		
 	        		$("#layer-popup").draggable({
 	        			disabled: true
@@ -967,4 +968,82 @@ function setMemoLayerMode(mode) {
 function noteClearSelection() {
 	var noteBlock = document.getElementsByClassName('noteBlock');
 	noteBlock[0].addEventListener("dblclick", clearSelection, false);
+}
+
+
+/**
+ * 브라우저 resize시, layer-popup 위치 조절 메서드
+ */
+function browserResize() {
+	if(memoFlag === "YES") {	
+		
+		// dom
+		var doc = window.document;
+		// 브라우저 넓이
+		var w = window.innerWidth;
+		// 브라우저 높이
+		var h = window.innerHeight;
+		// memoListBox element
+		var mLBOX = doc.getElementById("mLBox");
+		// layer-popup element
+		var popup = doc.getElementById("layer-popup");
+		// memo-main element
+		var memoMain = doc.getElementById("memoMain");
+		
+		// 팝업  창모드, 전체모드 class 
+		var popupClass = "";
+		if(popup.classList.contains("layerControl")) {
+			popupClass = "layerControl";
+		} else {
+			popupClass = "layerFullScreen";
+		}
+		
+		// 팝업 left
+		var popupLeft = popup.style.left;
+		// 팝업 top
+		var popupTop = popup.style.top;
+		// 팝업 넓이
+		var popupWidth = popup.style.width;
+		// 팝업 높이
+		var popupHeight = popup.style.height;
+		
+		/** index로 px 제거 */
+		var topPIndex = popupTop.indexOf("p");
+		var leftPIndex = popupLeft.indexOf("p");
+		
+		var popupTop = parseInt(popupTop.substr(0, topPIndex));
+		var popupLeft = parseInt(popupLeft.substr(0, leftPIndex));
+		
+		var widthPIndex = popupWidth.indexOf("p");
+		var heightPIndex = popupHeight.indexOf("p");
+		
+		var popupWidth = parseInt(popupWidth.substr(0, widthPIndex));
+		var popupHeight = parseInt(popupHeight.substr(0, heightPIndex));
+		
+		// 전체모드 일 경우
+		if(popupClass === "layerFullScreen") {
+			mLBox.style.width = w + "px";
+			mLBox.style.height = (h - 130) + "px";
+			memoMain.style.width = w + "px";
+			memoMain.style.height = (h - 150) + "px";
+			popup.style.width = w + "px";
+			popup.style.height = (h - 45) + "px";
+			
+		} else {
+			/*
+			 *  창모드일 경우
+			 *  브라우저의 크기를 layer-popup이 벗어날 경우
+			 */
+			if(((w>popupLeft) && (w < popupLeft + popupWidth)) || ((h>popupTop) && (h < popupTop + popupHeight))){
+				mLBox.style.width = w + "px";
+				mLBox.style.height = (h - 130) + "px";
+				memoMain.style.width = w + "px";
+				memoMain.style.height = (h - 150) + "px";
+				popup.style.width = w + "px";
+				popup.style.height = (h - 45) + "px";
+				popup.style.left = "0px";
+				popup.style.top = "55px";
+			}
+		}
+	}
 }

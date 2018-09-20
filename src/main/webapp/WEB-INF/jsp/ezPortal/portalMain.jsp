@@ -68,10 +68,7 @@
 		 	}
 		 	
 		 	$(window).resize(function() {
-		 		
- 		 		layerResize();
-		        setGadgetPositionResize();
-		        emptyMemoResize();
+		 		browserResize();
 		 	});
 		 	
 		    $(function() {
@@ -81,12 +78,12 @@
 			    	setPanelPointer();
 			    	layerPopupOpacity();
 			    	checkDefaultFolder();
+			    	layerPopupResize();
 		    		checkMemoConfig();
 			    	memoFoldersInfo();
 			    	scrollUI();
 			    	layerClose();
 			    	memoSortable();
-			    	layerPopupResize();
 			    	layerExpand();
 			    	memoAdd();
 			    	noteClearSelection();
@@ -160,8 +157,8 @@
 				     </div>
 			     </div>
 			     
-			     <div class="memoListBox" style="overflow:hidden;">
-			     	<div class="memo_main"></div>
+			     <div class="memoListBox" id="mLBox" style="overflow:hidden;">
+			     	<div class="memo_main" id="memoMain"></div>
 			     </div>
 				 
 			     <div class="memobgBar">
