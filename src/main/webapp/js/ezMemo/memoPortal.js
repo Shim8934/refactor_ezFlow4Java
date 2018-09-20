@@ -949,7 +949,7 @@ function setMemoLayerMode(mode) {
 
 
 /**
- * 음영처리 삭제
+ * 음영 삭제 메서드
  */
 function clearSelection() {
 	var sel = window.getSelection ? window.getSelection() : document.selection;
@@ -962,6 +962,10 @@ function clearSelection() {
 	}
 }
 
+
+/**
+ * noteBlock 내 더블클릭시, 음영 삭제 메서드
+ */
 function noteClearSelection() {
 	var noteBlock = document.getElementsByClassName('noteBlock');
 	noteBlock[0].addEventListener("dblclick", clearSelection, false);
