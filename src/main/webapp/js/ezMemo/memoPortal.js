@@ -95,7 +95,6 @@ function layerPopupOpacity() {
 function scrollUI(){
 	$(".memoListBox").mCustomScrollbar({
 		theme : "dark",
-		scrollType : "stepped",
 	});	
 }
 
@@ -125,6 +124,20 @@ function memoSortable() {
 	 $(".memo_main").sortable({
 		 containment: '.mCSB_container',
 		 opacity : 0.5,
+		 tolerance: "pointer",
+		 change:function(e,ui){
+			var h=ui.helper.outerHeight(true);
+			var elem=$(".memoListBox .mCustomScrollBox");
+			var elemHeight=elem.height();
+			var moveBy=$(".memoLay").outerHeight(true)+100;
+			var mouseCoordsY=e.pageY-elem.offset().top;
+			
+			if(mouseCoordsY<h){
+				$(".memoListBox").mCustomScrollbar("scrollTo","+="+moveBy);
+			}else if(mouseCoordsY>elemHeight-h){
+				$(".memoListBox").mCustomScrollbar("scrollTo","-="+moveBy);
+			}
+	 	 },
 		 update : function (event, ui) {
 			 var compareElId; 
        		 var clickedItem = ui.item;
