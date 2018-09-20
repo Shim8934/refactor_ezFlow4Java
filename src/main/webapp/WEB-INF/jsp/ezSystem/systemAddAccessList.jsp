@@ -355,29 +355,6 @@
 		        		result=loadXMLString(xml);
 		        		xmlDom = result;		        		
 	                    var LISTVIEWDATA = "<LISTVIEWDATA><ROWS>";
-	                    for (var i = 0; i < xmlDom.documentElement.getElementsByTagName("ROW").length; i++) {
-	                        LISTVIEWDATA = LISTVIEWDATA + "<ROW><CELL>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<VALUE>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])) + ")";
-	                        LISTVIEWDATA = LISTVIEWDATA + "</VALUE>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA1>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DEPARTMENT")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA1>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA2>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("CN")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA2>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA3>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE1")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA3>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA4>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE2")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA4>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA5>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
-	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
 	                    
 	                    //document.getElementById('UserAddJobList').innerHTML = "";

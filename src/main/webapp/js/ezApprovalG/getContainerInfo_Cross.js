@@ -401,7 +401,9 @@ function btnRemoveDoc_onclick() {
 
     if (selRow.length <= 0) {
         var InformationString = strLangS385;
-        OpenAlertUI(InformationString);
+        //2018-09-19 김보미 - 알럿창으로 변경
+//        OpenAlertUI(InformationString);
+        alert(InformationString);
         return;
     }
 
@@ -1211,8 +1213,20 @@ function check_presence2() {
 
     var SelUserCont_dialogArgument = new Array();
     function btnRegUserCont_onclick() {
+    	//2018-09-19 김보미 - 선택된 문서 없을 경우
+        var DocList = new ListView();
+        DocList.LoadFromID("DocList");
+        var selRow = DocList.GetSelectedRows();
+
+        if (selRow.length <= 0) {
+            var InformationString = strLangS385;
+            //OpenAlertUI(InformationString);
+            alert(InformationString);
+            return;
+        }
+    	
         SelUserCont_dialogArgument[0] = "";
-        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+        SelUserCont_dialogArgument[1] = RegUserCont_Complete;
         var url = "/ezApprovalG/selUserCont.do";
         ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
         try { ContOpen.focus() } catch (e) { }

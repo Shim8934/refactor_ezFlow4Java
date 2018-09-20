@@ -2733,7 +2733,7 @@ function checkdisabled()
 	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "002") // aprType이 진행인 경우
 	                        curaprsn = true;
 
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) // aprType이 승인인 경우
+	                    if ((GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) && pReDraftFlag != 'REDRAFT') // aprType이 승인인 경우
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = true;
 	                    else
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = false;

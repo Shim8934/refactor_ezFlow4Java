@@ -3194,11 +3194,18 @@ public class EzBoardController extends EgovFileMngUtil{
 				result = ezBoardService.getCheckItemID(itemID, boardType, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 				
 				if (boardType.toUpperCase().equals("GENERAL")) {
-					if (result > 0) {
-						rtv = false;
-						break;
+					//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
+					if (result != 999) {
+						//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
+						if (result > 0) {
+							rtv = false;
+							break;
+						} else {
+							rtv = true;
+							break;
+						}
 					} else {
-						rtv = true;
+						rtv = false;
 					}
 				} else {
 					if (result > 0) {
@@ -5394,7 +5401,8 @@ public class EzBoardController extends EgovFileMngUtil{
 //				fileName = fileName.replace("+", "%2b");
 //				fileName = fileName.replace(";", "%3b");
 				
-				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+				/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 				String guid = "{" + UUID.randomUUID().toString() + "}";
 				
 				uniqueName = guid + "." + extension;

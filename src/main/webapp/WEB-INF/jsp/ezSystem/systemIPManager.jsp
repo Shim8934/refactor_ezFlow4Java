@@ -145,6 +145,6 @@
 			    <p><span id="tagsub2"><spring:message code='ezSystem.jje2' /></span></p>
 	        </div>
 	    </div>
-	    <iframe id="ipManager_ifrm" style="width: 1200px; height:780px;" frameborder="0"></iframe> 
+	    <iframe id="ipManager_ifrm" style="width: 100%; height:780px;" frameborder="0"></iframe> 
 	</body>
 </html>
