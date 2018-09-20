@@ -203,6 +203,7 @@
 			</isEqual>
 			<isNotEqual property="v_pSelectBy" compareValue="3">
 <!-- 				접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
+<!--                하위부서 권한체크(BOARDGROUPACL) 조건 추가 18.09.20   -->
 				<![CDATA[
 					SELECT 
 						DISTINCT A.BoardID BoardID  ,
@@ -243,7 +244,9 @@
 	                      AND 
 	                      	( C.AccessID = #v_pUserID# )
 	                      AND 
-	                      	D.ParentBoardID = #v_pRootBoardID# ) B   
+	                      	D.ParentBoardID = #v_pRootBoardID#
+	                      AND
+	                      	C.BOARDGROUPACL = 'Y' ) B   
 	                ON 
 	                	A.TENANT_ID = B.TENANT_ID
 	                AND
@@ -882,6 +885,75 @@
 		]]>
 	</insert>
 	
+	<select id="EzBoardAdminDAO.getBoardTreePath" parameterClass="Map" resultClass="String" remapResults="true">
+		SELECT BOARDTREEPATH 
+		FROM tbl_board_boardinfo
+		WHERE boardid = #v_pBoardID#
+		AND tenant_id = #v_TENANTID#
+	</select>
+	
+	<update id="EzBoardAdminDAO.saveACLIncludeLowerBoard" parameterClass="Map">
+		<![CDATA[
+			UPDATE tbl_board_boardManage SET ACCESS_ = #v_pAccess#
+			WHERE boardid IN (
+				SELECT boardid 
+			    FROM tbl_board_boardinfo
+				WHERE TENANT_ID = #v_TENANTID#
+				AND boardtreepath LIKE CONCAT('%', #v_pBoardID#, '%')
+				OR boardid = #v_pBoardID#
+			)
+			AND TENANT_ID = #v_TENANTID#
+			AND ACCESSID = #v_pAccessID#
+		]]>	
+	</update>	
+	
+	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO tbl_board_boardmanage (
+			BOARDID, 
+			ACCESSID, 
+			ACCESSNAME, 
+			ACCESSNAME2, 
+			ACCESS_, 
+		    PARENTBOARDID, 
+		    BOARDADMIN_FG, 
+		    LISTVIEW_FG, 
+		    READ_FG, 
+		    WRITE_FG, 
+		    REPLY_FG, 
+		    DELETE_FG, 
+		    INHERIT_FG, 
+		    POSTNOTICE, 
+		    BOARDGROUPACL, 
+		    TENANT_ID, 
+		    COMPANYID
+		    )
+		SELECT 
+			BOARDID, 
+			#v_pAccessID#, 
+			#v_pAccessName#, 
+			#v_pAccessName2#, 
+			#v_pAccess#,
+		    PARENTBOARDID, 
+		    'false', 
+		    'false', 
+		    'false', 
+		    'false',   
+		    'false', 
+		    'false', 
+		    'false', 
+		    'false', 
+		    'N', 
+		    #v_TENANTID#, 
+		    null
+		FROM tbl_board_boardinfo
+		WHERE
+			BOARDID in ( $v_upperBoadList$ )
+		AND	TENANT_ID = #v_TENANTID#
+		ON DUPLICATE KEY UPDATE ACCESS_ = #v_pAccess#
+	]]>		
+	</insert>
+	
 	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardBackGroundInfo ( 
@@ -1399,6 +1471,21 @@
       		AND 
       			AccessID = #v_pAccessID#
 		]]>
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteACLUnderBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM tbl_board_boardManage
+			WHERE boardid IN (
+				SELECT boardid 
+			    FROM tbl_board_boardinfo
+				WHERE TENANT_ID = #v_TENANTID#
+				AND boardtreepath LIKE CONCAT('%', #v_pBoardID#, '%')
+				OR boardid = #v_pBoardID#
+			)
+			AND TENANT_ID = #v_TENANTID#
+			AND ACCESSID = #v_pAccessID#
+		]]>	
 	</delete>
 		
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >

@@ -2454,7 +2454,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
 			} else {
 				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, tenantID);
-				
+				logger.debug("BoardTreeVO.toString() : " + tempBrdBoardTreeList.toString());
 				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
 					for (BoardTreeVO k : tempBrdBoardTreeList) {
 						if (brdBoardTreeList.size() > 0) {

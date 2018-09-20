@@ -84,6 +84,8 @@ public interface EzBoardAdminService {
 
 	public String saveHeader(Document doc, LoginVO userInfo, BoardListHeaderVO boardListHeaderVO) throws Exception;
 
+	public String getBoardTreePath(Map<String, Object> map) throws Exception;
+	
 	public void saveACL(Map<String, Object> map) throws Exception;
 
 	public void deleteACL(Document doc, int tenantID) throws Exception;
