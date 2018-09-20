@@ -79,15 +79,19 @@
 					WebPartToggle(level1El.item(level1El.length - 1));
 					memo_Func(1);
 				}
-		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
+		        /* 2018-09-20 홍승비 - 윈도우 온로드 시 마이게시판 우선적으로 열리는 부분 주석처리 */
+		       /*  else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
-		        }
+		        } */
 		
+		        /* 2018-09-20 홍승비 - 게시판 서브메뉴로 나의게시물, 예약게시물 진입 시 좌측메뉴 하이라이트 수정 */
 		        if (Func != "1" && Func != "3" && Func != "4" && Func != "5") {
 		            if (subFunc == "1") {
+		            	ShowMyBoardItem();
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
+		            	ShowMyBoardItem();
 		                ReservationItem_onclick();
 		            }
 		            else {
@@ -489,12 +493,13 @@
 //					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
 
 				//TopBoard가 아닌 게시판의 왼쪽 게시판 리스트를 닫는다.
-				$(".fList h2").attr("class", "off");
-				$(".qst h2").attr("class", "off");
-				$(".pollDiv h2").attr("class", "off");
-				$(".myb h2").attr("class", "off");
+				$(".fList h2").attr("class", "off"); // 즐겨찾기 off
+				$(".qst h2").attr("class", "off"); // 전자설문 off
+				$(".pollDiv h2").attr("class", "off"); // 투표 off
+				$(".myb h2").attr("class", "off"); // 마이게시판 상위 off
 				$(".myb").next().attr("class", "off");//마이게시판 하위 ul off
 				$(".ApprDiv").attr("class", "off");
+				$(".ladder h2").attr("class", "off"); // 사다리게임 off
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -801,12 +806,13 @@
 	        	</div>
 	        	<ul></ul>		        
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		            <h2>
+		        <%-- 2018-09-20 홍승비 - window.onload 시 마이게시판 디폴트 클래스를 off로 수정 --%>
+		            <h2 class="off">
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" width="14px" />
 		            </h2>
 		        </div>
-		        <ul id="TreeCtrl_MyBoardTree_ul">
+		        <ul id="TreeCtrl_MyBoardTree_ul" class="off">
 		            <div class="tree" style='width:auto;overflow-x:hidden;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
@@ -814,17 +820,18 @@
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
 		        </ul>
 	        </c:if>
+	        <%-- 2018-09-20 홍승비 - window.onload 시 게시판리스트 디폴트 클래스를 off로 수정 --%>
 	        <div id='TopBoardsList'>
 	        	<script type="text/javascript">
 	        		parser = new DOMParser();
         		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
-       			        document.write("<h2>");
+       			        document.write("<h2 class='off'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
-           				document.write("<ul>\n");
+           				document.write("<ul class='off'>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
@@ -840,12 +847,12 @@
 	        	</div>
 	        	<ul></ul>
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		            <h2>
+		            <h2 class="off">
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" align="middle" />
 		            </h2>
 		        </div>
-		        <ul id="TreeCtrl_MyBoardTree_ul">
+		        <ul id="TreeCtrl_MyBoardTree_ul" class="off">
 		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
