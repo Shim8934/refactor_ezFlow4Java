@@ -3,12 +3,15 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
@@ -88,6 +91,18 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		for (String userId : userList) {
 			map.put("userId",  userId);
 			ezCabinetAdminDAO.changeUserCapacity(map);
+		}
+	}
+	
+	@Override
+	public void deleteUserCapacity(List<String> userList, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		for (String userId : userList) {
+			map.put("userId",  userId);
+			ezCabinetAdminDAO.deleteUserCapacity(map);
 		}
 	}
 	

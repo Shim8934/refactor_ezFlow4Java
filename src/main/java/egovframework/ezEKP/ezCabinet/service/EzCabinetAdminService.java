@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
+
 import org.json.simple.JSONArray;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
@@ -16,6 +18,7 @@ public interface EzCabinetAdminService {
 	List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int listCnt, int tenantId, String primary) throws Exception;
 	int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception;
 	void changeUserCapacity(List<String> userList, double newValue, int type, String companyId, int tenantId) throws Exception;
+	void deleteUserCapacity(List<String> userList, String companyId, int tenantId) throws Exception;
 	UserCapacityVO getUserCapacity(String userId, String companyId, String primary, int tenantId) throws Exception;
 	
 	//Admin module functions
@@ -23,4 +26,5 @@ public interface EzCabinetAdminService {
 	void saveModulesSetting(JSONArray modules, String companyId, int tenantId) throws Exception;
 	void insertModulForAdmin(List<CabinetModuleVO> listAllModule) throws Exception;
 	String checkModuleActive(String moduleType, LoginVO userInfo) throws Exception;
+	
 }

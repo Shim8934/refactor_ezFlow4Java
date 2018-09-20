@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezCabinet.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
@@ -29,6 +31,10 @@ public class EzCabinetAdminDAO extends EgovAbstractDAO {
 	
 	public void changeUserCapacity(Map<String, Object> map) {
 		insert("EzCabinetAdminDAO.changeUserCapacity", map);
+	}
+	
+	public void deleteUserCapacity(Map<String, Object> map) {
+		delete("EzCabinetAdminDAO.deleteUserCapacity", map);
 	}
 	
 	public List<CabinetModuleVO> getModuleListForAdmin(Map<String, Object> map) {

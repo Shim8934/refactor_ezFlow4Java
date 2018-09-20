@@ -156,6 +156,15 @@
 		</isNotEqual>
 	</insert>
 	
+	<delete id="EzCabinetAdminDAO.deleteUserCapacity" parameterClass="Map">
+		<![CDATA[
+			delete from
+				tbl_cb_user_capacity
+			where
+				user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#
+		]]>
+	</delete>
+	
 	<!--***********************************************************************************
 	**                                 Module setting process                            **
 	************************************************************************************-->

@@ -419,9 +419,7 @@ public class EzCabinetGWController {
 		
 		try {
 			int tenantId                      = loginService.getTenantId(serverName);
-			CompanyCapacityVO companyCapacity = cabinetAdminService.getCompanyCapacity(companyId, tenantId);
-			
-			cabinetAdminService.changeUserCapacity(userList, Integer.parseInt(companyCapacity.getCapacityValue()), companyCapacity.getCapacityType(), companyId, tenantId);
+			cabinetAdminService.deleteUserCapacity(userList, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
