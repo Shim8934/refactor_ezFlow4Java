@@ -5401,7 +5401,8 @@ public class EzBoardController extends EgovFileMngUtil{
 //				fileName = fileName.replace("+", "%2b");
 //				fileName = fileName.replace(";", "%3b");
 				
-				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+				/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 				String guid = "{" + UUID.randomUUID().toString() + "}";
 				
 				uniqueName = guid + "." + extension;
