@@ -167,6 +167,16 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
+	public JSONObject saveUserDefaultCapacity(HttpServletRequest request, List<String> userList, String companyId) throws Exception {
+		String url                = "/rest/ezcabinetadmin/defaultCapcity/person";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("companyId",    companyId);
+		param.put("userList",     String.join(",", userList));
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject getModuleListForAdmin(HttpServletRequest request, String companyId) throws Exception {
 		String url            = "/rest/ezcabinetadmin/module/id/" + companyId + "/comp";
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);

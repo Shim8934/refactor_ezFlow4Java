@@ -254,6 +254,31 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/admin/ezCabinet/saveUserDefaultCapacity.do")
+	@ResponseBody
+	public String jsonSaveUserDefaultCapacity(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "userList") List<String> userList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveUserDefaultCapacity start");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (companyId.equals("") || userList.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveUserDefaultCapacity(request, userList, companyId);
+		
+		logger.debug("jsonSaveUserDefaultCapacity end");
+		return resultObj.toString();
+	}
+	
 	@RequestMapping(value="/admin/ezCabinet/getModules.do")
 	@ResponseBody
 	public String jsonGetModules(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
