@@ -1251,7 +1251,9 @@
 
 		        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
 		            var InformationString = "<spring:message code='ezApproval.t579'/>";
-		            OpenAlertUI(InformationString, "OPEN");
+		            //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
+ 		            //OpenAlertUI(InformationString, "OPEN");
+		            OpenAlertUI(InformationString, "OPEN", "");
 		            return;
 		        }
 	
