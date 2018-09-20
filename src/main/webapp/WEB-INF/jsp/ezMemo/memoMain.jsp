@@ -75,6 +75,7 @@
 			getMemoConfig();
 			getFolderList();
 			getMemoList();
+			bodyClearSelection();
 			
 			$($(window.parent.frames['left'].document)).mouseup(function (e) {
 	    		MailOptionHiddenOutside(e);

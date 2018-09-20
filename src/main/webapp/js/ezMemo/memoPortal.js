@@ -949,21 +949,6 @@ function setMemoLayerMode(mode) {
 
 
 /**
- * 음영 삭제 메서드
- */
-function clearSelection() {
-	var sel = window.getSelection ? window.getSelection() : document.selection;
-	if (sel) {
-	    if (sel.removeAllRanges) {
-	        sel.removeAllRanges();
-	    } else if (sel.empty) {
-	        sel.empty();
-	    }
-	}
-}
-
-
-/**
  * noteBlock 내 더블클릭시, 음영 삭제 메서드
  */
 function noteClearSelection() {

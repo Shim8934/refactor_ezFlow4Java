@@ -358,7 +358,10 @@ function addEmptyMemo(flag) {
 	}
 }
 
-//저장 toast 팝업
+/**
+ * toast 팝업 출력 메서드
+ * @param memoId
+ */
 function saveMemoToast(memoId) {
 	var doc = window.document;
 	var alertMessage = strLangMemo8;
@@ -376,4 +379,31 @@ function saveMemoToast(memoId) {
 		var parent = doc.getElementById('memo' + memoId);
 		parent.removeChild(toastArea);
 	}, 700);	
+}
+
+
+/**
+ * 음영 삭제 메서드
+ */
+function clearSelection() {
+	var sel = window.getSelection ? window.getSelection() : document.selection;
+	if (sel) {
+	    if (sel.removeAllRanges) {
+	        sel.removeAllRanges();
+	    } else if (sel.empty) {
+	        sel.empty();
+	    }
+	}
+}
+
+
+/**
+ * mainBody 내 더블클릭시, 음영 삭제 메서드
+ */
+function bodyClearSelection() {
+	var mainbody = document.getElementsByClassName('mainbody');
+	var mainmenu = document.getElementById('mainmenu');
+	mainbody[0].addEventListener("dblclick", clearSelection, false);
+	mainmenu.addEventListener("click", clearSelection, false);
+	mainmenu.addEventListener("drag", clearSelection, false);
 }
