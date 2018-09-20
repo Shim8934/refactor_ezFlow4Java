@@ -24,5 +24,6 @@
 	<div class="cabdivBttn" id="chgDivBttn">
 		<a class="cabBttn"><span><spring:message code='ezCabinet.t112'/></span></a>
 		<a class="cabBttn"><span><spring:message code='ezCabinet.t15' /></span></a>
+		<a class="cabBttn"><span><spring:message code='ezCabinet.t166'/></span></a>
 	</div>
 </div></html>

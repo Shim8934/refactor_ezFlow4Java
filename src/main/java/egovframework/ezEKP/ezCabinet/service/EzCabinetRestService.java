@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,7 @@ public interface EzCabinetRestService {
 	//Admin user capacity service
 	public JSONObject getUserCapacity(HttpServletRequest request, String currPage, String companyId, String userId, String searchStr, String searchOpt, String column, String order, String listCnt) throws Exception;
 	public JSONObject saveUserCapacity(HttpServletRequest request, List<String> userList, String capacityType, String newCapacity, String companyId) throws Exception;
+	public JSONObject saveUserDefaultCapacity(HttpServletRequest request, List<String> userList, String companyId) throws Exception;
 	
 	//Admin related modules service
 	public JSONObject getModuleListForAdmin(HttpServletRequest request, String companyId) throws Exception;
@@ -95,4 +98,5 @@ public interface EzCabinetRestService {
 	
 	//Save related photo board
 	public JSONObject savePhotoBoard(HttpServletRequest request, String id, String title, String summary, String boardTitle, String mode, String cabinetId, String createUser, String createDate, String descript, String boardId, String itemId) throws Exception;
+	
 }

@@ -39,6 +39,7 @@
 		var chglistBttns        = cabChgBttnElmt.children;
 		chglistBttns[0].onclick = function(e) {changeCapacity();};
 		chglistBttns[1].onclick = function(e) {toggleChangePanel();};
+		chglistBttns[2].onclick = function(e) {changeDefaultCapacity();};
 		
 		var cabChgCloseBttn     = document.getElementById("cabPChClose").firstElementChild.firstElementChild.firstElementChild;
 		cabChgCloseBttn.onclick = function(e) {toggleChangePanel();};
@@ -133,6 +134,19 @@
 		var data = {
 			type      : capacityType == "limit" ? "1" : "0",
 			capacity  : newCapacity,
+			userList  : userIdList.toString(),
+			companyId : document.getElementById("companyList").value
+		};
+		
+		makeAjaxCall(data, "GET", url, afterChangeCapacity, null, true);
+	}
+	
+	function changeDefaultCapacity() {
+		var checkedList  = getSelectedRowsInfo();
+		var userIdList   = checkedList["userList"];
+		
+		var url  = "/admin/ezCabinet/saveUserDefaultCapacity.do";
+		var data = {
 			userList  : userIdList.toString(),
 			companyId : document.getElementById("companyList").value
 		};

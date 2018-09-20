@@ -402,6 +402,39 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinetadmin/defaultCapcity/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putChangePersonalDefaultStorage(@RequestParam("userList") List<String> userList, Locale locale, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")       != null ? request.getHeader("host-name")    : "";
+		String companyId  = request.getParameter("companyId")    != null ? request.getParameter("companyId")                      : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || CompanyId: " + companyId + " || User List: " + String.join(",", userList));
+		
+		if (serverName.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId                      = loginService.getTenantId(serverName);
+			CompanyCapacityVO companyCapacity = cabinetAdminService.getCompanyCapacity(companyId, tenantId);
+			
+			cabinetAdminService.changeUserCapacity(userList, Integer.parseInt(companyCapacity.getCapacityValue()), companyCapacity.getCapacityType(), companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/rest/ezcabinetadmin/module/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getModulesForAdmin(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";

@@ -164,7 +164,7 @@ var CabinetShareItem = function() {
 				divInner.className = "pic";
 				if (result[i]["userImg"]) {
 					var imgElmt = document.createElement("img");
-					imgElmt.src = result[i]["userImg"];
+					imgElmt.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + result[i]["userImg"];
 					divInner.appendChild(imgElmt);
 				}
 				
