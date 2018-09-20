@@ -400,8 +400,11 @@ function btnRemoveDoc_onclick() {
     var tr = DocList.GetSelectedRows();
     var orgCompanyID = "";
 
-    if (tr.length == 0) {
-        OpenAlertUI(strLangS385,"OPEN");
+    if (selRow.length <= 0) {
+        var InformationString = strLangS385;
+        //2018-09-19 김보미 - 알럿창으로 변경
+//        OpenAlertUI(InformationString);
+        alert(InformationString);
         return;
     } else {
 	    var OpinionContent = strLangS387;
@@ -1216,21 +1219,25 @@ function check_presence2() {
 
     var SelUserCont_dialogArgument = new Array();
     function btnRegUserCont_onclick() {
-    	var DocList = new ListView();
+    	//2018-09-19 김보미 - 선택된 문서 없을 경우
+        var DocList = new ListView();
         DocList.LoadFromID("DocList");
-        var tr = DocList.GetSelectedRows();
+        var selRow = DocList.GetSelectedRows();
+        
         var orgCompanyID = "";
 
-        if (tr.length == 0) {
-            OpenAlertUI(strLangS385,"OPEN");
+        if (selRow.length <= 0) {
+            var InformationString = strLangS385;
+            //OpenAlertUI(InformationString);
+            alert(InformationString);
             return;
-        } else {
-        	SelUserCont_dialogArgument[0] = "";
-        	SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
-        	var url = "/ezApprovalG/selUserCont.do";
-        	ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
-        	try { ContOpen.focus() } catch (e) { }
         }
+    	
+        SelUserCont_dialogArgument[0] = "";
+        SelUserCont_dialogArgument[1] = RegUserCont_Complete;
+        var url = "/ezApprovalG/selUserCont.do";
+        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+        try { ContOpen.focus() } catch (e) { }
     }
     
     function RegUserCont_Complete(RtnVal) {
