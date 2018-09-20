@@ -1358,7 +1358,7 @@
 	</select>
 	<!-- 포틀릿 기안문서 -->
 	<select id="EzApprovalG.getAprPortletList_draft" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
-		SELECT  
+		<!-- SELECT  
 			 DOCID             AS DOCID
 		    ,DOCSTATE          AS DOCSTATE
 		    ,FUNCTIONTYPE      AS FUNCTIONTYPE
@@ -1377,7 +1377,26 @@
 		AND 
 			WRITERID = #pUserID#
 		ORDER BY STARTDATE DESC
-		LIMIT #limit#	
+		LIMIT #limit# -->
+		
+		SELECT
+			*
+		FROM
+			VAPRWILLDOCLIST
+		WHERE
+			APRMEMBERID = #pUserID#
+		AND
+			APRMEMBERSN = 1
+		AND
+			APRTYPE <> '015'
+		AND
+			DocState <> '017'
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY STARTDATE DESC
+		LIMIT #limit#
 	</select>
 	<!-- 포틀릿 결재할 문서 상세 -->
 	<select id="EzApprovalG.getAprPortletList_progressDtl" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
