@@ -1221,9 +1221,11 @@
 				if (cnt > 0) {
 					$("nav > .countBox").css("display", "block");
 					$("#topNav").css("max-width", "1102px");
+					/* $("#topNav").css("max-width", "902px"); */
 					$(".hidden_nav_count").html("+" + cnt);
 				} else {
 					$("#topNav").css("max-width", "1102px");
+					/* $("#topNav").css("max-width", "902px"); */
 					$("nav > .countBox").css("display", "none");
 				}
 			}
@@ -1421,6 +1423,10 @@
 						parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0)";
 						parent.document.getElementById("topFrame").style.position = "";
 						$(".full_menu_toggle").css("display", "none");
+						
+						if ($("#topMenuFull").attr("class") == "full_nav on") {
+							$("#topMenuFull").attr("class", "full_nav off");
+						}
 						
 						if (url == "/ezPersonal/personSearch.do") {
 							option = GetOpenWindowfeature(750, 550);

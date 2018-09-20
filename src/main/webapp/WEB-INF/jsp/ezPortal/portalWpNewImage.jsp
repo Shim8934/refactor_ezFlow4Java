@@ -122,6 +122,7 @@
 			        }
 
 			        if (count > 0) {
+			        	$('#ScheduleList').css("width", "80%");
 			            document.getElementById("ScheduleList").innerHTML = listHTML;
 			            $('#scheduleEmptyList').empty();
 			        } else {
@@ -131,6 +132,7 @@
 	                	listHTML += '<dd>"' + strLang2_total + '"</dd>';
 	                	listHTML += "</dl>";
 	                	$('#ScheduleList').empty();
+	                	$('#ScheduleList').css("width", "0px");
 	                	$('#scheduleEmptyList').html(listHTML);
 			        }
 			    } catch (e) {}

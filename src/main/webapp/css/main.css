@@ -303,10 +303,10 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .CalendarArea .todayDate .dayText{font-size:14px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
 .CalendarArea .todayDate .dayNum{font-size:42px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
 .schedule_list {list-style:none; margin:0 0 0 0px; padding:12px 0px 0px 25px; clear:both; overflow:hidden; border-top:1px solid #e7e7e7;}
-.scheduleDate{ margin:0px; padding:0px 15px 0px 0px; float:left;}
+.scheduleDate{ width:40px; margin:0px; padding:0px 15px 0px 0px; float:left;}
 .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
-.scheduleUL{ margin:0px; padding:0px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:202px;} /*장진혁 */
+.scheduleUL{ width:80%; margin:0px; padding:0px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:202px;} /*장진혁 */
 .scheduleUL .scheduleLi{margin:0px; padding:3px 0px 12px 0px; cursor: pointer;}
 .scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px; line-height: 16px;}
 .scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:rgb(244, 221, 14); border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
@@ -314,7 +314,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scheduleUL .scheduleLi .scheduleTime .Tdept{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .Tcompany{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#ff1c71; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .timeText{margin:0px; padding:0px 0px 0px 5px; font-size:13px; color:#333;}
-.scheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333;}
+.scheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:100%; text-overflow:ellipsis; overflow: hidden; white-space: nowrap;}
 .scheduleUL .scheduleLi .scheduleText .reservation{margin:0px; padding:0px; font-size:13px; color:#000; font-weight:bold;}
 
 /* approval */
@@ -350,7 +350,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .comPic img{position:relative; width:100%; height:100%; display:block; transition: -webkit-transform .2s cubic-bezier(.165,.84,.44,1); transition: transform .2s cubic-bezier(.165,.84,.44,1); transition: transform .2s cubic-bezier(.165,.84,.44,1),-webkit-transform .2s cubic-bezier(.165,.84,.44,1); image-rendering: -webkit-optimize-contrast;}
 .comTit{margin: 0px auto; padding: 10px 0px; font-size: 13px; color:#555; font-weight:bold; text-align:center; width:80%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .comTit_none{ color:#c0c0c0;margin:0px; padding:10px 0px; font-size:13px; font-weight:bold; text-align:center;}
-.comText{margin: 0 auto; padding: 0px;font-size: 12px;color: #555; text-align: center; width: 80%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+.comText{margin: 0 auto; padding: 0px;font-size: 12px;color: #555; text-align: center; width: 80%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height:20px;}
 
 /* board */
 .board{overflow:hidden;}
