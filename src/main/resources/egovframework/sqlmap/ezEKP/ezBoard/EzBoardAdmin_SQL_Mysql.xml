@@ -892,7 +892,20 @@
 	
 	<update id="EzBoardAdminDAO.saveACLIncludeLowerBoard" parameterClass="Map">
 		<![CDATA[
-			UPDATE tbl_board_boardManage SET ACCESS_ = #v_pAccess#
+			UPDATE tbl_board_boardManage 
+			SET
+		]]> 
+		<isEqual property="type" compareValue="access">
+			<![CDATA[
+				ACCESS_ = #v_pAccess#	
+			]]> 
+		</isEqual>			
+		<isEqual property="type" compareValue="boardACL">
+			<![CDATA[
+				BOARDGROUPACL = #v_pBoardGroupACL#	
+			]]> 
+		</isEqual>	
+		<![CDATA[		
 			WHERE boardid IN (
 				SELECT boardid 
 			    FROM tbl_board_boardinfo
@@ -941,15 +954,25 @@
 		    'false', 
 		    'false', 
 		    'false', 
-		    'N', 
+		    #v_pBoardGroupACL#, 
 		    #v_TENANTID#, 
 		    null
 		FROM tbl_board_boardinfo
 		WHERE
 			BOARDID in ( $v_upperBoadList$ )
 		AND	TENANT_ID = #v_TENANTID#
-		ON DUPLICATE KEY UPDATE ACCESS_ = #v_pAccess#
-	]]>		
+		ON DUPLICATE KEY UPDATE 
+	]]>
+		<isEqual property="type" compareValue="access">
+			<![CDATA[
+				ACCESS_ = #v_pAccess#	
+			]]> 
+		</isEqual>			
+		<isEqual property="type" compareValue="boardACL">
+			<![CDATA[
+				BOARDGROUPACL = #v_pBoardGroupACL#	
+			]]> 
+		</isEqual>			
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >

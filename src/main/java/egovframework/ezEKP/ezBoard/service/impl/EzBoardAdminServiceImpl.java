@@ -244,7 +244,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("map.toString() : " +map.toString());	
 		logger.debug("brdBoardTree ended");
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
@@ -846,7 +845,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		// 접근 불가 : 하위게시판에 영향
 		// 접근 허용 : 상위게시판에 영향
-		if(map.get("v_pAccess").toString().equalsIgnoreCase("0")) {
+		String access = map.get("v_pAccess").toString();
+		map.put("type", "access");
+		if(access.equalsIgnoreCase("0")) {
 			// 하위 게시판에 권한이 변경되어야한다.
 			ezBoardAdminDAO.saveACLIncludeLowerBoard(map);			
 		} else {
@@ -859,6 +860,26 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}
+		}
+		
+		// 하위부서 허용-불가 여부도 고려해야함.
+		// ACCESSID의 BOARDGROUPACL이 N 인 경우, 하위도 N
+		// ACCESSID의 BOARDGROUPACL이 Y 인 경우, 상위도 Y
+		map.put("type", "boardACL");
+		String boardGroupACL = map.get("v_pBoardGroupACL").toString();
+		if(boardGroupACL.equalsIgnoreCase("N")) {
+			// 하위 게시판에 권한이 변경되어야한다.
+			ezBoardAdminDAO.saveACLIncludeLowerBoard(map);	
+		} else if (boardGroupACL.equalsIgnoreCase("Y")) {
+			// 상위 게시판 찾아서 map에 넣어두기.
+			String upperBoardList = getBoardTreePath(map);
+			// 상위 게시판이 존재할 경우.
+			if(upperBoardList != null) {
+				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
+				map.put("v_upperBoadList", upperBoardList);
+				// 상위 게시판에 접근 권한만 주기.
+				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
+			}			
 		}
 
 		trunkBoard((int) map.get("v_TENANTID"));
