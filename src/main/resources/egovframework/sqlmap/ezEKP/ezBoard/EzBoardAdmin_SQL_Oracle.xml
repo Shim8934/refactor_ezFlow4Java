@@ -101,13 +101,11 @@
 	<select id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2" remapResults="true">
 		<![CDATA[
 			SELECT 
-				CONCAT(BOARDID, ';') BOARDID  
+				BOARDID || ',' || ACCESS_ || ';' BOARDID 
 	        FROM 
 	        	TBL_Board_BoardManage 
 	        WHERE
 	        	TENANT_ID = #v_TENANTID#
-	        AND  
-	        	ACCESS_ = 0
 	        AND 
 	        	ACCESSID = #v_PACCESSID#
 	        AND 
@@ -1203,6 +1201,19 @@
     			TENANT_ID = #v_TENANTID#
     		AND  
     			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.saveBoardProperty3" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_MyTree
+      		SET 
+      			TREENAME = #v_PBOARDNAME#,
+          		TREENAME2 = #v_PBOARDNAME2#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			TREEBOARDID = #v_PBOARDID#
 		]]>
 	</update>
 	
