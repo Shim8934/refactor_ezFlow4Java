@@ -510,9 +510,12 @@ public class EzMemoGWController {
 			MemoVO memo = ezMemoService.memoWrite(memoVO);
 			
 			result.put("status", "ok");
+			result.put("code", 0);
 			result.put("memo", memo);
 		} catch(Exception e) {
+			result.put("code", 1);
 			result.put("status", "error");
+			result.put("data", "");
 		}
 		
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-list/" + folderId + "/memo/" +userId + "] ended.");
