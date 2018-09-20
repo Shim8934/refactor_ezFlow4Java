@@ -3079,13 +3079,18 @@
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
 				SELECT 
-					COUNT(ACCESSID)  CNT  
+					CASE
+				    WHEN
+				        COUNT(ACCESSID) = 0
+				    THEN
+				        999
+				    ELSE
+				        SUM(decode(READ_FG, 'false', 1, 0))
+				    END 
 	            FROM 
 	            	TBL_Board_BoardManage 
 	            WHERE
 	            	TENANT_ID = #v_TENANTID#
-	            AND  
-	            	READ_FG = 'FALSE'
 	            AND 
 	            	ACCESSID = #v_ACCESSID#
 	            AND 

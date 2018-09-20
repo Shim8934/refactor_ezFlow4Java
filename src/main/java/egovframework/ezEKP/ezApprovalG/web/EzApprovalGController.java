@@ -7532,7 +7532,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		 
+		
+		/* 2018-09-19 홍승비 - 문서보기 > 변경내역의 결재문서이력 저장 시 파일명으로 사용할 수 없는 특수문자 제거 */
+		docTitle = docTitle.replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+		
 		String saveFilePath = path + docTitle + ".mht";
 		
 		FileUtils.copyFile(new File(realPath + docHref), new File(realPath + saveFilePath));
