@@ -26,11 +26,11 @@
 			<h2 id="relatedCabinet"><span><spring:message code='ezCabinet.t32'/></span></h2>
 			<ul class="off"><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
 			
-			<!-- 공유 한은 캐비넷 -->
+			<!-- 공유한 캐비넷 -->
 			<h2 id="shareCabinet"><span><spring:message code='ezCabinet.t157'/></span></h2>
 			<ul class="off"><div id="myShareTree" class="cabinetTree2"></div></ul>
 			
-			<!-- 공유 반은 캐비넷 -->
+			<!-- 공유받은 캐비넷 -->
 			<h2 id="sharedCabinet"><span><spring:message code='ezCabinet.t05'/></span></h2>
 			<ul class="off"><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
 			

@@ -54,8 +54,9 @@
 .content .white {background-color: #fff !important;}
 .content .large {width: 40%;}
 .white >input[type='text'] {height: 30px; padding: 0px 5px; outline: none;}
-.spanName, .selectedNode {height: 22px; line-height: 22px; color: #666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
-.selectedNode {color: #004a87; font-weight: bold;}
+.spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
+.spanName:hover {color: #9b9b9b;}
+.selectedNode {font-weight: bold;}
 .cabinetMinus, .cabinetPlus {width: 18px; height: 18px; cursor: pointer;}
 .perSettingOff, .perSettingOn {overflow: hidden; width: 300px; height: 110px; position: fixed; z-index: 2000;}
 .userCapDiv {margin: 10px 0px; overflow: auto;}
