@@ -376,7 +376,7 @@
 .cabCenter {text-align: center !important;}
 .cabTxtOver {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
-.spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 1px solid #aeaeae; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
+.spanDown, .spanUp {cursor:pointer; border-radius: 50%; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
 .spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
 .spanUp:before     {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
 
