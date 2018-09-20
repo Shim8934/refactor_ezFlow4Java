@@ -22,10 +22,6 @@
 			.noticeSpan {
 				display:block;
 			}
-			.noti_portlet_list .notiLI dl {
-				background-repeat:no-repeat;
-				background-size:cover;
-			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<%-- <section  class="body_bg1">
@@ -167,7 +163,7 @@
 										imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";
 									}
 									
-									listHTML += "<li class='notiLI'><dl class='notiDL0'" + (i + 1) + "' style='background-image:url(\"" + imgSrc + "\");' onclick=\"openDoc('" + pItemID + "')\">";
+									listHTML += "<li class='notiLI'><dl class='notiDL0" + (i + 1) + "' onclick=\"openDoc('" + pItemID + "')\">";
 									listHTML += "<dt class='noti_num'>" + (i + 1) + "</dt><dt class='" + newItemFlag + "'>" + notiNewText + "</dt>";
 									listHTML += "<dd class='noti_text'>" + DOCTITLE + "</dd></dl></li>";
 								}
@@ -178,8 +174,7 @@
                      // 게시물이 3개 미만이라면, 디폴트 게시물 이미지를 대신 표출한다.
                      if (RowCnt < 3) {
 						for (i = RowCnt; i < 3; i++) {
-							imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";                 		 
-							listHTML += "<li class='notiLI'><dl class='notiDL0'" + (i + 1) + "' style='background-image:url(\"" + imgSrc + "\"); cursor:default;'></dl></li>";
+							listHTML += "<li class='notiLI'><dl class='noti_nodata' style='cursor:default;'></dl></li>";
                     	 }
                      }
                         
@@ -348,7 +343,7 @@
     	    }
 
         	function refresh_onclick() {
-            	if (document.getElementById("Board0_Newboard").className == "on") {
+            	/* if (document.getElementById("Board0_Newboard").className == "on") {
                 	pBoardID_NewBoard = document.getElementById("Board0_Newboard").getAttribute("DATA1");
                 	getBoardList_NewBoard();
             	} else if (document.getElementById("Board1_Newboard").className == "on") {
@@ -357,7 +352,8 @@
             	} else {
                 	pBoardID_NewBoard = document.getElementById("Board2_Newboard").getAttribute("DATA1");
                 	getBoardList_NewBoard();
-            	}
+            	} */
+        		getBoardList_NewBoard();
         	}
         	
         	/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */

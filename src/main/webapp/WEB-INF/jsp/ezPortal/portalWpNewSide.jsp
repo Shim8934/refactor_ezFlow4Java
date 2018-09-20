@@ -172,7 +172,7 @@
 		                            }
 		                            
 		                            /* 2018-08-21 장진혁 포틀릿 변경으로 주석처리  */
-		                            /* var STARTDATE = "";
+		                            var STARTDATE = "";
                             		var WRITERNAME = "";
 
                             		for (var j = 0; j < xmldom.getElementsByTagName("HEADER").length; j++) {
@@ -185,7 +185,7 @@
 	
     		                            if (STARTDATE != "" && WRITERNAME != "")
                                     		break;
-                            		} */
+                            		}
 		                            
 		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));		                            
 		                            var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("GUBUN").item(0));
@@ -209,7 +209,9 @@
 			                        if (newItemFlag == "Y") {
 			                        	listHTML += "<span class='boardNew'>N</span>";
 			                        }
-			                        listHTML += DOCTITLE + "</li>";
+			                        listHTML += "<span class='txt'>" + DOCTITLE + "</span>";
+			                        listHTML += "<span class='date'>" + STARTDATE.substring(5,16) + "</span>";
+			                        listHTML += "<span class='name'>" + WRITERNAME + "</span>";
 		                        }
 		                        
 		                        listHTML += "</ul>";
