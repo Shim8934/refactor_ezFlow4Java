@@ -32,7 +32,7 @@ public interface EzOrganAdminService {
 	
 	public String getPropertyList(String cn, String proplist, String string, int tenantID) throws Exception;
 	
-	public String moveEntry(String parentCn, String cn, String type, int tenantID) throws Exception;
+	public String moveEntry(String parentCn, String cn, String type, String offset, int tenantID) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception;
 
@@ -57,7 +57,7 @@ public interface EzOrganAdminService {
 
 	public void deleteDBData(String cn, String pClass, int tenantID) throws Exception;
 	
-	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception;
+	public void moveDBData(String parentCn, String cn, String type, String offset, int tenantID) throws Exception;
 
 	public void setPassword(String cn, String password, int tenantID) throws Exception;
 	
