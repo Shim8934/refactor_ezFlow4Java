@@ -370,7 +370,7 @@ function saveMemoToast(memoId) {
 	toastArea.innerHTML = alertMessage;
 	toastArea.setAttribute("class", "toastArea");
 	toastArea.style.top = "150px";
-	toastArea.style.left = "100px";
+	toastArea.style.left = "90px";
 	toastArea.style.display = "block";
 	toastArea.id = "tos"+memoId;
 	$("#memo" + memoId).prepend(toastArea);

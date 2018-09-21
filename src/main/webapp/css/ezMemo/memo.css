@@ -164,4 +164,4 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .ui-slider-horizontal, .ui-slider-range {border-radius:0px;}	
 .emptyDiv { height: 140px; padding-top: 100px; color: #d0d0d0; font-size: 12px; font-weight: bold; }
 
-.toastArea {position : absolute; background : #000000; display : block; color : #ffffff; font-size: 10px; border-radius: 2px;}
+.toastArea { padding : 10px; position : absolute; background : #000000; display : block; color : #ffffff; font-size: 12px; border-radius: 2px;}
