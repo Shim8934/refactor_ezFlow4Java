@@ -401,8 +401,10 @@ function clearSelection() {
  * mainBody 내 더블클릭시, 음영 삭제 메서드
  */
 function bodyClearSelection() {
-	var mainbody = document.getElementsByClassName('mainbody');
-	var mainmenu = document.getElementById('mainmenu');
+	var doc = window.document;
+	var mainbody = doc.getElementsByClassName('mainbody');
+	var mainmenu = doc.getElementById('mainmenu');
+	
 	mainbody[0].addEventListener("dblclick", clearSelection, false);
 	mainmenu.addEventListener("click", clearSelection, false);
 	mainmenu.addEventListener("drag", clearSelection, false);
