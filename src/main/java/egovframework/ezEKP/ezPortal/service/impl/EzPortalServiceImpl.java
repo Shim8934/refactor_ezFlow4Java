@@ -2685,6 +2685,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			pageColumnLength = (Integer.parseInt(pageColumnLength) + 2) + "";			
 		} else if (number == 3) {
 			sb.append("<div class='mainLayout_right'>");
+		} else if (number == 4) {
+			sb.append("<div class='mainLayout_right_move'>");
 		}
         
         for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
@@ -2780,9 +2782,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         	}
         }
         
-        if (number == 1 || number == 2 || number == 4) {
-			sb.append("</div>");
-		}
+        sb.append("</div>");
         
         if (pMode.equals("edit")) {
 			sb.append("</tr>\n</table>\n");

@@ -174,7 +174,7 @@
                      // 게시물이 3개 미만이라면, 디폴트 게시물 이미지를 대신 표출한다.
                      if (RowCnt < 3) {
 						for (i = RowCnt; i < 3; i++) {
-							listHTML += "<li class='notiLI'><dl class='noti_nodata' style='cursor:default;'></dl></li>";
+							listHTML += "<li class='notiLI'><p class='noti_nodata'></p></li>";
                     	 }
                      }
                         

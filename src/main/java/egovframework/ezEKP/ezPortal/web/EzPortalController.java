@@ -1655,7 +1655,7 @@ public class EzPortalController extends EgovFileMngUtil {
 								pPollResultList.add(list.get(i).getResult());
 								
 								pPollResultContent.append("<li class='voteList_0"+(i+1)+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
-								pPollResultContent.append("<div class='percent'>" + String.format("%.1f", poolRstPer) + "%</div>");
+								pPollResultContent.append("<div class='percent'>" + String.format("%.0f", poolRstPer) + "%</div>");
 								pPollResultContent.append("<div class='voteGraph'><span style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%'></span></div></li>");
 								
 		                        resultPrintCnt++;
