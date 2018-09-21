@@ -309,11 +309,7 @@ public class EzCabinetController_h {
 			return resultObj.toString();
 		}
 		
-		JSONParser jp        = new JSONParser();
-		JSONArray fileArray  = (JSONArray) jp.parse(fileList);
-		JSONArray relatedArr = (JSONArray) jp.parse(relatedList);
-		
-		resultObj = cabinetRestService_h.modifyItem(request, userInfo.getId(), itemId, title, summary, fileArray, relatedArr);
+		resultObj = cabinetRestService_h.modifyItem(request, userInfo.getId(), itemId, title, summary, fileList, relatedList);
 		
 		logger.debug("Modify item finishes!");
 		return resultObj.toString();

@@ -466,13 +466,13 @@ public class EzCabinetGWController_h {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/item/id/{itemId}/modify", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject modifyItem(@PathVariable(value="itemId") String itemId, Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject modifyItem(@RequestBody JSONObject itemInf, @PathVariable(value="itemId") String itemId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
-		String summary    = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
-		String fileArray  = request.getParameter("fileArray")  != null ? request.getParameter("fileArray")  : "";
-		String relatedArr = request.getParameter("relatedArr") != null ? request.getParameter("relatedArr") : "";
-		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		String title      = itemInf.get("title")      != null ? itemInf.get("title").toString()      : "";
+		String summary    = itemInf.get("summary")    != null ? itemInf.get("summary").toString()    : "";
+		String fileArray  = itemInf.get("fileArray")  != null ? itemInf.get("fileArray").toString()  : "";
+		String relatedArr = itemInf.get("relatedArr") != null ? itemInf.get("relatedArr").toString() : "";
+		String userId     = itemInf.get("userId")     != null ? itemInf.get("userId").toString()     : "";
 		JSONObject result = new JSONObject();
 		JSONParser jp     = new JSONParser();
 		
