@@ -1,18 +1,23 @@
 var content; 
 function copy() { 
-
-	var html = ""; 
-	var sel = window.getSelection(); 
+	var doc = window.document;
+	var sel = window.getSelection();
+	var agent = navigator.userAgent.toLowerCase(); 
+	 
 	if (sel.anchorNode.parentNode.id  !== "msgBody") { 
 		var childrenArray; 
+		var html = ""; 
 		if (sel.rangeCount) { 
-	        var container = document.createElement("div"); 
-	        for (var i = 0, len = sel.rangeCount; i < len; ++i) { 
-	            container.appendChild(sel.getRangeAt(i).cloneContents()); 
-	        } 
-	        childrenArray = [].slice.call(container.children); 
-	        for(var i=0; i<childrenArray.length; i++) { 
-	        	if(childrenArray[i].innerText === "") {
+	        
+			var container = doc.createElement("div"); 
+			container.appendChild(sel.getRangeAt(i).cloneContents()); 
+	        
+			childrenArray = [].slice.call(container.children);
+	        var len = childrenArray.length
+	       
+	        for(var i = 0; i < len; i++) { 
+	        	if(childrenArray[i].innerText === "" || childrenArray[i].id === "ContentClassbtn" 
+	        		|| childrenArray[i].id === "ifrmPreViewRayer" || childrenArray[i].id === "MailBigAttachRayer") {
 	        		continue;
 	        	}
 	        	html += childrenArray[i].innerText + "\n"; 
@@ -23,24 +28,20 @@ function copy() {
 		content = sel.toString(); 
 	} 
 	 
-	 
-	var agent = navigator.userAgent.toLowerCase(); 
-	 
 	// 익스플로어
 	if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) { 
 		content = content.replace(/\r\n\r\n/ig, '\n');
 		if(sel.anchorNode.parentNode.id === "msgBody") {
 			var html = ""; 
 			var childrenArray; 
-			var container = document.createElement("div"); 
+			var container = doc.createElement("div"); 
 			container.appendChild(sel.getRangeAt(i).cloneContents()); 
 			
 			content = container.innerText; 
 		}
 	} else { // 크롬 사파리  
 		content = content.replace(/\n\n/ig, '\n'); 
-	} 
-	 
+	}  
 } 
  
 function copyToClip() { 
