@@ -60,7 +60,7 @@ function setPanelPointer() {
 function layerPopupOpacity() {
 
 	var defaultValue = 2;
-	$("#layer-popup").css("background-color", "rgba(0,0,0,0.4)");
+	$("#layer-popup").css("background-color", "rgba(0,0,0,0.3)");
 
 	$("#slider-range").slider({
 		step : 1,
@@ -125,11 +125,12 @@ function memoSortable() {
 		 containment: '.mCSB_container',
 		 opacity : 0.5,
 		 tolerance: "pointer",
+		 scroll : true,
 		 change:function(e,ui){
 			var h=ui.helper.outerHeight(true);
 			var elem=$(".memoListBox .mCustomScrollBox");
 			var elemHeight=elem.height();
-			var moveBy=$(".memoLay").outerHeight(true)+100;
+			var moveBy=$(".memoLay").outerHeight(true);
 			var mouseCoordsY=e.pageY-elem.offset().top;
 			
 			if(mouseCoordsY<h){

@@ -720,13 +720,11 @@ public class EzMemoGWController {
 		
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
 			
 		} catch(Exception e) {
 			
 			result.put("code", 1);
 			result.put("status", "error");
-			result.put("data", "");
 		}
 		
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/move/folder/" + folder_id + "/users/" +userId + "] ended.");

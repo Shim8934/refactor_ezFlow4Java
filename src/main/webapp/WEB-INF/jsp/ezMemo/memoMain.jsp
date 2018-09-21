@@ -123,35 +123,28 @@
 		function getMemoSortable() {
 			$("#boardMemoList").sortable({
 	        	 containment: '#bodyFrame',
-       		 	opacity : 0.5,
+       		 	 opacity : 0.5,
+       		 	 tolerance: "pointer",
 	        	 update : function (event, ui) {
 	        		 if($("#orderOption").val() == 1) {
 	        			 var compareElId; 
 		        		 var clickedItem = ui.item;
 		        		 var clickedItemId = clickedItem.attr("id");
-		        		 
 		        		 var draggedElId = clickedItemId.replace("memo", "");
 		        		 
 		        		 if (clickedItem.prev().attr("id") != undefined) {
 		        			 if (clickedItem.next().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) > parseInt(clickedItem.next().attr("orders"))) {
-		        				 
-								compareElId = clickedItem.prev().attr("id").replace("memo", "");
+		        				compareElId = clickedItem.prev().attr("id").replace("memo", "");
 		        			 } else {
-		        				 
-								compareElId = clickedItem.next().attr("id").replace("memo", "");
+		        				compareElId = clickedItem.next().attr("id").replace("memo", "");
 		        			 }
-		        			
-		        		 	
 		        		 } else if (clickedItem.next().attr("id") != undefined) {
 		        			 if (clickedItem.prev().attr("orders") == undefined || parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.prev().attr("orders")) && parseInt(clickedItem.attr("orders")) < parseInt(clickedItem.next().attr("orders"))) {
-		        				 
-									compareElId = clickedItem.next().attr("id").replace("memo", "");
-			        			 } else {
-			        				 
-									compareElId = clickedItem.prev().attr("id").replace("memo", "");
-			        			 }
+		        				 compareElId = clickedItem.next().attr("id").replace("memo", "");
+			        		} else {
+								 compareElId = clickedItem.prev().attr("id").replace("memo", "");
+			        		}
 		        		 }
-		        		 
 		        		 $.ajax({
 		        			type : "POST",
 		        			data : {
@@ -161,9 +154,7 @@
 		        			dataType : "JSON",
 		        			url : "/ezMemo/reOrder.do",
 		        			success : function(result) {
-		        				
 		        				if (result.status == 1) {
-			        				//getMemoList();
 			        				parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
 		        				}
 		        			}
