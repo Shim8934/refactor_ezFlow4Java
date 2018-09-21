@@ -217,9 +217,9 @@
 	            
 	            if (type === "one" ) {
 	            	//alertContent = "<spring:message code='ezBoard.t197'/>";
-	            	alertContent = "하위게시판의 권한도 삭제됩니다. 삭제하시겠습니까?";
+	            	alertContent = "<spring:message code='ezBoard.pjg04'/>";
 	            } else if (type === "type" ) {
-	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
+	            	alertContent = "<spring:message code='ezBoard.pjg05'/>";
 	            }
 				
 	            if(confirm(alertContent)) {
