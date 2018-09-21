@@ -539,9 +539,23 @@ function deleteOpinionInfo_Complete(Rtnval) {
 
         var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
+        
+        if (OpinionList.GetRowCount() == 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "OpinionList_TR_noItems");
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	objTd.setAttribute("colSpan", 4);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+        }
+        
         document.getElementById("txt_OpinionContent").value = "";
         setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
         setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
+        document.getElementById("bbtn_OpinionDel").style.display = "none";
         OpinionAddFlag = 0;
     }
 }
@@ -583,10 +597,20 @@ function deleteOpinion_Complete(Rtnval) {
         var OpinionList = new ListView();
         OpinionList.LoadFromID("OpinionList");
         var pSelectedRow = OpinionList.GetSelectedRows();
-        var tr = pSelectedRow[0];
-
-        var selIdx = GetAttribute(tr, "id");
+        var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
+        
+        if (OpinionList.GetRowCount() == 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "OpinionList_TR_noItems");
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	objTd.setAttribute("colSpan", 4);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+        }
         document.getElementById("txt_OpinionContent").value = "";
         document.getElementById("btn_OpinionAdd").textContent = strLang389;
         document.getElementById("btn_OpinionCancel").textContent = strLang10;
@@ -600,9 +624,12 @@ function saveOpinionInfo() {
         var OpinionList = new ListView();
         OpinionList.LoadFromID("OpinionList");
 
-        var selRow = OpinionList.GetDataRows();
-
-        if (selRow.length == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
+        var pOpinionLen = OpinionList.GetRowCount();
+        
+        if (pOpinionLen == 1 && OpinionList.GetDataRows()[0].id.indexOf("noItems") > -1) {
+        	pOpinionLen = 0;
+        }
+        if (pOpinionLen == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
         {
         	if ((pDisplay == "BanSong" || pDisplay == "HeSong" || pDisplay == "BoRyu") && getNodeText(document.getElementById("btn_OpinionCancel")) != strLang407) {
                 var pAlertContent = GetOpinionTypeName(pOpinionType) + strLang410;
