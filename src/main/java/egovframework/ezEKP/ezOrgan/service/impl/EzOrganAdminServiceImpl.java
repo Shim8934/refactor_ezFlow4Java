@@ -242,7 +242,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String moveEntry(String parentCn, String cn, String type, int tenantID) throws Exception {
+	public String moveEntry(String parentCn, String cn, String type, String offset, int tenantID) throws Exception {
 	    logger.debug("moveEntry started");
 	    logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
 	    
@@ -270,9 +270,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			if (rc == 0) { // 성공
 				try {
-					moveDBData(parentCn, cn, type, tenantID);
+					moveDBData(parentCn, cn, type, offset, tenantID);
 		            result = "OK";
 				} catch (Exception e) {
+					e.printStackTrace();
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
 					result = "EMAIL_ERROR";
 				}				
@@ -341,7 +342,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("updateProperty ended");
 	}
 	
-	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
+	public void moveDBData(String parentCn, String cn, String type, String offset, int tenantID) throws Exception {
         logger.debug("moveDBData started");
         logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
 	    
@@ -395,6 +396,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
     		}
     	} else {
+    		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		Date date                  = new Date();
+    		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+    		
+    		map.put("timeUTC", timeUTC);
+    		
 	    	ezOrganAdminDao.moveGroupUser_U(map);
 	    	
 	    	/**
