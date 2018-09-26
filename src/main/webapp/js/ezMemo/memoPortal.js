@@ -795,8 +795,6 @@ function getMemoList(type) {
         cache: false,
         async: false,
         success: function(result) {
-        	
-        	//memoColor = result["colorList"].split(";");
         	memoList = result["memoList"];
         	layerFlag = result["layerFlag"];
         	
@@ -852,7 +850,7 @@ function memoFoldersInfo(type) {
 			
 			var folderList = result["folders"];
 			var html="";
-			html += "<option value='0'>전체</option>";
+			html += "<option value='0'>" + strLangMemo9 + "</option>";
 			folderList.forEach(function(list, index){
 				var folderName = list.folder_name;
 				
