@@ -723,7 +723,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		if (result.equals("OK")) {
-	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
+	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getOffset(), tenantID);
 	
 	        logger.debug("moveEntry result=" + result);
 		}
@@ -1070,7 +1070,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}
 		    
-			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", tenantID);
+			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", userInfo.getOffset(), tenantID);
 		
 			logger.debug("moveEntry result=" + result);
 			
