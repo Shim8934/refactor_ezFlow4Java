@@ -41,8 +41,6 @@ function createMemo(memo, flag) {
 	var dd3 = document.createElement("dd");
 	dd3.setAttribute("class", "memoIcon saveBtn");
 	dd3.setAttribute("memoid", memo.memo_id);
-	/*dd3.style.cursor= "pointer";
-	dd3.innerHTML = "+";*/
 	
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon memoX");
@@ -109,23 +107,17 @@ function loadMemoList(flag) {
 		
 		for(var i=0; i<memoList.length; i++) {
 			if ('layer' != flag) {
-				//var hColor = memoColor[memoList[i].color_id-1];
-				//var bColor = memoColor[memoList[i].color_id+5];
 				var div = createMemo(memoList[i]);
-				
 				$("#boardMemoList").prepend(div);
 			} else {
 				if (memoList[i].display_flag != 1) {
-					
-					//var hColor = memoColor[memoList[i].color_id-1];
-					//var bColor = memoColor[memoList[i].color_id+5];
 					var div = createMemo(memoList[i], flag);
-					
 					$(".memo_main").prepend(div);
 				}
 			}
-			if(useDate == 1)
+			if(useDate == 1) {
 				addDateInfo(memoList[i].write_date.substring(0,10));
+			}
 		}
 }
 
@@ -205,7 +197,6 @@ function addRemoveButton(memoId) {
 	alertPopup.appendChild(popHeader);
 	modal.appendChild(alertPopup)
 		
-	//modal.addEventListener('click', modalDelete, false);
 	$("#memo" + memoId).prepend(modal);
 	
 	$(".alertPopup").click(function(e){
@@ -268,7 +259,7 @@ function MailOptionHiddenOutside(e) {
 		}
 	}
 }
-
+/*
 function memoFoldersInfo() {
 	selFolderId="";
 	selFolderName="";
@@ -281,7 +272,7 @@ function memoFoldersInfo() {
 			
 			var folderList = result["folders"];
 			var html="";
-			html += "<option value='0'>전체</option>";
+			html += "<option value='0'>"+ strLangMemo9 +"</option>";
 			folderList.forEach(function(list, index){
 				var folderName = list.folder_name;
 				
@@ -317,7 +308,7 @@ function memoFoldersInfo() {
 			});
 		}     			
 	});
-}
+}*/
 
 // 메모 없을 때 투명한 메모 생성
 function addEmptyMemo(flag) {
@@ -370,7 +361,7 @@ function saveMemoToast(memoId) {
 	toastArea.innerHTML = alertMessage;
 	toastArea.setAttribute("class", "toastArea");
 	toastArea.style.top = "150px";
-	toastArea.style.left = "90px";
+	toastArea.style.left = "85px";
 	toastArea.style.display = "block";
 	toastArea.id = "tos"+memoId;
 	$("#memo" + memoId).prepend(toastArea);

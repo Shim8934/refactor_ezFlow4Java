@@ -6,3 +6,4 @@ var strLangMemo5 = "확인";
 var strLangMemo6 = "취소";
 var strLangMemo7 = "메모가 없습니다.";
 var strLangMemo8 = "저장했습니다";
+var strLangMemo9 = "전체";
