@@ -80,7 +80,7 @@
 							var liSpanChild2       = document.createElement("span");
 							var spanChild          = document.createElement("span");
 							
-							if (moduleType == "apprv" && attachList[i]["filePath"].includes("openAttachView")) {
+							if (moduleType == "apprv" && attachList[i]["filePath"].indexOf("openAttachView") != -1) {
 								liElmt.setAttribute("onclick", attachList[i]["filePath"]);
 							}
 							else {
