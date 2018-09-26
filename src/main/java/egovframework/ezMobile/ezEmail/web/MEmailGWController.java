@@ -3779,6 +3779,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			LOGGER.debug("folderId=" + folderId);
 
+			// 지정된 folderId가 사용자 언어에 따른 '임시 보관함'과 동일한 경우 표준 폴더 아이디를 사용해야 하는지
+			// 여부를 확인한다. ezMobile에서 임시 보관함의 메일을 삭제할 때 언어에 따른 이름을 보내도록 되어 있어서
+			// 아래 코드를 추가함.
+			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
+				folderId = ezEmailUtil.getDraftsFolderId(locale);
+			}
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
