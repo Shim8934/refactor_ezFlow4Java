@@ -130,12 +130,16 @@ function memoSortable() {
 			var h=ui.helper.outerHeight(true);
 			var elem=$(".memoListBox .mCustomScrollBox");
 			var elemHeight=elem.height();
+			var elemWidth = elem.width();
 			var moveBy=$(".memoLay").outerHeight(true);
+			var moveByX = $(".memoLay").outerWidth(true);
 			var mouseCoordsY=e.pageY-elem.offset().top;
+			var helper = ui.helper.index();
+			var pholder = ui.placeholder.index();
 			
-			if(mouseCoordsY<h){
+			if(mouseCoordsY<h || helper > pholder + parseInt(elemWidth/moveByX)){
 				$(".memoListBox").mCustomScrollbar("scrollTo","+="+moveBy);
-			}else if(mouseCoordsY>elemHeight-h){
+			}else if(mouseCoordsY>elemHeight-h || helper < pholder - parseInt(elemWidth/moveByX)){
 				$(".memoListBox").mCustomScrollbar("scrollTo","-="+moveBy);
 			}
 	 	 },
