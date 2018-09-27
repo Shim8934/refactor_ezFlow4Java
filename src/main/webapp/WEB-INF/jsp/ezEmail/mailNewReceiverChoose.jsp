@@ -1246,9 +1246,16 @@
 	            
 	            
 	            for (var i = 0; i < listContentArry.length; i++) {
-	            	for (var j = 0; j < 3; j++) {
-	            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+	            	if (keyword.value == "") {
+		            	for (var j = 0; j < 3; j++) {
+		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            	}
+	            	} else {
+		            	for (var j = 0; j < 4; j++) {
+		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            	}
 	            	}
+	            	
 	            }
 	            listContentArry = [];
 	            

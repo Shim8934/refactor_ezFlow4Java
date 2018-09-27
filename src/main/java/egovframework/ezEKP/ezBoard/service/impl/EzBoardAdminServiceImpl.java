@@ -248,7 +248,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
 	@Override
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID) throws Exception {
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept) throws Exception {
 		logger.debug("brdBoardTree started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -262,8 +262,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
-
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		
 		logger.debug("brdBoardTree ended");
+		logger.debug("map.toString() : " + map.toString());
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
@@ -864,6 +867,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("saveHeader ended");
 		return rtnValue;
 	}
+	
+	public String getBoardTreePath(Map<String, Object> map) throws Exception {
+		return ezBoardAdminDAO.getBoardTreePath(map);
+	}
 
 	@Override
 	public void saveACL(Map<String, Object> map) throws Exception {
@@ -878,6 +885,45 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			ezBoardAdminDAO.saveACL_I(map);
 		}
 		
+		// 접근 불가 : 하위게시판에 영향
+		// 접근 허용 : 상위게시판에 영향
+		String access = map.get("v_pAccess").toString();
+		map.put("type", "access");
+		if(access.equalsIgnoreCase("0")) {
+			// 하위 게시판에 권한이 변경되어야한다.
+			ezBoardAdminDAO.saveACLIncludeLowerBoard(map);			
+		} else {
+			// 상위 게시판 찾아서 map에 넣어두기.
+			String upperBoardList = getBoardTreePath(map);
+			// 상위 게시판이 존재할 경우.
+			if(upperBoardList != null) {
+				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
+				map.put("v_upperBoadList", upperBoardList);
+				// 상위 게시판에 접근 권한만 주기.
+				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
+			}
+		}
+		
+		// 하위부서 허용-불가 여부도 고려해야함.
+		// ACCESSID의 BOARDGROUPACL이 N 인 경우, 하위도 N
+		// ACCESSID의 BOARDGROUPACL이 Y 인 경우, 상위도 Y
+		map.put("type", "boardACL");
+		String boardGroupACL = map.get("v_pBoardGroupACL").toString();
+		if(boardGroupACL.equalsIgnoreCase("N")) {
+			// 하위 게시판에 권한이 변경되어야한다.
+			ezBoardAdminDAO.saveACLIncludeLowerBoard(map);	
+		} else if (boardGroupACL.equalsIgnoreCase("Y")) {
+			// 상위 게시판 찾아서 map에 넣어두기.
+			String upperBoardList = getBoardTreePath(map);
+			// 상위 게시판이 존재할 경우.
+			if(upperBoardList != null) {
+				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
+				map.put("v_upperBoadList", upperBoardList);
+				// 상위 게시판에 접근 권한만 주기.
+				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
+			}			
+		}
+
 		trunkBoard((int) map.get("v_TENANTID"));
 
 		logger.debug("saveACL ended");
@@ -897,7 +943,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			map.put("v_pBoardID", doc.getElementsByTagName("BOARDID").item(i).getTextContent());
 			map.put("v_pAccessID", doc.getElementsByTagName("TARGETID").item(i).getTextContent());
 			
-			ezBoardAdminDAO.deleteACL(map);
+			//ezBoardAdminDAO.deleteACL(map);
+			ezBoardAdminDAO.deleteACLUnderBoard(map); // 하위부서 권한까지 삭제로 변경.
 		}
 		
 		trunkBoard(tenantID);

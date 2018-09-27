@@ -1634,7 +1634,8 @@ function makePageSelPage() {
         var nowday = parseInt(nowDate.substring(8,10));
         
     	if (SearchCond[5] != null && SearchCond[5] != "" ) {
-    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
+    		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
+    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
     	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
     		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
     	} else {

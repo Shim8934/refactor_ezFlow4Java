@@ -3606,7 +3606,7 @@
 							)
 				)
 			AND
-				A.startdate < #v_pNow#
+				A.startdate <= #v_pNow#
 			AND
 				A.startdate > #v_pFromNow#
 			AND
@@ -3626,7 +3626,7 @@
 			WHERE
 				boardid = #v_pBoardID#
 			AND
-				startdate < #v_pNow#
+				startdate <= #v_pNow#
 			AND
 				enddate > #v_pNow#
 			AND

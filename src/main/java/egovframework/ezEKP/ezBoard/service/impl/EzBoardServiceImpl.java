@@ -2475,7 +2475,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, int tenantID) throws Exception {
 		logger.debug("getBoardTree started");
-
 		int count = 0;
 		String strForbiddenBoardIDList = "";
 		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
@@ -2500,11 +2499,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			String boardID = "";
 			
 			if (pMode == 0) {
-				/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
-				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID);            
+				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0);            
 			} else {
-				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID);
-				
+				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
+				int isEqaulDept = pAccessID.split(",")[i].trim().equalsIgnoreCase(pDeptID) ? 1 : 0;
+				int isDept = ezBoardDAO.isDeptChk(pAccessID.split(",")[i].trim(), tenantID);
+				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept);
+
 				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
 					for (BoardTreeVO k : tempBrdBoardTreeList) {
 						if (brdBoardTreeList.size() > 0) {

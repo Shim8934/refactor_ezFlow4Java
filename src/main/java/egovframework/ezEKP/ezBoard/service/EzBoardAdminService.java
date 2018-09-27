@@ -24,8 +24,7 @@ public interface EzBoardAdminService {
 	/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID) throws Exception;
 	
-	/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID) throws Exception;
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
@@ -91,6 +90,8 @@ public interface EzBoardAdminService {
 
 	public String saveHeader(Document doc, LoginVO userInfo, BoardListHeaderVO boardListHeaderVO) throws Exception;
 
+	public String getBoardTreePath(Map<String, Object> map) throws Exception;
+	
 	public void saveACL(Map<String, Object> map) throws Exception;
 
 	/* 게시판 권한 삭제 시 companyID 조건 부여 */

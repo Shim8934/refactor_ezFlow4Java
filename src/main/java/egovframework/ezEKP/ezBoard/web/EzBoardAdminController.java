@@ -1023,6 +1023,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				map.put("v_pPostNotice", doc.getElementsByTagName("POSTNOTICE").item(i).getTextContent());
 				map.put("v_pAccessName2", pAccessName2);
 				map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());
+				
 			}
 			
 			/* 2018-06-25 홍승비 - 게시판 권한설정 시 companyID 부여 */
