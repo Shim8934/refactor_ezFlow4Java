@@ -656,7 +656,15 @@
 		    function btnRedraft_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var oArrRows = DocList.GetSelectedRows();
+		        if (oArrRows == 0) {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
+		            return;
+		        }
+		        
 		        var pCurSelRow = oArrRows[0];
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
