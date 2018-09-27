@@ -1306,7 +1306,7 @@
    				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
    				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
    				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
-   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + " (" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION")[i]) + ")" + "]]></VALUE></CELL></ROW>";
+   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";		// 2018-09-27 김민성 - 부서명 뜨는 부분 삭제
    				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
    				            Resultxml = loadXMLString(pparsingXML2);
 
