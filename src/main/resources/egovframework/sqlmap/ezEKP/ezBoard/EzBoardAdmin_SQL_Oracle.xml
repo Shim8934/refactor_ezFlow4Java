@@ -929,7 +929,7 @@
 		    WHERE BOARDID in ( $v_upperBoadList$ ) 
 		    AND	TENANT_ID = #v_TENANTID#
 		    ) tb2
-		ON (tb1.BOARDID = tb2.BOARDID)
+		ON (tb1.BOARDID = tb2.BOARDID AND tb1.accessID = #v_pAccessID# )
 		WHEN MATCHED THEN
 		    UPDATE SET
 		    	<isEqual property="type" compareValue="access">
