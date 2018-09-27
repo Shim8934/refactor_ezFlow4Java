@@ -374,7 +374,9 @@
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getDeptMemberList" parameterClass="map" resultMap="organUserVO">		
-			select 
+		SELECT *
+		FROM 	
+		 (	select 
 			 	cn,
                 case #v_LANG#
 	                when '1' then displayname
@@ -409,7 +411,31 @@
             	</isNotEqual>
             and
 				tenant_id = #v_TENANTID#
-			order by description		
+			UNION ALL
+				SELECT
+					A.CN ,                  			
+					case #v_LANG#
+						when '1' then A.displayname
+						when '2' then A.displayname2    
+					end displayname,
+					A.displayname2,
+					case #v_LANG#
+						when '1' then A.description
+						when '2' then A.description2   
+					end description,
+					A.description2,
+					A.title ,
+					A.title2 ,
+					A.telephonenumber 
+				FROM
+					TBL_ADDJOBMASTER B
+				JOIN
+					TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+				WHERE
+					B.DEPTID = #v_DEPTID#
+				AND
+					B.TENANT_ID = 0	 ) AA
+			order by displayname	
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.scheduleGetLunarUse" parameterClass="map" resultClass="String">		
