@@ -1284,11 +1284,9 @@
             AND 
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
       		AND
-      			TENANT_ID = #v_TENANT_ID#	
+      			TENANT_ID = #v_TENANT_ID#
       		AND
       			IFNULL(BIRTH, ' ') <> ' '
-      		AND
-      			TENANT_ID = #v_TENANT_ID#	
 			ORDER BY
 				substr(birth, 8, 10)
 		]]>
