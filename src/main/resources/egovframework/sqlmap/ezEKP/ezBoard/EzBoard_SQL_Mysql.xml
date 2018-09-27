@@ -4622,6 +4622,18 @@
 		]]>
   </delete>
   
+  <select id="EzBoardDAO.isDeptChk" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM TBL_DEPTMASTER
+			WHERE
+				CN = #id#
+			AND
+				TENANT_ID = #tenantID#
+		]]>  	
+  </select>
+  
   <!-- baonk added -->
   <select id="EzBoardDAO.getPollConfig" resultMap="pollConfig">
 		<![CDATA[

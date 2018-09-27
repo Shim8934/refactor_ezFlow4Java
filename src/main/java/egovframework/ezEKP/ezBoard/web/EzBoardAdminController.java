@@ -1009,6 +1009,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				map.put("v_pPostNotice", doc.getElementsByTagName("POSTNOTICE").item(i).getTextContent());
 				map.put("v_pAccessName2", pAccessName2);
 				map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());
+				
 			}
 			
 			// save 서비스 구현
