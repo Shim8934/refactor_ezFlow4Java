@@ -277,7 +277,7 @@
 	}
 	
 	function startSearch(pPage) {
-		ShowMailProgress()
+		ShowMailProgress();
 		
 		var orderInf = cabinetTable.getOrderInfo();
 		var url      = "/admin/ezCabinet/getUserCapacity.do";

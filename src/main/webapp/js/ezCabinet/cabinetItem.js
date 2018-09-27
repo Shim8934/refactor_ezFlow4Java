@@ -348,6 +348,8 @@ var CabinetItem = function() {
 	
 	/* Main search */
 	function startSearchCabinet(pPage) {
+		ShowMailProgress();
+		
 		var orderInf  = cabinetTable.getOrderInfo();
 		var listCnt   = document.getElementById("listcount").value;
 		var searchOpt = document.getElementById("searchCheck").value;
@@ -379,6 +381,41 @@ var CabinetItem = function() {
 				alert(CabinetMessages.strError + error);
 			}
 		});
+		
+		CompleteProgress();
+	}
+	
+	//2018-09-27 문성업 - 프로그래스바		
+	function ShowMailProgress() {
+	    startTime = new Date();//프로그래스바 시작시간
+		CurrenWidth = document.body.clientWidth;
+	
+	    document.getElementById("mailPanel").style.display = "";
+	    document.getElementById("MailProgress").style.top = "400px";
+	    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+	    document.getElementById("MailProgress").style.display = "";
+	}
+	
+	function CompleteProgress() {
+		//2018-09-27 문성업 - 프로그레스바
+        endTime = new Date();//프로그래스바 종료시간
+		var timeDiff = endTime - startTime;
+		timeDiff /= 1000;
+		var seconds = (timeDiff % 60).toFixed(1);
+		
+		if (seconds <= 0.3) { //0.3초보다 적으면
+			seconds = 300 - (timeDiff * 1000);
+			setTimeout(function() {
+				HiddenMailProgress();
+			}, seconds);
+		} else {
+	        HiddenMailProgress();
+		}
+	}
+	
+	function HiddenMailProgress() {
+	    document.getElementById("mailPanel").style.display = "none";
+	    document.getElementById("MailProgress").style.display = "none";
 	}
 	
 	function checkingData(data) {

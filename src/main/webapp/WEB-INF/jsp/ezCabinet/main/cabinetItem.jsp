@@ -163,6 +163,14 @@
 				</div>
 			 </div>
 		</div>
+		
+		<!-- 2018-09-27 문성업 - 프로그래스바 추가 -->
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>
+		<div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+			<img src="/images/email/progress_img.gif" style="padding-top:20px;">
+			<div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+		</div>
+		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
