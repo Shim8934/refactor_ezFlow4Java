@@ -2306,6 +2306,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			use_attitude = "YES";
 		}
 		
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
+		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
 		model.addAttribute("topID", topID);
@@ -2314,6 +2316,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		model.addAttribute("use_attitude", use_attitude);
+		model.addAttribute("useWebfolder", useWebfolder);
 		
 		logger.debug("permissionsCheck ended.");
 		

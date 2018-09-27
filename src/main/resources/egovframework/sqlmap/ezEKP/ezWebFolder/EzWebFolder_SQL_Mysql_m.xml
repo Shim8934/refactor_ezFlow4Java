@@ -442,31 +442,34 @@
 				END SHARE_STATUS,
 				DF.TENANT_ID
 			FROM (
-				SELECT
-					S1.FOLDERFILE_ID,
-                    S1.FOLDERFILE_TYPE,
-                    S1.SHARER_ID,
-                    CASE WHEN #primary# = '1'
-						THEN S1.SHARER_NAME1
-						ELSE S1.SHARER_NAME2
-					END SHARER_NAME,
-					S1.SHARE_DATE,
-					S1.TENANT_ID
-				FROM TBL_WEBFOLDER_SHARE S1
-				JOIN TBL_WEBFOLDER_SHARE_SUB SS
-				ON S1.SHARE_ID = SS.SHARE_ID
-				AND SS.USER_ID IN
+				SELECT * FROM (
+					SELECT
+						S1.FOLDERFILE_ID,
+	                    S1.FOLDERFILE_TYPE,
+	                    S1.SHARER_ID,
+	                    CASE WHEN #primary# = '1'
+							THEN S1.SHARER_NAME1
+							ELSE S1.SHARER_NAME2
+						END SHARER_NAME,
+						S1.SHARE_DATE,
+						S1.TENANT_ID
+					FROM TBL_WEBFOLDER_SHARE S1
+					JOIN TBL_WEBFOLDER_SHARE_SUB SS
+					ON S1.SHARE_ID = SS.SHARE_ID
+					AND SS.USER_ID IN
 		]]>
 				<iterate property="idList" open="(" close=")" conjunction=",">
 					#idList[].id#
 				</iterate>
 		<![CDATA[
-				AND S1.TENANT_ID = SS.TENANT_ID
-				LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
-				ON S1.SHARE_ID = SH.SHARE_ID
-				AND S1.TENANT_ID = SH.TENANT_ID
-				AND SH.USER_ID = #userId#
-				WHERE SH.USER_ID IS NULL ) S
+					AND S1.TENANT_ID = SS.TENANT_ID
+					LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+					ON S1.SHARE_ID = SH.SHARE_ID
+					AND S1.TENANT_ID = SH.TENANT_ID
+					AND SH.USER_ID = #userId#
+					WHERE SH.USER_ID IS NULL
+					ORDER BY S1.SHARE_DATE ) S2
+				GROUP BY S2.FOLDERFILE_ID, S2.FOLDERFILE_TYPE, S2.TENANT_ID) S
 			JOIN (
 				SELECT
 					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
@@ -661,31 +664,34 @@
 					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 					DF.TENANT_ID
 				FROM (
-					SELECT
-						S1.FOLDERFILE_ID,
-                        S1.FOLDERFILE_TYPE,
-                        S1.SHARER_ID,
-                        CASE WHEN #primary# = '1'
-							THEN S1.SHARER_NAME1
-							ELSE S1.SHARER_NAME2
-						END SHARER_NAME,
-						S1.SHARE_DATE,
-						S1.TENANT_ID
-					FROM TBL_WEBFOLDER_SHARE S1
-					JOIN TBL_WEBFOLDER_SHARE_SUB SS
-					ON S1.SHARE_ID = SS.SHARE_ID
-					AND SS.USER_ID IN
+					SELECT * FROM (
+						SELECT
+							S1.FOLDERFILE_ID,
+		                    S1.FOLDERFILE_TYPE,
+		                    S1.SHARER_ID,
+		                    CASE WHEN #primary# = '1'
+								THEN S1.SHARER_NAME1
+								ELSE S1.SHARER_NAME2
+							END SHARER_NAME,
+							S1.SHARE_DATE,
+							S1.TENANT_ID
+						FROM TBL_WEBFOLDER_SHARE S1
+						JOIN TBL_WEBFOLDER_SHARE_SUB SS
+						ON S1.SHARE_ID = SS.SHARE_ID
+						AND SS.USER_ID IN
 		]]>
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
-					</iterate>
+				<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[].id#
+				</iterate>
 		<![CDATA[
-					AND S1.TENANT_ID = SS.TENANT_ID
-					LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
-					ON S1.SHARE_ID = SH.SHARE_ID
-					AND S1.TENANT_ID = SH.TENANT_ID
-					AND SH.USER_ID = #userId# 
-					WHERE SH.USER_ID IS NULL ) S
+						AND S1.TENANT_ID = SS.TENANT_ID
+						LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+						ON S1.SHARE_ID = SH.SHARE_ID
+						AND S1.TENANT_ID = SH.TENANT_ID
+						AND SH.USER_ID = #userId#
+						WHERE SH.USER_ID IS NULL
+						ORDER BY S1.SHARE_DATE ) S2
+					GROUP BY S2.FOLDERFILE_ID, S2.FOLDERFILE_TYPE, S2.TENANT_ID) S
 				JOIN (
 					SELECT
 						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
@@ -1063,30 +1069,33 @@
 				DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 				DF.TENANT_ID
 			FROM (
-				SELECT
-					S1.FOLDERFILE_ID,
-                       S1.FOLDERFILE_TYPE,
-                       S1.TENANT_ID,
-                       CASE WHEN #primary# = '1'
-						THEN S1.SHARER_NAME1
-						ELSE S1.SHARER_NAME2
-					END SHARER_NAME,
-					S1.SHARE_DATE,
-					S1.SHARER_ID
-				FROM TBL_WEBFOLDER_SHARE S1
-				JOIN TBL_WEBFOLDER_SHARE_SUB SS
-				ON S1.SHARE_ID = SS.SHARE_ID
-				AND SS.USER_ID IN
+				SELECT * FROM (
+					SELECT
+						S1.FOLDERFILE_ID,
+	                       S1.FOLDERFILE_TYPE,
+	                       S1.TENANT_ID,
+	                       CASE WHEN #primary# = '1'
+							THEN S1.SHARER_NAME1
+							ELSE S1.SHARER_NAME2
+						END SHARER_NAME,
+						S1.SHARE_DATE,
+						S1.SHARER_ID
+					FROM TBL_WEBFOLDER_SHARE S1
+					JOIN TBL_WEBFOLDER_SHARE_SUB SS
+					ON S1.SHARE_ID = SS.SHARE_ID
+					AND SS.USER_ID IN
 		]]>
 					<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[].id#
 					</iterate>
 		<![CDATA[
-				AND S1.TENANT_ID = SS.TENANT_ID
-				JOIN TBL_WEBFOLDER_SHARE_HIDE SH
-				ON S1.SHARE_ID = SH.SHARE_ID
-				AND S1.TENANT_ID = SH.TENANT_ID
-				AND SH.USER_ID = #userId# ) S
+					AND S1.TENANT_ID = SS.TENANT_ID
+					JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+					ON S1.SHARE_ID = SH.SHARE_ID
+					AND S1.TENANT_ID = SH.TENANT_ID
+					AND SH.USER_ID = #userId#
+					ORDER BY S1.SHARE_DATE ) S2
+				GROUP BY S2.FOLDERFILE_ID, S2.FOLDERFILE_TYPE, S2.TENANT_ID ) S
 			JOIN (
 				SELECT
 					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
@@ -1172,30 +1181,33 @@
 					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 					DF.TENANT_ID
 				FROM (
-					SELECT
-						S1.FOLDERFILE_ID,
-                        S1.FOLDERFILE_TYPE,
-                        S1.SHARER_ID,
-                        CASE WHEN #primary# = '1'
-							THEN S1.SHARER_NAME1
-							ELSE S1.SHARER_NAME2
-						END SHARER_NAME,
-						S1.SHARE_DATE,
-						S1.TENANT_ID
-					FROM TBL_WEBFOLDER_SHARE S1
-					JOIN TBL_WEBFOLDER_SHARE_SUB SS
-					ON S1.SHARE_ID = SS.SHARE_ID
-					AND SS.USER_ID IN
+					SELECT * FROM (
+						SELECT
+							S1.FOLDERFILE_ID,
+	                        S1.FOLDERFILE_TYPE,
+	                        S1.SHARER_ID,
+	                        CASE WHEN #primary# = '1'
+								THEN S1.SHARER_NAME1
+								ELSE S1.SHARER_NAME2
+							END SHARER_NAME,
+							S1.SHARE_DATE,
+							S1.TENANT_ID
+						FROM TBL_WEBFOLDER_SHARE S1
+						JOIN TBL_WEBFOLDER_SHARE_SUB SS
+						ON S1.SHARE_ID = SS.SHARE_ID
+						AND SS.USER_ID IN
 		]]>
 					<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[].id#
 					</iterate>
 		<![CDATA[
-					AND S1.TENANT_ID = SS.TENANT_ID
-					JOIN TBL_WEBFOLDER_SHARE_HIDE SH
-					ON S1.SHARE_ID = SH.SHARE_ID
-					AND S1.TENANT_ID = SH.TENANT_ID
-					AND SH.USER_ID = #userId# ) S
+						AND S1.TENANT_ID = SS.TENANT_ID
+						JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+						ON S1.SHARE_ID = SH.SHARE_ID
+						AND S1.TENANT_ID = SH.TENANT_ID
+						AND SH.USER_ID = #userId#
+						ORDER BY S1.SHARE_DATE ) S2
+					GROUP BY S2.FOLDERFILE_ID, S2.FOLDERFILE_TYPE, S2.TENANT_ID ) S
 				JOIN (
 					SELECT
 						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,

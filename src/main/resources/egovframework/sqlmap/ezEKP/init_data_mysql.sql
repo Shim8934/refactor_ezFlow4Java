@@ -1,9 +1,17 @@
-INSERT INTO `jmocha_dept_master` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`USEFLAG`,`MAIL`,`COMPNM2`,`DEPTLEVEL`,`DEPT_CD_PATH`,`DEPT_NM_PATH`,`EXTENSIONATTRIBUTE1`,`EXTENSIONATTRIBUTE2`,`EXTENSIONATTRIBUTE3`,`EXTENSIONATTRIBUTE4`,`EXTENSIONATTRIBUTE5`,`EXTENSIONATTRIBUTE6`,`EXTENSIONATTRIBUTE7`,`EXTENSIONATTRIBUTE8`,`EXTENSIONATTRIBUTE9`,`EXTENSIONATTRIBUTE10`,`EXTENSIONATTRIBUTE11`,`EXTENSIONATTRIBUTE12`,`EXTENSIONATTRIBUTE13`,`EXTENSIONATTRIBUTE14`,`EXTENSIONATTRIBUTE15`,`ADFLAG`,`ADSPATH`,`UPDATEDT`) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com','2017-01-06 00:00:00');
-INSERT INTO `jmocha_user_master` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`MAIL`,`MAILNICKNAME`,`UPNNAME`,`DEPARTMENT`,`DESCRIPTION`,`DESCRIPTION2`,`DESCRIPTION3`,`PHYSICALDELIVERYOFFICENAME`,`COMPANY`,`COMPANY2`,`TITLE`,`TITLE2`,`TELEPHONENUMBER`,`HOMEPHONE`,`FACSIMILETELEPHONENUMBER`,`MOBILE`,`POSTALCODE`,`STREETADDRESS`,`INFO`,`EXTENSIONATTRIBUTE1`,`EXTENSIONATTRIBUTE2`,`EXTENSIONATTRIBUTE3`,`EXTENSIONATTRIBUTE4`,`EXTENSIONATTRIBUTE5`,`EXTENSIONATTRIBUTE6`,`EXTENSIONATTRIBUTE7`,`EXTENSIONATTRIBUTE8`,`EXTENSIONATTRIBUTE9`,`EXTENSIONATTRIBUTE10`,`EXTENSIONATTRIBUTE102`,`EXTENSIONATTRIBUTE11`,`EXTENSIONATTRIBUTE12`,`EXTENSIONATTRIBUTE13`,`EXTENSIONATTRIBUTE14`,`EXTENSIONATTRIBUTE15`,`ADSPATH`,`SIPURI`,`UPDATEDT`,`MOBILE_ENABLE`,`MOBILE_NOTUSE`,`MOBILE_PIN`,`POSITIONCD`,`BIRTH`,`BIRTHTYPE`,`PASSWORD`,`IPADDRESS`,`LASTLOGIN`,`LOGINCNT`) VALUES (0,'masteradmin','마스터관리자','MasterAdmin','masteradmin@jtest.kaoni.com','masteradmin',NULL,'Top','조직도','OrganizationChart',NULL,'Top','조직도','OrganizationChart','마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,NULL,NULL,' ','c=1;a=1;k=1;i=1;g=1;l=1;n=0;m=0;w=0;t=0;',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,'1','CN=masteradmin,OU=사용자,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',NULL,'2017-01-06 00:00:00',NULL,'N',NULL,NULL,NULL,'Y','m7jsQtm1Uqm+n51H00wciQOeQm9rlarZxD0wuM9QVCU=','0:0:0:0:0:0:0:1','2017-01-06 00:00:00',0);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
 INSERT INTO `james_recipient_rewrite` (`DOMAIN_NAME`,`USER_NAME`,`TARGET_ADDRESS`) VALUES ('jtest.kaoni.com','Top','');
 INSERT IGNORE INTO `james_domain` (`DOMAIN_NAME`) VALUES ('jtest.kaoni.com');
 INSERT INTO `james_user` (`USER_NAME`,`PASSWORD_HASH_ALGORITHM`,`PASSWORD`,`version`) VALUES ('masteradmin@jtest.kaoni.com','SHA-256','9bb8ec42d9b552a9be9f9d47d34c1c89039e426f6b95aad9c43d30b8cf505425',1);
-INSERT INTO `jmocha_tenant` (`TENANT_ID`,`TENANT_NAME`,`TENANT_NAME2`) VALUES (0,'조직도','OrganizationChart');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'ExpirePassPeriod','0');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'BigSizeMailAttachDelDay','14');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'BigSizeMailAttachLimit','10');
@@ -19,7 +27,6 @@ INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary4','英语');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MailAttachLimit','10');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MailInnerDomain','jtest.kaoni.com');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'PrimaryLang','1');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'SignImageSizeLimit','10');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'totBigSizeMailAttachLimit','800');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'INDIVIDUALMAILUSER','5');
@@ -29,7 +36,6 @@ INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'Use_FromAddress','NO');
 INSERT INTO `jmocha_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
 INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) VALUES ('jtest.kaoni.com',1024,819.2);
-INSERT INTO `tbl_tenant` (`TENANT_ID`,`TENANT_NAME`,`TENANT_NAME2`) VALUES (0,'조직도','OrganizationChart');
 INSERT INTO `tbl_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useZipCodeSearchInApr', '전자결재 민원인주소 검색 사용여부', 'NO', '전자결재>결재정보에서 민원인주소를 입력 시 주소정보 검색을 사용한다.(민원인주소 버튼: 결재정보>수신자>민원인주소입력 버튼, 전자결재G에서 재기안이 아닐 때 버튼 활성화)YES: 이름+우편번호검색+상세주소 입력NO: 이름 입력 (default: NO)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useZipCodeSearch', '우편번호 검색 사용여부', 'YES', '사용자 정보 관리, 주소록에서 우편번호 검색을 사용한다. (우편번호 검색 버튼 활성화)YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '일반');
@@ -109,7 +115,6 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'reuseTitleYN', '전자결재 재사용 제목 포함여부', 'YES', '전자결재에서 결재문서 재사용 시 제목 정보를 가져온다. (재사용 버튼: 결재완료문서 조회 시 상단에 위치, 전자결재S에서 협조/합의 문서가 아니고 결재선에 후결자가 없을 때 활성화)YES: 제목 정보 포함하여 재사용NO: 제목 빈 칸으로 재사용 (default: YES)', '2017-01-06 00:00:00', '전자결재S');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'receptGubunYN', '전자결재 수신자탭 표출 타입', 'N', '전자결재G 결재정보에서 양식종류에 따라 수신자탭이 보여지는 타입을 정한다Y: 시행문일 경우 외부탭, 수신문일 경우 조직도탭이 표출N: 양식종류에 상관없이 외부탭, 조직도탭 모두 표출 (default: N)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryTimeZone', '시스템 표준 시간대', '235|+09:00', '시스템 primary 표준 시간대를 설정한다.시스템 Primary 표준 시간대 설정  (첫 로그인 시 사용자의 표준 시간대를 정할 수 없을 경우 시스템의 표준 시간대를 따름) (default: 235|+09:00)', '2017-01-06 00:00:00', '일반');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryLang', '시스템 언어', '1', '시스템 primary 언어를 설정한다.1: 한국어3: 일본어  (default: 1)', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'portalEnv', '마이포탈설정 메뉴표출 범위', '0', '환경설정>마이포탈설정의 메뉴가 보여지는 범위를 정한다.0: 마이포탈페이지+초기화면설정1: 마이포탈페이지2: 초기화면설정3: 모두 안보임*패키지가 스탠다드고 firstScreen_Mail이 NO일때만 적용 (default: 0)', '2017-01-06 00:00:00', '포탈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PersonalAgreeReturnType', '개인병렬 협조/합의 반송 처리 타입', '1', '개인병렬 협조/합의자가 반송한 경우 처리 타입을 정의한다.1: 반송해도 다음 결재권자에게 진행문서로 전달2. 한 명이라도 반송한 경우 원 기안자에게 반송 (default: 1)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'ONELINE_REPLY_ENABLE', '게시판 한줄답변 FLAG', '1', '커뮤니티 게시판의 한줄답변 FLAG0: 사용안함1: 사용 (default: 1)', '2017-01-06 00:00:00', '커뮤니티');
@@ -178,16 +183,12 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'howToSendOffer', '기안자를 발송의뢰 담당자로 지정', '0', '전자결재에서 발송의뢰 할 때 심사자를 선택하는 팝업이 뜨지 않고 기안자가 바로 발송의뢰 담당자로 지정된다.1: 사용0: 사용안함 (심사자 선택) (default: 0)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_COMMUNITY', '커뮤니티 모듈 사용여부', 'YES', 'YES: 사용 NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '커뮤니티');
 
-INSERT INTO `tbl_deptmaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`USEFLAG`,`MAIL`,`COMPNM2`,`DEPTLEVEL`,`DEPT_CD_PATH`,`DEPT_NM_PATH`,`EXTENSIONATTRIBUTE1`,`EXTENSIONATTRIBUTE2`,`EXTENSIONATTRIBUTE3`,`EXTENSIONATTRIBUTE4`,`EXTENSIONATTRIBUTE5`,`EXTENSIONATTRIBUTE6`,`EXTENSIONATTRIBUTE7`,`EXTENSIONATTRIBUTE8`,`EXTENSIONATTRIBUTE9`,`EXTENSIONATTRIBUTE10`,`EXTENSIONATTRIBUTE11`,`EXTENSIONATTRIBUTE12`,`EXTENSIONATTRIBUTE13`,`EXTENSIONATTRIBUTE14`,`EXTENSIONATTRIBUTE15`,`ADFLAG`,`ADSPATH`,`UPDATEDT`) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com','2017-01-06 00:00:00');
-INSERT INTO `tbl_usermaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`MAIL`,`MAILNICKNAME`,`UPNNAME`,`DEPARTMENT`,`DESCRIPTION`,`DESCRIPTION2`,`DESCRIPTION3`,`PHYSICALDELIVERYOFFICENAME`,`COMPANY`,`COMPANY2`,`TITLE`,`TITLE2`,`TELEPHONENUMBER`,`HOMEPHONE`,`FACSIMILETELEPHONENUMBER`,`MOBILE`,`POSTALCODE`,`STREETADDRESS`,`INFO`,`EXTENSIONATTRIBUTE1`,`EXTENSIONATTRIBUTE2`,`EXTENSIONATTRIBUTE3`,`EXTENSIONATTRIBUTE4`,`EXTENSIONATTRIBUTE5`,`EXTENSIONATTRIBUTE6`,`EXTENSIONATTRIBUTE7`,`EXTENSIONATTRIBUTE8`,`EXTENSIONATTRIBUTE9`,`EXTENSIONATTRIBUTE10`,`EXTENSIONATTRIBUTE102`,`EXTENSIONATTRIBUTE11`,`EXTENSIONATTRIBUTE12`,`EXTENSIONATTRIBUTE13`,`EXTENSIONATTRIBUTE14`,`EXTENSIONATTRIBUTE15`,`ADSPATH`,`SIPURI`,`UPDATEDT`,`MOBILE_ENABLE`,`MOBILE_NOTUSE`,`MOBILE_PIN`,`POSITIONCD`,`BIRTH`,`BIRTHTYPE`,`PASSWORD`,`IPADDRESS`,`LASTLOGIN`,`LOGINCNT`,`LISTTYPE`) VALUES (0,'masteradmin','Master','MasterAdmin','masteradmin@jtest.kaoni.com','masteradmin',NULL,'Top','조직도','OrganizationChart',NULL,'Top','조직도','OrganizationChart','MasterAdmin','MasterAdmin',NULL,NULL,NULL,NULL,NULL,NULL,' ','c=1;a=1;k=1;i=1;g=1;l=1;n=0;m=0;w=0;t=0;',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,'1','CN=masteradmin,OU=사용자,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',NULL,'2017-01-06 00:00:00',NULL,'N',NULL,NULL,NULL,'Y','m7jsQtm1Uqm+n51H00wciQOeQm9rlarZxD0wuM9QVCU=','0:0:0:0:0:0:0:1','2017-01-06 00:00:00',0,'TXT');
 
 --Board insert 
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 0);
 --INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0);
 
-INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
---INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
 
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',0,'CHECK','CHECK','CHECK','CHECK','ITEMID',20,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',1,'No','No','No','No','DOCNO',30,'Y',0);
@@ -263,7 +264,7 @@ Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNA
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('N',7,'게시일','Registered','掲示日','发布日期','WRITEDATE',100,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('N',8,'조회수','View','ヒット数','查询数','READCOUNT',50,'Y',0);
 
---Community Insert
+-- Community Insert
 
 Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('AA','a','t1496',1,0);
 Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('CC','a','t1497',2,0);
@@ -300,25 +301,11 @@ Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('OC',
 Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('ZA','c','t1528',9,0);
 
 -- approvalG Insert
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng','S907000',0);
 
 INSERT INTO TBL_LastDocID  (lastDocID, COMPANYID, TENANT_ID) VALUES ('0                ','S907000', 0);
 
 INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003','S907000',0);
 -- INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000003', N'HWP양식함', N'ALL', N'ROOT', NULL, NULL,'S907000',0);
-
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'100', N'품의함', N'Draft','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'200', N'협조함', N'Support','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'300', N'감사함', N'Audit','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'500', N'수신함', N'Receive','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'600', N'합의함', N'Agree','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'610', N'발신함', N'Send','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'700', N'반송함', N'Reject','S907000',0);
-INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'999', N'폐기함', N'Obsolete','S907000',0);
 
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'100', N'001','S907000',0);
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'200', N'002','S907000',0);
@@ -333,15 +320,6 @@ INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANY
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (NULL , N'023','S907000',0);
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'700', N'031','S907000',0);
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'700', N'032','S907000',0);
-
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng','S907000',0);
-INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng','S907000',0);
 
 ------------------------------------------
 -- TENANT_ID 추가시 TENANT_ID 수정해서 INSERT

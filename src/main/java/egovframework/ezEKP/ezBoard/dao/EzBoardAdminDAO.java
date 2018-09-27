@@ -142,6 +142,18 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.saveACL_I", map);
 	}
 	
+	public String getBoardTreePath(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardAdminDAO.getBoardTreePath", map);
+	}
+	
+	public void saveACLIncludeUppderBoard(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.saveACLIncludeUppderBoard", map);
+	}
+	
+	public void saveACLIncludeLowerBoard(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.saveACLIncludeLowerBoard", map);
+	}
+	
 	public void saveACL_U(Map<String, Object> map) throws Exception{
 		update("EzBoardAdminDAO.saveACL_U", map);
 	}
@@ -236,6 +248,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 	public void deleteACL(Map<String, Object> map) throws Exception{
 		delete("EzBoardAdminDAO.deleteACL", map);		
+	}
+	
+	public void deleteACLUnderBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteACLUnderBoard", map);
 	}
 
 	public void trunkBoard(int tenantID) throws Exception{
