@@ -511,7 +511,7 @@ function deleteOpinionInfo() {
             if (pOrgDocID == "REDRAFT") {
                 var pInformationContent = strLang406;
                 var Rtnval = OpenInformationUI(pInformationContent, deleteOpinionInfo_Complete);
-                //if (!CrossYN() && Rtnval) {
+                if (Rtnval) {
                     var selIdx = GetAttribute(pSelectedRow[0], "id");
 
                     OpinionList.DeleteRow(selIdx);
@@ -519,7 +519,7 @@ function deleteOpinionInfo() {
                     setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
                     setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
                     OpinionAddFlag = 0;
-                //}
+                }
             }
             else {
                 deleteOpinion(pSelectedRow);
