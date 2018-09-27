@@ -1437,6 +1437,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태관리 미입력자 메일발송
 	 */
+	/* 현재는 메일 작성창을 띄우므로 사용하지 않고 있음.
 	@RequestMapping(value = "/rest/ezattitude/attitudes/mail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject absentedListSendMail(HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] started.");
@@ -1500,6 +1501,8 @@ public class EzAttitudeGWController {
 		
 		return result;
 	}
+	*/
+	
 	/**
 	 * G/W 근태관리 [GET] 근태내역리스트
 	 * @param attModId
