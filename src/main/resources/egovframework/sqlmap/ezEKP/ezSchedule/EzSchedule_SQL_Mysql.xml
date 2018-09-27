@@ -583,7 +583,7 @@
         			when '2' then A.memberName2
                 end membername, 
                 '' as membername2,
-			 	'' as status,
+			 	A.status as status,
 			 	date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
              	'' as mail,
              	'' as department,
@@ -593,6 +593,7 @@
                   	memberid,
                   	membername,
                   	membername2,
+                  	status,
                   	responsedate,
                   	tenant_id
                      from 
