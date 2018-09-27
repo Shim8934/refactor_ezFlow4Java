@@ -25,9 +25,9 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        GetMyBoardItem();
+// 		        GetMyBoardItem();
 		        getTabList();
-		        getBoardList_NewBoardSTD();
+// 		        getBoardList_NewBoardSTD();
 		    }
 
 		    function getTabList() {
