@@ -470,7 +470,7 @@ public class EzCommonController extends EgovFileMngUtil{
 						
 						literalEmail = deptVO.getMail();
 						literalDisplayName = deptVO.getDisplayName();
-					// 이메일 아이디에 match되는 부서가 있는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
+					// 이메일 아이디에 match되는 부서가 없는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
 					} else {
 						List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
 						

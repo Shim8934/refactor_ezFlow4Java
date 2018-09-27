@@ -1490,6 +1490,50 @@ function ClearDocCellInfo() {
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
+        
+        //2018-09-27 김보미
+        if (AprState == "015") { //회송일 경우 수신처 결재칸도 비울것. 
+        	susunSN = "1";
+        	for (i = 1; i <= SignCount ; i++) {
+        		fieldname = susunSN + "sign" + i;
+        		field = message.GetListItem(fields, fieldname);
+        		
+        		if (field.textContent != null && field.textContent != " " && field.textContent != "") { //서명이 있을 경우에만 값을 지운다.
+        			if (field) {
+        				field.textContent = " ";
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        			
+        			fieldname = susunSN + "seumyung" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.textContent = " ";
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        			
+        			fieldname = susunSN + "seumyungdate" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.textContent = " ";
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        			
+        			fieldname = susunSN + "jikwe" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.innerHTML = "&nbsp; "; //그냥 공백(" ")을 넣으면 표가 틀어지기 때문에 기호값으로 넣어준다.
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        		}
+        	}
+        }
     }
     catch (e) {
         alert("ClearDocCellInfo()" + e.description);

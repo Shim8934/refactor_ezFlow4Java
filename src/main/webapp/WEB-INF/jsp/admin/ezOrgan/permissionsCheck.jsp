@@ -1111,12 +1111,14 @@
 			            </CELL>
 			        </ROW>   
                     </c:if>
-                    <%-- <ROW>
+                    <c:if test="${useWebfolder == 'YES'}">
+                    <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
 			                <DATA1>wf</DATA1>
 			            </CELL>
-			        </ROW>--%>
+			        </ROW>
+			        </c:if>
 			        <c:if test="${use_attitude == 'YES'}">
                     <ROW>
 			            <CELL>            
