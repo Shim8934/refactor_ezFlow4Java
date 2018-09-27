@@ -243,8 +243,15 @@
 	                      	( C.AccessID = #v_pUserID# )
 	                      AND 
 	                      	D.ParentBoardID = #v_pRootBoardID#
-	                      AND
-	                      	C.BOARDGROUPACL = 'Y' ) B   
+	                      ]]>
+	                      <isEqual property="v_ISDEPT" compareValue="1">
+	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+		                      AND
+		                      	C.BoardGroupACL = 'Y'
+	                      	</isEqual>
+	                      </isEqual>
+	                      <![CDATA[
+	                      	) B   
 	                ON 
 	                	A.TENANT_ID = B.TENANT_ID
 	                AND
@@ -257,7 +264,7 @@
 			</isNotEqual>
 		</isEqual>
 		<isNotEqual property="v_pMode" compareValue="1">
-<!-- 			ADMIN권한 -->
+<!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
 			<![CDATA[
 				SELECT 
 					DISTINCT A.BoardID ,
