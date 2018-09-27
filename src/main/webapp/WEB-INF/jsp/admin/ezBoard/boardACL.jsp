@@ -216,9 +216,10 @@
 	            var alertContent = "";
 	            
 	            if (type === "one" ) {
-	            	alertContent = "<spring:message code='ezBoard.t197'/>";
+	            	//alertContent = "<spring:message code='ezBoard.t197'/>";
+	            	alertContent = "<spring:message code='ezBoard.pjg04'/>";
 	            } else if (type === "type" ) {
-	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
+	            	alertContent = "<spring:message code='ezBoard.pjg05'/>";
 	            }
 				
 	            if(confirm(alertContent)) {
