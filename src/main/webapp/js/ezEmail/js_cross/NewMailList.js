@@ -275,7 +275,7 @@ function MakeListInfoHTML(ConentObject) {
                 
                 // 수신확인 중 수신자가 여러명일 경우
             	if (useReceivingChk) {
-            		recipients = p_Msgto.split(';');
+            		recipients = p_Msgto.split(',');
             		recipientsLen = recipients.length;
             	}
             	
