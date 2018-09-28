@@ -570,7 +570,15 @@
 		    function ViewDoc_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var selRow = DocList.GetSelectedRows();
+
+		        if (selRow.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        var tr = selRow[0];
 		        pURL = tr.getAttribute("DATA2");
 		
@@ -1161,7 +1169,10 @@
 		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>","OPEN");
+		        	//팝업창에서 알럿창으로 변경
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 		            return;
 		        }
 		        else{
@@ -1249,6 +1260,12 @@
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
 
+		        if (tr.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
 		            var InformationString = "<spring:message code='ezApproval.t579'/>";
 		            //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
@@ -1297,6 +1314,12 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        
+		        if (tr.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
 	
 		        if (GetAttribute(tr[0], "DATA12") != strDocState1) {
 		            var InformationString = "<spring:message code='ezApprovalG.hyj26'/>";
