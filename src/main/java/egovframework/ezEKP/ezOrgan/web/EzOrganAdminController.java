@@ -128,6 +128,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
     	ezCommonService.createTblCompanyConfig();
     	ezCommonService.addAddJobMasterOrderBy();
+    	ezCommonService.createTblIPAccessID();
+    	ezCommonService.createTblIPAccessIP();
     	
     	logger.debug("init ended.");
     }
