@@ -926,6 +926,10 @@
 			    try {
 			        bAttachProcess = true;
 			    } catch (e) { }
+			    
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {
