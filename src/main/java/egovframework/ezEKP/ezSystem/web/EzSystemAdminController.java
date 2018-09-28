@@ -92,8 +92,20 @@ public class EzSystemAdminController {
 
 	
 	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do")
-	public String systemLeftMenu(Model model) throws Exception {
+	public String systemLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		logger.debug("tenantID=" + userInfo.getTenantId());
+		
+		String useIPAccessMenu = ezCommonService.getTenantConfig("useIPAccessMenu", userInfo.getTenantId());
+		
+		if (useIPAccessMenu == null || useIPAccessMenu.equals("")) {
+			useIPAccessMenu = "NO";
+		}
+		
+		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		
+		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
 		return "/ezSystem/systemLeftMenu";
 	}
 	
