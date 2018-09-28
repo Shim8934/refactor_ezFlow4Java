@@ -121,21 +121,33 @@
 		                count++;
 			        }
 
-			        if (count > 0) {
-			        	$('#ScheduleList').css("width", "80%");
-			            document.getElementById("ScheduleList").innerHTML = listHTML;
-			            $('#scheduleEmptyList').empty();
-			        } else {
-			            var listHTML = "";
-					    listHTML += "<dl class='nodata'>";
-	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-	                	listHTML += '<dd>"' + strLang2_total + '"</dd>';
-	                	listHTML += "</dl>";
-	                	$('#ScheduleList').empty();
-	                	$('#ScheduleList').css("width", "0px");
-	                	$('#scheduleEmptyList').html(listHTML);
-			        }
+		        	//$('#ScheduleList').css("width", "80%");
+		        	
+		        	var cnt = 4 - count;
+		        	
+		        	while(cnt--) {
+		        		listHTML += "<li class='scheduleLi_nodata'>";
+		        		listHTML += "<p class='sNodataText'>"+ strLang277 + "</p>";
+		        		listHTML += "<p class='sNodataPlus' onclick='scheduleWrite()'><img src='/images/kr/main/schedule_plus.png'></p></li>";
+		        	}
+		        	
+		            document.getElementById("ScheduleList").innerHTML = listHTML;
+
 			    } catch (e) {}
+			}
+			
+			function scheduleWrite() {
+				var wWeight = "790";
+                var wHeight = "830";
+
+                var heigth = window.screen.availHeight;
+                var width = window.screen.availWidth;
+
+                var left = (width - wWeight) / 2;
+                var top = (heigth - wHeight) / 2;
+                
+                window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			
 			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
@@ -178,12 +190,11 @@
                 </dl>
             </div>
             <div class="schedule_list">
+            	<ul class="scheduleUL" id="ScheduleList"></ul>
                 <dl class="scheduleDate">
                     <dt class="dayT" id="dayT"></dt>
                     <dd class="dayN" id="dayN"></dd>
                 </dl>
-                <ul class="scheduleUL" id="ScheduleList"></ul>
-                <ul class="portlet_list" id="scheduleEmptyList"></ul>
             </div>
         </div>
 		

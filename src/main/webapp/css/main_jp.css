@@ -183,7 +183,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .noti_portlet_list .notiLI .notiDL03{background:url(../images/kr/main/notiImg03.png) no-repeat center; background-size:100% 100%;}
 .noti_portlet_list .notiLI .noti_num{margin:0px 1px 0px 0px; padding:0px; font-size:13px; color:#fff; font-weight:bold; width:24px; height:24px; line-height:23px; background:#0470e4; text-align:center; border:1px solid #0064d0; box-sizing:border-box; position:absolute; left:0px; top:0px;}
 .noti_portlet_list .notiLI .noti_new{margin:0px; padding:0px; font-size:13px; color:#fff; font-weight:bold; position:absolute; left:25px; top:0px; width:24px; height:24px; text-align:center; line-height:23px; background:#ff6c00;}
-.noti_portlet_list .notiLI .noti_text{margin:0px 0px 0px 0px; padding:5px 3px 0px 3px; position:absolute; bottom:0px; font-size:13px; color:#fff; height:67px; width:100%; background:rgba(0, 0, 0, 0.5); text-align:center; box-sizing:border-box;}
+.noti_portlet_list .notiLI .noti_text{margin:0px 0px 0px 0px; padding:5px 3px 0px 3px; position:absolute; bottom:0px; font-size:13px; color:#fff; height:67px; line-height:19px; width:100%; background:rgba(0, 0, 0, 0.5); text-align:center; box-sizing:border-box;}
 .portlet_list li.notiLI02{width:144px; height:169px; background:url(../images/kr/main/notiImg01.png) no-repeat; }
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(../images/kr/main/notiImg01.png) no-repeat; }
 
@@ -303,20 +303,23 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .CalendarArea .todayDate .Dgray{ font-size:12px; color:#b7b7b7; font-weight:bold; margin:0px; padding:30px 0px 60px 0px;}
 .CalendarArea .todayDate .dayText{font-size:14px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
 .CalendarArea .todayDate .dayNum{font-size:42px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
-.schedule_list {list-style:none; margin:0 0 0 0px; padding:12px 0px 0px 25px; clear:both; overflow:hidden; border-top:1px solid #e7e7e7;}
-.scheduleDate{ width:40px; margin:0px; padding:0px 15px 0px 0px; float:left;}
+.schedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 25px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7;}
+.scheduleDate{margin:0px;padding: 12px 15px 0px 0px;float: none;}
 .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
-.scheduleUL{ width:80%; margin:0px; padding:0px 0px 0px 20px; list-style:none; float:left; overflow:hidden; background:url(../images/kr/main/schedule_timeline.png) repeat-y left top; height:202px;} /*장진혁 */
-.scheduleUL .scheduleLi{margin:0px; padding:3px 0px 12px 0px; cursor: pointer;}
-.scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px; line-height: 16px;}
-.scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:rgb(244, 221, 14); border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
-.scheduleUL .scheduleLi .scheduleTime .Tindividual{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#018bfa; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.scheduleUL{margin:0px;padding: 0px 0px 0px 7px;list-style:none;float: right;overflow:hidden;background: url(../images/kr/main/schedule_timeline.png) no-repeat left top;width: 88%;height: 214px;box-sizing: border-box;}
+.scheduleUL .scheduleLi{margin:0px;padding: 6px 0px 12px 14px;border-bottom: 1px dashed #e7e7e7;height:35px; cursor: pointer;}
+.scheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px;}
+.scheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:rgb(244, 221, 14); border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
+.scheduleUL .scheduleLi .scheduleTime .Tindividual{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#018bfa; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .Tdept{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .Tcompany{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#ff1c71; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .scheduleUL .scheduleLi .scheduleTime .timeText{margin:0px; padding:0px 0px 0px 5px; font-size:13px; color:#333;}
-.scheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:100%; text-overflow:ellipsis; overflow: hidden; white-space: nowrap;}
+.scheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:97%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;}
 .scheduleUL .scheduleLi .scheduleText .reservation{margin:0px; padding:0px; font-size:13px; color:#000; font-weight:bold;}
+.scheduleUL .scheduleLi_nodata{margin:0px;padding: 8px 0px 10px 14px;border-bottom: 1px dashed #e7e7e7; height:35px; line-height:34px;}
+.scheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 35px; float:left; font-size:12px; color:#b2b2b2; background:url(../images/kr/main/schedule_nodataIcon.png) no-repeat left center;}
+.scheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 17px 0px 0px; padding:0px; float:right; cursor:pointer;}
 
 /* approval */
 
