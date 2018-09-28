@@ -660,8 +660,8 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        
 		        if (oArrRows.length <= 0) {
-		            var InformationString = strLangS385;
-		            alert(InformationString);
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
 		            return;
 		        }
 		        
@@ -804,8 +804,8 @@
 		                }
 		            }
 		        } else {
-		            var InformationString = strLangS385;
-		            alert(InformationString);
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
 		            return;
 		        }
 		    }
@@ -1388,7 +1388,10 @@
 		        var tr = DocList.GetSelectedRows();
 		
 		        if (tr.length == 0) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
+		        	//팝업창에서 알럿창으로 변경
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 		            return;
 		        }
 		        else
