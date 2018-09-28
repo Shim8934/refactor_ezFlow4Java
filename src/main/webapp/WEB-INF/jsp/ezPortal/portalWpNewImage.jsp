@@ -20,8 +20,12 @@
 		<script type="text/javascript">
 			var pMode = "P";
 			var strLang2_total = "<spring:message code='main.t00026' />";
-			
-	    	window.onload = function () {
+			var openerCalendarMiniView, openerCalendarMiniDataSource;
+	    	
+			window.onload = function () {
+	    		openerCalendarMiniView = CalendarMiniView;
+	    		openerCalendarMiniDataSource = CalendarMiniDataSource;
+	    		
 	    		CalendarMiniView("CalendarMini");	    		
 	    		CalendarMiniDataSource();
 	    		

@@ -158,6 +158,14 @@
 		                break;
 		        }
 		    }
+		    
+		    window.onbeforeunload = function () {
+		        try {
+		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
+		    		window.opener.openerCalendarMiniDataSource();
+		            window.opener.getScheduleList(window.opener.nowDay, "P");
+		        } catch (e) { }
+		    }
 
 		    $(function () {
 		        $("#Sdatepicker").datepicker({

@@ -92,7 +92,15 @@
 	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
 	            }
 	        }
-				
+	        
+		    window.onbeforeunload = function () {
+		        try {
+		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
+		    		window.opener.openerCalendarMiniDataSource();
+		            window.opener.getScheduleList(window.opener.nowDay, "P");
+		        } catch (e) { }
+		    }
+				    
 	        function show_personinfo(userid) {
 	            if (userid == "0")
 	                userid = creatorid;
