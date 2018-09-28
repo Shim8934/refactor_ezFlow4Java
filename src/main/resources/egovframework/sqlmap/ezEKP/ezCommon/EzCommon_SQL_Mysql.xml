@@ -260,4 +260,44 @@
 			ORDERBY VARCHAR(200) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
+	<![CDATA[
+		SELECT 
+			ipno
+		FROM 
+			TBL_ACCESS_IP
+		LIMIT 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessIP"> 
+		CREATE TABLE `tbl_access_ip` (
+		  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  `IPADDRESS` varchar(100) NOT NULL,
+		  `ACCESS` varchar(10) DEFAULT 'YES',
+		  `EXPLANATION` varchar(200) DEFAULT NULL,
+		  PRIMARY KEY (`IPNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblIPAccessID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				accessno
+			FROM 
+				TBL_ACCESS_ID
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessID"> 
+		CREATE TABLE `tbl_access_id` (
+		  `ACCESSNO` int(11) NOT NULL AUTO_INCREMENT,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  `CN` varchar(80) NOT NULL,
+		  PRIMARY KEY (`ACCESSNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 </sqlMap>
