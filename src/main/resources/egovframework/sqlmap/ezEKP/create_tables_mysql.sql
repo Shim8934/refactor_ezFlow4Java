@@ -1044,13 +1044,29 @@ CREATE TABLE `jmocha_tenant` (
 -- Table structure for table `jmocha_tenant_config`
 --
 
+--DROP TABLE IF EXISTS `jmocha_tenant_config`;
+--/*!40101 SET @saved_cs_client     = @@character_set_client */;
+--/*!40101 SET character_set_client = utf8 */;
+--CREATE TABLE `jmocha_tenant_config` (
+--  `TENANT_ID` int(11) NOT NULL,
+--  `PROPERTY_NAME` varchar(100) NOT NULL,
+--  `PROPERTY_VALUE` varchar(1000) NOT NULL,
+--  PRIMARY KEY (`TENANT_ID`,`PROPERTY_NAME`),
+--  KEY `IDX_PROPERTY_NAME` (`PROPERTY_NAME`),
+--  CONSTRAINT `FK_TENANT_ID` FOREIGN KEY (`TENANT_ID`) REFERENCES `jmocha_tenant` (`TENANT_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `jmocha_tenant_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_tenant_config` (
-  `TENANT_ID` int(11) NOT NULL,
-  `PROPERTY_NAME` varchar(100) NOT NULL,
-  `PROPERTY_VALUE` varchar(1000) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `PROPERTY_NAME` varchar(400) NOT NULL,
+  `PROPERTY_VALUE` varchar(2000) NOT NULL,
+  `DESCRIPTION` varchar(1000) DEFAULT NULL,
+  `CONFIG_NAME` varchar(400) DEFAULT NULL,
+  `REGDATE` datetime DEFAULT NULL,
+  `CONFIG_TYPE` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`PROPERTY_NAME`),
   KEY `IDX_PROPERTY_NAME` (`PROPERTY_NAME`),
   CONSTRAINT `FK_TENANT_ID` FOREIGN KEY (`TENANT_ID`) REFERENCES `jmocha_tenant` (`TENANT_ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1768,7 +1784,7 @@ CREATE TABLE `tbl_access_id` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `CN` varchar(80) NOT NULL,
   PRIMARY KEY (`ACCESSNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1785,7 +1801,7 @@ CREATE TABLE `tbl_access_ip` (
   `ACCESS` varchar(10) DEFAULT 'YES',
   `EXPLANATION` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`IPNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

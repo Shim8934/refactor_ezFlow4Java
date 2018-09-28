@@ -178,6 +178,7 @@ function getDocList_after(xml) {
         check_presence2();
     
     try {
+    	parent.frames["left"].pListTypeValue = pListTypeValue;
         parent.frames["left"].getAprCount();
         parent.frames["left"].setPresentValue("");
     } catch (e) { }
@@ -347,6 +348,7 @@ function getReceivedDocList_after(xml) {
 
         }
         try {
+        	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
             parent.frames["left"].setPresentValue("");
         } catch (e) { }

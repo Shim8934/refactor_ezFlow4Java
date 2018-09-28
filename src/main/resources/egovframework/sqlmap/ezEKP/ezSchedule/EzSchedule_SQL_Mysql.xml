@@ -434,8 +434,9 @@
 				WHERE
 					B.DEPTID = #v_DEPTID#
 				AND
-					B.TENANT_ID = 0	 ) AA
-			order by displayname	
+					B.TENANT_ID = #v_TENANTID#	 ) AA
+			ORDER BY 
+                  	DISPLAYNAME ASC	
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.scheduleGetLunarUse" parameterClass="map" resultClass="String">		
