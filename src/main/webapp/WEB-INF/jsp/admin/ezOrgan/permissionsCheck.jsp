@@ -52,7 +52,8 @@
 		    var xmlHTTP2 = createXMLHttpRequest();
 		    var ReturnFunction;
 		    var isfirst = true;
-			
+			var isAdmin = "${isAdmin}";
+		    
 		    $(document).ready(function(){
 		    	try {
 	                ReturnFunction = opener.permissions_check_dialogArguments[1];
@@ -87,6 +88,10 @@
 		        pUserList.DataBind("PermissionBasic"); 
 		        
 		        ChangeListView_onClick(getOrganListType());
+		        
+		        if (isAdmin == "false") {
+		        	$("#lvPermissionBasic").find("tbody tr:first").css("display","none");
+		        }
 		    });
 		    
 		    function ListTypeChangeIcon() {
