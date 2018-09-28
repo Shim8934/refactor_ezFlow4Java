@@ -436,6 +436,26 @@ CREATE TABLE `jmocha_distribution` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_distribution`
+--
+
+DROP TABLE IF EXISTS `jmocha_distribution_serve`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_distribution_serve` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `SERVE_MAIL` varchar(100) NOT NULL,
+  `SERVE_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SERVE_MAIL`,`SERVE_NAME`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
+  CONSTRAINT `distribution_serve_foreign_keys` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `james_recipient_rewrite` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+SELECT * FROM jmocha.jmocha_distribution_serve;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_inbox_rule`
 --
 
