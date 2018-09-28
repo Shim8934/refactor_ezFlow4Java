@@ -199,6 +199,26 @@ function addRemoveButton(memoId) {
 		
 	$("#memo" + memoId).prepend(modal);
 	
+	$("#modRm" + memoId).attr("tabindex", -1).on("focus", function() {
+		
+		var agent = navigator.userAgent.toLowerCase();
+
+		if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+			$(this).css("border", "1px solid blue");
+		}
+		
+	}).on("keyup", function(event) {
+		
+		if (event.keyCode == 13) {
+			modalDelete(memoId);
+		} else {
+			if ((navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1)) {
+				$(this).css("border", "1px solid #bbbbbb");
+			}
+		}
+		
+	}).focus();
+	
 	$(".alertPopup").click(function(e){
 		e.stopPropagation();
 	})
