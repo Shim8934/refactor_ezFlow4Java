@@ -6,6 +6,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +21,9 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +56,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzApprovalGAdminService")
 public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
@@ -71,6 +80,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource messageSource;
+	
+	@Resource(name = "crypto")
+	private EgovFileScrty egovFileScrty;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
@@ -2407,7 +2419,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	//TODO 2017-01-05 이효진 연동정보 및 workflow 등록 및 수정 부분 미구현(EZSP_SETFORMDATA)
 	@Override
-	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
+	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag, String reformMht, String reformHtml, String reformFunction) throws Exception {
 		logger.debug("saveFormInfo started.");
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
@@ -2445,34 +2457,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			recevGroupXML = formRecevGroup;
 		}
 		
-		boolean isUpdate = false;
 		String saveFileFolder = "";
 		String saveFileName = "";
-
-		if (!formID.equals("") && !formMhtInfo.equals("")) {
-			isUpdate = true;
-			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
-			saveFileName = saveFileFolder + commonUtil.separator + formID + ".mht";
-			
-			try {
-				File fileFolder = new File(saveFileFolder);
-				
-				if (!fileFolder.exists()) {
-					fileFolder.mkdirs();
-				}
-				
-				File file = new File(saveFileName);
-				if (file.exists()) {
-					strBeforeMHT = FileUtils.readFileToString(file);
-				}
-
-				FileWriter fw = new FileWriter(file);
-				fw.append(formMhtInfo);
-				fw.close();
-			} catch (Exception e) {
-				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
-			}
-		}
+		// FormBuilder
+		boolean useReform = reformMht != null;
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFORMCONTAINERID", contID);
@@ -2485,6 +2473,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMCONNFLAG", formConnFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
+		// FormBuilder
+		map.put("v_PREFORMFLAG", useReform ? "Y" : "N");
 
 		if (formID.equals("")) {
 			logger.debug("setFormDataSelect started.");
@@ -2727,21 +2717,82 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 		}
 		
-		if (!isUpdate) {
-			if (!formMhtInfo.equals(""))	 {
-				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
+		if (!formMhtInfo.equals(""))	 {
+			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
+			saveFileName = saveFileFolder + commonUtil.separator + formID + ".mht";
+			
+			try {
+				File fileFolder = new File(saveFileFolder);
 				
-				File file = new File(saveFileName);
-				
-				if (file.exists()) {
-					strBeforeMHT = FileUtils.readFileToString(file);
-				} else {
-					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+				if (!fileFolder.exists()) {
+					fileFolder.mkdirs();
 				}
 				
+				File file = new File(saveFileName);
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				}
+
 				FileWriter fw = new FileWriter(file);
 				fw.append(formMhtInfo);
 				fw.close();
+				
+				// FornBuilder
+				if (useReform) {
+					String reformSaveFolder = saveFileFolder + commonUtil.separator + "reform" + commonUtil.separator + formID;
+					String reformFilePrefix = reformSaveFolder + commonUtil.separator + formID + "_FORMBuilder";
+
+					Path reformSaveFolderPath = Paths.get(reformSaveFolder);
+
+					if (!Files.isDirectory(reformSaveFolderPath)) {
+						Files.createDirectories(reformSaveFolderPath);
+					}
+					
+					// HTML 쿼리 암호화
+					// TODO 파싱 속도 이슈
+					org.jsoup.nodes.Document document = Jsoup.parse(reformHtml);
+					org.jsoup.nodes.Element dataBindListElement = document.getElementById("__reform_data_bind_list");
+					
+					if (dataBindListElement != null) {
+						String dataBindListValue = dataBindListElement.attr("value");
+						
+						List<org.jsoup.nodes.Element> elements = document.getElementsByAttributeValueContaining("value", "\"sql\":");
+						JSONParser jsonParser = new JSONParser();
+						
+						for (org.jsoup.nodes.Element element : elements) {
+							if (dataBindListValue.contains('"' + element.id() + '"')) {
+								Map<String, Object> valueAttrJson = uncheckedCast(jsonParser.parse(element.attr("value")));
+								
+								String query = valueAttrJson.get("sql").toString();
+								query = egovFileScrty.encryptAES(query);
+								
+								valueAttrJson.put("sql", query);
+								
+								element.attr("value", JSONObject.toJSONString(valueAttrJson));
+								jsonParser.reset();
+							}
+						}
+						
+						reformHtml = document.outerHtml();
+					}
+
+					Path reformMhtPath = Paths.get(reformFilePrefix + ".mht");
+					Path reformHtmlPath = Paths.get(reformFilePrefix + ".html");
+					Path reformFunctionPath = Paths.get(reformFilePrefix + ".js");
+
+					OpenOption[] openOptions = { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING };
+
+					Files.write(reformMhtPath, reformMht.getBytes(), openOptions);
+					Files.write(reformHtmlPath, reformHtml.getBytes(), openOptions);
+
+					if (reformFunction == null || reformFunction.trim().isEmpty()) {
+						Files.deleteIfExists(reformFunctionPath);
+					} else {
+						Files.write(reformFunctionPath, reformFunction.getBytes(), openOptions);
+					}
+				}
+			} catch (Exception e) {
+				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
 			}
 		}
 		
@@ -2749,6 +2800,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("saveFormInfo ended.");
 		
 		return formID;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> T uncheckedCast(Object object) {
+		return (T) object;
 	}
 	
 	// 관리자 편집창

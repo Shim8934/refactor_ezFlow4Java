@@ -61,6 +61,10 @@
 		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
 		    var ext = "${ext}";
 		    var locale = "<c:out value = '${locale}' />";
+		    // FormBuilder
+		    var useReform = "${useReform}" === "true";
+		    var reformUrl = "${reformUrl}";
+		    // FormBuilder end
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -256,6 +260,11 @@
 			                	}
 			                }
 			            }
+						
+						<c:if test="${isReform}">
+							document.getElementById("reform-checkbox").checked = true;
+							onReformCheckboxClickEvent();
+						</c:if>
 		        	}
 		        });
 		    }
@@ -938,6 +947,23 @@
 		        }
 		    }
 		</script>
+		
+		<!-- FormBuilder -->
+		<c:if test="${useReform}">
+		<script>
+			function onReformCheckboxClickEvent() {
+				if (document.getElementById("reform-checkbox").checked) {
+					document.getElementById("ApvForm_sub7").style.display = "";
+					document.getElementById("ApvForm_sub8").style.display = "";
+				} else {
+					document.getElementById("ApvForm_sub7").style.display = "none";
+					document.getElementById("ApvForm_sub8").style.display = "none";
+				}
+			}
+		</script>
+		</c:if>
+		<!-- FormBuilder - end -->
+		
 		<style>
 			#mainmenu ul li {float:right !important}
 			#mainmenu ul li span {height:13px !important; background: none !important; margin-top:2px !important}
@@ -962,6 +988,12 @@
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApprovalG.t1629'/></span></p>
                 <p id = "ApvForm_sub6" style = 'display:none;'><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
+				<!-- FormBuilder -->
+				<c:if test="${useReform}">
+					<p id = "ApvForm_sub7" style="display:none;"><span divname="ApvForm_div7" id="1tab7"><spring:message code='ezApproval.reform.t001'/></span></p>
+					<p id = "ApvForm_sub8" style="display:none;"><span divname="ApvForm_div8" id="1tab8"><spring:message code='ezApproval.reform.t002'/></span></p>
+				</c:if>
+				<!-- FormBuilder - end -->
 	        </div>
         </div>
         
@@ -995,6 +1027,12 @@
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
 						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
+						<!-- FormBuilder -->
+						<c:if test="${useReform && approvalFlag == 'G'}">
+							<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
+							<label for="reform-checkbox"><span><spring:message code='ezApproval.reform.t003'/></span></label>
+						</c:if>
+						<!-- FormBuilder - end -->
 					</td>
 				</tr>
 			</table>
@@ -1002,6 +1040,12 @@
             <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
             	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
             	<span><spring:message code='ezApproval.t00004'/></span>
+                <!-- FormBuilder -->
+                <c:if test="${useReform && approvalFlag == 'S'}">
+                	<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onclick="onReformCheckboxClickEvent()"/>
+                	<label for="reform-checkbox"><span><spring:message code='ezApproval.reform.t003'/></span></label>
+                </c:if>
+                <!-- FormBuilder - end -->
             </div>
             <table class="content" style="width:100%;">
 				<tr id="tr_setAutoItemCode">
@@ -1299,6 +1343,29 @@
 	            </table>
         	</div>
         </div>
+        
+        <!-- FormBuilder -->
+        <c:if test="${useReform}">
+		    <div id="ApvForm_content7" style="width:100%; height:900px; display:none; padding-top:10px;">
+		        <h2 id="H4" class="receiver_tltype01" style="margin-bottom:5px;">
+		        	<span style="min-width: 45px;" id="Span4"><spring:message code='ezApproval.reform.t001'/></span>
+		        </h2>
+		        <iframe id="iframe_ApvReForm" class="viewbox" src="/admin/ezApprovalG/reformDesignProcessor.do?height=880&id=editor2" name="iframe_ApvReForm" frameborder="0" style="padding: 0; height: 100%; width: 100%; overflow: auto; border:none"></iframe>
+		    </div>
+		    <div id="ApvForm_content8" style="width:100%;height:90%;display:none; padding-top:10px;">
+		        <h2 id="H8" class="receiver_tltype01" style="margin-bottom:5px;">
+		        	<span style="min-width: 45px;" id="Span8"><spring:message code='ezApproval.reform.t002'/></span>
+		        </h2>
+		        <table class="content">
+		            <tr>
+		                <td>
+		                    <textarea class="textarea" id="txt_reformFunction" onkeydown="if (event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}" style="font-size:12pt; width:820px; height:790px; ime-mode: inactive;"><c:if test="${!empty reformFunction}">${reformFunction}</c:if></textarea>
+		                </td>
+		            </tr>
+		        </table>
+		    </div>  
+       	</c:if>
+       	<!-- FormBuilder - end -->
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

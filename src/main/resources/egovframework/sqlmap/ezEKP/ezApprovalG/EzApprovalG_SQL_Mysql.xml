@@ -24721,6 +24721,34 @@
 			ATTACHFILEHREF = #href#
 	</select>
 	
+	<select id="EzApprovalG.getReformFlag" parameterClass="Map" resultClass="String">
+		SELECT
+			REFORMFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			FORMID = #formId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalG.getReformFlagForApprovalDocument" parameterClass="Map" resultClass="String">
+		SELECT
+			FORMINFO.REFORMFLAG
+		FROM
+			TBL_APRDOCINFO DOCINFO
+		JOIN
+			TBL_FORMINFO FORMINFO
+		ON
+			FORMINFO.FORMID = DOCINFO.FORMID
+			AND FORMINFO.COMPANYID = DOCINFO.COMPANYID
+			AND FORMINFO.TENANT_ID = DOCINFO.TENANT_ID
+		WHERE
+			DOCINFO.DOCID = #docId#
+			AND DOCINFO.COMPANYID = #companyId#
+			AND DOCINFO.TENANT_ID = #tenantId#
+	</select>
+	
 	<!-- 단암 마이그레이션 권한 체크-->
 	<select id="EzApprovalG.getExtAttr1" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[							

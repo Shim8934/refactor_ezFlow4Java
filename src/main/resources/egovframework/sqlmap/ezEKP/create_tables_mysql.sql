@@ -5322,6 +5322,7 @@ CREATE TABLE `tbl_forminfo` (
   `FORMORDER` bigint(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
+  `REFORMFLAG` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

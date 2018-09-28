@@ -25257,7 +25257,8 @@
 			COMPANYID = #companyID#
 		AND
 			TENANT_ID = #tenantID#
-   </select>
+	</select>
+	
 	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
 		SELECT
 			COUNT(ATTACHFILEHREF)
@@ -25266,6 +25267,35 @@
 		WHERE
 			ATTACHFILEHREF = #href#
 	</select>
+	
+	<select id="EzApprovalG.getReformFlag" parameterClass="Map" resultClass="String">
+		SELECT
+			REFORMFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			FORMID = #formId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalG.getReformFlagForApprovalDocument" parameterClass="Map" resultClass="String">
+		SELECT
+			FORMINFO.REFORMFLAG
+		FROM
+			TBL_APRDOCINFO DOCINFO
+		JOIN
+			TBL_FORMINFO FORMINFO
+		ON
+			FORMINFO.FORMID = DOCINFO.FORMID
+			AND FORMINFO.COMPANYID = DOCINFO.COMPANYID
+			AND FORMINFO.TENANT_ID = DOCINFO.TENANT_ID
+		WHERE
+			DOCINFO.DOCID = #docId#
+			AND DOCINFO.COMPANYID = #companyId#
+			AND DOCINFO.TENANT_ID = #tenantId#
+	</select>
+	
    <delete id="EzApprovalG.susinNonElecRecDocDel1" parameterClass="Map">
 		DELETE
 			TBL_APRDOCINFO

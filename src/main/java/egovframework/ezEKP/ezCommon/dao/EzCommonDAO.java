@@ -21,7 +21,7 @@ import egovframework.let.user.login.vo.TenantVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommonDAO")
-public class EzCommonDAO extends EgovAbstractDAO{
+public class EzCommonDAO extends EgovAbstractDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(EzCommonDAO.class);
             
@@ -220,6 +220,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_company_config doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblCompanyConfig");
+		}
+	}
+	
+	public void createReformFlagColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkReformFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo.reformflag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.createReformFlagColumn");
 		}
 	}
 	

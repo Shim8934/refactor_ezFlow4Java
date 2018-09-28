@@ -382,6 +382,8 @@
 		                parameter = parameter + HWP;
 		            }
 		            else {
+		            	parameter += "&reformflag=" + encodeURIComponent(GetAttribute(selRow[0], "REFORMFLAG"));
+		            	
 		            	if (approvalFlag =='S') {
 							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 								url = "/admin/ezApprovalG/formMainOther.do";

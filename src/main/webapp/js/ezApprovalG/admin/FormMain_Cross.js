@@ -9,6 +9,12 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -20,6 +26,12 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "770px";
             }
             break;
@@ -31,6 +43,12 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -42,6 +60,12 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -53,6 +77,12 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -65,9 +95,51 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
+        // FormBuilder
+        case "ApvForm_div7":
+            if (document.getElementById("ApvForm_content7").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;
+        case "ApvForm_div8":
+            if (document.getElementById("ApvForm_content8").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "";
+                }
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;
+        // FormBuilder end
     }
 }
 
@@ -231,11 +303,36 @@ function SaveFormInfo() {
     }
     
     var url = "";
+    var params = {
+		companyID: companyID,
+		formContID: contID,
+		formID: formID,
+		formInfo: formInfo,
+		formMHT: formMHT,
+		formConn: formConn,
+		formAutoRule: formAutoRule,
+		formAutoRuleLine: formAutoRuleLine,
+		formRecevGroup: formRecevGroup
+	}
     
     if(useEditor == "HWP") {
     	url = "/admin/ezApprovalG/formSaveHWP.do";
     } else {
     	url = "/admin/ezApprovalG/formSave.do";
+    	
+		// FormBuilder
+		if (document.getElementById("reform-checkbox").checked) {
+			iframe_ApvReForm.processForSaving();
+			
+			var reformBodyStr = iframe_ApvReForm.GetEditorContent();
+			reformBodyStr = "<body>" + reformBodyStr + "</body>"
+			
+			params.reformMht = ConvertHTMLtoMHT(reformBodyStr)
+			params.reformHtml = reformBodyStr;
+			params.reformFunction = document.getElementById("txt_reformFunction").value;
+			
+			iframe_ApvReForm.processAfterSaving();
+		}
     }
     
     $.ajax({
@@ -243,17 +340,7 @@ function SaveFormInfo() {
 		dataType : "text",
 		async : false,
 		url : url,
-		data : {
-			companyID  : companyID,
-			formContID : contID,
-			formID     : formID,
-			formInfo   : formInfo,
-			formMHT    : formMHT,
-			formConn   : formConn,
-			formAutoRule     : formAutoRule,
-			formAutoRuleLine : formAutoRuleLine,
-			formRecevGroup   : formRecevGroup
-		},
+		data : params,
 		success: function(text){
 			SaveFormInfo_after(text);
 		}

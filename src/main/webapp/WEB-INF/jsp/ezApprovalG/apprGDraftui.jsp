@@ -157,6 +157,7 @@
 			var nonElecRec = "${nonElecRec}";
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
+			var reformFlag = "${reformflag}";
 			
 		    window.onload = function ()
 		    {
@@ -1277,6 +1278,9 @@
 		                    if (pFormHref == "PC") {
 		                        pReadPC = true;
 		                    } else {
+		                    	var len;
+		                        len = FormHref.lastIndexOf("/");
+		                        pFormID = FormHref.substr(len + 1, 10);
 		                        message.Set_EditorContentURL(pFormHref);
 		                    }
 		                    

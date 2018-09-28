@@ -57,6 +57,12 @@
 	        var pEditor = "${editor}";
 	        var isConDoc = false;
 	        var isEditor = false;
+	        
+			// FormBuilder
+			var isReform = parent.isReform;
+			var bodyInnerHtml = "";
+			// FormBuilder end
+	        
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
@@ -275,6 +281,10 @@
 	                    parent.OrgHtml = _htmlcontent;
  	                    BodyTagsDisabled(document.getElementById('div_Content'));
  	                    parent.FieldsAvailable();
+ 	                    
+ 						if (isReform) {
+ 							validateAllTextArea(document.getElementById('div_Content'));
+ 						}
 	                }
 	            } catch (e)
 	            { }
@@ -333,7 +343,11 @@
 	                        parent.modifiOrgBody = BODYTag.innerHTML;
 	                    }
 	                    if (document.getElementById("body") != null) {
-	                        if (BODYTag.getAttribute("editor") == null) {
+	                    	if (isReform) {
+	                    		validateAllTextArea(BODYTag);
+	                    		bodyInnerHtml = BODYTag.innerHTML;
+	                    		BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/approveHtml.do?formId=" + parent.pFormID + "' frameborder='0'></ifrmae>";
+	                    	} else if (BODYTag.getAttribute("editor") == null) {
 	                            isEditor = true;
 	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
 	                        }
@@ -345,6 +359,10 @@
 	                    }
 	                }
 	                else {
+	                	if (isReform) {
+		                	iframe_content.editComplete();
+	                	}
+	                	
 	                    DocTitleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
 	                    if (document.getElementById("body") != null) {
 // 	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
@@ -362,7 +380,22 @@
 	                                     _checkbox[i].removeAttribute("checked");
 	                             }
 	                         }
-	                         var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+	                    	 
+	                    	 var HtmlContent = "";
+	                    	 
+	                    	 if (isReform) {
+	     	            		var documentCloneNode = iframe_content.document.cloneNode(true);
+	    	            		var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
+	    	            		
+	    	            		if (datepickerDivElement != null) {
+	    	            			datepickerDivElement.parentNode.removeChild(datepickerDivElement);
+	    	            		}
+	    	            		
+	    	            		HtmlContent = documentCloneNode.body.innerHTML;
+	                    	 } else {
+	                    		 HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+	                    	 }
+	                    	 
 	                         BODYTag.innerHTML = HtmlContent;
 	                         document.getElementById("body").style.paddingLeft = "10px";
 	                         document.getElementById("body").style.paddingRight = "15px";
@@ -370,6 +403,10 @@
 	                     }
 	                     BodyTagsDisabled(document.getElementById('div_Content'));
 	                     document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
+	                     
+	                     if (isReform) {
+		                     validateAllTextArea(document.getElementById('div_Content'));
+	                     }
 	                }
 	            }
 	            catch (e) {
@@ -573,6 +610,23 @@
 	                if (inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = false;
 	            }
+	            
+	            // FormBuilder
+	            // 폼빌더만 textarea 비활성화 되도록 추가
+	            if (isReform) {
+	            	var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+	            	var element;
+	            	
+	            	for (var i = 0; i < textAreaElements.length; i++) {
+	            		element = textAreaElements[i];
+	            		
+	            		if (element.disabled) {
+	            			element.disabled = false;
+	            		}
+	            	}
+	            }
+	            // FormBuilder - end
+	            
 	            return HtmlObject;
 	        }
 	
@@ -587,8 +641,42 @@
 	                if (!inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = true;
 	            }
+	            
+	            // FormBuilder
+	            // 폼빌더만 textarea 비활성화 되도록 추가
+	            if (isReform) {
+	            	var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+	            	var element;
+	            	
+	            	for (var i = 0; i < textAreaElements.length; i++) {
+	            		element = textAreaElements[i];
+	            		
+	            		if (!element.disabled) {
+	            			element.disabled = true;
+	            		}
+	            	}
+	            }
+	            // FormBuilder - end
+	            
 	            return HtmlObject;
 	        }
+	        
+	        // FormBuilder textarea 제대로 나오도록 수정
+	        function validateAllTextArea(targetElement) {
+            	var textAreaElements = targetElement.getElementsByTagName("textarea");
+            	
+            	for (var i = 0; i < textAreaElements.length; i++) {
+            		validateTextArea(textAreaElements[i]);
+            	}
+	        }
+	        
+	        function validateTextArea(element) {
+	        	if (element.hasAttribute("value")) {
+        			element.value = element.getAttribute("value");
+        			element.innerHTML = element.value;
+        		}
+	        }
+			// FormBuilder - end
 	
 	        function DocumentBodySetAttribute(AttributeName, AttributeValue) {
 	            try {

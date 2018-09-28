@@ -157,6 +157,9 @@
 			
 			var docState = "${docState}";
 			
+			// FormBuilder
+			var isReform = ("${isReform}" === 'true');
+			
 			//최종결재시 채번
 			var useReceiveDocNo = "${useReceiveDocNo}";
 			
@@ -1562,7 +1565,6 @@
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
 		        modeflag = true;
-		
 		    }
 		    function btnSave_onclick() {
 		        var pDocID_ = "", pDocTitle_ = "";

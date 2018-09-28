@@ -1850,6 +1850,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA6>");
 					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></DATA7>");
 					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent()) + "]]></DATA8>");
+					resultXML.append("<REFORMFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("REFORMFLAG").item(k).getTextContent()) + "]]></REFORMFLAG>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -26862,6 +26863,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		parameterMap.put("href", attachHref);
 		
 		return ezApprovalGDAO.getLinkedAttachFileCount(parameterMap) > 0;
+	}
+	
+	@Override
+	public boolean isReform(String formId, String companyId, int tenantId) throws Exception {
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("formId", formId);
+		parameterMap.put("companyId", companyId);
+		parameterMap.put("tenantId", tenantId);
+
+		String reformFlag = ezApprovalGDAO.getReformFlag(parameterMap);
+		
+		return "Y".equalsIgnoreCase(reformFlag);
+	}
+
+	@Override
+	public boolean isReformApprovalDocument(String docId, String companyId, int tenantId) throws Exception {
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("docId", docId);
+		parameterMap.put("companyId", companyId);
+		parameterMap.put("tenantId", tenantId);
+
+		String reformFlag = ezApprovalGDAO.getReformFlagForApprovalDocument(parameterMap);
+		
+		return "Y".equalsIgnoreCase(reformFlag);
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {

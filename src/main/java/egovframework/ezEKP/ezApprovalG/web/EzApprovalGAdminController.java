@@ -6,11 +6,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -482,12 +486,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId());
+		String useReform = ezCommonService.getTenantConfig("useReform", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
 		String type = request.getParameter("type");
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String companyID = request.getParameter("companyID");
+		String reformflag = request.getParameter("reformflag");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
@@ -534,10 +540,144 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		
+		/* FormBuilder */
+		boolean isReform = "y".equalsIgnoreCase(reformflag);
+		
+		// 폼빌더 사용 여부 (폼빌더 양식이어도 true, 한글 에디터라면 무조건 false)
+		model.addAttribute("useReform", !"HWP".equals(type) && (useReform.equalsIgnoreCase("yes") || isReform));
+		// 폼빌더 양식 여부
+		model.addAttribute("isReform", isReform);
+		
+		String reformUrl = "";
+		
+		if (isReform) {
+			Path realPath = Paths.get(commonUtil.getRealPath(request));
+			Path reformDirectory = Paths.get(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()).substring(1), companyID, "form", "reform", formID);
+			Path reformFunctionPath = realPath.resolve(reformDirectory.resolve(formID + "_FORMBuilder.js"));
+
+			// 상대 경로로 해야함
+			Path reformMhtPath = reformDirectory.resolve(formID + "_FORMBuilder.mht");
+			
+			if (Files.exists(reformFunctionPath)) {
+				String reformFunctionStr = new String(Files.readAllBytes(reformFunctionPath));
+				
+				model.addAttribute("reformFunction", reformFunctionStr);
+			}
+			
+			if (Files.exists(realPath.resolve(reformMhtPath))) {
+				reformUrl = commonUtil.separator + reformMhtPath.toString().replace("\\", "\\\\");
+			}
+		}
+		
+		model.addAttribute("reformUrl", reformUrl);
+		/* FormBuilder end */
+		
 		logger.debug("formMainOther ended.");
 		
 		return "admin/ezApprovalG/apprGFormMainOther";
 	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/reformDesignProcessor.do")
+	public String reformDesignProcessor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("reformDesignProcessor started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+
+		// 관리자 권한 체크
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
+			return "cmm/error/adminDenied";
+		}
+
+		// 현재 사용 중인 에디터
+		String editor = ezCommonService.getTenantConfig("EDITOR", tenantId);
+		String height = Optional.ofNullable(request.getParameter("height")).orElse("");
+		
+		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
+		String  defaultFontSize = "13px";
+		
+		// 사용자 언어가 한국어이고 editorFontStyle 값이 있을 경우 editorFontStyle 값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+
+			if (!editorFontStyle.isEmpty()) {
+				String[] fontInfo = editorFontStyle.split("\\|");
+				defaultFontFamily = fontInfo[0];
+				defaultFontSize = fontInfo[1];
+			}
+		}
+		
+		// 에디터 특성에 따른 처리
+		switch (editor) {
+		case "DEXT":
+			// dext 에디터는 아이디와 유저 언어 정보가 필요
+			String id = Optional.ofNullable(request.getParameter("id")).orElse("");
+			model.addAttribute("id", id);
+			model.addAttribute("userlang", userInfo.getLang());
+			break;
+		case "NAMO":
+			// 나모 에디터는 업로드 URL, 유저 언어 정보가 필요
+			//TODO: http/https 설정값
+			String serverUrl = "http://" + userInfo.getServerName();
+			model.addAttribute("serverurl", serverUrl);
+			model.addAttribute("userlang", userInfo.getLang());
+			
+			logger.debug("serverUrl=" + serverUrl);
+			break;
+		default:
+			break;
+		}
+		
+		model.addAttribute("editor", editor);
+		model.addAttribute("height", height);
+		model.addAttribute("defaultFontFamily", defaultFontFamily);
+		model.addAttribute("defaultFontSize", defaultFontSize);
+
+		logger.debug("reformDesignProcessor ended.");
+
+		return "admin/ezApprovalG/reform/reformDesignProcessor";
+	}
+	
+	@RequestMapping(value = "admin/ezApprovalG/reformStyleDialog.do")
+	public String reformStyleDialog() throws Exception {
+		logger.debug("reformStyleDialog started.");
+		logger.debug("reformStyleDialog ended.");
+
+		return "admin/ezApprovalG/reform/reformStyleDialog";
+	}
+	
+	@RequestMapping(value = "admin/ezApprovalG/reformDataBindControlDialog.do")
+	public String reformDataBindControlDialog() throws Exception {
+		logger.debug("reformDataBindControlDialog started.");
+		logger.debug("reformDataBindControlDialog ended.");
+		
+		return "admin/ezApprovalG/reform/reformDataBindControlDialog";
+	}
+	
+	@RequestMapping(value = "admin/ezApprovalG/reformSelectValueDialog.do")
+	public String reformSelectValueDialog() throws Exception {
+		logger.debug("reformSelectValueDialog started.");
+		logger.debug("reformSelectValueDialog ended.");
+		
+		return "admin/ezApprovalG/reform/reformSelectValueDialog";
+	}
+	
+	@RequestMapping(value = "admin/ezApprovalG/reformParamControlListDialog.do")
+	public String reformParamControlListDialog() throws Exception {
+		logger.debug("reformParamControlListDialog started.");
+		logger.debug("reformParamControlListDialog ended.");
+		
+		return "admin/ezApprovalG/reform/reformParamControlListDialog";
+	}
+	
+	@RequestMapping(value = "admin/ezApprovalG/reformDisplayColumnDialog.do")
+	public String reformDisplayColumnDialog() throws Exception {
+		logger.debug("reformDisplayColumnDialog started.");
+		logger.debug("reformDisplayColumnDialog ended.");
+		
+		return "admin/ezApprovalG/reform/reformDisplayColumnDialog";
+	}
+	
 		
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 양식작성기 화면 호출함수 (한글기안)
@@ -627,10 +767,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formAutoRule = request.getParameter("formAutoRule");
 		String formAutoRuleLine = request.getParameter("formAutoRuleLine");
 		String formRecevGroup = request.getParameter("formRecevGroup");
+		// FormBuilder
+		String reformMht = request.getParameter("reformMht");
+		String reformHtml = request.getParameter("reformHtml");
+		String reformFunction = request.getParameter("reformFunction");
 		
 		logger.debug("formAutoRule = " + formAutoRule);
 		logger.debug("formAutoRuleLine = " + formAutoRuleLine);
-		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
+		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag, reformMht, reformHtml, reformFunction);
 		
 		logger.debug("formSave ended. result = " + result);
 		
@@ -826,6 +970,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("docHref", docHref);
 		
 		return "admin/ezApprovalG/apprGFormPreview";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/reformPreview.do")
+	public String reformPreview() throws Exception {
+		logger.debug("reformPreview started.");
+		logger.debug("reformPreview ended.");
+		
+		return "admin/ezApprovalG/reform/reformPreview";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/reformPreviewContent.do")
+	public String reformPreviewContent(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("reformPreviewContent started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR", tenantId));
+		model.addAttribute("ie11editor", ezCommonService.getTenantConfig("IE11EDITOR", tenantId));
+		
+		logger.debug("reformPreviewContent ended.");
+		
+		return "admin/ezApprovalG/reform/reformPreviewContent";
 	}
 	
 	/**

@@ -60,7 +60,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'SignImageSizeLimit','10',NULL);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'Site_OpenYear','2017','전자결재 년도별 SelectBox 시작 년도 설정');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'totBigSizeMailAttachLimit','800',NULL);
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'Usereform','NO','폼빌더');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useReform','NO','전자결재 폼빌더 양식 사용 여부(default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'UserInfo_Enforce','3','시행문 변환 정의 : 이 값이 1이면 단순 변환후 인쇄 이 값이 2이면 이것은 시행문 변환후 심사용. 이 값이 3이면 시행문 변환후 바로 발송용.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_AdditionalROle','YES','YES 이면 겸직부서 선택에 따라 결재제한. NO 이면 겸직부서 상관없이 결재가능.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_BOARD_LEFTMENU_COUNT','YES','YES 이면 게시판 좌측 메뉴 카운트 사용.NO 이면 사용하지 않는다. ');

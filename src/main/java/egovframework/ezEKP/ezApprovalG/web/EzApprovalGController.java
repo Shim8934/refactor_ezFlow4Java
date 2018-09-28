@@ -821,6 +821,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String isUsed = request.getParameter("isUsed");
 		String nonElecRec = request.getParameter("nonElecRec");
+		// FormBuilder
+		String reformflag = request.getParameter("reformflag");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -959,6 +961,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("reuseTitleYN", reuseTitleYN);
 		model.addAttribute("nonElecRec", nonElecRec);
+		// FormBuilder
+		model.addAttribute("reformflag", reformflag);
 		
 		logger.debug("draftui ended.");
 
@@ -1004,6 +1008,77 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("draftContent ended.");
 		
 		return "ezApprovalG/apprGDraftContent";
+	}
+	
+	/**
+	 * 전자결재G 기안시 리폼 HTML
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/draftHtml.do")
+	public String reformDraftHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
+		logger.debug("reformDraftHtml started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formId = request.getParameter("formID");
+		String reformBody = "";
+		
+		String reformUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()).substring(1);
+		
+		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+		Path reformDirectory = Paths.get(reformUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
+		Path reformHtmlRealPath = realPath.resolve(reformDirectory.resolve(formId + "_FORMBuilder.html"));
+		Path reformFunctionRelativePath = reformDirectory.resolve(formId + "_FORMBuilder.js");
+		
+		if (Files.exists(reformHtmlRealPath)) {
+			reformBody = new String(Files.readAllBytes(reformHtmlRealPath));
+		}
+		
+		if (Files.exists(realPath.resolve(reformFunctionRelativePath))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath.toString().replace(File.separator, commonUtil.separator));
+		}
+		
+		model.addAttribute("reformBody", reformBody);
+		
+		logger.debug("reformDraftHtml ended.");
+		
+		return "ezApprovalG/reform/draftHtml";
+	}
+	
+	/**
+	 * 전자결재G 결재 리폼 HTML
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/approveHtml.do")
+	public String reformApproveHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
+		logger.debug("reformApproveHtml started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formId = request.getParameter("formId");
+		
+		String reformUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()).substring(1);
+		
+		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+		Path reformDirectory = Paths.get(reformUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
+		Path reformFunctionRelativePath = reformDirectory.resolve(formId + "_FORMBuilder.js");
+		
+		if (Files.exists(realPath.resolve(reformFunctionRelativePath))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath.toString().replace(File.separator, commonUtil.separator));
+		}
+		
+		logger.debug("reformApproveHtml ended.");
+		
+		return "ezApprovalG/reform/approveHtml";
+	}
+	
+	/**
+	 * 전자결재G 폼빌더 useProcessor selectionDialog 페이지
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/selectionDialog.do")
+	public String reformStyleDialog() throws Exception {
+		logger.debug("selectionDialog started.");
+		logger.debug("selectionDialog ended.");
+
+		return "ezApprovalG/reform/selectionDialog";
 	}
 	
 	/**
@@ -3623,6 +3698,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String orgDocID = request.getParameter("orgDocID");
 		
+		// FormBuilder
+		boolean isReform = ezApprovalGService.isReformApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
+		
 		if (orgDocID == null) {
 			orgDocID = "";
 		}
@@ -3726,6 +3804,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("docState", docState);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		
+		model.addAttribute("isReform", isReform);
 		
 		logger.debug("approvui ended");
 		
