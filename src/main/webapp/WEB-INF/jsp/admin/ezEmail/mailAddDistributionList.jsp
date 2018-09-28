@@ -1078,9 +1078,6 @@
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
-	            var listid = pListView;
-	            var getlistview = new ListView();
-	            getlistview.LoadFromID(listid);
 				
 	            if (m_selectedTree == orglistView) {
 		            if (p_ListOrderObject == null || p_ListOrderObject == "") {
@@ -1089,8 +1086,11 @@
 		                var nodeIdx = organTree.GetSelectNode();
 		                var strId = nodeIdx.GetNodeData("CN");
 		                var strName = nodeIdx.NodeName;
-		
+						
+		                var getlistview = new ListView();
+		                getlistview.LoadFromID("MsgToList");
 		                var bFlag = getlistview.ExistRow("data1", strId);
+		                
 		                if (bFlag) {
 		                    pAddFlag = true;
 		                } else {
@@ -1134,8 +1134,11 @@
 		                    for (var i = 0; i < listContentArry.length; i++) {
 		                        var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
 		                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+		                        
+		                        var getlistview = new ListView();
+		                        getlistview.LoadFromID("MsgToList");
 		                        var bFlag = getlistview.ExistRow("data1", strId);
-		
+								
 		                        if (bFlag) {
 		                            pAddFlag = true;
 		                        } else {
@@ -1147,10 +1150,10 @@
 		                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                            Resultxml = loadXMLString(pparsingXML2);
-		
-		                            var MaxID = 0;
-		                            var InitTr = getlistview.GetDataRows();
-		                            var MaxCntNum = 0;
+		                            
+	                                var MaxID = 0;
+	                                var InitTr = getlistview.GetDataRows();
+	                                var MaxCntNum = 0;
 		
 		                            for (var j = 0; j < InitTr.length; j++) {
 		                                var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
@@ -1181,6 +1184,9 @@
 			                var nodeIdx = organTree.GetSelectNode();
 		                	var strId = nodeIdx.GetNodeData("CN");
 			                var strName = nodeIdx.NodeName;
+			                
+			                var getlistview = new ListView();
+	                        getlistview.LoadFromID("MsgToList");
 			                var bFlag = getlistview.ExistRow("data1", strId);
 			                
 		                    if (bFlag) {
@@ -1196,7 +1202,7 @@
 			                    Resultxml = loadXMLString(pparsingXML2);
 			
 			                    var MaxID = 0;
-			                    var InitTr = listview.GetDataRows();
+			                    var InitTr = getlistview.GetDataRows();
 			                    var MaxCntNum = 0;
 			
 			                    for (var j = 0; j < InitTr.length; j++) {
@@ -1233,8 +1239,11 @@
 	                	for (var i = 0; i < arrRows.length; i++) {
 		                	var strId = GetAttribute(arrRows[i], "DATA1");
 			                var strName = arrRows[i].innerText;
-			
+				
+			                var getlistview = new ListView();
+	                        getlistview.LoadFromID("MsgToList");
 			                var bFlag = getlistview.ExistRow("data1", strId);
+			                
 		                    if (bFlag) {
 		                        pAddFlag = true;
 		                    } else {
@@ -1313,7 +1322,10 @@
 	                            IsInsert = CheckMailReceiver(strEmail, "3");
 	                        } 
 	                        
+	                        var getlistview = new ListView();
+	                        getlistview.LoadFromID("MsgToList");
 	                        var bFlag = getlistview.ExistRow("data1", pAddressID);
+	                        
 		                    if (bFlag) {
 		                        pAddFlag = true;
 		                    }
@@ -1332,7 +1344,7 @@
 	                            }
 	                            
 	                            pparsingXML = pparsingXML + "<DATA4>ADDRESS</DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t592' /> : " + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -2442,6 +2454,15 @@
                     document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
                     document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
                 }
+                
+                if (document.getElementById("emailname").value != "") {
+                    document.getElementById("emailname").value = "";
+                }
+                
+                if (document.getElementById("emailaddr").value != "") {
+                    document.getElementById("emailaddr").value = "";
+                }
+                
             }
 	        
 	        function AddrSearch_press() {
