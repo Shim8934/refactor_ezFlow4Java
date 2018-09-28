@@ -112,5 +112,16 @@ public class BoardTreeVO {
 		
 		return rtnBool;
 	}
+	@Override
+	public String toString() {
+		return "BoardTreeVO [boardId=" + boardId + ", boardName=" + boardName
+				+ ", boardName2=" + boardName2 + ", treeViewOrder="
+				+ treeViewOrder + ", boardColor=" + boardColor + ", guBun="
+				+ guBun + ", boardGroupAcl=" + boardGroupAcl + ", expanded="
+				+ expanded + ", select=" + select + ", isLeaf=" + isLeaf
+				+ ", docNO=" + docNO + ", url=" + url + "]";
+	}
+	
+	
 
 }

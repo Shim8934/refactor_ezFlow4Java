@@ -22,7 +22,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, int tenantID) throws Exception;
 	
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID, int isDept, int isEqualDept) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
@@ -84,6 +84,8 @@ public interface EzBoardAdminService {
 
 	public String saveHeader(Document doc, LoginVO userInfo, BoardListHeaderVO boardListHeaderVO) throws Exception;
 
+	public String getBoardTreePath(Map<String, Object> map) throws Exception;
+	
 	public void saveACL(Map<String, Object> map) throws Exception;
 
 	public void deleteACL(Document doc, int tenantID) throws Exception;

@@ -88,6 +88,10 @@
 		        }
 		    }
 		    function select_click() {
+		    	if(document.getElementById('onl').checked == false && document.getElementById('att').checked == false) {
+		    		alert("<spring:message code='ezCircular.t193'/>");
+		    		return;
+		    	}
 		        if (eOneline == "true") {
 		            if (document.getElementById('onl').checked == true)
 		                rvalue[0] = "Y";
