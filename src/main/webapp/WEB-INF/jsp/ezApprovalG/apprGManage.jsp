@@ -657,6 +657,13 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
+		        
+		        if (oArrRows.length <= 0) {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
+		            return;
+		        }
+		        
 		        var pCurSelRow = oArrRows[0];
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
@@ -795,6 +802,10 @@
 		                    alert(pAlertContent);
 		                }
 		            }
+		        } else {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
+		            return;
 		        }
 		    }
 		    
