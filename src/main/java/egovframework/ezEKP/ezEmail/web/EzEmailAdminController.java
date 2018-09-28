@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -39,6 +40,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -104,6 +107,9 @@ public class EzEmailAdminController {
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 
 	/**
 	 * 공용배포그룹관리 화면 호출 함수
@@ -274,7 +280,14 @@ public class EzEmailAdminController {
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String name = doc.getElementsByTagName("NAME").item(0).getTextContent();
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
+		
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
+		NodeList addressIdList = doc.getElementsByTagName("ADDRESSID");
+		NodeList addressNameList = doc.getElementsByTagName("ADDRESSNAME");
+		NodeList addressMailList = doc.getElementsByTagName("ADDRESSMAIL");
+		NodeList addressTypeList = doc.getElementsByTagName("ADDRESSTYPE");
+		NodeList directMailList = doc.getElementsByTagName("DIRECTMAIL");
+		NodeList directNameList = doc.getElementsByTagName("DIRECTNAME");
 
 		int tenantID = auth.getTenantId();
 
@@ -283,7 +296,13 @@ public class EzEmailAdminController {
 		int reasonCode = -100;
 		String result = "ERROR";
 		String bizmekaResult = "ERROR";
-
+		String inputParams = "";
+		String requestURL = "";
+		String response = "";
+		List<Map<String,String>> distributionServeList = null;
+		AddressVO addressInfo = null;
+		Map<String,String> distributionServeMap = null;
+				
 		try {
 			String useBizmekaSpambox = ezCommonService.getTenantConfig(
 					"UseBizmekaSpambox", tenantID);
@@ -314,28 +333,98 @@ public class EzEmailAdminController {
 						throw new Exception("bizmekaAddDistributionList failed");
 					}
 				}
-
-				String inputParams = "companyId="
-						+ URLEncoder.encode(companyId, "UTF-8") + "&name="
-						+ URLEncoder.encode(name, "UTF-8") + "&id="
-						+ URLEncoder.encode(id, "UTF-8") + "&domain="
-						+ URLEncoder.encode(domain, "UTF-8");
-
-				for (int i = 0; i < memberIdList.getLength(); i++) {
-					inputParams += "&memberId="
-							+ URLEncoder.encode(memberIdList.item(i)
-									.getTextContent(), "UTF-8");
+		
+				//공용배포그룹 맴버가 조직도 or 공용그룹인 경우
+				if (memberIdList.getLength() > 0) {
+					inputParams = "companyId="
+							+ URLEncoder.encode(companyId, "UTF-8") + "&name="
+							+ URLEncoder.encode(name, "UTF-8") + "&id="
+							+ URLEncoder.encode(id, "UTF-8") + "&domain="
+							+ URLEncoder.encode(domain, "UTF-8");
+					
+					for (int i = 0; i < memberIdList.getLength(); i++) {
+						inputParams += "&memberId="
+								+ URLEncoder.encode(memberIdList.item(i)
+										.getTextContent(), "UTF-8");
+					}
+					
+					logger.debug("inputParams=" + inputParams);
+					
+					requestURL = config.getProperty("config.JGwServerURL")
+							+ "/jMochaAccess/setDistributionList";
+					response = ezEmailUtil.getWebServiceResult(requestURL,
+							inputParams);
+					
+					logger.debug("response=" + response);
 				}
-
-				logger.debug("inputParams=" + inputParams);
-
-				String requestURL = config.getProperty("config.JGwServerURL")
-						+ "/jMochaAccess/setDistributionList";
-				String response = ezEmailUtil.getWebServiceResult(requestURL,
-						inputParams);
-
-				logger.debug("response=" + response);
-
+				
+				distributionServeList = new ArrayList<Map<String,String>>();
+				
+				//주소록 리스트에 추가
+				for (int i = 0; i < addressTypeList.getLength(); i++) {
+					String addressType = addressTypeList.item(i).getTextContent();
+					
+					//주소록 타입이 그룹일 경우
+					if (addressType.equals("MAILGROUP")) {
+						addressInfo =  ezAddressService.getAddressInfo(tenantID, auth.getPrimary(), addressIdList.item(i).getTextContent());
+						String address = addressInfo.getsMemo();
+					
+						if (address != null && !address.trim().equals("")) {
+							String[] addressRows = address.split(";");
+							
+							for (String addr : addressRows) {
+								distributionServeMap = new HashMap<String, String>();
+								String[] serveRows = addr.split("<");
+								distributionServeMap.put("serveName", serveRows[0]);
+								distributionServeMap.put("serveEmail", serveRows[1].substring(0, serveRows[1].length() -1));
+								distributionServeList.add(distributionServeMap);
+							}
+						}
+						
+					} else if (addressType.equals("MAIL")) {
+						distributionServeMap = new HashMap<String, String>();
+						distributionServeMap.put("serveName", addressNameList.item(i).getTextContent());
+						distributionServeMap.put("serveEmail", addressMailList.item(i).getTextContent());
+						distributionServeList.add(distributionServeMap);
+					}
+				}
+				
+				//직접 입력 한 이름, 이메일 리스트에 추가
+				for (int i = 0; i < directMailList.getLength(); i++) {
+					if (directNameList.getLength() > 0) {
+						distributionServeMap = new HashMap<String, String>();
+						distributionServeMap.put("serveName", directNameList.item(i).getTextContent());
+						distributionServeMap.put("serveEmail", directMailList.item(i).getTextContent());
+						distributionServeList.add(distributionServeMap);
+					}
+				}
+				
+				//공용배포그룹 맴버가 주소록 or 직접입력인 경우
+				if (addressTypeList.getLength() > 0 || directMailList.getLength() > 0){
+					inputParams = "companyId="
+							+ URLEncoder.encode(companyId, "UTF-8") + "&name="
+							+ URLEncoder.encode(name, "UTF-8") + "&id="
+							+ URLEncoder.encode(id, "UTF-8") + "&domain="
+							+ URLEncoder.encode(domain, "UTF-8");
+					
+					for (int i = 0; i < distributionServeList.size(); i++) {
+						String serveName = distributionServeList.get(i).get("serveName");
+						String serveEmail = distributionServeList.get(i).get("serveEmail");
+						inputParams += "&serveName="
+								+ URLEncoder.encode(serveName, "UTF-8") + "&serveEmail="
+								+ URLEncoder.encode(serveEmail, "UTF-8");
+					}
+					
+					logger.debug("inputParams=" + inputParams);
+					
+					requestURL = config.getProperty("config.JGwServerURL")
+							+ "/jMochaAccess/setServeDistributionList";
+					response = ezEmailUtil.getWebServiceResult(requestURL,
+							inputParams);
+					
+					logger.debug("response=" + response);
+				}
+				
 				if (response != null) {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject) jsonParser
@@ -374,29 +463,97 @@ public class EzEmailAdminController {
 								"bizmekaEditDistributionList failed");
 					}
 				}
-
-				String inputParams = "companyId="
-						+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
-						+ URLEncoder.encode(cn, "UTF-8") + "&name="
-						+ URLEncoder.encode(name, "UTF-8") + "&id="
-						+ URLEncoder.encode(id, "UTF-8") + "&domain="
-						+ URLEncoder.encode(domain, "UTF-8");
-
-				for (int i = 0; i < memberIdList.getLength(); i++) {
-					inputParams += "&memberId="
-							+ URLEncoder.encode(memberIdList.item(i)
-									.getTextContent(), "UTF-8");
+				//공용배포그룹 맴버가 조직도 or 공용그룹인 경우
+				if (memberIdList.getLength() > 0) {
+					inputParams = "companyId="
+							+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
+							+ URLEncoder.encode(cn, "UTF-8") + "&name="
+							+ URLEncoder.encode(name, "UTF-8") + "&id="
+							+ URLEncoder.encode(id, "UTF-8") + "&domain="
+							+ URLEncoder.encode(domain, "UTF-8");
+					
+					for (int i = 0; i < memberIdList.getLength(); i++) {
+						inputParams += "&memberId="
+								+ URLEncoder.encode(memberIdList.item(i)
+										.getTextContent(), "UTF-8");
+					}
+					
+					logger.debug("inputParams=" + inputParams);
+					
+					requestURL = config.getProperty("config.JGwServerURL")
+							+ "/jMochaAccess/updateDistributionList";
+					response = ezEmailUtil.getWebServiceResult(requestURL,
+							inputParams);
+					
+					logger.debug("response=" + response);
 				}
-
-				logger.debug("inputParams=" + inputParams);
-
-				String requestURL = config.getProperty("config.JGwServerURL")
-						+ "/jMochaAccess/updateDistributionList";
-				String response = ezEmailUtil.getWebServiceResult(requestURL,
-						inputParams);
-
-				logger.debug("response=" + response);
-
+				
+				distributionServeList = new ArrayList<Map<String,String>>();
+				
+				//주소록 리스트에 추가
+				for (int i = 0; i < addressTypeList.getLength(); i++) {
+					String addressType = addressTypeList.item(i).getTextContent();
+					
+					//주소록 타입이 그룹일 경우
+					if (addressType.equals("MAILGROUP")) {
+						addressInfo =  ezAddressService.getAddressInfo(tenantID, auth.getPrimary(), addressIdList.item(i).getTextContent());
+						String address = addressInfo.getsMemo();
+					
+						if (address != null && !address.trim().equals("")) {
+							String[] addressRows = address.split(";");
+							
+							for (String addr : addressRows) {
+								distributionServeMap = new HashMap<String, String>();
+								String[] serveRows = addr.split("<");
+								distributionServeMap.put("serveName", serveRows[0]);
+								distributionServeMap.put("serveEmail", serveRows[1].substring(0, serveRows[1].length() -1));
+								distributionServeList.add(distributionServeMap);
+							}
+						}
+						
+					} else if (addressType.equals("MAIL")) {
+						distributionServeMap = new HashMap<String, String>();
+						distributionServeMap.put("serveName", addressNameList.item(i).getTextContent());
+						distributionServeMap.put("serveEmail", addressMailList.item(i).getTextContent());
+						distributionServeList.add(distributionServeMap);
+					}
+				}
+				
+				//직접 입력 한 이름, 이메일 리스트에 추가
+				for (int i = 0; i < directMailList.getLength(); i++) {
+					if (directNameList.getLength() > 0) {
+						distributionServeMap = new HashMap<String, String>();
+						distributionServeMap.put("serveName", directNameList.item(i).getTextContent());
+						distributionServeMap.put("serveEmail", directMailList.item(i).getTextContent());
+						distributionServeList.add(distributionServeMap);
+					}
+				}
+				
+				//공용배포그룹 맴버가 주소록 or 직접입력인 경우
+				if (addressTypeList.getLength() > 0 || directMailList.getLength() > 0){
+					inputParams = "companyId="
+							+ URLEncoder.encode(companyId, "UTF-8") + "&name="
+							+ URLEncoder.encode(name, "UTF-8") + "&id="
+							+ URLEncoder.encode(id, "UTF-8") + "&domain="
+							+ URLEncoder.encode(domain, "UTF-8");
+					
+					for (int i = 0; i < distributionServeList.size(); i++) {
+						String serveName = distributionServeList.get(i).get("serveName");
+						String serveEmail = distributionServeList.get(i).get("serveEmail");
+						inputParams += "&serveName="
+								+ URLEncoder.encode(serveName, "UTF-8") + "&serveEmail="
+								+ URLEncoder.encode(serveEmail, "UTF-8");
+					}
+					
+					logger.debug("inputParams=" + inputParams);
+					
+					requestURL = config.getProperty("config.JGwServerURL")
+							+ "/jMochaAccess/setServeDistributionList";
+					response = ezEmailUtil.getWebServiceResult(requestURL,
+							inputParams);
+					
+					logger.debug("response=" + response);
+				}
 				if (response != null) {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject) jsonParser
@@ -548,6 +705,8 @@ public class EzEmailAdminController {
 								+ commonUtil.cleanValue(user.getTitle())
 								+ "</TITLE>");
 						sb.append("</ROW>");
+					} else {
+						
 					}
 				}
 			}
@@ -617,10 +776,21 @@ public class EzEmailAdminController {
 					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
 
 			logger.debug("inputParams=" + inputParams);
-
+			
 			String requestURL = config.getProperty("config.JGwServerURL")
-					+ "/jMochaAccess/deleteDistribution";
+					+ "/jMochaAccess/deleteDistributionServe";
+			
 			String response = ezEmailUtil.getWebServiceResult(requestURL,
+					inputParams);
+
+			logger.debug("response=" + response);
+			
+			requestURL = config.getProperty("config.JGwServerURL")
+					+ "/jMochaAccess/deleteDistribution";
+			logger.debug("inputParams=" + inputParams);
+
+			
+			response = ezEmailUtil.getWebServiceResult(requestURL,
 					inputParams);
 
 			logger.debug("response=" + response);
