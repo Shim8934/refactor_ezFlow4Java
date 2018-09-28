@@ -918,7 +918,7 @@
 			    } catch (e) { }
 			
 			    try {
-			        if (bAttachProcess == false)
+// 			        if (bAttachProcess == false)
 			        	//Refresh_Window() 사용안함으로 주석처리
 			            //window.opener.Refresh_Window();
 			    } catch (e) { }
