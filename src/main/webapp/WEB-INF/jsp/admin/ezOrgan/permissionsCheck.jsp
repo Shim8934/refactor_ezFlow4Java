@@ -53,6 +53,7 @@
 		    var ReturnFunction;
 		    var isfirst = true;
 		    var deptTreeTopId = "${deptTreeTopId}";
+			var isAdmin = "${isAdmin}";
 			
 		    $(document).ready(function(){
 		    	try {
@@ -88,6 +89,10 @@
 		        pUserList.DataBind("PermissionBasic"); 
 		        
 		        ChangeListView_onClick(getOrganListType());
+		        
+		        if (isAdmin == "false") {
+		        	$("#lvPermissionBasic").find("tbody tr:first").css("display","none");
+		        }
 		    });
 		    
 		    function ListTypeChangeIcon() {
