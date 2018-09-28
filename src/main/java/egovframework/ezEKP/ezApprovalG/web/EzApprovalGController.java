@@ -7572,7 +7572,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String docID = doc.getElementsByTagName("DOCID").item(0).getTextContent();
-		String result = ezApprovalGService.getSusinSN(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String orgCompanyID = doc.getElementsByTagName("orgCompanyID").item(0).getTextContent();
+		String result = ezApprovalGService.getSusinSN(docID, orgCompanyID, userInfo.getTenantId());
 		
 		logger.debug("getSusinSN ended");
 		

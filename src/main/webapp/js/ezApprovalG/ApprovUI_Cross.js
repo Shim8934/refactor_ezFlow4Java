@@ -2747,6 +2747,7 @@ function getSusinSNInfo() {
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
 
     xmlhttp.open("POST", "/ezApprovalG/getSusinSN.do", false);
     xmlhttp.send(xmlpara);
