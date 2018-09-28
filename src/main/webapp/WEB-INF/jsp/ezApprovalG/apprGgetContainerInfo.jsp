@@ -569,7 +569,15 @@
 		    function ViewDoc_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var selRow = DocList.GetSelectedRows();
+
+		        if (selRow.length <= 0) {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
+		            return;
+		        }
+		        
 		        var tr = selRow[0];
 		        pURL = tr.getAttribute("DATA2");
 		
@@ -1244,6 +1252,12 @@
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
 
+		        if (tr.length <= 0) {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
+		            return;
+		        }
+		        
 		        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
 		            var InformationString = "<spring:message code='ezApproval.t579'/>";
 		            //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
@@ -1292,6 +1306,12 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        
+		        if (tr.length <= 0) {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
+		            return;
+		        }
 	
 		        if (GetAttribute(tr[0], "DATA12") != strDocState1) {
 		            var InformationString = "<spring:message code='ezApprovalG.hyj26'/>";

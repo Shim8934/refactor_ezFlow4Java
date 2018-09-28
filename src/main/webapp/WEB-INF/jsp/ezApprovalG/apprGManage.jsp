@@ -658,10 +658,10 @@
 		        DocList.LoadFromID("DocList");
 		        
 		        var oArrRows = DocList.GetSelectedRows();
-		        if (oArrRows == 0) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+		        
+		        if (oArrRows.length <= 0) {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
 		            return;
 		        }
 		        
@@ -803,6 +803,10 @@
 		                    alert(pAlertContent);
 		                }
 		            }
+		        } else {
+		            var InformationString = strLangS385;
+		            alert(InformationString);
+		            return;
 		        }
 		    }
 		    
