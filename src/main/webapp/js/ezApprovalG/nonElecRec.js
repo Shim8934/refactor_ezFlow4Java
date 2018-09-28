@@ -186,7 +186,7 @@ function getNonElecRecInfo() {
         }
     }
 	
-	return ConvertEntityReferenceToChar(getXmlString(rtnXml));
+	return getXmlString(rtnXml);
 }
 /*
  * 결재정보를 나갔다 들어왔을때 다시 데이터를 세팅 해주는 메소드

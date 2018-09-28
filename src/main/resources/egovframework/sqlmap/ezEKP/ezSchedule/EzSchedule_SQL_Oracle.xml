@@ -368,24 +368,26 @@
 	</select>
 	
 	<select id="EzScheduleDAO.getDeptMemberList" parameterClass="map" resultMap="organUserVO">		
-			SELECT 
-			 	CN,
-                CASE #v_LANG#
-	                WHEN '1' THEN DISPLAYNAME
-                    WHEN '2' THEN DISPLAYNAME2    
-                END DISPLAYNAME,
-                DISPLAYNAME2,
-                CASE #v_LANG#
-                    WHEN '1' THEN DESCRIPTION
-                    WHEN '2' THEN DESCRIPTION2   
-                END DESCRIPTION,
-                DESCRIPTION2,
-                TITLE ,
-                TITLE2 ,
-                TELEPHONENUMBER 
-			FROM 
-				TBL_USERMASTER
-            WHERE
+			SELECT *
+			FROM
+			  ( SELECT 
+				 	CN,
+	                CASE #v_LANG#
+		                WHEN '1' THEN DISPLAYNAME
+	                    WHEN '2' THEN DISPLAYNAME2    
+	                END DISPLAYNAME,
+	                DISPLAYNAME2,
+	                CASE #v_LANG#
+	                    WHEN '1' THEN DESCRIPTION
+	                    WHEN '2' THEN DESCRIPTION2   
+	                END DESCRIPTION,
+	                DESCRIPTION2,
+	                TITLE ,
+	                TITLE2 ,
+	                TELEPHONENUMBER 
+				FROM 
+					TBL_USERMASTER
+	            WHERE
             	<isEqual property="v_SUBDEPT" compareValue="Y">
             		DEPARTMENT IN ( 
             						SELECT 
@@ -402,8 +404,33 @@
             		DEPARTMENT = #v_DEPTID# 
             	</isNotEqual>
             AND
-				TENANT_ID = #v_TENANTID#	           	      
-			ORDER BY description		
+				TENANT_ID = #v_TENANTID#	  
+			UNION ALL
+				SELECT
+					A.CN ,                  			
+					case #v_LANG#
+						when '1' then A.displayname
+						when '2' then A.displayname2    
+					end displayname,
+					A.displayname2,
+					case #v_LANG#
+						when '1' then A.description
+						when '2' then A.description2   
+					end description,
+					A.description2,
+					A.title ,
+					A.title2 ,
+					A.telephonenumber 
+				FROM
+					TBL_ADDJOBMASTER B
+				JOIN
+					TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+				WHERE
+					B.DEPTID = #v_DEPTID#
+				AND
+					B.TENANT_ID = #v_TENANTID#	 ) AA         	      
+			ORDER BY 
+                  	DISPLAYNAME ASC		
 	</select>
 	
 	<select id="EzScheduleDAO.scheduleGetLunarUse" parameterClass="map" resultClass="String">		

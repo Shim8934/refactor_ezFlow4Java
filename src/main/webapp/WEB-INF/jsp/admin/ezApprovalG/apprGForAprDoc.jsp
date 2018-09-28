@@ -888,6 +888,9 @@
 				
 					var param = "?docID=" + docID + "&url=" + encodeURIComponent(pURL) + "&companyID=" + pCompanyID;
 					GetOpenWindow(url + param, "", 825, 850, "no");
+				} else {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 				}
 		    }		    
 		</script>
