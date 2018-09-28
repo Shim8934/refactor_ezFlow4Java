@@ -166,7 +166,7 @@
 			     </div>
 			</div>
 			
-			<div id="open-memo" class="memoBtn" style="display: none;"><span>메모</span></div>
+			<div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div>
 			
 		</div>
 		
