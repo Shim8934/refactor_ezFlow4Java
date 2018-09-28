@@ -521,7 +521,7 @@
 				heigth       = parseInt(heigth) - popUpH;
 				left         = pleftpos / 2;
 				top          = heigth / 2;
-				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 				return feature;
 			}
 		</script>
