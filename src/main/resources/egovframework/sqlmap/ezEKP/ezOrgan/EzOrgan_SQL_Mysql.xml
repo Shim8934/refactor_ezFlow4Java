@@ -1322,8 +1322,7 @@
 	    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#)   
 	    	</isNotEmpty>
             
-   		 	<isNotEqual property="noAddJob" compareValue="Y">
-            $strSizeForMySQL$ 
+   		 	<isNotEqual property="noAddJob" compareValue="Y"> 
 		      	UNION ALL
 		      		      	
 		      	SELECT 
@@ -1346,8 +1345,6 @@
             ORDER BY  displayname asc, CAST(EXTENSIONATTRIBUTE15 as unsigned) ASC
             </isNotEqual>
 				
-            $strSizeForMySQL$
-            
 			<isEqual property="class" compareValue="all">
 				UNION ALL
 				
@@ -1363,10 +1360,10 @@
                 <isNotEmpty property="companyId">
 	    		AND 
 	    			EXTENSIONATTRIBUTE2 = #companyId#
-		    	</isNotEmpty>
-                
-                $strSizeForMySQL$
-			</isEqual>	      				
+		    	</isNotEmpty>                
+			</isEqual>	     
+			
+            $strSizeForMySQL$			 				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
