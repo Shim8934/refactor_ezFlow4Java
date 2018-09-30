@@ -458,6 +458,25 @@ CREATE TABLE `jmocha_distribution` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_distribution_serve`
+--
+
+DROP TABLE IF EXISTS `jmocha_distribution_serve`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_distribution_serve` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `SERVE_MAIL` varchar(100) NOT NULL,
+  `SERVE_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SERVE_MAIL`,`SERVE_NAME`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
+  CONSTRAINT `distribution_serve_foreign_keys` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `james_recipient_rewrite` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_inbox_rule`
 --
 
@@ -1044,29 +1063,13 @@ CREATE TABLE `jmocha_tenant` (
 -- Table structure for table `jmocha_tenant_config`
 --
 
---DROP TABLE IF EXISTS `jmocha_tenant_config`;
---/*!40101 SET @saved_cs_client     = @@character_set_client */;
---/*!40101 SET character_set_client = utf8 */;
---CREATE TABLE `jmocha_tenant_config` (
---  `TENANT_ID` int(11) NOT NULL,
---  `PROPERTY_NAME` varchar(100) NOT NULL,
---  `PROPERTY_VALUE` varchar(1000) NOT NULL,
---  PRIMARY KEY (`TENANT_ID`,`PROPERTY_NAME`),
---  KEY `IDX_PROPERTY_NAME` (`PROPERTY_NAME`),
---  CONSTRAINT `FK_TENANT_ID` FOREIGN KEY (`TENANT_ID`) REFERENCES `jmocha_tenant` (`TENANT_ID`) ON DELETE CASCADE ON UPDATE CASCADE
---) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `jmocha_tenant_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_tenant_config` (
-  `TENANT_ID` mediumint(5) NOT NULL,
-  `PROPERTY_NAME` varchar(400) NOT NULL,
-  `PROPERTY_VALUE` varchar(2000) NOT NULL,
-  `DESCRIPTION` varchar(1000) DEFAULT NULL,
-  `CONFIG_NAME` varchar(400) DEFAULT NULL,
-  `REGDATE` datetime DEFAULT NULL,
-  `CONFIG_TYPE` varchar(100) DEFAULT NULL,
+  `TENANT_ID` int(11) NOT NULL,
+  `PROPERTY_NAME` varchar(100) NOT NULL,
+  `PROPERTY_VALUE` varchar(1000) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`PROPERTY_NAME`),
   KEY `IDX_PROPERTY_NAME` (`PROPERTY_NAME`),
   CONSTRAINT `FK_TENANT_ID` FOREIGN KEY (`TENANT_ID`) REFERENCES `jmocha_tenant` (`TENANT_ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1773,38 +1776,6 @@ CREATE TABLE `talk_tblversion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_access_id`
---
-
-DROP TABLE IF EXISTS `tbl_access_id`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_id` (
-  `ACCESSNO` int(11) NOT NULL AUTO_INCREMENT,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  `CN` varchar(80) NOT NULL,
-  PRIMARY KEY (`ACCESSNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_access_ip`
---
-
-DROP TABLE IF EXISTS `tbl_access_ip`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_ip` (
-  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  `IPADDRESS` varchar(100) NOT NULL,
-  `ACCESS` varchar(10) DEFAULT 'YES',
-  `EXPLANATION` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`IPNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_addjobmaster`
 --
 
@@ -2401,7 +2372,7 @@ CREATE TABLE `tbl_attitude` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `WRITER_ID` varchar(80) NOT NULL,
   `DEPT_ID` varchar(80) NOT NULL,
-  `START_DATE` datetime DEFAULT NULL,
+  `START_DATE` datetime NOT NULL,
   `END_DATE` datetime DEFAULT NULL,
   `MODAPPL` char(1) DEFAULT '0',
   `REGION` varchar(200) DEFAULT NULL,
@@ -2411,7 +2382,8 @@ CREATE TABLE `tbl_attitude` (
   `IP` varchar(60) DEFAULT NULL,
   `DATE_TYPE` char(1) NOT NULL,
   `TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-  PRIMARY KEY (`ATTITUDE_ID`)
+  PRIMARY KEY (`ATTITUDE_ID`),
+  KEY `dateIndex` (`TENANT_ID`,`WRITER_ID`,`START_DATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2573,7 +2545,8 @@ CREATE TABLE `tbl_attitude_type` (
   `FORM_ID` int(11) NOT NULL,
   `ISADD` char(1) NOT NULL DEFAULT '0',
   `ISDEL` char(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ORDER`,`TYPE_ID`,`COMPANY_ID`,`TENANT_ID`)
+  PRIMARY KEY (`ORDER`,`TYPE_ID`,`COMPANY_ID`,`TENANT_ID`),
+  KEY `testIndex` (`COMPANY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5416,6 +5389,7 @@ CREATE TABLE `tbl_forminfo` (
   `FORMORDER` bigint(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
+  `REFORMFLAG` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9873,7 +9847,8 @@ CREATE TABLE `tbl_usercontlist` (
   `DESCRIPTION` varchar(255) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERCONTID`,`DOCID`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERCONTID`,`DOCID`),
+  CONSTRAINT `PK_USERCONT` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `USERCONTID`) REFERENCES `tbl_usercont` (`TENANT_ID`, `COMPANYID`, `USERCONTID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
