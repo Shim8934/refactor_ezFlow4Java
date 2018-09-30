@@ -1306,6 +1306,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addMailToJMochaDistribution() throws Exception {
+		ezCommonDAO.addMailToJMochaDistribution();
+	}
+	
+	@Override
 	public void addAddJobMasterOrderBy() throws Exception {
 		ezCommonDAO.addAddJobMasterOrderBy();
 	}

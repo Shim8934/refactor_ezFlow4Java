@@ -173,7 +173,7 @@ public class EzEmailAdminController {
 			
 			logger.debug("cn=" + cn);
 			
-			if (cn != null && !cn.equals("null")) {
+			if (cn != null && !cn.equals("null") && !cn.isEmpty()) {
 				//cn을 포함하는 공용배포그룹
 				List<MailDistributionVO> distributionSearchList = ezEmailService
 						.getDistributioUpperList(cn, auth.getTenantId());
@@ -316,7 +316,7 @@ public class EzEmailAdminController {
 						throw new Exception("bizmekaAddDistributionList failed");
 					}
 				}
-
+				
 				String inputParams = "companyId="
 						+ URLEncoder.encode(companyId, "UTF-8") + "&name="
 						+ URLEncoder.encode(name, "UTF-8") + "&id="
@@ -329,6 +329,15 @@ public class EzEmailAdminController {
 									.getTextContent(), "UTF-8");
 				}
 
+				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+				
+				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+				if (!companyDomainName.isEmpty()) {
+					String email = id + "@" + companyDomainName;
+					
+					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+				}
+				
 				logger.debug("inputParams=" + inputParams);
 
 				String requestURL = config.getProperty("config.JGwServerURL")
@@ -390,6 +399,15 @@ public class EzEmailAdminController {
 									.getTextContent(), "UTF-8");
 				}
 
+				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+				
+				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+				if (!companyDomainName.isEmpty()) {
+					String email = id + "@" + companyDomainName;
+					
+					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+				}
+				
 				logger.debug("inputParams=" + inputParams);
 
 				String requestURL = config.getProperty("config.JGwServerURL")
@@ -584,6 +602,8 @@ public class EzEmailAdminController {
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String companyId = doc.getElementsByTagName("COMPID").item(0)
+				.getTextContent();		
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 
 		int tenantID = auth.getTenantId();
@@ -618,6 +638,15 @@ public class EzEmailAdminController {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
 					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
 
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+			
+			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+			if (!companyDomainName.isEmpty()) {
+				String email = cn + "@" + companyDomainName;
+				
+				inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+			}
+			
 			logger.debug("inputParams=" + inputParams);
 
 			String requestURL = config.getProperty("config.JGwServerURL")

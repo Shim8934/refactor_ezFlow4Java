@@ -177,6 +177,7 @@
 		        if (ret) {
 			        if (selectedCount > 0) {
 				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+				        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 				        
 				        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
 				        xmlHTTP.send(xmlDom);

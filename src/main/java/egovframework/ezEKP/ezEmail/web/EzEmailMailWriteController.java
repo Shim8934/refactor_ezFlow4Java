@@ -4882,8 +4882,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						map.put("dept", dept.getDisplayName());
 						map.put("title", "");
 					} else { // 공용배포그룹
+						String email = (String)address.get("cn");
+						String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyID(), "DomainName");
+						
+						// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소로 전달한다.								
+						if (!companyDomainName.isEmpty()) {
+				        	String emailId = null;
+				        	
+			        		int atSignIndex = email.indexOf("@");
+			        		
+			        		if (atSignIndex != -1) {
+			        			emailId = email.substring(0, atSignIndex);
+								email = emailId + "@" + companyDomainName;			        			
+			        		}							
+						}
+						
 						map.put("displayName", displayName); // 배포그룹 이름
-						map.put("mail", (String)address.get("cn"));  // 메일
+						map.put("mail", email);  // 메일
 						map.put("company", companyName); // 배포그룹 이름
 						map.put("dept", egovMessageSource.getMessage("ezEmail.t57",
 								locale));  //배포그룹이름

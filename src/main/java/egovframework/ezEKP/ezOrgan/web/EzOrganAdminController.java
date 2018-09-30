@@ -4,14 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +56,6 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -88,10 +84,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-	
-	@Autowired
-	private EzSystemAdminService ezSystemAdminService;
-		
+			
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -127,6 +120,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
 
     	ezCommonService.createTblCompanyConfig();
+    	ezCommonService.addMailToJMochaDistribution();
     	ezCommonService.addAddJobMasterOrderBy();
     	//ezCommonService.createTblIPAccessID();
     	//ezCommonService.createTblIPAccessIP();
@@ -465,6 +459,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						}
 				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
+    					
+    					removeEmailAddressBasedOnCompanyDomainName(cn, dept.getExtensionAttribute2(), userInfo);
+    					
     					result = "OK";
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
@@ -631,6 +628,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								}						
 							}
 							
+							mailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, cn, vo.getParentCn(), userInfo);
+									
 							vo.setMail(mailAddr);
 							
 							ezOrganAdminService.insertDBData_dept(vo);
@@ -657,6 +656,84 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("saveDeptInfo ended");
 		
 		return result;
+	}
+	
+	private String getEmailAddressBasedOnCompanyDomainName(
+			String originalMailAddr, String cn, String parentCn, LoginVO userInfo) {
+		try {
+			// 상위 부서를 통해 Company ID를 구한다.
+			OrganDeptVO parentDeptVO = ezOrganService.getDeptInfo(parentCn, userInfo.getPrimary(), userInfo.getTenantId());
+			String parentCompanyId = parentDeptVO.getExtensionAttribute2();
+			parentCompanyId = parentCompanyId != null ? parentCompanyId : "";
+			
+			logger.debug("parentCompanyId=" + parentCompanyId);
+			
+			if (!parentCompanyId.isEmpty()) {
+				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), parentCompanyId, "DomainName");
+				
+				logger.debug("companyDomainName=" + companyDomainName);
+	
+				// 회사별 이메일 도메인명이 설정되어 있으면 tbl_tenant_config에 있는 DomainName 대신에
+				// 해당 도메인명을 사용해 이메일 주소를 생성한다.								
+				if (!companyDomainName.isEmpty()) {
+					logger.debug("Setting originalMailAddr based on companyDomainName...");
+					
+					String newMailAddr = cn + "@" + companyDomainName;
+					
+					// 해당 주소를 Alias 주소로 등록한다.
+					int rc = ezEmailUserAdminService.addGroup(newMailAddr);
+					
+					logger.debug("addGroup rc=" + rc);
+					
+					if (rc == 0) {
+						// 해당 주소의 멤버로 원 이메일 주소를 등록한다.
+						rc = ezEmailUserAdminService.updateGroupAdd(newMailAddr, originalMailAddr);
+						
+						logger.debug("updateGroupAdd rc=" + rc);
+						
+						if (rc == 0) {
+							// 해당 주소로 원 이메일 주소를 교체한다.
+							originalMailAddr = newMailAddr;
+							
+							logger.debug("newMailAddr=" + newMailAddr);
+						} else {
+							ezEmailUserAdminService.removeGroup(newMailAddr);
+						}
+					}
+				}
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return originalMailAddr;		
+	}
+	
+	private void removeEmailAddressBasedOnCompanyDomainName(
+			String cn, String companyId, LoginVO userInfo) {
+		try {
+			companyId = companyId != null ? companyId : "";
+			
+			logger.debug("companyId=" + companyId);
+			
+			if (!companyId.isEmpty()) {
+				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "DomainName");
+				
+				logger.debug("companyDomainName=" + companyDomainName);
+	
+				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 james_recipient_rewrite 테이블에서 제거한다.								
+				if (!companyDomainName.isEmpty()) {
+					logger.debug("Removing Email Address based on companyDomainName...");
+					
+					String newMailAddr = cn + "@" + companyDomainName;
+					
+					// 해당 주소를 james_recipient_rewrite 테이블에서 제거한다.
+					ezEmailUserAdminService.removeGroup(newMailAddr);					
+				}
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}				
 	}
 	
 	/**
