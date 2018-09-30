@@ -326,7 +326,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			        			
 			        			OrganUserVO readerInfo = ezOrganAdminService.getUserInfo(emailId, loginInfo.getPrimary(), loginInfo.getTenantId());
 			        			
-			        			readerEmail = readerInfo.getMail();
+			        			if (readerInfo != null && readerInfo.getMail() != null) {
+			        				readerEmail = readerInfo.getMail();
+			        			}
 			        		}															
 						}
 						
