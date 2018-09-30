@@ -43,6 +43,8 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -77,6 +79,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
@@ -292,17 +297,14 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					}
 				}
 				
+				String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+				
 				// cancelList
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
 						String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
-						
-						unreadSb.append("<ROW>");
-						unreadSb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
-						unreadSb.append("<READERNAME><![CDATA[" + readerName + "]]></READERNAME>");
-						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
-						
+												
 						String status = "";
 						
 						if (vo.getStatus() != null && !vo.getStatus().equals("")) {
@@ -311,6 +313,27 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 							status = "0";
 						}
 						
+						logger.debug("cancelled email readerEmail=" + readerEmail);
+													
+						// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소 대신에 Primary 이메일 주소로 표시한다.								
+						if (!companyDomainName.isEmpty()) {
+				        	String emailId = null;
+				        	
+			        		int atSignIndex = readerEmail.indexOf("@");
+			        		
+			        		if (atSignIndex != -1) {
+			        			emailId = readerEmail.substring(0, atSignIndex);		
+			        			
+			        			OrganUserVO readerInfo = ezOrganAdminService.getUserInfo(emailId, loginInfo.getPrimary(), loginInfo.getTenantId());
+			        			
+			        			readerEmail = readerInfo.getMail();
+			        		}															
+						}
+						
+						unreadSb.append("<ROW>");
+						unreadSb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
+						unreadSb.append("<READERNAME><![CDATA[" + readerName + "]]></READERNAME>");
+						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");						
 						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						unreadSb.append("</ROW>");
 					}
