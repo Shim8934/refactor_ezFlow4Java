@@ -2464,6 +2464,26 @@ public class EzPollController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
+				if (fromAddressList.size() >= 2) {
+					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+					
+					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
+					if (!companyDomainName.isEmpty()) {
+						for (int i = 0; i < fromAddressList.size(); i++) {
+							String[] item = fromAddressList.get(i);
+							String itemType = item[1];
+							
+							if (itemType.equals("1")) {
+								logger.debug("removing the account email address...");
+								
+								fromAddressList.remove(i);
+								
+								break;
+							}
+						}
+					}
+				}
+				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
 				} else {
