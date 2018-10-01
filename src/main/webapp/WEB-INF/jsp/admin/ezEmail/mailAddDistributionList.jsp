@@ -129,6 +129,7 @@
 	                var objRoot, objNode;
 	                objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "CN", "${cn}");
+	                createNodeAndInsertText(xmlpara, objNode, "COMPID", companyid);
 	
 	                xmlHTTP2.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 	                xmlHTTP2.onreadystatechange = event_GetDistributionList;
@@ -157,7 +158,7 @@
 	                    var Resultxml = "";
 	                    pparsingXML2 = "";
 	                    pparsingXML = "";
-	                    pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    var nodes = SelectNodes(result, "DATA/ROW");
 	
 	                    for (var i = 0 ; i < nodes.length ; i++) {
@@ -165,15 +166,18 @@
 	                        
 	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "user"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
-	                        	
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "group"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distribution") {
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
+	                            pparsingXML = pparsingXML + "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA2>";
+	                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "(" + getNodeText(GetChildNodes(nodes[i])[3]) + ")" + "</VALUE></CELL></ROW>";
 	                        }
 	                    }
 	                              
-	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                    Resultxml = loadXMLString(pparsingXML2);
 	
 	                    var listview = new ListView();
