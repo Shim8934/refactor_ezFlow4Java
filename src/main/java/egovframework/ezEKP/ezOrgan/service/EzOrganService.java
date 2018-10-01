@@ -4,7 +4,6 @@ import java.util.List;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
 	
