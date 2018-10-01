@@ -428,7 +428,9 @@
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
 	    	   for(var i =0; i < returnvalue.length; i++) {
-		        	condition[i] = returnvalue[i]; 
+					//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+		        	//condition[i] = returnvalue[i];
+	    		    condition[i] = replaceCond(returnvalue[i]);
 		        }
 	    	   
 	    	    if (LoadSquery == "usercontlist") {
@@ -1395,6 +1397,11 @@
 		                }
 		            }
 		        }
+		    }
+		    
+		    //2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 	    </script>
 	</head>
