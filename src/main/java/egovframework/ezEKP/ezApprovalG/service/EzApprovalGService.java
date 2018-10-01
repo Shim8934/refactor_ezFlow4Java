@@ -292,7 +292,7 @@ public interface EzApprovalGService {
 	
 	public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, String searchQuery) throws Exception;
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
