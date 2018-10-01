@@ -6721,7 +6721,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getSendOutDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getSendOutDocList started");
-		
+
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
@@ -6731,8 +6731,110 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pageNum  = request.getParameter("pageNum");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		//2018-09-28 김보미 - 검색 추가
+		String searchQuery = request.getParameter("searchQuery");
+		String listType = request.getParameter("listType");
+
+		String userLang = userInfo.getLang();
+		Document domSub = null;
 		
-		String result = ezApprovalGService.getSendOutDocList(userID, deptID, susinManagerFlag, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		//2018-09-28 김보미 - 검색 추가
+		if (searchQuery != null && searchQuery.length() > 10) {
+			String tempQuery = "";
+			String returnQuery = "(1 = 1) ";
+			
+			domSub = commonUtil.convertStringToDocument(searchQuery);
+			tempQuery = domSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+			
+			if (tempQuery.indexOf("DOCNO;") != -1) {
+				returnQuery += " AND DOCNO LIKE '%" + domSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+			}
+			
+			if (tempQuery.indexOf("DOCTITLE;") != -1) {
+                returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+            }
+
+            if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
+                if (listType.equals("10")) {
+                	if (!dbType.equals("mysql")) {
+                    	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                    	returnQuery += " AND RECEIVEDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+                	}
+                } else {
+                	if (!dbType.equals("mysql")) {
+                		returnQuery += " AND STARTDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                		returnQuery += " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+
+                	}
+                }
+            }
+            
+            if (tempQuery.indexOf("APRENDDATE;") != -1) {
+                if (listType.equals("10")){
+                	if (!dbType.equals("mysql")) {
+                		returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                		returnQuery += " AND RECEIVEDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+                	}
+                } else {
+                	if (!dbType.equals("mysql")) {
+                		returnQuery += " AND STARTDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                		returnQuery += " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+                	}
+                }
+            }
+            
+            if (tempQuery.indexOf("FORMID;") != -1) {
+                returnQuery += " AND FormID = '" + domSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("KAPR;") != -1) {
+                returnQuery += " AND keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("KEND;") != -1) {
+                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("CAPR;") != -1) {
+                returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("CEND;") != -1) {
+                returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
+                returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+            }
+            
+            searchQuery = returnQuery;
+		}
+		
+		String result = ezApprovalGService.getSendOutDocList(userID, deptID, susinManagerFlag, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), searchQuery);
 		
 		logger.debug("getSendOutDocList ended");
 		

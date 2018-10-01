@@ -8848,7 +8848,10 @@
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
 		   	</isNotEqual> 
-		   	
+		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+			</isGreaterThan>		   	
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
@@ -13489,7 +13492,11 @@
 	   	 AND
 	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 	   	 AND
-	   	 	TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#
+	   	 	TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#	
+	   	 <isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+		</isGreaterThan>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAprPortletDocCount" parameterClass="Map" resultClass="int"> -->
