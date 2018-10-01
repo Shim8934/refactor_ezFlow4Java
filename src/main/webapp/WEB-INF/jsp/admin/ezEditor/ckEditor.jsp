@@ -328,19 +328,22 @@
 		                selCell.removeAttribute("id");
 	            	}
 	
-	                if (selCell.classList != null) {
-	                    if (selCell.classList.contains("FIELD")) {
-	                        selCell.classList.remove("FIELD");
-	                    }
-	                }
-	                else {
-	                    if (selCell.className.indexOf("FIELD") > -1) {
-	                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
-	                    }
-	                }
-	
-	                parent.Attribute_Write("");
-	                ChangeCell_display(selCell);
+	            	//2018-10-01 김보미 - 값이 비어있는 부분 클릭 후 취소시 포커스(배경색이 파란색으로)되지 않도록 변경 
+	            	if (selCell.className == "FIELD") {
+		                if (selCell.classList != null) {
+		                    if (selCell.classList.contains("FIELD")) {
+		                        selCell.classList.remove("FIELD");
+		                    }
+		                }
+		                else {
+		                    if (selCell.className.indexOf("FIELD") > -1) {
+		                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
+		                    }
+		                }
+		
+		                parent.Attribute_Write("");
+		                ChangeCell_display(selCell);
+	            	}
 	            }
 	            else if (type == "LOCK") {
 	                if (selCell.getAttribute("free") != null) {
