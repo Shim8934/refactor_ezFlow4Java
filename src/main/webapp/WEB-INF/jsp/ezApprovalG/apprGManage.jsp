@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -421,6 +422,7 @@
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
 		        var pCurSelRow = oArrRows[0];
+		        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		        if (pCurSelRow != null && oArrRows.length > 0) {
 		            if (GetBujaeFlag())
 		                return;
@@ -477,7 +479,7 @@
 		                	}
 		                } else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
-		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 		                }
 		                
 		                openwindow(openLocation, "", 880, 570);
@@ -622,6 +624,8 @@
 		            var DocList = new ListView();
 		            DocList.LoadFromID("DocList");
 		            var oArrRows = DocList.GetSelectedRows();
+		            var pCurSelRow = oArrRows[0];
+			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		            if (oArrRows.length > 0)
 		                openViewDocInfo();
 		            else {
@@ -649,7 +653,7 @@
 		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" + "&orgCompanyID=" + orgCompanyID;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -1386,6 +1390,7 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		        	//팝업창에서 알럿창으로 변경
@@ -1394,15 +1399,17 @@
 					alert(pAlertContent);
 		            return;
 		        }
-		        else
+		        else {
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 				
 		        //직인의뢰함에서 타입을 END로 주기위해
 		        var url;
 		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;	
 		        } else {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID;
 		        }
 		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
@@ -1794,6 +1801,10 @@
 		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 		    
+		    function getDocListByCompany(){
+		    	pageNum = 1;
+		    	getDocList();
+		    }
 		    function initselyear() {
 		        $('#sel_year').selectmenu('close');
 		    }
@@ -1861,6 +1872,18 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
+		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+						<select id="selectCompany" onchange="getDocListByCompany();">
+							<option value="">
+								<spring:message code='ezPoll.t237'/>
+							</option>
+							<c:forEach items="${companyList }" var="company">
+								<option value="${company.companyID }">
+									${company.companyName }
+								</option>
+							</c:forEach>
+						</select>
+					</c:if>
 		        </li>
 			</ul>
 		</div>

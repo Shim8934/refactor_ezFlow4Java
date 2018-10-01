@@ -24,23 +24,25 @@ public interface EzPollService {
 	
 	public List<String> getListOfUserIdForQst(int qstId, int tenantID, String type) throws Exception;
 	
+	public List<PollUserVO> getListOfUserForQst(int qstId, int tenantID, String type) throws Exception;
+	
 	public int checkTargetOfQst(int qstId, int tenantID) throws Exception;
 
 	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception;
 
 	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception;
 
-	public List<Integer> getHiddenQuestionIds(String userID, int tenantId) throws Exception;
+	public List<Integer> getHiddenQuestionIds(String userID, int tenantId, String companyID) throws Exception;
 
 	public void insertHiddenQuestion(PollQuestionStatusVO pollQstStatusVO) throws Exception;	
 
-	public void insertModifyingQuestion(PollQuestionStatusVO pollQstStatusVO) throws Exception;
+	public void insertModifyingQuestion(PollQuestionStatusVO pollQstStatusVO, String companyID) throws Exception;
 
-	public void insertSeenQuestion(PollQuestionStatusVO pollQstStatusVO) throws Exception;
+	public void insertSeenQuestion(PollQuestionStatusVO pollQstStatusVO, String companyID) throws Exception;
 
 	public void insertCommentQuestion(PollQuestionStatusVO pollQstStatusVO) throws Exception;
 
-	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary, String mode) throws Exception;
+	public List<PollQuestionVO> getOwnQuestions(String userID, int tenantID, String searchStr, String primary, String mode, String companyID) throws Exception;
 
 	public PollQuestionVO getQuestionByIdAndTenantId(int qstId, int tenantId) throws Exception;
 
@@ -72,7 +74,7 @@ public interface EzPollService {
 
 	public void updateEndDateForQst(int qstId, int tenantId, String dateNow) throws Exception;
 
-	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary, String mode) throws Exception;
+	public List<PollQuestionVO> getAllQuestions(int tenantID, String searchStr, String primary, String mode, String companyID, String userID) throws Exception;
 
 	public void updateModifyingQuestion(int qstId, int tenantId, int value) throws Exception;
 
@@ -122,9 +124,13 @@ public interface EzPollService {
 	
 	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception;
 	
-	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId) throws Exception;
+	public List<LoginVO> getInfoOfSeenUsers(int tenantId, int qstId, String companyID) throws Exception;
 	
-	public List<LoginVO> getAllUsersInfoForQstM(int tenantId, int qstId) throws Exception;
+	public List<LoginVO> getAllUsersInfoForQstM(int tenantId, int qstId, String companyID) throws Exception;
 	
 	public List<LoginVO> getAllUsersInfoForQstMRD(int tenantId, int qstId) throws Exception;
+	
+	public String getAddJobDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
+	
+	public String getQuestionRelatedDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
 }

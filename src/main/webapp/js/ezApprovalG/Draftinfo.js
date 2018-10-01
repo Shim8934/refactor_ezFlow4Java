@@ -21,7 +21,8 @@ function Draftinfo_ini() {
         	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
         	data : {
         			sCateCode : code,
-        			userFlag  : "2"
+        			userFlag  : "2",
+        			orgCompanyID : orgCompanyID
         			},
         	success : function(text) {
         		result = text;
@@ -360,7 +361,8 @@ function TreeViewinitializeCodeGroup(code, level) {
     		url : "/ezApprovalG/getCodeTreeInfo.do",
     		data : {
     			code  : code,
-    			level : level
+    			level : level,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(text){
     			result = text;
@@ -450,7 +452,8 @@ function TreeViewCodeNodeClick() {
     	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
     	data : {
     			sCateCode : code,
-    			userFlag  : "2"
+    			userFlag  : "2",
+    			orgCompanyID : orgCompanyID
     			},
     	success : function(text) {
     		result = text;

@@ -124,7 +124,7 @@ public class EzUCMessengerController {
 		
 		String redirectUrl = "redirect:/user/login/login.do";
 		if (orgId != null) {
-			loginController.createLoginCookie(orgId, " ", " ", tenantId, request, response);
+			loginController.createLoginCookie(orgId, " ", " ", tenantId, request, response,"","");
 			
 			if (type == null) { // 홈 화면으로 이동
 				redirectUrl = "redirect:/ezPortal/portalMain.do";

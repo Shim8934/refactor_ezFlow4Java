@@ -311,6 +311,10 @@ var strLangKYJ03 = "Spaces can not be entered."
 var strLangLSD02 = "The non-members of the department.";
 
 
+/* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
+var strLangHSB01 = "이 게시물은 ";
+var strLangHSB02 = "에서 열람하실 수 있습니다.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

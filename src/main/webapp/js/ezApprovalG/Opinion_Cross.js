@@ -8,7 +8,8 @@
     		async : false,
     		url : "/ezApprovalG/opinionRequest.do",
     		data : {
-    			docID : pDocID
+    			docID : pDocID,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -368,7 +369,8 @@ function AddOpinionContent(Opstate, OpContent) {
                     			userID : pUserID,
                     			formID  : "",
                     			isUsed  : "",
-                    			mode     : ""
+                    			mode     : "",
+                    			orgCompanyID : orgCompanyID
                     		},
                     		success: function(text){
                     			result = text;
@@ -400,8 +402,8 @@ function AddOpinionContent(Opstate, OpContent) {
 
                     var tr = GetChildNodes(pSelectedRow[0]);
 
-                    setNodeText(tr[3], UserLang == "1" ? tmpKyljeaDeptName : tmpKyljeaDeptName2);
-                    setNodeText(tr[2], UserLang == "1" ? tmpKyljeaJobtitle : tmpKyljeaJobtitle2);
+                    setNodeText(tr[3], tmpKyljeaDeptName);
+                    setNodeText(tr[2], tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA4", tmpKyljeaDeptID);
                     SetAttribute(pSelectedRow[0], "DATA9", tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA10", tmpKyljeaJobtitle2);
@@ -796,7 +798,7 @@ function autosaveOpinionXMLInfo() {
         }
 
         objXML = getOpinionListInfo();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
@@ -872,7 +874,7 @@ function saveHesoungOpinionXMLInfo() {
                 }
             }
             objXML = getOpinionListInfo();
-            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
             xmlhttp.send(objXML);
 
             var RtnVal = xmlhttp.responseText;
@@ -937,7 +939,7 @@ function saveOpinionXMLInfo() {
         }
         objXML = getOpinionListInfo();
         var xmlhttp = new createXMLHttpRequest();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;

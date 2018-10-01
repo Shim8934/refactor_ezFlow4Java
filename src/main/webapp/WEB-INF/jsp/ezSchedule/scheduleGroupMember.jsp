@@ -13,11 +13,27 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
 		    var groupid = "<c:out value='${groupID}' />";
+		    var companyid = "<c:out value='${userInfo.companyID}' />";
 		    var g_Member; //그룹 멤버 정보
-		    
+
 		    function show_personinfo(userid) {
+		    	var deptID = "";
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleGetCumDeptID.do",
+					data : { 						
+						userID : userid,
+						companyID : companyid
+					},
+					success: function(result){
+						deptID = result;
+					}
+				});
+		    	
 		        var feature = GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);		        
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);		        
 		    }
 					
 		    var OpenWin;

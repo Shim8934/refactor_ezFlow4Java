@@ -712,13 +712,8 @@
 		</c:choose>
 		
 		<div id="mainmenu">
-			<b><spring:message code = 'ezApprovalG.t1276' /></b>
-			<SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()" style="margin-bottom:10px">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-	        </SELECT>
-			<ul style="margin-top:5px">		        
+			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
+			<ul>		        
 		        <c:choose>
 		        	<c:when test="${approvalFlag == 'S'}">
 		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>

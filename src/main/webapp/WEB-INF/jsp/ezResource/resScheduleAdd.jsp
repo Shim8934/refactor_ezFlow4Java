@@ -32,6 +32,7 @@
 	    	var ss_deptNM		= "";
 	    	var ss_ownerNM		= "";
 	    	var lang = "${userInfo.primary}";
+	    	var deptID = "${userInfo.deptID}";
 	    	
 	    	if(lang == '2') {
 	        	ss_deptNM		= "${userInfo.deptName2}"; 
@@ -97,9 +98,9 @@
 		            }        
 	    	    } 
 	        	if (cmd == "mod") {
-	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
+	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
-	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
+	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	}
 	            
 	        	if (cmd == "mod") {
@@ -309,10 +310,10 @@
 	    	function FieldsAvailable() {
 	    	}
 
-	    	function MemberInfo_onClick(pSelUserID) {
+	    	function MemberInfo_onClick(pSelUserID, deptID) {
 	        	if (pSelUserID != "") {
 		            var feature = GetOpenPosition(420, 438);
-		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID +"&dept=" + deptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    	    }
 	    	}	
 
