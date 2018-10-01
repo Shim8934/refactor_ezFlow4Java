@@ -20,6 +20,7 @@ INSERT INTO `tbl_usermaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`MAI
 -- primaryLang
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'PrimaryLang','3');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryLang', '시스템 언어', '3', '시스템 primary 언어를 설정한다.1: 한국어3: 일본어  (default: 1)', '2017-01-06 00:00:00', '일반');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryTimeZone', '시스템 표준 시간대', '230|+09:00', '시스템 primary 표준 시간대를 설정한다.시스템 Primary 표준 시간대 설정  (첫 로그인 시 사용자의 표준 시간대를 정할 수 없을 경우 시스템의 표준 시간대를 따름) (default: 230|+09:00)', '2017-01-06 00:00:00', '일반');
 
 -- 게시판
 INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
