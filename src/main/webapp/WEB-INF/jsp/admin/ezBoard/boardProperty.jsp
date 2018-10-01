@@ -883,7 +883,7 @@
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 30px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
+	                <input type="text" id="txtAttachLimit" style="width: 33px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
 	            </td>
 	        </tr>
 	        
