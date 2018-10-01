@@ -67,5 +67,7 @@ public interface EzCommonService {
 	public void createTblIPAccessID() throws Exception;
 	
 	public void createTblIPAccessIP() throws Exception;
+	
+	public void createJMochaDistributionSub() throws Exception;
 
 }

@@ -1324,4 +1324,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblIPAccessIP() throws Exception {
 		ezCommonDAO.createTblIPAccessIP();
 	}
+	
+	@Override
+	public void createJMochaDistributionSub() throws Exception {
+		ezCommonDAO.createJMochaDistributionSub();
+	}
 }

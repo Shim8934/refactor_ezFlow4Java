@@ -322,4 +322,26 @@
 		
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaDistributionSub" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ipno
+			FROM 
+				TBL_ACCESS_IP
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaDistributionSub"> 
+	  CREATE TABLE "JMOCHA_DISTRIBUTION_SUB" 
+	  (	"DOMAIN_NAME" NVARCHAR2(100), 
+	   	"USER_NAME" NVARCHAR2(100), 
+	   	"COMPANY_ID" NVARCHAR2(100), 
+	   	"SUB_MAIL" NVARCHAR2(100), 
+	   	"SUB_NAME" NVARCHAR2(100),
+	   	 CONSTRAINT "JMOCHA_DISTRIBUTION_SUB_PK" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "SUB_MAIL", "SUB_NAME")
+	   	)
+	</statement>
+	
 </sqlMap>
