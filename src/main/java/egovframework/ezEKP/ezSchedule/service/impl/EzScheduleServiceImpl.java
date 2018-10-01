@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -76,21 +78,23 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception {
+	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getScheduleInfo(map);
 	}
 
 	@Override
-	public List<AttendantListVO> getAttendantList(String scheduleId, String offSetMin, int tenantId) throws Exception {
+	public List<AttendantListVO> getAttendantList(String scheduleId, String offSetMin, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getAttendantList(map);
 	}
@@ -105,49 +109,55 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang, int tenantId) throws Exception {
+	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang, int tenantId ,String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", userId);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getPublicScheduleSec(map);
 	}
 
 	@Override
-	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId) throws Exception {
+	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId ,String companyID) throws Exception {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", userId);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getPublicScheduleDept(map);
 	}
 
 	@Override
-	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId) throws Exception {
+	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", userId);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getPublicScheduleCumuler(map);
 	}
 
 	@Override
-	public int getReceiveCount(String pUserId, int tenantId) throws Exception {
+	public int getReceiveCount(String pUserId, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_USERID", pUserId);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getReceiveCount(map);
 	}
 
 	@Override
-	public int getInviteScheduleGroupCnt(String pUserId, int tenantId) throws Exception {
+	public int getInviteScheduleGroupCnt(String pUserId, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", pUserId);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		return ezScheduleDAO.getInviteScheduleGroupCnt(map);
 	}
@@ -182,9 +192,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId) throws Exception {						
+	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID) throws Exception {						
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_INDILIST", indiList);
 		map.put("v_PIDLIST", pidList);		
 		map.put("v_PFILTER", filter);
 		map.put("v_PSTARTDATE", utcStartDate);
@@ -193,6 +204,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_SEARCHTITLE", searchTitle);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERID", userID);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
@@ -505,10 +518,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				resultList.add(vo);
 			}
 		}
+
 		logger.debug("=====getScheduleList Ended=====");
 		if (tempResultList != null) {
 			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
 		}
+
 		return resultList;
 	}
 	
@@ -542,10 +557,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public List<ScheduleGroupListVO> getScheduleGroupList(String userID, int tenantId) throws Exception {
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userID, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleGroupListVO> gList = ezScheduleDAO.getScheduleGroupList(map);
 		
@@ -553,10 +569,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleGroupListVO> getMyGroupList(String userID, int tenantID) throws Exception {	
+	public List<ScheduleGroupListVO> getMyGroupList(String userID, int tenantID, String companyID) throws Exception {	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupList(map);
 		
@@ -564,11 +581,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId) throws Exception {
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupId);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		int cnt = ezScheduleDAO.getMyGroupMemberListCnt(map);
 		
@@ -576,13 +594,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public String getMyGroupMemberList(String groupId, String lang, int tenantId) throws Exception {
+	public String getMyGroupMemberList(String groupId, String lang, int tenantId, String companyID) throws Exception {
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupId);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupMemberList(map);
 		
@@ -607,11 +626,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleGroupListVO> getGroupMemberList(String groupID,	int tenantId, String offSetMin) throws Exception {
+	public List<ScheduleGroupListVO> getGroupMemberList(String groupID,	String lang, int tenantId, String offSetMin, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupID);		
+		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_OFFSETMIN", offSetMin);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleGroupListVO> gList = ezScheduleDAO.getGroupMemberList(map);
 		
@@ -663,7 +684,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId) throws Exception {
+	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId, String companyID) throws Exception {
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -671,6 +692,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_SUBDEPT", subDept);
 		map.put("v_LANG", lang);		
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		List<OrganUserVO> gList = ezScheduleDAO.getDeptMemberList(map);
 		
@@ -685,7 +707,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleGroup(String gUID, String id, String displayName,	String displayName2, String groupName, String description, int tenantId) throws Exception {
+	public void insertScheduleGroup(String gUID, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GUID", gUID);
 		map.put("v_USERID", id);
@@ -694,6 +716,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_GROUPNAME", groupName);
 		map.put("v_DESCRIPTION", description);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.insertScheduleGroup(map);
 	}
@@ -709,6 +732,18 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		if (result == null || result.equals("")) {
 			result = "0";
 		}		
+		return result;
+	}
+	
+	@Override
+	public String getCumDeptId(String userID, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_USERID", userID);
+		
+		String result = ezScheduleDAO.getCumDeptId(map);
+		
 		return result;
 	}
 
@@ -727,10 +762,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId) throws Exception {
+	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userId);		
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleSecretaryVO> sList = ezScheduleDAO.getSecretaryList(map);
 		
@@ -747,10 +783,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void deleteSecretary(String userID, int tenantID) throws Exception {
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);		
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.deleteSecretary(map);
 	}
@@ -770,7 +807,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID) throws Exception {
+	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_DISPLAYNAME", displayName);
@@ -778,6 +815,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_SECRETARYID", secretaryID);
 		map.put("v_SECRETARYNAME", secretaryName);		
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.insertSecretary(map);
 	}
@@ -785,7 +823,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
 		String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
-		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId) throws Exception {
+		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId, String companyID) throws Exception {
 		
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
@@ -852,6 +890,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			map.put("v_LOCATION", location);
 			map.put("v_CONTENTPATH", schedulePath);
 			map.put("v_TENANTID", tenantId);
+			map.put("v_COMPANYID", companyID);
 			
 			ezScheduleDAO.insertSchedule(map);
 			
@@ -885,7 +924,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				String v_attendantDeptName = attendantDeptName.item(i).getTextContent();
 				String v_attendantDeptName2 = attendantDeptName2.item(i).getTextContent();
 				
-				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId);
+				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId, companyID);
 			}
 			
 			sID = scheduleId;			
@@ -901,7 +940,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Override
 	public int updateSchedule(String scheduleid, String creatorid, String creatorname, String creatorname2, String importance, String ispublic, String datetype, String startdate, String enddate,
-		String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId) throws Exception {
+		String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId, String companyID) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		String uploadFilePath = commonUtil.separator + "uploadFile";
@@ -927,6 +966,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TITLE", title);
 		map.put("v_LOCATION", location);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 
 		ezScheduleDAO.updateSchedule(map);
 		
@@ -1039,7 +1079,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleAttendant(String scheduleId, String attendantId, String attendantName, String attendantName2, String attendantDeptName, String attendantDeptName2, int tenantId) throws Exception {
+	public void insertScheduleAttendant(String scheduleId, String attendantId, String attendantName, String attendantName2, String attendantDeptName, String attendantDeptName2, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_SCHEDULEID", scheduleId);
@@ -1049,6 +1089,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_ATTENDANTDEPTNAME", attendantDeptName);
 		map.put("v_ATTENDANTDEPTNAME2", attendantDeptName2);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.insertScheduleAttendant(map);		
 	}
@@ -1065,7 +1106,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin) throws Exception {
+	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", id);
 		map.put("v_TENANTID", tenantId);
@@ -1095,7 +1136,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleGroupListVO> getInviteScheduleGroupList(String id, int tenantId, String offSetMin) throws Exception {
+	public List<ScheduleGroupListVO> getInviteScheduleGroupList(String id, int tenantId, String offSetMin, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_USERID", id);
@@ -1108,7 +1149,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception {
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_SCHEDULEID", scheduleId);

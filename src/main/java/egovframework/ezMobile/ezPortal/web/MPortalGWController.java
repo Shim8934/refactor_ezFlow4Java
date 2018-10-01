@@ -141,11 +141,13 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//안읽은메일 리스트 카운트
 				int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 				
+				/* 2018-07-03 홍승비 - 조건에 companyID 추가 필요 */
 				//새게시물 리스트
-				List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId(), info.getOffSet());
+				List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet());
 				
+				/* 2018-07-03 홍승비 - 조건에 companyID 추가 */
 				//새게시물 리스트 카운트
-				int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
+				int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 				
 				//오늘의자원 리스트
 				Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt, primary);
@@ -336,7 +338,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			if (menu.equals("etc")) {
 				//게시판 풋터리스트
-				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId, primary);
+				/* 2018-07-03 홍승비 - 게시판 풋터리스트(즐겨찾기)에 companyID 조건 추가 */
+				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, info.getCompanyId(), tenantId, primary);
 				
 				String langStr = request.getParameter("langStr");
 				//자원관리 풋터리스트				
@@ -424,8 +427,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			//안읽은메일 리스트 카운트
 			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 			
+			/* 2018-07-03 홍승비 - 조건에 companyID 추가 */
 			//새게시물 리스트 카운트
-			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
+			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 			
 			//오늘의자원 리스트
 			Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt, langStr);

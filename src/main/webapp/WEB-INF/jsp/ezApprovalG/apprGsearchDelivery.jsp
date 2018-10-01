@@ -15,7 +15,7 @@
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OpenSelWin_Cross.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezComposeAppt_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezcomposeappt_Cross.js')}"></script>
     <!-- data picker-->
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>

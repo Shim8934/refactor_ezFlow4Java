@@ -23,6 +23,8 @@ public class ScheduleGroupListVO {
 	private String mail;
 	/** 그룹멤버 정보 */
 	private String info;
+	/** 그룹멤버 부서정보 */
+	private String department;
 	
 	
 	public String getGroupId() {
@@ -91,5 +93,10 @@ public class ScheduleGroupListVO {
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 }

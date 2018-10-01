@@ -397,7 +397,8 @@ function btnRemoveDoc_onclick() {
 
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
-    var selRow = DocList.GetSelectedRows();
+    var tr = DocList.GetSelectedRows();
+    var orgCompanyID = "";
 
     if (selRow.length <= 0) {
         var InformationString = strLangS385;
@@ -405,13 +406,13 @@ function btnRemoveDoc_onclick() {
 //        OpenAlertUI(InformationString);
         alert(InformationString);
         return;
-    }
-
-    var OpinionContent = strLangS387;
-    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
-    
-    if (rtn) {
-        RemoveDoc_Complete(rtn);
+    } else {
+	    var OpinionContent = strLangS387;
+	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
+	    
+	    if (rtn) {
+	        RemoveDoc_Complete(rtn);
+	    }
     }
 }
 
@@ -429,10 +430,13 @@ function RemoveDoc_Complete(RtnVal)
         var xmlpara = createXmlDom();
         var objNode;
         var tr = selRow[i];
+        
+        var orgCompanyID = tr.getAttribute("ORGCOMPANYID");
 
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
         createNodeAndInsertText(xmlpara, objNode, "ContID", ContainerID);
+        createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
 
         if (DocListType == "UserContDocList")
             xmlhttp.open("POST", "/ezApprovalG/delUserContDoc.do", false);
@@ -593,6 +597,7 @@ function selFirstRow(Resultxml) {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
         
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
@@ -715,7 +720,8 @@ function getDataInfo() {
 		url : pUrl,
 		data : {
 				docID : DocID,
-				mode  : "END"
+				mode  : "END",
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getdoclistSub_after(xml);
@@ -781,7 +787,7 @@ function lvtDoclist_SelChange() {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
-
+        orgCompanyID =  tr.getAttribute("ORGCOMPANYID");
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
             DocState = GetAttribute(tr, "DATA12");
@@ -1217,6 +1223,8 @@ function check_presence2() {
         var DocList = new ListView();
         DocList.LoadFromID("DocList");
         var selRow = DocList.GetSelectedRows();
+        
+        var orgCompanyID = "";
 
         if (selRow.length <= 0) {
             var InformationString = strLangS385;
@@ -1255,9 +1263,17 @@ function check_presence2() {
                 } else {
                 	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
                 }
+                
                 createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
                 createNodeAndInsertText(xmlpara, objNode, "Desc", "");
 
+                var orgCompnayID = tr.getAttribute("ORGCOMPANYID");
+                if (orgCompanyID != null && orgCompanyID != "") {
+                	createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
+                } else {
+                	createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", "");
+                }
+                
                 xmlhttp.open("POST", "/ezApprovalG/setUserContDoc.do", false);
                 xmlhttp.send(xmlpara);
             }

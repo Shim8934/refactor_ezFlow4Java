@@ -2,11 +2,11 @@ package egovframework.ezEKP.ezSchedule.service;
 
 public interface EzScheduleAdminService {
 	
-	public String scheduleGetShareManage(String lang, int tenantId) throws Exception;
+	public String scheduleGetShareManage(String lang, int tenantId, String companyID) throws Exception;
 
 	public void scheduleDelShareDept(String id, int tenantId) throws Exception;
 
-	public void scheduleSaveShareDept(String userID, String userName, String userName2, String deptID, String deptName, String deptName2, int tenantId) throws Exception;
+	public void scheduleSaveShareDept(String userID, String userName, String userName2, String deptID, String deptName, String deptName2, int tenantId, String companyID) throws Exception;
 
 	public void scheduleDelHoliday(String holidayID, int tenantId) throws Exception;
 
@@ -24,6 +24,6 @@ public interface EzScheduleAdminService {
 
 	public void scheduleUpdateRegi(String companyID, String regi, int tenantId) throws Exception;
 
-	public int scheduleShareCheck(String userID, String deptID, int tenantId) throws Exception;
+	public int scheduleShareCheck(String userID, String deptID, int tenantId, String companyID) throws Exception;
 	
 }

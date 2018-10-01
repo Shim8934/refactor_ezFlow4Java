@@ -104,6 +104,7 @@
 			var dirPath = "${approvalROOT}";
 			var ext = "hwp";
 			var approvalFlag = "${approvalFlag}";
+			var orgCompanyID = "";
 			
 		    function process_AfterOpen() {
 		        try {

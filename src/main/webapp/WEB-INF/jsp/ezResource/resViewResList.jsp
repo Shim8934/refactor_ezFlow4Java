@@ -28,9 +28,9 @@
 			var pAdminFg = "${adminFg}";
 			var TotalCnt = "${totalCnt}";
 
-		   function MemberInfo_onDblclick(pSelUserID) {
+		   function MemberInfo_onDblclick(pSelUserID, pDeptID) {
 			  var feature = GetOpenPosition(420, 438);
-			  window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			  window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		   }
 
 	    	function btnAdd_Click() {
@@ -423,7 +423,7 @@
 	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
 							<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left"><c:out value='${list.brdNm}' /> </td>
 							<td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td>
-							<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
+							<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}', '${list.ownDeptID }')" nowrap>${list.ownerNm}</td>
 							<td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td>
 							<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
 							<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->

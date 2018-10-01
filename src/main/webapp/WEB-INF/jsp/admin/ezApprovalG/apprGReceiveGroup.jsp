@@ -583,14 +583,7 @@
 	    <table>
         	<tr>
         		<td style="vertical-align: top;">
-                	<div id="mainmenu">	
-						<span><b><spring:message code = 'ezApprovalG.t1566' /> :</b></span> 
-	                	<select id="SCompID" name="SCompID" onchange="SCompID_onchange()">
-				    		<c:forEach var="item" items="${list}">
-			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-			            	</c:forEach>
-			            </select>
-			        </div>  
+        			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
                 	<div class="listview">
                     	<div id="lvtDept" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; Width: 360px; Height: 110px;" onselchanged="return lvtDept_SelChange()"></div>
                 	</div>
@@ -598,7 +591,7 @@
             	</td>
             	<td>&nbsp;</td>
             	<td style="vertical-align: top;">
-                	<table class="popuplist" style="width: 360px; height: 110px; margin-top:39px">
+                	<table class="popuplist" style="width: 360px; height: 110px;">
                     	<tr>
                     		<c:choose>
                     			<c:when test="${approvalFlag == 'S' }">
@@ -625,7 +618,8 @@
         	</tr>
         	<tr>
             	<td style="vertical-align: top;">
-                	<h2><spring:message code='ezApprovalG.t232'/></h2>
+                 	<%-- <h2><spring:message code='ezApprovalG.t232'/></h2> --%>
+                	<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>
                 	<div class="box" style="overflow: auto; height: 320px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
             	</td>
             	<td style="width: 30px; text-align: center;">
@@ -637,10 +631,12 @@
             	<td style="vertical-align: top;">
             		<c:choose>
 						<c:when test="${approvalFlag == 'S' }">
-							<h2><spring:message code='ezApprovalG.t999932'/></h2>
+							<%-- <h2><spring:message code='ezApprovalG.t999932'/></h2> --%>
+							<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t999932'/></h2>
 						</c:when>
 						<c:otherwise>
-							<h2><spring:message code='ezApprovalG.t53'/></h2>
+							<%-- <h2><spring:message code='ezApprovalG.t53'/></h2> --%>
+							<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t53'/></h2>
 						</c:otherwise>
 					</c:choose>
                 	

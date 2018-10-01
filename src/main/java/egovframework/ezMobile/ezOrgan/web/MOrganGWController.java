@@ -239,16 +239,18 @@ public class MOrganGWController {
 			String userId = request.getParameter("userID");
 			String searchFlag = request.getParameter("searchFlag");
 			String selectType = request.getParameter("selectType");
+			String companyId = request.getParameter("companyId");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("selectType : " + selectType);
 			LOGGER.debug("searchFlag : " + searchFlag);
+			LOGGER.debug("companyId : " + companyId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId());
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

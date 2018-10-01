@@ -25,6 +25,7 @@
 			var totalPage = "";
 			var totalCount = "";
 			var BlockSize = 10;
+			var companyID = "${companyId}"; // 회사 셀랙트 박스 변경 시 변경됨
 
 			// 화면 호출시 실행 함수
 			window.onload = function(){
@@ -212,11 +213,12 @@
 		    		var selectOption = document.getElementById("searchKeycode");
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
+					var companyIdChk = companyID;
 					
 					 if (pageNum == "-1") {
 						var pageSize = "-1";
 						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
+							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk;
 						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 		
 						saveExcel.location.href = pURL;
@@ -229,7 +231,7 @@
 			    			,async: false
 			    			,dataType: 'json'
 			    			,data: {
-			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum 
+			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum, 'companyId' : companyIdChk 
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -318,6 +320,17 @@
 		  		
 			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
 		    }
+			
+		  	// 회사 셀랙트 박스 변경 시
+		  	function selectCompanyID() {
+				if (companyID != document.getElementById("ListCompany").value) {
+		            companyID = document.getElementById("ListCompany").value
+	
+		            getUserList(1);
+					//getLoginHist(1, searchStartTime, searchEndTime);
+					//makePageSelPage();
+		        }
+			}
 
             //2018-08-06 김보미 - 페이지 위치 고정
 		    $(window).on("resize", function(){
@@ -325,7 +338,7 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 152;
+	        	var height = document.documentElement.clientHeight - 153;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
@@ -389,15 +402,9 @@
 						<a class="imgbtn" >
 							<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
 						</a>
-					</span> 
-				</td>
-				<td width="5%">
-					<a class="imgbtn" style="margin-right:5px;">
-						<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
-					</a>
-				</td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+			</table>
 		</div>
 		<div id="contentlist" style="width:100%; overflow: auto;">
 			<div>

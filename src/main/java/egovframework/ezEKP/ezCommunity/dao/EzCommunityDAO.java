@@ -663,8 +663,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (Integer) select("EzCommunityDAO.adminMemPermitGet1", map);
 	}
 	
-	public Integer todayCopGet1(int tenantID) throws Exception {
-		return (Integer) select("EzCommunityDAO.todayCopGet1", tenantID);
+	/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
+	public Integer todayCopGet1(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.todayCopGet1", map);
 	}
 
 	public Integer categoryListItemCntGet(Map<String, Object> map) throws Exception {

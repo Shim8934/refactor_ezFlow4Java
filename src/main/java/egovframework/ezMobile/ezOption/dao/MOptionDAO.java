@@ -35,7 +35,13 @@ public class MOptionDAO extends EgovAbstractDAO {
 	}
 
 	public MCommonVO commonInfoWeb(Map<String, Object> map) throws Exception {
-		return (MCommonVO) select("EzOptionDAO.commonInfoWeb", map);
+		MCommonVO result = null;
+		try {
+			result = (MCommonVO) select("EzOptionDAO.commonInfoWeb", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 }

@@ -156,7 +156,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 	@Override
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
-			String keyword, String lang, String startDate, String endDate) throws Exception {
+			String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
 
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
 		
@@ -170,6 +170,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("lang", lang); // primary:기본명 / 1:영문명
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
+		params.put("companyId", companyId);
 
 		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
 		logger.debug("getLoginHist ended.");
@@ -178,7 +179,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate) throws Exception {
+	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
 		
 		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
 		
@@ -190,6 +191,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("lang", lang);
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
+		params.put("companyId", companyId);
 				
 		logger.debug("getLoginHistCount ended.");
 		
