@@ -380,7 +380,9 @@ function getSendOutDocList() {
 				pageSize : pageSize,
 				pageNum  : pageNum,
 				orderCell : OrderCell,
-				orderOption : OrderOption
+				orderOption : OrderOption,
+				listType : pListTypeValue,
+				searchQuery  : SQLPARADATA
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
