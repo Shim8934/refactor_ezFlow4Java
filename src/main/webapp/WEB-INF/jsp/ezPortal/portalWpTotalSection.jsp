@@ -19,7 +19,22 @@
 				<div class="info">
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
-        				<dt>${companyNm}<br></dt>
+    					<c:choose>
+	   						<c:when test="${fn:length(companyList) gt 1 }">
+	    						<dt>
+									<select id="selectCompany" style="width: 190px; font-size: 9pt;" onchange="changeCompany();">
+										<c:forEach items="${companyList }" var="company">
+											<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
+												${company.companyName } (${company.deptName }) (${company.apprCount })
+											</option>
+										</c:forEach>
+									</select>
+								</dt>
+	   						</c:when>
+							<c:otherwise>
+		        				<dt>${companyNm}<br></dt>
+	        				</c:otherwise>
+    					</c:choose>
 			 			<dd>${department} ${title}</dd>
 						<dd class="gray" title="${loginIP}"><spring:message code="main.t00016" />  ${lastLogin}</dd>
     				</dl>
@@ -1170,6 +1185,12 @@
 		    }
 		    
 		    window_onload_total();
+		    
+		    function changeCompany(){
+		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
+		    	var TdeptID = $("#selectCompany option:selected").val();
+		    	window.parent.parent.changeCompany(TcompanyID,TdeptID);
+		    }
 		</script>
 	</head>
 </html>

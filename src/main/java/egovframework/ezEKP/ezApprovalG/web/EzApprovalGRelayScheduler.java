@@ -378,7 +378,7 @@ public class EzApprovalGRelayScheduler {
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
         								 break;
         							 case "attach_body":
-        								 if (objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("separate").getTextContent().equals("true")) {
+        								 if ("true".equals(objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("separate").getTextContent())) {
         									 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         									 logger.debug("#attach_body생성=" + WriteBodyAttach);
         									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);

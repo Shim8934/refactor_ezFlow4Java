@@ -203,7 +203,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 									logger.debug("new tenantId=" + tenantId);
 								}
 								
-								loginController.createLoginCookie(userId, " ", " ", tenantId, request, response);
+								loginController.createLoginCookie(userId, " ", " ", tenantId, request, response,"","");
 								
 								response.sendRedirect(request.getRequestURI());
 							}														

@@ -122,7 +122,7 @@ public class EzTalkGateController {
 		if (isUserExists) {
 			String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
 			
-			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response);
+			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response,"","");
 			
 			logger.debug("ezTalkGateMain ended.");
 			

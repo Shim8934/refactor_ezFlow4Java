@@ -54,6 +54,7 @@
 		    var ReturnFunction;
 		    var junGyulFlag = "${junGyulFlag}";
 		    var agreeReturnType = "${agreeReturnType}";
+		    var orgCompanyID = parent.orgCompanyID;
 		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;

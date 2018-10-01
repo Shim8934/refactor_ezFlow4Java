@@ -440,6 +440,9 @@
 		        $("#Edatepicker").val("");
 		
 		    }
+			
+			window.onbeforeunload = BoardSearchOptionHidden;
+			
 			function BoardSearchOptionHidden() {
 				btn_PostDate_Clear();
 				if(document.getElementById("searchWriter")){

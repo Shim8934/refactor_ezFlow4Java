@@ -88,10 +88,6 @@
 		        }
 		    }
 		    function select_click() {
-		    	if(document.getElementById('onl').checked == false && document.getElementById('att').checked == false) {
-		    		alert("<spring:message code='ezCircular.t193'/>");
-		    		return;
-		    	}
 		        if (eOneline == "true") {
 		            if (document.getElementById('onl').checked == true)
 		                rvalue[0] = "Y";
@@ -109,6 +105,13 @@
 		        }
 		        else
 		            rvalue[1] = "N";
+		        
+		        //2018-10-01 김민성 - 게시물 선택인쇄 확인 옵션 추가
+		        if(document.getElementById('onl').checked != true && document.getElementById('att').checked != true) {
+		    		alert("<spring:message code='ezCircular.t193'/>");
+		    		return;
+		    	} 
+		        
 		        if(ReturnFunction != null) {
 					parent.printOption_close();	        	
 		        } else {
@@ -135,6 +138,7 @@
 		    }
 		    
 		    function btn_close() {
+		    	ReturnFunction = null;
 				parent.printOption_close();
 		    }
 		

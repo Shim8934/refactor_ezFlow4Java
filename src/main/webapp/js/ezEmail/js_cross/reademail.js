@@ -904,6 +904,8 @@ function Item_View(vItem, pCItemID, vWriter, pBrdid, vGbnBoard, pBrdnm, brd_Gubu
     var openLocation = pURL;
     openwindow(openLocation, "", 880, 550);
 }
+
+/* 2018-07-19 홍승비 - 답변메일, 새 게시 메일로 알리는 기능 -> 사간겸직 시 현재 회사가 아닌 곳에서 보내진 승인메일은 alert 처리 */
 function Item_View_New(pBoardID, pItemID, pBoardType) {
     if (pBoardType == "3" || pBoardType == "4") {
         var pheight = window.screen.availHeight;
@@ -914,8 +916,22 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         var xmlhttp = createXMLHttpRequest();
         xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
         xmlhttp.send();
-        if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
-            window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+        
+        var xmlDoc = xmlhttp.responseXML;
+        
+        /* 2018-07-19 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+        if (xmlDoc == null) {
+       	 alert(strLang166);
+       	 return;
+       }
+        /* 2018-07-19 홍승비 - 게시물 관련 companyID 다를 시 alert 작동 */
+        if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
+        	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
+        }
+        /* 2018-04-26 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정 */
+        else if (getNodeText(xmlDoc.documentElement) != "0") {
+          //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
         }
         else {
             alert(strLang166);
@@ -934,20 +950,30 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         var xmlhttp = createXMLHttpRequest();
         xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
         xmlhttp.send();
+        
+        var xmlDoc = xmlhttp.responseXML;
 
+        /* 2018-07-19 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+        if (xmlDoc == null) {
+       	 alert(strLang166);
+       	 return;
+       }
         // 반환값이 http로 시작하면 닷넷 게시판으로 연동하는 경우이다.
         if (xmlhttp.responseText.substring(0, 4) == "http") {
             isDotNet = true;
             dotNetUrl = xmlhttp.responseText;
         }
-        
         if (isDotNet) {
             xmlhttp.open("POST", dotNetUrl + "/myoffice/ezBoardSTD/interASP/GetItemViewNew.aspx?pBoardID=" + pBoardID + "&pItemID=" + pItemID, false);
             xmlhttp.withCredentials = true;
             xmlhttp.send();            
-        } 
-        
-        if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
+        }
+          
+        /* 2018-07-19 홍승비 - 게시물 관련 companyID 다를 시 alert 작동 */
+        if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
+        	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
+        }
+        else if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
             if (isDotNet) {
                 window.open(dotNetUrl + "/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");                
             } else {
@@ -958,6 +984,8 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         }
     }
 }
+
+/* 2018-07-03 홍승비 - 승인게시물에 쓰이는 기능 -> 사간겸직 시 현재 회사가 아닌 곳에서 보내진 승인메일은 alert 처리 */
 function Item_View_APPR(pBoardID, pItemID, pgubun) {
     var pheigth = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
@@ -969,9 +997,20 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     var xmlhttp = createXMLHttpRequest();
     xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
     xmlhttp.send();
-
+    
+    var xmlDoc = xmlhttp.responseXML;
+    
+    /* 2018-07-05 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+    if (xmlDoc == null) {
+   	 alert(strLang166);
+   	 return;
+   }
+    /* 2018-07-03 홍승비 - 승인게시물 관련 companyID 다를 시 alert 작동 */
+    if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
+    	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
+    }
     /* 2018-04-26 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정 */
-    if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
+    else if (getNodeText(xmlDoc.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
             window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
@@ -988,6 +1027,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
 // 20060724 준호추가
 // 커뮤니티 게시판에서 넘어온 경우 처리
 // 게시 보기(새거)
+/* 2018-07-03 홍승비 - 답변 알림 메일 확인 시 companyID 체크 */
 function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     var pheigth = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
@@ -996,10 +1036,19 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     pheigth = pheigth - 284;
     pwidth = pwidth - 359;
 
+    var xmlhttp = createXMLHttpRequest();
+    xmlhttp.open("POST", "/ezCommunity/getItemViewNew.do?itemID=" + pItemID + "&boardID=" + pBoardID, false);
+    xmlhttp.send();
+
+    /* 2018-07-03 홍승비 - 승인게시물 관련 companyID 다를 시 alert 작동 */
+    if (getNodeText(xmlhttp.responseXML.documentElement) == "FAIL") {
+    	 alert(strLangHSB01);
+    } else {
     if (CrossYN())
         window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
     else
         window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+    }
 }
 
 // 결재 보기

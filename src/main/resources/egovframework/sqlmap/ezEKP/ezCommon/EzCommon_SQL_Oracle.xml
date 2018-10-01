@@ -243,6 +243,24 @@
 		]]>
 	</update>
 	
+	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MAIL
+			FROM 
+				JMOCHA_DISTRIBUTION
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addMailToJMochaDistribution"> 
+		ALTER TABLE 
+			JMOCHA_DISTRIBUTION
+		ADD 
+			MAIL VARCHAR2(100 CHAR) DEFAULT NULL
+	</statement>
+		
 	<select id="EzCommonDAO.checkAddJobMasterOrderBy" resultClass="String">
 		<![CDATA[
 			SELECT 

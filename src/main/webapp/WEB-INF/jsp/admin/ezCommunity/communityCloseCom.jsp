@@ -42,9 +42,10 @@
 				return true;
 			}
 
+		    /* 2018-06-22 홍승비 - 마스터이름 검색 시 sysopID가 아니라 USERNAME 넘기도록 수정*/
 			function search() {
 				if (document.comm_search.s_radio.value == "1" ) {
-					var strSearch = "sRadio=C_SysopID&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
+					var strSearch = "sRadio=USERNAME&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
 				} else if (document.comm_search.s_radio.value == "2" ) {
 					var strSearch = "sRadio=C_ClubName" + lang + "&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
 				}
