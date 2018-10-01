@@ -96,6 +96,7 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "DATA1"));
+		        createNodeAndInsertText(xmlDom, objNode, "COMPID", document.all("ListCompany").value);
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 		        xmlHTTP.onreadystatechange = getDistributionMember_after;
 		        xmlHTTP.send(xmlDom);
@@ -175,6 +176,7 @@
 		        if (ret) {
 			        if (selectedCount > 0) {
 				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+				        createNodeAndInsertText(xmlDom, objRoot, "COMPID", document.all("ListCompany").value);
 				        
 				        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
 				        xmlHTTP.send(xmlDom);
