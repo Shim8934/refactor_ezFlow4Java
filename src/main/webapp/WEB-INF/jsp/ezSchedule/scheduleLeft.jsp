@@ -135,7 +135,7 @@
 				var chk_str =  "";
 				var chk_total = $("input[name=chk_schedule]:checked").length;
 				var chk_fullLength = $("input[name=chk_schedule]").length;
-				
+
 				if(typeCal == 0) {		
 					$("input[name=chk_schedule]").each(function(index){
 						var chk_eachVal1 = $(this).val();
@@ -221,15 +221,12 @@
 						chk_str += $('#select-all').val();
 					}
 					
-					// 구해안1
 					/* sStartDate = parent.frames["right"].document.getElementById("hiddensStartDate").value;
 					sEndDate = parent.frames["right"].document.getElementById("hiddensEndDate").value; */
 					$('#chk_str').val(chk_str);
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
 					
-					// 구해안1 끝
-					/* parent.frames["right"].window.location.href = "/ezSchedule/scheduleMain.do?idTypeChk=" + chk_str; */
 				}else{					
 					$("input[name=chk_schedule]:checked").each(function(index) {
 						var test = $(this).val();
@@ -248,14 +245,11 @@
 						chk_str += $('#select-all').val();
 					}
 										
-					// 구해안1
 					/* sStartDate = parent.frames["right"].document.getElementById("hiddensStartDate").value;
 					sEndDate = parent.frames["right"].document.getElementById("hiddensEndDate").value; */
 					$('#chk_str').val(chk_str);
 					parent.frames["right"].CalendarView("Calendar",chk_str);
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
-					// 구해안1 끝
-					/* parent.frames["right"].window.location.href = "/ezSchedule/scheduleMain.do?idTypeChk=" + chk_str; */
 				}
 			}
 				

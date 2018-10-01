@@ -596,18 +596,56 @@
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
-                B.DISPLAYNAME OWNERNM  ,
-                B.DISPLAYNAME2 OWNERNM2  ,
-                B.DESCRIPTION DEPTNM  ,
-                B.DESCRIPTION2 DEPTNM2  ,
-                B.TITLE JOBTITLE  ,
-                B.TITLE2 JOBTITLE2  
+                BB.OWNERNM  ,
+                BB.OWNERNM2  ,
+                BB.DEPTNM  ,
+                BB.DEPTNM2  ,
+                BB.JOBTITLE  ,
+                BB.JOBTITLE2  
            	FROM 
            		TBL_RS_SCHEDULE A
 			JOIN
-				TBL_USERMASTER B 
+				(	SELECT 
+						d.DISPLAYNAME OWNERNM  ,
+						d.DISPLAYNAME2 OWNERNM2  ,
+						d.DESCRIPTION DEPTNM  ,
+						d.DESCRIPTION2 DEPTNM2  ,
+						d.TITLE JOBTITLE  ,
+						d.TITLE2 JOBTITLE2  ,
+						D.CN ,
+	                    D.TENANT_ID
+					FROM 
+						TBL_USERMASTER D
+					WHERE 
+						D.TENANT_ID = #tenantID# AND D.physicaldeliveryofficename = #v_PCOMPANYID#
+					UNION ALL
+					SELECT 
+						B.DISPLAYNAME OWNERNM  ,
+						B.DISPLAYNAME2 OWNERNM2  ,
+						C.DISPLAYNAME DEPTNM  ,
+						C.DISPLAYNAME2 DEPTNM2  ,
+						AA.TITLE JOBTITLE  ,
+						AA.TITLE2 JOBTITLE2 ,
+						B.CN ,
+	                    B.TENANT_ID
+					FROM 
+						TBL_USERMASTER B 
+					INNER JOIN 
+						TBL_ADDJOBMASTER AA 
+					ON 
+						AA.CN = B.CN 
+					AND 
+						AA.TENANT_ID = B.TENANT_ID       
+					RIGHT JOIN 
+						TBL_DEPTMASTER C
+					ON 
+						AA.DEPTID = C.CN
+					AND 
+						B.TENANT_ID = C.TENANT_ID 
+					WHERE 
+						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB
 			ON
-				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
+				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -617,11 +655,13 @@
 			AND 
 				A.OWNERID = #v_POWNERID#
 			AND
+				A.DEPTNM = BB.DEPTNM
+			AND
 				REFLAG = '0'
 			AND 
-                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+                ( BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND 
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -733,20 +773,58 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
-            	B.DISPLAYNAME OWNERNM  ,
-            	B.DISPLAYNAME2 OWNERNM2  ,
-            	B.DESCRIPTION DEPTNM  ,
-            	B.DESCRIPTION2 DEPTNM2  , 
-            	B.TITLE JOBTITLE  ,
-            	B.TITLE2 JOBTITLE2  
+            	BB.OWNERNM  ,
+            	BB.OWNERNM2  ,
+            	BB.DEPTNM  ,
+            	BB.DEPTNM2  , 
+            	BB.JOBTITLE  ,
+            	BB.JOBTITLE2  
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
-				TBL_USERMASTER B   
+				( SELECT 
+						d.DISPLAYNAME OWNERNM  ,
+						d.DISPLAYNAME2 OWNERNM2  ,
+						d.DESCRIPTION DEPTNM  ,
+						d.DESCRIPTION2 DEPTNM2  ,
+						d.TITLE JOBTITLE  ,
+						d.TITLE2 JOBTITLE2  ,
+						D.CN ,
+	                    D.TENANT_ID
+					FROM 
+						TBL_USERMASTER D
+					WHERE 
+						D.TENANT_ID = #tenantID# AND D.physicaldeliveryofficename = #v_PCOMPANYID#
+					UNION ALL
+					SELECT 
+						B.DISPLAYNAME OWNERNM  ,
+						B.DISPLAYNAME2 OWNERNM2  ,
+						CC.DISPLAYNAME DEPTNM  ,
+						CC.DISPLAYNAME2 DEPTNM2  ,
+						AA.TITLE JOBTITLE  ,
+						AA.TITLE2 JOBTITLE2 ,
+						B.CN ,
+	                    B.TENANT_ID
+					FROM 
+						TBL_USERMASTER B 
+					INNER JOIN 
+						TBL_ADDJOBMASTER AA 
+					ON 
+						AA.CN = B.CN 
+					AND 
+						AA.TENANT_ID = B.TENANT_ID       
+					RIGHT JOIN 
+						TBL_DEPTMASTER CC
+					ON 
+						AA.DEPTID = CC.CN
+					AND 
+						B.TENANT_ID = CC.TENANT_ID 
+					WHERE 
+						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB   
 			ON
-				A.writerID = B.CN
+				A.writerID = BB.CN
 			AND
-				A.TENANT_ID = B.TENANT_ID	
+				A.TENANT_ID = BB.TENANT_ID	
 			JOIN
 				TBL_RS_SCHEDULERepetition C 
 			ON 
@@ -762,13 +840,15 @@
 			AND
 				A.OWNERID = #v_POWNERID#
 			AND
-				REFLAG = '1'
+				A.DEPTNM = BB.DEPTNM
+			AND
+				REFLAG = '1'				
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			AND
-				( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+				( BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY
@@ -1354,6 +1434,36 @@
     			RESID = #v_RESID#
 			AND
 				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				D.department
+			FROM 
+				TBL_USERMASTER D
+			WHERE 
+				D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
+			UNION ALL
+			SELECT 
+				C.cn as department
+			FROM 
+				TBL_USERMASTER B 
+			INNER JOIN 
+				TBL_ADDJOBMASTER A 
+			ON 
+				A.CN = B.CN 
+			AND 
+				A.TENANT_ID = B.TENANT_ID       
+			RIGHT JOIN 
+				TBL_DEPTMASTER C
+			ON 
+				A.DEPTID = C.CN
+			AND 
+				B.TENANT_ID = C.TENANT_ID   
+			WHERE 
+				A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
 		]]>
 	</select>
 	

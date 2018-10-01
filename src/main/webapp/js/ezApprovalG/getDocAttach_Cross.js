@@ -51,7 +51,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     			async : false,
     			url : "/ezApprovalG/getLineMode.do",
     			data : {
-    					docID : pDocID
+    					docID : pDocID,
+    					orgCompanyID : orgCompanyID
     					},
     			success: function(xml){
     				INGFlag = xml;
@@ -67,7 +68,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 		url : "/ezApprovalG/getTotalAttachInfo.do",
 		data : {
 			docID : tempDocID,
-			mode : INGFlag
+			mode : INGFlag,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

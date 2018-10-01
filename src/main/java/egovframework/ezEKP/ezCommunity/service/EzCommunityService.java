@@ -35,17 +35,21 @@ public interface EzCommunityService {
 	
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 
-	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
+	/* 2018-07-17 홍승비 - 사원정보 deptID 파라미터 선택을 위해 companyID 조건 추가 */
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset) throws Exception;
 	
-	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, int tenantID, int pageNum, int perCount, String offset) throws Exception;
+	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가) */
+	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID, int tenantID) throws Exception;
 	
 	public List<CommunityCCategoryVO> mainPageGet4(String cat, int tenantID) throws Exception;
 	
-	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, int tenantID) throws Exception;
+	/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, String companyID, int tenantID) throws Exception;
 	
-	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, int tenantID) throws Exception ;
+	/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 검색 companyID 조건 추가 */
+	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, String companyID, int tenantID) throws Exception ;
 	
 	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo) throws Exception;
 	
@@ -76,11 +80,12 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO joinOkGet3(String code, String lang, int tenantID) throws Exception;
 	
-	public CommunityClubVO todayCopGet2(int num, int tenantID) throws Exception;
+	/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
+	public CommunityClubVO todayCopGet2(int num, String companyID, int tenantID) throws Exception;
 	
 	public CommunityClubVO boardItemListPhotoGet1(String id, String boardID, int tenantID) throws Exception;
 	
-	public CommunityClubVO leftCommunityGet4(String code, int tenantID)throws Exception;
+	public CommunityClubVO leftCommunityGet4(String code, String companyID, int tenantID)throws Exception;
 	
 	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception;
 	
@@ -100,7 +105,8 @@ public interface EzCommunityService {
 
 	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String primary, int tenantID) throws Exception;
 	
-	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, int tenantID) throws Exception;
+	/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
+	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, String companyID, int tenantID) throws Exception;
 	
 	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID, int tenantID) throws Exception;
 	
@@ -110,7 +116,8 @@ public interface EzCommunityService {
 
 	public CommunityCComCloseVO adminCommCloseOkGet1(String code, int tenantID) throws Exception;
 	
-	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat, int tenantID) throws Exception;
+	/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
+	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat, String companyID, int tenantID) throws Exception;
 	
 	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item, int tenantID, String offset) throws Exception;
 	
@@ -150,7 +157,7 @@ public interface EzCommunityService {
 
 	public String getBestNewCommunity(LoginVO userInfo, String mode) throws Exception;
 
-	public String leftCommunityGet1(String code, String userInfoUserID, int tenantID) throws Exception;
+	public String leftCommunityGet1(String code, String userInfoUserID, String companyID, int tenantID) throws Exception;
 
 	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType, int tenantID) throws Exception;
 	
@@ -234,7 +241,7 @@ public interface EzCommunityService {
 	
 	public String getBoardListItemPhotoXML(LoginVO userInfo, String pBoardID, int pStartRow, int pEndRow, String pSortBy) throws Exception;
 
-	public String leftCommunityGet2(String code, int tenantID) throws Exception;
+	public String leftCommunityGet2(String code, String companyID, int tenantID) throws Exception;
 	
 	public String checkPassword(String pItemID, int tenantID) throws Exception;
 	
@@ -260,7 +267,8 @@ public interface EzCommunityService {
 	
 	public int adminSearchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 	
-	public int todayCopGet1(int tenantID) throws Exception;
+	/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
+	public int todayCopGet1(String companyID, int tenantID) throws Exception;
 	
 	public int categoryListItemCntGet(String c_ClubNo, int tenantID) throws Exception;
 	
@@ -272,7 +280,8 @@ public interface EzCommunityService {
 
 	public int adminOuterListGet1(String code, int tenantID) throws Exception;
 	
-	public int adminMemberListGet1(String code, int tenantID) throws Exception;
+	/* 2018-07-18 홍승비 - 회원탈퇴/마스터이취임 화면 회원 검색 시 카운트 변하도록 수정, primary 추가 */
+	public int adminMemberListGet1(String code, String flag, String ser, String primary, int tenantID) throws Exception;
 
 	public int adminMemberListOkGetE(String code, String cID, int tenantID) throws Exception;	
 
@@ -304,7 +313,8 @@ public interface EzCommunityService {
 	
 	public void pollRes(LoginVO userInfo, Model model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception;
 	
-	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception;
+	/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
+	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, String pollManagerID, String pollState, HttpServletResponse response) throws Exception;
 	
 	public void pollEditOk(String pClubNo, String subject, String startDate, String endDate, String managerID, int tenantID, HttpServletResponse response) throws Exception;
 	

@@ -18,7 +18,14 @@ public class LadderBmVO {
 	private String userName;
 	private String userName2;
 	private int count;
+	private String companyID;
 	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public int getTenant_id() {
 		return tenant_id;
 	}

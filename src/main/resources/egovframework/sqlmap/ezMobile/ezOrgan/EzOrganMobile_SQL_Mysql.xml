@@ -200,7 +200,10 @@
 					WHERE
 						DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
 					AND
-						TENANT_ID = #tenantID#)
+						TENANT_ID = #tenantID#
+					AND       
+						EXTENSIONATTRIBUTE2 = #companyId#
+					)
 					
 					UNION ALL
 				]]>
@@ -236,9 +239,17 @@
 								WHERE
 									TENANT_ID = #tenantID#)
 				AND
-					TENANT_ID = #tenantID#)
-				    
-				UNION ALL
+					TENANT_ID = #tenantID#
+				AND 
+					DEPARTMENT IN (SELECT 
+										CN 
+									FROM 
+										TBL_DEPTMASTER 
+									WHERE 
+										EXTENSIONATTRIBUTE2 = #companyId#)	
+				)
+				]]>    
+				<!-- UNION ALL
 				
 				(SELECT
 					B.CN as userID,
@@ -267,8 +278,8 @@
 				OR
 					B.DESCRIPTION$lang$ LIKE CONCAT('%', #deptID#, '%'))
 				AND
-					A.TENANT_ID = #tenantID#)
-					
+					A.TENANT_ID = #tenantID#) -->
+			<![CDATA[		
 				ORDER BY 
 					EXTENSIONATTRIBUTE15,
 				    userName
@@ -335,8 +346,8 @@
 									TENANT_ID = #tenantID#)
 				AND
 					TENANT_ID = #tenantID#)
-				    
-				UNION ALL
+			]]>    
+				<!-- UNION ALL
 				
 				(SELECT
 					B.CN as userID,
@@ -363,8 +374,8 @@
 				WHERE
 					A.DEPTID = #deptID#
 				AND
-					A.TENANT_ID = #tenantID#)
-					
+					A.TENANT_ID = #tenantID#) -->
+			<![CDATA[		
 				ORDER BY 
 					EXTENSIONATTRIBUTE15,
 				    userName

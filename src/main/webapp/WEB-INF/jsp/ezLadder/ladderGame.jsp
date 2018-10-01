@@ -243,16 +243,29 @@
 			back = "<c:out value='${back}' />";
 			sort = "<c:out value='${sort}' />";
 			sortFlag = "<c:out value='${sortFlag}' />";
-			
+			companyID = "<c:out value='${companyID}' />";
+			companyName = "<c:out value='${vo.companyName}' />";
+			writerCompanyID = "<c:out value='${vo.companyID}' />";
 			marginChangeAttendantNum = 50;
 			
+			// 사다리가 삭제 되었을 경우
 			if(deleteFlag == "0") {
 				ladder_window_resize();
 				canvasSetting();
 			} else {
 				alert("<spring:message code='ezLadder.hyh01' />");
-				window.close();
+				window.location.href = "/ezLadder/ladderMain.do?brdID=7";
+				return;
 			}
+			
+			// 사간겸직시
+			if(companyID != writerCompanyID) {
+				/** 메세지 수정 필요 */
+				alert(companyName + "에서 조회 가능합니다.");	// 수정 필요
+				window.location.href = "/ezLadder/ladderMain.do?brdID=7";
+				return;
+			}
+			
 		}
 		
 		function afterDrag() {
@@ -541,7 +554,7 @@
 					if(flag == "add") { 
 						// add
 						var html = '<tr _comtIndex="' + cmt["id"] + '">';
-						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\', ' + cmt["setRetireFlag"] + ')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
+						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\', \'' +  cmt["deptID"] + '\',  ' + cmt["setRetireFlag"] + ')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
 						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
 						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
 						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"></p></div>';
@@ -657,10 +670,10 @@
 			}
 		}
 		
-		function menuQst_DetailUserInfo(pUserID, reFlag) {
+		function menuQst_DetailUserInfo(pUserID, pDeptID, reFlag) {
 			if(!reFlag) {
 				var feature = GetOpenPosition(420, 438);
-				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			}
 		}
 		
@@ -815,7 +828,7 @@
 		<div class="fullwidth">
 			<div style="height:50px">
 				<div style="float:left;margin-top:3px;margin-bottom:5px">
-					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value="${vo.writerId}" />')" > 
+					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value="${vo.writerId}" />', '<c:out value="${vo.deptID}" />')" > 
 						<c:choose>
 							<c:when test="${empty vo.pic}">
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
@@ -1003,7 +1016,7 @@
 					<c:forEach var="_comt" items="${cmtlist}">
 						<tr _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${_comt.userId}', '<c:out value='${_comt.setRetireFlag}' />')" >
+								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value='${_comt.userId}' />', '<c:out value='${_comt.deptID}' />', '<c:out value='${_comt.setRetireFlag}' />')" >
 								<c:choose>
 									<c:when test="${_comt.pic eq ''}">
 										<img src="/images/ezLadder/icon_defaultAttendant.png" style="height: 38px; width:38px;">

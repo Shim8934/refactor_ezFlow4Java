@@ -1620,10 +1620,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String sCateCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
 		String userFlag = request.getParameter("userFlag");
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		
 		//사용자에서 부를때 컴패니 추가
 		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
+		}
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			companyID = orgCompanyID;
 		}
 		
 		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag, userFlag);
