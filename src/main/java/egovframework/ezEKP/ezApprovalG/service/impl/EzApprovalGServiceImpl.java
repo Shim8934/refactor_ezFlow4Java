@@ -15130,12 +15130,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			for (int k = 0; k < seperateXML.getDocumentElement().getChildNodes().getLength(); k++) {
 				resultXML.append("<SEPATTACH>");
-				resultXML.append("<CABINETID>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent().trim() + "</CABINETID>");
-				resultXML.append("<TITLE><![CDATA[" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent().trim() + "]]></TITLE>");
-				resultXML.append("<NUMOFPAGE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent().trim() + "</NUMOFPAGE>");
-				resultXML.append("<REGTYPE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(3).getTextContent().trim() + "</REGTYPE>");
-				resultXML.append("<SUMMARY><![CDATA[" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(4).getTextContent().trim() + "]]></SUMMARY>");
-				resultXML.append("<AVTYPE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(5).getTextContent().trim() + "</AVTYPE>");
+
+				if (seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent().trim() == null || seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent().trim().equals("")) {
+					resultXML.append("<CABINETID>" + seperateXML.getElementsByTagName("SEPATTACH").item(k).getChildNodes().item(0).getTextContent().trim() + "</CABINETID>");
+					resultXML.append("<TITLE><![CDATA[" + seperateXML.getElementsByTagName("SEPATTACH").item(k).getChildNodes().item(1).getTextContent().trim() + "]]></TITLE>");
+					resultXML.append("<NUMOFPAGE>" + seperateXML.getElementsByTagName("SEPATTACH").item(k).getChildNodes().item(2).getTextContent().trim() + "</NUMOFPAGE>");
+					resultXML.append("<REGTYPE>" + seperateXML.getElementsByTagName("SEPATTACH").item(k).getChildNodes().item(3).getTextContent().trim() + "</REGTYPE>");
+					resultXML.append("<SUMMARY><![CDATA[" + seperateXML.getElementsByTagName("SEPATTACH").item(k).getChildNodes().item(4).getTextContent().trim() + "]]></SUMMARY>");
+					resultXML.append("<AVTYPE>" + seperateXML.getElementsByTagName("SEPATTACH").item(k).getChildNodes().item(5).getTextContent().trim() + "</AVTYPE>");
+				} else {
+					resultXML.append("<CABINETID>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent().trim() + "</CABINETID>");
+					resultXML.append("<TITLE><![CDATA[" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent().trim() + "]]></TITLE>");
+					resultXML.append("<NUMOFPAGE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent().trim() + "</NUMOFPAGE>");
+					resultXML.append("<REGTYPE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(3).getTextContent().trim() + "</REGTYPE>");
+					resultXML.append("<SUMMARY><![CDATA[" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(4).getTextContent().trim() + "]]></SUMMARY>");
+					resultXML.append("<AVTYPE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(5).getTextContent().trim() + "</AVTYPE>");
+				}
+				
 				resultXML.append("</SEPATTACH>");
 			}
 		}
@@ -27052,10 +27063,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				audioVisualRecSummary = strXML.getElementsByTagName("AUDIOVISUALRECSUMMARY").item(0).getTextContent();
 			}
 		}
-		if (strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").getLength() > 0) {
+		/*if (strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").getLength() > 0) {
 			seperateAttach = strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").item(0).getTextContent();
 			seperateAttach = commonUtil.cleanValue(seperateAttach);
-		}
+		}*/
 		if (strXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").getLength() > 0) {
 			specialCatalogInfo = strXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").item(0).getTextContent();
 			specialCatalogInfo = commonUtil.cleanValue(specialCatalogInfo);
@@ -27080,7 +27091,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<CABINETID><![CDATA[" + cabinetID + "]]></CABINETID>");
 		resultXML.append("<AUDIOVISUALRECINFO>" + audioVisualRecInfo + "</AUDIOVISUALRECINFO>");
 		resultXML.append("<AUDIOVISUALRECSUMMARY><![CDATA[" + audioVisualRecSummary + "]]></AUDIOVISUALRECSUMMARY>");
-		resultXML.append("<NONELECREC_SEPERATEATTACH>" + seperateAttach + "</NONELECREC_SEPERATEATTACH>");
+		
+		if (strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").getLength() > 0) {
+			seperateAttach = strXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").item(0).getTextContent();
+			Document xmlDom = commonUtil.convertStringToDocument(seperateAttach);
+			
+			StringBuffer tempVal = new StringBuffer();
+			tempVal.append("<SEPATTACHINFO>");
+			for (int i = 0; i < xmlDom.getElementsByTagName("SEPATTACH").getLength(); i++) {
+				tempVal.append("<SEPATTACH>");
+				tempVal.append("<CABINETID>" + xmlDom.getElementsByTagName("SEPATTACH").item(i).getChildNodes().item(0).getTextContent() + "</CABINETID>");
+				tempVal.append("<TITLE><![CDATA[" + xmlDom.getElementsByTagName("SEPATTACH").item(i).getChildNodes().item(1).getTextContent() + "]]></TITLE>");
+				tempVal.append("<NUMOFPAGE>" + xmlDom.getElementsByTagName("SEPATTACH").item(i).getChildNodes().item(2).getTextContent() + "</NUMOFPAGE>");
+				tempVal.append("<REGTYPE>" + xmlDom.getElementsByTagName("SEPATTACH").item(i).getChildNodes().item(3).getTextContent() + "</REGTYPE>");
+				tempVal.append("<SUMMARY><![CDATA[" + xmlDom.getElementsByTagName("SEPATTACH").item(i).getChildNodes().item(4).getTextContent() + "]]></SUMMARY>");
+				tempVal.append("<AVTYPE>" + xmlDom.getElementsByTagName("SEPATTACH").item(i).getChildNodes().item(5).getTextContent() + "</AVTYPE>");
+				tempVal.append("</SEPATTACH>");
+			}
+			tempVal.append("</SEPATTACHINFO>");
+			resultXML.append("<NONELECREC_SEPERATEATTACH>" + commonUtil.cleanValue(tempVal.toString()) + "</NONELECREC_SEPERATEATTACH>");
+		} else {
+			resultXML.append("<NONELECREC_SEPERATEATTACH>" + seperateAttach + "</NONELECREC_SEPERATEATTACH>");
+		}
+		
 		resultXML.append("<NONELECREC_SPECIALCATALOGINFO>" + specialCatalogInfo + "</NONELECREC_SPECIALCATALOGINFO>");
 		resultXML.append("</NONELECRECINFO>");
 		
@@ -27154,7 +27187,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    			resultXML.append("<ROW>");
 	    			resultXML.append("<SEPNO>" + i + "</SEPNO>");
 	    			resultXML.append("<SEPREGTYPE>" + apprGRecordTempVO.get(i).getRegisterType() + "</SEPREGTYPE>");
-	    			resultXML.append("<SEPTITLE><![CDATA[" + apprGRecordTempVO.get(i).getTitle() + "]]></SEPTITLE>");
+	    			resultXML.append("<SEPTITLE><![CDATA[" + commonUtil.cleanValue(apprGRecordTempVO.get(i).getTitle()) + "]]></SEPTITLE>");
 	    			resultXML.append("<SEPNUMOFPAGE>" + apprGRecordTempVO.get(i).getNumOfPage().trim() + "</SEPNUMOFPAGE>");
 	    			
 	    			if (apprGRecordTempVO.get(i).getRegisterType().equals("5") || apprGRecordTempVO.get(i).getRegisterType().equals("6")) {
@@ -27223,7 +27256,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    	int sepLength = docXML.getElementsByTagName("ROW").getLength();
 	    	
 	    	for (int i = 0; i < sepLength; i++) {
-	    		map.put("cabinetID", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(0).getChildNodes().item(1).getTextContent());
+	    		map.put("cabinetID", docXML.getElementsByTagName("ROWS").item(0).getChildNodes().item(i).getChildNodes().item(6).getTextContent());
 	    		map.put("sepAttachNO", formatSepSerialNum(String.valueOf(i+1)));
 	    		
 	    		ezApprovalGDAO.setNonElecRecCabID(map);
