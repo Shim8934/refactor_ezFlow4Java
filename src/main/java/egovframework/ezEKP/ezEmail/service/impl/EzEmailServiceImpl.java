@@ -2224,4 +2224,54 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return resultList;
 	}
 	
+	@Override
+	public MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception {
+		logger.debug("getDistributionSub started.");
+		logger.debug("userName = " + userName + ",subMail=" + subMail + ",companyId=" + companyId + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "domainName=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&userName=" + URLEncoder.encode(userName, "UTF-8");
+		inputParams += "&companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&subMail=" + URLEncoder.encode(subMail, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSub";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		MailDistributionVO distributonSubVo = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONObject resultObject = (JSONObject) responseObj.get("result");
+					
+					if (resultObject != null &&  resultObject.size() > 0) {
+						distributonSubVo = new MailDistributionVO();
+						
+						distributonSubVo.setMail((String)resultObject.get("SUB_MAIL"));
+						distributonSubVo.setName((String)resultObject.get("SUB_NAME"));
+						
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getDistributionSub ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributonSubVo.toString());
+		
+		return distributonSubVo;
+	}
+	
 }
