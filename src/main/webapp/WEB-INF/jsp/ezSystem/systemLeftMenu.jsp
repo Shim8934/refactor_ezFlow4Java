@@ -10,6 +10,7 @@
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
+	var cChk = ${cChk};
 	
 	document.onselectstart = function () {
         if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -19,8 +20,12 @@
     };
 	
     window.onload = function()
-    {
-        parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
+    {	
+    	if (cChk == "1") {
+        	parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
+    	} else {
+    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
+    	}
     };
 	
     function menu_change(Item) 
@@ -69,9 +74,11 @@
     <body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 	    <div id="left">
 		    <div class="left_admin" title="<spring:message code='main.t10011' />"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='main.t10011' /></div>
+            <c:if test="${cChk == '1' }">
             <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span>
             <ul class="on"></ul>
             </h2>
+            </c:if>
             <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span>
             <ul class="on"></ul>
             </h2>

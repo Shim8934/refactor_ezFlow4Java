@@ -200,7 +200,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>Community <spring:message code = 'ezCommunity.t18' /></th>
+					<th><spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t18' /></th>
 					<td style="padding:0px;">
 					<textarea id="c_clubdesc" name="c_clubdesc" style="Width:97%; Height:120px; cursor:default; border:none; 
 						font: 9pt <spring:message code = 'ezCommunity.t19' /> resize:none;" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>

@@ -71,6 +71,7 @@
 		                }
 
 		                document.getElementById("AddJobListView").innerHTML = "";
+		                document.getElementById("AddJobList").innerHTML = "";
 
 		                var listview = new ListView();
 		                listview.SetID("lvAddJobList");

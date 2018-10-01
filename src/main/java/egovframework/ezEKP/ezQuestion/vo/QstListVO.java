@@ -50,7 +50,15 @@ public class QstListVO {
 	private String lang;
 	/** jsp Onclick 시 주소*/
 	private String receve;
+	/** 사용자 회사 아이디 */
+	private String companyID;
 	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public int getBrdID() {
 		return brdID;
 	}

@@ -122,6 +122,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public String scheduleGetRegi(Map<String, Object> map) throws Exception {
 		return (String) select("EzScheduleDAO.scheduleGetRegi", map);
 	}
+	
+	public String getCumDeptId(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.getCumDeptId", map);
+	}
 
 	public int getCurScheduleId(Map<String, Object> map) {
 		return (int) select("EzScheduleDAO.getCurScheduleId", map);		

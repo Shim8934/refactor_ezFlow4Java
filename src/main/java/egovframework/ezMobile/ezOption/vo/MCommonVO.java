@@ -34,9 +34,12 @@ public class MCommonVO {
 	
 	private String userFileUrl;		/** 사용자 사진 */
 	
-	private String email; /* 사용자 e-mail*/
+	private String email; 			/** 사용자 e-mail*/
 	
 	private String primary;
+	
+	/** 2018-07-04 홍승비 - 사용자 전화번호 추가 */
+	private String phone;
 
 	public int getTenantId() {
 		return tenantId;
@@ -180,6 +183,14 @@ public class MCommonVO {
 
 	public void setPrimary(String primary) {
 		this.primary = primary;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 	
