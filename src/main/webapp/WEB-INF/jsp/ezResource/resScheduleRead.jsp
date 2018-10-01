@@ -57,9 +57,10 @@
 	        var brdName = "${brdName}";
 	        var resID = "${resID}";
 	        var iframeH = "";
+	        var deptID = "${deptID}";
 	        
 	        window.onload = function () {
-	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
+	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal +"','" + deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 
 	            if (brdName != "" && resID != "") {
 	                ItemArray[0] = Array(resID);
@@ -372,7 +373,7 @@
 	            }
 	        }
 
-	        function MemberInfo_onClick(pSelUserID) {
+	        function MemberInfo_onClick(pSelUserID, deptID) {
 	            var c_Width = 420;
 	            var c_Height = 438;
 
@@ -385,7 +386,7 @@
 	            var py = (s_Height - c_Height) / 2;
 
 	            if (pSelUserID != "") {
-	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID + "&dept=" + deptID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
 	        }  
 		</script>

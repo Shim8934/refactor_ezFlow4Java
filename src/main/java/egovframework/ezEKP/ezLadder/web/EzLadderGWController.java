@@ -94,8 +94,10 @@ public class EzLadderGWController {
 		String searchInput = request.getParameter("searchInput");
 		String sort = request.getParameter("sort");
 		String sortFlag = request.getParameter("sortFlag");
+		String companyID = request.getParameter("companyID");
 		
 		vo.setUserId(userId);
+		vo.setCompanyID(companyID);
 	
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
@@ -152,13 +154,13 @@ public class EzLadderGWController {
 	 * */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, int tenant_id, String lang, HttpServletRequest request) {
+	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, LadderVO ladVO, HttpServletRequest request) {
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			
-			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
+			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, ladVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -189,30 +191,25 @@ public class EzLadderGWController {
 			String todayDate = commonUtil.getTodayUTCTime("");
 			
 			String logCookie = (String) jsonBodys.get("loginCookie");
+			LoginVO userInfo = commonUtil.userInfo(logCookie);
 			
 			ladVO.setTitle((String) jsonBodys.get("title"));
 			ladVO.setType((String) jsonBodys.get("type"));
 			ladVO.setSecretFlag((String) jsonBodys.get("secretFlag"));
 			ladVO.setLineCnt((String) jsonBodys.get("lineCnt"));
 			ladVO.setWriteDate(todayDate);
-			
-			if(dbType.equals("mysql")) {
-				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
-				ladVO.setWriterName(userInfo.getUserName());
-				ladVO.setWriterName2(userInfo.getUserName2());
-				ladVO.setDeptName(userInfo.getDeptName());
-				ladVO.setDeptName2(userInfo.getDeptName2());
-			} else {
-				LoginVO userInfo = commonUtil.userInfo(logCookie);
-				ladVO.setWriterName(userInfo.getDisplayName());
-				ladVO.setWriterName2(userInfo.getDisplayName2());
-				ladVO.setDeptName(userInfo.getDeptName());
-				ladVO.setDeptName2(userInfo.getDeptName2());
-			}
+			ladVO.setWriterName(userInfo.getDisplayName());
+			ladVO.setWriterName2(userInfo.getDisplayName2());
+			ladVO.setDeptID(userInfo.getDeptID());
+			ladVO.setDeptName(userInfo.getDeptName());
+			ladVO.setDeptName2(userInfo.getDeptName2());
+			ladVO.setCompanyID(userInfo.getCompanyID());
 			
 			ladLineVO.setUserIds((ArrayList<String>) jsonBodys.get("userIds"));
 			ladLineVO.setUserNames((ArrayList<String>) jsonBodys.get("userNames"));
 			ladLineVO.setUserName2s((ArrayList<String>) jsonBodys.get("userName2s")); 
+			ladLineVO.setDescriptions((ArrayList<String>) jsonBodys.get("descriptions"));
+			ladLineVO.setDescriptions2((ArrayList<String>) jsonBodys.get("descriptions2"));
 			ladLineVO.setItems((ArrayList<String>) jsonBodys.get("items"));
 			
 			ezLadderService.insertLadder(ladVO, ladLineVO, logCookie);
@@ -407,17 +404,11 @@ public class EzLadderGWController {
 			String serverName = request.getHeader("x-user-host");
 			String dbType = globals.getProperty("Globals.DbType");
 			String todayDate = commonUtil.getTodayUTCTime("");
-			
-			if(dbType.equals("mysql")) {
-				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, userId);
-				cmtVO.setUserName(userInfo.getUserName());
-				cmtVO.setUserName2(userInfo.getUserName2());
-			} else {
-				LoginVO userInfo = commonUtil.userInfo((String) jsonBodys.get("loginCookie"));
-				cmtVO.setUserName(userInfo.getDisplayName());
-				cmtVO.setUserName2(userInfo.getDisplayName2());
-			}
-			
+		
+			LoginVO userInfo = commonUtil.userInfo((String) jsonBodys.get("loginCookie"));
+			cmtVO.setUserName(userInfo.getDisplayName());
+			cmtVO.setUserName2(userInfo.getDisplayName2());
+			cmtVO.setDeptID(userInfo.getDeptID());
 			cmtVO.setId((String) jsonBodys.get("commentId"));
 			cmtVO.setComment((String) jsonBodys.get("comment"));
 			cmtVO.setWriteDate(todayDate);
@@ -580,17 +571,27 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 삭제 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/delete/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwDeleteLadderList(@PathVariable String userId,  HttpServletRequest request) {
+	public JSONObject gwDeleteLadderList(@PathVariable String userId,  @RequestBody JSONObject jsonBodys, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /rest/ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		String tenant_Id = request.getParameter("tenant_Id");
-		String ladderId = request.getParameter("ladderId");
-
+		
 		try {
-	
-			ezLadderService.deleteLadderList(userId, tenant_Id, ladderId);
+			String serverName = request.getHeader("x-user-host");
+			String dbType = globals.getProperty("Globals.DbType");
+			String logCookie = (String) jsonBodys.get("loginCookie");
+			String ladderId = (String) jsonBodys.get("ladderId");
+			LoginVO userInfo = commonUtil.userInfo(logCookie);
+			
+			LadderVO ladVO = new LadderVO();
+			ladVO.setUserId(userId);
+			ladVO.setTenant_id(userInfo.getTenantId());
+			ladVO.setLadderId(Integer.parseInt(ladderId));
+			ladVO.setCompanyID(userInfo.getCompanyID());
+			
+			ezLadderService.deleteLadderList(ladVO);
 
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -642,19 +643,23 @@ public class EzLadderGWController {
 	 * 사다리게임 시작
 	 */
 	@RequestMapping(value = "/rest/ladder/start/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
+	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, @RequestBody JSONObject jsonBodys, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /rest/ladder/start/" + ladderId+ "/users/" + userId + "] started.");
 	
 		JSONObject result = new JSONObject();
 	
 		try {
-			int ladId = Integer.parseInt(ladderId);
-			int size = Integer.parseInt(request.getParameter("size"));
-			int lineCnt = Integer.parseInt(request.getParameter("lineCnt"));
-			String tenantId = request.getParameter("tenantId");
-			String lang = request.getParameter("lang");
+			String logCookie = (String) jsonBodys.get("loginCookie");
+			LoginVO userInfo = commonUtil.userInfo(logCookie);
 			
-			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt, lang);
+			LadderVO ladVO = new LadderVO();
+			ladVO.setTenant_id(userInfo.getTenantId());
+			ladVO.setLang(userInfo.getLang());
+			ladVO.setLadderId(Integer.parseInt(ladderId));
+			ladVO.setLineCnt(Integer.parseInt((String)jsonBodys.get("lineCnt")));
+			int size = Integer.parseInt((String)jsonBodys.get("size"));
+			
+			ezLadderService.setLadderStart(ladVO, size);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

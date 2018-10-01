@@ -190,6 +190,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
 		
 		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList(map);
 		

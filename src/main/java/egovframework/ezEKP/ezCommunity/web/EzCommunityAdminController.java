@@ -186,7 +186,8 @@ public class EzCommunityAdminController {
 			query = request.getParameter("query").replace("'",  "''");
 		}
 		
-		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), select, query, userInfo.getTenantId());
+		/* 관리자 > 커뮤니티검색화면 표출(총 n개 keywordCount) 시 companyID 조건 추가 */
+		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), select, query, userInfo.getCompanyID(), userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -196,10 +197,13 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage, totalPage);
 		int iQueryCount = keywordCount - (curPage -1) * 10;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getTenantId());
+		/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getCompanyID(), userInfo.getTenantId());
 
+		// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
 		for(CommunityClubVO club : clubList) {
-			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getTenantId()));
+			/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
+			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
 		}
 		
@@ -223,7 +227,7 @@ public class EzCommunityAdminController {
 		String code = request.getParameter("code");
 		
 		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), code, userInfo.getTenantId());
-		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getTenantId()));
+		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
 		club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n"));
 		
 		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
@@ -339,16 +343,22 @@ public class EzCommunityAdminController {
             }
         }
         
-        int keywordCount = ezCommunityAdminService.aspCloseComGet2(keyword, sRadio, tenantID);
+        /* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
+        int keywordCount = ezCommunityAdminService.aspCloseComGet2(keyword, sRadio, userInfo.getCompanyID(), tenantID);
         int totalPage = keywordCount / comNoPerPage;
 		
-        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), sort1, sort2, tenantID);
+        
+        logger.debug("현재 당신의 companyID      ::      " + userInfo.getCompanyID());
+        
+        /* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
+        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), sort1, sort2, userInfo.getCompanyID(), tenantID);
         
         if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
         	totalPage = totalPage + 1;
         }
         
         curPage = Math.min(curPage, totalPage);
+        // 화면에 리스트 나타내는 부분(companyID로 걸러진 커뮤니티 리스트 표출)
         String idSpanValue = ezCommunityAdminService.communityCloseCom(clubList, curPage, comNoPerPage, userInfo);
         
 		model.addAttribute("userInfo", userInfo);
@@ -386,7 +396,7 @@ public class EzCommunityAdminController {
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), tenantID), clubVO.getC_SysopID().trim(), tenantID);
+		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), tenantID), clubVO.getC_SysopID().trim(), userInfo.getCompanyID(), tenantID);
 		
 		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		
@@ -500,10 +510,12 @@ public class EzCommunityAdminController {
             }
         }
 		
-		int keywordCount = ezCommunityAdminService.aspAdmitComGet2(keyword, sRadio, tenantID);
+		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
+		int keywordCount = ezCommunityAdminService.aspAdmitComGet2(keyword, sRadio, userInfo.getCompanyID(), tenantID);
 		int totalPage = keywordCount / comNoPerPage;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), tenantID), sort1, sort2, tenantID);
+		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), tenantID), sort1, sort2, userInfo.getCompanyID(), tenantID);
 		
 		if (totalPage * comNoPerPage != keywordCount && (keywordCount % comNoPerPage) != 0) {
 			totalPage = totalPage + 1;

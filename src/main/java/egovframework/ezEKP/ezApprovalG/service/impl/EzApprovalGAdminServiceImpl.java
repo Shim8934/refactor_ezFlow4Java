@@ -1749,7 +1749,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_MODE", pMode);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
-		map1.put("v_LANGTYPE", lang);
+		map1.put("v_LANGTYPE", commonUtil.getPrimaryData(lang, tenantID));
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
 		
@@ -1883,6 +1883,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
 		map1.put("approvalFlag", approvalFlag);
+		map1.put("v_CODELANG", lang == "1" ? "" : lang);
 		
 		logger.debug("aprType=" + aprType);
 		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);

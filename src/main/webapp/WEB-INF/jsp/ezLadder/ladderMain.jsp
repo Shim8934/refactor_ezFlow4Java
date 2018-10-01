@@ -142,7 +142,7 @@
 							<c:out value ="${vo.title }" />
 							<c:if test="${vo.cmt>0 }"><span id="cmt">[<c:out value="${vo.cmt}" />]</span></c:if>
 						</td>
-						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('<c:out value='${vo.writerId}' />', event)"><c:out value="${vo.writerName }" /></a></td>
+						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('<c:out value='${vo.writerId}' />', '<c:out value='${vo.deptID}' />', event)"><c:out value="${vo.writerName }" /></a></td>
 						<td style="text-align: left;" width="140px"><c:out value="${vo.writeDate.substring(0,16) }" /></td>
 						
 						<c:choose>

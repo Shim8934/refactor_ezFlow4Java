@@ -59,6 +59,7 @@
 			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
+			var orgCompanyID = "${orgCompanyID}";
 			var ext = "${ext}";
 			
 			// 문서정보를 가져오는 함수
@@ -770,7 +771,7 @@
 		        isfileup = true;
 		        fd.append("boardid", window.parent.pBoardID);
 		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
-		        fd.append("compid", document.getElementById("compid").value);
+		        fd.append("compid", orgCompanyID);
 		        fd.append("docid", document.getElementById("docid").value);
 		        fd.append("attachsn", pAttachSN);
 		        

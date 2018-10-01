@@ -192,6 +192,7 @@
 			var beforeDocID = "${beforeDocID}";
 			var receptGubunYN = "${receptGubunYN}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
+	        var orgCompanyID = "${orgCompanyID}";
 	        var ext = "${ext}";
 	        var nonElecRec = "";
 	        var nonElecRecInfoXml = "";
@@ -1570,7 +1571,8 @@
 	            		async : false,
 	            		url : "/ezApprovalG/gongRamDocInfo.do",
 	            		data : {
-	            			docID : pDocID
+	            			docID : pDocID,
+	            			orgCompanyID : orgCompanyID
 	            		},
 	            		success: function(xml){
 	            			result = xml;

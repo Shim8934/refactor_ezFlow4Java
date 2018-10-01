@@ -1800,9 +1800,9 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     var xmlstring = "<DocID>" + DocID + "</DocID>";
     xmlpara = loadXMLString(xmlstring);
     if (Target == "APPROVALG")
-        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do?orgCompanyID="+orgCompanyID, false);
     else
-        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do?orgCompanyID="+orgCompanyID, false);
     xmlHTTP.send(xmlpara);
 
     if (xmlHTTP.status == 200) {

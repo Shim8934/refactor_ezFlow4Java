@@ -262,7 +262,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        //참석자 정보
 	        if (vo.getHasAttendant().equals("Y")) {
 	        	String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
-	        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId);
+	        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId, info.getCompanyId());
 	        	
 	        	dataObject.put("attendantList", aList);	        	
 	        }
@@ -404,7 +404,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				}
 			}
 			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId(), info.getCompanyId());
 			
 			for (ScheduleGroupListVO vo : gList) {
         		//그룹 일정
@@ -440,7 +440,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			
-			List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, info.getTenantId());
+			List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, info.getTenantId(), info.getCompanyId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
