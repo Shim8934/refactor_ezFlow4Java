@@ -60,8 +60,10 @@
 	    var pAdminFg = "${adminFg}";
 	    var pBrd_Access = "${brdAccess}";
 	    
+	    /* 2018-10-01 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 	    if(pAdminFg == "") {
-	        window.location.href = "/ezResource/nonResList.do?msg=" + pBrd_Access;
+	    	var msg = "<spring:message code='ezResource.t58' />";
+	        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
