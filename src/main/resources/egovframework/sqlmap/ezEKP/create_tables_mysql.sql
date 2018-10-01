@@ -1784,7 +1784,7 @@ CREATE TABLE `tbl_access_id` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `CN` varchar(80) NOT NULL,
   PRIMARY KEY (`ACCESSNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1801,7 +1801,7 @@ CREATE TABLE `tbl_access_ip` (
   `ACCESS` varchar(10) DEFAULT 'YES',
   `EXPLANATION` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`IPNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

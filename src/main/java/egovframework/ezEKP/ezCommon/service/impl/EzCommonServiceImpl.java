@@ -1309,4 +1309,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addAddJobMasterOrderBy() throws Exception {
 		ezCommonDAO.addAddJobMasterOrderBy();
 	}
+	
+	@Override
+	public void createTblIPAccessID() throws Exception {
+		ezCommonDAO.createTblIPAccessID();
+	}
+	
+	@Override
+	public void createTblIPAccessIP() throws Exception {
+		ezCommonDAO.createTblIPAccessIP();
+	}
 }

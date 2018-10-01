@@ -378,9 +378,11 @@ public class EzApprovalGRelayScheduler {
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
         								 break;
         							 case "attach_body":
-        								 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#attach_body생성=" + WriteBodyAttach);
-        								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
+        								 if (objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("separate").getTextContent().equals("true")) {
+        									 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#attach_body생성=" + WriteBodyAttach);
+        									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
+        								 }
         								 break;
         							 case "attach_xml":
         								 boolean WriteXMLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
