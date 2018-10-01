@@ -169,7 +169,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -280,7 +280,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			if (fis != null) fis.close();				
 			if (fos != null) fos.close();
@@ -335,7 +335,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				bos.write(buffer, 0, bytesRead);
 			}
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();

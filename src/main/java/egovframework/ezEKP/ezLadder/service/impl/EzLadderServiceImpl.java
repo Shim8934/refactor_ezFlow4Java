@@ -347,6 +347,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	@Override
 	public List<LadderBmUserVO> selectBMUser(LadderBmUserVO bmUser) throws Exception {
+		logger.debug("selectBMUser started");
+		
 		List<LadderBmUserVO> bmUsers = ezLadderDAO.selectBMUser(bmUser);
 		
 		String lang = commonUtil.getMultiData(bmUser.getLang(), bmUser.getTenant_id());
@@ -364,6 +366,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 			}
 		}
 		
+		logger.debug("selectBMUser ended");
 		return bmUsers;
 	}
 
