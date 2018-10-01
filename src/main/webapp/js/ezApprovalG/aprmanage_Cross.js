@@ -27,6 +27,8 @@ function getDocList() {
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
     
+    var searchCompanyID = $("#selectCompany option:selected").val();
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -43,7 +45,8 @@ function getDocList() {
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
-				subQuery     : SubQuery
+				subQuery     : SubQuery,
+				searchCompanyID : searchCompanyID
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -380,7 +383,9 @@ function getSendOutDocList() {
 				pageSize : pageSize,
 				pageNum  : pageNum,
 				orderCell : OrderCell,
-				orderOption : OrderOption
+				orderOption : OrderOption,
+				listType : pListTypeValue,
+				searchQuery  : SQLPARADATA
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
@@ -564,7 +569,8 @@ function DisplayWaitStat() {
 
 function getAprLine(tr) {
     var pDocID,pMode = "",pFlag = "";
-
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
+    
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
@@ -614,7 +620,8 @@ function getAprLine(tr) {
 		data : {
 				docID : pDocID,
 				mode  : pMode,
-				flag  : pFlag
+				flag  : pFlag,
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getAprovSub_after(xml);
@@ -782,6 +789,7 @@ function openApprovUI(allFlag) {
         pArgument[1] = GetAttribute(tr[0], "DATA4");		
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
         pArgument[3] = GetAttribute(tr[0], "DATA7");	
+        var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
 
         if (GetAttribute(tr[0], "DATA12") == "017") {
         	   $.ajax({
@@ -818,7 +826,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode)+"&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -942,6 +950,7 @@ function openViewDocInfo(type) {
     var pArgument = new Array();
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1009,6 +1018,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
+        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -1275,6 +1285,8 @@ function getAprDocAproveInfo(tr) {
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
+    
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     if (pDocInfoValue == "4") {
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
@@ -1310,7 +1322,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getTotalAttachInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1355,7 +1368,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getOpinionInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1396,7 +1410,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1433,7 +1448,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getCirculationinfo.do",
     		data : {
     			docID : pDocID,
-    			mode  : pFlag
+    			mode  : pFlag,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			RtnVal = xml;
@@ -1786,6 +1802,7 @@ function setbuttonenable() {
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
     var pFunctionType = GetAttribute(tr, "DATA10");
+    var orgCompanyID = GetAttribute(tr, "ORGCOMPANYID");
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
@@ -2145,10 +2162,12 @@ function selFirstRow(Resultxml) {
 
         pDocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
     }
     else {
         pDocID = "";
         pURL = "";
+        orgCompanyID = "" ;
     }
 
     switch (pDocInfoValue) {
@@ -2189,7 +2208,8 @@ function getDataInfo(jobState) {
         		url : "/ezApprovalG/getTotalAttachInfo.do",
         		data : {
         				docID : pDocID,
-        				flag  : pFlag
+        				flag  : pFlag,
+        				orgCompanyID : orgCompanyID
         				},
         		success: function(xml){
         			getdoclistSub_after(xml);

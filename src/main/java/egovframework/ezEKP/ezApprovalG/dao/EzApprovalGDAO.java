@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -3024,6 +3025,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getDocHrefInfoHref(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
+		return (List<PortalTopOtherCompanyAddJobVO>) list("EzApprovalG.getAllCompanyList", map);
+	}
+		
 	public void deleteSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.deleteSpecialInfoNonElecRec", map);
 	}

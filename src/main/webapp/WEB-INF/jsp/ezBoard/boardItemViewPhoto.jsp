@@ -374,7 +374,9 @@
 						checks.item(i).checked = true;
 				}
 		
-				function MemberInfo_onclick(pUserID)
+				/* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+				// 이 기능 사용하지 않음(닷넷 당시의 기능)
+				function MemberInfo_onclick(pUserID, pDeptID)
 				{
 		            var swidth = 420;
 		            var sheight = 490;
@@ -385,7 +387,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		            
-					window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID + "&dept=" + pDeptID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 				}
 		
 				function Bigger()
@@ -433,7 +435,8 @@
 				    DivPopUpHidden();
 				}
 		
-				function OpenUserInfo(pUserID)
+				/* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+				function OpenUserInfo(pUserID, pDeptID)
 				{
 		            var swidth = 420;
 		            var sheight = 450;
@@ -444,7 +447,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 				}
 		
 // 				function OneLineReply_onkeydown(e)
@@ -1505,7 +1508,7 @@
 		              <th style="width:10%"><spring:message code='ezBoard.t223'/></th>
 			              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="WriteUserNM">
 			              	  <div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto">
-								 <span onclick='OpenUserInfo("${boardItem.writerID}")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
+								 <span onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
 							  </div>
 			              </td> 
 		              <th style="width:10%"><spring:message code='ezBoard.t289'/></th>

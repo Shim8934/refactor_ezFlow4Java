@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -166,7 +167,7 @@ public class EzPollController extends EgovFileMngUtil {
 		        
 		        //Process target
 		        List<String> departIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "dept");
-		        List<String> userIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "user");			        
+		        List<PollUserVO> userList = ezPollService.getListOfUserForQst(qstId, loginVO.getTenantId(), "user");			        
 		        
 		        if (departIdList.size() > 0) {
 		        	strXMLRange.append("<DEPT>"); 
@@ -188,19 +189,20 @@ public class EzPollController extends EgovFileMngUtil {
 			        strXMLRange.append("</DEPT>"); 
 		        }
 		        
-		        if (userIdList.size() > 0) {
+		        if (userList.size() > 0) {
 		        	strXMLRange.append("<MEMBER>"); 
 		        	
-		        	for (String userID : userIdList) {
-		        		LoginVO user = loginService.selectReceiver(userID, loginVO.getTenantId());
-		        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
-			        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+		        	for (PollUserVO user : userList) {
+		        		LoginVO userVo = loginService.selectReceiver(user.getUserId(), loginVO.getTenantId());
+		        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(userVo.getId()) + "\" nm=\"" + commonUtil.cleanValue(userVo.getDisplayName1()) + 
+			        			"\" nm2=\"" + commonUtil.cleanValue(userVo.getDeptName1()) + "\" deptid=\"" + commonUtil.cleanValue(user.getDeptId()) + "\">"
+		        				+ commonUtil.cleanValue(userVo.getId()) + "</DATA>");
 		        		
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += user.getDisplayName1() + ",";
+			        		listOfTarget += userVo.getDisplayName1() + ",";
 			        	}
 			        	else {
-			        		listOfTarget += user.getDisplayName2() + ",";
+			        		listOfTarget += userVo.getDisplayName2() + ",";
 			        	}
 		        		
 		        	}		        	
@@ -321,6 +323,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("get question is running!");				
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);		
 		String userID = loginVO.getId();
+		String companyID = loginVO.getCompanyID();
 		int currPage = 1;
 		int pageSize = 15;
 		int totalPages = 0;
@@ -418,7 +421,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get list of questions for this user
 		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();	
 		ezPollService.getAllQuestionForUser(loginVO, setOfQuestions, searchStr, mode);
-		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId());
+		List<Integer> listHiddenQuestionIds = ezPollService.getHiddenQuestionIds(userID, loginVO.getTenantId(), companyID);
 		
 		//Set status for each question
 		checkingArray = setStatusForQuestions(setOfQuestions, listHiddenQuestionIds, loginVO, checkingArray, seeAll);
@@ -557,6 +560,7 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantID = loginVO.getTenantId();
 		String userID = loginVO.getId();		
+		String companyID = loginVO.getCompanyID();		
 		String numberOfOptions = req.getParameter("numberOfOptions");		
 		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));	
 		String qstTitle = req.getParameter("qst_title");	
@@ -631,6 +635,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setCreator(userID);
 		pollQuestionVO.setCreatorName1(loginVO.getDisplayName1());
 		pollQuestionVO.setCreatorName2(loginVO.getDisplayName2());
+		pollQuestionVO.setCreatorDept(loginVO.getDeptID());
 		pollQuestionVO.setCreateDate(createDate); //20180109
 		pollQuestionVO.setEndDate(endDate);
 		pollQuestionVO.setStartDate(startDate);
@@ -642,6 +647,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setIsSelOnlyOnce(isSelOnlyOnce);
 		pollQuestionVO.setSendPostNotice(sendPostNotice);
 		pollQuestionVO.setOpenToAll(openToAll);
+		pollQuestionVO.setCompanyId(companyID);
 		
 		
 		if (!qstModifyInfo.equals("")) {
@@ -701,6 +707,8 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("question vote is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
+		String companyID =	loginVO.getCompanyID();
+		String deptID =	loginVO.getDeptID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
 		int totalUsers = 0;		
@@ -810,7 +818,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
-		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId);
+		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
 		
 		//Check if user has the vote privilege
 		if (listofTotalUsers.contains(loginVO)) {
@@ -821,7 +829,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Get all seen users
-		List<LoginVO> listOfCurrentSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId);
+		List<LoginVO> listOfCurrentSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
 		totalSeenUsers = listOfCurrentSeenUsers.size();
 		
 		//해당 투표 대상자 중 사용자가 포함되어 있는 기존 열람 유저 리스트에 없으면 추가해준다.
@@ -832,7 +840,8 @@ public class EzPollController extends EgovFileMngUtil {
 				pollQstStatusVO.setUserId(loginVO.getId());
 				pollQstStatusVO.setTenantId(loginVO.getTenantId());
 				pollQstStatusVO.setQustId(qstId);	
-				ezPollService.insertSeenQuestion(pollQstStatusVO);
+				pollQstStatusVO.setDeptId(deptID);
+				ezPollService.insertSeenQuestion(pollQstStatusVO, companyID);
 				totalSeenUsers = totalSeenUsers + 1;
 				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
 			}
@@ -851,8 +860,10 @@ public class EzPollController extends EgovFileMngUtil {
 		while (iterator.hasNext()) {
 			LoginVO user = iterator.next();
 			
-			if (listOfPollUserAndAnswer.contains(user.getId())) {
-				iterator.remove();	
+			for(int i = 0; i < listOfPollUserAndAnswer.size(); i++){
+				if (listOfPollUserAndAnswer.get(i).getUserId().equals(user.getId())) {
+					iterator.remove();
+				}
 			}
 		}
 		
@@ -971,7 +982,14 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Get creator department
-		LoginVO pollCreator = loginService.selectReceiver(pollQuestionVO.getCreator(), tenantId);
+		//2018-07-10 홍대표 - 작성자 겸직 처리하려고 수정함.
+		LoginVO paramVO = new LoginVO();
+		paramVO.setId(pollQuestionVO.getCreator());
+		paramVO.setDeptID(pollQuestionVO.getCreatorDept());
+		paramVO.setDn("NOPASSWORD");
+		paramVO.setTenantId(tenantId);
+		LoginVO pollCreator = loginService.selectUser(paramVO);
+//		LoginVO pollCreator = loginService.selectReceiver(pollQuestionVO.getCreator(), tenantId);
 		
 		if(pollCreator != null){
 			if (loginVO.getPrimary().equals("1")) {
@@ -980,11 +998,14 @@ public class EzPollController extends EgovFileMngUtil {
 			else {
 				model.addAttribute("creatorDept", pollCreator.getDeptName2());
 			}
+			model.addAttribute("creatorDeptId", pollCreator.getDeptID());
 		}
 		
 		if(brdId != ""){
 			model.addAttribute("brdId", Integer.parseInt(brdId));
 		}
+		
+//		deptID = ezPollService.getAddJobDept(tenantId, qstId, loginVO.getId(), deptID);
 		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
@@ -1008,6 +1029,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
+		model.addAttribute("deptId", deptID);		
 		
 		
 		logger.debug("Question vote finishes!");		
@@ -1167,6 +1189,8 @@ public class EzPollController extends EgovFileMngUtil {
 		pollCmtVO.setUserName2(loginVO.getDisplayName2());
 		pollCmtVO.setCmtTime(cmtTime);		
 		pollCmtVO.setTextContent(txtContent);	
+		pollCmtVO.setDeptId(loginVO.getDeptID());
+		pollCmtVO.setCompanyId(loginVO.getCompanyID());
 		
 		logger.debug("attachFilePath: " + attachFilePath);
 		
@@ -1221,10 +1245,12 @@ public class EzPollController extends EgovFileMngUtil {
 			//Insert into comment table
 			ezPollService.insertCmt(pollCmtVO);
 			
+			String deptId = ezPollService.getQuestionRelatedDept(loginVO.getTenantId(), qstId, loginVO.getId(), loginVO.getDeptID());
+			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
 							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\","
-							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
+							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\", \"deptId\":\"" + deptId + "\"}";
 			JSONParser parser = new JSONParser(); 
 			
 			JSONObject json = (JSONObject) parser.parse(result);
@@ -1984,6 +2010,7 @@ public class EzPollController extends EgovFileMngUtil {
 	public String showUnJoinedUsersInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Show un joined user info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String companyID = loginVO.getCompanyID();
 		int tenantId = loginVO.getTenantId();
 		int qstId = -1;
 		int numberOfUnVotedUsers = 0;
@@ -1998,7 +2025,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get all users for this question
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
-		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId);
+		List<LoginVO> listofTotalUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
 		List<LoginVO> listOfUnvotedUsers = new ArrayList<LoginVO>(listofTotalUsers);		
 		
 		//Get list of users and their answers
@@ -2053,10 +2080,12 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 	
 	@MessageMapping("/editVote") 
-	public void editVote(JSONObject message) throws org.json.simple.parser.ParseException {
+	public void editVote(JSONObject message, @CookieValue("loginCookie")String loginCookie) throws org.json.simple.parser.ParseException {
 		logger.debug("Edit vote is running!");		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int qstId = Integer.parseInt((String) message.get("question"));
 		int tenantId = Integer.parseInt((String)message.get("tenant"));	
+		String companyID = loginVO.getCompanyID();
 		String sessionId = (String)message.get("sessionid");
 		String userId = (String)message.get("user");
 		
@@ -2067,7 +2096,7 @@ public class EzPollController extends EgovFileMngUtil {
 			pollQstStatusVO.setUserId(userId);
 			pollQstStatusVO.setTenantId(tenantId);
 			pollQstStatusVO.setQustId(qstId);
-			ezPollService.insertModifyingQuestion(pollQstStatusVO);
+			ezPollService.insertModifyingQuestion(pollQstStatusVO, companyID);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -2112,6 +2141,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Show seen users info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
+		String companyID = loginVO.getCompanyID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		int target = 0;
 		if(request.getParameter("target") != null){
@@ -2120,12 +2150,12 @@ public class EzPollController extends EgovFileMngUtil {
 	
 		//Get all related users for this question
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
-		List<LoginVO> listofUnseenUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId);
+		List<LoginVO> listofUnseenUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
 		List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
 		
 		//Get all of seen users
 //		List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId);
+		listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
 		
 		int numberOfSeenUsers = listofSeenUsers.size();
 		listofUnseenUsers.removeAll(listofSeenUsers);
@@ -2434,6 +2464,26 @@ public class EzPollController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
+				if (fromAddressList.size() >= 2) {
+					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+					
+					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
+					if (!companyDomainName.isEmpty()) {
+						for (int i = 0; i < fromAddressList.size(); i++) {
+							String[] item = fromAddressList.get(i);
+							String itemType = item[1];
+							
+							if (itemType.equals("1")) {
+								logger.debug("removing the account email address...");
+								
+								fromAddressList.remove(i);
+								
+								break;
+							}
+						}
+					}
+				}
+				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
 				} else {
@@ -2650,7 +2700,13 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			for (int i = 0; i < pUserCnt; i++) {
 				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+				String deptID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("deptid").getTextContent();
+				if(deptID == null){
+					LoginVO user = loginService.selectReceiver(userID, loginVO.getTenantId());
+					deptID = user.getDeptID();
+				}
 				pollQuestionVO.setUserId(userID);
+				pollQuestionVO.setUserDeptId(deptID);
 				pollQuestionVO.setReceiverType("user");
 				ezPollService.insertQustReceivers(pollQuestionVO);
 			}

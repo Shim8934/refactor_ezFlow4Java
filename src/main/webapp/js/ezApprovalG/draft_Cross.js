@@ -2486,7 +2486,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&ext=" + ext);
+        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
@@ -2504,7 +2504,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + DraftFlag;
         } else {
-        	url = "/ezApprovalG/aprDocAttach.do";
+        	url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
         }
         	
         if (CrossYN()) {
@@ -3550,7 +3550,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -3592,7 +3593,8 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;

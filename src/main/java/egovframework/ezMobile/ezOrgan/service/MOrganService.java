@@ -14,7 +14,7 @@ public interface MOrganService {
 
 	public List<MOrganListVO> getDeptInfo(String organType, String companyID, String deptId, String lang, int tenantId) throws Exception;
 
-	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId) throws Exception;
+	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId, String companyId) throws Exception;
 
 	public List<MOrganListVO> getLowDeptInfo(String deptID, String lang, int tenantId) throws Exception;
 

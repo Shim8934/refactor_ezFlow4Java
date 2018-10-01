@@ -254,6 +254,8 @@ function CalendarView(pTagetID,chk_str) {
                 dDiv.style.width = "100%"
                 dDiv.style.height = "100px";
                 dDiv.style.overflowY = "auto";
+                //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
+                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
                 dTd.appendChild(dDiv);
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
@@ -1058,6 +1060,8 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dDiv.style.overflowY = "auto";
         dDiv.style.overflowN = "hidden";
         dDiv.style.whiteSpace = "noWrap";
+        //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
+        dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dTd.appendChild(dDiv);
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);

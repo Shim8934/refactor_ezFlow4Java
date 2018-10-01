@@ -383,8 +383,8 @@ function goToPageByNum(page) {
 }
 
 // 작성자 정보 보기
-function menuQst_DetailUserInfo(pUserID, event) {
+function menuQst_DetailUserInfo(pUserID, pDeptID, event) {
 	event.stopPropagation();
 	var feature = GetOpenPosition(420, 438);
-    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" +pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 }	
