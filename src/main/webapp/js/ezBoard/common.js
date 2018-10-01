@@ -83,7 +83,7 @@ function getBoardComment() {
 					boardCommentList += "<td style='padding-left:3px;line-height:1.5'>&nbsp;<span>" + vo.userName + "</span></td>";					
 				} else {
 					boardCommentList += "<td style='padding-left:3px;'>&nbsp;<span style='cursor:pointer'" 
-										+ " onclick='OpenUserInfo(\"" + vo.userID + "\")'>" + vo.userName + "</span></td>";	
+										+ " onclick='OpenUserInfo(\"" + vo.userID + "\", \"" + vo.deptID + "\")'>" + vo.userName + "</span></td>";	
 				}
 				boardCommentList += "</td>";
 				boardCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
@@ -278,8 +278,8 @@ function Save_OneLineReply() {
 	});
 }
 //2017.12.28 강민수92
-function OpenUserInfo(pUserID) {
-    var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
+function OpenUserInfo(pUserID, pDeptID) {
+    var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "UserInfo", 420, 450, "NO");
 }
 
 //2018.01.02 강민수92

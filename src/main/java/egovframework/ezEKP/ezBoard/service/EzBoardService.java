@@ -28,7 +28,8 @@ public interface EzBoardService {
 	
 	public List<BoardVO> get_apprUserList(String boardID, int tenantID) throws Exception;
 
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception;
 
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
 	
@@ -36,7 +37,8 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
-	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception;
+	/* 2018-07-17 홍승비 - 사원정보 확인용 deptID를 위해 companyID 조건 추가 */
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 	
 	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree, int tenantID) throws Exception;
 	
@@ -52,9 +54,11 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, int tenantID) throws Exception;
+	/* 예약게시물 표출 시 companyID 조건 추가 */
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, String companyID, int tenantID) throws Exception;
 	
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception;
+	/* 2018-07-02 홍승비 - 댓글 확인 시 작성자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
 	
@@ -124,7 +128,8 @@ public interface EzBoardService {
 	
 	public String setBoardConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	
-	public String apprItem(String userID, String itemList, String pMod, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 승인게시물 표출 조건으로 companyID 추가 */
+	public String apprItem(String userID, String itemList, String pMod, String companyID, int tenantID) throws Exception;
 	
 	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
 	
@@ -132,9 +137,11 @@ public interface EzBoardService {
 	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
+	/* 2018-06-25 홍승비 - 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가 */
 	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
 	
-	public int getReservedItemListCount(String userID, int tenantID) throws Exception;
+	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
+	public int getReservedItemListCount(String userID, String companyID, int tenantID) throws Exception;
 	
 	public int getNewItemListCount(LoginVO userInfo) throws Exception;
 
@@ -190,7 +197,8 @@ public interface EzBoardService {
 
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception;
 
-	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 즐겨찾기 탭 회사별로 구분 */
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, String companyID, int tenantID) throws Exception;
 	
 	public void setMainImageID(String mainImageID, String itemID, int tenantID) throws Exception;
 	

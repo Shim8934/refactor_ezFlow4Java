@@ -88,6 +88,7 @@
  	        var period;
  	        var pDocInfoValue = "1";
  	       	var nowDate = "${nowDateUTC}";
+ 	        var orgCompanyID = "";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -427,7 +428,9 @@
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
 	    	   for(var i =0; i < returnvalue.length; i++) {
-		        	condition[i] = returnvalue[i]; 
+					//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+		        	//condition[i] = returnvalue[i];
+	    		    condition[i] = replaceCond(returnvalue[i]);
 		        }
 	    	   
 	    	    if (LoadSquery == "usercontlist") {
@@ -489,7 +492,7 @@
 				            var width = window.screen.availWidth;
 				            var left = (parseInt(width) - 600) / 2;
 				            var top = (parseInt(heigth) - 450) / 2;
-				            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+				            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4") + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
 		                }
 		            } else if (jobState == "RECIPENT") {
 		                var heigth = window.screen.availHeight;
@@ -569,7 +572,15 @@
 		    function ViewDoc_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var selRow = DocList.GetSelectedRows();
+
+		        if (selRow.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        var tr = selRow[0];
 		        pURL = tr.getAttribute("DATA2");
 		
@@ -614,7 +625,7 @@
 		            var selRow = DocList.GetSelectedRows();
 		            var tr = selRow[0];
 		            pURL = tr.getAttribute("DATA2");
-		
+					orgCompanyID = tr.getAttribute("ORGCOMPANYID");
 		            var formid = tr.getAttribute("DATA6");
 		            if (approvalFlag == 'S' ) {
 			            var docState =  tr.getAttribute("DATA12");
@@ -641,7 +652,7 @@
 		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;
+		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -976,8 +987,8 @@
 	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
 		        	var nowyear = nowDate.substring(0,4);
-		            var nowmonth = nowDate.substring(5,7);
-		            var nowday = nowDate.substring(8,10); 
+		            var nowmonth = parseInt(nowDate.substring(5,7));
+		            var nowday = parseInt(nowDate.substring(8,10)); 
 		            
 	            	/* if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
 			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
@@ -989,6 +1000,7 @@
 		            	period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
 	            	} */
 	            	
+	            	//2018-09-07 배현상, 년도 선택 시 한자리 숫자인 월 앞에 0이 붙지 않도록 변경
 	            	if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
 	            		period = condition[5].substring(0, 4) + strLang1028 + " " + parseInt(condition[5].substring(5, 7)) + strLang1029 + " " + parseInt(condition[5].substring(8,10)) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + parseInt(condition[6].substring(5, 7)) + strLang1029 + " " + parseInt(condition[6].substring(8, 10)) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "" && condition[6] != null && condition[6] != "" && condition[3].length <= 4 && condition[6].length <= 4) {
@@ -1156,15 +1168,21 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
+		        	//팝업창에서 알럿창으로 변경
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 		            return;
 		        }
-		        else
+		        else{
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 		
-		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
+		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
 		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
@@ -1244,9 +1262,17 @@
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
 
+		        if (tr.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
 		            var InformationString = "<spring:message code='ezApproval.t579'/>";
-		            OpenAlertUI(InformationString, "OPEN");
+		            //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
+ 		            //OpenAlertUI(InformationString, "OPEN");
+		            OpenAlertUI(InformationString, "OPEN", "");
 		            return;
 		        }
 	
@@ -1290,6 +1316,12 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        
+		        if (tr.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
 	
 		        if (GetAttribute(tr[0], "DATA12") != strDocState1) {
 		            var InformationString = "<spring:message code='ezApprovalG.hyj26'/>";
@@ -1365,6 +1397,11 @@
 		                }
 		            }
 		        }
+		    }
+		    
+		    //2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 	    </script>
 	</head>

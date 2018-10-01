@@ -71,7 +71,7 @@
 	    			}
 	    			
 	    		})
-	    		
+	    		 
 	    		opener.location.reload();
 	    	}
 	    </script>

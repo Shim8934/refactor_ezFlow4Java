@@ -181,6 +181,9 @@ public class LoginController {
 		loginVO.setDn("NOPASSWORD");
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
+		String deptId = resultVO.getDeptID();
+		String companyId = resultVO.getCompanyID();
+		
 		String useMasteradminLogin = ezCommonService.getTenantConfig("useMasteradminLogin", tenantId);
 		boolean masteradminLogin = false;
 		String displayName1 = null;
@@ -336,8 +339,8 @@ public class LoginController {
 				loginService.insertLog(resultVO);
         		
 				//로그인 쿠기 생성
-        		createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
-	        	
+				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+				
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
@@ -418,7 +421,7 @@ public class LoginController {
     					
     					loginService.insertLog(resultVO);
     	
-    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
+    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
     		        	
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
     		        	cookieName.setPath("/");
@@ -575,8 +578,6 @@ public class LoginController {
             				returnValue = true;
             			}
             			checkCnt = 0;
-        			} else {
-        				return false;
         			}
         		}
         		
@@ -591,7 +592,7 @@ public class LoginController {
     
     public void createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
-    				HttpServletRequest request, HttpServletResponse response
+    				HttpServletRequest request, HttpServletResponse response, String deptID, String companyID
     				) throws Exception {
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
@@ -654,7 +655,7 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId;
+		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);

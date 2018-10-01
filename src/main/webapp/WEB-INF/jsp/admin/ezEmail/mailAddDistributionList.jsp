@@ -59,6 +59,8 @@
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
 	        var m_contactImg = { "normal": "/images/tab_addr1.gif", "select": "/images/tab_addr.gif" };
 	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
+	        var ua = navigator.userAgent;
+	        var companyId = "${companyId}";
 	        var selSpan = "";
 	        var AddressTreeView = null;
 	        var searchgubun = "N";
@@ -97,9 +99,12 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
+                //createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -267,7 +272,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -396,7 +401,7 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		type : "user"
 		        	},
 		        	success : function(result){	
@@ -664,6 +669,7 @@
 	            }
 	            
 	            var UserListHTML = "";
+
 	           /*  if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 	                //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
@@ -1660,7 +1666,8 @@
 	            }
 	            
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            //var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            var dept = p_ListOrderObject.getAttribute("_DATA10");
 	            var rtn
 	            var width = 420, height = 450;
 	            var leftPosition, topPosition;

@@ -408,19 +408,22 @@ public class EzCommonController extends EgovFileMngUtil{
 //        		}
 				
 				if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getLang(), loginVO.getTenantId());
+					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
 					
 					if (infoXML2!=null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
 						Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
 						
 						literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 						literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
+						literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
 					} else {
 						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+						literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 					}
 					
 				} else {
+					literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 					literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 					literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 				}
@@ -467,7 +470,7 @@ public class EzCommonController extends EgovFileMngUtil{
 						
 						literalEmail = deptVO.getMail();
 						literalDisplayName = deptVO.getDisplayName();
-					// 이메일 아이디에 match되는 부서가 있는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
+					// 이메일 아이디에 match되는 부서가 없는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
 					} else {
 						List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
 						

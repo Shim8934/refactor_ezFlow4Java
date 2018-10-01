@@ -90,11 +90,11 @@
 				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
 			}
 			
-			/* 2018-07-18 홍승비 - 팝업창 위치, 스크립트 오류 수정(.js import) */
-			function openinfo_userinfo(pCN) {
+			/* 2018-07-18 홍승비 - 관리자단 커뮤니티 마스터 사원정보 겸직에 대응 가능하도록 수정, 스크립트 오류 수정(.js import) */
+			function openinfo_userinfo(pCN, pDept) {
 			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
 			    feature = feature + GetOpenPosition(420, 438);
-			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN + "&dept=" + pDept, "", feature);
 			}
 			
 			//########################################페이지네이션 변경 ##############################################
@@ -286,7 +286,7 @@
 									<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
 									<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
 									<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
-									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}')"><c:out value = '${club.userName }' /></td>
+									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}',  '${club.deptID}')"><c:out value = '${club.userName}' /></td>
 									<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
 								</tr>
 							</c:forEach>

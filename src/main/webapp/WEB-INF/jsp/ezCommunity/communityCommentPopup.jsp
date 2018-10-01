@@ -106,7 +106,7 @@
 			</ul>
 		</div>
 		
-		<div style='height:500px;overflow-y:auto;'>
+		<div style='height:590px;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%" >
 				<c:choose>
 					<c:when test="${gubun == 2}">

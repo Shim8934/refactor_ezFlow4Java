@@ -686,6 +686,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getSearchAllBoardItemCount", map);
 	}
 	
+	public int isDeptChk(String id, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("tenantID", tenantID);
+		return (int) select("EzBoardDAO.isDeptChk", map);
+	}
+	
 	/* 2018-06-11 홍승비 - 포토/썸네일 이미지 리스트 중에서 가장 큰 IMAGEID 가져오기 */
 	public String getLastImageID(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getLastImageID", map);

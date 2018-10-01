@@ -192,6 +192,7 @@
 			var beforeDocID = "${beforeDocID}";
 			var receptGubunYN = "${receptGubunYN}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
+	        var orgCompanyID = "${orgCompanyID}";
 	        var ext = "${ext}";
 	        var nonElecRec = "";
 	        var nonElecRecInfoXml = "";
@@ -1570,7 +1571,8 @@
 	            		async : false,
 	            		url : "/ezApprovalG/gongRamDocInfo.do",
 	            		data : {
-	            			docID : pDocID
+	            			docID : pDocID,
+	            			orgCompanyID : orgCompanyID
 	            		},
 	            		success: function(xml){
 	            			result = xml;
@@ -2725,28 +2727,17 @@
 	        							<input type="text" name="txtAprMemberTitle" id="txtAprMemberTitle" class="text" style="Width:100%;">
 	        						</td>
 								</tr>
-								<tr>
-	        						<th><spring:message code='ezApprovalG.t445'/></th><!-- 기안자 -->
-									<td>
-	        							<input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:100%;">
-		    						</td>
-								</tr>
-								<tr>
-            						<th><spring:message code='ezApprovalG.t863'/></th><!-- 시행일자 -->
-  	    							<td>
-										<input type="text" class="text" style="Width:40px;height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
-										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
-										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
-										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-            						</td>
-	        					</tr>
 	       						<tr>
 									<th >발신기관명</th><!--발신기관명-->
 									<td>
 							        	<input type="text" name="txtReceiptMember" id="txtReceiptMember" class="text" style="Width:100%;">
 							        </td>
+								</tr>
+								<tr>
+	        						<th>문서발신자</th><!-- 기안자 -->
+									<td>
+	        							<input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:100%;">
+		    						</td>
 								</tr>
 								<tr id="trDeliveryNo" style="display: none;">
 						 	        <th><spring:message code='ezApprovalG.t1069'/></th><!-- 문서과 배부번호 -->
@@ -2760,6 +2751,17 @@
 							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
 								    </td>
 								</tr>
+								<tr>
+            						<th>문서시행일자</th><!-- 시행일자 -->
+  	    							<td>
+										<input type="text" class="text" style="Width:40px;height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
+										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
+										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
+            						</td>
+	        					</tr>
 								<c:if test="${guBun ne '1'}">
 									<tr>
 									    <th><spring:message code='ezApprovalG.t94'/></th><!-- 특수목록 -->

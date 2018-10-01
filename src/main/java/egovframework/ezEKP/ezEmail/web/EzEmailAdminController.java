@@ -179,7 +179,7 @@ public class EzEmailAdminController {
 			
 			logger.debug("cn=" + cn);
 			
-			if (cn != null && !cn.equals("null")) {
+			if (cn != null && !cn.equals("null") && !cn.isEmpty()) {
 				//cn을 포함하는 공용배포그룹
 				List<MailDistributionVO> distributionSearchList = ezEmailService
 						.getDistributioUpperList(cn, auth.getTenantId());
@@ -246,11 +246,13 @@ public class EzEmailAdminController {
 		String textName = request.getParameter("name") == null ? "" : request
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
 
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
 		
 		logger.debug("mailAddDistributionList ended.");
 
@@ -333,7 +335,16 @@ public class EzEmailAdminController {
 						throw new Exception("bizmekaAddDistributionList failed");
 					}
 				}
-		
+				
+				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+				
+				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+				if (!companyDomainName.isEmpty()) {
+					String email = id + "@" + companyDomainName;
+					
+					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+				}
+				
 				//공용배포그룹 맴버가 조직도 or 공용그룹인 경우
 				if (memberIdList.getLength() > 0) {
 					inputParams = "companyId="
@@ -554,6 +565,25 @@ public class EzEmailAdminController {
 					
 					logger.debug("response=" + response);
 				}
+
+				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+				
+				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+				if (!companyDomainName.isEmpty()) {
+					String email = id + "@" + companyDomainName;
+					
+					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+				}
+				
+				logger.debug("inputParams=" + inputParams);
+
+				requestURL = config.getProperty("config.JGwServerURL")
+						+ "/jMochaAccess/updateDistributionList";
+				response = ezEmailUtil.getWebServiceResult(requestURL,
+						inputParams);
+
+				logger.debug("response=" + response);
+
 				if (response != null) {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject) jsonParser
@@ -802,6 +832,15 @@ public class EzEmailAdminController {
 					+ "&domain=" + URLEncoder.encode(domain, "UTF-8")
 					+ "&companyId=" + URLEncoder.encode(companyId, "UTF-8");
 
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+			
+			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+			if (!companyDomainName.isEmpty()) {
+				String email = cn + "@" + companyDomainName;
+				
+				inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+			}
+			
 			logger.debug("inputParams=" + inputParams);
 			
 			String requestURL = config.getProperty("config.JGwServerURL")
@@ -1024,13 +1063,29 @@ public class EzEmailAdminController {
 	 */
 
 	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
-	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie) throws Exception {
+	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
+		
+		String companyId = userInfo.getCompanyID();
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(companyId)) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
 		
 		return "/admin/ezEmail/mailQuotaList";
 	}
@@ -1048,6 +1103,7 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = req.getParameter("companyId");
 		String currPage = req.getParameter("pageNum");
 		
 		if (currPage == null || currPage.equals("")) {
@@ -1065,7 +1121,7 @@ public class EzEmailAdminController {
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
-		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
+		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
 
 		int totalPage = itemCnt / maxItemPerPage;
 
@@ -1080,10 +1136,10 @@ public class EzEmailAdminController {
 		currentPage = Math.min(currentPage, totalPage);
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
-
+		
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									    maxItemPerPage, searchKeycode, searchKeyword);
+									    maxItemPerPage, searchKeycode, searchKeyword, companyId);
 		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
@@ -1152,7 +1208,8 @@ public class EzEmailAdminController {
 		logger.debug("MailQuotaExcelExport controller started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-
+		
+		String companyId = request.getParameter("companyId");
 		String currPage = request.getParameter("pageNum");
 
 		int maxItemPerPage = 20;
@@ -1167,9 +1224,9 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, maxItemPerPage, searchKeycode, searchKeyword);
+									   startRow, maxItemPerPage, searchKeycode, searchKeyword, companyId);
 		
-		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
+		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
 		
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 

@@ -179,6 +179,7 @@
 		
 		    function SetAttribute(type, id, classname) {
 		        var selCell = DEXT5.getSelectedCell(formID);
+		        
 		        if (type == "DEL") {
 		        	// 일지 양식작성에서 사용하는 부분
 	            	if ("${type}" == "JOURNAL") {
@@ -188,14 +189,27 @@
 		                selCell[0].removeAttribute("id");
 	            	}
 		            // selCell[0].removeAttribute("id");
-		            if (selCell[0].classList.contains("FIELD"))
+		            if (selCell[0].classList.contains("FIELD")) {
 		                selCell[0].classList.remove("FIELD");
+				        
+		                setTimeout(function () {
+				        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
+				        	selCell[0].removeAttribute("beforebgcolor");
+			            }, 500);		            	
+		            }
 		        }
 		        else if (type == "LOCK") {
-		            if (selCell[0].getAttribute("free") != null)
+		            if (selCell[0].getAttribute("free") != null) {
 		                selCell[0].removeAttribute("free");
-		            else
+		            }
+		            else {
 		                selCell[0].setAttribute("free", "");
+		            }
+		            
+			        setTimeout(function () {
+			        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
+			        	selCell[0].removeAttribute("beforebgcolor");
+		            }, 500);
 		        }
 		        else {
 		        	// 일지양식작성에서 사용하는 부분
@@ -207,18 +221,25 @@
 		                selCell[0].setAttribute("id", id);
 	                }
 		            // selCell[0].setAttribute("id", id);
-		            if (!selCell[0].classList.contains("FIELD"))
+		            if (!selCell[0].classList.contains("FIELD")) {
 		                selCell[0].classList.add("FIELD");
+		            }
+		            
+			        setTimeout(function () {
+			        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
+			        	selCell[0].removeAttribute("beforebgcolor");
+		            }, 500);
 		        }
 		
 		        var _editor = DEXT5.getEditor(formID);
 		        _editor._FRAMEWIN.setTableCellSelect(selCell[0]);
 		        
+		      	//2018-10-01 김보미 - 값이 비어있는 부분 클릭 후 취소시 포커스(배경색이 파란색으로)되지 않도록 변경
 		        //2017-10-25 이효진 색상복구 스크립트 추가
-		        setTimeout(function () {
-		        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
-		        	selCell[0].removeAttribute("beforebgcolor");
-	            }, 500);
+// 		        setTimeout(function () {
+// 		        	selCell[0].style.backgroundColor = selCell[0].getAttribute("beforebgcolor");
+// 		        	selCell[0].removeAttribute("beforebgcolor");
+// 	            }, 500);
 		    }
 		
 		    function View_CellProperty(g_toggleFlag) {

@@ -215,6 +215,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String docTarget = "";
 		String retransType = "";
 		
+		String orgCompanyID = "";
+		
 		String fileUploadType = "";
 		String newWindowId = "";
 		
@@ -482,10 +484,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }
         // in case of approvalG
         else if (_url.equals("") && (_cmd.equals("docsend") || _cmd.equals("docsendDotNet"))) {
-    		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
+    		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
     		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+    		orgCompanyID = request.getParameter("orgCompanyID") == null ? "" : request.getParameter("orgCompanyID").trim();
     		
         	if (_cmd.equals("docsendDotNet")) {
         		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
@@ -1049,6 +1052,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
+				if (fromAddressList.size() >= 2) {
+					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+					
+					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
+					if (!companyDomainName.isEmpty()) {
+						for (int i = 0; i < fromAddressList.size(); i++) {
+							String[] item = fromAddressList.get(i);
+							String type = item[1];
+							
+							if (type.equals("1")) {
+								logger.debug("removing the account email address...");
+								
+								fromAddressList.remove(i);
+								
+								break;
+							}
+						}
+					}
+				}
+				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
 				} else {
@@ -1118,6 +1141,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("docImagCnt", docImagCnt);
 		model.addAttribute("docTarget", docTarget);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("retransType", retransType);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
 		model.addAttribute("displayNamePrintable", displayNamePrintable);
@@ -4878,8 +4902,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						map.put("dept", dept.getDisplayName());
 						map.put("title", "");
 					} else { // 공용배포그룹
+						String email = (String)address.get("cn");
+						String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyID(), "DomainName");
+						
+						// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소로 전달한다.								
+						if (!companyDomainName.isEmpty()) {
+				        	String emailId = null;
+				        	
+			        		int atSignIndex = email.indexOf("@");
+			        		
+			        		if (atSignIndex != -1) {
+			        			emailId = email.substring(0, atSignIndex);
+								email = emailId + "@" + companyDomainName;			        			
+			        		}							
+						}
+						
 						map.put("displayName", displayName); // 배포그룹 이름
-						map.put("mail", (String)address.get("cn"));  // 메일
+						map.put("mail", email);  // 메일
 						map.put("company", companyName); // 배포그룹 이름
 						map.put("dept", egovMessageSource.getMessage("ezEmail.t57",
 								locale));  //배포그룹이름
@@ -4969,7 +5008,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
 		String pResult = "";
         try {
-            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";
