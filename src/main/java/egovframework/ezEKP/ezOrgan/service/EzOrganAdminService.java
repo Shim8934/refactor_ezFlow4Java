@@ -6,6 +6,8 @@ import java.util.List;
 
 
 
+
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -19,8 +21,8 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception;
-		
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchField, String searchValue) throws Exception;
+
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchField, String searchValue, String searchCompanyID) throws Exception;
 	
 	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
 
@@ -42,8 +44,8 @@ public interface EzOrganAdminService {
 	
 	public int userCheck(String cn, int tenantID) throws Exception;
 	
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception;
-	
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception;
+
 	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID) throws Exception;
 
 	public void insertDBData_company(String cn, String displayName, String displayName2, String mailAddr, String parentCn, String ldapPath,
@@ -83,9 +85,9 @@ public interface EzOrganAdminService {
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword) throws Exception;
+	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,String companyId) throws Exception;
 	
-	public int getUserCount(int tenantID,String keycode,String keyword) throws Exception;
+	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
 	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
 	

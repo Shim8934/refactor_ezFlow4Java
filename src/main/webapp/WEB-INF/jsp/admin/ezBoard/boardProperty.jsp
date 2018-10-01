@@ -21,6 +21,7 @@
 	        var APPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
 	        var APPRMAILFLAG = $.trim("<c:out value='${model.apprMailFlag}'/>");
 	        var orgAPPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
+	        var primary = "<c:out value='${primary}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
@@ -476,6 +477,8 @@
 			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
+			
+			/* 2018-07-26 홍승비 - 다국어 설정에 대응하여 승인자 정보 표출 */
 			function SelectTarget_Complete(ret) {
 			    if (typeof (ret) != "undefined") {
 			        selectTargetListXML = ret;
@@ -488,7 +491,13 @@
 			        listview.DataSource(document.getElementById("listviewheader"));
 			        listview.DataBind("AccessList");
 			        var xmldom = loadXMLString(selectTargetListXML);
-			        var xmldomNode = SelectNodes(xmldom, "DATA/NAME");
+			        
+			         if (primary == "1") {
+			        	 var xmldomNode = SelectNodes(xmldom, "DATA/NAME");
+			         } else {
+			        	 var xmldomNode = SelectNodes(xmldom, "DATA/NAME2");
+			         }
+			         
 			        for (i = 0; i < xmldomNode.length; i++) {
 			            var listTR = listview.AddRow(listview.GetRowCount());
 			            var listTD = document.createElement("TD");
@@ -538,15 +547,15 @@
 			        var listTD = document.createElement("TD");
 			        listTD.style.paddingBottom = "0px";
 			        listTD.style.paddingTop = "0px";
-
-			        var UserName = SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME");
-			        if ("${lang}" != "1")
-			            UserName = SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME2");
-
-			        var DeptName = SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION");
-			        if("${lang}" != "1")
-			            DeptName  = SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION2");
-
+			         
+					if (primary == "1") {
+						var UserName = SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME");
+				        var DeptName = SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION");
+			         } else {
+						var UserName = SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME2");
+						var DeptName = SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION2");
+			         }
+			         
 			        var listTDText = document.createTextNode(UserName + "(" + DeptName + ")");
 			        listTD.appendChild(listTDText);
 			        listTR.appendChild(listTD);

@@ -384,6 +384,8 @@
                 Q.TENANT_ID = #tenantID#
             AND
                 U.TENANT_ID = #tenantID#
+            AND
+            	U.PHYSICALDELIVERYOFFICENAME = #companyID#
             ORDER BY
                 Q.REGDATE DESC          	
 		]]>

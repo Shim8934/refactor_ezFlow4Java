@@ -33,6 +33,7 @@
 			var pBoardID = "${boardID}";
 		    var pBoardName = "${boardInfo.boardName}";
 		    var strWriterID = "${boardItem.writerID}";
+		    var strWriterDeptID = "${boardItem.writerDeptID} ";
 		    var strWriterName = '${boardItem.writerName}'.replace("\"", "");
 		    var strWriterDeptName = "${boardItem.writerDeptName}";
 		    var strWriterCompanyName = "${boardItem.writerCompanyName}";
@@ -208,7 +209,7 @@
 		                var Span = document.createElement("SPAN");
 		                Span.style.verticalAlign = "middle";
 		                Span.style.cursor = "pointer";
-		                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "')");
+		                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
 		                Span.innerText = strWriterName;
 		                Div.appendChild(Span);
 		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;     
@@ -218,7 +219,7 @@
 		                Span = document.createElement("SPAN");
 		                Span.style.verticalAlign = "middle";
 		                Span.style.cursor = "pointer";
-		                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "')");
+		                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
 		                Span.innerText = strWriterName;
 		                Div.appendChild(Span);
 		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
@@ -675,10 +676,11 @@
 		            suffix = 0;
 		    }
 		
-		    function MemberInfo_onclick(pUserID) {
+		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		    function MemberInfo_onclick(pUserID, pDeptID) {
 		        var feature = "height=490px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 490);
-		        window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID, "", feature);
+		        window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function mail_boarditem() {
 		        var pheight = window.screen.availHeight;
@@ -745,8 +747,10 @@
 		            window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
 		        }
 		    }
-		    function OpenUserInfo(pUserID) {
-		        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
+		    
+		    /* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		    function OpenUserInfo(pUserID, pDeptID) {
+		        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "UserInfo", 420, 450, "NO");
 		    }
 // 		    function OneLineReply_onkeydown() {
 // 		        if (event.keyCode == 13) Save_OneLineReply();
@@ -1224,7 +1228,7 @@
 							<c:choose>
 								<c:when test="${guBun != '2'}">
 									<td id="WriteUserNM" style="width:40%; white-space:nowrap">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}")'>
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
 											<c:out value="${boardItem.writerName}"/>
 										</div>
 									</td>
@@ -1380,7 +1384,7 @@
 				        <table style="width:100%" class="content">
 				        <tr>
 				          <th><spring:message code='ezBoard.t223' /></th>
-				          <td id="WriteUserNM" style="white-space:nowrap; width:100%;"><div style="OVERFLOW-Y:auto;WIDTH:100%;cursor:pointer;HEIGHT:16px; vertical-align:middle;" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></div>
+				          <td id="WriteUserNM" style="white-space:nowrap; width:100%;"><div style="OVERFLOW-Y:auto;WIDTH:100%;cursor:pointer;HEIGHT:16px; vertical-align:middle;" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'><c:out value="${boardItem.writerName}"/></div>
 				          <th><spring:message code='ezBoard.t289' /></th>
 				          <td id="User_DeptNM" style="padding-right:10px; white-space:nowrap; width:100px;">${boardItem.writerDeptName}</td>
 				          <th><spring:message code='ezBoard.t290' /></th>

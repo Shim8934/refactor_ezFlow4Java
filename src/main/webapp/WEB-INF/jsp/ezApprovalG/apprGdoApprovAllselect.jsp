@@ -62,10 +62,12 @@
 		        createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
 		        createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "${userInfo.lang}");
 		        var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
+		        var orgCompanyID = "";
 		        if (parseInt(cnt) > 1) {
 		            for (var i = 0; i < parseInt(cnt) ; i++) {
 		            	// 체크된 값의 정보만 xmlpara에 생성
 		                if (eval(document.frm.chk[i]).checked) {
+					        orgCompanyID = $(document.frm.chk[i]).attr("orgCompanyID");
 		                    doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                    $.ajax({
 		    	      			type : "POST",
@@ -73,7 +75,8 @@
 		    	      			async : false,
 		    	      			url : "/ezApprovalG/getLineMode.do",
 		    	      			data : {
-		    	      					docID : document.frm.chk[i].value.split("|")[0]
+		    	      					docID : document.frm.chk[i].value.split("|")[0],
+		    	      					orgCompanyID : orgCompanyID
 		    	      					},
 		    	      			success: function(xml){
 		    	      				pMode = xml;
@@ -84,6 +87,7 @@
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk[i].value.split("|")[2]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk[i].value.split("|")[3]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk[i].value.split("|")[4]);
+			                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
 		        			createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		                }
 		            }
@@ -91,13 +95,15 @@
 		        else {
 		        	// 리스트의 값이 하나인 경우
 		            if (eval(document.frm.chk).checked) {
+		            	orgCompanyID = $(document.frm.chk).attr("orgCompanyID");
 		            	$.ajax({
 	    	      			type : "POST",
 	    	      			dataType : "text",
 	    	      			async : false,
 	    	      			url : "/ezApprovalG/getLineMode.do",
 	    	      			data : {
-	    	      					docID : document.frm.chk.value.split("|")[0]
+	    	      					docID : document.frm.chk.value.split("|")[0],
+	    	      					orgCompanyID : orgCompanyID
 	    	      					},
 	    	      			success: function(xml){
 	    	      				pMode = xml;
@@ -109,6 +115,7 @@
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk.value.split("|")[2]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk.value.split("|")[3]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk.value.split("|")[4]);
+		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
 		        		createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		            }
 		        }

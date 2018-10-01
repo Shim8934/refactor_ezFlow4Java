@@ -239,6 +239,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return delete("EzCommonDAO.deleteCompanyConfig", map);
 	}
 
+	public void addMailToJMochaDistribution() throws Exception {
+		try {
+			select("EzCommonDAO.checkJMochaDistributionMail");
+		} catch (Exception e) {
+			logger.debug("jmocha_distribution mail column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMailToJMochaDistribution");
+		}
+	}
+	
 	public void addAddJobMasterOrderBy() throws Exception {
 		try {
 			select("EzCommonDAO.checkAddJobMasterOrderBy");

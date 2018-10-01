@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -146,12 +147,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID)	throws Exception {
         logger.debug("getRetireList started");
         logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
         logger.debug("tenantID=" + tenantID + ",offset=" + offset);
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		logger.debug("searchCompanyID=" + searchCompanyID );
 	    
    		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -164,6 +166,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("searchEndDate", searchEndDate);
 		map.put("search_keycode", searchKeycode);
 		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -539,12 +542,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception {
 	    logger.debug("getRetireListCount started");
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
-   		
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -554,6 +557,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("searchEndDate", searchEndDate);
 		map.put("search_keycode", searchKeycode);
 		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
 		
 		logger.debug("getRetireListCount ended");
 		
@@ -615,18 +619,44 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("userID", userInfo.getId());
 				map1.put("userName", userInfo.getName());
 				map1.put("nowDate", nowDate);
+				map1.put("portalUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoUUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaUUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoKoUUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
+				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
+				
+				for (int i = 0; i < 112; i++) {
+					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
+				}
+				
+				for (int i = 0; i < 19; i++) {
+					map1.put("portalItemUID"+i, UUID.randomUUID().toString());
+				}
+				
+				for (int i = 0; i < 44; i++) {
+					map1.put("menuItemSUID"+i, UUID.randomUUID().toString());
+				}
 				
 				ezOrganAdminDao.insertCompanyInfo_I1(map1);
 				ezOrganAdminDao.insertCompanyInfo_I2(map1);
 				ezOrganAdminDao.insertCompanyInfo_I3(map1);
 				ezOrganAdminDao.insertCompanyInfo_I4(map1);
 				ezOrganAdminDao.insertCompanyInfo_I5(map1);
-				ezOrganAdminDao.insertCompanyInfo_I6(map1);
+//				ezOrganAdminDao.insertCompanyInfo_I6(map1);
 				ezOrganAdminDao.insertCompanyInfo_I7(map1);
 				ezOrganAdminDao.insertCompanyInfo_I8(map1);
 				ezOrganAdminDao.insertCompanyInfo_I9(map1);
 				ezOrganAdminDao.insertCompanyInfo_I10(map1);
-				ezOrganAdminDao.insertCompanyInfo_I11(map1);
+//				ezOrganAdminDao.insertCompanyInfo_I11(map1);
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);
@@ -635,9 +665,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I17(map1);
 				ezOrganAdminDao.insertCompanyInfo_I18(map1);
 				ezOrganAdminDao.insertCompanyInfo_I19(map1);
+				
+				ezOrganAdminDao.insertCompanyInfo_IKMS(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS2(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS3(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS4(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS5(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS6(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS7(map1);
+				
+				//회사등록시 근태설정(근태규율관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I20(map1);
 				map1.put("lang", userInfo.getLang());
 				ezOrganAdminDao.insertCompanyInfo_I21(map1);
+				
+				//회사 생성시 서브 메뉴 아이템 insert
+				ezOrganAdminDao.insertCompanyInfo_I22(map1);
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
@@ -924,6 +967,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteCompany_D17(map);
 	        ezOrganAdminDao.deleteCompany_D18(map);
 	        ezOrganAdminDao.deleteCompany_D19(map);
+	        ezOrganAdminDao.deleteCompany_D20(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
 	        
 		    /**
 		     * Active Directory
@@ -1179,7 +1224,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword) throws Exception {     
+    									 String keycode,String keyword,String companyId) throws Exception {     
     	logger.debug("getUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1190,6 +1235,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
 		
     	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
     	
@@ -1200,7 +1246,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
     // 사용자 이름,부서 목록개수를 반환한다.
     @Override
-    public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
+    public int getUserCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
     	logger.debug("getUserCount started");
    		
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1208,6 +1254,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	params.put("tenantID", tenantID);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
 		
 		int userCount = ezOrganAdminDao.getUserCount(params);
 		

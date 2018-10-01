@@ -186,11 +186,11 @@ function getBoardComment() {
 				}
 				if (commentBgColor === 1) {
 					boardCommentList += "<tr class='boardComment' boardUserID='" + vo.userID + "' memberID='"
-						+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
+						+ vo.userID + "' replyID='" + vo.replyID + "'deptID='" + vo.deptID + "' boardCommentStatus='" 
 						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
 				} else {
 					boardCommentList += "<tr class='boardComment' boardUserID='" + vo.userID + "' memberID='"
-						+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
+						+ vo.userID + "' replyID='" + vo.replyID + "'deptID='" + vo.deptID + "' boardCommentStatus='" 
 						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 				}
 				commentBgColor = commentBgColor * (-1);
@@ -198,7 +198,7 @@ function getBoardComment() {
 					boardCommentList += "<td style='padding-left:3px;line-height:1.5'>&nbsp;<span>" + vo.userName + "</span></td>";					
 				} else {
 					boardCommentList += "<td style='padding-left:3px;'>&nbsp;<span style='cursor:pointer'" 
-										+ " onclick='OpenUserInfo(\"" + vo.userID + "\")'>" + vo.userName + "</span></td>";	
+										+ " onclick='OpenUserInfo(\"" + vo.userID + "\", \"" + vo.deptID + "\")'>" + vo.userName + "</span></td>";	
 				}
 				boardCommentList += "</td>";
 				boardCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
@@ -362,7 +362,8 @@ function deleteBoardComment(obj) {
     xmlhttp = null;
 }
 
-//2017.12.28 강민수92
-function OpenUserInfo(pUserID) {
-    var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
+// 2017.12.28 강민수92
+/* 2018-07-02 홍승비 - 작성자 정보 표시 시 부서정보 파라미터 추가 */
+function OpenUserInfo(pUserID, pDeptID) {
+    var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "UserInfo", 420, 450, "NO");
 }

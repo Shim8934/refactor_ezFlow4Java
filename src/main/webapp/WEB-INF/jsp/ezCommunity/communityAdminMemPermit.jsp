@@ -63,15 +63,15 @@
 				});
 			}
 	
-			function openinfo(a,b,c) {
+			function openinfo(a,b,c, d) {
 			    if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
 			    	var feature = "width=490,height=490";
 				    feature = feature + GetOpenPosition(490, 490);
-				    window.open("/ezCommon/showPersonInfo.do?id=" + b, "", feature);
+				    window.open("/ezCommon/showPersonInfo.do?id=" + b + "&dept=" + d, "", feature);
 			    } else {
 			    	var feature = "dialogHeight:490px; dialogWidth:425px; status:no; help:no; scroll:no";
 				    feature = feature + GetShowModalPosition(425, 490);
-				    var Para = window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + b, null, feature);
+				    var Para = window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + b + "&dept=" + d, null, feature);
 			    }
 			}
 		</script>

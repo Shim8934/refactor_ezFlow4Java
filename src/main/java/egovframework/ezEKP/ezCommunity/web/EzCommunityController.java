@@ -135,21 +135,23 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
         
         if (code.equals("")) {
-        	String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getTenantId());
+        	
+        	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
+        	String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
         	
         	if (vPermit==null) {
         		userLevel = "0";
         	} else {
         		userLevel = vPermit;
         	}
-        	
-        	String clubConfirmType = ezCommunityService.leftCommunityGet2(code, userInfo.getTenantId());
+        	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
+        	String clubConfirmType = ezCommunityService.leftCommunityGet2(code, userInfo.getCompanyID(), userInfo.getTenantId());
         	
         	if (clubConfirmType != null) {
         		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
         	}
-        	
-        	CommunityClubVO club = ezCommunityService.leftCommunityGet4(code, userInfo.getTenantId());
+        	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
+        	CommunityClubVO club = ezCommunityService.leftCommunityGet4(code, userInfo.getCompanyID(), userInfo.getTenantId());
         	
         	if(club != null) {
         		if (userInfo.getId().equals(club.getC_SysopID().trim())) {
@@ -177,6 +179,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
+		/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
 		List<CommunityClubVO> list = ezCommunityService.getLeftCommunity(userInfo);
 		
 		model.addAttribute("list", list);
@@ -348,7 +351,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = "";
 		
 		if (!code.equals("")) {
-			String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getTenantId());
+			String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
         	
         	if (vPermit == null) {
         		userLevel = "0";
@@ -398,9 +401,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			copType = "type5";
 		}
 
+		/* 게시판 관련 작업 시작 */
 		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		int mode = 0;
-		
+
 		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			mode = 0;
 		} else {
@@ -409,14 +413,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("mode : " + mode);
 		String primary = userInfo.getPrimary();
-		
 		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, primary, userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 			retXML = "<RESULT>ERROR</RESULT>";
 		}
 		
-		String permit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getTenantId());
+		String permit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 
 		if (permit != null) {
 			userLevel = permit;
@@ -425,13 +428,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 			userLevel = "0";
 		}
 		
-		String confirmType = ezCommunityService.leftCommunityGet2(code, userInfo.getTenantId());
+		String confirmType = ezCommunityService.leftCommunityGet2(code, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (confirmType != null) {
 			newMemberConfirmType = Integer.parseInt(confirmType);
 		}
 		
-		CommunityClubVO clubVO = ezCommunityService.leftCommunityGet4(code, userInfo.getTenantId());
+		CommunityClubVO clubVO = ezCommunityService.leftCommunityGet4(code, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
 			checkSysop = true;
@@ -1094,6 +1097,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
+		
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
@@ -1189,7 +1193,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+		/* 2018-07-02 홍승비 - CompanyID 조건 추가, 댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		String totalCommentCount = String.valueOf(oneLineReplyList.size());
 		model.addAttribute("totalCommentCount", totalCommentCount);
@@ -2151,6 +2156,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.pollRes(userInfo, model, pollManagerID, pollState, response);
 		
 		model.addAttribute("code", code);
+		model.addAttribute("pollManagerID", pollManagerID);
 		model.addAttribute("pollState", pollState);
 		
 		return "ezCommunity/communityPollRes";
@@ -2170,8 +2176,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String answerCount = request.getParameter("answerCount_1");
 		String isSave = request.getParameter("isSave");
 		String questionID = request.getParameter("questionID_1");
+		String pollManagerID = request.getParameter("pollManagerID");
+		String pollState = request.getParameter("pollState");
 		
-		ezCommunityService.pollResOk(userInfo, code, questionID, pollSelect, answerETC, isSave, answerType, answerCount, response);
+		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
+		ezCommunityService.pollResOk(userInfo, code, questionID, pollSelect, answerETC, isSave, answerType, answerCount, pollManagerID, pollState, response);
 	}
 	
 	/**
@@ -2305,6 +2314,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
         
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
+		// 여기에서 해당 회원의 deptID, deptname을 xml 내부에 받아온다.
 		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage);
 		
 		model.addAttribute("curPage", curPage);
@@ -2486,7 +2496,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (club != null) {
 			//커뮤니티 소개글 수정할 때 br태그 안나오게 \r\n으로 치환
 			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n")); 
-			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
+			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			if (userInfo.getLang().equals("2")) {
 				member.setUserName(member.getUserName2());
@@ -3210,6 +3220,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int postCount = ezCommunityService.adminOuterListGet1(code, userInfo.getTenantId());
 		
+		/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
 		String idSpanValue = ezCommunityService.adminOuterList(userInfo, code);
 
 		model.addAttribute("code", code);
@@ -3272,9 +3283,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int postCount = ezCommunityService.adminMemberListGet1(code, userInfo.getTenantId());
+		/* 2018-07-18 홍승비 - 회원탈퇴/마스터이취임 화면 회원 검색 시 카운트 변하도록 수정 */
+		int postCount = ezCommunityService.adminMemberListGet1(code, flag.toUpperCase(), ser, userInfo.getPrimary(), userInfo.getTenantId());
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId());
-		String idSpanValue = ezCommunityService.adminMemberList(userInfo, code, flag, ser, strSysopID, mode);
+		String idSpanValue = ezCommunityService.adminMemberList(userInfo, code, flag.toUpperCase(), ser, strSysopID, mode);
 		
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
@@ -3294,7 +3306,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	String adminMemberListOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
-		String propList = "extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
+		
+		String propList = "extensionAttribute2;company;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
 		int userMode = 0;
 		boolean existOutList = false;
 		
@@ -3309,13 +3322,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (sysopCheck != 1) {
 			return "cmm/error/egovError";
 		}
-		
+
 		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmldom = commonUtil.convertStringToDocument(infoXML);
-		
+
+
 		CommunityMemberInfoVO memberInfo = new CommunityMemberInfoVO();
-		memberInfo.setDeptName(xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
 		memberInfo.setHandPhone(xmldom.getElementsByTagName("MOBILE").item(0).getTextContent());
 		memberInfo.setCompanyFax(xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent());
 		memberInfo.setCompanyZip(xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent());
@@ -3323,6 +3336,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
 		
+		// 이미 여기서 부서명을 받아오고 있는데여???
 		logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
@@ -3412,9 +3426,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		
 		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
 		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
-		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
+		
+		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
+		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
 		
@@ -3524,6 +3541,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
 		
+		/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
 		String result = ezCommunityService.myCopNewBoardItem(userInfo, startRow, endRow);
 		
 		logger.debug("result : " + result);
@@ -3545,6 +3563,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("getBestNewCommunity ended.");
 		
+		/* 2018-06-21 홍승비 - 메인홈 우측 우수+신규 커뮤니티 표출 companyID 조건 추가 */
 		return ezCommunityService.getBestNewCommunity(userInfo, mode);
 	}
 	
@@ -3672,6 +3691,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			bCanJoin = false;
 		}
 		
+		/* 이부분 잘 봐두자. 겸직 시 현재 선택한 companyID를 넣어야 하는데, 이게 제대로 userInfo에 반영되는지... */
 		ezCommunityService.joinOkSet1(code, id, commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), tenantID);
 		
 		String cID = ezCommunityService.joinOkGet2(code, id, tenantID);
@@ -3781,7 +3801,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		
-		String cPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getTenantId());
+		String cPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (cPermit != null) {
 			logger.debug("getIsJoin ended. true");
@@ -3810,7 +3830,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());		
+		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
+
+		/* 승인대기 회원 표시 companyID 조건 추가 */
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
 		
 		model.addAttribute("code", code);
@@ -3871,7 +3893,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		Calendar calendar = Calendar.getInstance();
 		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		
-		int rtnVal = ezCommunityService.todayCopGet1(userInfo.getTenantId());
+		/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
+		int rtnVal = ezCommunityService.todayCopGet1(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (rtnVal == 0) {
 			num = 1;
@@ -3879,8 +3902,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			num = (dayOfYear % rtnVal) + 1;
 		}
 		
+		/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
-		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());		
+		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (club != null) {
 			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
@@ -3918,10 +3942,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		List<CommunityCCategoryVO> list = new ArrayList<CommunityCCategoryVO>();
 		
+		/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
 		if (mode.equals("A")) {
 			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("a", userInfo.getTenantId());
 			for(CommunityCCategoryVO category : categoryList) {
-				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getTenantId());
+				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getCompanyID(), userInfo.getTenantId());
 				if (vo != null) {
 					logger.debug("code = " + category.getC_Code() + " || cat = a");
 					logger.debug(vo.getC_Name() + " : " + vo.getCnt());
@@ -3932,7 +3957,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("b", userInfo.getTenantId());
 			
 			for(CommunityCCategoryVO category : categoryList) {
-				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getTenantId());
+				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getCompanyID(), userInfo.getTenantId());
 				if (vo != null) {
 					logger.debug("code = " + category.getC_Code() + " || cat = b");
 					logger.debug(vo.getC_Name() + " : " + vo.getCnt());
@@ -3967,10 +3992,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int mariaStart = (5 * (page - 1));
 		int mariaEnd = 5;
 		
-		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, mariaStart, mariaEnd, userInfo.getTenantId());
+		/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
+		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, mariaStart, mariaEnd, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
+			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
 			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
@@ -4009,14 +4036,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 			search = "C_CLUBDESC";
 		}
 		
-		List<CommunityClubVO> clubList = ezCommunityService.searchCop(search, keyword, startRow, endRow, "SEA", userInfo.getTenantId());
-		List<CommunityClubVO> clubCopCnt = ezCommunityService.searchCop(search, keyword, startRow, endRow, "CNT", userInfo.getTenantId());
+		/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 검색 companyID 조건 추가 */
+		List<CommunityClubVO> clubList = ezCommunityService.searchCop(search, keyword, startRow, endRow, "SEA", userInfo.getCompanyID(), userInfo.getTenantId());
+		List<CommunityClubVO> clubCopCnt = ezCommunityService.searchCop(search, keyword, startRow, endRow, "CNT", userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (CommunityClubVO club : clubList) {
 			if (clubList.indexOf(club) == 0 ) { 
 				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
 			}
 			
+			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
 			// 18-05-08 김민성 - 커뮤니티 회원수 수정
 			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
@@ -4470,7 +4499,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return sb.toString();
 	}
 	
-	/*
+	/**
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
 	@RequestMapping(value = "/ezCommunity/adminNoticeMail.do")
@@ -4493,7 +4522,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "ezCommunity/communityAdminNoticeMail";
 	}
 	
-	/*
+	/**
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
 	@RequestMapping(value = "/ezCommunity/adminNoticeMailOk.do")
@@ -4592,7 +4621,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         String publicExponent = "10001";
 //		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+        // 댓글 작성자의 deptID를 가져온다. companyID 조건 추가.
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 
@@ -4620,10 +4650,38 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		StringBuffer resultXML = ezCommunityService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+		/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가) */
+		StringBuffer resultXML = ezCommunityService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
 
 		logger.debug("itemReadPagingList ended");
 		return resultXML.toString();
+	}
+	
+	/**
+	 * 2018-07-03 홍승비 - 커뮤니티 답변알림메일 사용 시 companyID 비교 부분 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getItemViewNew.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemViewNew started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");		
+		String result = "OK";
+		
+		// 답변메일의 게시물 정보를 가져온다.
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
+		
+		// 회사가 다르면 result를 FAIL로 반환한다. 만약 어느 회사에서 확인해야 하는지 알려야 한다면 이곳에서 다른 값을 보내자.
+		if (!item.getWriterCompanyID().equals(userInfo.getCompanyID())) {
+			result = "FAIL";
+		}
+		
+		logger.debug("getItemViewNew ended.");
+		
+		return "<DATA>" + result + "</DATA>";
 	}
 }
 

@@ -51,9 +51,25 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 			var type = "${type}";
+			var wcompanyID = "${result.companyID}"
+			var ucompanyID = "${userInfo.companyID}";
 			var attachList = "";
+			var deptID = "${deptID}";
+			var company = "${company}"
 
 			$(document).ready(function() {
+				if(circularID == "") {
+					alert("<spring:message code='ezCircular.kmsc05'/>");
+					window.close();
+					return;
+				}
+				
+				if(ucompanyID != wcompanyID) {
+					alert("<spring:message code='ezCircular.kmsc03' /> " + company +"<spring:message code='ezCircular.kmsc04' />");
+					window.close();
+					return;
+				}
+				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -453,7 +469,7 @@
 			function OpenUserInfo() {
 	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 438);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID + "&dept=" + deptID, "", feature);
 	        }
 			
 			function CircularClose_onclick() {

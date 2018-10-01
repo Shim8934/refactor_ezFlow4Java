@@ -126,6 +126,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();	
+		String companyID = userInfo.getCompanyID();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
@@ -142,7 +143,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, companyID);
 
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
@@ -191,11 +192,11 @@ public class EzTaskController extends EgovFileMngUtil {
 			        calendar2.setTime(taskEndDate);         
 			        
 			        if (calendar1.compareTo(calendar2) >= 0) {	        	
-			        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+			        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO, companyID);
 			        	date = endDate.substring(0, 10);
 			        }
 			        else {		        	
-			        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+			        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 			        	
 			        	for (String d: result.keySet()) {	        			        		
 			        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -210,7 +211,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			        }		        		        
 				}
 				else {				
-					result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+					result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 					
 		        	for (String d: result.keySet()) {
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -226,7 +227,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 			else {
 				//In search mode
-				result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
+				result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 			}
 			
 			for (Map.Entry<String, Integer> entry : result.entrySet()) {
@@ -457,6 +458,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		List<String> rateList = new ArrayList<String>();
 		List<String> statusList = new ArrayList<String>();
 		List<String> repeatCntList = new ArrayList<String>();
@@ -478,7 +480,7 @@ public class EzTaskController extends EgovFileMngUtil {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";  
 		
-        Map<String, Integer> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID);
+        Map<String, Integer> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID, companyID);
         
         for (Map.Entry<String, Integer> entry : result.entrySet()) {
             String key = entry.getKey();
@@ -514,7 +516,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSave started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();			
+		int tenantID = userInfo.getTenantId();	
+		String companyID = userInfo.getCompanyID();
 		
 		String realPath = commonUtil.getRealPath(request);
 		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID);
@@ -576,7 +579,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		taskInfoVO.setShareList(shareList);
 		
-		ezTaskService.taskSave(taskInfoVO, realPath, uploadTaskPath, content, fileList, fileName, fileSize, userInfo.getOffset(), tenantID);
+		ezTaskService.taskSave(taskInfoVO, realPath, uploadTaskPath, content, fileList, fileName, fileSize, userInfo.getOffset(), tenantID, companyID);
 
 		logger.debug("taskSave ended");
 		
@@ -599,7 +602,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		//첨부파일목록조회
 		StringBuilder strAttach = new StringBuilder();
@@ -771,7 +774,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");		
 		
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID, userInfo.getCompanyID());
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), tenantID);
 		
 		//baonk added		
@@ -835,7 +838,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 		
 		//taskWork첨부파일목록조회
 		String taskAttachList = null;
@@ -868,7 +871,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 		
 		//taskWork첨부파일목록조회
 		String taskWorkAttachList = null;
@@ -1152,7 +1155,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			endDate = nowDate.substring(0, 10) + " 23:59:59";
 		} else {
 			/*업무수정*/
-			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 			
 			taskInfoVO.setMemo(taskInfoVO.getMemo().replace("<br>", "\n"));
 			//업무공유자목록조회
@@ -1227,6 +1230,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();
+    	String companyID = userInfo.getCompanyID();
     	
     	String type = request.getParameter("type");
     	String filter = request.getParameter("filter");
@@ -1261,8 +1265,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		logger.debug("startDate: " +  startDate + "endDate: " +  endDate + "taskStatusCount: " +  taskStatusCount + "|| pSelectTab: " + pSelectTab + "|| Type: " + type);
 		
-    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID);   	
-    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, taskStatusCount, pSelectTab, tenantID);
+    	List<TaskInfoVO> list = ezTaskService.getTaskList(userID, startDate, endDate, offset, type, filter, chkValue, searchClass, taskStatusCount, primary, pSelectTab, tenantID, companyID);   	
+    	String cnt = ezTaskService.getTaskCount(userID, offset, type, filter, chkValue, primary, taskStatusCount, pSelectTab, tenantID, companyID);
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
@@ -1345,11 +1349,12 @@ public class EzTaskController extends EgovFileMngUtil {
     	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();    	
+    	String companyID = userInfo.getCompanyID();
 
     	String date = request.getParameter("currentDate");
     	String taskID = request.getParameter("taskID");
 		
-    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, companyID);
     	taskInfoVO.setStartDate(date + " 00:00:00");
     	taskInfoVO.setEndDate(date + " 23:59:59");		
     	
@@ -1362,7 +1367,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realStartDate, tenantID);
 		taskInfoVO.setCompleteRate(completionPercentage);    
 		
-		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
+		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		taskInfoVO.setRepeatCount(result.get(date));		
 		
 		if (taskInfoVO.getPersonContentPath() == null) {
@@ -1439,7 +1444,7 @@ public class EzTaskController extends EgovFileMngUtil {
         	pDirPath = pDirPath + commonUtil.separator;
         }
 
-        ezTaskService.taskDelete(taskIDList, pDirPath, offset, primary, userInfo.getId(), userInfo.getTenantId());
+        ezTaskService.taskDelete(taskIDList, pDirPath, offset, primary, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 
 		logger.debug("taskDelete ended.");
 
@@ -1565,7 +1570,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();	
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
@@ -1582,7 +1588,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
@@ -1627,11 +1633,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		        calendar2.setTime(taskEndDate);         
 		        
 		        if (calendar1.compareTo(calendar2) >= 0) {
-		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		        	date = endDate.substring(0, 10);
 		        }
 		        else {		        	
-		        	result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO);
+		        	result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		        	
 		        	for (String d: result.keySet()) {	        			        		
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -1646,7 +1652,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		        }		        		        
 			}
 			else {				
-				result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO);
+				result = ezTaskService.getRepTaskInfo(calDate, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 				
 	        	for (String d: result.keySet()) {
 	        		Date dDate = sdf.parse(d + " 00:00:00"); 
