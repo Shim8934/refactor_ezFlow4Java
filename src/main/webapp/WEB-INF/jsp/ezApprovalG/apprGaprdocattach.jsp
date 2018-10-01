@@ -42,7 +42,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var companyID = "${userInfo.companyID}";       
-		 
+		 	var orgCompanyID = "${orgCompanyID}";
+		 	
 	        subCondition = "";
 	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -62,9 +63,14 @@
 	        window.onload = function () {
 	            pUserID = arr_userinfo[1];
 	            pUserName = arr_userinfo[2];
-	            pUserJobTitle = arr_userinfo[3];
-	            pDeptID = arr_userinfo[4];
-	            pDeptName = arr_userinfo[5];
+	            pUserJobTitle = "${title }";
+	            pDeptID = "${detpID }";
+	            pDeptName = "${detpNM }";
+// 	            pUserID = arr_userinfo[1];
+// 	            pUserName = arr_userinfo[2];
+// 	            pUserJobTitle = arr_userinfo[3];
+// 	            pDeptID = arr_userinfo[4];
+// 	            pDeptName = arr_userinfo[5];
 	
 	            if (CrossYN()) {
 	                pDocID = parent.aprcabinetattach_cross_dialogArguments[0];

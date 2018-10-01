@@ -18,8 +18,8 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzBoardAdminDAO extends EgovAbstractDAO {	
 		
 	@SuppressWarnings("unchecked")
-	public List<BoardVO> checkApplyUser(int tenantID) throws Exception {
-		return (List<BoardVO>) list("EzBoardAdminDAO.checkApplyUser", tenantID);
+	public List<BoardVO> checkApplyUser(Map<String, Object> map) throws Exception {
+		return (List<BoardVO>) list("EzBoardAdminDAO.checkApplyUser", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -142,6 +142,18 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.saveACL_I", map);
 	}
 	
+	public String getBoardTreePath(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardAdminDAO.getBoardTreePath", map);
+	}
+	
+	public void saveACLIncludeUppderBoard(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.saveACLIncludeUppderBoard", map);
+	}
+	
+	public void saveACLIncludeLowerBoard(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.saveACLIncludeLowerBoard", map);
+	}
+	
 	public void saveACL_U(Map<String, Object> map) throws Exception{
 		update("EzBoardAdminDAO.saveACL_U", map);
 	}
@@ -237,6 +249,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void deleteACL(Map<String, Object> map) throws Exception{
 		delete("EzBoardAdminDAO.deleteACL", map);		
 	}
+	
+	public void deleteACLUnderBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteACLUnderBoard", map);
+	}
 
 	public void trunkBoard(int tenantID) throws Exception{
 		delete("EzBoardAdminDAO.trunkBoard", tenantID);
@@ -304,6 +320,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	public void addMyBoardsComp(Map<String, Object> map) {
 		insert("EzBoardAdminDAO.addMyBoardsComp", map);
+	}
+	
+	/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
+	public void saveBoardProperty3(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBoardProperty3", map);
 	}
 
 }

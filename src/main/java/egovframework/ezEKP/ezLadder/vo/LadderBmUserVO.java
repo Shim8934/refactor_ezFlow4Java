@@ -19,9 +19,17 @@ public class LadderBmUserVO {
 	private String userName2;
 	/** 다국어 설정 */
 	private String lang;
+	/** 회사 아이디  */
+	private String companyID;
+	/** 회사 이름  */
 	private String company;
+	/** 부서 아이디 */
+	private String deptID;
 	private String description;
+	private String description2;
+	/** 이메일 */
 	private String mail;
+	/** pic 저장소 */
 	private String pic;
 	
 	/** 즐겨찾기에 포함된 멤버 아이디 */
@@ -30,7 +38,23 @@ public class LadderBmUserVO {
 	private String [] userNames;
 	/** 즐겨찾기에 포함된 멤버 이름 (다국어)*/
 	private String [] userName2s;
+	/** 즐겨찾기에 포함된 부서이름*/
+	private String [] descriptions;
+	/** 즐겨찾기에 포함된 부서이름 (다국어) */
+	private String [] descriptions2;
 	
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
 	public int getTenant_id() {
 		return tenant_id;
 	}
@@ -75,8 +99,33 @@ public class LadderBmUserVO {
 	}
 	
 	/** 배열 */
+
 	public String[] getUserIds() {
 		return userIds;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription2() {
+		return description2;
+	}
+	public void setDescription2(String description2) {
+		this.description2 = description2;
+	}
+	public String[] getDescriptions() {
+		return descriptions;
+	}
+	public void setDescriptions(String[] descriptions) {
+		this.descriptions = descriptions;
+	}
+	public String[] getDescriptions2() {
+		return descriptions2;
+	}
+	public void setDescriptions2(String[] descriptions2) {
+		this.descriptions2 = descriptions2;
 	}
 	public void setUserIds(String[] userIds) {
 		this.userIds = userIds;
@@ -98,12 +147,6 @@ public class LadderBmUserVO {
 	}
 	public void setCompany(String company) {
 		this.company = company == null ? "" : company;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description == null ? "" : description;
 	}
 	public String getMail() {
 		return mail;

@@ -599,7 +599,7 @@
 			            if (!Ans) ret = "cancel";
 			        }
 			
-			        if (ret == "cancel") {
+			        if (ret == "cancel" || ret == undefined) {
 			            var pAlertContent = "[<spring:message code='ezApprovalG.t29'/>";
 				        OpenAlertUI(pAlertContent);
 				        setMenuDisable("btnApprove", false);
@@ -823,7 +823,7 @@
 			        }
 			
 			        var ret = openOpinionUI("BanSong");
-			        if (ret != "cancel") {
+			        if (ret != "cancel" && ret != undefined ) {
 			            UpdateLineHistory();
 			
 			            OrgHtml = HwpCtrl.GetCloneData("", "HWPML2X");
@@ -880,7 +880,7 @@
 			
 			        var ret = openOpinionUI("BoRyu");
 			
-			        if (ret != "cancel") {
+			        if (ret != "cancel" && ret != undefined) {
 			            UpdateLineHistory();
 			            var RtnVal = SaveApproveInfo("3");
 			

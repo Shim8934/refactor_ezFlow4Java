@@ -304,8 +304,6 @@
 	                    
 	                    if (pDraftFlag != "REDRAFT") {
 	                        setFirstDrafter();
-	                    } else {
-	                        SignCheck();
 	                    }
 	                    
 	                    HwpCtrl.SetFieldFocus("doctitle");
@@ -672,7 +670,7 @@
 		                    parameter[0] = pDocID;
 		                    ret = openSignUI(parameter);
 		
-		                    if (ret == "cancel") {
+		                    if (ret == "cancel" || ret == undefined) {
 		                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
 		                        OpenAlertUI(pAlertContent);
 		                        return;

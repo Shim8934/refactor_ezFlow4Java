@@ -162,17 +162,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 		if (schConfVO != null) {
 			defaultView = schConfVO.getDefaultView();
 			startDay = schConfVO.getStartDay();
-		}
-		
-		List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
+		}		
 		
 		String userID = loginVO.getId();
 		String lang = loginVO.getPrimary();
 		int tenantID = loginVO.getTenantId();
+		String companyID = loginVO.getCompanyID();
 		
-		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
-		List<ScheduleDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID);
-		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID);
+		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
+		List<ScheduleDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
+		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
+		List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() ,companyID);
 				
 		model.addAttribute("loginVO", loginVO);
 		model.addAttribute("groupList", groupList);
@@ -282,8 +282,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {
 		
 		logger.debug("============ scheduleListData started ============");		
+		String indiList = "";
 		String pidList = "";
 		String pidListSub = "";
+		String indiListSub = "";
 		
 		if(startDate != null && !startDate.equals("")) {
 			String[] sDate = startDate.split("-");
@@ -307,11 +309,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		String lang = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		String deptID = userInfo.getDeptID();
 		
-		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
-		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID);
-		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID);
-		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId(), userInfo.getTenantId());
+		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
+		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId(), userInfo.getTenantId() ,companyID);
 		
 		if (idList == null) {
 			idList = "";
@@ -320,16 +324,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 		//2018-06-08 구해안 T인 경우를 제외하고 나머지는 id값 그대로 가공해서 넘기기
 		
 		if (idList.equals("T") || idList.equals("")) {
-			pidList = "'" + userInfo.getId() + "'," + "'" + userInfo.getDeptID() + "'," + "'" + userInfo.getCompanyID() + "'";
+			indiList = "'" + userInfo.getId() + "'";
+			
 			if(tList != null && tList.size()>0){
 				for (int i = 0; i < tList.size(); i++) {
 					if (i == 0) {
-						pidListSub += ",";
+						indiListSub += ",";
 					}			
 					ScheduleSecretaryVO data = tList.get(i);			
-					pidListSub += "\'" + data.getSecId()+ "\',";				
+					indiListSub += "\'" + data.getSecId()+ "\',";			
+					System.out.println("비서가 있다고??? 회장인데?? : " + data.getSecId() + " , 이름 : " + data.getSecName());
 				}				
 			}
+			
+			pidList = "'" + userInfo.getDeptID() + "'," + "'" + userInfo.getCompanyID() + "'";
+			
 			
 			if(dList != null && dList.size()>0){
 				for (int i = 0; i < dList.size(); i++) {
@@ -345,7 +354,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			if(cList != null && cList.size()>0 ){
 				for (int i = 0; i < cList.size(); i++) {							
-					if((tList == null || tList.size()<=0) && (dList == null || dList.size()<=0)){
+					if(dList == null || dList.size()<=0){
 						if (i == 0) {
 							pidListSub += ",";
 						}	
@@ -356,7 +365,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			
 			for (int i = 0; i < gList.size(); i++) {
-				if((tList == null || tList.size()<=0) && (dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+				if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
 					if (i == 0) {
 						pidListSub += ",";
 					}
@@ -369,6 +378,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 					}*/
 				}
 			
+			if(indiListSub.equals("") || indiListSub == null){
+				indiListSub = ",\'\'";
+			}else{				
+				indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+			}
+			
+			indiList += indiListSub;
+			
 			if(pidListSub.equals("") || pidListSub == null){
 				pidListSub = ",\'\'";
 			}else{				
@@ -378,14 +395,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 			pidList += pidListSub;
 			
 		} else if(idList.equals("chkAllFalse")) {
+			indiList = "";
 			pidList = "\'\'";
 		} else if (idList.equals("P")) {
-			pidList = "'" + userInfo.getId() + "'";
+			indiList = "'" + userInfo.getId() + "'";
+			pidList = "";
 		}else {
 			pidList = idList;
 		}		
 		
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());		
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId());		
 		
 		return sList;
 	}
@@ -416,10 +435,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String userID = loginVO.getId();
 		String lang = loginVO.getPrimary();
 		int tenantID = loginVO.getTenantId();
+		String companyID = loginVO.getCompanyID();
 		
-		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
-		List<ScheduleDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID);
-		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID);
+		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
+		List<ScheduleDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
+		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
 		        
         StringBuilder sb = new StringBuilder();        
                 
@@ -445,8 +465,8 @@ public class EzScheduleController extends EgovFileMngUtil {
             deptAdmin = "Y";
         }
         
-        int receiveCount = ezScheduleService.getReceiveCount(loginVO.getId(), loginVO.getTenantId());
-        int groupCount = ezScheduleService.getInviteScheduleGroupCnt(loginVO.getId(), loginVO.getTenantId());
+        int receiveCount = ezScheduleService.getReceiveCount(loginVO.getId(), loginVO.getTenantId() ,loginVO.getCompanyID());
+        int groupCount = ezScheduleService.getInviteScheduleGroupCnt(loginVO.getId(), loginVO.getTenantId() ,loginVO.getCompanyID());
         // 일정관리 환경설정 정보
         ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(loginVO.getId(), loginVO.getTenantId());
         
@@ -488,7 +508,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             endTime		= 1020 / 60;
         }
         // 일정 그룹 목록
-        List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
+        List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() ,companyID);
         
         StringBuilder sbGroup = new StringBuilder("<DATA>");
         
@@ -590,7 +610,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
-		List<ScheduleGroupListVO> myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId());
+		List<ScheduleGroupListVO> myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
 		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
@@ -609,7 +629,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             result.append("</CELL>");
             result.append("<CELL>");
             
-            int myMemberListCnt = ezScheduleService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
+            int myMemberListCnt = ezScheduleService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
             String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
             
             result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
@@ -637,7 +657,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String gID = request.getParameter("groupID");
-		String xmlResult = ezScheduleService.getMyGroupMemberList(gID, loginVO.getPrimary(), loginVO.getTenantId());
+		String xmlResult = ezScheduleService.getMyGroupMemberList(gID, loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
 		
 		return xmlResult;
 	}
@@ -673,7 +693,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String groupID = request.getParameter("groupID");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 
-		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getTenantId(), offSetMin);
+		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
+		
+		for (ScheduleGroupListVO sg : mList) {
+			logger.debug("결과가 어떻게 나오나~~ : " + sg.getMemberId());
+		}
 		
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("groupID", groupID);
@@ -769,7 +793,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userID", loginVO.getId());
 		model.addAttribute("deptID", loginVO.getDeptID());
-                		
+		model.addAttribute("companyID", loginVO.getCompanyID());
+		
+		
+		//2018-06-22 구해안
+		
+		
 		return "ezSchedule/scheduleSelectAttendant";
 	}	
 	
@@ -833,7 +862,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String deptId = request.getParameter("deptID");
 		String subDept = request.getParameter("subDept");		
 		
-		String result = ezScheduleService.getDeptMemberList(deptId, subDept, loginVO.getPrimary(), loginVO.getTenantId());
+		String result = ezScheduleService.getDeptMemberList(deptId, subDept, loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
 				
 		return result;
 	}
@@ -856,7 +885,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String displayName2 = request.getParameter("displayName2");		
 		String memberList = request.getParameter("memberList");
 		
-		ezScheduleService.insertScheduleGroup(gUID, loginSimpleVO.getId(), displayName, displayName2, groupName, description, loginSimpleVO.getTenantId());
+		ezScheduleService.insertScheduleGroup(gUID, loginSimpleVO.getId(), displayName, displayName2, groupName, description, loginSimpleVO.getTenantId() ,loginSimpleVO.getCompanyID());
 
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
@@ -888,7 +917,23 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("sdate");
 		String endDate = request.getParameter("edate");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());		
-		String pidList = "'" + loginVO.getId() + "'," + "'" + loginVO.getDeptID() + "'," + "'" + loginVO.getCompanyID() + "'";
+		String indiList = "'" + loginVO.getId() + "'";
+		
+		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
+		
+		for(int i = 0; i < tList.size(); i++){
+			if(i == 0){
+				indiList += ",";
+			}			
+			ScheduleSecretaryVO data = tList.get(i);			
+			indiList += "'" + data.getSecId() + "'";
+			
+			if(i != tList.size()-1){
+				indiList += ",";
+			}	
+		}
+		
+		String pidList = "'" + loginVO.getDeptID() + "'," + "'" + loginVO.getCompanyID() + "'";
 		//////////////////2018-03-02김은석
 		String chkStartDate = "";
 		String chkEndDate = "";
@@ -925,7 +970,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			utcStartTime = commonUtil.getDateStringInUTC(startDate, loginVO.getOffset(), true);
 			utcEndTime = commonUtil.getDateStringInUTC(endDate, loginVO.getOffset(), true);
 			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() , loginVO.getCompanyID());
 			
 			for(int i = 0; i < gList.size(); i++){
 				if(i == 0){
@@ -939,7 +984,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}	
 			}
 			
-			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId());
+			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
 			
 			for(int i = 0; i < dList.size(); i++){
 				if(i == 0){
@@ -953,7 +998,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}	
 			}
 			
-			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId());
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
 			
 			for(int i = 0; i < cList.size(); i++){
 				if(i == 0){
@@ -967,7 +1012,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}	
 			}			
 			
-			sList = ezScheduleService.getScheduleList(pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, "", loginVO.getTenantId());
+			sList = ezScheduleService.getScheduleList(indiList, pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, "", loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId());
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
@@ -1039,7 +1084,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					userIDList += ",";
 				}
 			}			
-			sList = ezScheduleService.getScheduleList(userIDList, "IsPublic", utcStartTime, utcEndTime, startDate, endDate, "Y", offSetMin, "",loginVO.getTenantId());
+			sList = ezScheduleService.getScheduleList(userIDList, "\'\'", "IsPublic", utcStartTime, utcEndTime, startDate, endDate, "Y", offSetMin, "",loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId());
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
@@ -1139,6 +1184,25 @@ public class EzScheduleController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 공통 > 클릭한 유저정보 겸직된 회사정보로 호출
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGetCumDeptID.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String scheduleGetCumDeptID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleGetLunarUse started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String companyID = request.getParameter("companyID");
+		
+		String cumDeptID = ezScheduleService.getCumDeptId(userID,loginSimpleVO.getTenantId(), companyID);
+		
+		return cumDeptID;
+	}
+	
+	/**
 	 * 공통 > 이전날짜 등록관리 데이터
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGetRegi.do", produces = "text/html;charset=UTF-8")
@@ -1179,9 +1243,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String userID = loginVO.getId();
 		int tenantID = loginVO.getTenantId();
+		String companyID = loginVO.getCompanyID();
 		
 		scheduleConfigVO = ezScheduleService.getScheduleConfig(userID, tenantID);
-		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(userID, tenantID);
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(userID, tenantID, companyID);
 		List<OrganUserVO> oList = new ArrayList<OrganUserVO>();
 		
 		for (int i=0; i < sList.size(); i++) {
@@ -1215,7 +1280,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		int tenantID = loginSimpleVO.getTenantId();
-		String userID = loginSimpleVO.getId();		
+		String userID = loginSimpleVO.getId();	
+		String companyID = loginSimpleVO.getCompanyID();
 		String defaultView = request.getParameter("DEFAULTVIEW");
 		String startDay = request.getParameter("STARTDAY");
 		String startTime = request.getParameter("STARTTIME");
@@ -1231,7 +1297,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		//기존 환경설정 정보 삭제
 		ezScheduleService.deleteScheduleConfig(userID, tenantID);
 		//기존 비서정보 삭제
-		ezScheduleService.deleteSecretary(userID, tenantID);
+		ezScheduleService.deleteSecretary(userID, tenantID, companyID);
 		//새로운 환경설정 정보 등록
 		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID);		
 		
@@ -1241,7 +1307,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String secretaryID = (String) obj.get("secretaryID");
 			String secretaryName = (String) obj.get("secretaryName");
 			//새로운 비서정보 등록
-			ezScheduleService.insertSecretary(userID, displayName, displayName2, secretaryID, secretaryName, tenantID);
+			ezScheduleService.insertSecretary(userID, displayName, displayName2, secretaryID, secretaryName, tenantID, companyID);
 		}			
 	}
 	
@@ -1283,9 +1349,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         StringBuilder strOwnerID = new StringBuilder();
         ScheduleInfoVO scheduleInfo = new ScheduleInfoVO();
         
-		List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
-		List<ScheduleDeptVO> pdList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID);
-		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID);
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID ,companyID);
+		List<ScheduleDeptVO> pdList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID ,companyID);
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID, companyID);
                
 		loginVO = commonUtil.userInfo(loginCookie);
 
@@ -1329,7 +1395,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (!_scheduleid.equals("")) {		
         	String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
         	
-        	scheduleInfo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());
+        	scheduleInfo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId() ,loginVO.getCompanyID());
         	
             _contentpath = pDirPath + scheduleInfo.getContentPath();
             startDateStringOrgin = scheduleInfo.getStartDate();
@@ -1339,7 +1405,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             String hasAttendant = scheduleInfo.getHasAttendant();
             if (hasAttendant.equals("Y")) {            	
                 String parentId = (scheduleInfo.getParentId().equals("0") ? _scheduleid : scheduleInfo.getParentId());                
-                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginVO.getTenantId());   
+                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginVO.getTenantId(), loginVO.getCompanyID());   
                 
                 model.addAttribute("attendantList", attendantList);
             }
@@ -1428,7 +1494,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	            	}
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-						logger.debug("겸직리스트 : " + vo.getDeptId() + "겸직부서이름 : " + vo.getTitleName());
 	            		//겸직일정
 	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
 	            		count++;
@@ -1458,7 +1523,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	            	}
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-						logger.debug("겸직리스트 : " + vo.getDeptId() + "겸직부서이름 : " + vo.getTitleName());
 	            		//겸직일정
 	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
 	            		count++;
@@ -1469,7 +1533,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					count++;
 				}
             	
-            	List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, loginVO.getTenantId());
+            	List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, loginVO.getTenantId(), loginVO.getCompanyID());
             	
             	for (ScheduleGroupListVO vo : gList) {
             		//그룹 일정
@@ -1683,14 +1747,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
 	    	defaultPath = commonUtil.getRealPath(request) + contentPath;
 	    }
-
 	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
-        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId());
+        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
         } else {
         	//updateSchedule
-        	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId());
+        	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
         }
 	    
 	    //2018-08-01 구해안 반복설정 날짜 체크
@@ -1731,39 +1794,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");		
-		String pidList = "'" + idList + "',";
+		String pidList = "'" + idList + "'";
 		
-		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(idList, lang, tenantID);
-		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(idList, lang, tenantID);
+		String DeptID = ezScheduleService.getCumDeptId(idList, userInfo.getTenantId(), userInfo.getCompanyID());
 		String CompanyID = userInfo.getCompanyID();
-		String dcidList = "";
 		
-		if(dList != null && dList.size()>0){
-			for (int i = 0; i < dList.size(); i++) {
-				/*if (i == 0) {
-					dcidList += ",";
-				}*/
-				ScheduleDeptVO data = dList.get(i);			
-				dcidList += "\'" + data.getDeptId()+ "\',";				
-			}				
-		}
-		
-		if(cList != null && cList.size()>0 ){
-			for (int i = 0; i < cList.size(); i++) {							
-				if(dList == null || dList.size()<=0){
-					/*if (i == 0) {
-						dcidList += ",";
-					}*/
-					ScheduleCumulerVO data = cList.get(i);			
-					dcidList += "\'" + data.getDeptId()+ "\',";		
-				}
-			}				
-		}
-		
-		/*dcidList = dcidList.substring(0, dcidList.length()-1);*/
-		
-		dcidList += "\'" + CompanyID + "\'";
-		pidList += dcidList;
+		String dcidList = "'" + DeptID + "'" + ",'" + CompanyID + "'";
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
@@ -1771,11 +1807,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
-		for(int j = 0; j < sList.size(); j++){			
+		for(int j = 0; j < sList.size(); j++){		
 			ScheduleInfoVO data = sList.get(j);
 			sb.append(commonUtil.getQueryResult(data));
 		}
@@ -1937,9 +1973,10 @@ public class EzScheduleController extends EgovFileMngUtil {
         String _scheduleid = request.getParameter("id");
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
+        String companyID = loginVO.getCompanyID();
         
         //일정 상세정보
-        ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId);
+        ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
          
         //일정기간 계산        
         if (vo.getDateType().equals("3")){        	
@@ -1964,7 +2001,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         //참석자 정보
         if (vo.getHasAttendant().equals("Y")) {        
         	String parentID = (vo.getParentId().equals("0") ? _scheduleid : vo.getParentId());
-        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId);
+        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId, companyID);
         	
         	model.addAttribute("attendantList", aList);
         }
@@ -2078,7 +2115,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
 
 		//일정데이터 삭제
-		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId());
+		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
 	}
 	
 	/**
@@ -2099,7 +2136,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			scheduleId = scheduleId.replaceAll(" ", "+");
 		}
 		
-		List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, loginVO.getTenantId());		
+		List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, loginVO.getTenantId(), loginVO.getCompanyID());		
 	
 		model.addAttribute("attendantList", aList);
 		model.addAttribute("scheduleId", scheduleId);
@@ -2135,7 +2172,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String attendantDeptName = (String) obj.get("attendantDeptName");
 			String attendantDeptName2 = (String) obj.get("attendantDeptName2");
 			
-			ezScheduleService.insertScheduleAttendant(scheduleId, attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, loginSimpleVO.getTenantId());
+			ezScheduleService.insertScheduleAttendant(scheduleId, attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
 			ezScheduleService.updateAttendantSchedule("Y", scheduleId, loginSimpleVO.getTenantId());
 		}
 	}
@@ -2169,7 +2206,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		
-		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin);
+		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", rList);
 		model.addAttribute("userInfo", loginVO);
@@ -2209,7 +2246,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 				
-		List<ScheduleGroupListVO> iList = ezScheduleService.getInviteScheduleGroupList(loginVO.getId(), loginVO.getTenantId(), offSetMin);
+		List<ScheduleGroupListVO> iList = ezScheduleService.getInviteScheduleGroupList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", iList);
 		model.addAttribute("userInfo", loginVO);

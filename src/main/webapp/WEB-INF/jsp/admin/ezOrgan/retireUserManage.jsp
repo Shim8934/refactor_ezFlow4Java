@@ -26,7 +26,8 @@
 			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
-	    	
+			var companyId = "${companyId}";
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -299,6 +300,15 @@
 			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
 			
+			function selectCompanyID() {
+				retireUserList();
+// 				var tempCompanyId = document.getElementById("ListCompany").value;
+				
+// 				if (companyId != tempCompanyId) {
+// 					window.location.href = "/admin/ezOrgan/retireUserManage.do?companyId=" + tempCompanyId;
+// 		        }
+			}
+	  
 			//2018-07-20 천성준 - 페이지 네이션 변경 
 			function td_Create1(strtext) {
                 document.getElementById("tblPageRayer").innerHTML = strtext; //document.all.tblPageNum1.innerHTML + strtext;
@@ -484,7 +494,8 @@
 						 "searchStartDate" : $('#startDatepicker').val(),
 						 "searchEndDate" : $('#endDatepicker').val(),
 						 "searchKeycode" : $('#searchKeycode').val(),
-						 "searchKeyword" : $('#searchKeyword').val()
+						 "searchKeyword" : $('#searchKeyword').val(),
+						 "searchCompanyID" : $("#ListCompany").val()
 					 },
 					 success : function(data) {
 						 CurPage = data.pPage;
@@ -533,36 +544,38 @@
 				 })
    				makePageSelPage();
 			}
-			 
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 192;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        }
-		    
 		   //2018-08-06 김보미 - 페이지 위치 고정
 		    $(window).on("resize", function(){
 	            windowResize();
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 192;
+	        	var height = document.documentElement.clientHeight - 244;
+
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
+	        	
 	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 		    
 		    $(function(){
 	    		windowResize();
 		    });
+
 	    </script>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
+		<div id="mainmenu"> <!-- mainmenu -->    
+   		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+   			    <select id="ListCompany" onChange="selectCompanyID()">
+   		        	<c:forEach var="item" items="${companylist}">
+   	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+   	            	</c:forEach>
+   			    </select><br /><br />
+   		    </span>
+   		</div>
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${dotNetIntegration != 'YES'}">
@@ -625,7 +638,7 @@
 		</div>
      	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
-     	<br/>
+<!--      	<br/> -->
 		<div id="tblPageRayer"></div>
 	</body>
 </html>

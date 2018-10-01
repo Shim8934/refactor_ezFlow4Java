@@ -29,7 +29,7 @@
 		    var g_xmlHTTP = null;
 		    var bSearch = false;
 		    var topid = "<c:out value='${topid}'/>";
-		    var userLang = "<c:out value='${userLang}'/>";
+		    var primary = "<c:out value='${primary}'/>";
 		    var ReturnFunction;
 		    var RetValue;
 		    
@@ -236,10 +236,12 @@
 					pparsingXML = pparsingXML + "<DATA3><![CDATA[" + username2+ "]]></DATA3>";
 					pparsingXML = pparsingXML + "<DATA4><![CDATA[" + dept+ "]]></DATA4>";
 					pparsingXML = pparsingXML + "<DATA5><![CDATA["+ boardGroupACL + "]]></DATA5>";
-					if (userLang == "" || userLang == "1")
+					
+					if (primary == "1") {
 						pparsingXML = pparsingXML + "<VALUE><![CDATA["+ username + "]]></VALUE>";
-					else
+					} else {
 						pparsingXML = pparsingXML + "<VALUE><![CDATA["+ username2 + "]]></VALUE>";
+					}
 					pparsingXML = pparsingXML + "</CELL></ROW>";
 					pparsingXML2 = pparsingXML2 + pparsingXML+ "</ROWS></LISTVIEWDATA2>";
 
@@ -327,6 +329,7 @@
 					InsertReceiver(m_selectedWindow);
 			}
 
+			/* 다국어 설정할 시, 우측에 들어가는 이름도 다국어로 나타나야 한다. */
 			function InsertReceiver(pListView) {
 				if (m_selectedTree == TreeView) {
 					var pListViewDL = new ListView(); //// ListView 선언
@@ -356,10 +359,12 @@
 							pparsingXML = pparsingXML + "<DATA3><![CDATA["+ existName2 + "(" + strDeptNM2.trim()+ ")" + "]]></DATA3>";
 							pparsingXML = pparsingXML + "<DATA4><![CDATA[PERSON]]></DATA4>";
 							pparsingXML = pparsingXML + "<DATA5><![CDATA[N]]></DATA5>";
-							if (userLang == "" || userLang == "1")
+							
+							if (primary == "1") {
 								pparsingXML = pparsingXML + "<VALUE><![CDATA["+ existName + "(" + strDeptNM.trim()+ ")" + "]]></VALUE>";
-							else
+							} else {
 								pparsingXML = pparsingXML + "<VALUE><![CDATA["+ existName2 + "(" + strDeptNM2.trim()+ ")" + "]]></VALUE>";
+							}							
 							pparsingXML = pparsingXML + "</CELL></ROW>";
 							pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 
@@ -407,10 +412,12 @@
 							pparsingXML = pparsingXML + "<DATA3><![CDATA["+ nodeIdx.GetNodeData("DISPLAYNAME2")+ "]]></DATA3>";
 							pparsingXML = pparsingXML + "<DATA4><![CDATA[DEPT]]></DATA4>";
 							pparsingXML = pparsingXML + "<DATA5><![CDATA[N]]></DATA5>";
-							if (userLang == "" || userLang == "1")
+							
+							if (primary == "1") {
 								pparsingXML = pparsingXML + "<VALUE><![CDATA[" + nodeIdx.GetNodeData("DISPLAYNAME") + "]]></VALUE>";
-							else
+							} else {
 								pparsingXML = pparsingXML + "<VALUE><![CDATA[" + nodeIdx.GetNodeData("DISPLAYNAME2") + "]]></VALUE>";
+							}
 							pparsingXML = pparsingXML + "</CELL></ROW>";
 							pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 							Resultxml = loadXMLString(pparsingXML2);
@@ -615,7 +622,7 @@
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
-		        		<NAME><spring:message code='ezBoard.t38' /></NAME>
+		        		<NAME><spring:message code='ezPersonal.t177' /></NAME>
 		        		<WIDTH>100</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>		     

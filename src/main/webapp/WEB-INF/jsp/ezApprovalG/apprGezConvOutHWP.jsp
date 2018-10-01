@@ -19,7 +19,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		
 	    <script type="text/javascript">
-<%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
 	        var pDocID = "${docID}";
 	        var pDocHref = "${docHref}";
 	        var pUserID = "${userInfo.id}";
@@ -81,7 +80,6 @@
 	        var logoName = "";
 	        var pAprType = "";
 	        var tempAttachSN = 0;
-<%-- 	        var pUse_Editor = "<%= Use_Editor%>"; --%>
 			var g_progresswin = null;
 			var ext = 'hwp';
 			
@@ -321,17 +319,19 @@
 			    var Ans = OpenInformationUI(pInformationContent);
 			    if (!Ans) return;
 			
-			    var chkpass = chk_Passwd(pUserID);
-			    
-			    if (chkpass == "False") {
-			        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				    OpenAlertUI(pAlertContent);
-				    return;
-			    } else if (chkpass == "cancel" || chkpass == undefined) {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
-                }    
+			    if ("${approvalPWD}" != "N") {
+				    var chkpass = chk_Passwd(pUserID);
+				    
+				    if (chkpass == "False") {
+				        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+					    OpenAlertUI(pAlertContent);
+					    return;
+				    } else if (chkpass == "cancel" || chkpass == undefined) {
+	                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                }    
+			    }
 			
 			    var rMatch = SaveFile();
 			    if (rMatch == "SUCCESS") {

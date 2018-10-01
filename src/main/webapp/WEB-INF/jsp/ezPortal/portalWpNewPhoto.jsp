@@ -169,20 +169,25 @@
 	        	}
 		    }
 	        
-		    function Pagenationimage(page) {
-	    	    switch (page) {
-	        	    case "PREV":
-	                	if (CurPage_NewPhoto != 1)
-	                    	CurPage_NewPhoto--;
-	                	break;
-	            	case "NEXT":
-		                if (CurPage_NewPhoto < totalPage_NewPhoto)
-		                    CurPage_NewPhoto++;
-	    	            break;
-	        	}
-	    	    
-	        	getBoardList_NewPhoto();
-	    	}
+	    	 function Pagenationimage(page) {
+		    	    switch (page) {
+		        	    case "PREV":
+		                	if (CurPage_NewPhoto != 1){
+		                    	CurPage_NewPhoto--;
+		                	} else {
+		                		return;
+		                	}
+		                	break;
+		            	case "NEXT":
+			                if (CurPage_NewPhoto < totalPage_NewPhoto){
+			                    CurPage_NewPhoto++;
+			                } else {
+			                	return;
+			                }
+		    	            break;
+		        	}
+			        	getBoardList_NewPhoto();
+		    	}
 		    
 		    /* 2018-06-04 홍승비 - 포탈메인 포토게시판 포틀릿 > 게시물 읽기 창 사이즈 수정 */
 	    	function ItemRead_onclick(obj) {

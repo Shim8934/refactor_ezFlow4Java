@@ -881,6 +881,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        		}	        		
 		        		}
 	
+		        		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		        		
+		        		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		        		if (info.getLang().equals("1")) {
+		        			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", info.getTenantId());
+		        			
+		        			if (!editorFontStyle.equals("")) {
+		        				String fontFamily = editorFontStyle.split("\\|")[0];
+		        				String fontSize = editorFontStyle.split("\\|")[1];
+		        				
+		        				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+		        			}
+		        		}
+		        		
 		        		Address[] addresses = null;
 		        		
 		        		if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {
@@ -955,7 +969,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 			            
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
@@ -968,10 +982,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
 			            
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
 			            
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 			            
@@ -988,7 +1002,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							}
 						}			            
 						
-			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+						sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
@@ -3765,6 +3779,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 			LOGGER.debug("folderId=" + folderId);
 
+			// 지정된 folderId가 사용자 언어에 따른 '임시 보관함'과 동일한 경우 표준 폴더 아이디를 사용해야 하는지
+			// 여부를 확인한다. ezMobile에서 임시 보관함의 메일을 삭제할 때 언어에 따른 이름을 보내도록 되어 있어서
+			// 아래 코드를 추가함.
+			if (folderId.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
+				folderId = ezEmailUtil.getDraftsFolderId(locale);
+			}
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
@@ -4411,7 +4432,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String pResult = "";
 		
         try {
-            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getLang(), userInfo.getTenantId(), userInfo.getCompanyId());
         } catch (Exception e) {
         	e.printStackTrace();
         	

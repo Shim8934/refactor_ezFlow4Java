@@ -8,7 +8,8 @@
     		async : false,
     		url : "/ezApprovalG/opinionRequest.do",
     		data : {
-    			docID : pDocID
+    			docID : pDocID,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -368,7 +369,8 @@ function AddOpinionContent(Opstate, OpContent) {
                     			userID : pUserID,
                     			formID  : "",
                     			isUsed  : "",
-                    			mode     : ""
+                    			mode     : "",
+                    			orgCompanyID : orgCompanyID
                     		},
                     		success: function(text){
                     			result = text;
@@ -400,8 +402,8 @@ function AddOpinionContent(Opstate, OpContent) {
 
                     var tr = GetChildNodes(pSelectedRow[0]);
 
-                    setNodeText(tr[3], UserLang == "1" ? tmpKyljeaDeptName : tmpKyljeaDeptName2);
-                    setNodeText(tr[2], UserLang == "1" ? tmpKyljeaJobtitle : tmpKyljeaJobtitle2);
+                    setNodeText(tr[3], tmpKyljeaDeptName);
+                    setNodeText(tr[2], tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA4", tmpKyljeaDeptID);
                     SetAttribute(pSelectedRow[0], "DATA9", tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA10", tmpKyljeaJobtitle2);
@@ -511,7 +513,7 @@ function deleteOpinionInfo() {
             if (pOrgDocID == "REDRAFT") {
                 var pInformationContent = strLang406;
                 var Rtnval = OpenInformationUI(pInformationContent, deleteOpinionInfo_Complete);
-                //if (!CrossYN() && Rtnval) {
+                if (Rtnval) {
                     var selIdx = GetAttribute(pSelectedRow[0], "id");
 
                     OpinionList.DeleteRow(selIdx);
@@ -519,7 +521,7 @@ function deleteOpinionInfo() {
                     setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
                     setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
                     OpinionAddFlag = 0;
-                //}
+                }
             }
             else {
                 deleteOpinion(pSelectedRow);
@@ -539,9 +541,23 @@ function deleteOpinionInfo_Complete(Rtnval) {
 
         var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
+        
+        if (OpinionList.GetRowCount() == 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "OpinionList_TR_noItems");
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	objTd.setAttribute("colSpan", 4);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+        }
+        
         document.getElementById("txt_OpinionContent").value = "";
         setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
         setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
+        document.getElementById("bbtn_OpinionDel").style.display = "none";
         OpinionAddFlag = 0;
     }
 }
@@ -583,10 +599,20 @@ function deleteOpinion_Complete(Rtnval) {
         var OpinionList = new ListView();
         OpinionList.LoadFromID("OpinionList");
         var pSelectedRow = OpinionList.GetSelectedRows();
-        var tr = pSelectedRow[0];
-
-        var selIdx = GetAttribute(tr, "id");
+        var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
+        
+        if (OpinionList.GetRowCount() == 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "OpinionList_TR_noItems");
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	objTd.setAttribute("colSpan", 4);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+        }
         document.getElementById("txt_OpinionContent").value = "";
         document.getElementById("btn_OpinionAdd").textContent = strLang389;
         document.getElementById("btn_OpinionCancel").textContent = strLang10;
@@ -600,9 +626,12 @@ function saveOpinionInfo() {
         var OpinionList = new ListView();
         OpinionList.LoadFromID("OpinionList");
 
-        var selRow = OpinionList.GetDataRows();
-
-        if (selRow.length == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
+        var pOpinionLen = OpinionList.GetRowCount();
+        
+        if (pOpinionLen == 1 && OpinionList.GetDataRows()[0].id.indexOf("noItems") > -1) {
+        	pOpinionLen = 0;
+        }
+        if (pOpinionLen == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
         {
         	if ((pDisplay == "BanSong" || pDisplay == "HeSong" || pDisplay == "BoRyu") && getNodeText(document.getElementById("btn_OpinionCancel")) != strLang407) {
                 var pAlertContent = GetOpinionTypeName(pOpinionType) + strLang410;
@@ -769,7 +798,7 @@ function autosaveOpinionXMLInfo() {
         }
 
         objXML = getOpinionListInfo();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
@@ -845,7 +874,7 @@ function saveHesoungOpinionXMLInfo() {
                 }
             }
             objXML = getOpinionListInfo();
-            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
             xmlhttp.send(objXML);
 
             var RtnVal = xmlhttp.responseText;
@@ -910,7 +939,7 @@ function saveOpinionXMLInfo() {
         }
         objXML = getOpinionListInfo();
         var xmlhttp = new createXMLHttpRequest();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;

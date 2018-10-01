@@ -84,6 +84,10 @@ public class ApprGDocListVO {
 	private String keyword;
 	/** 회사아이디*/
 	private String companyID;
+	/** 회사이름*/
+	private String companyName;
+	/** 회사이름2*/
+	private String companyName2;
 	/** 분류코드*/
 	private String itemCode;
 	/** 분류이름*/
@@ -138,6 +142,18 @@ public class ApprGDocListVO {
 	private String formFileLocation;
 	private String formDocType;
 	
+	public String getCompanyName2() {
+		return companyName2;
+	}
+	public void setCompanyName2(String companyName2) {
+		this.companyName2 = companyName2;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 	public String getFormFileLocation() {
 		return formFileLocation;
 	}

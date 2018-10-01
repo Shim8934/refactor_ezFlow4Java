@@ -58,7 +58,8 @@
 	                rtnVal = ReplaceText(rtnVal, filename, encodeURIComponent(filename));
 	                AttachDownFrame.location.href = rtnVal;
 	            } else {
-	                AttachDownFrame.location.href = "/ezCommon/downloadAttach.do?filePath=" + encodeURIComponent(rtnVal);
+	            	/*  2018-09-19 홍승비 - 기존  ezCommon/downloadAttach.do 사용하던 부분 수정 */
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(rtnVal);
 	            }
 	        }
 	

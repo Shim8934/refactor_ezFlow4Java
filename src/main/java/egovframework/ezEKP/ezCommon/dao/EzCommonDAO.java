@@ -239,6 +239,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return delete("EzCommonDAO.deleteCompanyConfig", map);
 	}
 
+	public void addMailToJMochaDistribution() throws Exception {
+		try {
+			select("EzCommonDAO.checkJMochaDistributionMail");
+		} catch (Exception e) {
+			logger.debug("jmocha_distribution mail column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMailToJMochaDistribution");
+		}
+	}
+	
 	public void addAddJobMasterOrderBy() throws Exception {
 		try {
 			select("EzCommonDAO.checkAddJobMasterOrderBy");
@@ -246,6 +256,26 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_addjobmaster orderby column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addAddJobMasterOrderBy");
+		}
+	}
+	
+	public void createTblIPAccessID() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblIPAccessID");
+		} catch (Exception e) {
+			logger.debug("tbl_access_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblIPAccessID");
+		}
+	}
+	
+	public void createTblIPAccessIP() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblIPAccessIP");
+		} catch (Exception e) {
+			logger.debug("tbl_access_ip doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblIPAccessIP");
 		}
 	}
 }

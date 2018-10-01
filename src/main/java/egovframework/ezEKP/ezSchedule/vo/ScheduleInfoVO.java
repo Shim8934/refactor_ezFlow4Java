@@ -61,6 +61,8 @@ public class ScheduleInfoVO {
 
 	private String groupName;
 	
+	private String companyid;	
+
 	private int repeatCount;
 
 	/**
@@ -485,5 +487,12 @@ public class ScheduleInfoVO {
 		this.content = content;
 	}
 	
+	public String getCompanyid() {
+		return companyid;
+	}
+
+	public void setCompanyid(String companyid) {
+		this.companyid = companyid;
+	}
 	
 }

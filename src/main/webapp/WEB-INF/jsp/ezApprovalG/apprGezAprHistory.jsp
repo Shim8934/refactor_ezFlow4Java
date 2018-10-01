@@ -16,6 +16,7 @@
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = "${docID}";
 		    var OrderCell = "";
+		    var orgCompanyID = parent.orgCompanyID;
 		    var ext = "${ext}";
 		    var selSpan = "";
 		    
@@ -118,7 +119,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getDocHistory.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -141,7 +143,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getLineHistory.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -166,7 +169,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getAttachHistory.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -191,7 +195,8 @@
 		    		url : "/ezApprovalG/getLineHistoryDetail.do",
 		    		data : {
 		    			docID : pDocID,
-		    			changeSN : pChangeSN
+		    			changeSN : pChangeSN,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
