@@ -1600,7 +1600,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception {
+	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
 		logger.debug("pollResOk started.");
 		
 		int notResponse = 0;
@@ -1644,9 +1644,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("pollResOk ended.");
 		
+		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + pollManagerID + "&pollState=" + pollState + "';\n");		
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {

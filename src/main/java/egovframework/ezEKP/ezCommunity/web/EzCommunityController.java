@@ -2141,6 +2141,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.pollRes(userInfo, model, pollManagerID, pollState, response);
 		
 		model.addAttribute("code", code);
+		model.addAttribute("pollManagerID", pollManagerID);
 		model.addAttribute("pollState", pollState);
 		
 		return "ezCommunity/communityPollRes";
@@ -2160,8 +2161,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String answerCount = request.getParameter("answerCount_1");
 		String isSave = request.getParameter("isSave");
 		String questionID = request.getParameter("questionID_1");
+		String pollManagerID = request.getParameter("pollManagerID");
+		String pollState = request.getParameter("pollState");
 		
-		ezCommunityService.pollResOk(userInfo, code, questionID, pollSelect, answerETC, isSave, answerType, answerCount, response);
+		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
+		ezCommunityService.pollResOk(userInfo, code, questionID, pollSelect, answerETC, isSave, answerType, answerCount, pollManagerID, pollState, response);
 	}
 	
 	/**

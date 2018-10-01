@@ -304,7 +304,8 @@ public interface EzCommunityService {
 	
 	public void pollRes(LoginVO userInfo, Model model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception;
 	
-	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception;
+	/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
+	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, String pollManagerID, String pollState, HttpServletResponse response) throws Exception;
 	
 	public void pollEditOk(String pClubNo, String subject, String startDate, String endDate, String managerID, int tenantID, HttpServletResponse response) throws Exception;
 	
