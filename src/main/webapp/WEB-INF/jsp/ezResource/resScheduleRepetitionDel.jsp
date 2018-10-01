@@ -50,7 +50,7 @@
                 <li><span onclick="btnCancel_Click()"></span></li>
             </ul>
         </div>
-		<div class="box" style="padding:40px 10px 30px;height:70px">
+		<%-- <div class="box" style="padding:40px 10px 30px;height:70px">
   			<label>
   				<input id="chk_Instance" type="radio" name="chk_Open" value="Instance" checked>
   				<spring:message code="ezResource.t323" />
@@ -59,7 +59,21 @@
   				<input type="radio" name="chk_Open" value="Master">
   				<spring:message code="ezResource.t324" />
   			</label>
-  		</div>
+  		</div> --%>
+  		<table class="content" style="width:100%">
+			<tr>
+		    	<td colspan="3">
+		    		<input id="chk_Instance" type="radio" name="chk_Open" value="Instance" checked>
+		      		<label for="chk_Instance"><spring:message code='ezResource.t323'/></label>
+		      	</td>
+		  	</tr>
+		  	<tr>
+		    	<td colspan="3">
+		    		<input type="radio" name="chk_Open" value="Master" >
+		      		<label for="chk_series"><spring:message code='ezResource.t324'/></label>
+		      	</td>
+		  	</tr>  
+		</table>
 		<div class="btnpositionNew">
 			<a class="imgbtn"><span onclick="btnOk_Click()" ><spring:message code="ezResource.t15" /></span></a>
 		</div>
