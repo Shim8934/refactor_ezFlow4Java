@@ -28,6 +28,7 @@
 	}
 </style>
 <script type="text/javascript" ID="clientEventHandlersJS">
+	var regRecordFlag = false;
     var g_VisualAudioFlag="0";
     var g_NodesRcdgAVType=null;
     var g_NodesPhotoAVType=null;
@@ -229,11 +230,16 @@
         return true;
     }
     function cmdConfirm_onclick() {
+    	
         if (CheckInputField()) {
             if (pDocID == "")
                 pDocID = createNewDocID();
-
-            if (RegisterRecord()) {
+            
+            // 2018-10-01 중복 등록 버그 수정
+            if (regRecordFlag == false) {
+            	if(RegisterRecord()) {
+            		regRecordFlag == true;
+            	}
                 rtnVal[0] = "TRUE";
                 
                 rtnVal[1] = g_szSCListXml;
