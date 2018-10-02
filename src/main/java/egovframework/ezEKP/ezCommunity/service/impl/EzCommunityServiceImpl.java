@@ -4743,6 +4743,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
+		/* 2018-10-02 홍승비 - 게시자의 writerDeptID를 가져오도록 수정 */
 		List<CommunityBoardListVO> list = ezCommunityDAO.adminSearchItemXML(map);
         
         sb.append("<NODES>");
@@ -4757,6 +4758,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				sb.append("<ItemID>" + board.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + commonUtil.cleanValue(board.getWriterID()) + "</WriterID>");
 				sb.append("<WriterName>" + commonUtil.cleanValue(board.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptID>" + commonUtil.cleanValue(board.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(board.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(board.getWriterCompanyName()) + "</WriterCompanyName>");
 				
