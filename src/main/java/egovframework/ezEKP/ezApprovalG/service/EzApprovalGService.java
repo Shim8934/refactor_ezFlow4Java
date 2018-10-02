@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
@@ -295,7 +296,7 @@ public interface EzApprovalGService {
 	
 	public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, String searchQuery) throws Exception;
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
@@ -568,10 +569,12 @@ public interface EzApprovalGService {
 	 * */
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
 	
-/*	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
-
-	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
-*/	
+//	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
+//
+//	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
+	
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
+	
 	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;

@@ -331,7 +331,7 @@
 		</div>
 
 		<div class="listview" style="width:790px; height:550px; overflow-y:auto; overflow-x:hidden" >
-			<DIV id=lvtForm class="text" style="OVERFLOW-Y:auto; overflow-x:auto; border:0; HEIGHT:300px; WIDTH:790px"></DIV>
+			<DIV id=lvtForm class="text" style="OVERFLOW-Y:auto; overflow-x:auto; border:0; width:790px; height:550px;"></DIV>
 		</div>
 	
 		<script type="text/javascript">

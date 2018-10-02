@@ -888,6 +888,9 @@
 				
 					var param = "?docID=" + docID + "&url=" + encodeURIComponent(pURL) + "&companyID=" + pCompanyID;
 					GetOpenWindow(url + param, "", 825, 850, "no");
+				} else {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 				}
 		    }		    
 		</script>
@@ -916,12 +919,7 @@
     	</h1>
     	<div id="mainmenu">
     		<c:if test="${type == 'admin' }">
-            	<b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-		        </select><br /><br />
+    			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
         	<ul>        		
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>

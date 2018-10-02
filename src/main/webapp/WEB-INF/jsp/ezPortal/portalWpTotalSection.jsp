@@ -1010,6 +1010,13 @@
 	        	
 	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    	}
+		    window_onload_total();
+		    
+		    function changeCompany(){
+		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
+		    	var TdeptID = $("#selectCompany option:selected").val();
+		    	window.parent.parent.changeCompany(TcompanyID,TdeptID);
+		    }
 		</script>
 	</head>
 	<body style="background-color: white">	

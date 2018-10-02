@@ -27,6 +27,8 @@ function getDocList() {
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
     
+    var searchCompanyID = $("#selectCompany option:selected").val();
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -43,7 +45,8 @@ function getDocList() {
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
-				subQuery     : SubQuery
+				subQuery     : SubQuery,
+				searchCompanyID : searchCompanyID
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -178,6 +181,7 @@ function getDocList_after(xml) {
         check_presence2();
     
     try {
+    	parent.frames["left"].pListTypeValue = pListTypeValue;
         parent.frames["left"].getAprCount();
         parent.frames["left"].setPresentValue("");
     } catch (e) { }
@@ -347,6 +351,7 @@ function getReceivedDocList_after(xml) {
 
         }
         try {
+        	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
             parent.frames["left"].setPresentValue("");
         } catch (e) { }
@@ -378,7 +383,9 @@ function getSendOutDocList() {
 				pageSize : pageSize,
 				pageNum  : pageNum,
 				orderCell : OrderCell,
-				orderOption : OrderOption
+				orderOption : OrderOption,
+				listType : pListTypeValue,
+				searchQuery  : SQLPARADATA
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
@@ -562,7 +569,8 @@ function DisplayWaitStat() {
 
 function getAprLine(tr) {
     var pDocID,pMode = "",pFlag = "";
-
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
+    
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
@@ -612,7 +620,8 @@ function getAprLine(tr) {
 		data : {
 				docID : pDocID,
 				mode  : pMode,
-				flag  : pFlag
+				flag  : pFlag,
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getAprovSub_after(xml);
@@ -780,6 +789,7 @@ function openApprovUI(allFlag) {
         pArgument[1] = GetAttribute(tr[0], "DATA4");		
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
         pArgument[3] = GetAttribute(tr[0], "DATA7");	
+        var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
 
         if (GetAttribute(tr[0], "DATA12") == "017") {
         	   $.ajax({
@@ -816,7 +826,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode)+"&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -940,6 +950,7 @@ function openViewDocInfo(type) {
     var pArgument = new Array();
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1007,6 +1018,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
+        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -1273,6 +1285,8 @@ function getAprDocAproveInfo(tr) {
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
+    
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     if (pDocInfoValue == "4") {
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
@@ -1308,7 +1322,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getTotalAttachInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1353,7 +1368,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getOpinionInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1394,7 +1410,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1431,7 +1448,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getCirculationinfo.do",
     		data : {
     			docID : pDocID,
-    			mode  : pFlag
+    			mode  : pFlag,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			RtnVal = xml;
@@ -1619,13 +1637,23 @@ function makePageSelPage() {
         var nowmonth = parseInt(nowDate.substring(5,7));
         var nowday = parseInt(nowDate.substring(8,10));
         
-    	if (SearchCond[5] != null && SearchCond[5] != "" ) {
-    		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
-    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
-    	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
-    		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
-    	} else {
-    		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        if (approvalFlag == "G") { //2018-10-01 김보미 - G버전일때 추가.
+        	if (SearchCond[3] != null && SearchCond[3] != "") {
+        		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
+        	} else if (SearchCond[9] != null && SearchCond[9] != "") {
+        		period = SearchCond[9] + strLang1028 + " " + SearchCond[10] + strLang1029 + " " + SearchCond[11] + strLang1030 + " ~ " + SearchCond[12] + strLang1028 + " " + SearchCond[13] + strLang1029 + " " + SearchCond[14] + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        	}
+        } else {
+        	if (SearchCond[5] != null && SearchCond[5] != "" ) {
+        		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
+        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
+        	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
+        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        	}
         }
     } else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
@@ -1784,6 +1812,7 @@ function setbuttonenable() {
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
     var pFunctionType = GetAttribute(tr, "DATA10");
+    var orgCompanyID = GetAttribute(tr, "ORGCOMPANYID");
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
@@ -2143,10 +2172,12 @@ function selFirstRow(Resultxml) {
 
         pDocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
     }
     else {
         pDocID = "";
         pURL = "";
+        orgCompanyID = "" ;
     }
 
     switch (pDocInfoValue) {
@@ -2187,7 +2218,8 @@ function getDataInfo(jobState) {
         		url : "/ezApprovalG/getTotalAttachInfo.do",
         		data : {
         				docID : pDocID,
-        				flag  : pFlag
+        				flag  : pFlag,
+        				orgCompanyID : orgCompanyID
         				},
         		success: function(xml){
         			getdoclistSub_after(xml);

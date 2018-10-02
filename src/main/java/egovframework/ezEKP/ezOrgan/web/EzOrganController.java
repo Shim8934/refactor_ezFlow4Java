@@ -71,8 +71,18 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+        String adminDist = doc.getElementsByTagName("ADMINDIST").getLength() != 1 ? "false" : doc.getElementsByTagName("ADMINDIST").item(0).getTextContent(); // 관리자 > 공용배포그룹
+        String userCompanyID = userInfo.getCompanyID();
+        String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
         
-        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList);
+        if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
+        	topID = adminOrganChk[0];
+        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) {
+		} else {
+        	topID = userCompanyID;
+        }
+        
+        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID);
         
         // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
         String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), tenantID);
@@ -137,12 +147,14 @@ public class EzOrganController {
 		String listtype = request.getParameter("type");		
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
+		String noAddJob = request.getParameter("noAddJob");
+		String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
 		String infoXML = "";
 
 		logger.debug("page=" + page);
 		
 		if (page == null) {		
-			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId());
+			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob);
 		} else {
 			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId());
 		}
@@ -247,14 +259,20 @@ public class EzOrganController {
         logger.debug("tenantID=" + tenantID);       
 		
 		String searchlist = request.getParameter("search").trim();
-		String companyId  = request.getParameter("company") == null ? "" : request.getParameter("company");
+		String companyId  = request.getParameter("company") == null ? userInfo.getCompanyID() : request.getParameter("company");
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");
 		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
+		String noAddJob = request.getParameter("noAddJob");
 		String infoXML = "";
+		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan"); // 관리자페이지 > 조직도 메뉴에서 검색
 		
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrgan.equalsIgnoreCase("y")) { // 전체 관리자 && 관리자 > 조직도 메뉴 => 전체 검색
+			companyId = "";
+		}
+
 		logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
 		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyId=" + companyId);
 		
@@ -263,10 +281,10 @@ public class EzOrganController {
 				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
 			}
 			else {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob);
 			}
 		} else {
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);

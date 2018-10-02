@@ -14,6 +14,8 @@ public class PollCommentVO {
 	private String filePath;
 	private String cmtTime;
 	private String userImage;
+	private String deptId;
+	private String companyId;
 	
 	public int getCmtId() {
 		return cmtId;
@@ -117,6 +119,22 @@ public class PollCommentVO {
 
 	public void setUserName2(String userName2) {
 		this.userName2 = userName2;
+	}
+
+	public String getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}		
 	
 }

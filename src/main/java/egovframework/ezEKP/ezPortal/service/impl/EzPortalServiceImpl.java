@@ -57,6 +57,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
@@ -882,11 +883,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
-		
+
 		String temp = ezPortalDAO.getPorletProperties_S(map);
 
 		logger.debug("getPorletProperties ended");
-		
+
 		if (temp != null && temp.equals("1")) {
 			return ezPortalDAO.getPorletProperties(map);
 		} else {
@@ -2272,6 +2273,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
 		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
 		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
+		//List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
 		
 		if (use_attitude == null || use_attitude.equals("")) {
 			use_attitude = "YES";
@@ -2490,7 +2492,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			}
 			
 			String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId());
-			
+
 			if (cacheValue != null && !cacheValue.trim().equals("")) {
 				return cacheValue;
 			}
@@ -2633,7 +2635,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
         String RootParentUID = getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
         String boarderValue = "0";
         int i= 0;
-        
+
         if (pPortalPageID.equals(RootParentUID)) {
         	userInfo.setRootPage(true);
         }
@@ -3283,6 +3285,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		return boardInfo;
 	}
 	
+	/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
 	public String addBestTable (LoginVO userInfo) throws Exception {
 		logger.debug("addBestTable started");
 		
@@ -3291,6 +3294,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		StringBuilder strData = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
@@ -3932,5 +3936,13 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			}
 		}
 		return resultMap;
+	}
+
+	@Override
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		return ezPortalDAO.getAllCompanyList(map);
 	}
 }

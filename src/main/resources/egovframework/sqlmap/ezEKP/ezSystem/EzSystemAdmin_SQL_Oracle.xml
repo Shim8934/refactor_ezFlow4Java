@@ -180,10 +180,13 @@
 	</select>
 	
 	<insert id="EzSystemAdminDAO.insertIPBand" parameterClass="Map">
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT TBL_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+		</selectKey>
 		<![CDATA[
 			INSERT INTO 
-				TBL_ACCESS_IP (TENANT_ID, IPADDRESS, "ACCESS", EXPLANATION) 
-			VALUES (#tenantID#, #ipAddress#, #access#, #explanation#)
+				TBL_ACCESS_IP (IPNO, TENANT_ID, IPADDRESS, "ACCESS", EXPLANATION) 
+			VALUES (#id#, #tenantID#, #ipAddress#, #access#, #explanation#)
 		]]>
 	</insert>
 	
@@ -251,7 +254,7 @@
 		]]>
 	</select>
 	
-	<select id="EzSystemAdminDAO.getAllAccessListUserComapre" parameterClass="Integer" resultClass="String">
+	<select id="EzSystemAdminDAO.getAllAccessListUserCompare" parameterClass="Integer" resultClass="String">
 		<![CDATA[
 			SELECT
 				TBL_ACCESS_ID.CN
@@ -290,10 +293,13 @@
 	</delete>
 	
 	<insert id="EzSystemAdminDAO.insertAccessId" parameterClass="Map">
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT TBL_ACCESS_ID_SEQ2.NEXTVAL FROM SYS.DUAL
+		</selectKey>
 		<![CDATA[
 			INSERT INTO 
-				TBL_ACCESS_ID (TENANT_ID, CN) 
-			VALUES (#tenantID#, #cn#)
+				TBL_ACCESS_ID (ACCESSNO, TENANT_ID, CN) 
+			VALUES (#id#, #tenantID#, #cn#)
 		]]>
 	</insert>
 	

@@ -84,13 +84,14 @@
 					C.DEPTNM2,
 					C.CONNECTIP,
 					C.CONNECTBROWSER,
-					C.CONNECTOS
+					C.CONNECTOS,
+					C.COMPANYID
 			FROM 
 					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 			ON 
 					C.USERID = U.USERID
 			WHERE 
-					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
+					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# AND C.COMPANYID=#companyId#
 					<include refid="EzSystemAdminDAO.searchQuery"/>
 			ORDER BY 
 					SEQUENCE DESC
@@ -103,7 +104,7 @@
 	<select id="EzSystemAdminDAO.getLoginHistCount" parameterClass="map" resultClass="int">
 		SELECT 	COUNT(SEQUENCE) 
 		FROM   	TBL_CONNECTION_INFO
-		WHERE	TENANT_ID = #v_tenantID#
+		WHERE	TENANT_ID = #v_tenantID# AND COMPANYID = #companyId#
 				<include refid="EzSystemAdminDAO.searchQuery"/>
 	</select>
 	

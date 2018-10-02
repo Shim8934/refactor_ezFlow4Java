@@ -20,6 +20,8 @@ public class LadderVO {
 	/** 게임 작성자 이름(다국어) */
 	private String writerName2;
 	/** 게임 작성자 부서 이름 */
+	private String deptID;
+	/** 게임 작성자 부서 ID */
 	private String deptName;
 	/** 게임 작성자 부서 이름(다국어)*/
 	private String deptName2;
@@ -46,8 +48,30 @@ public class LadderVO {
 	private int cmt;
 	/** 생성 24시간 여부*/
 	private int newFlag;
+	/** 회사 아이디 */
+	private String companyID;
+	/** 회사 이름 */
+	private String companyName;
 	
 	
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public int getTenant_id() {
 		return tenant_id;
 	}

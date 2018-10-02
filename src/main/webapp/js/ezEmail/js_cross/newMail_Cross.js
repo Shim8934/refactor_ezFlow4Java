@@ -1800,9 +1800,9 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     var xmlstring = "<DocID>" + DocID + "</DocID>";
     xmlpara = loadXMLString(xmlstring);
     if (Target == "APPROVALG")
-        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do?orgCompanyID="+orgCompanyID, false);
     else
-        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do?orgCompanyID="+orgCompanyID, false);
     xmlHTTP.send(xmlpara);
 
     if (xmlHTTP.status == 200) {
@@ -2192,9 +2192,9 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
             var filename = SelectSingleNodeValue(AttachRows[i], "FileName");
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
             
-            pstrXML += "<ROW><CELL><VALUE>" + filename + "</VALUE>";
-            pstrXML += "<DATA1>" + filename + "</DATA1>";
-            pstrXML += "<DATA2>" + uploadCommunityPath + "/" + filepath + "</DATA2>";
+            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+            pstrXML += "<DATA2><![CDATA[" + uploadCommunityPath + "/" + filepath + "]]></DATA2>";
             pstrXML += "<DATA3></DATA3>";
             pstrXML += "<DATA4>BOARD</DATA4>";
             pstrXML += "<DATA5>N</DATA5>";

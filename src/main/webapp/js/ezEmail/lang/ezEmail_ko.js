@@ -310,6 +310,9 @@ var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
 var strLangKYJ03 = "공백은 입력할 수 없습니다.";
 var strLangLSD02 = "구성원이 없는 부서입니다.";
 
+/* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X*/
+var strLangHSB01 = "이 게시물은 ";
+var strLangHSB02 = "에서 조회 할 수 있습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

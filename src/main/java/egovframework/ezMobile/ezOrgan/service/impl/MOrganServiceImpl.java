@@ -173,7 +173,7 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId) throws Exception {
+	public List<MOrganListVO> getDeptMemberList(String deptID, String searchFlag, String selectType, String lang, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("getDeptMemberList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -182,9 +182,13 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("deptID", deptID.replace("%", "\\%").replace("_", "\\_"));
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("deptId : " + deptID.replace("%", "\\%").replace("_", "\\_"));
+		LOGGER.debug("lang : " + commonUtil.getMultiData(lang, tenantId));
 		
 		List<MOrganListVO> mOrganListVOs = mOrganDAO.getDeptMemberList(map);
-
+		
 		LOGGER.debug("getDeptMemberList ended");
 		
 		return mOrganListVOs;

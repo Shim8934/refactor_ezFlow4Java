@@ -243,6 +243,24 @@
 		]]>
 	</update>
 	
+	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MAIL
+			FROM 
+				JMOCHA_DISTRIBUTION
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addMailToJMochaDistribution"> 
+		ALTER TABLE 
+			JMOCHA_DISTRIBUTION
+		ADD 
+			MAIL VARCHAR2(100 CHAR) DEFAULT NULL
+	</statement>
+		
 	<select id="EzCommonDAO.checkAddJobMasterOrderBy" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -259,6 +277,49 @@
 			TBL_ADDJOBMASTER
 		ADD 
 			ORDERBY NVARCHAR2(200) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ipno
+			FROM 
+				TBL_ACCESS_IP
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessIP"> 
+		CREATE TABLE "TBL_ACCESS_IP" 
+	 	  (	"IPNO" NUMBER(*,0) NOT NULL ENABLE, 
+			"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+			"IPADDRESS" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
+			"ACCESS" VARCHAR2(10 BYTE) NOT NULL ENABLE, 
+			"EXPLANATION" VARCHAR2(200 BYTE), 
+			 CONSTRAINT "TBL_ACCESS_IP_PK" PRIMARY KEY ("IPNO")
+	 	 )
+	</statement>
+
+	<select id="EzCommonDAO.checkTblIPAccessID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				accessno
+			FROM 
+				TBL_ACCESS_ID
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessID"> 
+	 	CREATE TABLE "TBL_ACCESS_ID" 
+	   	(	"ACCESSNO" NUMBER(5,0) NOT NULL ENABLE, 
+			"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+			"CN" VARCHAR2(80 BYTE) NOT NULL ENABLE, 
+			 CONSTRAINT "TBL_ACCESS_ID_PK" PRIMARY KEY ("ACCESSNO")
+	   	)
+		
 	</statement>
 	
 </sqlMap>

@@ -140,7 +140,7 @@ public class BoardListVO {
 	private String mainImageID;
 	/** 게시물 내용*/
 	private String content;
-	
+
 	public int getrNum() {
 		return rNum;
 	}
