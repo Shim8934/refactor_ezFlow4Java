@@ -46,7 +46,7 @@ var CabinetMessages = {
 	strPerm      : "권한이 없습니다.",
 	strMovErr2   : "기존 캐비넷로는 이동/복사할 수 없습니다.",
 	strMovErr3   : "하위 캐비넷으로 이동/복사할 수 없습니다.",
-	strNoTitle   : "제목을 입력하세요.",
+	strNoTitle   : "제목을 입력해주세요.",
 	strCapacity  : "용량을 초과하였습니다.",
 	strSearch    : "검색 조건이 없습니다.",
 	strDate1     : "검색 시작일을 종료일보다 빠르게 지정하세요.",
