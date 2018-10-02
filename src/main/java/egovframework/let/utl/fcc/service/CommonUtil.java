@@ -1126,6 +1126,9 @@ public class CommonUtil {
 		case "delete":
 			method = HttpMethod.DELETE;
 			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
 		default:
 			method = HttpMethod.GET;
 			break;
