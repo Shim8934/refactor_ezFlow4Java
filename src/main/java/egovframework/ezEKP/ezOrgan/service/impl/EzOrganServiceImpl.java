@@ -1187,6 +1187,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                 case "UPNNAME":
                     strRet = "upnName";
                     break;
+                case "USERTYPE":
+                	strRet = "usertype";
+                	break;
                 default: strRet = "";
                     break;
             }
