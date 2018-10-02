@@ -57,38 +57,68 @@
 		        DocList = null;
 		    }
 
+		    /* 2018-10-02 홍승비 - 좌측영역에서 좌측이동 시 예외처리 추가 */
 		    function leftmoveboard(val) {
-		        switch (val) {
-		            case 1:
-		                boardlistup("lvboardForm2");
-		                break;
-		            case 2:
-		                boardlistdown("lvboardForm2");
-		                break;
-		            case 3:
-		                adddeletelist("lvboardForm", "lvboardForm2");
-		                break;
-		            case 4:
-		                adddeletelist("lvboardForm2", "lvboardForm");
-		                break;
-		        }
+		    	listviewL = new ListView();
+		        listviewM = new ListView();
+		        
+		        listviewL.LoadFromID("lvboardForm2");
+		        listviewM.LoadFromID("lvboardForm");
+		        
+		        var selectL = listviewL.GetSelectedIndexes();
+		        var selectM = listviewM.GetSelectedIndexes();
+		        
+				if((val == "3") && (selectL != "") && (selectM == "")) {
+					alert("\"" + listviewL.GetSelectedRows()[0].cells[0].innerText + "\"" + " <spring:message code = 'ezCommunity.t342' />");
+				}
+				else {
+			        switch (val) {
+			            case 1:
+			                boardlistup("lvboardForm2");
+			                break;
+			            case 2:
+			                boardlistdown("lvboardForm2");
+			                break;
+			            case 3:
+			                adddeletelist("lvboardForm", "lvboardForm2");
+			                break;
+			            case 4:
+			                adddeletelist("lvboardForm2", "lvboardForm");
+			                break;
+			        }
+		 	  	}
 		    }
 
+		    /* 2018-10-02 홍승비 - 우측영역에서 우측이동 시 예외처리 추가 */
 		    function rightmoveboard(val) {
-		        switch (val) {
-		            case 1:
-		                boardlistup("lvboardForm3");
-		                break;
-		            case 2:
-		                boardlistdown("lvboardForm3");
-		                break;
-		            case 3:
-		                adddeletelist("lvboardForm3", "lvboardForm");
-		                break;
-		            case 4:
-		                adddeletelist("lvboardForm", "lvboardForm3");
-		                break;
-		        }
+		    	listviewR = new ListView();
+		        listviewM = new ListView();
+		        
+		        listviewR.LoadFromID("lvboardForm3");
+		        listviewM.LoadFromID("lvboardForm");
+		        
+		        var selectR = listviewR.GetSelectedIndexes();
+		        var selectM = listviewM.GetSelectedIndexes();
+		        
+				if((val == "4") && (selectR != "") && (selectM == "")) {
+					alert("\"" + listviewR.GetSelectedRows()[0].cells[0].innerText + "\"" + " <spring:message code = 'ezCommunity.t342' />");
+				}
+				else {
+			        switch (val) {
+			            case 1:
+			                boardlistup("lvboardForm3");
+			                break;
+			            case 2:
+			                boardlistdown("lvboardForm3");
+			                break;
+			            case 3:
+			                adddeletelist("lvboardForm3", "lvboardForm");
+			                break;
+			            case 4:
+			                adddeletelist("lvboardForm", "lvboardForm3");
+			                break;
+			        }
+				}
 		    }
 
 		    function adddeletelist(dellist, addlist) {
