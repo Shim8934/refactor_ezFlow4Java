@@ -4884,9 +4884,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			for (int i=0; i<resultArray.size(); i++) {
 				JSONObject address = (JSONObject)resultArray.get(i);
 				String pCn = (String)address.get("cn");
-				pCn = pCn.substring(0, pCn.indexOf("@"));
+				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
 				isUser = (String)address.get("class");
 				String displayName = (String) address.get("displayName");
+				
+				if (domain.equals(pCnDomain)) {
+					pCn = pCn.substring(0, pCn.indexOf("@"));
+				} else {
+					isUser = "distributionSub";
+				}
 
 				logger.debug("pCn=" + pCn + ", isUser=" + isUser + ", displayName=" + displayName);
 				
@@ -4925,17 +4931,34 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						map.put("title", ""); // ""
 					}
 					list.add(map);
-				} else {
+				} else if (isUser.equals("user")) {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("displayName", user.getDisplayName());
-					map.put("mail", user.getMail());
-					map.put("company", user.getCompany());
-					map.put("dept", user.getDescription());
-					map.put("title", user.getTitle());
+					if (user != null) {
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("displayName", user.getDisplayName());
+						map.put("mail", user.getMail());
+						map.put("company", user.getCompany());
+						map.put("dept", user.getDescription());
+						map.put("title", user.getTitle());
+						
+						list.add(map);
+					}
 					
-					list.add(map);
+				} else {
+					MailDistributionVO distributionSubVO = ezEmailService
+						.getDistributionSub(cn, pCn, userInfo.getCompanyID(), userInfo.getTenantId());
+					
+					if (distributionSubVO != null) {
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("displayName", distributionSubVO.getName());
+						map.put("mail", distributionSubVO.getMail());
+						map.put("company", "");
+						map.put("dept", "");
+						map.put("title", "");
+						
+						list.add(map);
+					}
 				}
 				
 			}
