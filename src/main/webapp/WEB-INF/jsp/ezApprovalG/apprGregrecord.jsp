@@ -28,6 +28,7 @@
 	}
 </style>
 <script type="text/javascript" ID="clientEventHandlersJS">
+	var regRecordFlag = false;
     var g_VisualAudioFlag="0";
     var g_NodesRcdgAVType=null;
     var g_NodesPhotoAVType=null;
@@ -229,16 +230,22 @@
         return true;
     }
     function cmdConfirm_onclick() {
-        if (CheckInputField()) {
-            if (pDocID == "")
+            // 2018-10-01 중복 등록 버그 수정
+        if (regRecordFlag == false && CheckInputField()) {
+        	regRecordFlag = true;
+           
+        	if (pDocID == "")
                 pDocID = createNewDocID();
-
-            if (RegisterRecord()) {
-                rtnVal[0] = "TRUE";
-                
-                rtnVal[1] = g_szSCListXml;
-                window.opener.GetRecordList();
-                window.close();
+            
+            	var regRecordFlag2 = RegisterRecord();
+            	if(regRecordFlag2) {
+	                rtnVal[0] = "TRUE";
+	                
+	                rtnVal[1] = g_szSCListXml;
+	                window.opener.GetRecordList();
+	                window.close();
+            } else {
+            	alert("대장등록에 실패하였습니다.");
             }
         }
     }

@@ -618,7 +618,8 @@
         	</tr>
         	<tr>
             	<td style="vertical-align: top;">
-                	<h2><spring:message code='ezApprovalG.t232'/></h2>
+                 	<%-- <h2><spring:message code='ezApprovalG.t232'/></h2> --%>
+                	<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>
                 	<div class="box" style="overflow: auto; height: 320px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
             	</td>
             	<td style="width: 30px; text-align: center;">
@@ -630,10 +631,12 @@
             	<td style="vertical-align: top;">
             		<c:choose>
 						<c:when test="${approvalFlag == 'S' }">
-							<h2><spring:message code='ezApprovalG.t999932'/></h2>
+							<%-- <h2><spring:message code='ezApprovalG.t999932'/></h2> --%>
+							<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t999932'/></h2>
 						</c:when>
 						<c:otherwise>
-							<h2><spring:message code='ezApprovalG.t53'/></h2>
+							<%-- <h2><spring:message code='ezApprovalG.t53'/></h2> --%>
+							<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t53'/></h2>
 						</c:otherwise>
 					</c:choose>
                 	

@@ -1163,17 +1163,22 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
-      <![CDATA[
-        INSERT INTO
-          TBL_TASKCATEGORY
-            (CategoryCode,  Name,  Description,  OldFlag,  Name2, TENANT_ID, COMPANYID)
-          VALUES
-            (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng',#tenantID#, #companyID#),
-            (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng',#tenantID#, #companyID#),
-            (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng',#tenantID#, #companyID#),
-            (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng',#tenantID#, #companyID#),
-            (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng',#tenantID#, #companyID#)
-      ]]>
+	        INSERT INTO
+	          TBL_TASKCATEGORY
+	            (CategoryCode,  Name,  Description,  OldFlag,  Name2, TENANT_ID, COMPANYID)
+	          VALUES
+    	<isEqual property="PrimaryLang" compareValue="1" > 
+	      <![CDATA[
+	            (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng',#tenantID#, #companyID#),
+	            (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng',#tenantID#, #companyID#),
+	            (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng',#tenantID#, #companyID#),
+	            (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng',#tenantID#, #companyID#),
+	            (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng',#tenantID#, #companyID#)
+	      ]]>
+	     </isEqual>
+	     <isNotEqual property="PrimaryLang" compareValue="1" >
+            (N'ZZ000001', N'共通', N'共通', NULL, N'COMMON',#tenantID#, #companyID#)
+	     </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I7" parameterClass="Map">
@@ -1187,13 +1192,16 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I8" parameterClass="Map">
-      <![CDATA[
-        INSERT INTO
-          TBL_FormContainer  
-            (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID)
-        VALUES
-            (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003',#tenantID#, #companyID#)
-      ]]>
+	        INSERT INTO
+	          TBL_FormContainer  
+	            (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID)
+	        VALUES
+    	<isEqual property="PrimaryLang" compareValue="1" > 
+	            (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003',#tenantID#, #companyID#)
+	     </isEqual>
+	     <isNotEqual property="PrimaryLang" compareValue="1" >
+            (N'2004000001', N'共通', N'ALL', N'ROOT', N'共通', N'DEPT003',#tenantID#, #companyID#)
+	     </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I9" parameterClass="Map">
@@ -1249,20 +1257,25 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I11" parameterClass="Map">
-      <![CDATA[
          INSERT INTO
             TBL_TASKMIDDLECATEGORY
               (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, TENANT_ID, COMPANYID) 
          VALUES
-              (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng',#tenantID#, #companyID#),
-              (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
-              (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
-              (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng',#tenantID#, #companyID#),
-              (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng',#tenantID#, #companyID#),
-              (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
-              (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
-              (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng',#tenantID#, #companyID#)
-      ]]>
+     	<isEqual property="PrimaryLang" compareValue="1" > 
+	      <![CDATA[
+	              (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng',#tenantID#, #companyID#),
+	              (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
+	              (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
+	              (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng',#tenantID#, #companyID#),
+	              (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng',#tenantID#, #companyID#),
+	              (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
+	              (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
+	              (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng',#tenantID#, #companyID#)
+	      ]]>
+	     </isEqual>
+	     <isNotEqual property="PrimaryLang" compareValue="1" >
+	     	(N'aa000001', N'', N'共通', N'ZZ000001', NULL, N'COMMON',#tenantID#, #companyID#)
+	     </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I12" parameterClass="Map">

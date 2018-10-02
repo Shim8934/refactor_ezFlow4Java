@@ -110,7 +110,7 @@
 					if (gubun == "2") {
 						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
 					} else {
-						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
+						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
 					}
 
 					listXML += "<td class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
@@ -720,11 +720,12 @@
 					refresh_onclick();
 				}
 			}
-
-			function MemberInfo_onclick(pUserID) {
+			
+			/* 2018-10-02 홍승비 - 커뮤니티 게시물 리스트 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+			function MemberInfo_onclick(pUserID, pDeptID) {
 			    var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 			    feature = feature + GetOpenPosition(420, 438);
-			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 			}
 
 			document.onselectstart = function () {
