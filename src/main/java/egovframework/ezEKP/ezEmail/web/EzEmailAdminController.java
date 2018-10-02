@@ -336,15 +336,6 @@ public class EzEmailAdminController {
 					}
 				}
 				
-				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
-				
-				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-				if (!companyDomainName.isEmpty()) {
-					String email = id + "@" + companyDomainName;
-					
-					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-				}
-				
 				//공용배포그룹 맴버가 조직도 or 공용그룹인 경우
 				if (memberIdList.getLength() > 0) {
 					inputParams = "companyId="
@@ -357,6 +348,15 @@ public class EzEmailAdminController {
 						inputParams += "&memberId="
 								+ URLEncoder.encode(memberIdList.item(i)
 										.getTextContent(), "UTF-8");
+					}
+					
+					String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+					
+					// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+					if (!companyDomainName.isEmpty()) {
+						String email = id + "@" + companyDomainName;
+						
+						inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
 					}
 					
 					logger.debug("inputParams=" + inputParams);
@@ -489,13 +489,22 @@ public class EzEmailAdminController {
 										.getTextContent(), "UTF-8");
 					}
 					
-					logger.debug("inputParams=" + inputParams);
+					String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+				
+					// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+					if (!companyDomainName.isEmpty()) {
+						String email = id + "@" + companyDomainName;
+						
+						inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+					}
 					
+					logger.debug("inputParams=" + inputParams);
+	
 					requestURL = config.getProperty("config.JGwServerURL")
 							+ "/jMochaAccess/updateDistributionList";
 					response = ezEmailUtil.getWebServiceResult(requestURL,
 							inputParams);
-					
+	
 					logger.debug("response=" + response);
 				}
 				
@@ -565,24 +574,6 @@ public class EzEmailAdminController {
 					
 					logger.debug("response=" + response);
 				}
-
-				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
-				
-				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-				if (!companyDomainName.isEmpty()) {
-					String email = id + "@" + companyDomainName;
-					
-					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-				}
-				
-				logger.debug("inputParams=" + inputParams);
-
-				requestURL = config.getProperty("config.JGwServerURL")
-						+ "/jMochaAccess/updateDistributionList";
-				response = ezEmailUtil.getWebServiceResult(requestURL,
-						inputParams);
-
-				logger.debug("response=" + response);
 
 				if (response != null) {
 					JSONParser jsonParser = new JSONParser();
