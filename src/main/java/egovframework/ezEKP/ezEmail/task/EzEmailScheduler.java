@@ -989,7 +989,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		public boolean accept(File dir, String name) {
 			if (name != null && dir.isDirectory()) {
 				if (NumberUtils.isNumber(name)) {
-					return EgovDateUtil.getDaysDiff(name, today) >= bigSizeMailAttachDelDay;
+					return EgovDateUtil.getDaysDiff(name, today) > bigSizeMailAttachDelDay;
 				}
 			}
 			return false;
