@@ -6,7 +6,7 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js?ver=20180828150036"></script>
 <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js?ver=20180828150036"></script>
-<link rel="stylesheet" href="${util.addVer('/css/ezWorkspace.css')}" type="text/css" />
+<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 </c:if>
 <!DOCTYPE html>
 <html>
@@ -26,8 +26,7 @@
 		</script>
 		<c:if test="${hasWorkspace == true}">
 		<script type="text/javascript">
-		    //var g_UserID = "${userID}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-		    var g_UserID = 'jongp'
+		    var g_UserID = "${userID}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
 		    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
 		    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 		    var feedListCount = 10;
@@ -40,34 +39,24 @@
 	<body>
 		<c:choose>
 			<c:when test="${hasWorkspace == true}">
-			<div class="layDIV">
-				<section class="section3">
-					<article class="collaborateBox">
-						<div class="collaborate_tab">
-							<p class="collaborate_tabTitle">협업</p>
-							<ul class="collaborate_tabList" id="divSpaceListResults" style="overflow-y: auto; height: 278px;">
-							<%--   내가 속한 SPACE 리스트 화면--%>
-							</ul>
-						</div>
-						<div class="collaborate_list">
-							<div class="title">
-								<dl class="collaborate_listTab">
-									<dt onclick="workspaceChangeTab('newsTab')" id="newsTab" class="on"><span>뉴스피드</span></dt>
-									<dt onclick="workspaceChangeTab('taskTab')" id="taskTab"><span>할일</span></dt>
-									<dt onclick="workspaceChangeTab('documentTab')" id="documentTab"><span>문서</span></dt>
-									<dt onclick="workspaceChangeTab('issueTab')" id="issueTab"><span>이슈</span></dt>
-									<dd onclick="workspacemore()"><img src="/images/kr/main/btn_more03.png" alt="더보기" /></dd>
-								</dl>
-							</div>
-							<div class="collaboratecont">
-								<ul class="listtype_txt" id="divNewsfeedResults">
-								<%--PostType에 따른 리스트 화면--%>
-								</ul>
-							</div>
-						</div>		
-					</article>
-				</section>
-			</div>
+		    <div class="layDIV">
+		        <dl class="portlet_title">
+		            <dt class="portletText">협업</dt>
+		            <dd class="portletPlus" onclick="workspacemore()"><img src="/images/kr/main/portlet_Plus.png"></dd>
+		        </dl>          
+		        <ul class="collaborate_tab" id="divSpaceListResults" style="overflow-y: auto; height: 204px;">
+		        </ul>
+		        <div class="collaborate_list">
+		            <dl class="collaborate_listTab">
+		                <dt onClick="workspaceChangeTab('newsTab')" id="newsTab" class="on">뉴스피드</dt>
+		                <dt onClick="workspaceChangeTab('taskTab')" id="taskTab">할일</dt>
+		                <dt onClick="workspaceChangeTab('documentTab')" id="documentTab">문서</dt>
+		                <dt onClick="workspaceChangeTab('issueTab')" id="issueTab">이슈</dt>
+		            </dl>            
+		            <ul class="listtype_txt" id="divNewsfeedResults">
+		            </ul>            	
+		        </div>
+		    </div>   			
 			</c:when>
 			<c:otherwise>
 				<div class="layDIV">
