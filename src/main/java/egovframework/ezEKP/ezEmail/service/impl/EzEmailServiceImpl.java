@@ -2130,7 +2130,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Override
 	public List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception {
-		logger.debug("getDistributioIncludednList started.");
+		logger.debug("getDistributioUpperList started.");
 		logger.debug("userName = " + userName + ",tenantId=" + tenantId);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -2139,7 +2139,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributioIncludednList";			
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributioIncludedList";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 		logger.debug("response=" + response);
 		
@@ -2184,7 +2184,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			}
 		}						
 		
-		logger.debug("getDistributioIncludednList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug("getDistributioUpperList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		logger.debug(distributionList.toString());
 		
 		return distributionList;

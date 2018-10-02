@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,9 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tomcat.jni.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -33,7 +30,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
@@ -52,9 +48,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -181,12 +175,33 @@ public class EzEmailAdminController {
 			
 			if (cn != null && !cn.equals("null") && !cn.isEmpty()) {
 				//cn을 포함하는 공용배포그룹
-				List<MailDistributionVO> distributionSearchList = ezEmailService
+				List<MailDistributionVO> distributionUpperList = ezEmailService
 						.getDistributioUpperList(cn, auth.getTenantId());
 				
-				for (MailDistributionVO vo : distributionSearchList) {
-					distributionTotalList.remove(vo);
+				//공용배포그룹 전체 리스트에서 자기 자신 제외
+				for (int i = 0; i < distributionTotalList.size(); i++) {
+					String totalId = distributionTotalList.get(i).getId();
+					
+					if (totalId.equals(cn)) {
+						distributionTotalList.remove(i);
+					}
+					
 				}
+				
+				//공용배포그룹에서 자기를 포함하는 공용배포그룹 제외
+				for (int i = 0; i < distributionTotalList.size(); i++) {
+					String totalId = distributionTotalList.get(i).getId();
+					
+					for (int j = 0; j < distributionUpperList.size(); j++) {
+						String upperId = distributionUpperList.get(j).getId();
+						
+						if (totalId.equals(upperId)) {
+							distributionTotalList.remove(i);
+						}
+						
+					}
+				}
+				
 			}
 			
 			StringBuilder sb = new StringBuilder();
@@ -292,9 +307,8 @@ public class EzEmailAdminController {
 		NodeList directNameList = doc.getElementsByTagName("DIRECTNAME");
 
 		int tenantID = auth.getTenantId();
-
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-
+		
 		int reasonCode = -100;
 		String result = "ERROR";
 		String bizmekaResult = "ERROR";
@@ -552,7 +566,8 @@ public class EzEmailAdminController {
 				//공용배포그룹 맴버가 주소록 or 직접입력인 경우
 				if (addressTypeList.getLength() > 0 || directMailList.getLength() > 0){
 					inputParams = "companyId="
-							+ URLEncoder.encode(companyId, "UTF-8") + "&name="
+							+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
+							+ URLEncoder.encode(cn, "UTF-8") + "&name="
 							+ URLEncoder.encode(name, "UTF-8") + "&id="
 							+ URLEncoder.encode(id, "UTF-8") + "&domain="
 							+ URLEncoder.encode(domain, "UTF-8");
