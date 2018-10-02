@@ -332,6 +332,9 @@
 					}
 				} else if (objThis.id == "ModInfo") {
 					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
+				} else if (objThis.id == "Workspace") {
+					window.open("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main");
+					//OpenWindow(event, "http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main", "")
 				} else {
 					ifrw.topMenuToggle(objThis.id);
 				}
@@ -1088,7 +1091,15 @@
                     <dd class="iconText"><spring:message code="ezCircular.t1" /></dd>
                     <dd class="iconCount_none" id="circularCnt">0</dd>
                 </dl>
-                </c:if>                    
+                </c:if>    
+                <!-- 협업 추가 --> 
+            	<c:if test="${hasWorkspace == true}">
+                <dl id="Workspace" onClick="btnSumming_click(this)"> 
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon04.png"></dt>
+                    <dd class="iconText">협업</dd>
+                    <dd class="iconCount_none" id="workspaceCnt">0</dd>
+                </dl>
+                </c:if>                                  
             </div>    
         </article>
         <article class="birthday">
@@ -1130,4 +1141,63 @@
             </dl>
         </article>
 	</body>
+	<!-- 협업 연동 script -->
+	<c:if test="${hasWorkspace == true }">
+	    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js?ver=20180828150036"></script>
+	    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js?ver=20180828150036"></script>
+	    <script type="text/javascript">
+		    //var g_UserID = "${userInfo.id}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
+		    var g_UserID = 'jongp';
+		    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
+		    var feedListCount = 10;
+		    var g_bRayful = false;
+		    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
+		    
+		    //협업 카운트
+		    if (typeof (GetWorkspaceUserActLogCount) === "function") {
+		        GetWorkspaceUserActLogCount("workspaceCnt", 1);
+		    }
+		    
+		    var checkBrowser = function () {
+		    	var agent = navigator.userAgent.toLowerCase();
+		    	
+		    	if(agent.indexOf('msie') !== -1) {
+		    		return false;
+		    	} else {
+		    		return true;
+		    	}
+		    };
+		    
+			// ie 10일 경우는 다르게 해야겠음.		
+		    if(!checkBrowser()) {
+		    	console.log('in the bind Function.');
+				$("#workspaceCnt").bind("DOMSubtreeModified", function() {
+			    	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
+			    	if(workspaceCnt > 0) {
+		 		    	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
+				    	document.getElementById("workspaceCnt").classList.add('iconCount');
+				    }
+			    });		    	
+		    } else {
+		    	console.log('in the MutationObserver.');
+			    var target = document.getElementById('workspaceCnt');
+			    
+				var observer = new MutationObserver(function(mutations) {
+					mutations.forEach(function(mutation) {
+	  			    var workspaceCnt = mutation.target.innerHTML * 1;
+			    	if(workspaceCnt > 0) {
+		 		    	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
+				    	document.getElementById("workspaceCnt").classList.add('iconCount');
+			    	}
+			    	observer.disconnect();
+				  });    
+				});
+				
+				var config = { attributes: true, childList: true, characterData: true };
+				observer.observe(target, config);		    	
+		    }
+
+			</script>		
+	</c:if>	
 </html>

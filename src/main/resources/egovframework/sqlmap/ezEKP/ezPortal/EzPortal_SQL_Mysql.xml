@@ -2519,6 +2519,18 @@
 		]]>
 	</update>
 	
+	<select id="EzPortalDAO.getWorkspaceUID" parameterClass="Map" resultClass="String">
+		SELECT 
+			UID_ 
+        FROM 
+        	tbl_menuitem_items_menuitems
+		WHERE 
+			tenant_id = #tenantID#
+		AND 
+			linkUrl LIKE '%workspace%'
+		LIMIT 1	
+	</select>
+	
 	<select id="EzPortalDAO.getMainMenuItemUID" parameterClass="Map" resultClass="String">
 		select
 			b.UID_

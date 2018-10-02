@@ -1160,7 +1160,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 
 		logger.debug("getAccessList ended");
-		
 		return ret;
 	}
 	
@@ -2252,7 +2251,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		sb.append(sbSubMain.toString());
 		sb.append(sbSubSub.toString());
 		sb.append("</ul></div></nav></li></ul></li></ul></header></div>\n");
-
+logger.debug("sbSubMain.toString() : " + sbSubMain.toString());
+logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		logger.debug("getMainMenuHTML ended");
         
 		return sb.toString();
@@ -3874,6 +3874,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("ezCkAdminACL ended");
 		
 		return "OK";
+	}
+	
+	public String getWorkspaceUID(int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		
+		return ezPortalDAO.getWorkspaceUID(map);
 	}
 
 	@Override

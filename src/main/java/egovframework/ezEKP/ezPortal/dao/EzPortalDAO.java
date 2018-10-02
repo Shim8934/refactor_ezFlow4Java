@@ -484,6 +484,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		update("EzPortalDAO.ezCkAdminACL2_U1", map);
 	}
 	
+	public String getWorkspaceUID(Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getWorkspaceUID", map);
+	}
+	
 	public String getMainMenuItemUID(Map<String, Object>map) {
 		return (String) select("EzPortalDAO.getMainMenuItemUID", map);
 	}

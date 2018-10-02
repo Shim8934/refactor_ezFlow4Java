@@ -1235,6 +1235,16 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
 		model.addAttribute("use_attitude", use_attitude);
 		
+		/**
+		 * 협업 메뉴가 존재할 경우 통계 화면 대신 협업 포틀릿 호출
+		 * */
+		//String accessList = ezPortalService.getAccessList(userInfo);
+		logger.debug("accessList: " + accessID);
+		String workspaceUID = ezPortalService.getWorkspaceUID(userInfo.getTenantId());
+		Boolean hasWorkspace = ezPortalService.checkViewRightBln(workspaceUID, accessID, userInfo.getTenantId());
+		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());		
+		model.addAttribute("hasWorkspace", hasWorkspace);
+		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
 	}
@@ -1715,57 +1725,71 @@ public class EzPortalController extends EgovFileMngUtil {
 		int dMaxCount = 0;
 		int sMaxCount = 0;
 		
-		Calendar cal = Calendar.getInstance();
-		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
-		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		/**
+		 * 협업 메뉴가 존재할 경우 통계 화면 대신 협업 포틀릿 호출
+		 * */
+		String accessList = ezPortalService.getAccessList(userInfo);
+		logger.debug("accessList: " + accessList);
+		String workspaceUID = ezPortalService.getWorkspaceUID(userInfo.getTenantId());
+		Boolean hasWorkspace = ezPortalService.checkViewRightBln(workspaceUID, accessList, userInfo.getTenantId());
+		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());
 		
-		if (startDate != null && startDate.split("-")[1].equals("0")) {
-			startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
-		}
-		
-		if (endDate != null && endDate.split("-")[1].equals("0")) {
-			endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
-		}
-		
-		logger.debug("startDate="+startDate+", endDate="+endDate);
-		
-		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
-		String dMax = "1";
-		
-		if (list.size() > 0) {
-			for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
-				dMax = dMax + "0";
+		if(!hasWorkspace) {
+			Calendar cal = Calendar.getInstance();
+			String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
+			String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+			
+			if (startDate != null && startDate.split("-")[1].equals("0")) {
+				startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
 			}
 			
-			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
-			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			if (endDate != null && endDate.split("-")[1].equals("0")) {
+				endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
+			}
 			
-			for (int i=0; i<list.size(); i++) {
-				if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
-					sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+			logger.debug("startDate="+startDate+", endDate="+endDate);
+			
+			List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			String dMax = "1";
+			
+			if (list.size() > 0) {
+				for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
+					dMax = dMax + "0";
 				}
-			}
-			dMaxCount = dMaxCount + sMaxCount;
-			
-			logger.debug("listSize="+list.size());
-			for (int i=0; i<list.size(); i++) {
-				logger.debug("draftCount="+list.get(i).getDraftCount());
-				logger.debug("susinCount="+list.get(i).getSusinCount());
-				float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
-				float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
 				
-				list.get(i).setDraftCount((int)(draftPercent));
-				list.get(i).setSusinCount((int)(susinPercent));
+				dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+				sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+				
+				for (int i=0; i<list.size(); i++) {
+					if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
+						sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+					}
+				}
+				dMaxCount = dMaxCount + sMaxCount;
+				
+				logger.debug("listSize="+list.size());
+				for (int i=0; i<list.size(); i++) {
+					logger.debug("draftCount="+list.get(i).getDraftCount());
+					logger.debug("susinCount="+list.get(i).getSusinCount());
+					float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
+					float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
+					
+					list.get(i).setDraftCount((int)(draftPercent));
+					list.get(i).setSusinCount((int)(susinPercent));
+				}
+			} else {
+				dMax = "0";
+				dMaxCount = 0;
 			}
+			logger.debug("dMaxCount="+dMaxCount);
+			
+			model.addAttribute("dMaxCount", dMaxCount);
+			model.addAttribute("list", list);
 		} else {
-			dMax = "0";
-			dMaxCount = 0;
+			model.addAttribute("userID", userInfo.getId());
 		}
-		logger.debug("dMaxCount="+dMaxCount);
-		
-		model.addAttribute("dMaxCount", dMaxCount);
-		model.addAttribute("list", list);
+		model.addAttribute("hasWorkspace", hasWorkspace);
 
 		logger.debug("wpNewGraph ended");
 		return "/ezPortal/portalWpNewGraph";

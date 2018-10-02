@@ -2,6 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:if test="${hasWorkspace == true}">
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js?ver=20180828150036"></script>
+<script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js?ver=20180828150036"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezWorkspace.css')}" type="text/css" />
+</c:if>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -18,9 +24,105 @@
 	        	}
 	    	}
 		</script>
+		<c:if test="${hasWorkspace == true}">
+		<script type="text/javascript">
+		    //var g_UserID = "${userID}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
+		    var g_UserID = 'jongp'
+		    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
+		    var feedListCount = 10;
+		    var g_bRayful = false;
+		    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)		
+		    var g_ParentHref = true // location.href를 parent 윈도우의 경로를 이동시킬지 여부 (true: parent 윈도우를 통해 이동)
+		</script>
+		</c:if>
 	</head>
 	<body>
-		<div class="layDIV">
+		<c:choose>
+			<c:when test="${hasWorkspace == true}">
+			<div class="layDIV">
+				<section class="section3">
+					<article class="collaborateBox">
+						<div class="collaborate_tab">
+							<p class="collaborate_tabTitle">협업</p>
+							<ul class="collaborate_tabList" id="divSpaceListResults" style="overflow-y: auto; height: 278px;">
+							<%--   내가 속한 SPACE 리스트 화면--%>
+							</ul>
+						</div>
+						<div class="collaborate_list">
+							<div class="title">
+								<dl class="collaborate_listTab">
+									<dt onclick="workspaceChangeTab('newsTab')" id="newsTab" class="on"><span>뉴스피드</span></dt>
+									<dt onclick="workspaceChangeTab('taskTab')" id="taskTab"><span>할일</span></dt>
+									<dt onclick="workspaceChangeTab('documentTab')" id="documentTab"><span>문서</span></dt>
+									<dt onclick="workspaceChangeTab('issueTab')" id="issueTab"><span>이슈</span></dt>
+									<dd onclick="workspacemore()"><img src="/images/kr/main/btn_more03.png" alt="더보기" /></dd>
+								</dl>
+							</div>
+							<div class="collaboratecont">
+								<ul class="listtype_txt" id="divNewsfeedResults">
+								<%--PostType에 따른 리스트 화면--%>
+								</ul>
+							</div>
+						</div>		
+					</article>
+				</section>
+			</div>
+			</c:when>
+			<c:otherwise>
+				<div class="layDIV">
+			    	<dl class="portlet_title">
+			            <dt class="portletText"><spring:message code='main.t00002' /></dt>
+			            <dd class="portletPlus"></dd>
+			        </dl>
+			        <c:choose>
+						<c:when test="${not empty list}">
+		      				<div class="v_graph">       					
+		        				<ul>
+					               	<%-- <c:forEach var="item" items="${list}">
+				                		<li>
+											<span class="g_term">${item.displayName}</span>
+					                   		<span class="g_bar1" style="height:${item.draftCount}%"></span>
+					                   		<span class="g_bar2" style="height:${item.susinCount}%"></span>
+										</li> 
+					            	</c:forEach> --%>
+					            	<c:forEach var="item" begin="0" end="4" items="${list}" varStatus="i">
+					             		<li>
+											<span class="g_term">${item.displayName}</span>
+					                   		<span class="g_bar1" style="height:${item.draftCount}%"></span>
+					                   		<span class="g_bar2" style="height:${item.susinCount}%"></span>
+										</li> 
+									</c:forEach>
+				             		<c:if test="${fn:length(list) < 5 }">
+				             			<c:forEach begin="0" end="${4 - fn:length(list)}">
+				             				<li>
+												<span class="g_term"></span>
+						                   		<span class="g_bar1"></span>
+						                   		<span class="g_bar2"></span>
+											</li> 
+				             			</c:forEach>
+				             		</c:if>
+		        				</ul>
+		        			</div>	
+		      			</c:when>
+		      			<c:otherwise>
+		      				<div class="v_graph">       					
+		        				<ul>
+					               	<c:forEach var="item" begin="0" end="4">
+				                		<li>
+											<span class="g_term"></span>
+					                   		<span class="g_bar1"></span>
+					                   		<span class="g_bar2"></span>
+										</li> 
+					            	</c:forEach>
+		        				</ul>
+		        			</div>	
+		      			</c:otherwise>
+		      		</c:choose>			
+				</div>			
+			</c:otherwise>
+		</c:choose>
+<%-- 		<div class="layDIV">
 	    	<dl class="portlet_title">
 	            <dt class="portletText"><spring:message code='main.t00002' /></dt>
 	            <dd class="portletPlus"></dd>
@@ -29,13 +131,13 @@
 				<c:when test="${not empty list}">
       				<div class="v_graph">       					
         				<ul>
-			               	<%-- <c:forEach var="item" items="${list}">
+			               	<c:forEach var="item" items="${list}">
 		                		<li>
 									<span class="g_term">${item.displayName}</span>
 			                   		<span class="g_bar1" style="height:${item.draftCount}%"></span>
 			                   		<span class="g_bar2" style="height:${item.susinCount}%"></span>
 								</li> 
-			            	</c:forEach> --%>
+			            	</c:forEach>
 			            	<c:forEach var="item" begin="0" end="4" items="${list}" varStatus="i">
 			             		<li>
 									<span class="g_term">${item.displayName}</span>
@@ -69,7 +171,7 @@
         			</div>	
       			</c:otherwise>
       		</c:choose>			
-		</div>
+		</div> --%>
 		
 		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
 		<%-- <section  class="body_bg1">
