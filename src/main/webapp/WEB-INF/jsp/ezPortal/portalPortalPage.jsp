@@ -23,7 +23,7 @@
 		</c:choose>
 		
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -31,7 +31,7 @@
 		<script type="text/javascript">
 			var xmlhttp;
 			var QuickcurNum = 0;
-			var QuickBlockNum = 8;
+			var QuickBlockNum = 5;
 			var selectedCell = "";
 			var selectedSubCell = "";
 			var previousSubCell = null;
@@ -50,7 +50,8 @@
 			var g_ClassID = "${classID}";
 			var g_ClassName = "${className}";
 			var g_UserID = "${userInfo.id}";
-			var g_UserName = "${userInfo.displayName}";				
+			var g_UserName = "${userInfo.displayName}";
+			var g_UserDeptID = "${userInfo.deptID}";	
 			var MyPortalPageID = "${myPortalPageID}"; //
 			var g_BaseType = "${baseType}";  	  // 초기화 버튼 활성화 유무
 			var g_CompanyID = "${userInfo.companyID}";
@@ -167,6 +168,210 @@
 					}
 				}
 			}
+			
+		    function btnWrite_onclick(objThis) {
+		        switch (objThis.id) {
+		            case "mailwrite":
+		                new_mail_onclick();
+		                break;
+
+		            case "approvalwrite":
+		                openForm();
+		                break;
+
+		            case "schedulewrite":
+	                    var wWeight = "790";
+	                    var wHeight = "830";
+
+	                    var heigth = window.screen.availHeight;
+	                    var width = window.screen.availWidth;
+
+	                    var left = (width - wWeight) / 2;
+	                    var top = (heigth - wHeight) / 2;
+	                    
+	                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	                    
+		                break;
+
+		            case "addresswrite":
+		                var wWeight = "600";
+		                var wHeight = "500";
+
+		                var heigth = window.screen.availHeight;
+		                var width = window.screen.availWidth;
+
+		                var left = (width - wWeight) / 2;
+		                var top = (heigth - wHeight) / 2;
+		                window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent("jongp1") + "&folderid=&foldertype=", "",
+		                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                break;
+
+		            case "resourcewrite":
+		                if (CrossYN()) {
+		                    var url = "/ezResource/scheduleAddSelect.do";
+
+		                    schedule_add_select_cross_dialogArguments[0] = "";
+		                    schedule_add_select_cross_dialogArguments[1] = btnWrite_onclick_Complete;
+		                    var Schedule_Add_Select_Cross = GetOpenWindow(url, "Schedule_Add_Select_Cross", 552, 435);
+		                    try { Schedule_Add_Select_Cross.focus(); } catch (e) {
+		                    }
+		                } else {
+		                    var url = "/ezResource/scheduleAddSelect.do";
+		                    var feature = "status:no;dialogWidth:552px;dialogHeight:430px;help:no;scroll:no;edge:sunken";
+		                    feature = feature + GetShowModalPosition(552, 422);
+		                    var ret = window.showModalDialog(url, "", feature);
+
+		                    if (ret != undefined && ret[0][0] != undefined) {
+		                        url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
+		                        feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
+		                        feature = feature + GetShowModalPosition(700, 700);
+		                        window.showModalDialog(url, ret, feature);
+		                    }
+		                }
+		                break;
+
+		            case "boardwrite":
+		                var wWeight = "460";
+		                var wHeight = "600";
+
+		                var heigth = window.screen.availHeight;
+		                var width = window.screen.availWidth;
+
+		                var left = (width - wWeight) / 2;
+		                var top = (heigth - wHeight) / 2;
+		                window.open("/ezBoard/writeBoardSelect.do", "",
+		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                break;
+		        }
+		    }	    
+		    
+		    function new_mail_onclick() {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        
+		        if (conWidth > 890)
+		            conWidth = 890;
+		        
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+
+                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		    } 
+		    
+		    var formURL = "";
+		    var formDocType = "";
+		    var getformcont_cross_dialogArguments = new Array();
+		    var url = "";		    
+		    
+		    function openForm() {
+		        var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+
+		        if ("YES" == ("YES")) {
+		            url = "/ezApprovalG/getFormCont.do";
+		        } else {
+		            url = "/ezApproval/getFormCont.do";
+		        }
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+		    }	
+		    
+		    function openForm_Complete(ret) {
+		        formURL = ret[0];
+		        formDocType = ret[1];
+
+		        if (formURL != "cancel") {
+		            openDraftUI();
+		        }
+		    }
+
+		    function openDraftUI() {
+		        var pArgument = new Array();
+		        var gb = "";
+		        
+		        if ("YES" == ("YES"))
+		            gb = "G";
+		        
+	        	pArgument[0] = "jongp";
+	            pArgument[1] = formURL;
+	            pArgument[2] = "DRAFT";
+	            pArgument[3] = formDocType;
+	            pArgument[4] = "0"
+	            pArgument[5] = ""
+	            pArgument[6] = ""
+	            pArgument[7] = "";
+
+	            var openLocation = "";
+	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                if (!isIE()) {
+	                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+	                    return;
+	                } else {
+	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
+	                }
+	            } else {
+	                var openLocation = "/ezApprovalG/draftui.do";
+	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+                
+	            openwindow(openLocation, "", 890, 620);
+	        }
+
+		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+		        try {
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+
+		            var left = 0;
+		            var top = 0;
+
+		            if (window.screen.width > 800) {
+		                var pleftpos;
+
+		                pleftpos = parseInt(width) - 967;
+		                heigth = parseInt(heigth) - 30;
+		                width = parseInt(width) - pleftpos;
+
+		                left = pleftpos / 2;
+		            } else {
+
+		                heigth = parseInt(heigth) - 30;
+		                width = parseInt(width) - 10;
+		            }
+		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+
+		        } catch (e) {}
+		    }		    
+					 
+			
+ 			function openQuickMenu(id) {
+				if(id === 'organ') {
+					window.open("/ezPersonal/personSearch.do", "", GetOpenWindowfeature(750, 550));
+				}
+					
+			}
 
 		    function QuickLinkCheck() {
 		        var xmlpara = createXmlDom();
@@ -174,36 +379,52 @@
 
 		        xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do", true);
+		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do?page="+QuickcurNum * QuickBlockNum, true);
 		        xmlhttp.onreadystatechange = event_GetQuickLink;
 		        xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 		        xmlhttp.send(xmlpara);
 		    }
 		    
+		    var listSize = 0;
+		    
 		    function event_GetQuickLink() {
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
 		            if (xmlhttp.statusText == "OK") {
+		            	document.getElementById("QuickUl").innerHTML = "";
+		            	
 		                var xmldomNode = SelectNodes(xmlhttp.responseXML, "DATA/ROW");
 		                
+		                if (xmldomNode.length > 0) {
+		                	var sizeNode = SelectNodes(xmlhttp.responseXML, "DATA/SIZE");
+		                	listSize = SelectSingleNodeValue(sizeNode[0], "PAGE");
+		                	
+		                	if (listSize > (QuickcurNum+1) * 5) {
+		                		$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn.png' />");
+		                	}
+		                }
+             
 		                for (i = 0; i < xmldomNode.length; i++) {
 		                    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
 		                    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
 
 		                    var _li = document.createElement("li");
-		                    _li.style.display = "none";
+		                    _li.className = "linkText";
 		                    
 		                    if (trim_Cross(URL) != "") {
 		                        _li.onclick = new Function("openURL('" + URL + "', '"+ SIZE +"');");
 		                    }
 		                    
-		                    var _span1 = document.createElement("span");
+		                    var QuickLang = lang == "1" ? "" : lang;
+		                    
+		                    _li.innerHTML = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
+/* 		                    var _span1 = document.createElement("span");
 		                    _span1.className = "icon";
 
 		                    var linktype = SelectSingleNodeValue(xmldomNode[i], "LINKTYPE");
-		                    _span1.innerHTML = "<img src=\"" + SelectSingleNodeValue(xmldomNode[i], "LINKTYPEURL") + "\" >";
+		                    _span1.innerHTML = "<img src=\"" + SelectSingleNodeValue(xmldomNode[i], "LINKTYPEURL") + "\" >"; */
 		                                                
 
-		                    var _span2 = document.createElement("span");
+		                    /* var _span2 = document.createElement("span");
 		                    _span2.className = "txt";
 		                    var QuickLang = lang == "1" ? "" : lang;
 		                    
@@ -213,35 +434,45 @@
                                 _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang); 
                             
 		                    _li.appendChild(_span1);
-		                    _li.appendChild(_span2);
+		                    _li.appendChild(_span2); */
 		                    
 		                    document.getElementById("QuickUl").appendChild(_li);
 
-		                    if (i < QuickBlockNum) {
+		                    /* if (i < QuickBlockNum) {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'block';
 		                    } else {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'none';
-		                    }
+		                    } */
 		                }
 		            }
 		        }
 		    }
 		    
 		    function QuickMove(value) {
-		        var totalcnt = document.getElementById('QuickUl').getElementsByTagName('li').length;
-		        
-		        if (value == "DOWN") {
-		            if (totalcnt > QuickcurNum + QuickBlockNum) {
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum].style.display = "none";
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum + QuickBlockNum].style.display = "block";
-		                QuickcurNum++;
-		            }
+		        if (value == "1") {
+		        	if (QuickcurNum != 0) {
+		        		QuickcurNum--;
+		        		QuickLinkCheck();
+		        		
+		        		if (QuickcurNum > 0) {
+		        			$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn.png' />");	                		
+	                	} else if (QuickcurNum == 0) {
+	                		$("#preBtn").html("<img src='/images/kr/main/link_preBtn_dis.png' />");
+	                	}
+		        	}
 		        } else {
-		            if (QuickcurNum > 0) {
-		                QuickcurNum--;
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum].style.display = "block";
-		                document.getElementById('QuickUl').getElementsByTagName('li')[QuickcurNum + QuickBlockNum].style.display = "none";
-		            }
+		        	if (listSize <= (QuickcurNum+1) * 5) {
+		        		return;
+		        	}
+		        	QuickcurNum++;
+		        	QuickLinkCheck();
+		        	
+		        	if (QuickcurNum > 0) {
+		        		$("#preBtn").html("<img src='/images/kr/main/link_preBtn.png' />");
+		        	}
+		        	if (listSize < (QuickcurNum+1) * 5) {
+                		$("#nextBtn").html("<img src='/images/kr/main/link_nextBtn_dis.png' />");
+                	}
 		        }
 		    }
 		    
@@ -1621,6 +1852,29 @@
 			        OpenFlag = false;
 			    }
 			}
+			
+			function leftResize() {
+				var wwh = $('.section_main').prop("scrollHeight") + 30;
+				$(".section_left").css("height", wwh +"px");
+			}
+			
+			window.onresize = function() {
+				leftResize();
+			}
+			
+			function viewQuick() {
+       			if (document.getElementById("quickSide").style.width == "0px") {
+       				$(document.getElementById("quickSide")).animate({width: '100px'});
+       				$(".linkBtn_close").animate({right: '82px'}, function(){
+       					$(".linkBtn_close").attr("class", "linkBtn_open");
+       				});
+       			} else {
+       				$(document.getElementById("quickSide")).animate({width: '0px'});
+       				$(".linkBtn_open").animate({right: '3px'}, function(){
+       					$(".linkBtn_open").attr("class", "linkBtn_close");
+       				});
+       			}
+       		}
 		</script>
 	</head>
 	
@@ -1756,7 +2010,7 @@
 	</c:choose>		
 	
 	<c:if test="${mode == 'view'}">
-		<aside style="position:fixed;">
+		<aside style="position:fixed;display:none">
     		<c:choose>
     			<c:when test="${userInfo.lang == 3}">
     				<p class="quickmenu_title"><img src="/images/jp/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
@@ -1773,4 +2027,7 @@
 			<p class="btn_quick" id="btn_quick_Down" onclick="QuickMove('DOWN')"><img src="/images/kr/main/quickmenu_btn_down.gif" ></p>
     	</aside>
 	</c:if>
+	<script>
+		leftResize();
+	</script>
 </html>

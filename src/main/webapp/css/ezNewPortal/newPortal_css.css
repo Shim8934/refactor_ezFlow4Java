@@ -3,7 +3,7 @@
 
 /* base */
 html { height:100%; }
-body { height:100%; margin:0;}
+body { height:100%; margin:0;background-color: #e0e3e4}
 input,button { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1em; }
 textarea { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1.25em; }
 img { border:0 none; vertical-align:top; }

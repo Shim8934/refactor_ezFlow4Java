@@ -35,7 +35,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Controller
 public class EzNewPortalController {
 
-private static final Logger logger = LoggerFactory.getLogger(EzPortalController.class);
+private static final Logger logger = LoggerFactory.getLogger(EzNewPortalController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
