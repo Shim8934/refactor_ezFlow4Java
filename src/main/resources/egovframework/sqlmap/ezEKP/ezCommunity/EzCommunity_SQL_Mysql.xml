@@ -784,6 +784,7 @@
 				A.itemid,
 				A.writerid,
 				A.writername$v_strLang$ AS writername,
+				A.writerDeptID,
 				A.writerdeptname$v_strLang$ AS writerdeptname,
 				A.writercompanyname$v_strLang$ AS writercompanyname,
 				A.parentwritedate,
