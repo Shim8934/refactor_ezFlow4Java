@@ -702,6 +702,7 @@
 				CASE WHEN #primary# = '1' THEN A.writername ELSE A.writername2 END AS writername,
 				CASE WHEN #primary# = '1' THEN A.writerdeptname ELSE A.writerdeptname2 END AS writerdeptname,
 				CASE WHEN #primary# = '1' THEN A.writercompanyname ELSE A.writercompanyname2 END AS writercompanyname,
+				A.writerDeptID,
 				A.startdate,
 				A.writedate,
 				A.parentwritedate,
