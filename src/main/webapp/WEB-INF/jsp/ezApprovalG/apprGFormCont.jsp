@@ -482,7 +482,7 @@
 	                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
 	                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
 	                </select>
-	                <input id="forminfo" onkeypress="search_press(event)" type="text" />
+	                <input id="forminfo" onkeypress="search_press(event)" type="text" style="vertical-align: baseline;" />
 	                <a class="imgbtn imgbck" onclick="searchform()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t111'/></span></a>
 	                <a class="imgbtn imgbck" onclick="reset()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t1301'/></span></a>
 	            </td>

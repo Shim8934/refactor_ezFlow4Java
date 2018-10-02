@@ -398,7 +398,7 @@ function DeleteAppointment()
 			schedule_repetition_del_cross_dialogArguments[0] = rgParams;
 			schedule_repetition_del_cross_dialogArguments[1] = DeleteAppointment_Complete;
 
-			DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
+			DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
 		}
 		
 	    if (!isRepetition) {
