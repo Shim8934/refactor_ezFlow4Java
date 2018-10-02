@@ -48,7 +48,7 @@
 		    function GetAttachmentCount() {
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
-		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
 		        xmlhttp.send();
 		        xmldom = loadXMLString(xmlhttp.responseText);
 		        xmlhttp = null;
@@ -63,7 +63,7 @@
 		    }
 		    function getOneLineReplyCount() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);

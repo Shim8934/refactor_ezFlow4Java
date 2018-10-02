@@ -167,7 +167,7 @@
 	
 	        function CheckIfHasReplies() {
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + pItemID + ",;", false);
+	            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ",;", false);
 	            xmlhttp.send();
 	            if (xmlhttp.responseText == "FALSE") {
 	                xmlhttp = null;
@@ -183,7 +183,7 @@
 				    return;
 				}
 	
-	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply"
+	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply"
 	        }
 	
 	        function OneLineReply_onkeydown(e) {
@@ -283,7 +283,7 @@
 	
 	        function getOneLineReply() {
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+	            xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
 	            xmlhttp.send();
 	            var xmldom = createXmlDom();
 	            

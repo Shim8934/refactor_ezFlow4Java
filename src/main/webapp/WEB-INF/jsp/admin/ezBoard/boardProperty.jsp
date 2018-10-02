@@ -250,7 +250,7 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;	            			
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);	            			
 	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;

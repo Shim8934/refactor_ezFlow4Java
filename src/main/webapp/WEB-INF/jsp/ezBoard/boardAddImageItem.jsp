@@ -171,7 +171,7 @@
 		            }
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		        }
 	        }
@@ -399,7 +399,7 @@
 			    		return;	
 		            }
 		            
-	                xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+	                xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + encodeURIComponent(pBoardID) +"&uniqueIDs=" + uniqueIDs, false);
 	                xmlhttp.send(xmldom);
 	
 	                document.getElementById("checkmenu").checked = false;

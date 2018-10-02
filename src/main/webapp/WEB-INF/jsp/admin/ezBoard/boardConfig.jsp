@@ -44,18 +44,18 @@
 	            switch (pSelectTab) {
 	                case "BoardEnv_div1":
 	                    if (pBoardType == 3) {
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else if (pBoardType == 4) {
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else {	      
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }
 	                    break;
 	                case "BoardEnv_div2":
-	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardProperty.do?boardID=" + pBoardID + "&adminType=y";
+	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardProperty.do?boardID=" + encodeURIComponent(pBoardID) + "&adminType=y";
 	                    break;
 	                case "BoardEnv_div3":
-	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardACL.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID;
+	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardACL.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(pParentBoardID);
 	                    break;
 	                case "BoardEnv_div4":
 	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardHeader.do";
@@ -63,7 +63,7 @@
 	                case "BoardEnv_div5":
 	                    //if (CrossYN()){
 	                    // 2016-04-11 장진혁과장 Cross 단일 파일로 적용   
-	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardFormSave.do?boardID=" + pBoardID;	
+	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardFormSave.do?boardID=" + encodeURIComponent(pBoardID);	
 	                    /*} else {
 	                        if (pUse_Editor == "TAGFREE" || pUse_Editor == "DEXT")
 	                            document.getElementById("BoardEnv_ifrm").src = "/myoffice/ezBoardSTD/admin/BoardForm_save_IE.aspx?BoardID=" + pBoardID;

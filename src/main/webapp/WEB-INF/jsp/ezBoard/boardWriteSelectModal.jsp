@@ -80,7 +80,7 @@
 			
 			function CheckIfAnonyBoard(pBoardID)
 			{
-				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("anonyboard") != -1) return true;
@@ -89,7 +89,7 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
-				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
@@ -203,7 +203,7 @@
 			
 			function GetSubBoard(pRootBoardID, pSubFlag)
 			{
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + encodeURIComponent(BoardID), false);
 				xmlhttp.send();
 				
 				return xmlhttp.responseXML;

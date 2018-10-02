@@ -30,7 +30,7 @@
 	        };
 	        function GetMyBoardItem(pRootTreeID) {
 	            var xmlhttp4 = createXMLHttpRequest();
-	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + pRootTreeID, false);
+	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + encodeURIComponent(pRootTreeID), false);
 	            xmlhttp4.send();
 	            var ret = xmlhttp4.responseXML;
 	            xmlhttp4 = null;
@@ -106,7 +106,7 @@
 	            var objNode;
 	            createNodeInsert(xmlpara, objNode, "PARAMETER");
 	            createNodeAndInsertText(xmlpara, objNode, "PSELTREEID", pSelID);
-	            createNodeAndInsertText(xmlpara, objNode, "PMOVETREEID", SelectedBoardID);
+	            createNodeAndInsertText(xmlpara, objNode, "PMOVETREEID", encodeURIComponent(SelectedBoardID));
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", pMode);
 	
 	            xmlhttp.open("POST", "/ezBoard/setMyBoardMoveCopy.do", false);

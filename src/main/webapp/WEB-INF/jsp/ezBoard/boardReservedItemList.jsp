@@ -55,7 +55,7 @@
 	        
 		    function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID) {
 		        var feature = GetOpenWindowfeature(765, 820);
-	            window.open("/ezBoard/boardNewItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pItemBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=true", "", feature, "");
 		    }
 		
 		    function checkBox_checked(pBoardID, pItemID, evt) {
@@ -131,7 +131,7 @@
 					console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
 					console.log("itemList = " + itemList);
 					
-					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + boardId + "&itemList=" + itemList, false);
+					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(boardId) + "&itemList=" + encodeURIComponent(itemList), false);
 		        	xmlhttp.send();
 			        if (xmlhttp.responseText == "NO") {
 			            alert("<spring:message code='ezBoard.t265'/>");

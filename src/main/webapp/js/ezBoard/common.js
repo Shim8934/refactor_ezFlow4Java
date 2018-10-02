@@ -47,7 +47,7 @@ function CustomRandom() {
 //강민수92
 function openBoardComment() {
 	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.92, "/ezBoard/boardCommentPopup.do?itemID=" 
-			+ pItemID + "&boardID=" + pBoardID + "&gubun=" + gubun + "&Reply_FG=" + Reply_FG + "&OneLineReplyFlag=" + OneLineReplyFlag);
+			+ encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&gubun=" + gubun + "&Reply_FG=" + Reply_FG + "&OneLineReplyFlag=" + OneLineReplyFlag);
 }
 //강민수92
 function closePopup() {
@@ -142,7 +142,7 @@ function delete_onelinereply_Complete(ret) {
         return;
     }
 
-    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
+    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
     xmlhttp.send();
     getBoardComment();
     xmlhttp = null;
@@ -150,7 +150,7 @@ function delete_onelinereply_Complete(ret) {
 //강민수92
 function deleteBoardCommentPopup() {
 	DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID=" 
-			+ pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+			+ encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(delpReplyID) + "&replyFlag=true");
 }
 //강민수92
 function closePopup2() {
@@ -159,7 +159,7 @@ function closePopup2() {
 //강민수92
 function deleteBoardComment(obj) {
 	var boardCommentID = $(obj).closest("tr").attr("replyID");
-    delpReplyID = boardCommentID;
+    delpReplyID = encodeURIComponent(boardCommentID);
     var xmlhttp = createXMLHttpRequest();
     
     if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
@@ -172,7 +172,7 @@ function deleteBoardComment(obj) {
             } else {		                	
             	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
                 feature = feature + GetShowModalPosition(330, 200);
-                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + delpReplyID, "", feature);
+                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(delpReplyID), "", feature);
                 
                 if (ret == "NO") {
                     alert("<spring:message code='ezBoard.t267' />");
@@ -181,7 +181,7 @@ function deleteBoardComment(obj) {
                     return;
                 }
                 
-                xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
+                xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
                 xmlhttp.send();
                 if (xmlhttp.responseText == "FAIL") {
                     alert(strLang184);
@@ -192,21 +192,21 @@ function deleteBoardComment(obj) {
             }
             
         } else {
-            xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + delpReplyID, false);
+            xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + encodeURIComponent(delpReplyID), false);
             xmlhttp.send();
             if (xmlhttp.responseText.substr(0, 2) != "OK") {
                 alert(strLang184);
                 return;
             } else {
             	if (!confirm(strLang180)) return;
-            	xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
+            	xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
             	xmlhttp.send();	
             }
             
         }
     } else {
     	if (!confirm(strLang180)) return;
-    	xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
+    	xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + encodeURIComponent(delpReplyID) + "&guBun=" + gubun, false);
     	xmlhttp.send();	
     	
     }

@@ -221,7 +221,7 @@
 	        
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
+		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
 		        xmlhttp3.send();
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;
@@ -239,10 +239,10 @@
 
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
-	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID + "&tabID=1tab2";
+	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
 	                    }
 	                }else{                	
-	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID;
+	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                }
 	            }
 	            catch (e) {
@@ -273,25 +273,25 @@
 	                    window.open("/admin/ezBoard/boardGroupCreate.do", "board_main");
 	                    break;
 	                case 2:
-	                    window.open("/admin/ezBoard/boardCreate.do?parentBoardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    window.open("/admin/ezBoard/boardCreate.do?parentBoardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID), "board_main");
 	                    break;
 	                case 3:	                	
-	                    window.open("/admin/ezBoard/boardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID, "board_main");
+	                    window.open("/admin/ezBoard/boardOrder.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
 	                    break;
 	                case 4:	                    
-                        window.open("/admin/ezBoard/boardMove.do?boardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");
+                        window.open("/admin/ezBoard/boardMove.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID), "board_main");
 	                    break;
 	                case 5:	                    
-	                    window.open("/admin/ezBoard/boardDelete.do?boardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");	                    
+	                    window.open("/admin/ezBoard/boardDelete.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID), "board_main");	                    
 	                    break;
 	                case 6:
-	                    window.open("/admin/ezBoard/boardProperty.do?boardID=" + SelectedBoardID, "board_main");
+	                    window.open("/admin/ezBoard/boardProperty.do?boardID=" + encodeURIComponent(SelectedBoardID), "board_main");
 	                    break;
 	                case 7:
-	                    window.open("/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&accessLevel=" + AccessLevel, "board_main");
+	                    window.open("/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&accessLevel=" + AccessLevel, "board_main");
 	                    break;
 	                case 8:
-	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID, "board_main");
+	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
 	                    break;
 	                default:
 	                    break;

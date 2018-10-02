@@ -35,7 +35,7 @@
 	        }
 	        function GetMyBoardItem(pRootTreeID) {
 	            var xmlhttp4 = createXMLHttpRequest();
-	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + pRootTreeID, false);
+	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + encodeURIComponent(pRootTreeID), false);
 	            xmlhttp4.send();
 	            var ret = xmlhttp4.responseXML;
 	            xmlhttp4 = null;
@@ -354,12 +354,12 @@
 	            if (CrossYN()) {
 	                myboard_movecopy_dialogArguments[0] = "";
 	                myboard_movecopy_dialogArguments[1] = move_onclick_Complete;
-	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID + "&nodeID=" + selectedNodeID);
+	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + encodeURIComponent(SelectedBoardID) + "&nodeID=" + selectedNodeID);
 	            }
 	            else {
 	                var feature = "dialogWidth:320px; dialogHeight:375px; status:no; help:no; scroll:no; edge:sunken";
 	                feature = feature + GetShowModalPosition(320, 375);
-	                var moveUrl = window.showModalDialog("/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID, null, feature);
+	                var moveUrl = window.showModalDialog("/ezBoard/myBoardmovecopy.do?selID=" + encodeURIComponent(SelectedBoardID), null, feature);
 	                if (moveUrl == undefined)
 	                    return;
 	

@@ -135,7 +135,7 @@
 		        var imgwidth = document.getElementById("backimage").width;
 		        var imgheight = document.getElementById("backimage").height;
 
-		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=UPT&backgroundID=" + clickitem.getAttribute("backgroundid") + "&width=" + imgwidth + "&height=" + imgheight, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=578,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=UPT&backgroundID=" + encodeURIComponent(clickitem.getAttribute("backgroundid")) + "&width=" + imgwidth + "&height=" + imgheight, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=578,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    
 		    function MakeDescription(filepath) {
