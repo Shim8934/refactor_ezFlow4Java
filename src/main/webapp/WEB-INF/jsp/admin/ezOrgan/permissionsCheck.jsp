@@ -227,7 +227,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -606,6 +606,12 @@
 
 	            var xmlDom = createXmlDom();
 	            
+	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
+	            if (addJob == "addJob") {
+	            	document.getElementById('UserAclList').innerHTML = "";
+	            	return;
+	            }
+	            
 	            $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -669,9 +675,14 @@
 
 	            var arrRows = getlistview.GetSelectedRows();
 	            var length = arrRows.length;
+	            
+	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
 
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
 	                alert(strLang13);
+	                return;
+	            } else if(addJob == "addJob"){
+	            	alert("<spring:message code='ezOrgan.psb01' />");
 	                return;
 	            } else {
 	                var UserAcllistview = new ListView();
