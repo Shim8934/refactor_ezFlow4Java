@@ -19656,7 +19656,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</HEADERS>");
 		
-		if (!viewCompany.equals("1")) {
+		if (!viewCompany.equals("1") && !viewCompany.equals("")) {
 			hlength -= 1;
 		}
 		
