@@ -162,14 +162,20 @@ public class CommonUtil {
 			
             String tenantIdStr = "0";
             
+            String deptID = "";
+            
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
+            }
+            if(decDataArray.length >= 10) {
+            	deptID = decDataArray[9];
             }
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
+			login.setDeptID(deptID);
 			
 			LoginVO user = loginService.selectUser(login);
 	
@@ -219,6 +225,8 @@ public class CommonUtil {
 			String locale = decDataArray[5];
 			String lang = decDataArray[6];
 			String timeZone = decDataArray[7];
+			String deptID = decDataArray[9];
+			String companyID = decDataArray[10];
 			
             String tenantIdStr = "0";
             
@@ -233,6 +241,8 @@ public class CommonUtil {
             user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);			
 			user.setServerName(serverName);
+			user.setDeptID(deptID);
+			user.setCompanyID(companyID);
 			
 			return user;
 		}catch(Exception e){

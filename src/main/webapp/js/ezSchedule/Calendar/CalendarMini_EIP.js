@@ -13,7 +13,7 @@ var dayOfWeeks;
 var typeCal = 0;
 
 
-var idtype = "P";
+var idtype = "T";
 var idlist = "";
 var groupid = "";
 var firstYN = false;

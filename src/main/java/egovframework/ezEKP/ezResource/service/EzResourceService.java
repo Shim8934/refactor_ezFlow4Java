@@ -78,4 +78,6 @@ public interface EzResourceService {
 	
 	public void delFormID(String delCode, int tenantID) throws Exception;
 	
+	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception;
+	
 }

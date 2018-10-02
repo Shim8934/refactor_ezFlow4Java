@@ -61,6 +61,8 @@
 	        var ReturnFunction;
 	        var deptClickFlag;
 	        var attendants;
+	        var tabStatus;	// tab1 : circularOrgan.(조직도) tab2 : circularDept (즐겨찾기)
+	        var rowId;		// 즐겨찾기 목록 번호
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -105,6 +107,8 @@
 	            }
 	        }
 	        window.onload = function () {
+	        	tabStatus="circularOrgan";
+	        	
 	            try {
 	                RetValue = parent.ladder_select_attendant_dialogArguments[0];
 	                ReturnFunction = parent.ladder_select_attendant_dialogArguments[1];
@@ -192,18 +196,24 @@
 	                var strName2;
 	                var strPic;
 	                var item;
+	                var description;
+	                var description2;
 	
 	                strId = attendants["id"][i];
 	                strName = attendants["name"][i];
 	                strName2 = attendants["name2"][i];
 	                strPic = attendants["pic"][i];
 	                item = RetValue["item"][i];
+	          	    description = attendants["description"][i];
+	                description2 = attendants["description2"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strPic + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + item + "]]></DATA5>";
+	                pparsingXML = pparsingXML + "<DATA7><![CDATA[" + description + "]]></DATA7>";
+	                pparsingXML = pparsingXML + "<DATA8><![CDATA[" + description2 + "]]></DATA8>";
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -327,15 +337,80 @@
 	            listview.DataBind(pListView);
 	            listview.RowDataBind();
 	        }
+	        
+	        /*
+	         *  [조직도 탭]  참여자 더블 클릭 || <- 화살표 버튼 클릭  
+	         *  [즐겨찾기 탭] 참여자 더블 클릭
+	         *   참여자 삭제
+	         */
 	        function DeleteReceiver(pListView) {
-	            var selList = new ListView();
+	        	var selList = new ListView();
 	            selList.LoadFromID("MsgToList");
 	            var arrRows = selList.GetSelectedRows();
-	            var strName = "";
-	            for (var i = 0; i < arrRows.length; i++) {
-	                selList.DeleteRow(arrRows[i].id);
-	            }
+	            
+	        	for (var i = 0; i < arrRows.length; i++) {
+		        	selList.DeleteRow(arrRows[i].id);
+		        }	
 	        }
+	        
+	        
+	        /*  
+	         *  [즐겨찾기 탭] <- 화살표 버튼 클릭
+	         *   즐겨찾기 목록으로 인원 추가
+	         */
+	        function DeleteReceiver2(pListView) {
+	        	if(tabStatus === "circularOrgan") { // 조직도 탭일 경우
+	        		DeleteReceiver(pListView);
+	        		return;
+	        	}
+	        	
+	        	// 참여자 탭에서 가져오기
+	        	var selList = new ListView();
+	            selList.LoadFromID("MsgToList");
+	            var arrRows = selList.GetSelectedRows();
+	            
+	            // 즐겨찾기 목록에서 가져오기
+	            var tempListBody2 = $("#List_TBODY2");
+	            var order = tempListBody2.children().size();
+	            var companyName = $(".node_div").attr("value");
+	            var domainName = "<c:out value='${domainName}' />";
+	           
+	            if(order == 0) {
+	            	alert("<spring:message code='ezLadder.hyh03' />");
+	            	return;
+	            }
+	          
+	            // 즐겨찾기 목록 재정렬
+	            var html = "";
+	            for (var i = 0; i < arrRows.length; i++) {
+		            html += "<tr id='nameList" + order + "' name='nameList" + order + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_DBclick(this)'>";
+	    			html += "<td id='data1' style='width:5%'>" + (order + 1) + "</td>";
+	    			if(arrRows[i].getAttribute("data1").substring(0, 14) !== "anonyAttendant") {
+	    				html += "<td id='data2' style='width:18%'>" + companyName + "</td>"; 
+	    				html += "<td id='data3' style='width:20%'>" + arrRows[i].getAttribute("data7") + "</td>";
+	    				html += "<td id='data4' style='display:none;'>" + arrRows[i].getAttribute("data8") + "</td>";
+	    			} else {
+	    				html += "<td id='data2' style='width:18%'></td>"; 
+	    				html += "<td id='data3' style='width:20%'></td>";
+	    				html += "<td id='data4' style='display:none;'></td>";
+	    			}
+	    			html += "<td id='data5' style='width:16%'>" + arrRows[i].getAttribute("data2") + "</td>";
+	    			if(arrRows[i].getAttribute("data1").substring(0, 14) === "anonyAttendant") {
+	    				html += "<td id='data6' style='width:41%'></td>"
+	    				html += "<td id='data7' style='display:none'>" + arrRows[i].getAttribute("data1") + "</td>";
+	    			} else {
+	    				html += "<td id='data6' style='width:41%'>" + arrRows[i].getAttribute("data1") + "@" + domainName +"</td>";
+		    			html += "<td id='data7' style='display:none'>" + arrRows[i].getAttribute("data1") + "</td>";
+	    			} 
+	    			html += "<td id='data8' style='display:none'>" + arrRows[i].getAttribute("data3") + "</td>";
+	    			html += "<td id='data9' style='display:none'>" + arrRows[i].getAttribute("data4") + "</td>";
+	    			html += "</tr>";
+    			
+    				order++;
+	            }
+	            $('#List_TBODY2  tr:last').after(html); 
+	        }
+	        
 	        var nodeIdx;
 	        function TreeViewNodeClick() {
 	            issearch = false;
@@ -504,7 +579,7 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            var dept = $(".node_selected").parent().attr("cn");
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 450) / 2;
@@ -638,8 +713,8 @@
 	            var overlapAttendantXML = [];
 	            var AttendantXML = [];
 	            
-	            var alluser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": []};
-				var overlapuser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": []};
+	            var alluser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": [], "email": [], "description": [], "description2": []}; 
+				var overlapuser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": [], "email": [], "description": [], "description2": []};
             	var trData;
             	
 	            if (_RowObjectID != null) { 
@@ -652,6 +727,9 @@
 		                    strName = trData.find("#data5").text();
 		                    strName2 = trData.find("#data8").text();
 		                    pic = trData.find("#data9").text();
+		                    email = trData.find("#data6").text();
+		                    description = trData.find("#data3").text();
+		                    description2 = trData.find("#data3").text();
 		                    
 		                    var IsInsert = CheckMailReceiver(strId, "3");
 		
@@ -661,6 +739,9 @@
 		                    	alluser["userName2"][i] = strName2;
 		                    	alluser["pic"][i] = pic;
 		                    	alluser["temporder"][i] = i;
+		                    	alluser["email"][i] = email;
+		                    	alluser["description"][i] = description;
+		                    	alluser["description2"][i] = description2;
 		                    	if(strId.substring(0, 14) === "anonyAttendant") {
 		                    		alluser["userdata"][i] = "anony";
 		                    	} else {
@@ -673,6 +754,9 @@
 		                    	overlapuser["pic"][i] = pic;
 		                    	overlapuser["temporder"][i] = i;
 		                    	overlapuser["userdata"][i] = "";
+		                    	overlapuser["email"][i] = email;
+		                    	overlapuser["description"][i] = description;
+		                    	overlapuser["description2"][i] = description2;
 		                    }
 		                }
 	            	} else {
@@ -683,7 +767,10 @@
 	                    strName = trData.find("#data5").text();
 	                    strName2 = trData.find("#data8").text();
 	                    pic = trData.find("#data9").text();
-	
+	                    email = trData.find("#data6").text();
+	                    description = trData.find("#data3").text();
+	                    description2 = trData.find("#data3").text();
+	                    
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
 	                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
@@ -692,6 +779,9 @@
 	                    	alluser["userName2"][0] = strName2;
 	                    	alluser["pic"][0] = pic;
 	                    	alluser["temporder"][0] = i;
+	                    	alluser["email"][i] = email;
+	                    	alluser["description"][0] = description;
+	                    	alluser["description2"][0] = description2;
 	                    	if(strId.substring(0, 14) === "anonyAttendant") {
 	                    		alluser["userdata"][0] = "anony";
 	                    	} else {
@@ -704,6 +794,9 @@
 	                    	overlapuser["pic"][0] = pic;
 	                    	overlapuser["temporder"][0] = i;
 	                    	overlapuser["userdata"][0] = "";
+	                    	overlapuser["email"][i] = email;
+	                    	overlapuser["description"][0] = description;
+	                    	overlapuser["description2"][0] = description2;
 	                    }
 	            	}
 	            } else {
@@ -716,7 +809,9 @@
 		                    strName = trData.getAttribute("_data4");
 		                    strName2 = trData.getAttribute("_data11");
 		                    pic = trData.getAttribute("_data9");
-		                    
+		                    email = trData.getAttribute("_data3");
+		                    description = trData.getAttribute("_data12");
+		                    description2 = trData.getAttribute("_data13");
 		
 		                    var IsInsert = CheckMailReceiver(strId, "3"); 
 		                    
@@ -726,6 +821,9 @@
 		                    	alluser["userName2"][i] = strName2;
 		                    	alluser["pic"][i] = pic;
 		                    	alluser["temporder"][i] = i;
+		                    	alluser["email"][i] = email;
+		                    	alluser["description"][i] = description;
+		                    	alluser["description2"][i] = description2;
 		                    	if(strId.substring(0, 14) === "anonyAttendant") {
 		                    		alluser["userdata"][i] = "anony";
 		                    	} else {
@@ -738,6 +836,9 @@
 		                    	overlapuser["pic"][i] = pic;
 		                    	overlapuser["temporder"][i] = i;
 		                    	overlapuser["userdata"][i] = "";
+		                    	overlapuser["email"][i] = email;
+		                    	overlapuser["description"][i] = description;
+		                    	overlapuser["description2"][i] = description2;
 		                    }
 		                }
 		            } else {
@@ -751,7 +852,7 @@
 		                    strName = p_ListOrderObject.getAttribute("_data4");
 		                    strName2 = p_ListOrderObject.getAttribute("_data11");
 		                    pic = p_ListOrderObject.getAttribute("_data9");
-		
+		                    
 		                    var listid = "MsgToList";
 		                
 		                    var getlistview = new ListView();
@@ -764,6 +865,7 @@
 		                    	alluser["userName2"][0] = strName2;
 		                    	alluser["temporder"][0] = i;
 		                    	alluser["pic"][0] = pic;
+		                    
 		                    	if(strId.substring(0, 14) === "anonyAttendant") {
 		                    		alluser["userdata"][0] = "anony";
 		                    	} else {
@@ -807,6 +909,9 @@
 								alluser["temporder"][i] = i;
 								alluser["pic"][i] = overlapuser["pic"][i];
 								alluser["userdata"][i] = type;
+								alluser["email"][i] = overlapuser["email"][i];
+								alluser["description"][i] = overlapuser["description"][i];
+								alluser["description2"][i] = overlapuser["description2"][i];
 							}
 						}
 					}
@@ -840,6 +945,9 @@
 					userlist["pic"].splice(spliceNum);
 					userlist["temporder"].splice(spliceNum);
 					userlist["userdata"].splice(spliceNum);
+					userlist["email"].splice(spliceNum);
+					userlist["description"].splice(spliceNum);
+					userlist["description2"].splice(spliceNum);
 					len = userlist["userId"].length;
 				}
 				
@@ -853,12 +961,18 @@
 					}
 					strName = userlist["userName"][i];
 					strName2 = userlist["userName2"][i];
-					
+					email = userlist["email"][i];
+					description = userlist["description"][i];
+					description2 = userlist["description2"][i];
+
 					pparsingXML = "<LISTVIEWDATA2><ROWS>";
 					pparsingXML += "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 					pparsingXML += "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 					pparsingXML += "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 					pparsingXML += "<DATA4><![CDATA[" + strpic + "]]></DATA4>";
+					pparsingXML += "<DATA6><![CDATA[" + email + "]]></DATA6>";
+					pparsingXML += "<DATA7><![CDATA[" + description + "]]></DATA7>";
+					pparsingXML += "<DATA8><![CDATA[" + description2 + "]]></DATA8>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
@@ -890,8 +1004,8 @@
 						document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 					}
 				}
-				var listid ="MsgToList";
-				_RowObjectID = null;
+				/* var listid ="MsgToList";
+				_RowObjectID = null; */
 			}	
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -1271,18 +1385,33 @@
 		    function editBM(flag) {
 				setBmGroup(flag, _RowObjectID);
 			}
-		    
 		    function setBmGroup(type, ladderBmId) {
-		    	save_userlist();
+		    	save_userlist();		// 즐겨찾기 추가,삭제
+		    	if(type === "modify") { // 즐겨찾기 수정
+		    		save_userlist_bm();
+		    	} else if(type === "delete") {
+		    		if(_RowObjectName !== "deptList") {
+		    			alert("<spring:message code='ezLadder.hyh03' />");
+			        	return;
+			        }
+		    	}
 		    	
 		    	if(type !== "delete" && !rtn.length){
-		    		alert("<spring:message code='ezLadder.t058' />");
-		    		return;
+		    		if(type === "add") {
+			    		alert("<spring:message code='ezLadder.t058' />");
+			    		return;
+		    		} else {
+		    			alert("<spring:message code='ezLadder.hyh03' />");
+			        	return;
+		    		}
 		    	}
 		    	
 		    	retAttendantPopInfo[0] = type;
 		    	retAttendantPopInfo[1] = setBmGroupComp;
 		    	retAttendantPopInfo[2] = ladderBmId
+		    	if(type === "modify") {
+		    		retAttendantPopInfo[2] = rowId;
+		    	}
 		    	
 		    	DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=" + type);
 		    }
@@ -1295,6 +1424,8 @@
 		    	var bmuserid;
 		    	var bmusername;
 		    	var bmusername2;
+		    	var descriptions;
+		    	var descriptions2;
 		    	
 				if(type !== "delete") {
 					bmuserid = rtn.reduce(function(result, curr) {
@@ -1307,6 +1438,14 @@
 					}, []);
 			    	bmusername2 = rtn.reduce(function(result, curr) {
 						result.push(curr["userName2"]);
+						return result;
+					}, []);
+			    	descriptions = rtn.reduce(function(result, curr) {
+						result.push(curr["description"]);
+						return result;
+					}, []);
+			    	descriptions2 = rtn.reduce(function(result, curr) {
+						result.push(curr["description2"]);
 						return result;
 					}, []);
 				}
@@ -1322,7 +1461,9 @@
 						bmName: bmName,
 						userIds: bmuserid,
 						userNames: bmusername,
-						userName2s: bmusername2
+						userName2s: bmusername2,
+						descriptions: descriptions,
+						descriptions2: descriptions2
 					},
 					success: function(result) {
 						getLadderBmList();
@@ -1360,12 +1501,19 @@
 				    	
 							$("#List_TBODY").html(html);
 							$("#List_TBODY2").html("");
+							_RowObjectID = null; 
+			                _RowObjectName = null;
 				    	} else {
 				    		bm_list.forEach(function(user, index) {
-				    			html += "<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_listDBclick(this)'>";
+				    			html += "<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_DBclick(this)'>";
 				    			html += "<td id='data1' style='width:5%'>" + (index + 1) + "</td>";
-				    			html += "<td id='data2' style='width:18%'>" + user.company + "</td>";
+				    			if(user.userId.substring(0, 14) != "anonyAttendant" && !user.mail) {
+				    				html += "<td id='data2' style='width:18%'></td>";
+				    			} else {
+				    				html += "<td id='data2' style='width:18%'>" + user.company + "</td>";
+				    			}
 				    			html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
+				    			html += "<td id='data4' style='display:none;'>" + user.description2 + "</td>";
 				    			html += "<td id='data5' style='width:16%'>" + user.userName + "</td>";
 				    			html += "<td id='data6' style='width:41%'>" + user.mail + "</td>";
 				    			if(user.userId.substring(0, 14) != "anonyAttendant" && !user.mail) {
@@ -1382,6 +1530,29 @@
 				    	}
    					}
    				});
+		    }
+		    
+		  
+		    /* [즐겨찾기 탭] 즐겨찾기 인원 목록 더블 클릭 (인원 삭제)*/
+		    function event_DBclick(obj){
+		    	// List_TBODY2 tr 삭제
+				var tr = $(obj);
+				var tempListBody2 = $("#List_TBODY2");
+		    	tr.remove(); 
+		    	
+				// List_TBODY2 재정렬
+				if(tempListBody2.children().size()==0) {
+					tempListBody2.html("");
+				} else {
+					var tableIndex = tr.attr("id").substring(8); 
+		    			
+					for(var index=tableIndex; index < tempListBody2.children().size(); index++) {
+		    			index*=1;	
+		    			$("#nameList"+(index+1)).children().first().text(index+1);
+		    			$("#nameList"+(index+1)).attr("name", "nameList"+index);
+		    			$("#nameList"+(index+1)).attr("id", "nameList"+index);
+		    		}
+				}
 		    }
 		    
 		    /** msgtolist 의 유저 rtn에 추가 */
@@ -1401,6 +1572,8 @@
 		        var userName2;
 		        var pic;
 		        var item;
+		        var description;
+		        var description2;
 		        
 		        for(var i = 0; i < totalLen; i++) {
 		        	userId = GetAttribute(totalRows[i], "DATA1");
@@ -1410,11 +1583,41 @@
 		        	} else {
 		        		userName = GetAttribute(totalRows[i], "DATA2");
 			        	userName2 = GetAttribute(totalRows[i], "DATA3");
+			        	description = GetAttribute(totalRows[i], "DATA7") || "";
+			        	description2 = GetAttribute(totalRows[i], "DATA8") || "";
 		        	}
 		        	pic = GetAttribute(totalRows[i], "DATA4") || "";
 		        	item = GetAttribute(totalRows[i], "DATA5") || "";
-		        	rtn[i] = {"userId": userId, "userName": userName, "userName2": userName2, "pic": pic, "item": item};
+		        	email = GetAttribute(totalRows[i], "DATA6") || "";
+		        	rtn[i] = {"userId": userId, "userName": userName, "userName2": userName2, "pic": pic, "item": item, "email": email, "description": description, "description2": description2};
 		        }
+		    }
+		    
+		    /** [즐겨찾기 탭]
+		     *  ladderBmId가 'rowId'인 즐겨찾기 유저 정보 저장
+		     */
+		    function save_userlist_bm() {
+				rtn = [];
+				var tempListBody2 = $("#List_TBODY2");
+		   		var userId;
+		        var userName;
+		        var userName2;
+		        var description;
+		        var description2;
+		        var index=0;
+	        
+		        if(tempListBody2.children().size()==0) {
+		        	return;
+		        }
+		    
+		    	$('#List_TBODY2 tr').each(function() {
+		    	    userId = $(this).find("td").eq(6).html();
+		        	userName = $(this).find("td").eq(4).html();
+			        userName2 = $(this).find("td").eq(7).html();
+		        	description = $(this).find("td").eq(2).html();
+		        	description2 = $(this).find("td").eq(3).html();
+		        	rtn[index++] = {"userId": userId, "userName": userName, "userName2": userName2, "description": description, "description2": description2};
+		    	});
 		    }
 		    
 		    function btnok_onclick() {
@@ -1606,6 +1809,9 @@
 		        _RowObject = obj;
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
+		        if(_RowObjectName === "deptList") {
+		        	rowId = _RowObjectID;
+		        }
 
 		        obj.style.backgroundColor = "#edf4fd";
 		        
@@ -1630,17 +1836,22 @@
 		    	var pSelectTab = GetAttribute(obj, "tdname");
 
 		        switch (pSelectTab) {
-		            case "circularOrgan":
+		            case "circularOrgan":	// 조직도
+		            	tabStatus="circularOrgan";
+		            	rowId = null;
 		                if (document.getElementById("circularOrgan_content").style.display == "none") {
 		                    document.getElementById("circularOrgan_content").style.display = "";
 		                    document.getElementById("circularDept_content").style.display = "none";
 		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
 		                    $("div[id^='editBmGroup_']").hide();
 		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+		                    _RowObjectName = null;
 		                    selectDeptAllUser();
 		                }
 		                break;
-		            case "circularDept":
+		            case "circularDept":	// 즐겨찾기
+		            	tabStatus="circularDept";
+		            	
 		                if (document.getElementById("circularDept_content").style.display == "none") {
 		                    document.getElementById("circularOrgan_content").style.display = "none";
 		                    document.getElementById("circularDept_content").style.display = "";
@@ -1664,6 +1875,11 @@
 	                ChangeTab(obj);
 	            }
 	        }
+	      
+	        function window_close() {
+	             window.returnValue = 0;
+	             window.close();
+	        } 
 	        
 		    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
 	        function deptNameLong(containLow, strIsLeaf) {
@@ -1698,10 +1914,10 @@
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code="ezLadder.t071" /></h1>
 		<div id="close">
-            <ul>
-                <li><span onclick="window.close()"></span></li>
-            </ul>
-        </div>
+		    <ul>
+		    	<li><span onclick="window_close()"></span></li>
+		    </ul>
+	    </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1837,7 +2053,7 @@
 	                        </td>
 	                        <td style="width: 30px; text-align: center;">                            
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
-	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver2(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top; position: relative;">
 								<a class="imgbtn imgbck" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>

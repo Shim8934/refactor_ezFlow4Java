@@ -130,7 +130,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -476,7 +476,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            /* var dept = p_ListOrderObject.getAttribute("_DATA11"); */
+	            var dept = $('.node_selected').parent().attr("cn");
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 450) / 2;

@@ -125,6 +125,36 @@
 		    		$(".noteBlock").css("pointer-events", "none");
 		    	}
 		    });
+
+		    function Div_Close() {
+		        document.getElementById("popup_layer").style.display = "none";
+		    }
+		    
+		    function changeCompany(TcompanyID,TdeptID){
+		    	method = "post"; 
+		    	
+		        var form = document.createElement("form");
+		        form.setAttribute("method", method);
+		        form.setAttribute("action", "/ezPortal/portalMain.do");
+
+                var companyIDField = document.createElement("input");
+                companyIDField.setAttribute("type", "hidden");
+                companyIDField.setAttribute("name", "companyID");
+                companyIDField.setAttribute("value", TcompanyID);
+
+                form.appendChild(companyIDField);
+                
+                var deptIDField = document.createElement("input");
+                deptIDField.setAttribute("type", "hidden");
+                deptIDField.setAttribute("name", "deptID");
+                deptIDField.setAttribute("value", TdeptID);
+
+                form.appendChild(deptIDField);
+
+		        document.body.appendChild(form);
+		        form.submit();
+		    }
+
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">

@@ -16,6 +16,9 @@ public class BoardLineReplyVO {
 	private String boardItemID;
 	/** 2017.12.29 게시판 아이디 */
 	private String boardID;
+	/** 2018-07-02 홍승비 - deptID 추가 */
+	private String deptID;
+	
 	public String getReplyID() {
 		return replyID;
 	}
@@ -57,6 +60,12 @@ public class BoardLineReplyVO {
 	}
 	public void setBoardID(String boardID) {
 		this.boardID = boardID;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
 	}
 	
 }

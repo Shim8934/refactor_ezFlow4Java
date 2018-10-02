@@ -203,7 +203,9 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
-		statApprVO.setLang(userInfo.getLang());
+		//2018-10-02 김보미
+		//statApprVO.setLang(userInfo.getLang());
+		statApprVO.setLang(userInfo.getPrimary()); //formName은 1,2밖에 없음.
 		
 		String result = ezStatisticsAdminService.getFormInfo(statApprVO);
 

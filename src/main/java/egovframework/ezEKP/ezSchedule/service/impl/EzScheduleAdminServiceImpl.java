@@ -25,10 +25,11 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 
 	
 	@Override
-	public String scheduleGetShareManage(String lang, int tenantId) throws Exception {
+	public String scheduleGetShareManage(String lang, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGDATA", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleShareVO> list = ezScheduleAdminDAO.scheduleGetShareManage(map);
 		
@@ -53,7 +54,7 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	}
 
 	@Override
-	public void scheduleSaveShareDept(String userID, String userName, String userName2, String deptID, String deptName, String deptName2, int tenantId) throws Exception {
+	public void scheduleSaveShareDept(String userID, String userName, String userName2, String deptID, String deptName, String deptName2, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_USERNAME", userName);
@@ -62,6 +63,7 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 		map.put("v_DEPTNAME", deptName);
 		map.put("v_DEPTNAME2", deptName2);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleAdminDAO.scheduleSaveShareDept(map);
 	}
@@ -157,11 +159,12 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	}
 
 	@Override
-	public int scheduleShareCheck(String userID, String deptID, int tenantId) throws Exception {
+	public int scheduleShareCheck(String userID, String deptID, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 				
 		return ezScheduleAdminDAO.scheduleShareCheck(map);
 	}

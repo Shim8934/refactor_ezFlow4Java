@@ -119,6 +119,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			map.put("v_CREATORNAME2", jsonParam.get("creatorName2").toString());
 			map.put("v_SCHEDULETYPE", jsonParam.get("scheduleType").toString());
 			map.put("v_IMPORTANCE", jsonParam.get("importance").toString());
+			map.put("v_COMPANYID", jsonParam.get("companyID").toString());
 			map.put("v_HASATTENDANT", hasattendant);
 			map.put("v_HASATTACH", hasattach);
 			map.put("v_ISPUBLIC", jsonParam.get("isPublic").toString());
@@ -168,7 +169,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -279,7 +280,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			if (fis != null) fis.close();				
 			if (fos != null) fos.close();
@@ -334,7 +335,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				bos.write(buffer, 0, bytesRead);
 			}
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -375,7 +376,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	@Override
 	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
-		ezScheduleService.insertScheduleRepeDel(scheduleId, startDate, tenantId);
+//		ezScheduleService.insertScheduleRepeDel(scheduleId, startDate, tenantId);
 		
 	}
 
@@ -407,7 +408,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String pidList = "'" + info.getUserId() + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
 		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 		
-		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId());
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId(), info.getCompanyId());
 		
 		for (int i = 0; i < gList.size(); i++) {
 			if (i == 0) {
@@ -421,9 +422,9 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			}	
 		}
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList,"\'\'", searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId(),info.getCompanyId(), info.getDeptId());
+		
 		Collections.sort(sList, new EzScheduleCompareUtilPublic());
-//		Collections.sort(sList, new EzScheduleCompareUtil());
 		
 		return sList;
 	}

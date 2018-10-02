@@ -627,7 +627,7 @@
 	        	</c:choose>
 	        </tr>
 	        <tr class = 'approvalS'>
-	        	<th><spring:message code = 'ezApprovalG.t109' /> *</th>
+	        	<th><spring:message code = 'ezApprovalG.t109' /> <span style="color:red">*</span></th>
 	        	<td>
 		        	<select id="isPublic" style="width: 100%">
 	                    <option value="Y" id="Y"><spring:message code='ezApprovalG.t47'/></option>

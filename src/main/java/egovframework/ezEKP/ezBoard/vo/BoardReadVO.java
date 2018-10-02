@@ -13,6 +13,8 @@ public class BoardReadVO {
 	private String userTitle;
 	/** 조회일시*/
 	private String readDate;
+	/** 2018-07-02 홍승비 - 조회 당시 조회자의 부서ID */
+	private String deptID;
 	
 	public String getUserID() {
 		return userID;
@@ -49,6 +51,12 @@ public class BoardReadVO {
 	}
 	public void setReadDate(String readDate) {
 		this.readDate = readDate;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
 	}
 
 }

@@ -93,9 +93,15 @@ public class EzSystemAdminController {
 	
 	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do")
 	public String systemLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		logger.debug("tenantID=" + userInfo.getTenantId());
+		
+		//관리자 권한체크
+		String cChk = "0";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
+		model.addAttribute("cChk", cChk);
 		
 		String useIPAccessMenu = ezCommonService.getTenantConfig("useIPAccessMenu", userInfo.getTenantId());
 		
@@ -213,6 +219,8 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = userInfo.getCompanyID();
+		
 		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", userInfo.getTenantId());
 		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
 		
@@ -220,6 +228,20 @@ public class EzSystemAdminController {
 		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
 		
 		logger.debug("ended systemLoginHistMain controller.");
 		
@@ -257,6 +279,14 @@ public class EzSystemAdminController {
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
+		
+		//String companyId = req.getParameter("companyId"); // 선택된 회사
+		/*
+		 * 2017.07.26 강민석
+		 * 로그인 히스토리에는 자신의 회사만 나오도록 수정
+		 * */
+		String companyId = userInfo.getCompanyID();
+		logger.debug("companyId : " + companyId);
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
@@ -265,8 +295,8 @@ public class EzSystemAdminController {
 		}
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
-		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate);
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
 		
 		int totalPage = itemCnt / maxItemPerPage ;
 		
@@ -315,6 +345,8 @@ public class EzSystemAdminController {
 			startRow = -1;
 		}
 
+		String companyId = request.getParameter("companyId"); // 선택된 회사
+		
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if (userInfo.getLang().equals(sysLang))  {
@@ -322,8 +354,8 @@ public class EzSystemAdminController {
 		}
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
-		int totalCount = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate);
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+		int totalCount = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
 		
 		/* 엑셀 만들기 */
 		HSSFWorkbook workbook = new HSSFWorkbook();

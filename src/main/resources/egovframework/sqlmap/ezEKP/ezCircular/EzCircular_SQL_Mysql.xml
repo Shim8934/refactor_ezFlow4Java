@@ -113,7 +113,8 @@
             	A.status != '2'
             AND
 				B.updatestatus IN (0, 1)
-            	
+            AND 
+            	B.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -191,6 +192,8 @@
                 B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -238,7 +241,8 @@
 				B.status confirmstatus,
 				B.updateStatus,
 				B.commentStatus,
-				B.shareStatus
+				B.shareStatus,
+				A.companyId
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -411,6 +415,8 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
     </select>
 
@@ -419,23 +425,46 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-				B.company,
-				B.description,
-				B.title,
+				BB.company,
+				BB.description,
+				BB.title,
 				A.membername,
-				B.mail
+				BB.mail
 			FROM
 				TBL_CIRCULAR_BMUSER A
 			LEFT JOIN
-				TBL_USERMASTER B
+				( SELECT 
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+				UNION ALL
+				SELECT 
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#) BB
 			ON
-				A.memberid = B.cn
-			AND
-				A.tenantid = B.tenant_id
+				A.memberid = BB.cn
 			WHERE
-				circularbmid = #circularBMId#
+				A.circularbmid = #circularBMId#
 			AND
-				tenantid = #tenantID#
+				A.tenantid = #tenantID#
+			GROUP BY memberid
         ]]>
     </select>
     
@@ -529,6 +558,8 @@
 				A.memberid != #memberID#
 			AND
 				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -597,6 +628,8 @@
 				A.memberid != #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -645,6 +678,8 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -739,6 +774,8 @@
             	A.status = 2
             AND
              	B.updatestatus IN (0, 1)
+            AND
+            	A.companyid =#companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -803,6 +840,8 @@
             	memberid = #memberId#
             AND
                 tenantid = #tenantId#      
+            AND
+                companyid = #companyID#
         ]]>
     </select>
     
@@ -828,6 +867,8 @@
 				A.memberid = #memberID#
 			AND
 				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
 		]]>
          
 		<isNotEqual property="searchValue" compareValue="">
@@ -926,6 +967,8 @@
 				A.tenantid = #tenantID# 
 			AND
 				A.status != 2
+			AND
+				A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -1062,6 +1105,8 @@
             	B.memberID = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -1122,6 +1167,8 @@
             	B.memberID = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -1310,6 +1357,8 @@
 				D.updatestatus = '3'  
 			AND
 				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
 			ORDER BY
         ]]>
         
@@ -1578,6 +1627,8 @@
 					A.circularid = B.circularid
 				AND
 					A.tenantid = B.tenantid
+				AND
+					A.companyid = B.companyid
 				WHERE
 					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
@@ -1588,6 +1639,8 @@
 					B.memberid = #userID#
 				AND
 					A.tenantid = #tenantID#
+				AND
+					A.companyid = #companyID#
 			]]>
 		</isEqual>
 		<isEqual property="listType" compareValue="circularComplete">
@@ -1636,6 +1689,8 @@
 					A.memberid = #userID#
 				AND
 					A.tenantid = #tenantID#
+				AND
+					A.companyid = #companyID#
 			]]>
 		</isEqual>
 		<isEqual property="listType" compareValue="circularTemp">
@@ -1732,16 +1787,40 @@
 	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
 		<![CDATA[
 			SELECT 
-				A.memberid, B.displayname, B.description, B.company, B.title, 
-				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate
+				A.memberid, BB.displayname, BB.description, BB.company, BB.title, 
+				IFNULL(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), '') AS confirmdate, BB.DEPARTMENT as deptid
 			FROM 
 				TBL_CIRCULAR_USER A
 			RIGHT JOIN 
-				TBL_USERMASTER B
+				(SELECT 
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+				UNION ALL
+				SELECT 
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# )  BB
 			ON 
-				A.memberid = B.cn
+				A.memberid = BB.cn
 			WHERE 
-				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' 
 			AND
 				a.memberid <> ( SELECT 
 												memberId 
@@ -1749,8 +1828,10 @@
 											TBL_CIRCULAR 
 										WHERE 
 											circularId = #circularID# )
+			group by
+				A.MEMBERID
 			ORDER BY 
-			 	A.confirmdate desc
+				A.confirmdate desc
 			 LIMIT
 			 	#start#, #perCount#
 		]]>
@@ -1777,13 +1858,44 @@
 											circularId = #circularID# )
 		]]>
 	</select>
-
+	
+	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="CircularMemberVO">
+		<![CDATA[
+			SELECT 
+				A.department, a.company
+			FROM (SELECT 
+						D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME as companyid, D.TENANT_ID, D.company
+					FROM 
+						TBL_USERMASTER D
+					UNION ALL
+					SELECT 
+						B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID, C.COMPNM2
+					FROM 
+						TBL_USERMASTER B 
+					INNER JOIN 
+						TBL_ADDJOBMASTER A 
+					ON 
+						A.CN = B.CN 
+					AND 
+						A.TENANT_ID = B.TENANT_ID       
+					RIGHT JOIN 
+						TBL_DEPTMASTER C
+					ON 
+						A.DEPTID = C.CN
+					AND 
+						B.TENANT_ID = C.TENANT_ID) A
+			WHERE 
+				A.CN = #circularUserID# and a.tenant_id = #tenantID# and a.companyid = #companyID#
+			group by A.CN
+		]]>
+	</select> 
+	
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR
-                (circularid, title, importance, option, content, hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid)
+                (circularid, title, importance, option, content, hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid, companyID)
             VALUES
-                (#circularID#, #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#)
+                (#circularID#, #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#, #companyID#)
         ]]>
         
         <selectKey keyProperty="circularid" resultClass="Integer">
@@ -1794,9 +1906,9 @@
     <insert id="EzCircularDAO.insertCircularUser" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_USER
-                (circularuserid, circularid, memberid, membername, membername2, status, confirmdate, updatestatus, tenantid)
+                (circularuserid, circularid, memberid, membername, membername2, status, confirmdate, updatestatus, tenantid, companyid)
             VALUES
-                (#circularUserID# ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#)
+                (#circularUserID# ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#, #companyID#)
         ]]>
     </insert>
   
@@ -1821,9 +1933,9 @@
     <insert id="EzCircularDAO.setCircularDeptSave" parameterClass="Map">
         <![CDATA[
 			INSERT INTO TBL_CIRCULAR_BM
-				(title, memberid, regdate, tenantid)
+				(title, memberid, regdate, tenantid, companyid)
 			VALUES 
-				(#title#, #userID#, #nowDate#, #tenantID#)
+				(#title#, #userID#, #nowDate#, #tenantID#, #companyID#)
         ]]>
         
         <selectKey resultClass="String">
@@ -1862,9 +1974,9 @@
     <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_FOLDER
-                (circularfoldername, memberid, regdate, tenantid) 
+                (circularfoldername, memberid, regdate, tenantid, companyid) 
             VALUES 
-                (#folderName#, #memberId#, #regDate#, #tenantId#)
+                (#folderName#, #memberId#, #regDate#, #tenantId#, #companyID#)
         ]]>
     </insert>
     

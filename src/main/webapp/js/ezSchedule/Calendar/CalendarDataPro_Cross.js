@@ -33,14 +33,17 @@ function chk_scheduleCSS() {
 	if(typeCal == 0){		
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
-			$('.td_list td[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).addClass('chk_noneDisplay');
 			});
 		});
 		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
 			var test = $(this).val();
+			var chk_type=$(this).data("schedule-type");
 			
-			$('.td_list td[ownerid = "'+test+'"]').each(function(index, value){
+			$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).removeClass('chk_noneDisplay');
 			});
 		});					
@@ -48,13 +51,17 @@ function chk_scheduleCSS() {
 		console.log('주보기진입');
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
-			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).addClass('chk_noneDisplay');
 			});			
 		});
 		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
 			var test = $(this).val();
-			$('div[ownerid = "'+test+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).removeClass('chk_noneDisplay');
 			});			
 		});	
@@ -62,14 +69,17 @@ function chk_scheduleCSS() {
 		console.log('일보기진입');
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
-			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).addClass('chk_noneDisplay');
 			});			
 		});
 		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
 			var test = $(this).val();
+			var chk_type=$(this).data("schedule-type");
 			
-			$('div[ownerid = "'+test+'"]').each(function(index, value){
+			$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).removeClass('chk_noneDisplay');
 			});			
 		});	

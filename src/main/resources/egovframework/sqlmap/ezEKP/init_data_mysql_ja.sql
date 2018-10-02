@@ -20,11 +20,15 @@ INSERT INTO `tbl_usermaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`MAI
 -- primaryLang
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'PrimaryLang','3');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryLang', '시스템 언어', '3', '시스템 primary 언어를 설정한다.1: 한국어3: 일본어  (default: 1)', '2017-01-06 00:00:00', '일반');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryTimeZone', '시스템 표준 시간대', '230|+09:00', '시스템 primary 표준 시간대를 설정한다.시스템 Primary 표준 시간대 설정  (첫 로그인 시 사용자의 표준 시간대를 정할 수 없을 경우 시스템의 표준 시간대를 따름) (default: 230|+09:00)', '2017-01-06 00:00:00', '일반');
 
 -- 게시판
 INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
 
 -- 전자결재
+-- INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003','Top',0);
+-- INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000003', N'HWP양식함', N'ALL', N'ROOT', NULL, NULL,'Top',0);
+
 -- INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng','S907000',0);
 -- INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng','S907000',0);
 -- INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng','S907000',0);
@@ -437,7 +441,7 @@ Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENAN
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('a2149765-4c0b-466c-9e61-310925139d3c','everyone','組織図',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('a463482f-2e87-4ab1-be9f-e0ed5e054f76','everyone','組織図',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('9c7cfadb-4f21-4cbf-94b9-60669936a9f8','everyone','組織図',2,2,0);
-
+Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('34c08c4a-48a2-4cf1-8093-44aec5a783cf','everyone','両備グループ',2,2,0);
 
 Insert into TBL_PORTLET_CATEGORY (CATEGORY,DISPLAYNAME,TENANT_ID) values ('1','t4075',0);
 Insert into TBL_PORTLET_CATEGORY (CATEGORY,DISPLAYNAME,TENANT_ID) values ('2','t4076',0);
