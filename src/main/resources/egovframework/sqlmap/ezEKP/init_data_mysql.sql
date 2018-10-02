@@ -115,7 +115,6 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'signImageSize', '전자결재 사인이미지 크기', '50/50', '전자결재 사인칸의 이미지 크기를 설정한다. width/height 로 표기한다. (default: 50/50)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'reuseTitleYN', '전자결재 재사용 제목 포함여부', 'YES', '전자결재에서 결재문서 재사용 시 제목 정보를 가져온다. (재사용 버튼: 결재완료문서 조회 시 상단에 위치, 전자결재S에서 협조/합의 문서가 아니고 결재선에 후결자가 없을 때 활성화)YES: 제목 정보 포함하여 재사용NO: 제목 빈 칸으로 재사용 (default: YES)', '2017-01-06 00:00:00', '전자결재S');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'receptGubunYN', '전자결재 수신자탭 표출 타입', 'N', '전자결재G 결재정보에서 양식종류에 따라 수신자탭이 보여지는 타입을 정한다Y: 시행문일 경우 외부탭, 수신문일 경우 조직도탭이 표출N: 양식종류에 상관없이 외부탭, 조직도탭 모두 표출 (default: N)', '2017-01-06 00:00:00', '전자결재G');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PrimaryTimeZone', '시스템 표준 시간대', '235|+09:00', '시스템 primary 표준 시간대를 설정한다.시스템 Primary 표준 시간대 설정  (첫 로그인 시 사용자의 표준 시간대를 정할 수 없을 경우 시스템의 표준 시간대를 따름) (default: 235|+09:00)', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'portalEnv', '마이포탈설정 메뉴표출 범위', '0', '환경설정>마이포탈설정의 메뉴가 보여지는 범위를 정한다.0: 마이포탈페이지+초기화면설정1: 마이포탈페이지2: 초기화면설정3: 모두 안보임*패키지가 스탠다드고 firstScreen_Mail이 NO일때만 적용 (default: 0)', '2017-01-06 00:00:00', '포탈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'PersonalAgreeReturnType', '개인병렬 협조/합의 반송 처리 타입', '1', '개인병렬 협조/합의자가 반송한 경우 처리 타입을 정의한다.1: 반송해도 다음 결재권자에게 진행문서로 전달2. 한 명이라도 반송한 경우 원 기안자에게 반송 (default: 1)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'ONELINE_REPLY_ENABLE', '게시판 한줄답변 FLAG', '1', '커뮤니티 게시판의 한줄답변 FLAG0: 사용안함1: 사용 (default: 1)', '2017-01-06 00:00:00', '커뮤니티');
@@ -302,9 +301,6 @@ Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('ZA',
 
 -- approvalG Insert
 INSERT INTO TBL_LastDocID  (lastDocID, COMPANYID, TENANT_ID) VALUES ('0                ','Top', 0);
-
-INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003','Top',0);
--- INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000003', N'HWP양식함', N'ALL', N'ROOT', NULL, NULL,'Top',0);
 
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'100', N'001','S907000',0);
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'200', N'002','S907000',0);
@@ -544,7 +540,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A02','032','회송','1','회송','Returning','差し戻し','退回','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','0  ','결재방법','0','결재방법','결재방법',null,null,'Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','001','결재','1','일반','Approval','決裁','审批','Top',0);
-INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','002','확인','1','확인','Confirmation','回覧','確認','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','002','확인','1','확인','Confirmation','確認','確認','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','003','결재안함','0','결재안함','Skip-approval','決裁しない','不审批','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','004','전결','1','전결','Pre-approval','専決','先决','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A03','005','준법감시','0','감사','Audit','遵法監視','监督','Top',0);
@@ -639,7 +635,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA01','009','대외문서발송','0','대외발송','Send outside','?外へ?送','?外?送','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','0  ','결재방법','0','결재방법','결재방법',null,null,'Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','001','결재','1','일반','Approval','決裁','审批','Top',0);
-INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','002','확인','1','확인','Confirmation','回覧','確認','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','002','확인','1','확인','Confirmation','確認','確認','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','003','결재안함','0','결재안함','Skip-approval','決裁しない','不审批','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','004','전결','1','전결','Pre-approval','専決','先决','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA03','005','준법감시','0','감사','Audit','遵法監視','监督','Top',0);

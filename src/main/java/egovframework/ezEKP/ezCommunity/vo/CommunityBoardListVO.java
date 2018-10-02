@@ -54,6 +54,8 @@ public class CommunityBoardListVO {
 	String endDate;
 	/** 댓글갯수  //2018-05-04 홍승비 댓글갯수 표출 */
 	int oneLineCnt;
+	/** 2018-07-18 홍승비 - 게시자 부서ID 추가 */
+	String writerDeptID;
 
 	public String getC_ClubGubun() {
 		return c_ClubGubun;
@@ -253,6 +255,14 @@ public class CommunityBoardListVO {
 
 	public void setOneLineCnt(int oneLineCnt) {
 		this.oneLineCnt = oneLineCnt;
+	}
+
+	public String getWriterDeptID() {
+		return writerDeptID;
+	}
+
+	public void setWriterDeptID(String writerDeptID) {
+		this.writerDeptID = writerDeptID;
 	}
 	
 }
