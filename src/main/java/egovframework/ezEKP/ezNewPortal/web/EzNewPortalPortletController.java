@@ -1,4 +1,4 @@
-package egovframework.ezEKP.ezPortal.web;
+package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.Locale;
 import java.util.Properties;
@@ -31,8 +31,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzPortalPortletController {
-private static final Logger logger = LoggerFactory.getLogger(EzPortalPortletController.class);
+public class EzNewPortalPortletController {
+private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;

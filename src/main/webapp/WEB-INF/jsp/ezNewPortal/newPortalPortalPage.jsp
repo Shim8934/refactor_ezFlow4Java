@@ -40,7 +40,6 @@
 				dataType : "html",
 				url : "/ezNewPortal/" + portletName + "Portlet.do",
 				success : function(result) {
-					console.log(portletName + "Portlet");
 					$("#" + portletName + "Portlet").html(result);
 				}
 			})
@@ -59,7 +58,7 @@
 		<aside id="quickSide">
 			<p class="linkBtn_open"></p>
 			<div class="aside_quick">퀵메뉴</div>
-			<div class="aside_link"></div>
+			<div class="aside_link">퀵링크</div>
 		</aside>
 		<section class="section_main">
 			<div class="portlet_area">

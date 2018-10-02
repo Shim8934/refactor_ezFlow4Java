@@ -79,7 +79,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
 	/**
-	 * 포탈 메인 화면 호출 함수
+	 * 포탈 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
@@ -89,7 +89,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	/**
-	 * 포탈 메인 화면 호출 함수
+	 * 포탈 탑메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do")
 	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
