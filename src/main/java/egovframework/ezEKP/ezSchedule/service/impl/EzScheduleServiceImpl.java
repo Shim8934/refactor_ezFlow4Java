@@ -1154,7 +1154,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_STARTDATE", startDate);
-		map.put("v_TENANTID", tenantId);		
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.insertScheduleRepeDel(map);
 	}

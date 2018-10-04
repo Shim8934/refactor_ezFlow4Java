@@ -19679,7 +19679,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</HEADERS>");
 		
-		if (!viewCompany.equals("1")) {
+		if (!viewCompany.equals("1") && !viewCompany.equals("")) {
 			hlength -= 1;
 		}
 		
@@ -19698,69 +19698,71 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<ROW>");
 			
 			for (int p = 0; p < hlength; p++) {
-				resultXML.append("<CELL>");
+				
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
-				if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("SENDERNAME")) {
-					fieldName = fieldName + langData;
-				}
-				
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				
-				if (fieldName.equals("COMPANYNAME") && !viewCompany.equals("1")) {
-				} else {
+				if (!fieldName.equals("COMPANYNAME") || (fieldName.equals("COMPANYNAME")&&viewCompany.equals("1"))) {
+					
+					resultXML.append("<CELL>");
+					
+					if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("SENDERNAME")) {
+						fieldName = fieldName + langData;
+					}
+					
+					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+					
 					resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
-				}
-				
-				if (p == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
-					// 3: 결재진행 문서, 21 : 서버저장 문서
-					if (!listType.equals("3") && !listType.equals("21")) {
-						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
-						resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA5>");
-						resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA6>");
-						resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA7>");
-						resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA8>");
-						resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA17>");
-						resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
-						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA19>");
-					} else {
-						resultXML.append("<DATA4>" + "" + "</DATA4>");
-						resultXML.append("<DATA5>" + "" + "</DATA5>");
-						resultXML.append("<DATA6>" + "" + "</DATA6>");
-						resultXML.append("<DATA7>" + "" + "</DATA7>");
-						resultXML.append("<DATA8>" + "" + "</DATA8>");
+					
+					if (p == 0) {
+						resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA2>");
+						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
+						// 3: 결재진행 문서, 21 : 서버저장 문서
+						if (!listType.equals("3") && !listType.equals("21")) {
+							resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
+							resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA5>");
+							resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA6>");
+							resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA7>");
+							resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA8>");
+							resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA17>");
+							resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
+							resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA19>");
+						} else {
+							resultXML.append("<DATA4>" + "" + "</DATA4>");
+							resultXML.append("<DATA5>" + "" + "</DATA5>");
+							resultXML.append("<DATA6>" + "" + "</DATA6>");
+							resultXML.append("<DATA7>" + "" + "</DATA7>");
+							resultXML.append("<DATA8>" + "" + "</DATA8>");
+						}
+						
+						if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals(staDSSuSin) && !listType.equals("3")) {
+							resultXML.append("<DATA9>" + getAprDocListReceiveSN(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), companyID, tenantID) + "</DATA9>");
+						} else {
+							resultXML.append("<DATA9>" + "0" + "</DATA9>");
+						}
+						
+						resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
+						resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
+						resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
+						resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent()) + "</DATA13>");
+						resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+						resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
+						resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
+						//일괄결재로 인한 추가인데 위에 DATA17 겹침
+						resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA17>");
+						resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
 					}
 					
-					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals(staDSSuSin) && !listType.equals("3")) {
-						resultXML.append("<DATA9>" + getAprDocListReceiveSN(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), companyID, tenantID) + "</DATA9>");
-					} else {
-						resultXML.append("<DATA9>" + "0" + "</DATA9>");
+					if (fieldName.equals("HASATTACHYN")) {
+						resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
 					}
 					
-					resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
-					resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
-					resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
-					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent()) + "</DATA13>");
-					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
-					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
-					resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
-					//일괄결재로 인한 추가인데 위에 DATA17 겹침
-					resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA17>");
-					resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
+					if (fieldName.equals("ISPUBLIC")) {
+						resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					}
+					
+					resultXML.append("</CELL>");
 				}
-				
-				if (fieldName.equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
-				}
-				
-				if (fieldName.equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
-				}
-				
-				resultXML.append("</CELL>");
 			}
 			
 			resultXML.append("</ROW>");
