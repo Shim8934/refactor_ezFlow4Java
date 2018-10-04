@@ -65,12 +65,13 @@
 				if ("${pCompanyBoard }" == "") {
 					document.getElementById("Board0_Newboard").style.display = "none";
 				}
-				if ("${pDeptBoardID }" == "") {
+				//newPortal에 ID값 주석처리되있음
+				/* if ("${pDeptBoardID }" == "") {
 					document.getElementById("Board1_Newboard").style.display = "none";
 				}
 				if ("${pNewsBoardID }" == "") {
 					document.getElementById("Board2_Newboard").style.display = "none";
-				}
+				} */
 				
             	try { top.onresize() } catch (e) { }
         	}
