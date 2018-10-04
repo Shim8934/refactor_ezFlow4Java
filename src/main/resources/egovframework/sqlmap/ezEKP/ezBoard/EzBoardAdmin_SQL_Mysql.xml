@@ -1048,7 +1048,7 @@
 		    'false', 
 		    #v_pBoardGroupACL#, 
 		    #v_TENANTID#, 
-		    null
+		    #v_COMPANYID#
 		FROM tbl_board_boardinfo
 		WHERE
 			BOARDID in ( $v_upperBoadList$ )
