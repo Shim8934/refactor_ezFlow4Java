@@ -705,7 +705,7 @@
 	                    retval = "<spring:message code = 'ezCommunity.t1508' />";
 	                    break;
 	                case "t1509":
-	                    retval = "<spring:message code = 'ezCommunity.t1499' />";
+	                    retval = "<spring:message code = 'ezCommunity.t1509' />";
 	                    break;
 	                case "t1510":
 	                    retval = "<spring:message code = 'ezCommunity.t1510' />";
