@@ -137,6 +137,7 @@
 	        var nonElecRec = "${nonElecRec}";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 	        var useReceiveDocNo = "${useReceiveDocNo}";
+	        var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";

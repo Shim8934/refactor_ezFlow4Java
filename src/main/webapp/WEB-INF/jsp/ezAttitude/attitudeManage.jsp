@@ -46,16 +46,12 @@
 			  -ms-box-shadow: 0 0 10px #000;
 			  box-shadow: 0 0 10px #000;
 			  text-align: left;
-			}
-			
-			table, td, th {
+			}	
+			td, th {
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-			}
-			th {
-				cursor: pointer;
-			}
+			}		
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -206,7 +202,7 @@
 	        });
 	        
 	        function windowResize() {
-	        	var height = document.documentElement.clientHeight - 100 - document.getElementById("mainmenu").clientHeight;
+	        	var height = document.documentElement.clientHeight - 130 - document.getElementById("mainmenu").clientHeight;
 	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
@@ -287,28 +283,28 @@
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
 					resultHtml += "<tr><th style='width: 60px; cursor:default;' colname='NO'>NO.</th>";
-					resultHtml += "<th style='width: 24%;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
-					resultHtml += "<th style='width: 22%;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
-					resultHtml += "<th style='width: 24%;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
-					resultHtml += "<th style='width: 30%;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
-					resultHtml += "<th style='width: 200px;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
+					resultHtml += "<th style='width: 24%; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+					resultHtml += "<th style='width: 22%; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
+					resultHtml += "<th style='width: 24%; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
+					resultHtml += "<th style='width: 30%; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
+					resultHtml += "<th style='width: 200px; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
 	    			break;
 	    		case "absent":
 	    			resultHtml += "<tr><th style='width: 60px; cursor:default;' colname='NO'>NO.</th>";
-	    			resultHtml += "<th style='width: 25%;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
-	    			resultHtml += "<th style='width: 25%;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
-	    			resultHtml += "<th style='width: 24%;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
-	    			resultHtml += "<th style='width: 26%;' colname='description'><spring:message code='ezAttitude.t9' /></th></tr>";
+	    			resultHtml += "<th style='width: 25%; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
+	    			resultHtml += "<th style='width: 25%; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<th style='width: 24%; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
+	    			resultHtml += "<th style='width: 26%; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th></tr>";
 	    			break;
 	    		case "history":
 	    			resultHtml += "<tr><th style='width: 60px; cursor:default;' colname='NO'>NO.</th>";
-	    			resultHtml += "<th style='width: 13%;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
-	    			resultHtml += "<th style='width: 13%;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
-	    			resultHtml += "<th style='width: 13%;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='width: 35%;' colname='change_Startdate'><spring:message code='ezAttitude.t149'/></th>";
-	    			resultHtml += "<th style='width: 13%;' colname='change_Type_Name'><spring:message code='ezAttitude.t134' /></th>";
-	    			resultHtml += "<th style='width: 13%;' colname='appr_User_Name'><spring:message code='ezAttitude.t62'/></th>";
-	    			resultHtml += "<th style='width: 180px;' colname='appr_Date'><spring:message code='ezAttitude.t63'/></th></tr>";
+	    			resultHtml += "<th style='width: 13%; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<th style='width: 13%; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
+	    			resultHtml += "<th style='width: 13%; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
+	    			resultHtml += "<th style='width: 35%; cursor: pointer;' colname='change_Startdate'><spring:message code='ezAttitude.t149'/></th>";
+	    			resultHtml += "<th style='width: 13%; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.t134' /></th>";
+	    			resultHtml += "<th style='width: 13%; cursor: pointer;' colname='appr_User_Name'><spring:message code='ezAttitude.t62'/></th>";
+	    			resultHtml += "<th style='width: 180px; cursor: pointer;' colname='appr_Date'><spring:message code='ezAttitude.t63'/></th></tr>";
 	    			break;
 	    		}
 	        	

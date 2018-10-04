@@ -1039,10 +1039,17 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     var xmlhttp = createXMLHttpRequest();
     xmlhttp.open("POST", "/ezCommunity/getItemViewNew.do?itemID=" + pItemID + "&boardID=" + pBoardID, false);
     xmlhttp.send();
-
-    /* 2018-07-03 홍승비 - 승인게시물 관련 companyID 다를 시 alert 작동 */
-    if (getNodeText(xmlhttp.responseXML.documentElement) == "FAIL") {
-    	 alert(strLangHSB01);
+    
+    var xmlDoc = xmlhttp.responseXML;
+    
+    /* 2018-07-19 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+    if (xmlDoc == null) {
+   	 alert(strLang166);
+   	 return;
+   }
+    /* 2018-10-04 홍승비 - 커뮤니티 답변게시물 관련 companyID 다를 시 alert 작동 */
+    if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
+    	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
     } else {
     if (CrossYN())
         window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
