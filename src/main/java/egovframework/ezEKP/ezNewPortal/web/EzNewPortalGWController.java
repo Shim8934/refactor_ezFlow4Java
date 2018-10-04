@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -29,11 +35,14 @@ public class EzNewPortalGWController {
 	@Autowired
 	private EzCommonService ezCommonService;
 	
-	@Resource(name="ezNewPortalService")
+	@Resource(name="EzNewPortalService")
 	private EzNewPortalService ezNewPortalService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
 
 	/////사용자///////
 	/**
@@ -1010,10 +1019,45 @@ public class EzNewPortalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
+			
+			//deptpath 구하기
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+			System.out.println(info.getRollInfo());
+			//진행중인 투표 중 내가 참여하고 있는 투표의 개수
+			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId);
+
+			JSONObject data = new JSONObject();
+			data.put("voteCount", voteCount);
+			
+			if (voteCount != 0) {
+				//투표 정보 가져오기
+				PollQuestionVO pollQuestion = ezNewPortalService.getVotePortletInfo(userId, companyId, deptPath, tenantId);
+				int qstId = pollQuestion.getQstId();
+				
+				LOGGER.debug("qstId : " + qstId);
+				System.out.println(pollQuestion.getTitle());
+				System.out.println(qstId);
+				List<PollAnswerVO> pollAnswer = ezNewPortalService.getVotePortletAnswer(qstId, tenantId);
+				int pollAnswerCount = 0;
+				
+				for (int i = 0; i < pollAnswer.size(); i++) {
+					pollAnswerCount += pollAnswer.get(i).getVotesNumber(); 
+				}
+				
+				data.put("qstId", qstId);
+				data.put("title", pollQuestion.getTitle());
+				data.put("pollAnswer", pollAnswer);
+				data.put("pollAnswerCount", pollAnswerCount);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

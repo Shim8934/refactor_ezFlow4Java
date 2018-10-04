@@ -1,4 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 <sqlMap namespace="ezNewPortal">
+
+<typeAlias alias="PollQuestionVO" type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
+<typeAlias alias="PollAnswerVO" type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
+<resultMap class="PollQuestionVO" id="PollQuestionVO">
+<result property="qstId" 			column="ID" />
+<result property="title" 			column="TITLE" />
+</resultMap>
+<resultMap class="PollAnswerVO" id="PollAnswerVO">
+<result property="qstId" 				column="QST_ID" />
+<result property="votesNumber" 			column="VOTES_NUM" />
+<result property="content"				column="CONTENT"/>
+</resultMap>
+<!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
+<select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
+<![CDATA[
+SELECT
+	COUNT(ID)
+FROM
+	tbl_vote_question A
+JOIN 
+	tbl_vote_user_and_question B
+ON 
+	A.ID = B.QST_ID
+AND
+	A.TENANT_ID = B.TENANT_ID
+WHERE
+	A.END_DATE > date_format(now(), '%Y-%m-%d %H:%i:%s')
+AND
+(
+	(
+		B.USER_ID = #userId#
+		AND
+		B.user_type = 'user'
+	)
+    OR
+    (
+		B.USER_type = 'company'
+        AND
+		B.USER_ID = #companyId#
+	)
+    OR
+	(
+		B.user_type = 'dept'
+		AND
+        B.USER_ID
+		IN
+			(
+				SELECT 
+					C.CN 
+				FROM 
+					TBL_DEPTMASTER C 
+				WHERE 
+					(FIND_IN_SET (CN, #deptPath#) 
+					OR CN = 'Top') 
+				AND C.TENANT_ID = #tenantId#
+			)
+	)
+)
+AND
+	a.TENANT_ID = #tenantId#
+]]>
+</select>
+<!-- 가장 최근에 만들어진 진행중이면서 사용자가 참여 중인 투표 정보 가져오기 -->
+<select id="ezNewPortal.getVotePortletInfo" parameterClass="Map" resultMap="PollQuestionVO">
+<![CDATA[
+SELECT	
+	A.ID,	 
+	A.TITLE	
+FROM	
+	tbl_vote_question A
+JOIN 
+	tbl_vote_user_and_question B
+ON 
+	A.ID = B.QST_ID
+AND
+	A.TENANT_ID = B.TENANT_ID
+WHERE
+	A.END_DATE > date_format(now(), '%Y-%m-%d %H:%i:%s')
+AND
+(
+	(
+		B.USER_ID = #userId#
+		AND
+		B.user_type = 'user'
+	)
+    OR
+    (
+		B.USER_type = 'company'
+        AND
+		B.USER_ID = #companyId#
+	)
+    OR
+	(
+		B.user_type = 'dept'
+		AND
+        B.USER_ID
+		IN
+			(
+				SELECT 
+					C.CN 
+				FROM 
+					TBL_DEPTMASTER C 
+				WHERE 
+					(FIND_IN_SET (CN, #deptPath#) 
+					OR CN = 'Top') 
+				AND C.TENANT_ID = #tenantId#
+			)
+	)
+)
+AND
+	a.TENANT_ID = #tenantId#
+ORDER BY 
+	CREATE_DATE DESC
+LIMIT 
+	1
+]]>
+</select>
+<select id="ezNewPortal.getVotePortletAnswer" parameterClass="Map" resultMap="PollAnswerVO">
+<![CDATA[
+SELECT 
+	QST_ID, VOTES_NUM, CONTENT
+FROM 
+	TBL_VOTE_ANSWER
+WHERE 
+	QST_ID = #qstId#
+AND
+	TENANT_ID = #tenantId#
+]]>
+</select>
 </sqlMap>
