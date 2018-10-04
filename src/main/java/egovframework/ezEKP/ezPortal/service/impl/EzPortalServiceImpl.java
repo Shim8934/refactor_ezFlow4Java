@@ -260,14 +260,13 @@ logger.debug("map.toString()" + map.toString());
 		map.put("v_pCOMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
-		map.put("nowDate", nowDate);
-		
 		String temp = ezPortalDAO.getUserInfo3_S(map);
 		
 		if (temp != null && temp.equals("1")) {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			map.put("nowDate", date.format(new Date()));
+			
 			ezPortalDAO.getUserInfo3_I1(map);
 			ezPortalDAO.getUserInfo3_I2(map);
 		}

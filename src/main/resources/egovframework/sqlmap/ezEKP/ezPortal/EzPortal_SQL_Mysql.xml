@@ -496,13 +496,13 @@
        		WHERE
 				(NOT EXISTS
 					(SELECT
-						UID_ 
+						UID_
                     FROM
 						TBL_TOPMENU_ITEMS 
 					WHERE
 						uid_ = B.uid_
 					AND
-						tenant_id = #tenantID#	 ) )
+						tenant_id = #tenantID#))
 			AND
 				A.tenant_id = #tenantID#
 			AND
@@ -522,38 +522,40 @@
         		DUAL
        		WHERE
        			NOT EXISTS
-       				( SELECT
-       				  	B.* 
-                      FROM
-                      	TBL_PORTALPAGE_GENERAL A, TBL_PORTALPAGE_GENERAL B
-                      WHERE
-                      	( NOT EXISTS
-                      		( SELECT
-                      		  	UID_ 
-                              FROM
-                              	TBL_PORTALPAGE_ITEMS 
-							  WHERE
-							  	UID_ = A.UID_
-							  AND
-							  	TENANT_ID = #tenantID#	 ) )
-             		  AND
-             		  	A.UID_ = B.ParentUID
-             		  AND
-             		  	A.TENANT_ID = B.TENANT_ID	
-                      AND
-                      	A.UseFlag = #v_pUSERFLAG#
-					  AND
-					  	B.CompanyID = #v_pCOMPANYID#
-					  AND
-					  	B.ParentUID = #v_pPARENTUID#
-					  AND
-					  	B.GubunFlag = #v_pGUBUNFLAG#
-					  AND
-					  	B.CreatorID = #v_pUSERID#
-					  AND 
-					  	B.TENANT_ID = #tenantID#
-					  AND
-					  	A.TENANT_ID = #tenantID#		 )
+       				(SELECT
+						A.*
+					FROM
+						TBL_PORTALPAGE_GENERAL A
+					JOIN
+						TBL_PORTALPAGE_GENERAL B
+					ON
+						A.tenant_id = B.tenant_id
+					AND
+						A.parentuid = B.uid_
+					AND
+						A.companyid = B.companyid
+					WHERE
+						(NOT EXISTS
+							(SELECT
+								uid_
+							FROM
+								TBL_PORTALPAGE_ITEMS
+							WHERE
+								uid_ = B.uid_
+							AND
+								tenant_id = #tenantID#))
+					AND
+						A.tenant_id = #tenantID#
+					AND
+						A.companyid = #v_pCOMPANYID#
+					AND
+						B.useflag = #v_pUSERFLAG#
+					AND
+						A.parentuid = #v_pPARENTUID#
+					AND
+						A.gubunflag = #v_pGUBUNFLAG#
+					AND
+						A.creatorid = #v_pUSERID#)
 		]]>
 	</select>
 	
