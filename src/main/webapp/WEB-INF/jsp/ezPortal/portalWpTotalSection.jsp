@@ -1082,7 +1082,7 @@
                     <dd class="iconCount_none" id="schedulenum">0</dd>
                 </dl>
 			</div>
-            <div class="countingIcon02">
+            <div class="countingIcon02" ${hasWorkspace == true ? "style='width:258px'" : "" }>
             	<dl id="Poll" onClick="btnSumming_click(this)">
                     <dt class="iconImg"><img src="/images/kr/main/countingIcon05.png"></dt>
                     <dd class="iconText"><spring:message code="main.t00020" /></dd>                        
