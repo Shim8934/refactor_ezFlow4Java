@@ -453,28 +453,30 @@
 	<select id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
 			SELECT
-				B.* 
+				A.*
         	FROM
-        		TBL_TOPMENU_GENERAL A, TBL_USERINFO B
+        		TBL_USERINFO A
+        	JOIN
+        		TBL_TOPMENU_GENERAL B
+        	ON
+        		A.tenant_id = B.tenant_id
+        	AND
+        		A.uid_ = B.uid_
        		WHERE
-       			( NOT EXISTS ( SELECT 
-       								 	UID_ 
-                             		 FROM 
-                             		 	TBL_TOPMENU_ITEMS 
-                              		 WHERE
-                              		 	UID_ = A.UID_
-                              		 AND
-                              		 	TENANT_ID = #tenantID#	 ) )
+       			(NOT EXISTS (SELECT
+								uid_
+                             FROM
+                              	TBL_TOPMENU_ITEMS
+                             WHERE
+                              	uid_ = A.uid_
+                             AND
+                             	tenant_id = #tenantID#))
 			AND
-				A.UID_ = B.UID_
-            AND
-                A.TENANT_ID = B.TENANT_ID
+				A.tenant_id = #tenantID#
 			AND
-				A.UseFlag = 'Y'
+				B.useflag = 'Y'
 			AND
-				B.UserID = #v_pUSERID#
-			AND
-				A.TENANT_ID = #tenantID#
+				A.userid = #v_pUSERID#
 		]]>
 	</select>
 	

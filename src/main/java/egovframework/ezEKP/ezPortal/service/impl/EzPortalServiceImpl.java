@@ -391,18 +391,22 @@ logger.debug("map.toString()" + map.toString());
 		return ezPortalDAO.topGetUserInfo2(map);
 	}
 	
+	/**
+	 * TBL_USERINFO table에 값 하나도 안들어가 있어서 인자값 상관없이 무조건 null 반환
+	 */
 	@Override
 	public PortalTBLUserInfoVO topGetUserInfo(String pUserID, int tenantID) throws Exception {
 		logger.debug("topGetUserInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pUSERID", pUserID);
 		map.put("tenantID", tenantID);
 
-		logger.debug("topGetUserInfo ended");
+		PortalTBLUserInfoVO result = ezPortalDAO.topGetUserInfo(map);
 		
-		return ezPortalDAO.topGetUserInfo(map);
+		logger.debug("topGetUserInfo ended.");
+		
+		return result;
 	}
 	
 	@Override
