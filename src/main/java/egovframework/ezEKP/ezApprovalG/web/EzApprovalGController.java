@@ -5601,6 +5601,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
 		String userLang = userInfo.getLang();
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String viewCompany = ezCommonService.getTenantConfig("viewCompany", userInfo.getTenantId()); //companyID 관련 tenant_config 추가 [return ::> 1 = 회사 보임(YES), 0 = 회사 가림(NO)]
 		
 		Document xmlDomSub = null;
 		//<SEARCHQUERy> > 10인 경우	
@@ -5683,7 +5684,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String result = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), searchQuery, xmlDomSub, userInfo.getTenantId(), userInfo.getOffset());
-
+		
 		Document xmlResult = commonUtil.convertStringToDocument(result);
 		NodeList docListNode = xmlResult.getElementsByTagName("ROW");
 		
@@ -5692,13 +5693,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String strAprState = "";
 			String aprType_aprState = "";
 			String aprDocUserID = "";
+			String orgCompanyID = "";
 
 			for (int k = 0; k < docListNode.getLength(); k++) {
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+				orgCompanyID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(21).getTextContent();
+				//orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
 				
-				String orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
 				if (!aprDocUserID.equals(userID)) {
 					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
@@ -5734,10 +5737,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
-	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
-	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
-	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
-	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            
+	                            if (viewCompany.equals("1")) {
+		                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
+		                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
+		                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
+		                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
+		                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(4).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            } else {
+	                            	sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            	sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            	sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            	sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            }
+	                            
 	                            sbStr.append("</tr>");    
 							}
 						}
@@ -5751,6 +5764,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("sbStr", sbStr.toString());
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("viewCompany", viewCompany);
 		logger.debug("doApprovAllselect ended");
 		
 		return "ezApprovalG/apprGdoApprovAllselect";
