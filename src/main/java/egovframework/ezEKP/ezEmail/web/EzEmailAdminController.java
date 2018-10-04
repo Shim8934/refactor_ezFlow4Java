@@ -180,6 +180,8 @@ public class EzEmailAdminController {
 				
 				int totalSzie = distributionTotalList.size();
 				
+				logger.debug("totalSzie=" + totalSzie);
+				
 				//공용배포그룹 전체 리스트에서 자기 자신 제외
 				for (int i = totalSzie - 1 ; i >= 0; i--) {
 					String totalId = distributionTotalList.get(i).getId();
@@ -190,13 +192,16 @@ public class EzEmailAdminController {
 					
 				}
 				
-				int upperSzie = distributionUpperList.size();
+				totalSzie = distributionTotalList.size();
+				int upperSize = distributionUpperList.size();
+				
+				logger.debug("totalSzie=" + totalSzie + ",upperSize=" + upperSize);
 				
 				//공용배포그룹에서 자기를 포함하는 공용배포그룹 제외
 				for (int i = totalSzie - 1 ; i >= 0; i--) {
 					String totalId = distributionTotalList.get(i).getId();
 					
-					for (int j = upperSzie - 1; j >= 0; j--) {
+					for (int j = upperSize - 1; j >= 0; j--) {
 						String upperId = distributionUpperList.get(j).getId();
 						
 						if (totalId.equals(upperId)) {
