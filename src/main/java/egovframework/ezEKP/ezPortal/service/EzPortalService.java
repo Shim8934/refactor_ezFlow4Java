@@ -142,7 +142,7 @@ public interface EzPortalService {
 	
 	public String useStartPageChack2 (String pUserID, String pCompanyID, String pParentUID, int tenantID) throws Exception;
 	
-	public String getPortalConfigItem (String pItemName, String pPageID, int tenantID) throws Exception;
+	public String getPortalConfigItem (String pItemName, String pPageID, int tenantID, String companyID) throws Exception;
 	
 	public String getPortletConfigItem (String pItemName, String pPortletID, int tenantID, String companyID) throws Exception;
 	
