@@ -4674,9 +4674,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		// 답변메일의 게시물 정보를 가져온다.
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		
-		// 회사가 다르면 result를 FAIL로 반환한다. 만약 어느 회사에서 확인해야 하는지 알려야 한다면 이곳에서 다른 값을 보내자.
+		// 회사가 다르면 result를 FAIL로 반환한다. 사용자의 lang에 따라 회사이름을 다국어로 보낸다.
 		if (!item.getWriterCompanyID().equals(userInfo.getCompanyID())) {
-			result = "FAIL";
+			return "<DATA><DATA1>FAIL</DATA1><DATA2>" + item.getWriterCompanyName() + "</DATA2></DATA>";
 		}
 		
 		logger.debug("getItemViewNew ended.");

@@ -175,10 +175,13 @@
 	        }
 	        
 	        function deleteSchedule_Complete(ret) {
+	        	alert('으아아아아 : ' + ret);
 				if (ret == "0") {
 					once_delete_schedule();
 				} else if (ret == "1") {
 					delete_schedule();
+				} else {
+					alert('ret가 0도 아니고 1도 아닐 때 ' + ret);
 				}
 		    }
 	        
