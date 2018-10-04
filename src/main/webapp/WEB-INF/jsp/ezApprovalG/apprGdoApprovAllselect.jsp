@@ -283,14 +283,25 @@
 		        </tr>
 		        <tr>
 		            <td  style="text-align:center;">
-		                <div style="overflow-y:auto;width:600px;HEIGHT:350px;">
+		                <div style="overflow-y:auto;width:680px;HEIGHT:350px;">
 		                    <table class="mainlist" >
 		                        <tr >
 		                            <th style="padding:0;text-align:center;width:20px;"><input type="checkbox" id="mainChk" onclick="checkAll(this.id)" /></th>
-		                            <th style="width:280px;"><spring:message code='ezApprovalG.t106'/></th>
-		                            <th style="width:100px;"><spring:message code='ezApprovalG.t1331'/></th>
-		                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>
-		                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th>
+		                            <c:choose>
+		                            	<c:when test="${viewCompany eq '1'}">
+				                            <th style="width:280px;"><spring:message code='ezApprovalG.t106'/></th>  <%-- 제목 --%>
+				                            <th style="width:100px;"><spring:message code='ezApprovalG.t1145'/></th> <%-- 회사 --%>
+				                            <th style="width:100px;"><spring:message code='ezApprovalG.t1331'/></th> <%-- 기안부서 --%>
+				                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>   <%-- 기안자 --%>
+				                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th> <%-- 기안일시 --%>
+		                            	</c:when>
+		                            	<c:otherwise>
+				                            <th style="width:290px;"><spring:message code='ezApprovalG.t106'/></th>  <%-- 제목 --%>
+				                            <th style="width:110px;"><spring:message code='ezApprovalG.t1331'/></th> <%-- 기안부서 --%>
+				                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>   <%-- 기안자 --%>
+				                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th> <%-- 기안일시 --%>
+		                            	</c:otherwise>
+		                            </c:choose>
 		                        </tr>
 		                        ${sbStr}
 		                    </table>
