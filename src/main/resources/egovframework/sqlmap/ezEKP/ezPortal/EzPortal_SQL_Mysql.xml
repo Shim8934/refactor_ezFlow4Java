@@ -33,6 +33,7 @@
 	<typeAlias  alias="PortalMyPortalListVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
 	<typeAlias  alias="PortalNewMyPortalPageListVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO"/>
 	<typeAlias  alias="PortalUseTopMenuID2VO" 						type="egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO"/>
+	<typeAlias  alias="PortalTopOtherCompanyAddJobVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -306,6 +307,14 @@
 		<result property="uID"							column="UID_"						columnIndex="1"/>
 		<result property="displayName"				    column="DISPLAYNAME"			    columnIndex="2"/>
 		<result property="htmlData"					    column="HTMLDATA"				    columnIndex="3"/>
+	</resultMap>
+	
+	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
+		<result property="companyID"					column="companyID"						/>
+		<result property="deptID"						column="deptID"						/>
+		<result property="companyName"					column="companyName"						/>
+		<result property="deptName"						column="deptName"						/>
+		<result property="apprCount"					column="aprCount"						/>
 	</resultMap>
 	
 	<select id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
@@ -1126,8 +1135,8 @@
 				UID_ = #v_pPAGEID#
 			AND
 				TENANT_ID = #tenantID#	 
-			LIMIT
-                1
+			AND
+				COMPANYID = #companyID#
 		]]>
 	</select>
 	
@@ -1143,8 +1152,6 @@
 				TENANT_ID = #tenantID#
             AND
                 COMPANYID = #companyID#
-			LIMIT
-                1
 		]]>
 	</select>
 	
@@ -2566,5 +2573,54 @@
 			a.lang = #lang#
 		and
 			b.parentuid = #parentUID#
+	</select>
+	
+	<select id="EzPortalDAO.getAllCompanyList" parameterClass="map" resultMap="PortalTopOtherCompanyAddJobMap">
+		<![CDATA[
+			select
+			 d.EXTENSIONATTRIBUTE2 companyID,
+			 d.EXTENSIONATTRIBUTE3 companyName,
+			 d.cn deptID,
+			 d.displayname deptName,
+			 count(ap.docid) as aprCount
+			from
+			tbl_deptmaster d
+			left join 
+			(select * from VAPRDOINGDOCLIST 
+			where APRMEMBERID IN (#userId#) 
+			AND APRTYPE <> '015'
+			union all
+			 SELECT * FROM  VENDCHAMJODOCINFO
+			 where APRMEMBERID IN (#userId#) 
+			AND APRTYPE <> '015') ap
+			on (ap.companyid = d.EXTENSIONATTRIBUTE2 and ap.tenant_id = d.tenant_id)
+			where d.cn = (select department from tbl_usermaster where cn = #userId# and tenant_id = #tenantId#)
+			and d.tenant_id = #tenantId# 
+			group by companyID, companyName, deptID, deptName 
+			union
+			all
+			select
+			 d.EXTENSIONATTRIBUTE2 companyID,
+			 d.EXTENSIONATTRIBUTE3 companyName,
+			 d.cn deptID,
+			 d.displayname deptName,
+			 count(ap.docid) aprCount
+			from
+			tbl_addjobmaster ad
+			inner join tbl_deptmaster d
+			on (ad.tenant_id = d.tenant_id and ad.deptid = d.cn)
+			left join 
+			(select * from VAPRDOINGDOCLIST 
+			where APRMEMBERID IN (#userId#) 
+			AND APRTYPE <> '015'
+			union all
+			 SELECT * FROM  VENDCHAMJODOCINFO
+			 where APRMEMBERID IN (#userId#) 
+			AND APRTYPE <> '015') ap
+			on (ap.companyid = d.EXTENSIONATTRIBUTE2 and ap.tenant_id = d.tenant_id)
+			where ad.cn = #userId# and d.tenant_id = #tenantId#
+			and d.EXTENSIONATTRIBUTE2 <> (select PHYSICALDELIVERYOFFICENAME from tbl_usermaster where cn = #userId# and tenant_id = #tenantId#)
+			group by companyID, companyName, deptID, deptName
+		]]>
 	</select>
 </sqlMap>

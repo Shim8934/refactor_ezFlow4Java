@@ -69,13 +69,17 @@
 			
 			function Check_ID(pValue){
 				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
-					if(pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90){
+					if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
 						// A-Z
-					}else if(pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122){
+					} else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
 						// a-z
-					}else if(pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57){
+					} else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
 						// 0-9
-					}else{
+					} else if (pValue.charCodeAt(iCnt) == 45) {
+		                // -
+		            } else if (pValue.charCodeAt(iCnt) == 95) {
+                        // _
+                    } else {
 						return false;
 					}
 				}				

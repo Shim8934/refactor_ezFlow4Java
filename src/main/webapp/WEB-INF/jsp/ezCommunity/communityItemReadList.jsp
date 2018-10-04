@@ -32,8 +32,9 @@
 		        }		    	
 		    };
 		
-			function show_info(userid) {
-	            window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", GetOpenWindowfeature(438, 440));
+		    /* 2018-07-02 홍승비 - 커뮤니티 게시물 조회자 정보 > 겸직부서의 정보로 표출 */
+			function show_info(userID, deptID) {
+	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", GetOpenWindowfeature(438, 440));
 	        }
 			
 		    function close_onclick() {
@@ -136,7 +137,8 @@
 			          
 				        $("#lvBoardList tr").on("click", function () {
 				        	userID = $(this).closest("tr").attr("userid");
-				        	show_info(userID);
+				        	deptID = $(this).closest("tr").attr("deptid");
+				        	show_info(userID, deptID);
 				        });
 			            
 			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");

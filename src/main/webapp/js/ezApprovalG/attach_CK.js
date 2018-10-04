@@ -10,7 +10,8 @@ function InitAttach(pDocID) {
 		async : false,
 		url : "/ezApprovalG/attachRequest.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -106,7 +107,7 @@ function DelAttachFileAtList(pAttachCurSel) {
 }
 function SaveAttachListInfo(Attachxml) {
     var ReturnVal;
-    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do", false);
+    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(Attachxml);
     
     if (xmlhttp.responseText == "TRUE") {
@@ -393,7 +394,8 @@ function AttachRemoveAll() {
 		async : false,
 		url : "/ezApprovalG/attachRemove.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -541,7 +543,8 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 			modifyFlag : pModifyFlag,
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16]
+			userDeptName2 : arr_userinfo[16],
+			orgCompanyID : orgCompanyID
 		},
 		success: function(result){
 			if (result == "TRUE") {

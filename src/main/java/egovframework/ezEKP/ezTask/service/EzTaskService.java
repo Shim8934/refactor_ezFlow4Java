@@ -17,19 +17,19 @@ public interface EzTaskService {
 	
 	List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception;
 	
-	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID) throws Exception;
+	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID, String companyID) throws Exception;
 	
-	Map<String, Integer> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception;
+	Map<String, Integer> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID, String companyID) throws Exception;
 	
 	List<TaskInfoVO> getRepTaskList(String taskID, String offset, String primary, String date, int tenantID) throws Exception;
 	
 	void setRepTaskInfo(TaskInfoVO vo) throws Exception;
 	
-	Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO) throws Exception;
+	Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO, String companyID) throws Exception;
 
 	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
 
-	TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception;
+	TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID, String companyID) throws Exception;
 	
 	TaskConfigVO getOriginColor(String userID, int tenantID) throws Exception;
 	
@@ -37,7 +37,7 @@ public interface EzTaskService {
 	
 	String taskWorkSave(String taskID, String content, String attachList, String fileName, String fileSize, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
 	
-	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, String taskStatusCount, String pSelectTab, int tenantID) throws Exception;
+	String getTaskCount(String userID, String offset, String type, String filter, String chkValue, String primary, String taskStatusCount, String pSelectTab, int tenantID, String companyID) throws Exception;
 	
 	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
 	
@@ -47,13 +47,13 @@ public interface EzTaskService {
 	
 	void updateNumberOfTotalReps(String taskID, int tenantID) throws Exception;
 	
-	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID) throws Exception;
+	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, String fileSize, String fileName, int tenantID, String companyID) throws Exception;
 	
 	void taskSaveConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;
 	
 	void taskUpdateConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;
 	
-	void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception;
+	void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID, String companyID) throws Exception;
 
 	void taskSaveGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception;
 

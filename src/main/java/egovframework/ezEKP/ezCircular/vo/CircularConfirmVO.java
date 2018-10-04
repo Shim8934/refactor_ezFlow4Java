@@ -13,6 +13,9 @@ public class CircularConfirmVO {
 	private String title;
 	/** 확인일시*/
 	private String confirmDate;
+	/** 확인자부서ID*/
+	private String deptID;
+	
 	public String getMemberID() {
 		return memberID;
 	}
@@ -48,6 +51,12 @@ public class CircularConfirmVO {
 	}
 	public void setConfirmDate(String confirmDate) {
 		this.confirmDate = confirmDate;
+	}
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
 	}
 	
 }

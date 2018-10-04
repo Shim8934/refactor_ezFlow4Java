@@ -26,14 +26,16 @@
         <result property="creator"           	column="creator"                   columnIndex="11"	/>
         <result property="creatorName1"         column="creator_name1"             columnIndex="12" />
         <result property="creatorName2"         column="creator_name2"             columnIndex="13" />
-        <result property="filePath"          	column="file_path"                 columnIndex="14" />
-        <result property="resultFirst"          column="result_first"              columnIndex="15" />
-        <result property="isMofifying"          column="is_modifying"              columnIndex="16" />
-        <result property="setDate"          	column="set_date"              	   columnIndex="17" />
-        <result property="isSorting"          	column="is_sorting"                columnIndex="18" />
-        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="19" />
-        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="20" />
-        <result property="openToAll" 			column="openToAll"		  	 	   columnIndex="21" />
+        <result property="creatorDept"          column="creator_dept"              columnIndex="14" />
+        <result property="filePath"          	column="file_path"                 columnIndex="15" />
+        <result property="resultFirst"          column="result_first"              columnIndex="16" />
+        <result property="isMofifying"          column="is_modifying"              columnIndex="17" />
+        <result property="setDate"          	column="set_date"              	   columnIndex="18" />
+        <result property="isSorting"          	column="is_sorting"                columnIndex="19" />
+        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="20" />
+        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="21" />
+        <result property="openToAll" 			column="openToAll"		  	 	   columnIndex="22" />
+        <result property="companyId" 			column="companyid"		  	 	   columnIndex="23" />
         
     </resultMap>    
     
@@ -59,6 +61,7 @@
         <result property="fileName"         	column="file_name"               	columnIndex="10"/>        
         <result property="filePath"         	column="file_path"               	columnIndex="11"/>
         <result property="cmtTime"         		column="cmt_time"               	columnIndex="12"/>
+        <result property="deptId"         		column="dept_id"               		columnIndex="13"/>
     </resultMap>    
 	
 	<resultMap id="pollUserAnswer" class="PollUserAnswerVO">
@@ -69,6 +72,7 @@
         <result property="userName1"         	column="user_name1"                	columnIndex="5"/>
         <result property="userName2"         	column="user_name2"                	columnIndex="6"/>
         <result property="voteDate"         	column="vote_date"               	columnIndex="7"/>
+        <result property="deptId"         		column="dept_id"               		columnIndex="8"/>
     </resultMap>   
     
     <resultMap id="pollQuestionStatus" class="PollQuestionStatusVO">
@@ -78,6 +82,7 @@
         <result property="seen"                	column="seen"                       columnIndex="4"/>   
         <result property="comment"         		column="comment"                	columnIndex="5"/>
         <result property="hide"         		column="hide"               	    columnIndex="6"/>
+        <result property="deptId"         		column="dept_id"               	    columnIndex="7"/>
     </resultMap>  
     
     <resultMap id="pollUser" class="PollUserVO">
@@ -85,6 +90,7 @@
     	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
         <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
         <result property="userType"         	column="user_type"                	columnIndex="4"/>
+        <result property="companyId" 			column="companyid"		  	 	   	columnIndex="5"/>
     </resultMap>
      
     <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -138,14 +144,16 @@
 	            INSERT INTO TBL_VOTE_QUESTION(
 	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       CREATE_DATE,
 	                START_DATE,         END_DATE,          TARGET,              TITLE,          	SECRET_VOTE,        
-	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    FILE_PATH,		    RESULT_FIRST,		
-	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE,		SENDPOSTNOTICE,		OPENTOALL
+	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    CREATOR_DEPT,		FILE_PATH,
+	                RESULT_FIRST,		SET_DATE,		   IS_SORTING,		    IS_SELONLYONCE,		SENDPOSTNOTICE,
+	                OPENTOALL,			COMPANYID
 	            )
 	            VALUES(
 	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #create_date#,
 	                #start_date#,       #end_date#,         #target#,           #title#,     		#secret_vote#,
-	                #creator#,		    #creator_name1#,	#creator_name2#,	#file_path#,		#result_first#,		
-	                #set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#,	#opentoall#
+	                #creator#,		    #creator_name1#,	#creator_name2#,	#creator_dept#,		#file_path#,
+	                #result_first#,		#set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#,
+					#opentoall#,		#companyid#
             )  
         	]]>
         </isEqual>
@@ -165,6 +173,7 @@
 	            	 CREATOR			= #creator#,
 	            	 CREATOR_NAME1		= #creator_name1#,
 	            	 CREATOR_NAME2		= #creator_name2#,
+	            	 CREATOR_DEPT		= #creator_dept#,
 	            	 FILE_PATH			= #file_path#,
 	            	 RESULT_FIRST		= #result_first#,
 	            	 SET_DATE			= #set_date#,
@@ -183,10 +192,12 @@
     <insert id="EzPollDAO.addAnswerAndUser" parameterClass="Map">  
 	    <![CDATA[
 	            INSERT INTO TBL_VOTE_USER_AND_ANSWER(
-	                ANS_ID,        		QST_ID,		    USER_ID,          TENANT_ID, 		USER_NAME1,	      USER_NAME2,	   VOTE_DATE
+	                ANS_ID,        		QST_ID,		    USER_ID,          TENANT_ID, 		USER_NAME1,	      USER_NAME2,	   VOTE_DATE,
+	                DEPT_ID
 	            )
 	            VALUES(
-	                #opt_id#,          	#qst_id#, 		#user_id#,        #tenant_id#,		#user_name1#,	  #user_name2#,	   #vote_date#
+	                #opt_id#,          	#qst_id#, 		#user_id#,        #tenant_id#,		#user_name1#,	  #user_name2#,	   #vote_date#,
+	                (SELECT DEPT_ID FROM TBL_VOTE_QUESTION_RELATED WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id# AND USER_ID = #user_id#)
 	            )  
 	   ]]> 
     </insert>  
@@ -217,10 +228,12 @@
 		<isEqual property="v_temp1" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_USER_AND_QUESTION(
-	                QST_ID,        			USER_ID,		    TENANT_ID,          USER_TYPE
+	                QST_ID,        			USER_ID,		    TENANT_ID,          USER_TYPE,
+	                COMPANYID,				DEPT_ID
 	            )
 	            VALUES(
-	                #qst_id#,          	 	#user_id#, 			#tenant_id#,       #type#  
+	                #qst_id#,          	 	#user_id#, 			#tenant_id#,       #type#,
+	                #companyid#,			#dept_id#
 	            )  
         	]]>
         </isEqual>
@@ -296,15 +309,16 @@
     </insert>
     
     <insert id="EzPollDAO.insertCmt" parameterClass="Map"> 
-        	<![CDATA[
-	            INSERT INTO TBL_VOTE_COMMENT(
-	               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 USER_NAME1,	 USER_NAME2,	TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME 
-	            )
-	            VALUES( 
-	               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #user_name1#,	 #user_name2#,	#text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#
-	            )  
-        	]]>
-         
+       	<![CDATA[
+            INSERT INTO TBL_VOTE_COMMENT(
+               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 USER_NAME1,	 USER_NAME2,	TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME,
+               DEPT_ID
+            )
+            VALUES( 
+               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #user_name1#,	 #user_name2#,	#text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#,
+               (SELECT DEPT_ID FROM TBL_VOTE_QUESTION_RELATED WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id# AND USER_ID = #user_id#)  
+	       )
+       	]]>
     </insert>
 
     <select id="EzPollDAO.getQuestionSeq" resultClass="String">             
@@ -337,6 +351,26 @@
 		<![CDATA[
 			SELECT 
 				USER_ID
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+			AND 
+				USER_TYPE = #type#
+		]]>			
+    </select> 
+    
+   	<select id="EzPollDAO.getListOfUserForQst" resultClass="PollUserVO">             
+		<![CDATA[
+			SELECT 
+				QST_ID as qstid,
+				USER_ID as userid,
+				TENANT_ID as tenantid,
+				USER_TYPE as usertype,
+				COMPANYID as companyid,
+				DEPT_ID as deptid
 			FROM 
 				TBL_VOTE_USER_AND_QUESTION
 			WHERE  
@@ -392,6 +426,7 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
+				a.CREATOR_DEPT AS creatordept,
 				a.FILE_PATH AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
@@ -421,7 +456,12 @@
 						(
 								USER_TYPE = 'company'
 							AND
-								USER_ID   = #company_id#
+							(
+									USER_ID   = #company_id#
+								OR
+									USER_ID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
+							)
+								
 						) 
 					OR
 						(
@@ -438,7 +478,9 @@
 											(												
 												FIND_IN_SET	(CN, #v_deptPath#)		
 												OR 
-													CN = 'Top'									
+													CN = 'Top'
+												OR
+													CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id#)
 											)
 										AND
 											TENANT_ID = #tenant_id#
@@ -471,7 +513,7 @@
     
     <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">
 		<![CDATA[
-			SELECT 
+			SELECT DISTINCT
 				a.ID AS qstid,
 				a.TENANT_ID AS tenantid,
 				a.CONTENT AS content,
@@ -485,6 +527,7 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
+				a.CREATOR_DEPT AS creatordept,
 				a.FILE_PATH AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
@@ -496,8 +539,22 @@
 				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = a.TENANT_ID)) AS CMTCNT
 			FROM 
 				TBL_VOTE_QUESTION a
+			JOIN
+				TBL_VOTE_USER_AND_QUESTION b
+			ON
+				a.ID = b.QST_ID	
+			AND
+				a.TENANT_ID = b.TENANT_ID
 			WHERE 
-				TENANT_ID = #tenant_id#
+				a.TENANT_ID = #tenant_id#
+			AND
+			(
+					a.COMPANYID = #companyid#
+				OR
+					b.USER_ID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND tenant_id = #tenant_id#)
+				OR
+					b.USER_ID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
+			)
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
@@ -528,6 +585,8 @@
 				CREATOR = #user_id#
 			AND
 				TENANT_ID = #tenant_id#	
+			AND
+				COMPANYID = #companyid#	
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
 			<![CDATA[
@@ -622,15 +681,27 @@
     <select id="EzPollDAO.getHiddenQuestionIds" resultClass="Integer">             
 		<![CDATA[
 			SELECT 
-				QST_ID
+				a.QST_ID
 			FROM  
-				TBL_VOTE_QUESTION_RELATED
-			WHERE  
-				TENANT_ID = #tenant_id#	
+				TBL_VOTE_QUESTION_RELATED a
+			JOIN
+				TBL_VOTE_USER_AND_QUESTION b
+			ON
+				a.QST_ID = b.QST_ID	
 			AND
-				USER_ID   = #user_id#
+				a.TENANT_ID = b.TENANT_ID
+			WHERE 
+				a.TENANT_ID = #tenant_id#
+			AND
+			(
+					a.COMPANYID = #companyid#
+				OR
+					b.USER_ID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND tenant_id = #tenant_id#)
+			)
+			AND
+				a.USER_ID   = #user_id#
 			AND 
-				HIDE 	  = 1
+				a.HIDE 	  = 1
 		]]>			
     </select>   
     
@@ -660,10 +731,12 @@
 		<isEqual property="v_temp" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
-	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING,
+	                DEPT_ID
 	            )
 	            VALUES(
-	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   1,			   0
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   1,			   0,
+	                #dept_id#
             )  
         	]]>
         </isEqual>
@@ -710,10 +783,12 @@
 		<isEqual property="v_temp" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
-	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING,
+	                COMPANYID,		DEPT_ID
 	            )
 	            VALUES(
-	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   0,			   1
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   0,			   1,
+	                #companyid#,	#dept_id#
             )  
         	]]>
         </isEqual>
@@ -786,16 +861,58 @@
                                    		TENANT_ID = #tenant_id#
 								)
 			]]>
-		</selectKey>   
-		<isEqual property="v_temp" compareValue="1">     
+		</selectKey>
+		
+		<isEqual property="v_temp" compareValue="1"> 
+			<!-- 개인이나 회사가 대상자로 선택됐을 때 -->
+			<isNotEmpty property="userType">
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
-	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING,
+	                COMPANYID,		DEPT_ID
 	            )
 	            VALUES(
-	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0
-            )  
+	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0,
+	                #companyid#,	
         	]]>
+        		<isEqual property="userType" compareValue="user"><![CDATA[ #userDept# ]]></isEqual>
+        		<isEqual property="userType" compareValue="company"><![CDATA[ #dept_id# ]]></isEqual>
+            	)  
+			</isNotEmpty>    
+			
+			<!-- 부서가 대상자로 선택됐을 때 -->
+			<isEmpty property="userType">
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING,
+	                COMPANYID,		DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0,
+	                #companyid#,
+	                (SELECT 
+					  CASE
+					  WHEN COUNT(USER_ID) = 0
+					  THEN
+						  (SELECT DEPTID FROM TBL_ADDJOBMASTER a JOIN TBL_VOTE_USER_AND_QUESTION b ON a.TENANT_ID = b.TENANT_ID AND b.QST_ID = #qst_id# AND a.CN = #user_id# AND a.TENANT_ID = #tenant_id# LIMIT 0, 1)
+					  ELSE
+					  	USER_ID
+					  END
+					FROM 
+						TBL_VOTE_USER_AND_QUESTION 
+					WHERE 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+        	]]>
+						USER_ID IN ( 
+							<iterate property="deptPathArr" conjunction=","><![CDATA[ #deptPathArr[]# ]]></iterate> 
+						)
+					)
+					
+            	)  
+        	</isEmpty>
         </isEqual>
         
          <isNotEqual property="v_temp" compareValue="1">
@@ -1182,6 +1299,8 @@
 				TENANT_ID = #tenant_id#
 			AND
 				OPENTOALL = 1
+			AND
+				COMPANYID = #companyid#
 		]]>				
     </select>
     
@@ -1192,7 +1311,7 @@
 				b.password,
 				IFNULL(b.displayname, a.user_id) AS DISPLAYNAME,
 				IFNULL(b.displayname2, a.user_id) AS DISPLAYNAME2,
-				b.department,              
+				a.dept_id as department,
 				b.description,
 				b.description2,
 				b.title,
@@ -1216,7 +1335,8 @@
 					SELECT 
 						QST_ID,
 						USER_ID,
-						TENANT_ID
+						TENANT_ID,
+						DEPT_ID
 					FROM 
 						TBL_VOTE_QUESTION_RELATED
 					WHERE  
@@ -1229,95 +1349,119 @@
 			LEFT JOIN
 				(
 					SELECT 
-						cn,  
-			            password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
+						a.cn,  
+						a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
 					FROM 
 						TBL_USERMASTER a
+					JOIN
+						TBL_DEPTMASTER d
+					ON
+						a.TENANT_ID = d.TENANT_ID
+					AND
+						a.DEPARTMENT = d.CN
 					WHERE 
-						tenant_id = #tenant_id#
+						a.tenant_id = #tenant_id#
+					AND
+						d.EXTENSIONATTRIBUTE2 = #companyid#
 					AND 
-               			cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+               			a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 					union all
 					SELECT 
-						cn,  
-			            password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
+						a.cn,  
+						a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
 					FROM 
 						TBL_USERMASTER_RETIRE a
+					JOIN
+						TBL_DEPTMASTER d
+					ON
+						a.TENANT_ID = d.TENANT_ID
+					AND
+						a.DEPARTMENT = d.CN
 					WHERE 
-						tenant_id = #tenant_id#
+						a.tenant_id = #tenant_id#
+					AND
+						d.EXTENSIONATTRIBUTE2 = #companyid#
 				UNION ALL
 					SELECT 
-						cn,  
-			            password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
+						a.cn,  
+						a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
 					FROM 
 						TBL_USERMASTER_DELETE a
+					JOIN
+						TBL_DEPTMASTER d
+					ON
+						a.TENANT_ID = d.TENANT_ID
+					AND
+						a.DEPARTMENT = d.CN
 					WHERE 
-						tenant_id = #tenant_id#
+						a.tenant_id = #tenant_id#
+					AND
+						d.EXTENSIONATTRIBUTE2 = #companyid#
 					AND 
-                		cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
+                		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
 				) b
 				ON
 				a.USER_ID = b.cn
@@ -1341,55 +1485,55 @@
     <select id="EzPollDAO.getUserInfoMRD" resultMap="login">
 		<![CDATA[
 			SELECT
-				CN AS CN,
-				password,
-				IFNULL(displayname, CN) AS DISPLAYNAME,
-				IFNULL(displayname2, CN) AS DISPLAYNAME2,
-				department,              
-				description,
-				description2,
-				title,
-				title2,
-				companyid,
-				company,
-				company2,
-				updatedt,
-				rollinfo,
-				telephonenumber,
-				mail,
-				jikchek,
-				tenant_id,
-				deptPathCode,
-				primaryLang,
-				gyumJik,
-				userFileUrl,
-				sabun
+				a.cn,  
+				a.password,
+				a.displayname,
+				a.displayname2,
+				a.department,              
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.physicaldeliveryofficename as companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.extensionattribute1 as rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.extensionattribute10 as jikchek,
+				a.tenant_id,
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
 			FROM
 				(
 					SELECT 
-						cn,  
-			            password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
+						a.cn,  
+						a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
 					FROM 
 						TBL_USERMASTER a
 					WHERE 
@@ -1398,58 +1542,58 @@
                 		cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 				UNION ALL
 					SELECT 
-						cn,  
-			            password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
+						a.cn,  
+						a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
 					FROM 
 						TBL_USERMASTER_RETIRE a
 					WHERE 
 						tenant_id = #tenant_id#
 				UNION ALL
 					SELECT 
-						cn,  
-			            password,
-						displayname,
-						displayname2,
-						department,              
-						description,
-						description2,
-						title,
-						title2,
-						physicaldeliveryofficename as companyid,
-						company,
-						company2,
-						updatedt,
-						extensionattribute1 as rollinfo,
-						telephonenumber,
-						mail,
-						extensionattribute10 as jikchek,
-						tenant_id,
+						a.cn,  
+						a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-						extensionattribute4 as gyumJik,
-						extensionattribute2 as userFileUrl,
-						extensionattribute14 as sabun
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
 					FROM 
 						TBL_USERMASTER_DELETE a
 					WHERE 
@@ -1457,8 +1601,16 @@
 					AND 
                 		cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
 				) a
-			WHERE
-				1 = 1
+				JOIN
+					TBL_DEPTMASTER d
+				ON
+					a.TENANT_ID = d.TENANT_ID
+				AND
+					a.DEPARTMENT = d.CN
+				WHERE 
+					a.tenant_id = #tenant_id#
+				AND
+					d.EXTENSIONATTRIBUTE2 = #companyid#
 		]]>	
 		<dynamic prepend="AND">
 		(
@@ -1475,11 +1627,20 @@
 				<iterate property="deptUserList" prepend="OR">
 				<![CDATA[
 					a.CN IN (
-					SELECT CN FROM TBL_USERMASTER 
-					where 
+					SELECT 
+						CN 
+					FROM 
+						TBL_USERMASTER 
+					WHERE 
+					(
 						DEPARTMENT in (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE CONCAT('%\,',#deptUserList[]#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#deptUserList[]#,'\,%'))
+					OR
+						CN in (SELECT CN FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND DEPTID = #deptUserList[]#)
+					)
 					AND
 						TENANT_ID = #tenant_id#
+					AND 
+              			CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 				)
 				]]>
 				</iterate>
@@ -1489,38 +1650,113 @@
     </select>
     
     <select id="EzPollDAO.getUserInfoM" resultMap="login">
+    	<isEmpty property="companyUser">
 		<![CDATA[
 			SELECT 
-				cn,  
-	            password,
-				displayname,
-				displayname2,
-				department,              
-				description,
-				description2,
-				title,
-				title2,
-				physicaldeliveryofficename as companyid,
-				company,
-				company2,
-				updatedt,
-				extensionattribute1 as rollinfo,
-				telephonenumber,
-				mail,
-				extensionattribute10 as jikchek,
-				tenant_id,
+				a.cn,  
+				a.password,
+				a.displayname,
+				a.displayname2,
+				(CASE
+				WHEN a.DEPARTMENT IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id#)
+				THEN a.DEPARTMENT
+				ELSE c.DEPTID
+				END
+				)AS department,
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.physicaldeliveryofficename as companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.extensionattribute1 as rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.extensionattribute10 as jikchek,
+				a.tenant_id,
 				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
 				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
-				extensionattribute4 as gyumJik,
-				extensionattribute2 as userFileUrl,
-				extensionattribute14 as sabun
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
 			FROM 
 				TBL_USERMASTER a
+			JOIN
+				TBL_DEPTMASTER d
+			ON
+				a.TENANT_ID = d.TENANT_ID
+			AND
+				a.DEPARTMENT = d.CN
+			LEFT JOIN
+				TBL_ADDJOBMASTER c
+			ON
+				c.CN = a.CN
+			AND
+				a.TENANT_ID = c.TENANT_ID
+			AND
+				c.DEPTID IN (SELECT CN from TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyid#)
 			WHERE 
-				tenant_id = #tenant_id#
+				a.tenant_id = #tenant_id#
 			AND 
-              	cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+              	a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 		]]>	
+    	</isEmpty>
+    	<isNotEmpty property="companyUser">
+		<![CDATA[
+			SELECT 
+				a.cn,  
+				a.password,
+				a.displayname,
+				a.displayname2,
+				(
+				CASE
+				WHEN a.PHYSICALDELIVERYOFFICENAME = #companyUser#
+				THEN a.DEPARTMENT
+				ELSE c.DEPTID
+				END
+				) as department,              
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.physicaldeliveryofficename as companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.extensionattribute1 as rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.extensionattribute10 as jikchek,
+				a.tenant_id,
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
+			FROM 
+				TBL_USERMASTER a
+			JOIN
+				TBL_DEPTMASTER d
+			ON
+				a.TENANT_ID = d.TENANT_ID
+			AND
+				a.DEPARTMENT = d.CN
+			LEFT JOIN
+				TBL_ADDJOBMASTER c
+			ON
+				c.CN = a.CN
+			AND
+				a.TENANT_ID = c.TENANT_ID
+			AND
+				c.DEPTID IN (SELECT CN from TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser#)
+			WHERE 
+				a.tenant_id = #tenant_id#
+			AND 
+              	a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+		]]>	
+    	</isNotEmpty>
 		<dynamic prepend="AND">
 		(
 			<isNotEmpty property="userList" prepend="AND">
@@ -1535,10 +1771,17 @@
 			<isNotEmpty property="deptUserList">
 				<iterate property="deptUserList" prepend="OR" conjunction="OR">
 				<![CDATA[
-					a.CN IN (
-					SELECT CN FROM TBL_USERMASTER 
-					where 
-						DEPARTMENT in (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE CONCAT('%\,',#deptUserList[]#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#deptUserList[]#,'\,%'))
+				a.CN IN (
+					SELECT 
+						CN 
+					FROM 
+						TBL_USERMASTER 
+					WHERE 
+					(
+						DEPARTMENT IN (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE CONCAT('%\,',#deptUserList[]#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#deptUserList[]#,'\,%'))
+					OR
+						CN IN (SELECT CN FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND DEPTID = #deptUserList[]#)
+					)
 					AND
 						TENANT_ID = #tenant_id#
 					AND 
@@ -1547,7 +1790,102 @@
 				]]>
 				</iterate>
 			</isNotEmpty>
+			<isNotEmpty property="companyUser">
+				<![CDATA[
+				a.CN IN (
+					SELECT 
+						ua.CN
+					FROM
+					(
+						SELECT CN FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id# AND PHYSICALDELIVERYOFFICENAME = #companyUser#
+						UNION ALL
+						SELECT CN FROM TBL_ADDJOBMASTER WHERE DEPTID IN (SELECT CN  FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser# AND TENANT_ID = #tenant_id#) AND TENANT_ID = #tenant_id#
+					) ua
+				)
+				]]>
+			</isNotEmpty>
 		)
 		</dynamic>	
     </select> 
+    
+    <select id="EzPollDAO.getAddJobDept" resultClass="String">
+    <![CDATA[
+    	SELECT 
+		  CASE
+		  WHEN user_id IS NULL
+		  THEN
+			(SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
+		  WHEN 
+			  USER_ID IS NOT NULL AND USER_TYPE = 'company' 
+		  THEN
+			  #dept_id#
+		  else
+		    (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
+		    END
+		FROM
+			tbl_vote_user_and_question 
+		WHERE 
+			TENANT_ID = #tenant_id#
+        AND
+			QST_ID = #qst_id# 
+		AND 
+		(
+			USER_ID = #user_id#
+		OR
+			user_id IN ( SELECT a.CN FROM TBL_DEPTMASTER a JOIN TBL_DEPTMASTER b ON a.EXTENSIONATTRIBUTE2 = b.EXTENSIONATTRIBUTE2 AND b.CN = #dept_id# AND a.TENANT_ID = #tenant_id# )
+		)
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getQuestionRelatedDept" resultClass="String">
+    <![CDATA[
+    	SELECT
+    		DEPT_ID 
+    	FROM 
+    		TBL_VOTE_QUESTION_RELATED
+    	WHERE 
+    		TENANT_ID = #tenant_id#
+    	AND
+    		QST_ID = #qst_id#
+    	AND
+    		USER_ID = #user_id#
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getQuestionUserDept" resultClass="String">
+    <![CDATA[
+    	SELECT
+    		DEPT_ID 
+    	FROM 
+    		TBL_VOTE_QUESTION_RELATED
+    	WHERE 
+    		TENANT_ID = #tenant_id#
+    	AND
+    		QST_ID = #qst_id#
+    	AND
+    		USER_ID = #user_id#
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getIsQuestionUser" resultClass="PollUserVO">
+    <![CDATA[
+    	SELECT 
+    		USER_ID AS userId,
+		    USER_TYPE AS userType,
+		    DEPT_ID AS deptId
+		FROM
+			TBL_VOTE_USER_AND_QUESTION 
+		WHERE 
+			TENANT_ID = #tenant_id#
+        AND
+			QST_ID = #qst_id# 
+		AND 
+		(
+			USER_ID = #user_id#
+		OR
+			USER_ID = #companyid#
+		) 
+    ]]>
+    </select>
+    
 </sqlMap>

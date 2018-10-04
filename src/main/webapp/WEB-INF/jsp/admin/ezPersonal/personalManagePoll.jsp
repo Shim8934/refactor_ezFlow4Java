@@ -37,12 +37,12 @@
 			};
 			
 			$(document).ready(function() {
-	            if (document.getElementById("ListCompany").length == 0)
-	                alert("<spring:message code = 'ezPersonal.t106' />");
-	            else {
-	                document.getElementById("ListCompany").selectedIndex = 0;
+	            if (document.getElementById("ListCompany").length == 0) {
+					alert("<spring:message code = 'ezPersonal.t106' />");
 	            }
-	
+	            else {
+// 	                document.getElementById("ListCompany").selectedIndex = 0;
+	            }
 	            makelist();
 	            //2018-08-06 김보미 - 페이지 위치 고정
 	            windowResize();
@@ -381,12 +381,13 @@
 	    <form method="post">
 	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
 	        <div id="mainmenu">
-				<span><b><spring:message code='ezEmail.t59' /> : </b></span>
-				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-	        	</SELECT>
+	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+				    <select id="ListCompany" onChange="company_change()">
+			        	<c:forEach var="item" items="${list}">
+							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+				    </select><br /><br />
+			    </span>
 				<ul style="margin-top:15px">	            	
 	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>

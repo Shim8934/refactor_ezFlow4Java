@@ -68,7 +68,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -154,7 +154,7 @@
 	  				data : {
 	  					deptID : tempDeptID ,
 	  					cell : "company;description;displayName;title;telephoneNumber",
-	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 	  					page : CurPage ,
 	  					type : "user"
 	  				} ,
@@ -199,7 +199,7 @@
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert(error);
 					}
-				});
+		        });
 	    	}
 	    	
 	     	function event_displayUserList(xml) {
@@ -247,7 +247,7 @@
 	    	
 	    	function event_listDBclick(obj) {
 		        var id = obj.getAttribute("_DATA2");
-		        var dept = obj.getAttribute("_DATA11");
+		        var dept = obj.getAttribute("_DATA10");
 
 	    	    var width = 420, height = 450;
 	        	var leftPosition, topPosition;

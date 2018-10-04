@@ -20,6 +20,21 @@
 		</section>
 
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<style>
+			.notice_tab {
+				background-color: #f9f9f9;
+				border: 1px solid #e8e8e8;
+			}
+ 			.notice_tab dt {
+				margin: -1px -1px 0px -1px;
+				height: 27px;
+			}
+			.notice_tab dt.on {
+				margin: -1px -1px 0px -1px;
+				height: 27px;
+				padding: 0px 5px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
@@ -42,7 +57,18 @@
     	        // 2016-08-03 첫화면에 공지게시판 불러오기
 				getBoardList_NewBoard();
 				selTab = "Board0_Newboard";
-    	        
+				
+				/* 2018-09-27 홍승비 - 포틀릿에 게시판이 등록되어있지 않다면 셀 나타내지 않도록 수정 */
+				if ("${pCompanyBoard }" == "") {
+					document.getElementById("Board0_Newboard").style.display = "none";
+				}
+				if ("${pDeptBoardID }" == "") {
+					document.getElementById("Board1_Newboard").style.display = "none";
+				}
+				if ("${pNewsBoardID }" == "") {
+					document.getElementById("Board2_Newboard").style.display = "none";
+				}
+				
             	try { top.onresize() } catch (e) { }
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();

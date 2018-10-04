@@ -56,10 +56,6 @@
 		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>");
 		        getDocType();
 		        
-// 		        $("#btnAppdept").closest("a").hide();
-// 	            $("#btnDeldept").closest("a").hide();
-//	            document.getElementById("selUseDept").disabled = true;
-		        
 		        if (gState == "U") {
 		            initVal(RetValue);
 		        }
@@ -121,9 +117,6 @@
 						var objNode = xmlRtn.documentElement.childNodes;
 						
 				        if (SelectSingleNodeValueNew(xmlRtn, "PARAMETER/ID0") != "FALSE") {
-				            document.getElementsByName("chkUseDept")[0].checked = true;
-				            chkUseDept_onclick();
-
 				            for (var Cnt = 0; Cnt < objNode.length / 2 ; Cnt++) {
 				                if (SelectSingleNodeValueNew(xmlRtn, "PARAMETER/NAME" + Cnt) == "") {
 				                    break;
@@ -136,18 +129,6 @@
 		        		xmlRtn = loadXMLString("<PARAMETER><ID0>FALSE</ID0><NAME0></NAME0></PARAMETER>");
 		        	}
 		        });		        
-		    }
-		    
-		    function chkUseDept_onclick() {
-		        if (document.getElementById("chkUseDept").checked) {
-		            $("#btnAppdept").closest("a").show();
-		            $("#btnDeldept").closest("a").show();
-		            document.getElementById("selUseDept").disabled = false;
-		        } else {
-// 		            $("#btnAppdept").closest("a").hide();
-// 		            $("#btnDeldept").closest("a").hide();
-		            document.getElementById("selUseDept").disabled = true;
-		        }
 		    }
 		    
 		    function Add_Group(Name, ID) {
@@ -204,31 +185,9 @@
 			        var rtnVal, itmeCnt;
 	
 			        if (gState == "I") {
-			            if (document.getElementById("chkUseDept").checked) {
-			                itemCnt = selUseDept.length;
-			                
-			                if (itemCnt > 0) {
-			                    rtnVal = insCont("G");
-			                } else {
-			                    window.alert("<spring:message code='ezApprovalG.t1647'/>");
-			                    return;
-			                }
-			            } else {
-			                rtnVal = insCont("N");
-			            }
+	                    rtnVal = insCont();
 			        } else {
-			            if (chkUseDept.checked) {
-			                itemCnt = selUseDept.length;
-			                
-			                if (itemCnt > 0) {
-			                    rtnVal = UpdateCont("G");
-			                } else {
-			                    window.alert("<spring:message code='ezApprovalG.t1647'/>");
-			                    return;
-			                }
-			            } else {
-			                rtnVal = UpdateCont("N");
-			            }
+	                    rtnVal = UpdateCont();
 			        }
 	
 			        if (typeof (rtnVal) != "undefined") {
@@ -247,7 +206,7 @@
 		    	}
 		    }
 		    
-		    function insCont(state) {
+		    function insCont() {
 		        var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
 		        var ParaName, ParaValue;
@@ -256,15 +215,13 @@
 		        createNodeAndInsertText(xmlpara, objNode, "CONTTYPE", document.getElementById("selContName").value);
 		        createNodeAndInsertText(xmlpara, objNode, "CONTOWNDEPID", gDeptID);
 		        
-		        if (state == "G") {
-		            var Count = selUseDept.length;
-		            
-		            for (var i = 0; i < Count; i++) {
-		                ParaName = "Dept" + i;
-		                ParaValue = selUseDept.item(i);
-		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
-		            }
-		        }
+	            var Count = selUseDept.length;
+	            
+	            for (var i = 0; i < Count; i++) {
+	                ParaName = "Dept" + i;
+	                ParaValue = selUseDept.item(i);
+	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	            }
 
 		        createNodeAndInsertText(xmlpara, objNode, "COMID", P_companyID);
 
@@ -280,7 +237,7 @@
 				}
 		    }
 		    
-		    function UpdateCont(state) {
+		    function UpdateCont() {
 		        var xmlpara = createXmlDom();
 		        var ParaName, ParaValue;
 
@@ -289,15 +246,13 @@
 		        createNodeAndInsertText(xmlpara, objNode, "CONTTYPE", document.getElementById("selContName").value);
 		        createNodeAndInsertText(xmlpara, objNode, "CONTOWNDEPID", gDeptID);
 
-		        if (state == "G") {
-		            var Count = selUseDept.length;
-		            
-		            for (var i = 0; i < Count; i++) {
-		                ParaName = "Dept" + i;
-		                ParaValue = selUseDept.item(i);
-		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
-		            }
-		        }
+	            var Count = selUseDept.length;
+	            
+	            for (var i = 0; i < Count; i++) {
+	                ParaName = "Dept" + i;
+	                ParaValue = selUseDept.item(i);
+	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	            }
 
 		        createNodeAndInsertText(xmlpara, objNode, "comID", P_companyID);
 
@@ -343,9 +298,12 @@
 		</table>			
 		<table style="margin-top:10px">
 			<tr>
-				<td colspan="3">
-					<input type="checkbox" id="chkUseDept" name="chkUseDept" value="checkbox" onClick="return chkUseDept_onclick()">
-					<spring:message code='ezApprovalG.t1648'/>
+				<td>
+					<h2><spring:message code='main.t8'/></h2>
+				</td>
+				<td></td>
+				<td>
+					<h2><spring:message code='ezApprovalG.t1648'/></h2>
 				</td>
 			</tr>
 			<tr>
@@ -353,8 +311,8 @@
 					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:275px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
 				</td>
 				<td style="width:70px;text-align:center;white-space:nowrap;">
-					<img src="/images/arr_right.gif" name="Image191" onClick="return btnAppdept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>					
-	                <img src="/images/arr_left.gif" name="Image201" onClick="return btnDeldept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>
+					<img src="/images/arr_right.gif" id="btnAppdept" name="Image191" onClick="return btnAppdept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>					
+	                <img src="/images/arr_left.gif" id="btnDeldept" name="Image201" onClick="return btnDeldept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>
 				</td>
 				<td style="vertical-align:top;">
 					<select id="selUseDept" name="selUseDept" style="WIDTH: 245px; HEIGHT: 235px; background: none;" size="2"></select>

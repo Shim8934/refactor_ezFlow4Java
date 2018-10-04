@@ -20,56 +20,58 @@ public interface EzScheduleService {
 	
 	public List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany, int tenantId) throws Exception;
 	
-	public List<AttendantListVO> getAttendantList(String scheduleId, String offSetMin, int tenantId) throws Exception;
+	public List<AttendantListVO> getAttendantList(String scheduleId, String offSetMin, int tenantId, String companyID) throws Exception;
 	
 	public List<AttachListVO> getAttachList(String scheduleId, int tenantId) throws Exception;
 		
-	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang, int tenantId) throws Exception;
+	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang, int tenantId ,String companyID) throws Exception;
 	
-	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId) throws Exception;
+	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId ,String companyID) throws Exception;
 	
-	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId) throws Exception;
+	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId, String companyID) throws Exception;
 	
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId) throws Exception;
+	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID) throws Exception;
 	
-	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId) throws Exception;
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId ,String companyID) throws Exception;
 
-	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId) throws Exception;
+	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId ,String companyID) throws Exception;
 	
-	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	int tenantId, String offSetMin) throws Exception;
+	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	String lang, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
-	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin) throws Exception;
+	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
-	public List<ScheduleGroupListVO> getInviteScheduleGroupList(String id, int tenantId, String offSetMin) throws Exception;
+	public List<ScheduleGroupListVO> getInviteScheduleGroupList(String id, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
-	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId) throws Exception;
+	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId ,String companyID) throws Exception;
 	
 	public ScheduleConfigVO getScheduleConfig(String userId, int tenantId) throws Exception;
 	
-	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception;
+	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId ,String companyID) throws Exception;
 	
-	public String getMyGroupMemberList(String groupId, String lang, int tenantId) throws Exception;
+	public String getMyGroupMemberList(String groupId, String lang, int tenantId ,String companyID) throws Exception;
 
-	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId) throws Exception;
+	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId ,String companyID) throws Exception;
 	
 	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception;
 
 	public String scheduleGetRegi(String companyID, int tenantId) throws Exception;
+	
+	public String getCumDeptId(String userID, int tenantID, String companyID) throws Exception;
 		
-	public int getReceiveCount (String pUserId, int tenantId) throws Exception;
+	public int getReceiveCount (String pUserId, int tenantId ,String companyID) throws Exception;
 	
-	public int getInviteScheduleGroupCnt (String pUserId, int tenantId) throws Exception;
+	public int getInviteScheduleGroupCnt (String pUserId, int tenantId ,String companyID) throws Exception;
 	
-	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId) throws Exception;
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
 	
 	public int getResourceCount(String scheduleId, int tenantId) throws Exception;
 	
 	public int updateSchedule(String scheduleid, String creatorid, String creatorname, String creatorname2, String importance, String ispublic, String datetype, String startdate, String enddate,
-			String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId) throws Exception;
+			String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId, String companyID) throws Exception;
 
 	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
 			String ispublic, String datetype, String startdate, String enddate, String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
-			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId) throws Exception;	
+			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId ,String companyID) throws Exception;	
 
 	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception;	
 
@@ -81,15 +83,15 @@ public interface EzScheduleService {
 
 	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
 
-	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId) throws Exception;	
+	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;	
 
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
 
-	public void deleteSecretary(String userID, int tenantID) throws Exception;
+	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception;
 
 	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID) throws Exception;
 
-	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID) throws Exception;
+	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID ,String companyID) throws Exception;
 
 	public void deleteSchedule(String scheduleId, int tenantID) throws Exception;
 	
@@ -97,13 +99,13 @@ public interface EzScheduleService {
 
 	public void scheduleDelAttendant(String scheduleId, String attendantId,	int tenantId) throws Exception;
 
-	public void insertScheduleAttendant(String scheduleId, String attendantId, String attendantName, String attendantName2, String attendantDeptName, String attendantDeptName2, int tenantId) throws Exception;
+	public void insertScheduleAttendant(String scheduleId, String attendantId, String attendantName, String attendantName2, String attendantDeptName, String attendantDeptName2, int tenantId ,String companyID) throws Exception;
 
 	public void updateAttendantSchedule(String hasAttendant, String scheduleId, int tenantId) throws Exception;	
 
 	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId) throws Exception;
 
-	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception;
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId ,String companyID) throws Exception;
 
 	public void deleteScheduleRepe(String scheduleId, int tenantId) throws Exception;
 	

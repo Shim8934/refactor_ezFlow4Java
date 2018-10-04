@@ -52,6 +52,8 @@
 		    var xmlHTTP2 = createXMLHttpRequest();
 		    var ReturnFunction;
 		    var isfirst = true;
+		    var deptTreeTopId = "${deptTreeTopId}";
+			var isAdmin = "${isAdmin}";
 			
 		    $(document).ready(function(){
 		    	try {
@@ -71,7 +73,7 @@
 		            }
 		        } catch (e) {}
 	
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP></DATA>";
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
 		        xmlHTTP.send(strQuery);
@@ -87,6 +89,10 @@
 		        pUserList.DataBind("PermissionBasic"); 
 		        
 		        ChangeListView_onClick(getOrganListType());
+		        
+		        if (isAdmin == "false") {
+		        	$("#lvPermissionBasic").find("tbody tr:first").css("display","none");
+		        }
 		    });
 		    
 		    function ListTypeChangeIcon() {
@@ -184,7 +190,7 @@
 			        	dataType : "text",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user'},
+			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user', adminOrgan : "y", noAddJob : "Y"},
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
@@ -221,7 +227,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -600,6 +606,12 @@
 
 	            var xmlDom = createXmlDom();
 	            
+	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
+	            if (addJob == "addJob") {
+	            	document.getElementById('UserAclList').innerHTML = "";
+	            	return;
+	            }
+	            
 	            $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -663,9 +675,14 @@
 
 	            var arrRows = getlistview.GetSelectedRows();
 	            var length = arrRows.length;
+	            
+	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
 
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
 	                alert(strLang13);
+	                return;
+	            } else if(addJob == "addJob"){
+	            	alert("<spring:message code='ezOrgan.psb01' />");
 	                return;
 	            } else {
 	                var UserAcllistview = new ListView();
@@ -769,7 +786,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group'},
+		        	data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group', adminOrgan : "y", noAddJob : "Y"},
 		        	success : function(xml){	
 		        		result=loadXMLString(xml);
 		        		xmlDOM = result;
@@ -789,9 +806,9 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 
 		            if (CrossYN()) {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP></DATA>";
 		            } else {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -813,7 +830,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -826,7 +843,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -877,7 +894,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user", adminOrgan : "y", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
@@ -1068,12 +1085,14 @@
 			                <DATA1>a</DATA1>
 			            </CELL>
 			        </ROW>
+			        <c:if test="${approvalFlag eq 'G'}">
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
 			                <DATA1>i</DATA1>
 			            </CELL>
 			        </ROW>
+			        </c:if>
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>

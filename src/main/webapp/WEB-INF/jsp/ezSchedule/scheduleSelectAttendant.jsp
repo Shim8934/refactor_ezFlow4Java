@@ -130,7 +130,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -476,7 +476,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            /* var dept = p_ListOrderObject.getAttribute("_DATA11"); */
+	            var dept = $('.node_selected').parent().attr("cn");
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 450) / 2;
@@ -1306,7 +1307,7 @@
    				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
    				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
    				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
-   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + " (" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION")[i]) + ")" + "]]></VALUE></CELL></ROW>";
+   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";		// 2018-09-27 김민성 - 부서명 뜨는 부분 삭제
    				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
    				            Resultxml = loadXMLString(pparsingXML2);
 

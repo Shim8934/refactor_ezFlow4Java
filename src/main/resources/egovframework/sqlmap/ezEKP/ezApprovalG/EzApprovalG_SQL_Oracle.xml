@@ -39,6 +39,12 @@
 	<typeAlias  alias="ApprGDeleteCabinetInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeleteCabinetInfoVO"/>
 	<typeAlias  alias="ApprGRelayVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO"/>
 	<typeAlias  alias="ApprGRecordTempVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO"/>
+	<typeAlias  alias="PortalTopOtherCompanyAddJobVO" 	type="egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO"/>
+	
+	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
+		<result property="companyID"					column="companyID"						/>
+		<result property="companyName"					column="companyName"						/>
+	</resultMap>
 	
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -25537,4 +25543,39 @@
                 	AND
    						COMPANYID = #companyID#)
 	</update>
+	
+	<select id="EzApprovalG.getAllCompanyList" parameterClass="map" resultMap="PortalTopOtherCompanyAddJobMap">
+		select 
+			EXTENSIONATTRIBUTE2 companyID,
+			EXTENSIONATTRIBUTE3 companyName
+		from
+			tbl_deptmaster d
+		where 
+			cn = (select department from tbl_usermaster where cn = #userId# and tenant_id = #tenantId#)
+		and 
+			tenant_id = #tenantId#
+		union
+		select
+			EXTENSIONATTRIBUTE2 companyID,
+			EXTENSIONATTRIBUTE3 companyName
+		from
+			tbl_deptmaster d
+		where 
+		    cn in (SELECT 
+						EXTENSIONATTRIBUTE2 
+					FROM 
+						TBL_DEPTMASTER 
+					INNER JOIN 
+						TBL_ADDJOBMASTER 
+					ON
+						(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+						AND 
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+					WHERE 
+						TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+					AND 
+						TBL_ADDJOBMASTER.CN = #userId#)
+		and 
+			tenant_id = #tenantId#
+	</select>
 </sqlMap>

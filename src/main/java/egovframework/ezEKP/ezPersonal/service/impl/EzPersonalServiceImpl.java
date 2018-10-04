@@ -221,7 +221,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pCompanyID", pComapnyID);
-		map.put("v_pMode", "U");
+		map.put("v_pMode", "A");
 		map.put("tenantID", tenantID);
 
 		logger.debug("getPollCount ended");

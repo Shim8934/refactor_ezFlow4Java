@@ -2942,6 +2942,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return result;
 	}
 	
+	// 2018-07-06 김민성 - 사간겸직 시 deptID값 조회
+	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception {
+		logger.debug("getDeptID ended");
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("writerID", writerID);
+		map.put("deptNm", deptNm);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		logger.debug("getDeptID ended");
+		return ezResourceDAO.getDeptID(map);
+	}
+	
 	public List<Date[]> getchkRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
 		logger.debug("getchkRepDateTimes started");
 		
