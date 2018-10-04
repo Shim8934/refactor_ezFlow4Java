@@ -178,8 +178,10 @@ public class EzEmailAdminController {
 				List<MailDistributionVO> distributionUpperList = ezEmailService
 						.getDistributioUpperList(cn, auth.getTenantId());
 				
+				int totalSzie = distributionTotalList.size();
+				
 				//공용배포그룹 전체 리스트에서 자기 자신 제외
-				for (int i = 0; i < distributionTotalList.size(); i++) {
+				for (int i = totalSzie - 1 ; i >= 0; i--) {
 					String totalId = distributionTotalList.get(i).getId();
 					
 					if (totalId.equals(cn)) {
@@ -188,11 +190,13 @@ public class EzEmailAdminController {
 					
 				}
 				
+				int upperSzie = distributionUpperList.size();
+				
 				//공용배포그룹에서 자기를 포함하는 공용배포그룹 제외
-				for (int i = 0; i < distributionTotalList.size(); i++) {
+				for (int i = totalSzie - 1 ; i >= 0; i--) {
 					String totalId = distributionTotalList.get(i).getId();
 					
-					for (int j = 0; j < distributionUpperList.size(); j++) {
+					for (int j = upperSzie - 1; j >= 0; j--) {
 						String upperId = distributionUpperList.get(j).getId();
 						
 						if (totalId.equals(upperId)) {
@@ -427,7 +431,7 @@ public class EzEmailAdminController {
 				//공용배포그룹 맴버가 주소록 or 직접입력인 경우
 				if (addressTypeList.getLength() > 0 || directMailList.getLength() > 0){
 					inputParams = "companyId="
-							+ URLEncoder.encode(companyId, "UTF-8") + "&name="
+							+ URLEncoder.encode(cn, "UTF-8") + "&name="
 							+ URLEncoder.encode(name, "UTF-8") + "&id="
 							+ URLEncoder.encode(id, "UTF-8") + "&domain="
 							+ URLEncoder.encode(domain, "UTF-8");
@@ -438,6 +442,12 @@ public class EzEmailAdminController {
 						inputParams += "&subName="
 								+ URLEncoder.encode(subName, "UTF-8") + "&subEmail="
 								+ URLEncoder.encode(subEmail, "UTF-8");
+					}
+					
+					for (int i = 0; i < memberIdList.getLength(); i++) {
+						inputParams += "&memberId="
+								+ URLEncoder.encode(memberIdList.item(i)
+										.getTextContent(), "UTF-8");
 					}
 					
 					logger.debug("inputParams=" + inputParams);
@@ -539,7 +549,9 @@ public class EzEmailAdminController {
 							for (String addr : addressRows) {
 								distributionSubMap = new HashMap<String, String>();
 								String[] subRows = addr.split("<");
-								distributionSubMap.put("subName", subRows[0]);
+								String subName = subRows[0].replaceAll("\"", "");
+								
+								distributionSubMap.put("subName", subName);
 								distributionSubMap.put("subEmail", subRows[1].substring(0, subRows[1].length() -1));
 								distributionSubList.add(distributionSubMap);
 							}
@@ -580,10 +592,16 @@ public class EzEmailAdminController {
 									+ "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
 					}
 					
+					for (int i = 0; i < memberIdList.getLength(); i++) {
+						inputParams += "&memberId="
+								+ URLEncoder.encode(memberIdList.item(i)
+										.getTextContent(), "UTF-8");
+					}
+					
 					logger.debug("inputParams=" + inputParams);
 					
 					requestURL = config.getProperty("config.JGwServerURL")
-							+ "/jMochaAccess/setDistributionSubList";
+							+ "/jMochaAccess/updateDistributionSubList";
 					response = ezEmailUtil.getWebServiceResult(requestURL,
 							inputParams);
 					
