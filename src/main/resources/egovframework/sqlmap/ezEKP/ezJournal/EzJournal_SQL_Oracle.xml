@@ -733,7 +733,7 @@
 				tbl_journal_recv r on (r.journal_id = j.journal_id and j.tenant_id = r.tenant_id)
 		</isNotEmpty>
 		where 
-			j.tenant_id = #tenantId# and ft.company_id = #companyId# and j.journal_writer in (select CN from tbl_usermaster)
+			j.tenant_id = #tenantId# and ft.company_id = #companyId#
 		<isNotEmpty property="typeId">
 			and ft.type_id = #typeId#
 		</isNotEmpty>
