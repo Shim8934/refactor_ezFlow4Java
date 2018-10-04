@@ -1092,13 +1092,15 @@
 	            if (m_selectedTree == orglistView) {
 		            if (p_ListOrderObject == null || p_ListOrderObject == "") {
 		                var organTree = new TreeView();
+		                
 		                organTree.LoadFromID("FromTreeView");
 		                var nodeIdx = organTree.GetSelectNode();
 		                var strId = nodeIdx.GetNodeData("CN");
 		                var strName = nodeIdx.NodeName;
 						
+		                var listid = "MsgToList";
 		                var getlistview = new ListView();
-		                getlistview.LoadFromID("MsgToList");
+		                getlistview.LoadFromID(listid);
 		                var bFlag = getlistview.ExistRow("data1", strId);
 		                
 		                if (bFlag) {
@@ -1145,8 +1147,9 @@
 		                        var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
 		                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 		                        
+		                        var listid = "MsgToList";
 		                        var getlistview = new ListView();
-		                        getlistview.LoadFromID("MsgToList");
+		                        getlistview.LoadFromID(listid);
 		                        var bFlag = getlistview.ExistRow("data1", strId);
 								
 		                        if (bFlag) {
@@ -1195,8 +1198,9 @@
 		                	var strId = nodeIdx.GetNodeData("CN");
 			                var strName = nodeIdx.NodeName;
 			                
+			                var listid = "MsgToList";
 			                var getlistview = new ListView();
-	                        getlistview.LoadFromID("MsgToList");
+	                        getlistview.LoadFromID(listid);
 			                var bFlag = getlistview.ExistRow("data1", strId);
 			                
 		                    if (bFlag) {
@@ -1249,9 +1253,10 @@
 	                	for (var i = 0; i < arrRows.length; i++) {
 		                	var strId = GetAttribute(arrRows[i], "DATA1");
 			                var strName = arrRows[i].innerText;
-				
+							
+			                var listid = "MsgToList";
 			                var getlistview = new ListView();
-	                        getlistview.LoadFromID("MsgToList");
+	                        getlistview.LoadFromID(listid);
 			                var bFlag = getlistview.ExistRow("data1", strId);
 			                
 		                    if (bFlag) {
@@ -1320,11 +1325,6 @@
 	                            continue;
 	                        }
 	                        
-	                        var listid = "";
-	                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
-	                            listid = "MsgToList";
-	                        }
-	                        
 	                        var IsInsert;
 	                        if (pAddressType == "mailgroup") {
                             	IsInsert = CheckMailReceiver(pAddressID, "3");
@@ -1332,6 +1332,7 @@
 	                            IsInsert = CheckMailReceiver(strEmail, "3");
 	                        } 
 	                        
+	                        var listid = "MsgToList";
 	                        var getlistview = new ListView();
 	                        getlistview.LoadFromID("MsgToList");
 	                        var bFlag = getlistview.ExistRow("data1", pAddressID);
