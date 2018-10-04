@@ -281,7 +281,7 @@ var CabinetRlFileSelect = function() {
 	function getModuleName(moduleType) {
 		var result = "";
 		
-		switch(moduleType) {
+		switch(parseInt(moduleType)) {
 			case 0 : result = CabinetMessages.strNormal ; break;
 			case 1 : result = CabinetMessages.strEmail  ; break;
 			case 2 : result = CabinetMessages.strApprv  ; break;
