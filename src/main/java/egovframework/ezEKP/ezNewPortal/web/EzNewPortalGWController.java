@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,8 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
@@ -29,11 +37,20 @@ public class EzNewPortalGWController {
 	@Autowired
 	private EzCommonService ezCommonService;
 	
+	@Autowired
+	private LoginService loginService;
+	
 	@Resource(name="ezNewPortalService")
 	private EzNewPortalService ezNewPortalService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 
 	/////사용자///////
 	/**
@@ -410,7 +427,21 @@ public class EzNewPortalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			String primary = userInfo.getPrimary();
+			
+			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+			
+			resultList = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
+			
+			result.put("data", resultList);
+			result.put("userCompany", userInfo.getCompanyID());
+			result.put("primary", primary);
+			result.put("status", "ok");
+			result.put("code", 0);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
