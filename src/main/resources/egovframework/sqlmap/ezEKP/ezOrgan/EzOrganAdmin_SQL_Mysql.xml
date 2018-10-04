@@ -62,7 +62,7 @@
 					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="dpetName">
+					<isEqual property="search_keycode" compareValue="deptName">
 						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">

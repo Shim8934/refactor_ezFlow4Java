@@ -337,7 +337,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					String journalStatus = (String) journalResult.get("status");
 					
-					if (journalStatus.equals("ok")) {
+					if (!journalStatus.equals("ok")) {
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 					}
 					

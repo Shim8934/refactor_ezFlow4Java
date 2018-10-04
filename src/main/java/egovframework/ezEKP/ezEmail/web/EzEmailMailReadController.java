@@ -3266,11 +3266,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		if (isSecureMail) {
 			returnValue = "<span title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address)) + "'>"
-					+ (name == null ? "" : EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+					+ (name == null ? "" : name) + "</span>";
 		} else {
 			returnValue = "<span style='cursor:pointer' title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address))
 					+ "' onclick='show_personinfo(\"" + address + "\")'>"
-					+ (name == null ? "" : EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+					+ (name == null ? "" : name) + "</span>";
 		}
 		
 		return returnValue;
