@@ -431,6 +431,7 @@ public class EzEmailAdminController {
 				//공용배포그룹 맴버가 주소록 or 직접입력인 경우
 				if (addressTypeList.getLength() > 0 || directMailList.getLength() > 0){
 					inputParams = "companyId="
+							+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
 							+ URLEncoder.encode(cn, "UTF-8") + "&name="
 							+ URLEncoder.encode(name, "UTF-8") + "&id="
 							+ URLEncoder.encode(id, "UTF-8") + "&domain="
