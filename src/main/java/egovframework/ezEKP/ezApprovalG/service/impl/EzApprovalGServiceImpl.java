@@ -2097,9 +2097,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
+					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
 							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
-							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT></SIGNINFO></SIGNINFOS>";
+							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT>" + 
+							"<ORGCOMPANYID></ORGCOMPANYID></SIGNINFO></SIGNINFOS>";
 					
 					Document xmlDom = commonUtil.convertStringToDocument(strXML);
 					
