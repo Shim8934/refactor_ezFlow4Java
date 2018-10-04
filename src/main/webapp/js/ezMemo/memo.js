@@ -380,16 +380,20 @@ function saveMemoToast(memoId) {
 		
 	toastArea.innerHTML = alertMessage;
 	toastArea.setAttribute("class", "toastArea");
-	toastArea.style.top = "150px";
+	toastArea.style.top = "134px";
 	toastArea.style.left = "85px";
 	toastArea.style.display = "block";
 	toastArea.id = "tos"+memoId;
 	$("#memo" + memoId).prepend(toastArea);
-
+	
+	// 1sec show, 1sec fadeOut, element delete
 	setTimeout(function(){
-		var parent = doc.getElementById('memo' + memoId);
-		parent.removeChild(toastArea);
-	}, 700);	
+		$("#tos"+memoId).fadeOut(1000, function(){
+			var parent = doc.getElementById('memo' + memoId);
+			parent.removeChild(toastArea);		
+		});
+	}, 1000);	
+
 }
 
 

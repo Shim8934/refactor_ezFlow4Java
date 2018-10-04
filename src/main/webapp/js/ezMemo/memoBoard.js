@@ -162,8 +162,8 @@ function modifyMemo(obj) {
 	var afterContents = $(".memoText[memoid=" + memoId + "]").val();
 
     	$.ajax ({
-			   	url : '/ezMemo/memoModify.do',
-			   	type : 'POST',
+    		url : '/ezMemo/memoModify.do',
+    		type : 'POST',
             dataType : 'json',
             data : { 
             	memoId : memoId,
