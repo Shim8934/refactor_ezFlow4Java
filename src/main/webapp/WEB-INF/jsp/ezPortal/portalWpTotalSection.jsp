@@ -83,10 +83,7 @@
 			    if (month < 10 && String(month).length == 1)
 		            month = "0" + month;
 		        
-		        if (CrossYN())
-		            document.getElementById("curMon").textContent = month;
-	    	    else
-	        	    document.getElementById("curMon").innerText = month;
+        	    document.getElementById("curMon").innerHTML = month;
 
 	        	try { top.onresize() } catch (e) { }
 	        	
@@ -1010,7 +1007,6 @@
 	        	
 	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    	}
-		    window_onload_total();
 		    
 		    function changeCompany(){
 		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
@@ -1204,6 +1200,6 @@
 				observer.observe(target, config);		    	
 		    }
 
-			</script>		
+		</script>		
 	</c:if>	
 </html>
