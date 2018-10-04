@@ -452,7 +452,7 @@ public interface EzApprovalGService {
 
 	public String getSameOrgHAPYUIDoc(String docID, String companyID, String lang, int tenantID) throws Exception;
 
-	public String getDocHref(String docID, String docStatus, String type, String docAttachSN, String companyID, int tenantId) throws Exception;
+	public String getDocHref(String docID, String docStatus, String type, String docAttachSN, String userID, String companyID, int tenantId) throws Exception;
 
 	public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 
