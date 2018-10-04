@@ -5697,7 +5697,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-				String orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(0).getTextContent();
+				
+				String orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
 				if (!aprDocUserID.equals(userID)) {
 					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
@@ -6955,7 +6956,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				mode = xmlDom.getElementsByTagName("MODE").item(k).getTextContent();
 				
 				String docState = xmlDom.getElementsByTagName("DOCSTATE").item(k).getTextContent().trim();
-				String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(0).getTextContent().trim();
+				String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(k).getTextContent().trim();
 				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgCompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
 				
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
