@@ -432,8 +432,11 @@
 	        		}
 	        	} else {
 	        		if (!AllDayCheckStartEndDateTime()) {
-	        			alert("" + strLang139 + "");			
-	        			return;
+	        			// 2018-10-02 김민성 - 자원 반복예약 시 회수 설정 시 끝날짜 무시하도록 수정
+	        			if($("#EndTimeSet").checked == true) {		
+		        			alert("" + strLang139 + "");			
+		        			return;
+	        			}
 	        		}
 	        	}
 	        	
