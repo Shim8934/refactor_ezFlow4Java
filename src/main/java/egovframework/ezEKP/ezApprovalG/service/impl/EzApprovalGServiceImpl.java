@@ -6830,20 +6830,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document xmlDoc = commonUtil.convertStringToDocument(results);
 		
 		signImage = xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent();
-		pTitle = xmlDoc.getElementsByTagName("TITLE").item(0).getTextContent();
+		pTitle = xmlDoc.getElementsByTagName("TITLE1").item(0).getTextContent();
 		jikwe = pTitle;
 		jikwe2 = xmlDoc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		displayName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		displayName = xmlDoc.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		displayName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		department = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
-		description = xmlDoc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		description = xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
 		description2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 		
 		results = ezOrganService.getPropertyList(orgUID, propList, strLang, userInfo.getTenantId());
 		logger.debug("<<<results : " + results);
 		xmlDoc = commonUtil.convertStringToDocument(results);
 		
-		orgName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		orgName = xmlDoc.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		orgName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		orgDeptID = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
 		
