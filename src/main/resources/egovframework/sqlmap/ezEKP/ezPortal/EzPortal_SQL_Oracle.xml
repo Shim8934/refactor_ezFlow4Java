@@ -456,50 +456,54 @@
         	AND
         		A.uid_ = B.uid_
        		WHERE
-       			(NOT EXISTS (SELECT
-								uid_
-                             FROM
-                              	TBL_TOPMENU_ITEMS
-                             WHERE
-                              	uid_ = A.uid_
-                             AND
-                             	tenant_id = #tenantID#))
+       			(NOT EXISTS
+       				(SELECT
+						uid_
+					FROM
+						TBL_TOPMENU_ITEMS
+					WHERE
+						uid_ = B.uid_
+					AND
+						tenant_id = #tenantID#))
 			AND
 				A.tenant_id = #tenantID#
 			AND
-				B.useflag = 'Y'
-			AND
 				A.userid = #v_pUSERID#
+			AND
+				B.useflag = 'Y'
 		]]>
 	</select>
 	
 	<select id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
-			 SELECT
+			SELECT
 			 	B.* 
         	FROM
-        		TBL_TOPMENU_GENERAL A, TBL_USERINFO B
+        		TBL_USERINFO A
+        	JOIN
+        		TBL_TOPMENU_GENERAL B
+        	ON
+        		A.uid_ = B.uid_
+        	AND
+        		A.tenant_id = B.tenant_id
        		WHERE
-       			( NOT EXISTS ( SELECT
-       									 UID_ 
-                             		FROM
-                             			TBL_TOPMENU_ITEMS 
-                              		WHERE
-                              			UID_ = A.UID_
-                              		AND
-                              			TENANT_ID = #tenantID#	 ) )
-            AND
-            	A.UID_ = B.UID_
-            AND
-                A.TENANT_ID = B.TENANT_ID  
+				(NOT EXISTS
+					(SELECT
+						UID_ 
+                    FROM
+						TBL_TOPMENU_ITEMS 
+					WHERE
+						uid_ = B.uid_
+					AND
+						tenant_id = #tenantID#))
 			AND
-				A.UseFlag = 'Y'
+				A.tenant_id = #tenantID#
 			AND
-				B.UserID = #v_pUSERID#
+				A.userid = #v_pUSERID#
 			AND
-				B.lang = #v_pLANG#
+				A.lang = #v_pLANG#
 			AND
-				A.TENANT_ID = #tenantID#	
+				B.useflag = 'Y'	
 		]]>
 	</select>
 	
