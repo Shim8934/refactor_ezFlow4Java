@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -19,6 +21,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -90,7 +95,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalNoticePortlet Start");
 		
-		return "/ezNewPortal/noticePortlet";
+		return "/ezNewPortal/portlets/noticePortlet";
 	}
 	
 	/**
@@ -100,27 +105,44 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalReceivedMailPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
 		
-		return "/ezNewPortal/receivedMailPortlet";
+		return "/ezNewPortal/portlets/receivedMailPortlet";
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 투표 포틀릿 
 	 */
 	@RequestMapping(value = "/ezNewPortal/votePortlet.do")
-	public String portalVotePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalVotePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalVotePortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		return "/ezNewPortal/votePortlet";
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/vote";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("voteCount", data.get("voteCount"));
+			model.addAttribute("title", data.get("title"));
+			model.addAttribute("qstId", data.get("qstId"));
+			model.addAttribute("pollAnswer", data.get("pollAnswer"));
+			model.addAttribute("pollAnswerCount", data.get("pollAnswerCount"));
+		}
+		
+		return "/ezNewPortal/portlets/votePortlet";
 	}
 	
 	/**
 	 * 포틀릿 - 공지사항
 	 */
 	@RequestMapping(value = "/ezNewPortal/pollPortlet.do")
-	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
 		
-		return "/ezNewPortal/pollPortlet";
+		return "/ezNewPortal/portlets/pollPortlet";
 	}
 	
 	/**
@@ -130,7 +152,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalSchedulePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalSchedulePortlet Start");
 		
-		return "/ezNewPortal/schedulePortlet";
+		return "/ezNewPortal/portlets/schedulePortlet";
 	}
 	
 	/**
@@ -140,7 +162,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalApprovalListPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalApprovalListPortlet Start");
 		
-		return "/ezNewPortal/approvalListPortlet";
+		return "/ezNewPortal/portlets/approvalListPortlet";
 	}
 	
 	/**
@@ -150,17 +172,29 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalApprovalFavoritePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalApprovalFavoritePortlet Start");
 		
-		return "/ezNewPortal/approvalFavoritePortlet";
+		return "/ezNewPortal/portlets/approvalFavoritePortlet";
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 포토게시판 포틀릿
 	 */
 	@RequestMapping(value = "/ezNewPortal/photoBoardPortlet.do")
-	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoBoardPortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/photoBoard";
 		
-		return "/ezNewPortal/photoBoardPortlet";
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+		}
+		
+		return "/ezNewPortal/portlets/photoBoardPortlet";
 	}
 	
 	/**
@@ -266,7 +300,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalCommunityPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalCommunityPortlet Start");
 		
-		return "/ezNewPortal/communityPortlet";
+		return "/ezNewPortal/portlets/communityPortlet";
 	}
 	
 	/**
@@ -276,17 +310,31 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalHelpPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalHelpPortlet Start");
 		
-		return "/ezNewPortal/helpPortlet";
+		return "/ezNewPortal/portlets/helpPortlet";
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 환율 포틀릿
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/currencyPortlet.do")
-	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalCurrencyPortlet Start");
 		
-		return "/ezNewPortal/currencyPortlet";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		String json = restTemplate.getForObject("http://fx.kebhana.com/FER1101M.web", String.class);
+		json = json.replaceAll("var exView = ", "");
+		json = json.substring(0, json.lastIndexOf(",")) + json.substring(json.lastIndexOf(",") + 1);
+
+		ObjectMapper mapper = new ObjectMapper();
+		HashMap<String, Object> map2 = mapper.readValue(json, HashMap.class);
+		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) map2.get("리스트");
+		String exchangeRate = (String) list.get(0).get("송금_전신환보내실때");
+		
+		System.out.println(exchangeRate);
+		return "/ezNewPortal/portlets/currencyPortlet";
 	}
 	
 	/**
@@ -296,7 +344,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalWeatherePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalWeatherePortlet Start");
 		
-		return "/ezNewPortal/weatherPortlet";
+		return "/ezNewPortal/portlets/weatherPortlet";
 	}
 	
 	
