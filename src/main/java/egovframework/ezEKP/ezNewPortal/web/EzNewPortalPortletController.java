@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -184,7 +185,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("page", 1);
+		param.put("startRow", 0);
 		param.put("photoCount", 4);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
@@ -341,7 +342,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) map2.get("리스트");
 		String exchangeRate = (String) list.get(0).get("송금_전신환보내실때");
 		
-		System.out.println(exchangeRate);
 		return "/ezNewPortal/portlets/currencyPortlet";
 	}
 	
@@ -357,13 +357,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	/////포틀릿 정보만 가져오기
 	@RequestMapping(value = "/ezNewPortal/getPhotoItemList.do")
+	@ResponseBody
 	public JSONArray portalPhotoItemList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoItemList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		int page = Integer.parseInt(req.getParameter("page"));
 		int photoCount = Integer.parseInt(req.getParameter("photoCount"));
-		int startRow = ((page - 1) * photoCount) + 1;
+		int startRow = (page - 1) * photoCount;
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
@@ -379,10 +380,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			String access = data.get("access").toString();
 			
 			if (access.equals("true")) {
-				json = (JSONArray) data.get("photoBoardList");
+				if (data.get("photoBoardList") != null) {
+					json = (JSONArray) data.get("photoBoardList");
+				} else {
+					json = null;
+				}
 			}
 		}
 		
+		logger.debug("portalPhotoItemList Ended");
 		return json;
 	}
 }

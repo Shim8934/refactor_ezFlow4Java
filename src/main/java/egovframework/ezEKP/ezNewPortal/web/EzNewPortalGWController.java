@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -54,6 +55,9 @@ public class EzNewPortalGWController {
 	
 	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Resource(name="EzBoardAdminService")
+	private EzBoardAdminService ezBoardAdminService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -1143,7 +1147,7 @@ public class EzNewPortalGWController {
 			
 			//deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			System.out.println(info.getRollInfo());
+			
 			//진행중인 투표 중 내가 참여하고 있는 투표의 개수
 			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId);
 
@@ -1156,8 +1160,6 @@ public class EzNewPortalGWController {
 				int qstId = pollQuestion.getQstId();
 				
 				LOGGER.debug("qstId : " + qstId);
-				System.out.println(pollQuestion.getTitle());
-				System.out.println(qstId);
 				List<PollAnswerVO> pollAnswer = ezNewPortalService.getVotePortletAnswer(qstId, tenantId);
 				int pollAnswerCount = 0;
 				
@@ -1197,6 +1199,8 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			String companyId = info.getCompanyID();
+			String deptId = info.getDeptID();
+			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
 			int portletId = 0; //포토게시판의 포틀릿 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
@@ -1213,7 +1217,7 @@ public class EzNewPortalGWController {
 			data.put("boardId", boardId);
 			
 			//게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId);
+			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 			
 			if (!accessCheck) { 
 				data.put("access", "false");
@@ -1383,23 +1387,34 @@ public class EzNewPortalGWController {
 	}
 	
 	////////board 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId) {
+	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) {
 		LOGGER.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
 		int deptPathCount = deptPathSplit.length;
+		String rootBoardID = "top";
 		
-		for (int i = 0; i < deptPathCount; i++) {
-			String deptId = deptPathSplit[i];
-			String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptId, tenantId, companyId);
+		try {
+			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, userId, deptId, companyId, tenantId);
 			
-			if (authCompare != null) {
-				if (authCompare.equals("true")) {
-					authCheck = true;
-				} else {
-					authCheck = false;
+			if (rollInfo != null && (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+				authCheck = true;
+			} else {
+				for (int i = 0; i < deptPathCount; i++) {
+					String deptPathId = deptPathSplit[i];
+					String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
+					
+					if (authCompare != null) {
+						if (authCompare.equals("true")) {
+							authCheck = true;
+						} else {
+							authCheck = false;
+						}
+					}
 				}
 			}
+		} catch (Exception e) {
+			LOGGER.debug("boardAuthCheck error");
 		}
 		
 		LOGGER.debug("authCheck : " + authCheck);

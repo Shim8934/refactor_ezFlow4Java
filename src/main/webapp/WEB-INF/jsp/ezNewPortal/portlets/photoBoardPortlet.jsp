@@ -31,22 +31,24 @@ function moveNextPage() {
 	
 	$.ajax({
 		type : "POST",
-		contentType : "application/json",
-		dataType : "json",
 		url : "/ezNewPortal/getPhotoItemList.do",
-		data : {boardId : boardId, page : page, photoCount : photoCount},
+		data : {"boardId" : boardId, "page" : page, "photoCount" : photoCount},
 		success : function(result) {
-			var resultCount = result.length;
-			var strHTML = "";
-			
-			for (var i = 0; i < resultCount; i++) {
-				strHTML += "<li>";
-				strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardId + "' data2='" + result[i].itemId + "'>";
-				strHTML += "</li>";
+			if (result.length > 0) {
+				var resultCount = result.length;
+				var strHTML = "";
 				
+				for (var i = 0; i < resultCount; i++) {
+					strHTML += "<li>";
+					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
+					strHTML += "</li>";
+					
+				}
+				
+				$("#photoul").html(strHTML);
+			} else {
+				page = page - 1;
 			}
-			
-			$("#photoul").html(strHTML);
 		}
 	})
 }
@@ -57,17 +59,16 @@ function movePrevPage() {
 		
 		$.ajax({
 			type : "POST",
-			contentType : "application/json",
 			dataType : "json",
 			url : "/ezNewPortal/getPhotoItemList.do",
-			data : {boardId : boardId, page : page, photoCount : photoCount},
+			data : {"boardId" : boardId, "page" : page, "photoCount" : photoCount},
 			success : function(result) {
 				var resultCount = result.length;
 				var strHTML = "";
 				
 				for (var i = 0; i < resultCount; i++) {
 					strHTML += "<li>";
-					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardId + "' data2='" + result[i].itemId + "'>";
+					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
 					strHTML += "</li>";
 					
 				}
@@ -80,6 +81,23 @@ function movePrevPage() {
 
 function viewBoardList() {
     window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+}
+
+function photoItemRead(elem) {
+	var ShowAdjacent = "";
+	var pheight = window.screen.availHeight;
+	var pwidth = window.screen.availWidth;
+	var pTop = (pheight - 789) / 2;
+	var pLeft = (pwidth - 765) / 2;
+	
+	if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+		var height = 789;
+	} else {
+		var height = 785;
+	}
+	console.log(elem.data1);
+	console.log(elem);
+	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + elem.getAttribute("data2") + "&boardID=" + elem.getAttribute("data1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 }
 </script>
 </head>
@@ -94,7 +112,7 @@ function viewBoardList() {
 	</dl>
 	<ul class="photoList" id="photoul">
 		<c:forEach items="${photoBoardList }" var="photo">
-		 	<li><img src="${photo.filePath }" data1="${photo.boardId }" data2="${photo.itemId }"></li>
+		 	<li><img src="${photo.filePath }" data1="${photo.boardID }" data2="${photo.itemID }" onclick="photoItemRead(this)"></li>
 		</c:forEach>
 	</ul>
 	</c:if>

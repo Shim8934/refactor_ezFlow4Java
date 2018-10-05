@@ -162,6 +162,10 @@ AND
 	A.BOARDID = #boardId#
 AND
 	B.MAIN_FLAG = 'y'
+ORDER BY
+	A.WRITEDATE DESC
+LIMIT
+	#startRow#, #photoCount#
 ]]>
 </select>
 

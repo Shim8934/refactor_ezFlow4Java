@@ -57,7 +57,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("startRow", startRow);
-		
+		map.put("photoCount", photoCount);
 		
 		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
 	}
