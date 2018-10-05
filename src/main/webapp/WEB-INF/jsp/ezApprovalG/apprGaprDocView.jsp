@@ -247,7 +247,8 @@
 		    		url : "/ezApprovalG/doCanCelYN.do",
 		    		data : {
 		    			docID : pDocID,
-		    			userID : pUserID
+		    			userID : pUserID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			cancelYN_after(loadXMLString(xml));
@@ -423,7 +424,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID=" + orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -477,7 +478,8 @@
 		        		url : "/ezApprovalG/doCancelForce.do",
 		        		data : {
 		        			docID : pDocID,
-		        			userID : pUserID
+		        			userID : pUserID,
+		        			orgCompanyID : orgCompanyID
 		        		},
 		        		success: function(xml){
 		        			result = xml;

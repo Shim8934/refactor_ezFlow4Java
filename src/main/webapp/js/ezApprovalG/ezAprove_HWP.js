@@ -618,6 +618,7 @@ function SaveApproveInfo(pApproveFlag)
 
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
+	createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 	
 	if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
@@ -748,7 +749,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
+			html  : HwpCtrl.GetCloneData("", "HWP"),
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;

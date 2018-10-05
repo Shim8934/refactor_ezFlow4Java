@@ -343,7 +343,7 @@ public class EzPollController extends EgovFileMngUtil {
 			qstId = request.getParameter("qstId");
 		}
 		
-		if (!qstId.equals("") && gotoList == null) {			
+		if (!qstId.equals("") && gotoList.equals("0")) {
 			redirectAttributes.addAttribute("qstId", qstId);
 			return "redirect:/ezPoll/pollVote.do";
 		}

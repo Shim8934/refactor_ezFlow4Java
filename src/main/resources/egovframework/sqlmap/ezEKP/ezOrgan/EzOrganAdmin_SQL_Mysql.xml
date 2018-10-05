@@ -1106,20 +1106,20 @@
       		TBL_PORTLET_URL 
       			(UID_,CREATORID,USERTYPE,URL,TENANT_ID) 
       		VALUES 
-      			(#portalItemUID14#,'gisa1','1','/ezPortal/wpNewCommunity.do',#tenantID#),
-				(#portalItemUID7#,'gisa1','1','/ezPortal/wpNewGWBanner.do',#tenantID#),
-				(#portalItemUID10#,'gisa1','1','/ezPortal/wpNewPhoto.do',#tenantID#),
-				(#portalItemUID4#,'gisa1','1','/ezPortal/wpNewImage.do',#tenantID#),
-				(#portalItemUID17#,'gisa1','1','/ezPortal/wpTotalSection5.do',#tenantID#),
-				(#portalItemUID18#,'gisa1','1','/ezPortal/wpTotalSection2.do',#tenantID#),
-				(#portalItemUID15#,'gisa1','1','/ezPortal/wpNewGraph.do',#tenantID#),
-				(#portalItemUID5#,'gisa1','1','/ezPortal/wpNewApprMail.do',#tenantID#),
-				(#portalItemUID6#,'gisa1','1','/ezPortal/wpNewPoll.do',#tenantID#),
-				(#portalItemUID16#,'gisa1','1','/ezPortal/wpNewBoardSTD.do',#tenantID#),
-				(#portalItemUID8#,'gisa1','1','/ezPortal/wpTotalSection.do',#tenantID#),
-				(#portalItemUID13#,'gisa1','1','/ezPortal/wpNewBirth.do',#tenantID#),
-				(#portalItemUID11#,'gisa1','1','/ezPortal/wpNewBoard.do',#tenantID#),
-				(#portalItemUID12#,'gisa1','1','/ezPortal/wpNewSide.do',#tenantID#)
+      			(#portalItemUID14#,#userID#,'1','/ezPortal/wpNewCommunity.do',#tenantID#),
+				(#portalItemUID7#,#userID#,'1','/ezPortal/wpNewGWBanner.do',#tenantID#),
+				(#portalItemUID10#,#userID#,'1','/ezPortal/wpNewPhoto.do',#tenantID#),
+				(#portalItemUID4#,#userID#,'1','/ezPortal/wpNewImage.do',#tenantID#),
+				(#portalItemUID17#,#userID#,'1','/ezPortal/wpTotalSection5.do',#tenantID#),
+				(#portalItemUID18#,#userID#,'1','/ezPortal/wpTotalSection2.do',#tenantID#),
+				(#portalItemUID15#,#userID#,'1','/ezPortal/wpNewGraph.do',#tenantID#),
+				(#portalItemUID5#,#userID#,'1','/ezPortal/wpNewApprMail.do',#tenantID#),
+				(#portalItemUID6#,#userID#,'1','/ezPortal/wpNewPoll.do',#tenantID#),
+				(#portalItemUID16#,#userID#,'1','/ezPortal/wpNewBoardSTD.do',#tenantID#),
+				(#portalItemUID8#,#userID#,'1','/ezPortal/wpTotalSection.do',#tenantID#),
+				(#portalItemUID13#,#userID#,'1','/ezPortal/wpNewBirth.do',#tenantID#),
+				(#portalItemUID11#,#userID#,'1','/ezPortal/wpNewBoard.do',#tenantID#),
+				(#portalItemUID12#,#userID#,'1','/ezPortal/wpNewSide.do',#tenantID#)
       ]]>
     </insert>
 

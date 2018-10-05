@@ -1540,7 +1540,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					dept_schedule:
 					for (ScheduleDeptVO vo : pdList) {
 						for (ScheduleCumulerVO vo2 : cList) {
-							if (vo.getDeptId().equals(vo2.getDeptId())){
+							if (vo.getDeptId().equals(vo2.getDeptId()) || loginVO.getDeptID().equals(vo.getDeptId())) {
 								continue dept_schedule;
 							}
 						}						
@@ -1550,9 +1550,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 					
 					//겸직일정
 					for (ScheduleCumulerVO vo : cList) {
-	            		//겸직일정
-	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
-	            		count++;
+						if (loginVO.getDeptID().equals(vo.getDeptId())) {
+							continue;
+						} else {
+							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+							count++;
+						}
 	            	}
 					
 					//회사일정
