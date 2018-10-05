@@ -24322,8 +24322,8 @@
    			TBL_USERCONTLIST  
    		ON 
    			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
-   		AND
-   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+<!--    AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID  -->
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
    		WHERE 
@@ -24332,6 +24332,34 @@
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		AND
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL 
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID IN (
+												SELECT 
+													EXTENSIONATTRIBUTE2 
+												FROM 
+													TBL_DEPTMASTER 
+												INNER JOIN 
+													TBL_ADDJOBMASTER 
+												ON
+													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+												AND
+													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+												WHERE 
+													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+												AND 
+													TBL_ADDJOBMASTER.CN = #v_PUSERID#
+											
+												UNION ALL
+										
+												SELECT 
+													PHYSICALDELIVERYOFFICENAME
+												FROM
+													TBL_USERMASTER
+												WHERE
+													CN = #v_PUSERID#
+												AND
+													TENANT_ID = #v_TENANTID#
+   											)
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		AND 
    			$v_PSUBQUERY$
@@ -24366,7 +24394,7 @@
    			TBL_EXPENDAPRDOCINFO.EDMSYN, 
    			TBL_USERCONTLIST.LINKDATE, 
    			TBL_USERCONTLIST.DESCRIPTION,
-   			TBL_USERCONTLIST.COMPANYID
+   			TBL_ENDAPRDOCINFO.COMPANYID
 <!--    			GETSENDSTATUS' || v_PSTRLANG || '(TBENDAPRDOCINFO.DOCID) AS SENDFLAG -->
    		FROM 
    			TBL_ENDAPRDOCINFO  
@@ -24384,14 +24412,42 @@
    			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID 
-   		AND
-   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+<!-- 	AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID --> 
    		WHERE 
 	   		USERCONTID = #v_CONTID# 
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
    		AND
    			TBL_USERCONTLIST.TENANT_ID = #v_TENANTID#
+   		AND
+	   		TBL_ENDAPRDOCINFO.COMPANYID IN (
+												SELECT 
+													EXTENSIONATTRIBUTE2 
+												FROM 
+													TBL_DEPTMASTER 
+												INNER JOIN 
+													TBL_ADDJOBMASTER 
+												ON
+													(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+												AND
+													TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+												WHERE 
+													TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+												AND 
+													TBL_ADDJOBMASTER.CN = #v_PUSERID#
+											
+												UNION ALL
+										
+												SELECT 
+													PHYSICALDELIVERYOFFICENAME
+												FROM
+													TBL_USERMASTER
+												WHERE
+													CN = #v_PUSERID#
+												AND
+													TENANT_ID = #v_TENANTID#
+   											)
    		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
    		 AND 
    		 	$v_PSUBQUERY$
