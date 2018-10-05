@@ -10681,33 +10681,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID IN (
-								SELECT 
-										EXTENSIONATTRIBUTE2 
-								FROM 
-										TBL_DEPTMASTER 
-								INNER JOIN 
-										TBL_ADDJOBMASTER 
-								ON
-										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND
-										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
-								AND 
-										TBL_ADDJOBMASTER.CN = #v_PUSERID#
-									
-								UNION ALL
-								
-								SELECT 
-										PHYSICALDELIVERYOFFICENAME
-								FROM
-										TBL_USERMASTER
-								WHERE
-										CN = #v_PUSERID#
-								AND
-										TENANT_ID = #v_TENANTID#
-							)
+           		COMPANYID = #companyID#
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
 		   SELECT 
@@ -10723,33 +10697,7 @@
            AND
             	TENANT_ID = #v_TENANTID#
            AND
-           		COMPANYID IN (
-								SELECT 
-										EXTENSIONATTRIBUTE2 
-								FROM 
-										TBL_DEPTMASTER 
-								INNER JOIN 
-										TBL_ADDJOBMASTER 
-								ON
-										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND
-										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
-								AND 
-										TBL_ADDJOBMASTER.CN = #v_PUSERID#
-									
-								UNION ALL
-								
-								SELECT 
-										PHYSICALDELIVERYOFFICENAME
-								FROM
-										TBL_USERMASTER
-								WHERE
-										CN = #v_PUSERID#
-								AND
-										TENANT_ID = #v_TENANTID#
-							)
+           		COMPANYID = #companyID#
 		</isNotEqual>
 	</select>
 
@@ -10766,33 +10714,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID IN (
-								SELECT 
-										EXTENSIONATTRIBUTE2 
-								FROM 
-										TBL_DEPTMASTER 
-								INNER JOIN 
-										TBL_ADDJOBMASTER 
-								ON
-										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND
-										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
-								AND 
-										TBL_ADDJOBMASTER.CN = #v_PUSERID#
-									
-								UNION ALL
-								
-								SELECT 
-										PHYSICALDELIVERYOFFICENAME
-								FROM
-										TBL_USERMASTER
-								WHERE
-										CN = #v_PUSERID#
-								AND
-										TENANT_ID = #v_TENANTID#
-							)
+           		COMPANYID = #companyID#
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
 			SELECT 
@@ -10806,33 +10728,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID IN (
-								SELECT 
-										EXTENSIONATTRIBUTE2 
-								FROM 
-										TBL_DEPTMASTER 
-								INNER JOIN 
-										TBL_ADDJOBMASTER 
-								ON
-										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND
-										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
-								AND 
-										TBL_ADDJOBMASTER.CN = #v_PUSERID#
-									
-								UNION ALL
-								
-								SELECT 
-										PHYSICALDELIVERYOFFICENAME
-								FROM
-										TBL_USERMASTER
-								WHERE
-										CN = #v_PUSERID#
-								AND
-										TENANT_ID = #v_TENANTID#
-							)
+           		COMPANYID = #companyID#
 		</isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
