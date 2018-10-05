@@ -147,7 +147,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
 .section_main .mainLayout_right_move{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
 
-.layDIV{ height:250px; background:#fff; overflow:hidden; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.layDIV{ height:250px; background:#fff; overflow:hidden; position:relative; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .layDIV02{ height:520px; background:#fff; overflow:hidden; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} /* 장진혁 */
 
 /* box_shadow */
