@@ -2243,7 +2243,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String resultCode = "Error";
 		int reasonCode = -100; 
-		MailDistributionVO distributonSubVo = null;
+		MailDistributionVO distributonSubVo = new MailDistributionVO();;
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -2258,8 +2258,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 					JSONObject resultObject = (JSONObject) responseObj.get("result");
 					
 					if (resultObject != null &&  resultObject.size() > 0) {
-						distributonSubVo = new MailDistributionVO();
-						
 						distributonSubVo.setMail((String)resultObject.get("SUB_MAIL"));
 						distributonSubVo.setName((String)resultObject.get("SUB_NAME"));
 						
@@ -2270,7 +2268,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("getDistributionSub ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		logger.debug(distributonSubVo.toString());
-		
 		return distributonSubVo;
 	}
 	
