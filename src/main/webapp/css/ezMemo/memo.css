@@ -18,8 +18,8 @@ select::-ms-expand {
 }
 .memoHeaderUL li.memoPlus{margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-180px 0px; width:30px; height:30px; cursor:pointer;}
 .memoHeaderUL li.memoClose{margin:5px 5px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:30px; height:30px; cursor:pointer;}
-.memoHeaderUL li.memoExpand{ margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-60px 0px; width:30px; height:30px; cursor:pointer;}
-.memoHeaderUL li.memoExpand_s{ margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-120px 0px; width:30px; height:30px; cursor:pointer;}
+.memoHeaderUL li.memoExpand{ margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-120px 0px; width:30px; height:30px; cursor:pointer;}
+.memoHeaderUL li.memoExpand_s{ margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-60px 0px; width:30px; height:30px; cursor:pointer;}
 .memo_main{clear:both; padding:0px 0px 0px 5px;}
 .memo_main .memoLay{ width:260px; height:310px; float:left; margin:0px 0px 10px 5px; position:relative;}
 #boardMemoList { margin: 10px; pointer-events : auto;}
