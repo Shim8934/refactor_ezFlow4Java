@@ -90,7 +90,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalNoticePortlet Start");
 		
-		return "/ezNewPortal/noticePortlet";
+		return "/ezNewPortal/portlets/noticePortlet";
 	}
 	
 	/**
@@ -100,7 +100,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalReceivedMailPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
 		
-		return "/ezNewPortal/receivedMailPortlet";
+		return "/ezNewPortal/portlets/receivedMailPortlet";
 	}
 	
 	/**
@@ -127,7 +127,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("pollAnswerCount", data.get("pollAnswerCount"));
 		}
 		
-		return "/ezNewPortal/votePortlet";
+		return "/ezNewPortal/portlets/votePortlet";
 	}
 	
 	/**
@@ -137,7 +137,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
 		
-		return "/ezNewPortal/pollPortlet";
+		return "/ezNewPortal/portlets/pollPortlet";
 	}
 	
 	/**
@@ -147,7 +147,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalSchedulePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalSchedulePortlet Start");
 		
-		return "/ezNewPortal/schedulePortlet";
+		return "/ezNewPortal/portlets/schedulePortlet";
 	}
 	
 	/**
@@ -157,7 +157,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalApprovalListPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalApprovalListPortlet Start");
 		
-		return "/ezNewPortal/approvalListPortlet";
+		return "/ezNewPortal/portlets/approvalListPortlet";
 	}
 	
 	/**
@@ -167,7 +167,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalApprovalFavoritePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalApprovalFavoritePortlet Start");
 		
-		return "/ezNewPortal/approvalFavoritePortlet";
+		return "/ezNewPortal/portlets/approvalFavoritePortlet";
 	}
 	
 	/**
@@ -189,7 +189,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			
 		}
 		
-		return "/ezNewPortal/photoBoardPortlet";
+		return "/ezNewPortal/portlets/photoBoardPortlet";
 	}
 	
 	/**
@@ -199,7 +199,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalFavoriteBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalFavoriteBoardPortlet Start");
 		
-		return "/ezNewPortal/favoriteBoardPortlet";
+		return "/ezNewPortal/portlets/favoriteBoardPortlet";
 	}
 	
 	/**
@@ -209,7 +209,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalCommunityPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalCommunityPortlet Start");
 		
-		return "/ezNewPortal/communityPortlet";
+		return "/ezNewPortal/portlets/communityPortlet";
 	}
 	
 	/**
@@ -219,7 +219,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalHelpPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalHelpPortlet Start");
 		
-		return "/ezNewPortal/helpPortlet";
+		return "/ezNewPortal/portlets/helpPortlet";
 	}
 	
 	/**
@@ -243,7 +243,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String exchangeRate = (String) list.get(0).get("송금_전신환보내실때");
 		
 		System.out.println(exchangeRate);
-		return "/ezNewPortal/currencyPortlet";
+		return "/ezNewPortal/portlets/currencyPortlet";
 	}
 	
 	/**
@@ -253,7 +253,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalWeatherePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalWeatherePortlet Start");
 		
-		return "/ezNewPortal/weatherPortlet";
+		return "/ezNewPortal/portlets/weatherPortlet";
 	}
 	
 	
