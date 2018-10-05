@@ -27,5 +27,32 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript">
+		getCompanies();
+		
+		document.getElementById("ListCompany").addEventListener('change', function() {
+			selectCompanyID();
+		});
+		
+		function getCompanies() {
+			$.ajax({
+   				type : "post",
+   				dataType : "json",
+   				url : "/admin/ezNewPortal/getCompanys.do",
+   				success: function(result){
+   					element = document.getElementById("ListCompany");
+   					
+   					result.list.forEach(function(vo, index) {
+//    							element.innerHTML = "<option value=" + "\"Replace2HTML('${item.cn}')" +"/>" + ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+//     						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+   					});
+//    					document.getElementById("ListCompany")
+   					//userCompany 자기회사
+   					//list 회사목록
+   					
+   				}
+   			});
+		}
+	
+		
 	</script>
 </html>

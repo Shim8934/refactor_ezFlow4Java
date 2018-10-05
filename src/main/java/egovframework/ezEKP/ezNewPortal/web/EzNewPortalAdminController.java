@@ -31,7 +31,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Controller
 public class EzNewPortalAdminController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalAdminController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalAdminController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -52,16 +52,16 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMain.do")
 	public String portalMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("portalMain started.");
+		LOGGER.debug("portalMain started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			logger.debug("portalMain accessDenied.");
+			LOGGER.debug("portalMain accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			logger.debug("portalMain ended.");
+			LOGGER.debug("portalMain ended.");
 			
 			return "/admin/ezNewPortal/portalMain";
 		}
@@ -72,16 +72,16 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalLeftMenu.do")
 	public String portalTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("portalLeftMenu started.");
+		LOGGER.debug("portalLeftMenu started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			logger.debug("portalLeftMenu accessDenied.");
+			LOGGER.debug("portalLeftMenu accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			logger.debug("portalLeftMenu ended.");
+			LOGGER.debug("portalLeftMenu ended.");
 			
 			return "/admin/ezNewPortal/portalLeftMenu";
 		}
@@ -96,16 +96,16 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalThemes.do")
 	public String portalThemes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("portalThemes started.");
+		LOGGER.debug("portalThemes started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			logger.debug("portalThemes accessDenied.");
+			LOGGER.debug("portalThemes accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			logger.debug("portalThemes ended.");
+			LOGGER.debug("portalThemes ended.");
 			
 			return "/admin/ezNewPortal/portalThemes";
 		}
@@ -116,16 +116,16 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do")
 	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset) throws Exception {
-		logger.debug("portalMenus started.");
+		LOGGER.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			logger.debug("portalMenus accessDenied.");
+			LOGGER.debug("portalMenus accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			logger.debug("portalMenus ended.");
+			LOGGER.debug("portalMenus ended.");
 			
 			return "/admin/ezNewPortal/portalMenus";
 		}
@@ -139,7 +139,7 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getCompanys.do")
 	public String getCompanys(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getCompanys started.");
+		LOGGER.debug("getCompanys started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -167,7 +167,7 @@ public class EzNewPortalAdminController {
 			model.addAttribute("list", companyList);
 		}
 		
-		logger.debug("getCompanys ended.");
+		LOGGER.debug("getCompanys ended.");
 		
 		return "json";
 	}
