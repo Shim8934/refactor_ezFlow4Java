@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,10 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
@@ -31,6 +39,9 @@ public class EzNewPortalGWController {
 	
 	@Resource(name="ezNewPortalService")
 	private EzNewPortalService ezNewPortalService;
+	
+	@Resource(name="ezBoardService")
+	private EzBoardService ezBoardService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -937,9 +948,56 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet started.");
 		JSONObject result = new JSONObject();
 		
+		String userId = request.getParameter("userId");
+		String type = request.getParameter("type");
+    	String boardId = request.getParameter("boardID");
+    	String boardType = request.getParameter("boardType");
+    	String mode = request.getParameter("mode");
+    	int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+    	String orderCell = request.getParameter("orderCell");
+    	String orderOption = request.getParameter("orderOption");
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			BoardVO boardVO = new BoardVO();
+			boardVO.setBoardId(boardId);
+			boardVO.setBoardType(boardType);
+			boardVO.setMode(mode);
+			boardVO.setPageNum(pageNum);
+			boardVO.setOrderCell(orderCell);
+			boardVO.setOrderOption(orderOption);
+			boardVO.setType(type);
+			boardVO.setLang(info.getLang());
+			boardVO.setTenantID(info.getTenantId());
+			
+			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
+    			boardVO.setBoardType("N");
+    			BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
+    			int boardCount = ezBoardService.getNewItemListCount(userInfo);
+    			int startRow = 1;
+    			int endRow = 0;
+    			int personalCount_ = boardConfigVO.getListCount();
+    			
+    			startRow = (personalCount_ * (boardVO.getPageNum() - 1)) + 1;
+    			endRow = (personalCount_ * boardVO.getPageNum());
+    			
+    			BoardListVO boardListVO = new BoardListVO();
+    			
+    			boardListVO.setUserID(userInfo.getId());
+    			boardListVO.setWriterCompanyID(userInfo.getCompanyID());
+    			boardListVO.setTenantID(userInfo.getTenantId());
+    			boardListVO.setStartRow(startRow);
+    			boardListVO.setEndRow(endRow);
+    			boardListVO.setTotalCount(boardCount);
+//    			boardListVO.setOrderBySub(orderOption1);
+//    			boardListVO.setOrderByMain(orderOption2);
+    			
+//    			result = getNewItemList(boardVO, userInfo);
+    		} else { // 일반게시판
+//    			result = getBoardListItem(boardVO, userInfo, type);
+    		}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -949,6 +1007,38 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화  G/W [GET] 포틀릿 - 게시판 즐겨찾기 포틀릿 탭 리스트 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value= "/rest/ezPortal/portlets/boardFavorites/lists", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFavoriteBoardPortletList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortletList started.");
+		JSONObject result = new JSONObject();
+		String userId = request.getParameter("userId");
+		String mode = request.getParameter("mode");
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			result.put("resultList", resultList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortletList ended.");
 		return result;
 	}
 	
