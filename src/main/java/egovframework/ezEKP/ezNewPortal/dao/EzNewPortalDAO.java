@@ -30,4 +30,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<BoardItemVO> getphotoBoardPortletInfo(Map<String, Object> map) {
 		return (List<BoardItemVO>) list("ezNewPortal.getPhotoBoardPortletInfo", map);
 	}
+
+	public String getBoardAuthCheck(Map<String, Object> map) {
+		return (String) select("ezNewPortal.getBoardAuthCheck", map);
+	}
 }

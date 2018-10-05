@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -47,6 +51,9 @@ public class EzNewPortalGWController {
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name="EzBoardController")
+	private EzBoardController ezBoardController;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -1102,10 +1109,41 @@ public class EzNewPortalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			String companyId = info.getCompanyID();
+			int tenantId = info.getTenantId();
+			int portletId = 0; //포토게시판의 포틀릿 아이디
+			int startRow = Integer.parseInt(request.getParameter("startRow"));
+			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
+			
+			String deptPath = info.getDeptPathCode();
+			deptPath += "everyone," + deptPath + "," + userId;
+			JSONObject data = new JSONObject();
+			
+			//회사의 포토게시판의 포틀릿 정보 가져오기
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId);
+			//String boardId = portlet.getPortletBoardId();
+			String boardId = "{cd73f88d-e415-43ab-314b-990870b8cf81}";			
+			data.put("boardId", boardId);
+			
+			//게시판 권한 체크
+			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId);
+			
+			if (!accessCheck) { 
+				data.put("access", "false");
+			} else {
+				//권한이 true이면 boardList불러오기
+				List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount);
+				
+				data.put("access", "true");
+				data.put("photoBoardList", photoBoardList);
+			}
+			
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1257,5 +1295,30 @@ public class EzNewPortalGWController {
 		}
 		LOGGER.debug("ezNewPortal G/W getSchedulePortlet ended.");
 		return result;
+	}
+	
+	////////board 권한 체크
+	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId) {
+		LOGGER.debug("boardAuthCheck started");
+		boolean authCheck = false;
+		String[] deptPathSplit = deptPath.split(",");
+		int deptPathCount = deptPathSplit.length;
+		
+		for (int i = 0; i < deptPathCount; i++) {
+			String deptId = deptPathSplit[i];
+			String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptId, tenantId, companyId);
+			
+			if (authCompare != null) {
+				if (authCompare.equals("true")) {
+					authCheck = true;
+				} else {
+					authCheck = false;
+				}
+			}
+		}
+		
+		LOGGER.debug("authCheck : " + authCheck);
+		LOGGER.debug("boardAuthCheck ended");
+		return authCheck;
 	}
 }

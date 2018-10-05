@@ -164,4 +164,22 @@ AND
 	B.MAIN_FLAG = 'y'
 ]]>
 </select>
+
+<!-- 게시판 권한 불러오기 -->
+<select id="ezNewPortal.getBoardAuthCheck" parameterClass="Map" resultClass="String">
+<![CDATA[
+SELECT
+	READ_FG
+FROM
+	TBL_BOARD_BOARDMANAGE
+WHERE
+	BOARDID = #boardId#
+AND
+	ACCESSID = #accessId#
+AND
+	TENANT_ID = #tenantId#
+AND
+	COMPANYID = #companyId#
+]]>
+</select>
 </sqlMap>
