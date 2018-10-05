@@ -3396,7 +3396,8 @@
         		tenant_id = #tenantID#
         	AND
         		companyid = #companyID#
-        		
+        	ORDER BY
+        		cast(containertypeid as unsigned);
 	    ]]>
 	</select>
 
