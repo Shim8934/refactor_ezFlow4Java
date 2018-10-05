@@ -1,7 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
@@ -202,14 +206,100 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 즐겨찾기
 	 */
 	@RequestMapping(value = "/ezNewPortal/favoriteBoardPortlet.do")
 	public String portalFavoriteBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalFavoriteBoardPortlet Start");
+
+		userInfo = commonUtil.userInfo(loginCookie);
 		
-		return "/ezNewPortal/portlets/favoriteBoardPortlet";
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("portalFavoriteBoardPortlet ended");
+		return "/ezNewPortal/favoriteBoardPortlet";
 	}
+	
+	/**
+	 * 포들릿 - 즐겨찾기 탭 리스트 불러오기
+	 */
+	@RequestMapping(value="/ezNewPortal/favoriteBoardPortletList.do")
+	public String favoriteBoardPortletList(String mode, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+		logger.debug("get_favoriteList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("mode", mode);
+		param.put("userId", userId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists" + userInfo.getId(), param, request, "get", null);		
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray resultList = (JSONArray) resultBody.get("resultList");
+			
+			model.addAttribute("resultList", resultList);
+		}
+
+		logger.debug("get_favoriteList ended");
+		return "json";
+	}
+	
+	/**
+	 * 포들릿 - 즐겨찾기 리스트 불러오기
+	 */
+	@RequestMapping(value="/ezNewPortal/getFavoriteBoardList.do")
+	public String getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale, @ModelAttribute BoardVO boardVO) throws Exception {
+		logger.debug("get_favoriteList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		logger.debug("boardID : " + boardVO.getBoardId());
+    	logger.debug("boardType : " + boardVO.getBoardType());
+    	logger.debug("pageNum : " + boardVO.getPageNum());
+    	logger.debug("orderCell : " + boardVO.getOrderCell());
+    	logger.debug("orderOption : " + boardVO.getOrderOption());
+    	
+    	String userId = userInfo.getId();
+    	String type = "1";
+    	String boardId = boardVO.getBoardId();
+    	String boardType = boardVO.getBoardType();
+    	String mode = boardVO.getMode();
+    	String pageNum = String.valueOf(boardVO.getPageNum());
+    	String orderCell = boardVO.getOrderCell();
+    	String orderOption = boardVO.getOrderOption();
+    	
+    	if (boardVO.getType() != null && !boardVO.getType().equals("")) {
+    		type = boardVO.getType();
+    	}
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("type", type);
+		param.put("boardId", boardId);
+		param.put("boardType", boardType);
+		param.put("mode", mode);
+		param.put("pageNum", pageNum);
+		param.put("orderCell", orderCell);
+		param.put("orderOption", orderOption);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites" + userInfo.getId(), param, request, "get", null);		
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray resultList = (JSONArray) resultBody.get("resultList");
+			
+			model.addAttribute("resultList", resultList);
+		}
+
+		logger.debug("get_favoriteList ended");
+		return "json";
+	}	
 	
 	/**
 	 * 포틀릿 - 공지사항
