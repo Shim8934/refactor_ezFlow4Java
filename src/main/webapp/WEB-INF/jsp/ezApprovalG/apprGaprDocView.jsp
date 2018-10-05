@@ -247,7 +247,8 @@
 		    		url : "/ezApprovalG/doCanCelYN.do",
 		    		data : {
 		    			docID : pDocID,
-		    			userID : pUserID
+		    			userID : pUserID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			cancelYN_after(loadXMLString(xml));
@@ -458,7 +459,8 @@
 		        		url : "/ezApprovalG/doCancelForce.do",
 		        		data : {
 		        			docID : pDocID,
-		        			userID : pUserID
+		        			userID : pUserID,
+		        			orgCompanyID : orgCompanyID
 		        		},
 		        		success: function(xml){
 		        			result = xml;
