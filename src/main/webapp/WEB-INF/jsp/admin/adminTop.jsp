@@ -65,7 +65,8 @@
 					    parent.frames["bottom"].location.href = "/ezStatistics/statisticsMain.do";				
 						break;
 					case "menu10":		
-					    parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
+// 					    parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
+					    parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
 						break;								
 					case "menu12":		
 					    parent.frames["bottom"].location.href = "/admin/ezResource/resourceMain.do";
