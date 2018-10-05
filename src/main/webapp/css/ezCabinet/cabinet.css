@@ -246,7 +246,7 @@
 .cabShareBttn {width: 30px; text-align: center;}
 .cabShareBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
 .cabShareListDiv, .cabShareListDiv2 {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 3px;}
-.cabShareListDiv >div, .cabShareListDiv2 >div {width: 410px; overflow-x: auto; overflow-y: auto;}
+.cabShareListDiv >div, .cabShareListDiv2 >div {width: 100%; overflow-x: auto; overflow-y: auto;}
 .cabShareListDiv >div {height: 520px;}
 .cabShareListDiv2 >div {height: 340px;}
 .cabShareListDiv .mainlist, .cabShareListDiv2 .mainlist {width: 100%;}

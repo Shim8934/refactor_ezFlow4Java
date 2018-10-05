@@ -364,7 +364,7 @@ var CabinetShareItem = function() {
 		
 		if (sharePopup) {sharePopup.close();}
 		
-		var width        = 433;
+		var width        = 470;
 		var height       = 450;
 		var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
 		var topPosition  = (window.screen.height / 2) - ((height / 2) + 50);
