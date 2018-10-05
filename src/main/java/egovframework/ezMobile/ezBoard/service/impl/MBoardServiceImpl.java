@@ -831,7 +831,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 	@Override
-	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary) throws Exception {
+	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary, int isDept, int isEqualDept) throws Exception {
 		logger.debug("brdBoardTree started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -839,13 +839,14 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("rootBoardID", rootBoardID);
 		map.put("userID", accessID);
 		map.put("deptID", "");
-		map.put("companyID","");
 		map.put("mode", mode);
 		map.put("selectBy", selectBy);
 		map.put("excludeBoardID", excludeBoardID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("primary", primary);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
 		
 		logger.debug("brdBoardTree ended");
 		return mBoardDAO.brdBoardTree(map);
@@ -917,8 +918,9 @@ public class MBoardServiceImpl implements MBoardService {
 		String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 		String rollInfo = info.getRollInfo();
 		int tenantID = info.getTenantId();
+		String deptID = info.getDeptId();
 		String companyID = info.getCompanyId();
-		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
+		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), deptID, companyID, info.getTenantId());
 		
 	    if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
 	    	mode = 0;
@@ -926,25 +928,32 @@ public class MBoardServiceImpl implements MBoardService {
 	    	mode = 1;
 	    }
 	    
-	    String accessID = info.getUserId() + "," + ezOrganService.getDeptFullPath(info.getDeptId(), tenantID) + ",everyone";
+	    /* 2018-10-05 홍승비 - 변경된 게시판권한 스펙 모바일에도 적용(개인>부서>회사) */
+	    String accessID = info.getUserId();
+		String[] reverseDeptPath = ezOrganService.getDeptFullPath(deptID, tenantID).split(",");
+		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
+			accessID += "," + reverseDeptPath[i];
+			if (i == 0) {
+				accessID += ",everyone";
+			}
+		}
 		
-	    logger.debug("accessID:"+accessID);
+		List<MBoardTreeVO> brdBoardTreeList = new ArrayList<MBoardTreeVO>();
 	    
-	    List<MBoardTreeVO> brdBoardTreeList = new ArrayList<MBoardTreeVO>();
 	    for (int i = 0; i < accessID.split(",").length; i++) {
             
             if (mode == 0) {
-            	// 여기에서 companyID 넘겨줘야 한다.
-            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, companyID, tenantID, primary);
-            	
+            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, companyID, tenantID, primary, 0, 0);
             } else {
-            	// 여기에서 companyID 넘겨줘야 한다.
-            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, companyID, tenantID, primary);
+            	// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
+				int isEqaulDept = accessID.split(",")[i].trim().equalsIgnoreCase(deptID) ? 1 : 0;
+				int isDept = mBoardDAO.isDeptChk(accessID.split(",")[i].trim(), tenantID);
+				
+            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, companyID, tenantID, primary, isDept, isEqaulDept);
             	
             	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
             		for (MBoardTreeVO k : tempBrdBoardTreeList) {
             			if (brdBoardTreeList.size() > 0) {
-            				
             				int tempCnt = 0;
             				
             				for (MBoardTreeVO h : brdBoardTreeList) {
@@ -964,11 +973,11 @@ public class MBoardServiceImpl implements MBoardService {
             }
         }
 	  
-	    //오름차순 정렬
+	    /* 2018-10-05 홍승비 - 게시판순서 오름차순 정렬 시 o1=o2(0), o1>o2(1), o1<o2(-1) 분기 추가 */
 	    Collections.sort(brdBoardTreeList, new Comparator<MBoardTreeVO>() {
 			@Override
 			public int compare(MBoardTreeVO o1, MBoardTreeVO o2) {
-				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
+				return Integer.parseInt(o1.getTreeViewOrder()) < Integer.parseInt(o2.getTreeViewOrder()) ? -1 : Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
 	    
@@ -990,8 +999,6 @@ public class MBoardServiceImpl implements MBoardService {
 	    	
 	    	brdBoardTreeList.get(i).setListCount(listCount);
 	    }
-	    
-	    logger.debug("모바일에서 생성한 게시판 리스트       ::   " + brdBoardTreeList);
 	    
 	    logger.debug("getBoardTree ended");
 		return brdBoardTreeList;
