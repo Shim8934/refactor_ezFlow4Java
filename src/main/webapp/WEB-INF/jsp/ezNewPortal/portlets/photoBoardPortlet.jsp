@@ -15,21 +15,98 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/showModalDialog.js')}" ></script>
+<script type="text/javascript">
+var page = 1;
+var photoCount = 4;
+var boardId = "<c:out value='${boardId}'/>";
+
+$(function(){
+	$(".nextBtn").on("click", moveNextPage);
+	$(".preBtn").on("click", movePrevPage);
+	$(".portletPlus").on("click", viewBoardList);
+})
+
+function moveNextPage() {
+	page = page + 1;
+	
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		dataType : "json",
+		url : "/ezNewPortal/getPhotoItemList.do",
+		data : {boardId : boardId, page : page, photoCount : photoCount},
+		success : function(result) {
+			var resultCount = result.length;
+			var strHTML = "";
+			
+			for (var i = 0; i < resultCount; i++) {
+				strHTML += "<li>";
+				strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardId + "' data2='" + result[i].itemId + "'>";
+				strHTML += "</li>";
+				
+			}
+			
+			$("#photoul").html(strHTML);
+		}
+	})
+}
+
+function movePrevPage() {
+	if (page !== 1) {
+		page = page - 1;
+		
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			dataType : "json",
+			url : "/ezNewPortal/getPhotoItemList.do",
+			data : {boardId : boardId, page : page, photoCount : photoCount},
+			success : function(result) {
+				var resultCount = result.length;
+				var strHTML = "";
+				
+				for (var i = 0; i < resultCount; i++) {
+					strHTML += "<li>";
+					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardId + "' data2='" + result[i].itemId + "'>";
+					strHTML += "</li>";
+					
+				}
+				
+				$("#photoul").html(strHTML);
+			}
+		})
+	}
+}
+
+function viewBoardList() {
+    window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+}
+</script>
 </head>
 <body>
 <div class="layDIV">
 	<dl class="portlet_title photo_board">
 		<dt class="portletText">포토 갤러리</dt>
 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
+	<c:if test="${access eq 'true' }">
 		<dd class="nextBtn"><img src="/images/ezNewPortal/photo_next.png"></dd>
 		<dd class="preBtn"><img src="/images/ezNewPortal/photo_pre.png"></dd>
 	</dl>
 	<ul class="photoList" id="photoul">
-			<li><img src="/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&amp;boardID=%7Bded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c%7D&amp;fileName=s_{6c8cc7e6-e533-4ead-8d36-bd877aa3b03b}.jpg" onclick="ItemRead_onclick(this)" data1="{ded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c}" data2="{d49768a5-d94e-b5ef-9333-9b6069ba2fd9}"></li>
-			<li><img src="/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&amp;boardID=%7Bded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c%7D&amp;fileName=s_{ebf75b2d-57ba-42d0-be5e-20db4c89974e}.jpg" onclick="ItemRead_onclick(this)" data1="{ded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c}" data2="{9916d44e-51ce-2828-9c7d-35121d54cb7e}"></li>
-			<li><img src="/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&amp;boardID=%7Bded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c%7D&amp;fileName=s_{868bd6e2-c06a-45a1-b875-0b45ed9de78f}.jpg" onclick="ItemRead_onclick(this)" data1="{ded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c}" data2="{52f1611f-57da-a9bb-d560-c727902b63d8}"></li>
-			<li><img src="/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&amp;boardID=%7Bded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c%7D&amp;fileName=s_{4ef0470b-8924-4050-8a8f-e070353e28ad}.jpg" onclick="ItemRead_onclick(this)" data1="{ded4ccd7-79f7-f6e5-b37a-51c29a4fdc3c}" data2="{0beb815c-fff2-920f-0614-653fecf77619}"></li>
+		<c:forEach items="${photoBoardList }" var="photo">
+		 	<li><img src="${photo.filePath }" data1="${photo.boardId }" data2="${photo.itemId }"></li>
+		</c:forEach>
 	</ul>
+	</c:if>
+	<c:if test="${access eq 'false' }">
+	</dl>
+	<ul class="portlet_list">
+		<dl class="nodata">
+			<dt><img src="/images/ezNewPortal/nodata.png"></dt>
+			<dd>해당 게시판의 접근 권한이 없습니다.</dd>
+		</dl>
+	</ul>
+	</c:if>
 </div>
 </body>
 </html>

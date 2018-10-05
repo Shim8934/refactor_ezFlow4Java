@@ -184,6 +184,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("page", 1);
+		param.put("photoCount", 4);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -191,7 +193,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (result.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			model.addAttribute("access", access);
+			model.addAttribute("boardId", data.get("boardId"));
 			
+			if (access.equals("true")) {
+				model.addAttribute("photoBoardList", data.get("photoBoardList"));
+			}
 		}
 		
 		return "/ezNewPortal/portlets/photoBoardPortlet";
@@ -347,5 +355,34 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "/ezNewPortal/portlets/weatherPortlet";
 	}
 	
-	
+	/////포틀릿 정보만 가져오기
+	@RequestMapping(value = "/ezNewPortal/getPhotoItemList.do")
+	public JSONArray portalPhotoItemList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
+		logger.debug("portalPhotoItemList Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String url = "/rest/ezPortal/portlets/photoBoard";
+		int page = Integer.parseInt(req.getParameter("page"));
+		int photoCount = Integer.parseInt(req.getParameter("photoCount"));
+		int startRow = ((page - 1) * photoCount) + 1;
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("photoCount", photoCount);
+		param.put("startRow", startRow);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			
+			if (access.equals("true")) {
+				json = (JSONArray) data.get("photoBoardList");
+			}
+		}
+		
+		return json;
+	}
 }

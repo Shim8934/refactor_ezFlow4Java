@@ -8,8 +8,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -47,6 +49,38 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		
 		return ezNewPortalDAO.getVotePortletAnswer(map);
+	}
+
+	@Override
+	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("boardId", boardId);
+		map.put("startRow", startRow);
+		
+		
+		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
+	}
+
+	@Override
+	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("portletId", portletId);
+		
+		return null;
+	}
+
+	@Override
+	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("boardId", boardId);
+		map.put("accessId", accessId);
+		
+		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}
 
 }

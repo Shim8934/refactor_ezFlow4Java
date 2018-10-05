@@ -46,9 +46,6 @@
 		}
 	});
 	</script>
-	<style type="text/css">
-		.box_shadow {width:410px; float : left; margin-left:16px;}
-	</style>
 </head>
 
 	<body class="mainbg">
