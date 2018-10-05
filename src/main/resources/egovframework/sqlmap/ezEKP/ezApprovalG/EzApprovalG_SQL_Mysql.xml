@@ -10697,7 +10697,7 @@
            AND
             	TENANT_ID = #v_TENANTID#
            AND
-           		COMPANYID = #companyID# 
+           		COMPANYID = #companyID#
 		</isNotEqual>
 	</select>
 
@@ -10714,7 +10714,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID = #companyID#     	
+           		COMPANYID = #companyID#
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
 			SELECT 
@@ -10728,7 +10728,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID = #companyID#     	
+           		COMPANYID = #companyID#
 		</isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->

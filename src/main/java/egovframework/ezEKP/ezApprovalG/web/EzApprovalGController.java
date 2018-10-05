@@ -2586,8 +2586,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String fileName = request.getParameter("fileName");
 		String docAttachSN = request.getParameter("docAttachSN");
 		String realPath = commonUtil.getRealPath(request);
+		
+		String companyID = userInfo.getCompanyID();
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !companyID.equals(orgCompanyID)) {
+			companyID = orgCompanyID;
+		}
 
-		String href = ezApprovalGService.getDocHref(docID, docStatus, type, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
+		String href = ezApprovalGService.getDocHref(docID, docStatus, type, docAttachSN, companyID, userInfo.getTenantId());
 		
 		downFile(request, response, realPath + href, fileName);
 		
