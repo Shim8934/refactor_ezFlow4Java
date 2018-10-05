@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1271,7 +1272,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		//Sort cabinetList
-		Collections.sort(cabinetList, (CabinetSimpleVO c1, CabinetSimpleVO c2) -> c1.getCabinetName().compareTo(c2.getCabinetName()));
+		cabinetList.sort(Comparator.comparing(CabinetSimpleVO::getCabinetLevel).thenComparing(CabinetSimpleVO::getCabinetName));
+		//Collections.sort(cabinetList, (CabinetSimpleVO c1, CabinetSimpleVO c2) -> c1.getCabinetName().compareTo(c2.getCabinetName()));
 	}
 	
 	@SuppressWarnings("unchecked")
