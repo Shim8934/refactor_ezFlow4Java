@@ -4,7 +4,8 @@
 
 	<typeAlias alias="SysParamVO" type="egovframework.ezEKP.ezSystem.vo.SysParamVO"/>
 	<typeAlias alias="ConnectionInfoVO" type="egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO"/>
-	
+	<typeAlias alias="IPBandVO" type="egovframework.ezEKP.ezSystem.vo.IPBandVO"/>
+	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -150,6 +151,157 @@
             	CONNECTTIME < sysdate - #v_KEEP_LOG_PERIOD#
 		]]>
 	</delete>
+	
+	<update id="EzSystemAdminDAO.updateSystemIPAllow" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_TENANT_CONFIG 
+			SET 
+				PROPERTY_VALUE=#value# 
+			WHERE 
+				PROPERTY_NAME='useIPAccess'
+			AND
+				TENANT_ID=#tenantID#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemAllIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT
+				IPNO, 
+				IPADDRESS,
+				"ACCESS",
+				EXPLANATION
+			FROM 
+				TBL_ACCESS_IP
+			WHERE 
+				TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.insertIPBand" parameterClass="Map">
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT TBL_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+		</selectKey>
+		<![CDATA[
+			INSERT INTO 
+				TBL_ACCESS_IP (IPNO, TENANT_ID, IPADDRESS, "ACCESS", EXPLANATION) 
+			VALUES (#id#, #tenantID#, #ipAddress#, #access#, #explanation#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateIPBand" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_ACCESS_IP
+			SET 
+				IPADDRESS=#ipAddress#,
+				"ACCESS"=#access#,
+				EXPLANATION=#explanation#
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemIPBand" parameterClass="String" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT 
+				IPADDRESS,
+				"ACCESS",
+				EXPLANATION
+			FROM 
+				TBL_ACCESS_IP
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteIPBand" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_ACCESS_IP
+            ]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
+       
+	</delete>
+	
+	<select id="EzSystemAdminDAO.getAllAccessList" parameterClass="Map" resultClass="AccessIdVO">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.ACCESSNO, TBL_USERMASTER.DISPLAYNAME$lang$ NAME, TBL_ACCESS_ID.CN CN, TBL_USERMASTER.DESCRIPTION$lang$ DEPARTMENT 
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_USERMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_USERMASTER.CN AND TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME=#companyID# 
+			AND	
+				TBL_USERMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAllAccessListDept" parameterClass="Map" resultClass="AccessIdVO">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.ACCESSNO, TBL_DEPTMASTER.DISPLAYNAME$lang$ NAME, TBL_ACCESS_ID.CN CN, TBL_DEPTMASTER.DISPLAYNAME$lang$ DEPARTMENT 
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN AND TBL_DEPTMASTER.EXTENSIONATTRIBUTE2=#companyID# 
+			AND	
+				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAllAccessListUserCompare" parameterClass="Integer" resultClass="String">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.CN
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_DEPTMASTER.CN
+			AND	
+				TBL_DEPTMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAllAccessListDeptCompare" parameterClass="Integer" resultClass="String">
+		<![CDATA[
+			SELECT
+				TBL_ACCESS_ID.CN
+			FROM 
+				TBL_ACCESS_ID
+			INNER JOIN
+				TBL_USERMASTER
+			ON 
+				TBL_ACCESS_ID.CN=TBL_USERMASTER.CN
+			AND	
+				TBL_USERMASTER.TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteAccessId" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_ACCESS_ID
+            ]]> <iterate prepend="WHERE ACCESSNO IN" open="(" close=")" conjunction=",">#accessNoList[]#</iterate>
+       
+	</delete>
+	
+	<insert id="EzSystemAdminDAO.insertAccessId" parameterClass="Map">
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT TBL_ACCESS_ID_SEQ2.NEXTVAL FROM SYS.DUAL
+		</selectKey>
+		<![CDATA[
+			INSERT INTO 
+				TBL_ACCESS_ID (ACCESSNO, TENANT_ID, CN) 
+			VALUES (#id#, #tenantID#, #cn#)
+		]]>
+	</insert>
 	
 	
 </sqlMap>

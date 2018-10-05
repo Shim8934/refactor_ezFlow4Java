@@ -60,8 +60,10 @@
 	    var pAdminFg = "${adminFg}";
 	    var pBrd_Access = "${brdAccess}";
 	    
+	    /* 2018-10-01 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 	    if(pAdminFg == "") {
-	        window.location.href = "/ezResource/nonResList.do?msg=" + pBrd_Access;
+	    	var msg = "<spring:message code='ezResource.t58' />";
+	        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
@@ -179,20 +181,17 @@
 	    }
 
 	    function event_schedule_get_lunaruse() {
-	        if (xmlhttp == null || xmlhttp.readyState != 4)
+	       /*  if (xmlhttp == null || xmlhttp.readyState != 4)
 	            return;
 
 	        if (xmlhttp.responseText == "0")
 	            LunarUse = true;
 	        else if (xmlhttp.responseText == "1")
 	            LunarUse = true;
-	        else
-	            LunarUse = false;
+	        else */
 	        
-	     	// #13470 uselang이 3인 경우 음력사용 금지
-			if(getLang == "3") {
-				LunarUse = false;
-			}
+	        // #13470 일본은 음력사용 안함
+	        LunarUse = false;
 
 	        schedule_get_holiday();
 	    }
@@ -342,6 +341,21 @@
 	        } else {
 	            selsd = GetAttribute(srcEl, "dispDate");
             	seled = GetAttribute(srcEl, "dispDate");
+	        }
+			//2018-09-13 천성준 - #13590
+	        if (selsd == "" && seled == "") {
+	        	var date = new Date();
+	        	var year = date.getFullYear();	//2018
+	        	var month = date.getMonth()+1;	//0~11
+	        	var day = date.getDate(); 		//1~31
+	        	
+	        	if (month < 10)
+	        		month = "0" + month;
+	        	if (day < 10)
+	        		day = "0" + day;
+	        	
+	        	selsd = year + "-" + month + "-" + day;
+	        	seled = year + "-" + month + "-" + day;
 	        }
 	       
 	        var feature = GetOpenPosition(820, 700);

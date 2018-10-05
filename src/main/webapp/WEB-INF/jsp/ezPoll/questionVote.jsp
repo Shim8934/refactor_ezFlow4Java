@@ -463,6 +463,7 @@
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
 			        	var _userPhoto = JSON.parse(updatedInfo.body).userPhoto;
 			        	var _sessionID = JSON.parse(updatedInfo.body).sessionid;
+			        	var _deptId = JSON.parse(updatedInfo.body).deptId;
 			        	var _userName = "";			        				        	
 			        	
 			        	if (_primary == 1) {
@@ -490,7 +491,7 @@
 		            		}
 		            	}
 		            	
-		            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
+		            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto, _deptId);
 				    });
 			        
 			        stompClient.subscribe('/reply/editCmtForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
@@ -956,9 +957,9 @@
 		    	}
 		    }
 		    
-		    function menuQst_DetailUserInfo(pUserID) {
+		    function menuQst_DetailUserInfo(pUserID, pDeptID) {
 		    	 var feature = GetOpenPosition(420, 438);
-		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
 		    
 		    function showEditPanel(obj) {					    	
@@ -2187,7 +2188,7 @@
 		    	}
 		    }
 		    
-		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto) {		    	
+		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto, deptId) {		    	
 		    	var oTable = document.getElementById("commentListView");
 		    	
 		    	//Create the tr element
@@ -2199,7 +2200,7 @@
                 var image_tag = document.createElement("img");                
                 image_tag.src = userPhoto;
                 image_tag.setAttribute("class", "userPhotoImg");
-                image_tag.onclick = function () { menuQst_DetailUserInfo(userId); };
+                image_tag.onclick = function () { menuQst_DetailUserInfo(userId, deptId); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
                 
@@ -3192,7 +3193,7 @@
 				<div id="mainmenu3" style="overflow: hidden;">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		
-					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
+					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}','${deptId}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
 								<c:choose>
 									<c:when test="${primary == '1'}">
@@ -3580,7 +3581,7 @@
 						<c:forEach var="_comt" items="${listComments}">
 							<tr>
 								<td class="userPhotoTd">
-									<img class="userPhotoImg" src="${_comt.userImage}" onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+									<img class="userPhotoImg" src="${_comt.userImage}" onclick="menuQst_DetailUserInfo('${_comt.userId}','${_comt.deptId}');">
 								</td>
 								<td>
 									<c:choose>

@@ -26,6 +26,8 @@
 		    var useBizmekaSpambox = "${useBizmekaSpambox}";
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
+		    var deptTreeTopId = "${deptTreeTopId}";
+		    var changePassLength = 0;
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -57,7 +59,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -152,7 +154,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : cellContent, prop : "", type : typeContent},
+		        	data : {deptID : DeptID, cell : cellContent, prop : "userType", type : typeContent},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -181,6 +183,8 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+
+				        moveDisplay(false);
 		        	},
 		        	error : function(error){
 		        		alert("<spring:message code='ezOrgan.t2'/>" + error);	
@@ -571,7 +575,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -587,7 +591,7 @@
 					return;
 				}else if (adCount == 1){
 				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					g_xmlHTTP.send(strQuery);
@@ -607,7 +611,7 @@
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();
 					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
+					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
 					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					        g_xmlHTTP.send(strQuery);
@@ -622,7 +626,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -645,7 +649,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user"},
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
@@ -674,6 +678,8 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+				        
+				        moveDisplay(true);
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -786,6 +792,7 @@
 			    var nodeIdx = treeView.GetSelectNode();			    
 			    var treeNode = new TreeNode();
 			    treeNode.LoadFromID(nodeIdx.NodeID);
+			    var userType = "";
 
 		        var listview = new ListView();		        
 		        listview.LoadFromID("lvUserList");
@@ -796,8 +803,11 @@
 
 				for (var i = 0 ; i < listview.GetDataRows().length ; i++){
 					objNode += listview.GetDataRows()[i].getAttribute("DATA2");
+					userType += listview.GetDataRows()[i].getAttribute("DATA3");
+					
 					if(i != listview.GetDataRows().length){
 						objNode += ",";
+						userType +=",";
 					}
 				}
 				
@@ -812,7 +822,7 @@
 					dataType : "text",
 					url : "/admin/ezOrgan/saveOrderList.do",
 					async : false,
-					data : {cn : objNode, pClass : pClass},
+					data : {cn : objNode, pClass : pClass, userType : userType , deptId : DeptID},
 					success : function(result){
 						alert("<spring:message code='ezOrgan.t49' />");
 						getDeptFullTree(treeNode.GetNodeData("CN"));
@@ -1009,6 +1019,7 @@
                     alert(strLang13);
                     return;
 				}
+		        changePassLength = listview.GetSelectedRows().length;
 		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
@@ -1030,9 +1041,6 @@
 		            listview.LoadFromID("lvUserList");
 
 		            var length = listview.GetSelectedRows().length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
-			        	return;
-		            }		            
          			var data = "";
 		            for (var i = 0; i < length; i++) {
 		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
@@ -1389,6 +1397,14 @@
 		    	}
 		    }
 		    
+		    function moveDisplay(mode) {
+		    	if (mode) {
+		    		$(".moveWrap").css("display","none");	
+		    	} else {
+		    		$(".moveWrap").css("display","block");	
+		    	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -1510,11 +1526,9 @@
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>		                
 						<c:if test="${useBizmekaTalk == 'YES'}">			
-							<c:if test="${locale eq 'ko'}">
 							<tr>
 			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 			                </tr>
-							</c:if>
 		                </c:if>
 		                <c:if test="${useDisablePopImap == 'YES'}">
 							<tr>
@@ -1527,7 +1541,7 @@
 			<tr>
 				<th style="height:30px;border-top:0px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
-					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
+					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th style="border-top:0px">
 					<select id="search_type" style="WIDTH:60px; height:22px;">
@@ -1561,7 +1575,7 @@
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>
 		            <c:if test="${dotNetIntegration != 'YES'}">
-		            <div style="width:100%; vertical-align:middle; text-align:center">
+		            <div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center">
 		            	<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 						<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
 		                <a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>

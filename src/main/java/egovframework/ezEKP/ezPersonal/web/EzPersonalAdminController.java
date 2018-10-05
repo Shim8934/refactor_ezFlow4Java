@@ -439,6 +439,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("managePoll started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = userInfo.getCompanyID();
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -452,6 +453,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
 
 		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";
@@ -670,7 +672,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
-		
+		String companyId = userInfo.getCompanyID();
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
@@ -682,6 +684,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		model.addAttribute("companyId", companyId);
 		model.addAttribute("list", resultList);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useEditor", useEditor);

@@ -20,6 +20,21 @@
 		</section>
 
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<style>
+			.notice_tab {
+				background-color: #f9f9f9;
+				border: 1px solid #e8e8e8;
+			}
+ 			.notice_tab dt {
+				margin: -1px -1px 0px -1px;
+				height: 27px;
+			}
+			.notice_tab dt.on {
+				margin: -1px -1px 0px -1px;
+				height: 27px;
+				padding: 0px 5px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
@@ -42,7 +57,18 @@
     	        // 2016-08-03 첫화면에 공지게시판 불러오기
 				getBoardList_NewBoard();
 				selTab = "Board0_Newboard";
-    	        
+				
+				/* 2018-09-27 홍승비 - 포틀릿에 게시판이 등록되어있지 않다면 셀 나타내지 않도록 수정 */
+				if ("${pCompanyBoard }" == "") {
+					document.getElementById("Board0_Newboard").style.display = "none";
+				}
+				if ("${pDeptBoardID }" == "") {
+					document.getElementById("Board1_Newboard").style.display = "none";
+				}
+				if ("${pNewsBoardID }" == "") {
+					document.getElementById("Board2_Newboard").style.display = "none";
+				}
+				
             	try { top.onresize() } catch (e) { }
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();
@@ -143,9 +169,18 @@
             	var pTop = (pheight - 720) / 2;
             	var pLeft = (pwidth - 765) / 2;
 
-            	if (boardType == "3" || boardType == "4")
-	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-            	else {
+            	/* 2018-09-19 홍승비 - 포탈 포틀릿에서 포토/썸네일게시물 보기 시 창 크기 수정 */
+				if (boardType == "3" || boardType == "4") {
+					if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+						var height = 789;
+					} else {
+						var height = 785;
+					}
+					pTop = (pheight - 789) / 2;
+					pLeft = (pwidth - 764) / 2;
+					
+	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+            	} else {
 	                if (CrossYN())
     	                window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
         	        else

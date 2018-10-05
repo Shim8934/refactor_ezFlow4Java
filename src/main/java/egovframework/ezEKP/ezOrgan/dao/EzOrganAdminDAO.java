@@ -184,6 +184,42 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return companyChildCheckForLocal(map);       
 	}
 	
+	private int userCheckForJMocha(Map<String, Object> map) throws Exception {
+		String cn = (String)map.get("cn");
+        int tenantID = (Integer)map.get("tenantID");
+        
+        logger.debug("userCheckForJMocha started. cn=" + cn + ",tenantID=" + tenantID);
+
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "mailId=" + URLEncoder.encode(cn, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkMailId";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        int result = 0;
+        
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+            
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            
+            if (resultCode.equals("OK") && reasonCode == 0) {
+            	result = ((Long)responseObj.get("result")).intValue();
+            } else {
+            	logger.debug("resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+            	throw new Exception("JGwServer /jMochaEzEmail/checkMailId Failed!");
+            }
+        }
+        
+        logger.debug("userCheckForJMocha ended. result=" + result);
+        return result;
+    }
+	
     private int userCheckForLocal(Map<String, Object> map) throws Exception {
         String cn = (String)map.get("cn");
         int tenantID = (Integer)map.get("tenantID");
@@ -198,12 +234,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public int userCheck(String cn, int tenantID) throws Exception{
-    	Map<String, Object> map = new HashMap<String, Object>();
+    	int result = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
     	
     	map.put("cn", cn);
     	map.put("tenantID", tenantID);
     	
-        return userCheckForLocal(map);       
+    	result = userCheckForLocal(map);
+    	
+    	if (result == 0) {
+    		result = userCheckForJMocha(map);
+    	}
+    	
+        return result;    
 	}
 		
     private int getPermissionListCountForLocal(Map<String, Object> map) throws Exception {
@@ -752,6 +795,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void updateProperty(Map<String, Object> map) throws Exception{
 		updatePropertyForLocal(map);       
 	}
+	
+	public void updateProperty_addJob(Map<String, Object> map) throws Exception{
+        update("EzOrganAdminDAO.updateProperty_addJob", map);
+	}
 
     private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
@@ -1135,6 +1182,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompany_D19(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteCompany_D19", map);
     }
+	
+	public void deleteCompany_D20(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D20", map);
+	}
+	
+	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS7", map);
+	}
 		
 	public OrganDeptVO moveDBData_S (Map<String, Object> map) throws Exception {
 		return (OrganDeptVO)select("EzOrganAdminDAO.moveDBData_S", map);
@@ -1268,12 +1323,42 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I19(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I19", map);
     }
-    
     public void insertCompanyInfo_I20(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
     }
     public void insertCompanyInfo_I21(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I21", map);
+    }
+    public void insertCompanyInfo_I22(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I22", map);
+    }
+    
+    public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
+    }
+    
+    public void insertCompanyInfo_IKMS2(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS2", map);
+    }
+    
+    public void insertCompanyInfo_IKMS3(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS3", map);
+    }
+
+    public void insertCompanyInfo_IKMS4(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS4", map);
+    }
+    
+    public void insertCompanyInfo_IKMS5(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS5", map);
+    }
+    
+    public void insertCompanyInfo_IKMS6(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS6", map);
+    }
+    
+    public void insertCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS7", map);
     }
     
 	/**

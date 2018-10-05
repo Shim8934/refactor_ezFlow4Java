@@ -592,12 +592,38 @@
 
                             if (AttachUrl != "null") {
                                 var tempINGFlag = "";
-                                
-                                if (GetAttribute(tr,"data4") == "file") {
+                                /* if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
                                 } else {
                                     window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
-                                }
+                                } */
+                                
+                              	//2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
+								try {
+									if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
+	                                	var tempStr = AttachUrlA1.split("/");
+	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+	                                    var openLocation;
+	                                    
+	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    	if (isIE()) {
+	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                                    	} else {
+	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                		                	alert(pAlertContent);
+	                		                	return;
+	                                    	}
+	                                    } else {
+	                                    	openLocation = "/ezApprovalG/contDocView.do";
+	                                    }
+	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
+	                                    openwindow(openLocation, "", 880, 570);
+									} else {
+	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+	                                }
+								} catch(e) {
+									console.log(e);
+								}
                             }
                         }
 			    	}
@@ -837,12 +863,7 @@
 	    </h1>
 	    <div id="mainmenu">
 	    	<c:if test="${type == 'admin' }">
-	            <b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-		        </select><br /><br />
+	    		<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
 	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>

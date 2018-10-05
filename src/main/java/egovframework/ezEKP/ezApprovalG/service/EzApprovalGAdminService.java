@@ -16,11 +16,11 @@ public interface EzApprovalGAdminService {
 
 	public String getContainerInfoManage(String deptID, String type, String companyID, String lang, int tenantID) throws Exception;
 
-	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
+	public String getContTypeInfo(String type, String companyID, String primary, int tenantID, String lang) throws Exception;
 	
 	public String deleteContainerType(String docTypeID, String companyID, int tenantID) throws Exception;
 	
-	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag) throws Exception;
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag, String lang) throws Exception;
 	
 	public String updateContainerToDocStateInfo(Document xmlData, String companyID, int tenantID) throws Exception;
 	

@@ -177,6 +177,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docState = request.getParameter("docState");
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -277,6 +283,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         model.addAttribute("docState", docState);
         model.addAttribute("isHWP", "Y");
         model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+        model.addAttribute("orgCompanyID", orgCompanyID);
         
 		LOGGER.debug("approvuiHWP ended");
 		
@@ -590,7 +597,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String endDir = "";
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
-        String SignCheck = "N";
         String pass = "";
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -611,7 +617,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
@@ -643,15 +649,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
                     "</DEPTNAME2></PARAMETER>";
 
             ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
-
-            String rtnXML = ezApprovalGService.getDocInfo(docID, "END", "SignCheck", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
-
-    		Document xmlDom2 = commonUtil.convertStringToDocument(rtnXML);
-
-            if (xmlDom2.getElementsByTagName("SIGNCHECK").getLength() > 0) {
-            	SignCheck = xmlDom2.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
-            }
         }
+		
+		if (sendType == null || sendType.equals("")) {
+			sendType = ezApprovalGService.getDocSendType(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -661,7 +663,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("endDir", endDir);
 		model.addAttribute("docTitle", docTitle);
 		model.addAttribute("susinAdmin", susinAdmin);
-		model.addAttribute("SignCheck", SignCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
@@ -828,6 +829,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
+	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 
 	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
@@ -841,6 +843,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("hwpToolbar", hwpToolbar);
 	    model.addAttribute("useEditor", useEditor);
 	    model.addAttribute("approvalRoot", approvalRoot);
+	    model.addAttribute("approvalPWD", approvalPWD);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");

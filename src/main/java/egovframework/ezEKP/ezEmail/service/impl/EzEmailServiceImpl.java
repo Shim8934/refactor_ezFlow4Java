@@ -41,7 +41,6 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -83,9 +82,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
-	
-	@Autowired
-	private EzEmailDAO ezEmailDAO;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -670,6 +666,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		MailCancelVO mailCancelVO = new MailCancelVO();
         		
         		mailCancelVO.setReaderEmail((String)obj.get("receiverEmail"));
+        		mailCancelVO.setReaderName((String)obj.get("receiverName"));
         		mailCancelVO.setStatus((String)obj.get("status"));
         		
 				cancelList.add(mailCancelVO);
@@ -681,26 +678,29 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception {
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception {
 		logger.debug("setMailCancelSend started.");
-		logger.debug("tenantId=" + tenantId + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
+		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
 		String senderEmailParam = "senderEmail=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
 		String subjectParam = "subject=" + URLEncoder.encode(pSubject, "UTF-8");
+		String primaryParam = "primary=" + primary;
+		String tenantIdParam = "tenantId=" + tenantId;
 		
 		StringBuilder receiverEmailParam = new StringBuilder();
+		
 		for (String innerAddress : pInnerAddresses) {
 			receiverEmailParam.append("&re=" + URLEncoder.encode(innerAddress, "UTF-8"));
 		}
 		
-		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam;
+		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam + "&" + primaryParam + "&" + tenantIdParam;
 		inputParams += receiverEmailParam.toString();
 		logger.debug("inputParams=" + inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailRecall", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailRecall2", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		//get recallIdx
@@ -747,20 +747,19 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void updateMailReceiveDetailInfo(String pNum, List<String[]> receiveDetailList) throws Exception {
+	public void updateMailReceiveDetailInfo(String pNum, String[] receiveDetail) throws Exception {
 		logger.debug("updateMailReceiveDetailInfo started.");
 		
-		StringBuilder inputParams = new StringBuilder();
-		inputParams.append("recallIdx=" + URLEncoder.encode(pNum, "UTF-8"));
+		String recallIdxParam = "recallIdx=" + pNum;
+		String addressParam = "address=" + URLEncoder.encode(receiveDetail[0], "UTF-8");
+		String statusParam = "status=" + URLEncoder.encode(receiveDetail[1], "UTF-8");
 		
-		for (String[] receiveDetail : receiveDetailList) {
-			inputParams.append("&re=" + URLEncoder.encode(receiveDetail[0], "UTF-8"));
-			inputParams.append("&s=" + URLEncoder.encode(receiveDetail[1], "UTF-8"));
-		}
+		String inputParams = recallIdxParam + "&" + addressParam + "&" + statusParam;
+		logger.debug("inputParams=" + inputParams);
 		
 		logger.debug("inputParams=" + inputParams.toString());
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailRecallDetail", inputParams.toString());
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailRecallDetail2", inputParams.toString());
 		logger.debug("strJson=" + strJson);
 		
 		JSONParser parser = new JSONParser();

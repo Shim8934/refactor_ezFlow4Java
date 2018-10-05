@@ -112,7 +112,7 @@
 		        if (approvalFlag == "G") {
 			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG");
 		        } else {
-			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
 		        }
 		        $("#tr_setAutoItemCode").hide();
 		        

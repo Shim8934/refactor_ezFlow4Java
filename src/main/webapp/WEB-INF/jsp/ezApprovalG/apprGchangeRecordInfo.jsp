@@ -193,6 +193,8 @@
                 var EletronicFlag = getNodeText(objXml.documentElement.getElementsByTagName("ELECTRONICRECFLAG")[0]);
                 if (EletronicFlag == "1")
                     document.getElementsByName("rdoElectronicFlag")[0].checked = true;
+                else if (EletronicFlag == "2")
+                	document.getElementsByName("rdoElectronicFlag")[1].checked = true;
 
                 SwapInputField();
                 g_ArrPageInitFlag[0] = true;

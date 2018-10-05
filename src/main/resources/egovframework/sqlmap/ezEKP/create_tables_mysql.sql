@@ -76,6 +76,28 @@ CREATE TABLE `james_mail_blob` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `james_mail_countryip`
+--
+
+DROP TABLE IF EXISTS `james_mail_countryip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `james_mail_countryip` (
+  `startIP` longtext,
+  `endIP` longtext,
+  `startIPINT` bigint(20) DEFAULT NULL,
+  `endIPINT` bigint(20) DEFAULT NULL,
+  `countrycode` varchar(45) DEFAULT NULL,
+  `countryname` varchar(45) DEFAULT NULL,
+  `index` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`index`),
+  UNIQUE KEY `startIPINT_UNIQUE` (`startIPINT`),
+  UNIQUE KEY `endIPINT_UNIQUE` (`endIPINT`),
+  KEY `INDEX` (`startIPINT`,`endIPINT`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `james_mail_property`
 --
 
@@ -429,9 +451,28 @@ CREATE TABLE `jmocha_distribution` (
   `USER_NAME` varchar(100) NOT NULL,
   `COMPANY_ID` varchar(100) NOT NULL,
   `GROUP_NAME` varchar(100) NOT NULL,
-  PRIMARY KEY (`DOMAIN_NAME`,`GROUP_NAME`,`USER_NAME`),
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`),
   KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
   CONSTRAINT `distribution_foreign_keys` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `james_recipient_rewrite` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_distribution_serve`
+--
+
+DROP TABLE IF EXISTS `jmocha_distribution_serve`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_distribution_serve` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `SERVE_MAIL` varchar(100) NOT NULL,
+  `SERVE_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SERVE_MAIL`,`SERVE_NAME`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
+  CONSTRAINT `distribution_serve_foreign_keys` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `james_recipient_rewrite` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -702,6 +743,7 @@ CREATE TABLE `jmocha_mail_recall_detail` (
   `receiver_email` varchar(100) NOT NULL,
   `status` int(11) DEFAULT NULL,
   `del_date` datetime DEFAULT NULL,
+  `receiver_name` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`recall_idx`,`receiver_email`),
   CONSTRAINT `recall_foreign_key` FOREIGN KEY (`recall_idx`) REFERENCES `jmocha_mail_recall` (`recall_idx`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1203,6 +1245,20 @@ CREATE TABLE `jmocha_user_quota` (
   `MAX_STORAGE` double DEFAULT '0',
   `WARN_STORAGE` double DEFAULT '0',
   PRIMARY KEY (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `openjpa_sequence_table`
+--
+
+DROP TABLE IF EXISTS `openjpa_sequence_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `openjpa_sequence_table` (
+  `ID` tinyint(4) NOT NULL,
+  `SEQUENCE_VALUE` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1717,38 +1773,6 @@ CREATE TABLE `talk_tblversion` (
   `RegDate` datetime NOT NULL,
   PRIMARY KEY (`Type`,`RegDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_access_id`
---
-
-DROP TABLE IF EXISTS `tbl_access_id`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_id` (
-  `ACCESSNO` int(11) NOT NULL AUTO_INCREMENT,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  `CN` varchar(80) NOT NULL,
-  PRIMARY KEY (`ACCESSNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_access_ip`
---
-
-DROP TABLE IF EXISTS `tbl_access_ip`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_ip` (
-  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  `IPADDRESS` varchar(100) NOT NULL,
-  `ACCESS` varchar(10) DEFAULT 'YES',
-  `EXPLANATION` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`IPNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2348,7 +2372,7 @@ CREATE TABLE `tbl_attitude` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `WRITER_ID` varchar(80) NOT NULL,
   `DEPT_ID` varchar(80) NOT NULL,
-  `START_DATE` datetime DEFAULT NULL,
+  `START_DATE` datetime NOT NULL,
   `END_DATE` datetime DEFAULT NULL,
   `MODAPPL` char(1) DEFAULT '0',
   `REGION` varchar(200) DEFAULT NULL,
@@ -2358,7 +2382,8 @@ CREATE TABLE `tbl_attitude` (
   `IP` varchar(60) DEFAULT NULL,
   `DATE_TYPE` char(1) NOT NULL,
   `TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-  PRIMARY KEY (`ATTITUDE_ID`)
+  PRIMARY KEY (`ATTITUDE_ID`),
+  KEY `dateIndex` (`TENANT_ID`,`WRITER_ID`,`START_DATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2520,7 +2545,8 @@ CREATE TABLE `tbl_attitude_type` (
   `FORM_ID` int(11) NOT NULL,
   `ISADD` char(1) NOT NULL DEFAULT '0',
   `ISDEL` char(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ORDER`,`TYPE_ID`,`COMPANY_ID`,`TENANT_ID`)
+  PRIMARY KEY (`ORDER`,`TYPE_ID`,`COMPANY_ID`,`TENANT_ID`),
+  KEY `testIndex` (`COMPANY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4113,6 +4139,47 @@ CREATE TABLE `tbl_circular_user` (
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_cloud_customer`
+--
+
+DROP TABLE IF EXISTS `tbl_cloud_customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_cloud_customer` (
+  `customerId` int(11) NOT NULL AUTO_INCREMENT COMMENT '고객사 구분 번호',
+  `customerName` varchar(120) NOT NULL COMMENT '고객사 이름 (회사 이름)',
+  `domain` varchar(100) NOT NULL COMMENT '고객사 메일 도메인',
+  `customerIp` varchar(100) NOT NULL COMMENT '고객사 아이피',
+  `package` varchar(100) DEFAULT NULL COMMENT '고객사 가입 패키지',
+  `startDate` datetime DEFAULT NULL COMMENT '개통날짜',
+  `expireDate` datetime DEFAULT NULL COMMENT '만료날짜',
+  `createDate` datetime NOT NULL COMMENT '등록날짜',
+  `updateDate` datetime DEFAULT NULL COMMENT '업데이트날짜',
+  PRIMARY KEY (`customerId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ezCloud 고객사 정보';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_cloud_user`
+--
+
+DROP TABLE IF EXISTS `tbl_cloud_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_cloud_user` (
+  `userId` varchar(80) NOT NULL COMMENT '멀티서버 관리자 유저 아이디',
+  `password` varchar(120) NOT NULL COMMENT '멀티서버 관리자 유저 비밀번호',
+  `userName` varchar(120) NOT NULL COMMENT '멀티서버 관리자 유저 이름',
+  `phone` varchar(100) DEFAULT NULL COMMENT '멀티서버 관리자 유저 연락번호',
+  `email` varchar(100) DEFAULT NULL COMMENT '멀티서버 관리자 유저 메일',
+  `createDate` datetime NOT NULL COMMENT '생성날짜',
+  `deleteDate` datetime DEFAULT NULL COMMENT '삭제날짜',
+  `updateDate` datetime DEFAULT NULL COMMENT '업데이트날짜',
+  PRIMARY KEY (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='멀티서버 관리자 유저 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6157,10 +6224,9 @@ DROP TABLE IF EXISTS `tbl_memo_config`;
 CREATE TABLE `tbl_memo_config` (
   `user_id` varchar(80) NOT NULL,
   `font_size` tinyint(4) NOT NULL,
-  `use_date` tinyint(4) DEFAULT '0',
-  `use_gadget` tinyint(4) DEFAULT '0',
+  `use_date` tinyint(4) DEFAULT '1',
+  `use_gadget` tinyint(4) DEFAULT '1',
   `default_color` tinyint(4) DEFAULT NULL,
-  `color_name` varchar(100) NOT NULL,
   `gadget_right` smallint(6) DEFAULT NULL,
   `gadget_bottom` smallint(6) DEFAULT NULL,
   `layer_left` smallint(6) DEFAULT NULL,
@@ -6169,6 +6235,7 @@ CREATE TABLE `tbl_memo_config` (
   `layer_height` smallint(6) DEFAULT NULL,
   `company_id` varchar(80) NOT NULL,
   `tenant_id` mediumint(5) NOT NULL,
+  `full_mode` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`user_id`,`company_id`,`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6187,7 +6254,6 @@ CREATE TABLE `tbl_memo_folder` (
   `delete_date` datetime DEFAULT NULL,
   `user_id` varchar(80) NOT NULL,
   `orders` bigint(10) DEFAULT NULL,
-  `icon_id` varchar(80) DEFAULT NULL,
   `company_id` varchar(80) NOT NULL,
   `tenant_id` mediumint(5) NOT NULL,
   `delete_flag` tinyint(4) DEFAULT '0',
@@ -9006,7 +9072,7 @@ CREATE TABLE `tbl_task` (
   `HASCOMMENT` varchar(2) DEFAULT NULL,
   `STARTDATE` varchar(40) DEFAULT NULL,
   `ENDDATE` varchar(40) DEFAULT NULL,
-  `TITLE` varchar(500) DEFAULT NULL,
+  `TITLE` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CONTENTPATH` varchar(500) DEFAULT NULL,
   `TASKTYPE` mediumint(5) DEFAULT NULL,
   `UPDATETIME` varchar(40) DEFAULT NULL,
@@ -9363,6 +9429,7 @@ CREATE TABLE `tbl_tenant_config` (
   `DESCRIPTION` varchar(1000) DEFAULT NULL,
   `CONFIG_NAME` varchar(400) DEFAULT NULL,
   `REGDATE` datetime DEFAULT NULL,
+  `CONFIG_TYPE` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`PROPERTY_NAME`(255)),
   CONSTRAINT `FK_TBLTENANT_CONFIG_TENANT_ID` FOREIGN KEY (`TENANT_ID`) REFERENCES `tbl_tenant` (`TENANT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -9776,7 +9843,7 @@ DROP TABLE IF EXISTS `tbl_usercontlist`;
 CREATE TABLE `tbl_usercontlist` (
   `DOCID` varchar(20) NOT NULL,
   `USERCONTID` varchar(20) NOT NULL,
-  `LINKDATE` date DEFAULT NULL,
+  `LINKDATE` datetime DEFAULT NULL,
   `DESCRIPTION` varchar(255) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,

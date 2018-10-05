@@ -46,8 +46,11 @@
 			var startDate = "";
 			var endDate = "";
 			
+			var companyID = "";
+			
 			// 화면 호출시 실행 함수
 			window.onload = function(){
+				companyID = document.getElementById("ListCompany").value;
 				getTime();
 				getLoginHist(1, searchStartTime, searchEndTime);
 				makePageSelPage();
@@ -364,7 +367,7 @@
 					var pageSize = "-1";
 					var params = 'startDate=' + searchStartTime	+ '&endDate=' + searchEndTime;
 					params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize;
+					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID;
 					var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
 					saveExcel.location.href = pURL;
 				} else {
@@ -380,7 +383,8 @@
 								'endDate' : searchEndTime,
 								'searchKeycode' : searchKeycode,
 								'searchKeyword' : searchKeyword,
-								'pageNum' : pageNum
+								'pageNum' : pageNum,
+								'companyId' : companyID
 							},
 							success : function(res) {
 								var html = "";
@@ -454,13 +458,22 @@
 				getLoginHist(pageNum, searchStartTime, searchEndTime);
 			}
 			
+			function selectCompanyID() {
+				if (companyID != document.getElementById("ListCompany").value) {
+		            companyID = document.getElementById("ListCompany").value
+	
+					getLoginHist(1, searchStartTime, searchEndTime);
+					makePageSelPage();
+		        }
+			}
+			
 	        //2018-08-06 김보미 - 페이지 위치 고정
 		    $(window).on("resize", function(){
 	            windowResize();
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 191;
+	        	var height = document.documentElement.clientHeight - 192;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
@@ -475,6 +488,15 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
+		<div id="" style="display:none"> <!-- mainmenu -->
+		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="selectCompanyID()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br />
+		    </span>
+		</div>
 		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">

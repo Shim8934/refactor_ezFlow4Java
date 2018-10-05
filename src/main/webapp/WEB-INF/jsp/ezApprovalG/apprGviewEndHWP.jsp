@@ -52,7 +52,6 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	        var companyID = "${userInfo.companyID}";
 	        var pUserID = arr_userinfo[1];
-	        var SignCheckFlag = "${SignCheck}";
 	        var pUse_Editor = "${useEditor}";
 			var ext = "hwp";
 			
@@ -129,9 +128,6 @@
 	                        }
 	                    }
 	
-	                    if (SignCheckFlag == "N")
-	                        SignCheck();
-	
 	                    HwpCtrl.SetImgReg();
 	                }
 	                else {
@@ -185,7 +181,7 @@
 			
 	
 			function btnSave_onclick() {
-			    HwpCtrl.RegisterModule("FilePathCheckDLL", "FilePathCheck");
+				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 			    HwpCtrl.SetDocumentInfo(pFormID);
 			    var hwpDoctitle = HwpCtrl.GetFieldText("doctitle").replace("\r\n", "");
 			    hwpDoctitle = hwpDoctitle.replace(/\\/ig, '').replace(/\//ig, '').replace(/:/ig, '').replace(/\*/ig, '').replace(/\?/ig, '').replace(/“/ig, '').replace(/</ig, '').replace(/>/ig, '').replace(/|/ig, '').replace("“", "").replace("|", "");

@@ -19,8 +19,9 @@
 		    var use_ocs = "<c:out value='${use_ocs}' />";
 		    
 		    window.onload = function () {
-		        getGroupList();
+		        getGroupList();		      
 		    }
+		    
 				    
 		    function getGroupList() {
 		    	$.ajax({
@@ -131,14 +132,14 @@
 		                    if (CrossYN()) {
 		                        //if (use_ocs == "YES") {
 		                            //DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(text, "MAIL").item(i).textContent + "\",this);'/></span><span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).textContent + "</span>";
-		                            DIV.innerHTML = "<span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).textContent + "</span>";
+		                            DIV.innerHTML = "<span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).textContent + " data-dept="+SelectNodes(text, "DEPARTMENT").item(i).textContent +" onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).textContent + "</span>";
 		                        /* } else {
 		                            DIV.innerHTML = SelectNodes(text, "INFO").item(i).textContent;
 		                        } */
 		                    } else {
 		                        //if (use_ocs == "YES") {
 		                            //DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(text, "MAIL").item(i).text + "\",this);'/></span><span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).text + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).text + "</span>";
-		                            DIV.innerHTML = "<span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).text + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).text + "</span>";
+		                            DIV.innerHTML = "<span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).text + "data-dept="+SelectNodes(text, "DEPARTMENT").item(i).text +" onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).text + "</span>";
 		                        /* } else {
 		                            DIV.innerHTML = SelectNodes(text, "INFO").item(i).text;
 		                        } */
@@ -158,7 +159,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 420) / 2;
-		        window.open("/ezCommon/showPersonInfo.do?id=" + obj.id + "&dept=", "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        window.open("/ezCommon/showPersonInfo.do?id=" + obj.id + "&dept="+$(obj).data("dept"), "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
@@ -231,6 +232,7 @@
 		    }
 					
 		    function show_groupinfo() {
+		    	console.log('Selected : ' + Selected);
 		        var listview = new ListView();
 		        listview.LoadFromID("GroupListView");
 		        
@@ -245,7 +247,7 @@
 			            return;
 			        }
 			        
-			        /* listview.GetSelectedRows()[0].onclick();  */
+			        /* listview.GetSelectedRows()[0].onclick(); */ 
 		        }
       		            
 		        var Selected = listview.GetSelectedRows();
@@ -259,6 +261,7 @@
 		        
 		        //getGroupList();		
 		    }
+			  
 		</script>
 	</head>
 	<body class="mainbody">		

@@ -77,6 +77,15 @@ public class TaskInfoVO {
 	private int totalRep;
 	/** 테넌트ID*/
 	private int tenantID;
+	/** 회사*/
+	private String companyID;
+
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
 	public String getTaskID() {
 		return taskID;
 	}

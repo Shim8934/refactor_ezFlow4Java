@@ -264,15 +264,17 @@
                 var Ans = OpenInformationUI(pInformationContent);
                 if (!Ans) return;
 
-                var chkpass = chk_Passwd(pUserID);
-                if (chkpass == "False") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
-                } else if (chkpass == "cancel" || chkpass == undefined) {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
+                if ("${approvalPWD}" != "N") {
+	                var chkpass = chk_Passwd(pUserID);
+	                if (chkpass == "False") {
+	                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                } else if (chkpass == "cancel" || chkpass == undefined) {
+	                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                }
                 }
                 
                 SaveFile();
@@ -389,7 +391,7 @@
             }
 
             var ret = openOpinionUI("BanSong");
-            if (ret != "cancel") {
+            if (ret != "cancel" && ret != undefined) {
                 SaveFile();
 
               	var result = "";
@@ -1110,7 +1112,12 @@
 
                 var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
                 rtnVal = rtnVal.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
-                return rtnVal;
+                
+                var nodeText = getNodeText(pTemp.getElementsByTagName("CONTENT")[0]);
+                nodeText = nodeText.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
+                nodeText = nodeText.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
+                
+                return nodeText;
 
                 //return Content.innerHTML;
             } catch (e) {

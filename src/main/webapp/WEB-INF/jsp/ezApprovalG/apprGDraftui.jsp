@@ -152,6 +152,7 @@
 			var agreeResultType = "${agreeResultType}";
 			var curDocNum = "";
 			var isEditorComplete = false;
+			var orgCompanyID = "${userInfo.companyID}";
 			var isHWP = "";
 			var ext = "mht";
 			var nonElecRec = "${nonElecRec}";

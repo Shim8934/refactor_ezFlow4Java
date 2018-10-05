@@ -397,9 +397,21 @@
 			    var type = "config";
 			    var receiverData = new Array();
 			    receiverData["window"] = this;
-			    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+			    mail_newreceiverchoose_dialogArguments[0] = receiverData;
+		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
+			    if (CrossYN()) {
+				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=970,height=655,status=no');
+		            try { OpenWin.focus(); } catch (e) { }
+			    } else {
+				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+                }
 		        Simple_Choice();
 		    }
+			
+			function new_Address_Complete() {
+		        Simple_Choice();
+		    }
+			
 		    function Simple_Choice()
 		    {  
 		        document.all("SelectToAddress").innerHTML = "";

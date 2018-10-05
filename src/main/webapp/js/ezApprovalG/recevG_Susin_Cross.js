@@ -7,7 +7,7 @@ function btnSetTaskCode_onclick() {
         selectcabinet_cross_dialogArguments[0] = para;
         selectcabinet_cross_dialogArguments[1] = btnSetTaskCode_onclick_Complete;
 
-        DivPopUpShow(870, 500, "/ezApprovalG/selectCabinet.do?initFlag=1");
+        DivPopUpShow(1000, 625, "/ezApprovalG/selectCabinet.do?initFlag=1");
     } catch (e) {
         alert("btnSetTaskCode_onclick : " + e.description);
     }
@@ -1775,7 +1775,7 @@ function openOpinionUI(pOpinionFlag) {
 
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
-    if (ret != "cancel") {
+    if (ret != "cancel" && ret != "Clear") {
         var NodeList;
         var objXML = createXmlDom();
 
@@ -1787,6 +1787,8 @@ function openOpinionUI_Complete(ret) {
         } else {
             pHasOpinionYN = "N";
         }
+    } else if (ret != "Clear") {
+    	pHasOpinionYN = "N";
     }
 }
 
@@ -2471,6 +2473,8 @@ function getReceiveDocInfo() {
             var node = GetElementsByTagName(xmlpara, "DOCNUMCODE");
             pOrgDocNumCode = getNodeText(node[0]);
         }
+        
+        orgCompanyID = getNodeText(GetElementsByTagName(xmlpara, "ORGCOMPANYID")[0]);
 
         xmlpara = createXmlDom();
         pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/ATTACHINFO");

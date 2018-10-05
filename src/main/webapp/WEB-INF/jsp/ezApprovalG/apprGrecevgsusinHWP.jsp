@@ -120,6 +120,7 @@
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    var dirPath = "${approvalRoot}";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
+		    var orgCompanyID = "";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -228,7 +229,7 @@
 		                        pDocID = createNewDoc();
 		                    }
 		                }
-		                SignCheck();
+// 		                SignCheck();
 		            }
 		        }
 		        catch (e) {
@@ -606,7 +607,7 @@
 			                    ret = openSignUI(parameter);
 			                }
 			
-			                if (ret == "cancel") {
+			                if (ret == "cancel" || ret == undefined) {
 			                    var pAlertContent = "[<spring:message code='ezApprovalG.t1413'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    return;
@@ -1193,7 +1194,7 @@
 		
 			function btnReAssign_onclick() {
 			    var ret = openOpinionUI("BanSong");
-			    if (ret != "cancel") {
+			    if (ret != "cancel" && ret != undefined) {
 			        var xmlpara = createXmlDom();
 			        var xmlhttp = createXMLHttpRequest();
 			        var objNode;
@@ -1216,7 +1217,7 @@
 		
 			function btnReDistribute_onclick() {
 			    var ret = openOpinionUI("BanSong");
-			    if (ret != "cancel") {
+			    if (ret != "cancel" && ret != undefined) {
 			        var xmlpara = createXmlDom();
 			        var xmlhttp = createXMLHttpRequest();
 			        var objNode;

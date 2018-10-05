@@ -167,7 +167,11 @@
 	            ListTypeChangeIcon();
 	
 	            if (ReturnFunction == null)
-	                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	if (CrossYN()) {
+                        g_fnaddReceiver = opener.addReceiver;
+	            	} else {
+		                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	}
 	            try {
 	                var xmlpara = createXmlDom();
 	                var xmlTree = createXmlDom();
@@ -1242,9 +1246,16 @@
 	            
 	            
 	            for (var i = 0; i < listContentArry.length; i++) {
-	            	for (var j = 0; j < 3; j++) {
-	            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+	            	if (keyword.value == "") {
+		            	for (var j = 0; j < 3; j++) {
+		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            	}
+	            	} else {
+		            	for (var j = 0; j < 4; j++) {
+		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            	}
 	            	}
+	            	
 	            }
 	            listContentArry = [];
 	            
@@ -1438,7 +1449,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", page: CurPage, type : "user"},
+		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", page: CurPage, type : "user"},
 		        	success : function(result){
 		                pListXML_Info = loadXMLString(result);
 		        		
@@ -1981,7 +1992,7 @@
 		        	data : {
 		        			search : document.getElementById("search_type").value + "::" + keyword.value, 
 		        			cell : "company;description;displayName;title;telephoneNumber;"+ document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2", 
+		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2;department", 
 		        			page : CurPage, 
 		        			type : "user"},
 		        	success : function(result){	
@@ -2185,7 +2196,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            //var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            var dept = p_ListOrderObject.getAttribute("_DATA10");
 	            var rtn
 	            var width = 420, height = 450;
 	            var leftPosition, topPosition;

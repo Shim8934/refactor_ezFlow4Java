@@ -21,7 +21,8 @@
 			}
 			if (Lang != "") {
 			    document.getElementsByName('rad_flag')[Lang - 1].checked = true;
-			    flagValue = Lang;
+			    //flagValue = Lang;			   
+				flagValue = $("input:radio[name=rad_flag]:checked").attr("id");
 			}
 		}
 		
@@ -73,18 +74,18 @@
       				<th><spring:message code='ezPersonal.s83'/></th>
       				<td style="height:40px;">
                         <c:if test="${usePrimaryLangOnly == 'NO'}">
-                        <input type="radio" id="1" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-                        <img name="1" src="../../../images/lang/icon_flag_kr.gif" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer;"/>
-                        <input type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-                        <img style="" name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
-                        <input type="radio" id="3" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
+                        <input type="radio" id="3" name="rad_flag" <c:if test="${strLang eq '3'}">checked="checked"</c:if> onclick="flag_onClick(this, 'rad');" />
                         <img name="3" src="../../../images/lang/icon_flag_jp.gif" alt="" title="<spring:message code='ezPersonal.s84'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>                        
+                        <input type="radio" id="1" name="rad_flag" <c:if test="${strLang eq '1'}">checked="checked"</c:if> onclick="flag_onClick(this, 'rad');" />
+                        <img name="1" src="../../../images/lang/icon_flag_kr.gif" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer;"/>
+                        <input type="radio" id="2" name="rad_flag" <c:if test="${strLang eq '2'}">checked="checked"</c:if> onclick="flag_onClick(this, 'rad');" />
+                        <img style="" name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
                         </c:if>
                         
                         <c:if test="${usePrimaryLangOnly == 'YES'}">
                         <c:choose>
                         <c:when test="${primaryLang == '1'}">
-	                        <input type="radio" id="1" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
+	                        <input type="radio" id="1" name="rad_flag" checked="checked" onclick="flag_onClick(this, 'rad');" />
 	                        <img name="1" src="../../../images/lang/icon_flag_kr.gif" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer;"/>
 	                        <input style="display:none;" type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
 	                        <img style="display:none;" name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
@@ -94,7 +95,7 @@
                         <c:when test="${primaryLang == '2'}">
 	                        <input style="display:none;" type="radio" id="1" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
 	            			<img style="display:none;" name="1" src="../../../images/lang/icon_flag_kr.gif" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer;"/>
-	                        <input type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
+	                        <input type="radio" id="2" name="rad_flag" checked="checked" onclick="flag_onClick(this, 'rad');" />
 	                        <img name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
 	                        <input style="display:none;" type="radio" id="3" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
 	                        <img style="display:none;" name="3" src="../../../images/lang/icon_flag_jp.gif" alt="" title="<spring:message code='ezPersonal.s84'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
@@ -104,7 +105,7 @@
 	            			<img style="display:none;" name="1" src="../../../images/lang/icon_flag_kr.gif" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer;"/>
 	          				<input style="display:none;" type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
 	            			<img style="display:none;" name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
-	          				<input type="radio" id="3" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
+	          				<input type="radio" id="3" name="rad_flag" checked="checked" onclick="flag_onClick(this, 'rad');" />
 	            			<img name="3" src="../../../images/lang/icon_flag_jp.gif" alt="" title="<spring:message code='ezPersonal.s84'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
                         </c:when>
                         </c:choose>

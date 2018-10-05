@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
@@ -20,7 +21,7 @@ public interface EzOrganService {
 
 	public List<OrganDeptVO> getDeptMemberList(String pClass, String deptID, String lang, int tenantID) throws Exception;
 	
-	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID) throws Exception;
+	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID, String noAddJob) throws Exception;
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
 	
@@ -38,7 +39,7 @@ public interface EzOrganService {
 	
 	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
-	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID) throws Exception;
+	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID, String companyId) throws Exception;
 	
 	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception;
 	
@@ -76,7 +77,7 @@ public interface EzOrganService {
 	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception;
 
-	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID) throws Exception;
+	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob) throws Exception;
 
 	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
 	
@@ -86,7 +87,7 @@ public interface EzOrganService {
 
 	public String getListType(String userID, int tenantID, String companyID) throws Exception;
 
-	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
+	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String companyId) throws Exception;
 
 	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
 	

@@ -218,7 +218,7 @@
 					taskname,
 					taskname2,
 					C.subcategorycode,
-					C.NAME$lang$,
+					C.NAME$lang$ AS name,
 					itemSecurity,
 					isPublic,
 					(SELECT
@@ -1509,7 +1509,7 @@
 					APRMEMBERDEPTNAME$v_STRLANG$ AS APRMEMBERDEPTNAME,
 	   				APRMEMBERJOBTITLE$v_STRLANG$ AS APRMEMBERJOBTITLE,
 	   				APRTYPE, 
-	   				C.NAME$v_STRLANG$ AS APRTYPENAME,
+	   				C.NAME$v_LANG$ AS APRTYPENAME,
 	   				COUNT(APRMEMBERID) AS APRCOUNT
 	   			FROM 
 	   				TBL_ENDAPRLINEINFO E
@@ -1538,7 +1538,7 @@
 	   				APRMEMBERDEPTNAME$v_STRLANG$,
 	   				APRMEMBERJOBTITLE$v_STRLANG$,
 	   				APRTYPE,
-	   				C.NAME$v_STRLANG$
+	   				C.NAME$v_LANG$
 			]]>
 			<isEqual property="userFlag" compareValue="0">
 				ORDER BY
@@ -3399,7 +3399,8 @@
         		tenant_id = #tenantID#
         	AND
         		companyid = #companyID#
-        		
+        	ORDER BY
+        		cast(containertypeid as unsigned);
 	    ]]>
 	</select>
 

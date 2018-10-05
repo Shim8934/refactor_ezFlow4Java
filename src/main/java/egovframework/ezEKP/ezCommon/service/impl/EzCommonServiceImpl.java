@@ -1309,4 +1309,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("deleteCompanyConfig ended");
 	}
+
+	@Override
+	public void addMailToJMochaDistribution() throws Exception {
+		ezCommonDAO.addMailToJMochaDistribution();
+	}
+	
+	@Override
+	public void addAddJobMasterOrderBy() throws Exception {
+		ezCommonDAO.addAddJobMasterOrderBy();
+	}
+	
+	@Override
+	public void createTblIPAccessID() throws Exception {
+		ezCommonDAO.createTblIPAccessID();
+	}
+	
+	@Override
+	public void createTblIPAccessIP() throws Exception {
+		ezCommonDAO.createTblIPAccessIP();
+	}
 }

@@ -394,7 +394,6 @@ public class EzEmailMailListController {
 				String readDate = "";
 				int nameLength = 1;
 				int readCount = 0;
-				msgto = "";
 				
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				
@@ -427,7 +426,6 @@ public class EzEmailMailListController {
 						String email = ((InternetAddress)address).getAddress();
 						
 						if (email != null) {
-							msgto += email + ";";
 							
 							if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
 								email = aliasAddressList.get(email);

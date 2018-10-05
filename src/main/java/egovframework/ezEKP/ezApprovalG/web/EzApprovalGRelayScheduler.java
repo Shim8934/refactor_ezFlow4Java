@@ -378,9 +378,21 @@ public class EzApprovalGRelayScheduler {
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
         								 break;
         							 case "attach_body":
-        								 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#attach_body생성=" + WriteBodyAttach);
-        								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
+        								 //콘텐트의 내용을 base64로 디코딩
+        								 String tempString = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr" );
+        								 //디코딩된 내용에 nbsp가 있으면 string 에서 xml로 변환되지 않음
+        								 tempString = tempString.replaceAll("&nbsp;", "");
+        								 //첫부분 3줄의 내용이 xml로 변환되는데 오류가 생김
+        								 String[] tempStrLine = tempString.split("\\r?\\n", 4);
+        								 
+        								 //4번째부터의 내용을 xml로 변환
+        								 Document tempXml = commonUtil.convertStringToDocument(tempStrLine[3]);
+        								 
+        								 if ("true".equals(tempXml.getElementsByTagName("body").item(0).getAttributes().getNamedItem("separate").getTextContent())) {
+        									 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#attach_body생성=" + WriteBodyAttach);
+        									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
+        								 }
         								 break;
         							 case "attach_xml":
         								 boolean WriteXMLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
@@ -471,7 +483,7 @@ public class EzApprovalGRelayScheduler {
         						 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
         						 
         						 //인코딩 안풀고 그냥 저장
-        						 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strCont_Name);
+        						 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strSendID + strCont_Name);
         						 logger.debug("#재발송요청 의견 생성=" + writeReqResendOpinion);
         					 }
         					 

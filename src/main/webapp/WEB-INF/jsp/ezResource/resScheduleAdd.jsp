@@ -32,6 +32,7 @@
 	    	var ss_deptNM		= "";
 	    	var ss_ownerNM		= "";
 	    	var lang = "${userInfo.primary}";
+	    	var deptID = "${userInfo.deptID}";
 	    	
 	    	if(lang == '2') {
 	        	ss_deptNM		= "${userInfo.deptName2}"; 
@@ -97,9 +98,9 @@
 		            }        
 	    	    } 
 	        	if (cmd == "mod") {
-	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
+	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
-	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
+	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	}
 	            
 	        	if (cmd == "mod") {
@@ -309,10 +310,10 @@
 	    	function FieldsAvailable() {
 	    	}
 
-	    	function MemberInfo_onClick(pSelUserID) {
+	    	function MemberInfo_onClick(pSelUserID, deptID) {
 	        	if (pSelUserID != "") {
 		            var feature = GetOpenPosition(420, 438);
-		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID +"&dept=" + deptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    	    }
 	    	}	
 
@@ -431,8 +432,11 @@
 	        		}
 	        	} else {
 	        		if (!AllDayCheckStartEndDateTime()) {
-	        			alert("" + strLang139 + "");			
-	        			return;
+	        			// 2018-10-02 김민성 - 자원 반복예약 시 회수 설정 시 끝날짜 무시하도록 수정
+	        			if($("#EndTimeSet").checked == true) {		
+		        			alert("" + strLang139 + "");			
+		        			return;
+	        			}
 	        		}
 	        	}
 	        	
@@ -507,7 +511,7 @@
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
-	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
+	<body id="mainbodytag" class="popup" style="height: 97%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>

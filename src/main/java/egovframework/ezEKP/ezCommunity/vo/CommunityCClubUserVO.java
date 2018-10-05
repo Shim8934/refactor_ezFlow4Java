@@ -2,39 +2,44 @@ package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityCClubUserVO {
 	/** 커뮤니티번호*/
-	String c_clubNo;
+	private String c_clubNo;
 	/** 사용자아이디*/
-	String c_ID;
+	private String c_ID;
 	/** 커뮤니티가입일시*/
-	String c_inDate;
+	private String c_inDate;
 	/** 커뮤니티최근접속일시*/
-	String c_lastDate;
+	private String c_lastDate;
 	/** 이메일여부*/
-	int c_eMail;
+	private int c_eMail;
 	/** 이동전화여부*/
-	int c_hPhone;
+	private int c_hPhone;
 	/** 회사여부*/
-	int c_company;
+	private int c_company;
 	/** 집여부*/
-	int c_house;
+	private int c_house;
 	/** 직업여부*/
-	int c_job;
+	private int c_job;
 	/** 생년월일공개여부*/
-	int c_birth;
+	private int c_birth;
 	/** 성별여부*/
-	int c_sex;
+	private int c_sex;
 	/** 접속횟수(1일1회)*/
-	int c_visited;
+	private int c_visited;
 	/** 자기소개*/
-	String c_intro;
+	private String c_intro;
 	/** 권한*/
-	String permit;
+	private String permit;
 	/** 사용자회사아이디*/
-	String companyID;
+	private String companyID;
 	/** 사용자이름*/
-	String userName;
+	private String userName;
 	/** 사용자이름(다국어)*/
-	String userName2;
+	private String userName2;
+	/** 2018-07-02 홍승비 - 회원의 부서ID */
+	private String deptID;
+	/** 2018-07-02 홍승비 - 회원의 부서이름 */
+	private String deptName;
+	
 	public String getC_clubNo() {
 		return c_clubNo;
 	}
@@ -137,5 +142,17 @@ public class CommunityCClubUserVO {
 	public void setUserName2(String userName2) {
 		this.userName2 = userName2;
 	}
-	
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
 }

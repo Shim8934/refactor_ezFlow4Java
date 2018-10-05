@@ -104,6 +104,8 @@ public class CommonUtil {
 	public static final String PT_MAIL = "mail";
 	public static final String PT_BASIC = "basic";
 	public static final String PT_STANDARD = "standard";
+	public static final int MARIADB = 1;
+	public static final int ORACLE = 2;
 	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
@@ -160,14 +162,20 @@ public class CommonUtil {
 			
             String tenantIdStr = "0";
             
+            String deptID = "";
+            
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
+            }
+            if(decDataArray.length >= 10) {
+            	deptID = decDataArray[9];
             }
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
+			login.setDeptID(deptID);
 			
 			LoginVO user = loginService.selectUser(login);
 	
@@ -217,6 +225,8 @@ public class CommonUtil {
 			String locale = decDataArray[5];
 			String lang = decDataArray[6];
 			String timeZone = decDataArray[7];
+			String deptID = decDataArray[9];
+			String companyID = decDataArray[10];
 			
             String tenantIdStr = "0";
             
@@ -231,6 +241,8 @@ public class CommonUtil {
             user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);			
 			user.setServerName(serverName);
+			user.setDeptID(deptID);
+			user.setCompanyID(companyID);
 			
 			return user;
 		}catch(Exception e){
@@ -1282,5 +1294,43 @@ public class CommonUtil {
 		}
 		logger.debug("getJsonFromWebFolderRestApi ended");
 		return resultBody;
+	}
+	
+	public String getWildcardEscapedString(String s, int dbName) {
+		if (dbName == ORACLE) {
+			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {
+				return s;
+			}
+		} else {
+			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1)) {
+				return s;
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		if (dbName == ORACLE) {
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+
+				if (c == '%' || c == '_' || c == '\\') {
+					sb.append('\\');
+				}
+
+				sb.append(c);
+			}
+		} else {
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+
+				if (c == '%' || c == '_') {
+					sb.append('\\');
+				}
+
+				sb.append(c);
+			}
+		}
+
+		return sb.toString();
 	}
 }

@@ -31,6 +31,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -183,6 +184,56 @@ public class EzStatisticsMailLogController {
 		
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> mailLogList = (List<Map<String, Object>>) resultMap.get("mailLogList");
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyID(), "DomainName");
+		
+		// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소 대신에 Primary 이메일 주소로 표시한다.								
+		if (!companyDomainName.isEmpty()) {
+			for (Map<String, Object> item : mailLogList) {
+				String senderEmail = (String)item.get("senderEmail");				
+	        	String senderEmailId = null;
+	        	String senderEmailDomain = null;
+	        	
+        		int atSignIndex = senderEmail.indexOf("@");
+        		
+        		if (atSignIndex != -1) {
+        			senderEmailId = senderEmail.substring(0, atSignIndex);
+        			senderEmailDomain = senderEmail.substring(atSignIndex + 1);
+        			
+        			if (senderEmailDomain.equals(domainName)) {
+        				OrganUserVO senderInfo = ezOrganAdminService.getUserInfo(senderEmailId, userInfo.getPrimary(), userInfo.getTenantId());
+        				
+        				if (senderInfo != null && senderInfo.getMail() != null) {
+        					senderEmail = senderInfo.getMail();
+        					
+        					item.put("senderEmail", senderEmail);
+        				}
+        			}
+        		}
+				
+				String recipientEmail = (String)item.get("recipientEmail");				
+	        	String recipientEmailId = null;
+	        	String recipientEmailDomain = null;
+	        	
+        		atSignIndex = recipientEmail.indexOf("@");
+        		
+        		if (atSignIndex != -1) {
+        			recipientEmailId = recipientEmail.substring(0, atSignIndex);
+        			recipientEmailDomain = recipientEmail.substring(atSignIndex + 1);
+        			
+        			if (recipientEmailDomain.equals(domainName)) {
+        				OrganUserVO recipientInfo = ezOrganAdminService.getUserInfo(recipientEmailId, userInfo.getPrimary(), userInfo.getTenantId());
+        				
+	        			if (recipientInfo != null && recipientInfo.getMail() != null) {
+	        				recipientEmail = recipientInfo.getMail();
+	        				
+	        				item.put("recipientEmail", recipientEmail);
+	        			}
+        			}        			
+        		}				
+			}
+		}
 		
 		int totalCount = (int) resultMap.get("totalCount");
 		int totalPage = totalCount / pageSize;
