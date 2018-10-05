@@ -141,7 +141,7 @@
 .cabTbl .ttlTh  {width: 40%;}
 .cabTbl .userTh {width: 30%;}
 .cabTbl .dateTh {width: 30%;}
-.cabTbl .sizeTh {width: 100px; text-align: center;}
+.cabTbl .sizeTh {width: 101px; text-align: center;}
 .tableDataDiv {overflow-y: auto; overflow-x: hidden;}
 
 .cabcol {width: 80px;}
