@@ -169,7 +169,6 @@
 	            }
 
 	            if (beforeJob != pListTypeValue) {
-		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
 		        if (arr_userinfo[10] == "YES" || arr_userinfo[10] == "Y")

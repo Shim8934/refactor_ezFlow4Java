@@ -120,6 +120,7 @@
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    var dirPath = "${approvalRoot}";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
+		    var orgCompanyID = "";
 		    
 		    function process_AfterOpen() {
 		        try {
