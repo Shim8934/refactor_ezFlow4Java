@@ -19,7 +19,7 @@ var CabinetMessages = {
 	strOverUsed  : "설정하려는 값을 사용량보다 작게 설정할 수 없습니다.",
 	strNormal    : "수동",
 	strEmail     : "메일",
-	strApprv     : "전자결제",
+	strApprv     : "전자결재",
 	strBoard     : "게시판",
 	strOption    : "회람판",
 	strSchedl    : "일정관리",

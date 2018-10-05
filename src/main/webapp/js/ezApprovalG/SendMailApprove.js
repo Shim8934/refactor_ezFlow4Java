@@ -15,7 +15,8 @@ function getAprLinefor(mode, docid) {
 		url : "/ezApprovalG/getLineList.do",
 		data : {
 			docID : docid,
-			mode  : mode
+			mode  : mode,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;

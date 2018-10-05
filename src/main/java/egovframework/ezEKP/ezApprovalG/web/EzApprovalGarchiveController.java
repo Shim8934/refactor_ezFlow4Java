@@ -1646,7 +1646,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			orgCompanyID = userInfo.getCompanyID();
 		}
 		
-		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, orgCompanyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, orgCompanyID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("setUserContDoc ended");
 		
@@ -1760,7 +1760,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
             }
         }
 
-        String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
+        String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId());
 
 		logger.debug("getUserContList ended");
 
@@ -1885,7 +1885,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         }
         
         if (AllFG.equals("0")) {
-        	excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
+        	excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId());
         } else if(AllFG.equals("1")) {
         	excelValue = ezApprovalGService.getUserContListAll(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());	
         }

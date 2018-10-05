@@ -4511,6 +4511,14 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID				   		
 			  </isEqual> 
+			  		LEFT JOIN 
+			     		TBL_ENDAPRLINEINFO 
+			    	 ON 
+			     		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
+			     	 AND 
+			     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
+			    	 AND 
+			     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -4695,6 +4703,8 @@
 				</isEqual>
 					WHERE 
 						TBL_RECORD.TENANT_ID = #tenantID#
+					AND
+						TBL_RECORD.COMPANYID = #companyID#
 					AND 
 						TBL_RECORD.DelFlag = '0' 
 					AND 
@@ -4766,6 +4776,12 @@
 						TBL_RECORD.RegisterDate <= TO_DATE(#regEndDate#, 'YYYY.MM.DD HH24:MI:SS')
 					]]>
 				</isNotEmpty>
+				<![CDATA[
+					 AND   
+					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
+				     OR      
+				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
+			     ]]>
 				<isNotEmpty property="sc" prepend="AND">
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
