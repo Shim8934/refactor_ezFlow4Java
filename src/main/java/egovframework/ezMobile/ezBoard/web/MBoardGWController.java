@@ -951,13 +951,22 @@ public class MBoardGWController {
 			for (int i = 0; i < userDeptPath.split(",").length; i++) {
 				result = ezBoardService.getCheckItemID(contentID, "GENERAL", userDeptPath.split(",")[i].trim(), info.getTenantId());
 				
-				if (result > 0) {
-					rtv = false;
-					break;
+				/* 2018-10-04 홍승비 - 변경된 게시판권한 스펙 모바일에도 적용(개인>부서>회사) */
+				//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
+				if (result != 999) {
+					//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
+					if (result > 0) {
+						rtv = false;
+						break;
+					} else {
+						rtv = true;
+						break;
+					}
 				} else {
-					rtv = true;
+					rtv = false;
 				}
 			}
+			
 			LOGGER.debug("accessCheck ended2");
 			return rtv;
 		}

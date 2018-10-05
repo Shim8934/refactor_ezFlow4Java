@@ -1079,6 +1079,7 @@
               </isEqual>
               <isNotEqual property="selectBy" compareValue="3">
               <!--        접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
+              <!--         하위부서 권한체크(BOARDGROUPACL) 조건 추가 18.10.05   -->
                 <![CDATA[
                     SELECT 
                         DISTINCT A.BoardID BoardID,
@@ -1124,7 +1125,16 @@
                          AND 
                             ( C.AccessID = #userID# )
                          AND 
-                            D.ParentBoardID = #rootBoardID# ) B   
+                            D.ParentBoardID = #rootBoardID#
+						]]>
+	                      <isEqual property="v_ISDEPT" compareValue="1">
+	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+		                      AND
+		                      	C.BoardGroupACL = 'Y'
+	                      	</isEqual>
+	                      </isEqual>
+	                      <![CDATA[
+							 ) B   
                          ON 
                             A.TENANT_ID = B.TENANT_ID
                          AND
@@ -1139,7 +1149,7 @@
                 </isNotEqual>
             </isEqual>
             <isNotEqual property="mode" compareValue="1">
-            <!--      ADMIN권한 -->
+<!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
                 <![CDATA[
                     SELECT 
                         DISTINCT A.BoardID ,
@@ -1543,5 +1553,17 @@
                 PARENTBOARDID = #v_PROOTBOARDID#
         ]]>
     </select>
+    
+    <select id="MBoardDAO.isDeptChk" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM TBL_DEPTMASTER
+			WHERE
+				CN = #id#
+			AND
+				TENANT_ID = #tenantID#
+		]]>  	
+  </select>
 </sqlMap>
 

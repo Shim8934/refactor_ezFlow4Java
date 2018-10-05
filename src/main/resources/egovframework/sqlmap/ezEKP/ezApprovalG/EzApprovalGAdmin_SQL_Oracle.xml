@@ -2762,20 +2762,11 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ADMINRECEIPTGROUP_MAIN
-				(mainid,
-				mainname,
+				(mainname,
 				companyid,
 				tenant_id)
 			VALUES
-				((SELECT
-					NVL(MAX(mainid),0) + 1
-				FROM
-					TBL_ADMINRECEIPTGROUP_MAIN
-				WHERE
-					tenant_ID = #tenantID#
-				AND
-					companyid = #companyID#),
-				#v_MAINNAME#,
+				(#v_MAINNAME#,
 				#companyID#,
 				#tenantID#)
 		]]>
@@ -3417,7 +3408,8 @@
         		tenant_id = #tenantID#
         	AND
         		companyid = #companyID#
-        		
+        	ORDER BY
+        		TO_NUMBER(containertypeid)	
 	    ]]>
 	</select>
 
@@ -3599,8 +3591,8 @@
 				'0',
 				NULL,
 				NULL,
-				#companyID#,
-				#tenantID#
+				companyid,
+				tenant_id
 			FROM
 				TBL_TASKCODE
 			WHERE
@@ -3987,7 +3979,7 @@
 		]]>
 	</update>
 	
-	<select id ="EzApprovalG.getAdminListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
+	<select id ="EzApprovalGAdmin.getAdminListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
 		<![CDATA[
 			SELECT 
 				name,
