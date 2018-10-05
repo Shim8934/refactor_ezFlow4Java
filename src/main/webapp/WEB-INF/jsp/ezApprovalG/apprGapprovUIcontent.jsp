@@ -1,10 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<!-- FormBuilder -->
+		<c:if test="${isReform}">
+			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/reform/reformUseProcessor.js')}"></script>
+			<c:if test="${!empty reformFunctionUrl}">
+				<script type="text/javascript" src="${util.addVer(reformFunctionUrl)}"></script>
+			</c:if>
+		</c:if>
+		<!-- FormBuilder end -->
 	    <style>
 	        P { margin-top: 0px;margin-bottom: 0px; }
 	        .viewbox {
@@ -59,7 +68,6 @@
 	        var isEditor = false;
 	        
 			// FormBuilder
-			var isReform = parent.isReform;
 			var bodyInnerHtml = "";
 			// FormBuilder end
 	        
@@ -69,6 +77,10 @@
 	            }
 	            catch (e)
 	            {}
+	            
+	            try {
+	            	reformUseProc.onLoadHandler();
+	            } catch (e) {}
 	            
 	            try {
 // 		        	$('#div_Content #body').css('overflow', 'auto');
@@ -282,9 +294,9 @@
  	                    BodyTagsDisabled(document.getElementById('div_Content'));
  	                    parent.FieldsAvailable();
  	                    
- 						if (isReform) {
+ 						<c:if test="${isReform}">
  							validateAllTextArea(document.getElementById('div_Content'));
- 						}
+ 						</c:if>
 	                }
 	            } catch (e)
 	            { }
@@ -343,25 +355,30 @@
 	                        parent.modifiOrgBody = BODYTag.innerHTML;
 	                    }
 	                    if (document.getElementById("body") != null) {
-	                    	if (isReform) {
-	                    		validateAllTextArea(BODYTag);
-	                    		bodyInnerHtml = BODYTag.innerHTML;
-	                    		BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/approveHtml.do?formId=" + parent.pFormID + "' frameborder='0'></ifrmae>";
-	                    	} else if (BODYTag.getAttribute("editor") == null) {
-	                            isEditor = true;
-	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                        }
-	                        else {
-	                            try {
-	                                Conent_contentEditable(document.getElementById('body'));
-	                            } catch (e) { }
-	                        }
+	                    	<c:choose>
+	                    		<c:when test="${isReform}">
+	                    			validateAllTextArea(BODYTag);
+	                    			bodyInnerHtml = BODYTag.innerHTML;
+	                    			BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/approveHtml.do?formId=" + parent.pFormID + "' frameborder='0'></ifrmae>";
+	                    		</c:when>
+	                    		<c:otherwise>
+			                    	if (BODYTag.getAttribute("editor") == null) {
+			                            isEditor = true;
+			                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+			                        }
+			                        else {
+			                            try {
+			                                Conent_contentEditable(document.getElementById('body'));
+			                            } catch (e) { }
+			                        }
+		                    	</c:otherwise>
+	                    	</c:choose>
 	                    }
 	                }
 	                else {
-	                	if (isReform) {
+	                	<c:if test="${isReform}">
 		                	iframe_content.editComplete();
-	                	}
+	                	</c:if>
 	                	
 	                    DocTitleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
 	                    if (document.getElementById("body") != null) {
@@ -383,18 +400,21 @@
 	                    	 
 	                    	 var HtmlContent = "";
 	                    	 
-	                    	 if (isReform) {
-	     	            		var documentCloneNode = iframe_content.document.cloneNode(true);
-	    	            		var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
-	    	            		
-	    	            		if (datepickerDivElement != null) {
-	    	            			datepickerDivElement.parentNode.removeChild(datepickerDivElement);
-	    	            		}
-	    	            		
-	    	            		HtmlContent = documentCloneNode.body.innerHTML;
-	                    	 } else {
-	                    		 HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
-	                    	 }
+							<c:choose>
+								<c:when test="${isReform}">
+									var documentCloneNode = iframe_content.document.cloneNode(true);
+									var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
+									
+									if (datepickerDivElement != null) {
+										datepickerDivElement.parentNode.removeChild(datepickerDivElement);
+									}
+									
+									HtmlContent = documentCloneNode.body.innerHTML;
+								</c:when>
+								<c:otherwise>
+									HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+								</c:otherwise>
+							</c:choose>
 	                    	 
 	                         BODYTag.innerHTML = HtmlContent;
 	                         document.getElementById("body").style.paddingLeft = "10px";
@@ -404,9 +424,9 @@
 	                     BodyTagsDisabled(document.getElementById('div_Content'));
 	                     document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
 	                     
-	                     if (isReform) {
+	                     <c:if test="${isReform}">
 		                     validateAllTextArea(document.getElementById('div_Content'));
-	                     }
+	                     </c:if>
 	                }
 	            }
 	            catch (e) {
@@ -613,7 +633,7 @@
 	            
 	            // FormBuilder
 	            // 폼빌더만 textarea 비활성화 되도록 추가
-	            if (isReform) {
+	            <c:if test="${isReform}">
 	            	var textAreaElements = HtmlObject.getElementsByTagName("textarea");
 	            	var element;
 	            	
@@ -624,7 +644,7 @@
 	            			element.disabled = false;
 	            		}
 	            	}
-	            }
+	            </c:if>
 	            // FormBuilder - end
 	            
 	            return HtmlObject;
@@ -644,7 +664,7 @@
 	            
 	            // FormBuilder
 	            // 폼빌더만 textarea 비활성화 되도록 추가
-	            if (isReform) {
+	            <c:if test="${isReform}">
 	            	var textAreaElements = HtmlObject.getElementsByTagName("textarea");
 	            	var element;
 	            	
@@ -655,7 +675,7 @@
 	            			element.disabled = true;
 	            		}
 	            	}
-	            }
+	            </c:if>
 	            // FormBuilder - end
 	            
 	            return HtmlObject;

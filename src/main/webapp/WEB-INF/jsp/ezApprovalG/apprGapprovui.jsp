@@ -157,9 +157,6 @@
 			
 			var docState = "${docState}";
 			
-			// FormBuilder
-			var isReform = ("${isReform}" === 'true');
-			
 			//최종결재시 채번
 			var useReceiveDocNo = "${useReceiveDocNo}";
 			
@@ -1665,7 +1662,7 @@
 		  </tr>
 		  <tr>
 		      <td style="vertical-align:top;height:90%;">
-		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do<c:if test="${isReform}">?isReform=${isReform}&formId=${formId}</c:if>" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		          
 		    </td>
 		  </tr>

@@ -3046,8 +3046,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getReformFlag", map);
 	}
 	
-	public String getReformFlagForApprovalDocument(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalG.getReformFlagForApprovalDocument", map);
+	public ApprGFormVO getReformInfoForApprovalDocument(Map<String, Object> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalG.getReformInfoForApprovalDocument", map);
 	}
 	
 	public void susinNonElecRecDocDel1(Map<String, Object> map) throws Exception {

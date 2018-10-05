@@ -56,6 +56,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -1022,19 +1023,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formId = request.getParameter("formID");
 		String reformBody = "";
 		
-		String reformUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()).substring(1);
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
+		
+		String reformFilePrefix = reformDirectoryPathStr + commonUtil.separator + formId;
+		String reformHtmlRelativePathStr = reformFilePrefix +  "_FORMBuilder.html";
+		String reformFunctionRelativePathStr = reformFilePrefix + "_FORMBuilder.js";
 		
 		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
-		Path reformDirectory = Paths.get(reformUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
-		Path reformHtmlRealPath = realPath.resolve(reformDirectory.resolve(formId + "_FORMBuilder.html"));
-		Path reformFunctionRelativePath = reformDirectory.resolve(formId + "_FORMBuilder.js");
-		
-		if (Files.exists(reformHtmlRealPath)) {
-			reformBody = new String(Files.readAllBytes(reformHtmlRealPath));
+		Path reformHtmlRelativePath = realPath.resolve("." + reformHtmlRelativePathStr);
+				
+		if (Files.exists(reformHtmlRelativePath)) {
+			reformBody = new String(Files.readAllBytes(reformHtmlRelativePath));
 		}
 		
-		if (Files.exists(realPath.resolve(reformFunctionRelativePath))) {
-			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath.toString().replace(File.separator, commonUtil.separator));
+		if (Files.exists(realPath.resolve("." + reformFunctionRelativePathStr))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePathStr);
 		}
 		
 		model.addAttribute("reformBody", reformBody);
@@ -1055,14 +1059,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String formId = request.getParameter("formId");
 		
-		String reformUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()).substring(1);
+		// 전자결재 업로드 폴더 경로에서 앞부분 경로구분자를 없앰
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String reformFunctionRelativePath = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId, formId + "_FORMBuilder.js");
 		
 		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
-		Path reformDirectory = Paths.get(reformUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
-		Path reformFunctionRelativePath = reformDirectory.resolve(formId + "_FORMBuilder.js");
 		
-		if (Files.exists(realPath.resolve(reformFunctionRelativePath))) {
-			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath.toString().replace(File.separator, commonUtil.separator));
+		if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
 		}
 		
 		logger.debug("reformApproveHtml ended.");
@@ -3699,7 +3703,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgDocID = request.getParameter("orgDocID");
 		
 		// FormBuilder
-		boolean isReform = ezApprovalGService.isReformApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
+		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
+		String formId = reformInfo.getFormID();
+		boolean isReform = "Y".equals(reformInfo.getReformFlag());
 		
 		if (orgDocID == null) {
 			orgDocID = "";
@@ -3805,7 +3811,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		
-		model.addAttribute("isReform", isReform);
+		// FormBuilder
+		if (isReform) {
+			model.addAttribute("isReform", isReform);
+			model.addAttribute("formId", formId);
+		}
 		
 		logger.debug("approvui ended");
 		
@@ -3816,12 +3826,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재화면 결재내용 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvUIcontent.do")
-	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("approvUIcontent started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useAllowTextSelection = ezCommonService.getTenantConfig("useAllowTextSelection", userInfo.getTenantId());
+		
+		// FormBuilder
+		if (Boolean.valueOf(request.getParameter("isReform"))) {
+			model.addAttribute("isReform", true);
+			
+			String formId = request.getParameter("formId");
+			String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+			String reformFunctionRelativePath = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId, formId + "_FORMBuilder.js");
+			
+			Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+			
+			if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
+				model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
+			}
+		}
 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("useAllowTextSelection", useAllowTextSelection);

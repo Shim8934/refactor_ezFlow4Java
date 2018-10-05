@@ -26878,15 +26878,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public boolean isReformApprovalDocument(String docId, String companyId, int tenantId) throws Exception {
+	public ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("docId", docId);
 		parameterMap.put("companyId", companyId);
 		parameterMap.put("tenantId", tenantId);
 
-		String reformFlag = ezApprovalGDAO.getReformFlagForApprovalDocument(parameterMap);
+		// formId, reformflag
+		ApprGFormVO reformInfo = (ApprGFormVO) ezApprovalGDAO.getReformInfoForApprovalDocument(parameterMap);
 		
-		return "Y".equalsIgnoreCase(reformFlag);
+		return reformInfo;
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {

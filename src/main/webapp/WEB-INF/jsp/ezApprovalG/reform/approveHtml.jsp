@@ -19,7 +19,7 @@
 <link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 <script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 <c:if test="${!empty reformFunctionUrl}">
-	<script type="text/javascript" src="/${util.addVer(reformFunctionUrl)}"></script>
+	<script type="text/javascript" src="${util.addVer(reformFunctionUrl)}"></script>
 </c:if>
 <script type="text/javascript">
 	window.onload = function() {

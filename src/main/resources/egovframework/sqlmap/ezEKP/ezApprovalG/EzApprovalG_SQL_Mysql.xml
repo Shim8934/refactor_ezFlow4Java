@@ -24732,8 +24732,9 @@
 			AND TENANT_ID = #tenantId#
 	</select>
 	
-	<select id="EzApprovalG.getReformFlagForApprovalDocument" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalG.getReformInfoForApprovalDocument" parameterClass="Map" resultClass="ApprGFormVO">
 		SELECT
+			FORMINFO.FORMID,
 			FORMINFO.REFORMFLAG
 		FROM
 			TBL_APRDOCINFO DOCINFO

@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -582,7 +583,7 @@ public interface EzApprovalGService {
 	 * @param tenantId
 	 *            테넌트 아이디
 	 */
-	boolean isReformApprovalDocument(String docId, String companyId, int tenantId) throws Exception;
+	ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception;
 	/* FormBuilder end */
 	
 /*	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
