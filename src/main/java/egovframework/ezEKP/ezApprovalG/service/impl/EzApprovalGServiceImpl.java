@@ -18872,6 +18872,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
 				if (fieldName.equals("HASATTACHYN")) {
@@ -23629,7 +23630,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantID)	throws Exception {
+	public String registerUserContDoc(String docID, String contID, String description, String orgCompanyID, String companyID, String lang, int tenantID)	throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CONTID", contID);
@@ -23638,6 +23639,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("orgCompanyID", orgCompanyID);
 		
 		
 		int docCount = ezApprovalGDAO.userContListCount(map);
@@ -23947,7 +23949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getUserContList(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet)	throws Exception {
+	public String getUserContList(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet, String userID)	throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
 		String OrderOption2 = "";
@@ -23964,6 +23966,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSUBQUERYLENGTH", pSubQuery.trim().length());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_PUSERID", userID);
 
 		int totalCount = ezApprovalGDAO.getUserContDocListCount(map);
 		
