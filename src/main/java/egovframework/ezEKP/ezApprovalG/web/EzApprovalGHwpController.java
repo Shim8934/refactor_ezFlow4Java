@@ -177,6 +177,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docState = request.getParameter("docState");
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -277,6 +283,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         model.addAttribute("docState", docState);
         model.addAttribute("isHWP", "Y");
         model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+        model.addAttribute("orgCompanyID", orgCompanyID);
         
 		LOGGER.debug("approvuiHWP ended");
 		
