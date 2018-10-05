@@ -4,6 +4,8 @@
 
 <typeAlias alias="PollQuestionVO" type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
 <typeAlias alias="PollAnswerVO" type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
+<typeAlias alias="BoardItemVO" type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
+
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 			column="ID" />
 <result property="title" 			column="TITLE" />
@@ -13,6 +15,13 @@
 <result property="votesNumber" 			column="VOTES_NUM" />
 <result property="content"				column="CONTENT"/>
 </resultMap>
+<resultMap class="BoardItemVO" id="BoardItemVO">
+<result property="itemID" 				column="ITEMID" />
+<result property="title" 				column="TITLE" />
+<result property="boardID" 				column="BOARDID" />
+<result property="filePath" 			column="FILEPATH" />
+</resultMap>
+
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
 <![CDATA[
@@ -118,6 +127,7 @@ LIMIT
 	1
 ]]>
 </select>
+<!-- 해당 투표의 답변 정보 -->
 <select id="ezNewPortal.getVotePortletAnswer" parameterClass="Map" resultMap="PollAnswerVO">
 <![CDATA[
 SELECT 
@@ -128,6 +138,30 @@ WHERE
 	QST_ID = #qstId#
 AND
 	TENANT_ID = #tenantId#
+]]>
+</select>
+<!-- 포토게시판 게시물(대표사진 정보)불러오기 -->
+<select id="ezNewPortal.getPhotoBoardPortletInfo" parameterClass="Map" resultMap="BoardItemVO">
+<![CDATA[
+SELECT	
+	A.BOARDID,
+	A.ITEMID,
+	A.TITLE,
+	B.FILEPATH
+FROM
+	TBL_BOARD_ITEM A
+INNER JOIN
+	TBL_PHOTO_IMAGEITEM B
+ON
+	A.TENANT_ID = B.TENANT_ID
+AND
+	A.ITEMID = B.ITEMID
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.BOARDID = #boardId#
+AND
+	B.MAIN_FLAG = 'y'
 ]]>
 </select>
 </sqlMap>

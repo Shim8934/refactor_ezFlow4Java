@@ -31,7 +31,7 @@ $(function() {
 			answerLength = 4;
 		}
 
-		$(".layDiv").append("<p class='voteTitle'>'<c:out value="${title }"/>'</p>");
+		$(".layDiv").append("<p class='voteTitle'>\"<c:out value="${title }"/>\"</p>");
 		$(".layDiv").append("<p class='voteBtn'>참여</p>");
 		
 		$(".layDiv").append("<ul class='voteList'>");

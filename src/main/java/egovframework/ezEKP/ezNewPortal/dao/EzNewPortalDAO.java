@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -23,5 +24,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PollAnswerVO> getVotePortletAnswer (Map<String, Object> map) {
 		return (List<PollAnswerVO>) list("ezNewPortal.getVotePortletAnswer", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardItemVO> getphotoBoardPortletInfo(Map<String, Object> map) {
+		return (List<BoardItemVO>) list("ezNewPortal.getPhotoBoardPortletInfo", map);
 	}
 }

@@ -174,8 +174,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 * 포틀릿 - 포토게시판 포틀릿
 	 */
 	@RequestMapping(value = "/ezNewPortal/photoBoardPortlet.do")
-	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoBoardPortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/photoBoard";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+		}
 		
 		return "/ezNewPortal/photoBoardPortlet";
 	}
@@ -215,8 +227,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/currencyPortlet.do")
-	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalCurrencyPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		RestTemplate restTemplate = new RestTemplate();
 		String json = restTemplate.getForObject("http://fx.kebhana.com/FER1101M.web", String.class);
 		json = json.replaceAll("var exView = ", "");
