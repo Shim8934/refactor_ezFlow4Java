@@ -901,12 +901,201 @@ var CabinetItem = function() {
 	}
 	
 	function showAddressPreview(data, dlElmt) {
-		var itemInfo    = data.fileDetail;
-		var attachList  = data.attachFileList;
 		var relatedList = data.relatedFileList;
+		var addrType    = data.addresstype;
+		var itemInfo    = data.fileDetail;
 		
 		generateAddressTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, null);
+		
+		if (addrType == "normal") {
+			showNormalAddressPreview(data, dlElmt);
+		}
+		else {
+			var attachList  = data.attachFileList;
+			generateRelatedModuleContent(itemInfo, attachList, null, null);
+		}
+	}
+	
+	function generateNormalAddressContent(content) {
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = content;
+	}
+	
+	function showNormalAddressPreview(data, dlElmt) {
+		var columnList   = data.columns;
+		var creatorUser  = data.creator;
+		var modifierUser = data.modifier;
+		var creatorCol   = columnList.filter(function(col) {return col["columnId"] == "creator";})[0];
+		var crtDateCol   = columnList.filter(function(col) {return col["columnId"] == "createdate";})[0];
+		var modifierCol  = columnList.filter(function(col) {return col["columnId"] == "modifier";})[0];
+		var modDateCol   = columnList.filter(function(col) {return col["columnId"] == "modifydate";})[0];
+		var companyCol   = columnList.filter(function(col) {return col["columnId"] == "company";})[0];
+		var departCol    = columnList.filter(function(col) {return col["columnId"] == "department";})[0];
+		var comNumCol    = columnList.filter(function(col) {return col["columnId"] == "compnumber";})[0];
+		var userNumCol   = columnList.filter(function(col) {return col["columnId"] == "usernumber";})[0];
+		var faxNumCol    = columnList.filter(function(col) {return col["columnId"] == "faxnumber";})[0];
+		var homepageCol  = columnList.filter(function(col) {return col["columnId"] == "homepage";})[0];
+		var compaddrCol  = columnList.filter(function(col) {return col["columnId"] == "compaddr";})[0];
+		var compzipCol   = columnList.filter(function(col) {return col["columnId"] == "companyzip";})[0];
+		var homeaddrCol  = columnList.filter(function(col) {return col["columnId"] == "homeaddr";})[0];
+		var homezipCol   = columnList.filter(function(col) {return col["columnId"] == "homezip";})[0];
+		var memoCol      = columnList.filter(function(col) {return col["columnId"] == "memo";})[0];
+		
+		var wrdivElmt    = document.createElement("div");
+		var firstTbl     = document.createElement("table");
+		var secondTbl    = document.createElement("table");
+		
+		var tbl1TrElmt1  = document.createElement("tr");
+		var tbl1ThElmt1  = document.createElement("th");
+		var tbl1TdElmt1  = document.createElement("td");
+		var tbl1TrElmt2  = document.createElement("tr");
+		var tbl1ThElmt2  = document.createElement("th");
+		var tbl1TdElmt2  = document.createElement("td");
+		var tbl1TrElmt3  = document.createElement("tr");
+		var tbl1ThElmt3  = document.createElement("th");
+		var tbl1TdElmt3  = document.createElement("td");
+		var tbl1TrElmt4  = document.createElement("tr");
+		var tbl1ThElmt4  = document.createElement("th");
+		var tbl1TdElmt4  = document.createElement("td");
+		var tbl1TrElmt5  = document.createElement("tr");
+		var tbl1ThElmt5  = document.createElement("th");
+		var tbl1TdElmt5  = document.createElement("td");
+		var tbl1TrElmt6  = document.createElement("tr");
+		var tbl1ThElmt6  = document.createElement("th");
+		var tbl1TdElmt6  = document.createElement("td");
+		
+		var tbl2TrElmt1  = document.createElement("tr");
+		var tbl2ThElmt1  = document.createElement("th");
+		var tbl2TdElmt1  = document.createElement("td");
+		var tbl2TrElmt2  = document.createElement("tr");
+		var tbl2ThElmt2  = document.createElement("th");
+		var tbl2TdElmt2  = document.createElement("td");
+		var tbl2TrElmt3  = document.createElement("tr");
+		var tbl2ThElmt3  = document.createElement("th");
+		var tbl2TdElmt3  = document.createElement("td");
+		var tbl2TrElmt4  = document.createElement("tr");
+		var tbl2ThElmt4  = document.createElement("th");
+		var tbl2TdElmt4  = document.createElement("td");
+		var tbl2TrElmt5  = document.createElement("tr");
+		var tbl2ThElmt5  = document.createElement("th");
+		var tbl2TdElmt5  = document.createElement("td");
+		var tbl2TrElmt6  = document.createElement("tr");
+		var tbl2TdElmt6  = document.createElement("td");
+		var tbl2TrElmt7  = document.createElement("tr");
+		var tbl2ThElmt7  = document.createElement("th");
+		var tbl2TdElmt7  = document.createElement("td");
+		var tbl2TrElmt8  = document.createElement("tr");
+		var tbl2TdElmt8  = document.createElement("td");
+		var tbl2TrElmt9  = document.createElement("tr");
+		var tbl2ThElmt9  = document.createElement("th");
+		var tbl2TdElmt9  = document.createElement("td");
+		var innerDivElmt = document.createElement("div");
+		
+		tbl1ThElmt1.textContent  = creatorCol["columnName"];
+		tbl1TdElmt1.textContent  = creatorUser["userName"];
+		tbl1ThElmt2.textContent  = crtDateCol["columnName"];
+		tbl1TdElmt2.textContent  = crtDateCol["columnValue"].substring(0, 19);
+		tbl1ThElmt3.textContent  = modifierCol["columnName"];
+		tbl1TdElmt3.textContent  = modifierUser["userName"];
+		tbl1ThElmt4.textContent  = modDateCol["columnName"];
+		tbl1TdElmt4.textContent  = modDateCol["columnValue"].substring(0, 19);
+		tbl1ThElmt5.textContent  = companyCol["columnName"];
+		tbl1TdElmt5.textContent  = companyCol["columnValue"];
+		tbl1ThElmt6.textContent  = departCol["columnName"];
+		tbl1TdElmt6.textContent  = departCol["columnValue"];
+		tbl2ThElmt1.textContent  = comNumCol["columnName"];
+		tbl2TdElmt1.textContent  = comNumCol["columnValue"];
+		tbl2ThElmt2.textContent  = userNumCol["columnName"];
+		tbl2TdElmt2.textContent  = userNumCol["columnValue"];
+		tbl2ThElmt3.textContent  = faxNumCol["columnName"];
+		tbl2TdElmt3.textContent  = faxNumCol["columnValue"];
+		tbl2ThElmt4.textContent  = homepageCol["columnName"];
+		tbl2TdElmt4.textContent  = homepageCol["columnValue"];
+		tbl2ThElmt5.textContent  = compaddrCol["columnName"];
+		tbl2TdElmt5.textContent  = compzipCol["columnValue"];
+		tbl2TdElmt6.textContent  = compaddrCol["columnValue"];
+		tbl2ThElmt7.textContent  = homeaddrCol["columnName"];
+		tbl2TdElmt7.textContent  = homezipCol["columnValue"];
+		tbl2TdElmt8.textContent  = homeaddrCol["columnValue"];
+		tbl2ThElmt9.textContent  = memoCol["columnName"];
+		innerDivElmt.textContent = memoCol["columnValue"];
+		innerDivElmt.className   = "cabmemo";
+		tbl2TdElmt9.appendChild(innerDivElmt);
+		
+		tbl1TdElmt1.setAttribute("title", creatorUser["userName"]);
+		tbl1TdElmt3.setAttribute("title", modifierCol["columnValue"]);
+		tbl1TdElmt5.setAttribute("title", companyCol["columnValue"]);
+		tbl1TdElmt6.setAttribute("title", departCol["columnValue"]);
+		
+		tbl2TdElmt1.setAttribute("title" , tbl2TdElmt1.textContent);
+		tbl2TdElmt2.setAttribute("title" , tbl2TdElmt2.textContent);
+		tbl2TdElmt3.setAttribute("title" , tbl2TdElmt3.textContent);
+		tbl2TdElmt4.setAttribute("title" , tbl2TdElmt4.textContent);
+		tbl2TdElmt5.setAttribute("title" , tbl2TdElmt5.textContent);
+		tbl2TdElmt6.setAttribute("title" , tbl2TdElmt6.textContent);
+		tbl2TdElmt7.setAttribute("title" , tbl2TdElmt7.textContent);
+		tbl2TdElmt8.setAttribute("title" , tbl2TdElmt8.textContent);
+		tbl2TdElmt9.setAttribute("title" , tbl2TdElmt9.textContent);
+		tbl2ThElmt5.setAttribute("rowspan", "2");
+		tbl2ThElmt7.setAttribute("rowspan", "2");
+		
+		tbl1TrElmt1.appendChild(tbl1ThElmt1);
+		tbl1TrElmt1.appendChild(tbl1TdElmt1);
+		tbl1TrElmt2.appendChild(tbl1ThElmt2);
+		tbl1TrElmt2.appendChild(tbl1TdElmt2);
+		tbl1TrElmt3.appendChild(tbl1ThElmt3);
+		tbl1TrElmt3.appendChild(tbl1TdElmt3);
+		tbl1TrElmt4.appendChild(tbl1ThElmt4);
+		tbl1TrElmt4.appendChild(tbl1TdElmt4);
+		tbl1TrElmt5.appendChild(tbl1ThElmt5);
+		tbl1TrElmt5.appendChild(tbl1TdElmt5);
+		tbl1TrElmt6.appendChild(tbl1ThElmt6);
+		tbl1TrElmt6.appendChild(tbl1TdElmt6);
+		
+		firstTbl.appendChild(tbl1TrElmt1);
+		firstTbl.appendChild(tbl1TrElmt2);
+		firstTbl.appendChild(tbl1TrElmt3);
+		firstTbl.appendChild(tbl1TrElmt4);
+		firstTbl.appendChild(tbl1TrElmt5);
+		firstTbl.appendChild(tbl1TrElmt6);
+		
+		tbl2TrElmt1.appendChild(tbl2ThElmt1);
+		tbl2TrElmt1.appendChild(tbl2TdElmt1);
+		tbl2TrElmt2.appendChild(tbl2ThElmt2);
+		tbl2TrElmt2.appendChild(tbl2TdElmt2);
+		tbl2TrElmt3.appendChild(tbl2ThElmt3);
+		tbl2TrElmt3.appendChild(tbl2TdElmt3);
+		tbl2TrElmt4.appendChild(tbl2ThElmt4);
+		tbl2TrElmt4.appendChild(tbl2TdElmt4);
+		tbl2TrElmt5.appendChild(tbl2ThElmt5);
+		tbl2TrElmt5.appendChild(tbl2TdElmt5);
+		tbl2TrElmt6.appendChild(tbl2TdElmt6);
+		tbl2TrElmt7.appendChild(tbl2ThElmt7);
+		tbl2TrElmt7.appendChild(tbl2TdElmt7);
+		tbl2TrElmt8.appendChild(tbl2TdElmt8);
+		tbl2TrElmt9.appendChild(tbl2ThElmt9);
+		tbl2TrElmt9.appendChild(tbl2TdElmt9);
+		
+		secondTbl.appendChild(tbl2TrElmt1);
+		secondTbl.appendChild(tbl2TrElmt2);
+		secondTbl.appendChild(tbl2TrElmt3);
+		secondTbl.appendChild(tbl2TrElmt4);
+		secondTbl.appendChild(tbl2TrElmt5);
+		secondTbl.appendChild(tbl2TrElmt6);
+		secondTbl.appendChild(tbl2TrElmt7);
+		secondTbl.appendChild(tbl2TrElmt8);
+		secondTbl.appendChild(tbl2TrElmt9);
+		
+		firstTbl.className  = "tblEmailInf";
+		secondTbl.className = "tblEmailInf";
+		wrdivElmt.appendChild(firstTbl);
+		wrdivElmt.appendChild(secondTbl);
+		wrdivElmt.className = "divInfo";
+		
+		generateNormalAddressContent(wrdivElmt.outerHTML);
 	}
 	
 	function generateAddressTitle(itemInfo, relatedList, dlElmt) {
