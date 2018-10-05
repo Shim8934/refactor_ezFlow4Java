@@ -283,7 +283,7 @@
 .rlFileDiv {display: flex; align-items: center;}
 .rlDocDiv {flex: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px; max-height: 30px; height: 20px; overflow-y: auto;}
 .rlDocDiv span {cursor: pointer; color: blue; text-decoration: underline; line-height: 20px;}
-.rlDocDiv span:hover {text-decoration:none; text-shadow: 1px 1px 1px #555;}
+.rlDocDiv span:hover {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
 .rlDocDiv em, .cabemailDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
 
 .wide {width: 52%;}
