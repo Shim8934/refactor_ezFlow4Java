@@ -27,6 +27,7 @@
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
 		    var deptTreeTopId = "${deptTreeTopId}";
+		    var changePassLength = 0;
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -1018,6 +1019,7 @@
                     alert(strLang13);
                     return;
 				}
+		        changePassLength = listview.GetSelectedRows().length;
 		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
@@ -1039,9 +1041,6 @@
 		            listview.LoadFromID("lvUserList");
 
 		            var length = listview.GetSelectedRows().length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
-			        	return;
-		            }		            
          			var data = "";
 		            for (var i = 0; i < length; i++) {
 		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
@@ -1527,11 +1526,9 @@
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>		                
 						<c:if test="${useBizmekaTalk == 'YES'}">			
-							<c:if test="${locale eq 'ko'}">
 							<tr>
 			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 			                </tr>
-							</c:if>
 		                </c:if>
 		                <c:if test="${useDisablePopImap == 'YES'}">
 							<tr>

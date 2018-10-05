@@ -235,7 +235,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("temp", temp);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
-
+logger.debug("map.toString()" + map.toString());
 		logger.debug("getPortalParentUID ended");
 		
 		return ezPortalDAO.getPortalParentUID(map);
@@ -618,7 +618,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getPortalConfigItem(String pItemName, String pPageID, int tenantID) throws Exception {
+	public String getPortalConfigItem(String pItemName, String pPageID, int tenantID, String companyID) throws Exception {
 		logger.debug("getPortalConfigItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -626,6 +626,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPAGEID", pPageID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 
 		logger.debug("getPortalConfigItem ended");
 		
@@ -2418,10 +2419,12 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			return defaultValue;
 		}
 		
-		pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
-		pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
-		pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
-		pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+		String companyID = userInfo.getCompanyID();
+		
+		pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId(), companyID);
+		pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId(), companyID);
+		pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId(), companyID);
+		pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId(), companyID);
 		
 		logger.debug("pageWidth="+pageWidth + " , pageHeight=" + pageHeight + " , pageColumnLength= " + pageColumnLength + " , pageColumnSplit=" + pageColumnSplit);
 		
@@ -2546,10 +2549,10 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
         	return defaultValue;
         }
         
-        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
-        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
-        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
-        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
+        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
+        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
+        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
         
         if (pMode.equals("edit")) {
         	sb.append("<table id=\"main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"\" border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
@@ -2745,6 +2748,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			String portletMoveURL = "";
 
 			if (pMode.equals("edit")) {
+				logger.debug("in the edit");
 				if (portletHeight != 0) {
 					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");
 				} else {

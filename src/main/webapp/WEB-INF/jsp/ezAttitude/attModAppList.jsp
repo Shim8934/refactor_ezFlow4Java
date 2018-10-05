@@ -972,7 +972,6 @@
 						<td>
 							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()">
 							<label for="usepostdate"><spring:message code='ezAttitude.t105' /></label>&nbsp;
-							<div>
 							<input type="text" id="Sdatepicker"	style="width: 80px; text-align: center;" /> 
 							~ 
 							<input type="text" id="Edatepicker" style="width: 80px; text-align: center;" />
