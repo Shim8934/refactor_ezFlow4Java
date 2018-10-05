@@ -27,7 +27,8 @@ public interface MBoardService {
 	List<MBoardFavoriteVO> getFavoriteList(String userID, String companyID, int tenantID, String primary) throws Exception;
 	
 	/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
-	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary) throws Exception;
+	/* 2018-10-05 홍승비 - 하위부서 허용/불가권한 적용되지 않는 오류 수정(EzBoardAdmin 참고) */
+	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, String companyID, int tenantID, String primary, int isDept, int isEqualDept) throws Exception;
 	
 	/* 2018-07-03 홍승비 - 포탈 메인 새게시물 리스트 표시 시 deptID, companyID 조건 추가  */
 	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String deptID, String companyID, int tenantID, String offset) throws Exception;
