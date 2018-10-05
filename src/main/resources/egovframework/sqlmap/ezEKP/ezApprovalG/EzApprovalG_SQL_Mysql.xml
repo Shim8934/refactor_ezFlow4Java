@@ -5006,7 +5006,7 @@
 			SELECT 
 				N.* 
 			FROM ( SELECT 
-						TBL_RECORD.RecordID, 
+						DISTINCT TBL_RECORD.RecordID, 
 						TBL_RECORD.DocID, 
 						TBL_RECORD.RegisterNo, 
 						DATE_ADD(DATE_FORMAT(TBL_SEPERATEATTACH.CreateDate ,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) as CreateDate,
@@ -5063,6 +5063,14 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
 			  </isEqual>
+			  		LEFT JOIN 
+			     		TBL_ENDAPRLINEINFO 
+			    	 ON 
+			     		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
+			     	 AND 
+			     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
+			    	 AND 
+			     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -5247,6 +5255,8 @@
 				</isEqual>
 					WHERE 
 						TBL_RECORD.TENANT_ID = #tenantID#
+					AND
+						TBL_RECORD.COMPANYID = #companyID#
 					AND 
 						TBL_RECORD.DelFlag = '0' 
 					AND 
@@ -5318,6 +5328,12 @@
 						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 					]]>
 				</isNotEmpty>
+				<![CDATA[
+					 AND   
+					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
+				     OR      
+				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
+			     ]]>
 				<isNotEmpty property="sc" prepend="AND">
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
@@ -10697,7 +10713,7 @@
            AND
             	TENANT_ID = #v_TENANTID#
            AND
-           		COMPANYID = #companyID# 
+           		COMPANYID = #companyID#
 		</isNotEqual>
 	</select>
 
@@ -10714,7 +10730,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID = #companyID#     	
+           		COMPANYID = #companyID#
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
 			SELECT 
@@ -10728,7 +10744,7 @@
             AND
             	TENANT_ID = #v_TENANTID#
            	AND
-           		COMPANYID = #companyID#     	
+           		COMPANYID = #companyID#
 		</isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
@@ -11692,7 +11708,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getRecordListCount" parameterClass="ApprGRecordListVO" resultClass="int">
 		SELECT 
-			COUNT(TBL_RECORD.RecordID)
+			COUNT(DISTINCT TBL_RECORD.RecordID)
 		FROM 
 	   		TBL_RECORD 
 	    Left Join 

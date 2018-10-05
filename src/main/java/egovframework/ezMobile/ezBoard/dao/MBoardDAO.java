@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezBoard.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -205,6 +206,14 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void getBoardTree_Set_D(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.getBoardTree_Set_D", map);
+	}
+
+	/* 2018-10-05 홍승비 - 하위부서 허용/불가권한 적용되지 않는 오류 수정(EzBoardDAO 참고) */
+	public int isDeptChk(String id, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("tenantID", tenantID);
+		return (int) select("MBoardDAO.isDeptChk", map);
 	}
 	
 }

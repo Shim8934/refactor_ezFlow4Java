@@ -2097,9 +2097,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
+					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
 							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
-							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT></SIGNINFO></SIGNINFOS>";
+							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT>" + 
+							"<ORGCOMPANYID></ORGCOMPANYID></SIGNINFO></SIGNINFOS>";
 					
 					Document xmlDom = commonUtil.convertStringToDocument(strXML);
 					
@@ -3908,20 +3910,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			
-			/*if (primaryData.equals("1")) {
-				if (useReceiveInfoName.equals("1")) {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent() + messageSource.getMessage("ezApprovalG.lhj18",  locale))) + "</VALUE>");
-				} else if (useReceiveInfoName.equals("2")) {
-					//추가 개발시 변경
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
-				} else {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");					
-				}
+			if (primaryData.equals("1")) {
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");					
 			} else {
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
-			}*/
-			
-			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
+			}
 			
 			resultXML.append("</CELL>");
 			
@@ -18879,6 +18872,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
 				if (fieldName.equals("HASATTACHYN")) {
@@ -19655,10 +19649,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		resultXML.append("</HEADERS>");
-		
-		if (!viewCompany.equals("1") && !viewCompany.equals("")) {
-			hlength -= 1;
-		}
 		
 		// 결재문서 리스트 추출
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID);
