@@ -199,7 +199,7 @@ function addRemoveButton(memoId) {
 		
 	$("#memo" + memoId).prepend(modal);
 	
-	$("#modRm" + memoId).attr("tabindex", -1).on("focus", function() {
+	/*$("#modRm" + memoId).attr("tabindex", -1).on("focus", function() {
 		
 		var agent = navigator.userAgent.toLowerCase();
 
@@ -217,11 +217,23 @@ function addRemoveButton(memoId) {
 			}
 		}
 		
-	}).focus();
+	}).focus();*/
 	
-	$(".alertPopup").click(function(e){
-		e.stopPropagation();
-	})
+	$("#modRm" + memoId).attr("tabindex", -1).on("focus", function() {
+		
+		var agent = navigator.userAgent.toLowerCase();
+		
+		if (agent.indexOf("chrome") != -1) {
+			$(this).css("outline", "none");
+			
+		}
+	}).on("keyup", function(event) {
+		
+		if (event.keyCode == 13) {
+			modalDelete(memoId);
+		}
+		
+	}).focus();
 }
 
 //날짜 초기화
