@@ -50,7 +50,7 @@ public class EzNewPortalGWController {
 	@Resource(name="EzNewPortalService")
 	private EzNewPortalService ezNewPortalService;
 	
-	@Resource(name="ezBoardService")
+	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
 	
 	@Resource(name="MOptionService")
