@@ -12,7 +12,7 @@ function getDocList() {
     if (typeof (psearch) == "object")
         document.getElementById("psearch").style.display = "none";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -223,7 +223,7 @@ function getReceivedDocList(p_FormCd) {
     }
 
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -364,7 +364,7 @@ function getReceivedDocList_after(xml) {
 function getSendOutDocList() {    
     pSelMenu = "all";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -2340,7 +2340,7 @@ function getSimsaDocList() {
     pageSize = "10";
     
     var manager;
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
