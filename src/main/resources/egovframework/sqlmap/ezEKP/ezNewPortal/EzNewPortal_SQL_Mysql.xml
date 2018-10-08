@@ -21,6 +21,52 @@
 <result property="boardID" 				column="BOARDID" />
 <result property="filePath" 			column="FILEPATH" />
 </resultMap>
+<resultMap class="BoardListVO" id="BoardListVO">
+<result property="itemID" 				column="ITEMID" />
+<result property="boardID" 				column="BOARDID" />
+<result property="title" 				column="TITLE" />
+<result property="guBun" 				column="GUBUN" />
+</resultMap>
+
+<!-- 공지사항 포틀릿 가져오기 -->
+<select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
+<![CDATA[
+SELECT 
+	B.GUBUN,
+	A.BOARDID,
+    A.ITEMID,
+    A.TITLE
+FROM 
+	TBL_BOARD_ITEM AS A
+JOIN
+	TBL_BOARD_BOARDINFO AS B
+ON
+	A.BOARDID = B.BOARDID
+AND
+	A.TENANT_ID = B.TENANT_ID
+WHERE 
+	A.BOARDID = (
+	            SELECT 
+	            	CONNECTION_URL
+	            FROM
+	            	TBL_PORTAL_PORTLET_COMP
+	            WHERE
+	            	COMPANY_ID = #companyId#
+	            AND
+	            	TENANT_ID = #tenantId#
+	            AND
+					PORTLET_ID = #portletId#	            
+	            )
+AND 
+	A.TENANT_ID = #tenantId#
+AND 
+	A.WRITERCOMPANYID = #companyId#
+ORDER BY 
+	A.PARENTWRITEDATE DESC, 
+	A.UPPERITEMIDTREE ASC
+LIMIT #limit#
+]]>
+</select>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">

@@ -95,6 +95,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/noticePortlet.do")
 	public String portalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalNoticePortlet Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/notice";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("noticeList", data.get("noticeList"));
+		}
 		
 		return "/ezNewPortal/portlets/noticePortlet";
 	}

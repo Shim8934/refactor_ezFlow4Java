@@ -4,28 +4,33 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>helpPortlet</title>
+<title>help Portlet</title>
 <script type="text/javascript">
 
-var helpDetail = function () {
-	var height = window.screen.availHeight;
-	var width = window.screen.availWidth;
-	var top = (height - 750) / 2;
-	var left = (width - 1000) / 2;
-	var url = '/ezPortal/help/help.do';
-	var option = 'height=700px,width=1000px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no, resizable=0';
-	
-	window.open(url, "", option);
+var helpPortletLoadFunc = function () {
+
+	var helpDetail = function () {
+		var height = window.screen.availHeight;
+		var width = window.screen.availWidth;
+		var top = (height - 750) / 2;
+		var left = (width - 1000) / 2;
+		var url = '/ezPortal/help/help.do';
+		var option = 'height=700px,width=1000px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no, resizable=0';
+		
+		window.open(url, "", option);
+	}
+		
+	/* 이벤트 추가 */
+	document.getElementById("helpDetail").addEventListener('click', helpDetail );	
 }
 
-
-/* 이벤트 추가 */
-document.getElementById("helpDetail").addEventListener('click', helpDetail );
+// 즉시실행함수처럼 사용하기.
+helpPortletLoadFunc();
 
 </script>
 </head>
-<body  class="body_bg1">
-<div class="layDIV">
+<body class="body_bg1">
+<div class="layDIV" id="helpDiv">
     <span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
     <dl class="bannerText">
 	    <dt class="bText">그룹웨어 쉽게 활용하기</dt>

@@ -6,12 +6,18 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("ezNewPortal.getNoticePortletList", map);
+	}
 
 	public int getVotePortletCount (Map<String, Object> map) {
 		return (int) select("ezNewPortal.getVotePortletCount", map);
