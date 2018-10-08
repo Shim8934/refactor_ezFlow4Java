@@ -98,6 +98,7 @@
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
 		    var isSentItems = "${isSentItems}";
 		    var importExportMode = false;
+		    var useCountryIP = "${useCountryIP}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";

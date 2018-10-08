@@ -380,8 +380,19 @@
 	        	}
 	        	DivPopUpHidden();
 	    	}
-
+	    	
+	    	var doubleSubmitFlag = false;
+	    	function doubleSubmitCheck(){
+	    	    if(doubleSubmitFlag){
+	    	        return doubleSubmitFlag;
+	    	    }else{
+	    	        doubleSubmitFlag = true;
+	    	        return false;
+	    	    }
+	    	}
+	    	
 	    	function btn_Save() {
+
 	        	var check = true;
 	        	if (ItemArray[0].length == 0) {
 	            	alert(strLang252);

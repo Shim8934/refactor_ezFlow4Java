@@ -2557,8 +2557,7 @@ public class EzEmailUtil {
 				
 				conn.disconnect();		
 				conn = null;
-			}
-			else {
+			} else {
 				Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
 				
 				throw e;

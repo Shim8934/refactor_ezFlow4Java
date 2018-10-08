@@ -11724,7 +11724,8 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getRecordListCount" parameterClass="ApprGRecordListVO" resultClass="int">
 		SELECT 
-			COUNT(DISTINCT TBL_RECORD.RecordID)
+			COUNT(DISTINCT TBL_RECORD.RecordID,
+				  TBL_SEPERATEATTACH.SeperateAttachNo)
 		FROM 
 	   		TBL_RECORD 
 	    Left Join 
@@ -18575,7 +18576,7 @@
 				   		 	AND 
 				   		 		RECEIPTDATE > STR_TO_DATE(SUBSTR(#v_SREGDATE#,1,19) ,'%Y-%m-%d %H:%i:%s')
 				   		</isNotEmpty>
-				   		<isNotEmpty property="v_SREGDATE" >
+				   		<isNotEmpty property="v_EREGDATE" >
 				   		 <![CDATA[	
 				   		 	AND 
 				   		 		 RECEIPTDATE < STR_TO_DATE(SUBSTR(#v_EREGDATE#,1,19) ,'%Y-%m-%d %H:%i:%s')
@@ -19054,7 +19055,7 @@
 	  	  											 AND
 	  	  											 	A.COMPANYID = #companyID#
 	  	  											 AND 
-	  	  											 	A.User_ID IN ( #charger# ) )
+	  	  											 	A.User_ID IN ( $charger$ ) )
 	  </isNotEmpty>
 	  <isNotEmpty property="transExpire">
 	  	<![CDATA[
