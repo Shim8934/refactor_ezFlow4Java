@@ -435,7 +435,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				}
 				
 				/* 2018-09-13 홍승비 - 사원 정보 보기 시 담당업무 자기소개 특수문자 처리 */
-				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+//				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 				literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 				literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
 				literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
