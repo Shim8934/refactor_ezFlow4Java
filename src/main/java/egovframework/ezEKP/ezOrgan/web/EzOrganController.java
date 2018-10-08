@@ -74,10 +74,13 @@ public class EzOrganController {
         String adminDist = doc.getElementsByTagName("ADMINDIST").getLength() != 1 ? "false" : doc.getElementsByTagName("ADMINDIST").item(0).getTextContent(); // 관리자 > 공용배포그룹
         String userCompanyID = userInfo.getCompanyID();
         String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
+        String orgCompanyID = doc.getElementsByTagName("orgCompanyID").getLength() != 1 ? "" : doc.getElementsByTagName("orgCompanyID").item(0).getTextContent(); // 전자결재 orgCompanyID
         
         if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
         	topID = adminOrganChk[0];
         } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) {
+		} else if (!orgCompanyID.equals("") && !orgCompanyID.equals("undefined")) {
+			topID = orgCompanyID;
 		} else {
         	topID = userCompanyID;
         }

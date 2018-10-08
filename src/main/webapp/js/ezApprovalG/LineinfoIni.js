@@ -5,7 +5,7 @@ function Lineinfo_ini() {
             Tree_setconfig();
             Lineinfoini = true;
             InitListView();
-            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
+            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
             displayUserList(DeptID);
             ChangeLineTab("Organ");
             initJunGyul();
@@ -23,7 +23,7 @@ function Lineinfo_ini() {
 function circulation_ini() {
 	getGongRamDocInfo();
 	Tree_setconfig();
-	TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "circulation");
+	TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "circulation", orgCompanyID);
     displayUserListCC(DeptID);
     InitListViewCC();
     ChangeLineTabCC("Organ");
