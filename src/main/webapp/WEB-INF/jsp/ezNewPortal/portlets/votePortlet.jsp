@@ -113,7 +113,7 @@ function eventSetting() {
 <body>
 <div class="layDiv">
 	<dl class="portlet_title">
-		<dt class="portletText">투표 (<c:out value='${voteCount }'/>)</dt>
+		<dt class="portletText"><c:out value="${portletName }"/> (<c:out value='${voteCount }'/>)</dt>
 		<dd class="portletPlus" id="votePlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 	</dl>
 </div>

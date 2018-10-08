@@ -19,11 +19,12 @@
 var page = 1;
 var photoCount = 4;
 var boardId = "<c:out value='${boardId}'/>";
+var portletId = "<c:out value='${portletId}'/>";
 
 $(function(){
 	$(".nextBtn").on("click", moveNextPage);
 	$(".preBtn").on("click", movePrevPage);
-	$(".portletPlus").on("click", viewBoardList);
+	$("#photoBoardPlus").on("click", viewBoardList);
 })
 
 function moveNextPage() {
@@ -32,7 +33,7 @@ function moveNextPage() {
 	$.ajax({
 		type : "POST",
 		url : "/ezNewPortal/getPhotoItemList.do",
-		data : {"boardId" : boardId, "page" : page, "photoCount" : photoCount},
+		data : {"boardId" : boardId, "page" : page, "photoCount" : photoCount, "portletId" : portletId},
 		success : function(result) {
 			if (result.length > 0) {
 				var resultCount = result.length;
@@ -61,7 +62,7 @@ function movePrevPage() {
 			type : "POST",
 			dataType : "json",
 			url : "/ezNewPortal/getPhotoItemList.do",
-			data : {"boardId" : boardId, "page" : page, "photoCount" : photoCount},
+			data : {"boardId" : boardId, "page" : page, "photoCount" : photoCount, "portletId" : portletId},
 			success : function(result) {
 				var resultCount = result.length;
 				var strHTML = "";
@@ -95,8 +96,7 @@ function photoItemRead(elem) {
 	} else {
 		var height = 785;
 	}
-	console.log(elem.data1);
-	console.log(elem);
+	
 	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + elem.getAttribute("data2") + "&boardID=" + elem.getAttribute("data1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 }
 </script>
@@ -104,8 +104,8 @@ function photoItemRead(elem) {
 <body>
 <div class="layDIV">
 	<dl class="portlet_title photo_board">
-		<dt class="portletText">포토 갤러리</dt>
-		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
+		<dt class="portletText"><c:out value="${portletName }"/></dt>
+		<dd class="portletPlus" id="photoBoardPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 	<c:if test="${access eq 'true' }">
 		<dd class="nextBtn"><img src="/images/ezNewPortal/photo_next.png"></dd>
 		<dd class="preBtn"><img src="/images/ezNewPortal/photo_pre.png"></dd>
