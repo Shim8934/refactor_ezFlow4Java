@@ -114,7 +114,7 @@
 				if (cirCnt > 99) {
 					cirCnt = "99+";		
 				}						
-				$("#circularCnt").html(cirCnt);
+				$("#circularCount").html(cirCnt);
 
 				if (cirCnt == "0") {
                 	$("#circularCount").attr("class", "iconCount_none");
@@ -126,7 +126,7 @@
     }
 	
 	function getPollCount() {
-		$.ajax({
+		/* $.ajax({
 			type : "POST",
 			url : "",
 			success : function(result) {
@@ -142,7 +142,7 @@
 				
 				$("#pollCount").text(result);
 			}
-		})
+		}) */
 	}
 	
 	function getTodayScheduleCount() {
