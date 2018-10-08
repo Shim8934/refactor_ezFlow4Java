@@ -381,18 +381,17 @@
 	        	DivPopUpHidden();
 	    	}
 	    	
-	    	//var doubleSubmitFlag = false;
-	    	//function doubleSubmitCheck(){
-	    	//    if(doubleSubmitFlag){
-	    	//        return doubleSubmitFlag;
-	    	//    }else{
-	    	//        doubleSubmitFlag = true;
-	    	//        return false;
-	    	//    }
-	    	//}
+	    	var doubleSubmitFlag = false;
+	    	function doubleSubmitCheck(){
+	    	    if(doubleSubmitFlag){
+	    	        return doubleSubmitFlag;
+	    	    }else{
+	    	        doubleSubmitFlag = true;
+	    	        return false;
+	    	    }
+	    	}
 	    	
 	    	function btn_Save() {
-	    		//if(doubleSubmitCheck()) return;
 
 	        	var check = true;
 	        	if (ItemArray[0].length == 0) {
