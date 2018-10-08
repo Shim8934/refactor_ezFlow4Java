@@ -211,15 +211,16 @@
             </ul>
         </div>
 	    <h2 id="maintitle" style="height: 30px;"><span id="tdCateType" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t696' /><br>
-        <spring:message code = 'ezApprovalG.t697' />"<span id="tdPCode" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t698' /></h2>
+        <spring:message code = 'ezApprovalG.t697' /><span id="tdPCode" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t698' /></h2>
     	<table class="content">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t699' /></th>
 	            <td id="descript">&nbsp;</td>
 	        </tr>
     	</table>
-    	<div style="BORDER: #ddd 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 100%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
-    	<div class="btnposition">
+    	<!-- 2018-10-08 김민성 - 버튼 및 테이블 style 수정 -->
+    	<div style="BORDER: #ddd 1px solid; border-top:0px; OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 99.5%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
+    	<div class="btnpositionNew">
         	<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
     	</div>
 	</body>
