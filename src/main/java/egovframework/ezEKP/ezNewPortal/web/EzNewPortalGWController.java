@@ -1328,9 +1328,20 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			int limit = 3; // 공지사항 갯수
+			
+			// 여기에 데이터를 put해서 넘기면 됨.
+			JSONObject data = new JSONObject();
+			
+			List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
+			noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
+			data.put("noticeList", noticeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

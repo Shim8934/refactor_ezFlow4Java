@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -19,6 +20,16 @@ import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
+	
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("limit", limit);
+		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
+		
+		return ezNewPortalDAO.getNoticePortletList(map);
+	}
 	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
