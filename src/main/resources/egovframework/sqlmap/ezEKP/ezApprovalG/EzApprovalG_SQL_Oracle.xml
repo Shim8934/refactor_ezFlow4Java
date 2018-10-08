@@ -18632,7 +18632,7 @@
 				   		 	AND 
 				   		 		RECEIPTDATE > TO_DATE(SUBSTR(#v_SREGDATE#,1,19) ,'YYYY-MM-DD HH24:MI:SS')
 				   		</isNotEmpty>
-				   		<isNotEmpty property="v_SREGDATE" >
+				   		<isNotEmpty property="v_EREGDATE" >
 				   		 <![CDATA[	
 				   		 	AND 
 				   		 		 RECEIPTDATE < TO_DATE(SUBSTR(#v_EREGDATE#,1,19) ,'YYYY-MM-DD HH24:MI:SS')

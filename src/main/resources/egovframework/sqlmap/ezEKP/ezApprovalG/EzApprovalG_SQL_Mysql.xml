@@ -18576,7 +18576,7 @@
 				   		 	AND 
 				   		 		RECEIPTDATE > STR_TO_DATE(SUBSTR(#v_SREGDATE#,1,19) ,'%Y-%m-%d %H:%i:%s')
 				   		</isNotEmpty>
-				   		<isNotEmpty property="v_SREGDATE" >
+				   		<isNotEmpty property="v_EREGDATE" >
 				   		 <![CDATA[	
 				   		 	AND 
 				   		 		 RECEIPTDATE < STR_TO_DATE(SUBSTR(#v_EREGDATE#,1,19) ,'%Y-%m-%d %H:%i:%s')
