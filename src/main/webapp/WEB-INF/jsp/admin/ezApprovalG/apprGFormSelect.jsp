@@ -46,8 +46,6 @@
 	
 		        Rtnval[0] = "cancel";
 		        Rtnval[1] = "cancel";
-// 		        window.returnValue = Rtnval;
-		        ReturnFunction(Rtnval);
 		    }
 		    
 		    function Tree_setconfig() {
@@ -177,7 +175,12 @@
 		        			alert("<spring:message code = 'ezApprovalG.t25003' />");
 		        			
 			                Rtnval[0] = "OK";
-			                window.returnValue = Rtnval;
+			                
+			                if (ReturnFunction != null) {
+				                ReturnFunction(Rtnval);
+			                } else {
+				                window.returnValue = Rtnval;
+			                }
 		        		} else {
 		        			alert(strLang131);
 		        		}

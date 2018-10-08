@@ -171,10 +171,10 @@
 	        function repetiton_check() {	
 	        	schedule_delete_confirm_cross_dialogArguments[0] = "";
 	        	schedule_delete_confirm_cross_dialogArguments[1] = deleteSchedule_Complete;
-	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 400, 170);
+	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 500, 170);
 	        }
 	        
-	        function deleteSchedule_Complete(ret) {
+	        function deleteSchedule_Complete(ret) {	        	
 				if (ret == "0") {
 					once_delete_schedule();
 				} else if (ret == "1") {
@@ -186,13 +186,15 @@
 	        	if ("${scheduleInfo.dateType}" == "3") {
 	        		repetiton_check();	        	
 	        	} else {
-	        		delete_schedule();
+	        		if (confirm("<spring:message code='ezSchedule.t209' />")) {
+	        			delete_schedule();
+		        	} 
 	        	}
 	        }
 	
 	        function delete_schedule() {	        	
-	            if (!confirm("<spring:message code='ezSchedule.t209' />"))
-	                return;
+	            //if (!confirm("<spring:message code='ezSchedule.t209' />"))
+	            //    return;
 	
 	            var ResourceDel = "FALSE";;
 	            if (ResourceInfo != "0") {
@@ -225,8 +227,8 @@
 	        }
 	        
 	        function once_delete_schedule() {
-	        	if (!confirm("<spring:message code='ezSchedule.t209' />"))
-	                return;
+	        	//if (!confirm("<spring:message code='ezSchedule.t209' />"))
+	            //    return;
 		            
 	            $.ajax({
 					type : "POST",
