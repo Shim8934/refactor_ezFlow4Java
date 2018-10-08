@@ -2097,9 +2097,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
+					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
 							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
-							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT></SIGNINFO></SIGNINFOS>";
+							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT>" + 
+							"<ORGCOMPANYID></ORGCOMPANYID></SIGNINFO></SIGNINFOS>";
 					
 					Document xmlDom = commonUtil.convertStringToDocument(strXML);
 					
@@ -3908,20 +3910,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			
-			/*if (primaryData.equals("1")) {
-				if (useReceiveInfoName.equals("1")) {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent() + messageSource.getMessage("ezApprovalG.lhj18",  locale))) + "</VALUE>");
-				} else if (useReceiveInfoName.equals("2")) {
-					//추가 개발시 변경
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");
-				} else {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");					
-				}
+			if (primaryData.equals("1")) {
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");					
 			} else {
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
-			}*/
-			
-			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
+			}
 			
 			resultXML.append("</CELL>");
 			
@@ -6830,20 +6823,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document xmlDoc = commonUtil.convertStringToDocument(results);
 		
 		signImage = xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent();
-		pTitle = xmlDoc.getElementsByTagName("TITLE").item(0).getTextContent();
+		pTitle = xmlDoc.getElementsByTagName("TITLE1").item(0).getTextContent();
 		jikwe = pTitle;
 		jikwe2 = xmlDoc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		displayName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		displayName = xmlDoc.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		displayName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		department = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
-		description = xmlDoc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		description = xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
 		description2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 		
 		results = ezOrganService.getPropertyList(orgUID, propList, strLang, userInfo.getTenantId());
 		logger.debug("<<<results : " + results);
 		xmlDoc = commonUtil.convertStringToDocument(results);
 		
-		orgName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		orgName = xmlDoc.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		orgName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		orgDeptID = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
 		
@@ -18879,6 +18872,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
 				if (fieldName.equals("HASATTACHYN")) {
@@ -19656,10 +19650,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</HEADERS>");
 		
-		if (!viewCompany.equals("1")) {
-			hlength -= 1;
-		}
-		
 		// 결재문서 리스트 추출
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID);
 		
@@ -19675,69 +19665,71 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<ROW>");
 			
 			for (int p = 0; p < hlength; p++) {
-				resultXML.append("<CELL>");
+				
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
-				if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("SENDERNAME")) {
-					fieldName = fieldName + langData;
-				}
-				
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				
-				if (fieldName.equals("COMPANYNAME") && !viewCompany.equals("1")) {
-				} else {
+				if (!fieldName.equals("COMPANYNAME") || (fieldName.equals("COMPANYNAME")&&viewCompany.equals("1"))) {
+					
+					resultXML.append("<CELL>");
+					
+					if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("SENDERNAME")) {
+						fieldName = fieldName + langData;
+					}
+					
+					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+					
 					resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
-				}
-				
-				if (p == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
-					// 3: 결재진행 문서, 21 : 서버저장 문서
-					if (!listType.equals("3") && !listType.equals("21")) {
-						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
-						resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA5>");
-						resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA6>");
-						resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA7>");
-						resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA8>");
-						resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA17>");
-						resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
-						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA19>");
-					} else {
-						resultXML.append("<DATA4>" + "" + "</DATA4>");
-						resultXML.append("<DATA5>" + "" + "</DATA5>");
-						resultXML.append("<DATA6>" + "" + "</DATA6>");
-						resultXML.append("<DATA7>" + "" + "</DATA7>");
-						resultXML.append("<DATA8>" + "" + "</DATA8>");
+					
+					if (p == 0) {
+						resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA2>");
+						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
+						// 3: 결재진행 문서, 21 : 서버저장 문서
+						if (!listType.equals("3") && !listType.equals("21")) {
+							resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
+							resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA5>");
+							resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA6>");
+							resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA7>");
+							resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA8>");
+							resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA17>");
+							resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
+							resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA19>");
+						} else {
+							resultXML.append("<DATA4>" + "" + "</DATA4>");
+							resultXML.append("<DATA5>" + "" + "</DATA5>");
+							resultXML.append("<DATA6>" + "" + "</DATA6>");
+							resultXML.append("<DATA7>" + "" + "</DATA7>");
+							resultXML.append("<DATA8>" + "" + "</DATA8>");
+						}
+						
+						if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals(staDSSuSin) && !listType.equals("3")) {
+							resultXML.append("<DATA9>" + getAprDocListReceiveSN(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), companyID, tenantID) + "</DATA9>");
+						} else {
+							resultXML.append("<DATA9>" + "0" + "</DATA9>");
+						}
+						
+						resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
+						resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
+						resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
+						resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent()) + "</DATA13>");
+						resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+						resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
+						resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
+						//일괄결재로 인한 추가인데 위에 DATA17 겹침
+						resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA17>");
+						resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
 					}
 					
-					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals(staDSSuSin) && !listType.equals("3")) {
-						resultXML.append("<DATA9>" + getAprDocListReceiveSN(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), companyID, tenantID) + "</DATA9>");
-					} else {
-						resultXML.append("<DATA9>" + "0" + "</DATA9>");
+					if (fieldName.equals("HASATTACHYN")) {
+						resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
 					}
 					
-					resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
-					resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
-					resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
-					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent()) + "</DATA13>");
-					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
-					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
-					resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
-					//일괄결재로 인한 추가인데 위에 DATA17 겹침
-					resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA17>");
-					resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
+					if (fieldName.equals("ISPUBLIC")) {
+						resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					}
+					
+					resultXML.append("</CELL>");
 				}
-				
-				if (fieldName.equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
-				}
-				
-				if (fieldName.equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
-				}
-				
-				resultXML.append("</CELL>");
 			}
 			
 			resultXML.append("</ROW>");
@@ -23638,7 +23630,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantID)	throws Exception {
+	public String registerUserContDoc(String docID, String contID, String description, String orgCompanyID, String companyID, String lang, int tenantID)	throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CONTID", contID);
@@ -23647,6 +23639,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("orgCompanyID", orgCompanyID);
 		
 		
 		int docCount = ezApprovalGDAO.userContListCount(map);
@@ -23956,7 +23949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getUserContList(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet)	throws Exception {
+	public String getUserContList(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet, String userID)	throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
 		String OrderOption2 = "";
@@ -23973,6 +23966,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSUBQUERYLENGTH", pSubQuery.trim().length());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_PUSERID", userID);
 
 		int totalCount = ezApprovalGDAO.getUserContDocListCount(map);
 		

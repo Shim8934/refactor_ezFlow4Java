@@ -400,7 +400,7 @@ function btnRemoveDoc_onclick() {
     var tr = DocList.GetSelectedRows();
     var orgCompanyID = "";
 
-    if (selRow.length <= 0) {
+    if (tr.length <= 0) {
         var InformationString = strLangS385;
         //2018-09-19 김보미 - 알럿창으로 변경
 //        OpenAlertUI(InformationString);

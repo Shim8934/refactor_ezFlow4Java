@@ -507,6 +507,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("--------------------------------------------------------------");
 		
 		List<TaskInfoVO> resultList = new ArrayList<TaskInfoVO>();
+		List<TaskInfoVO> tempResultList = new ArrayList<TaskInfoVO>();
 		
 		for (int i=0; i < list.size(); i++) {		
 			TaskInfoVO vo = list.get(i);
@@ -697,12 +698,17 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 								}
 							}
 							count=1;
-							for (Integer iday : wDay) {
-								logger.debug(count+"wDay에 담긴 요일 : " + iday);								
-							}
 							maxCount += 1;
+							Calendar tempEDate_cal = Calendar.getInstance();
+							
 							while (true) {
-								if (date_cal.compareTo(eDate_cal) > 0) break;
+								if (date_cal.compareTo(eDate_cal) > 0) {
+									tempEDate_cal.setTime(eDate_cal.getTime());
+									tempEDate_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
+										if(date_cal.compareTo(tempEDate_cal) > 0) {
+											break;
+										}
+								}
 								if (maxCount == count) break;
 								
 									String calcuDate = nsdf.format(date_cal.getTime());
@@ -718,7 +724,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 													logger.debug("endDate : " + endDate);
 													if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(vo.getEndDate())) <= 0) {
 													TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-													resultList.add(rVo);
+													tempResultList.add(rVo);
+//													resultList.add(rVo);
 												}
 												
 											}
@@ -732,7 +739,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 											if (!rList.contains(calcuDate)) {
 												if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0){
 													TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-													resultList.add(rVo);
+													tempResultList.add(rVo);
+//													resultList.add(rVo);
 												}
 											}
 											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
@@ -887,7 +895,46 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 		logger.debug("listsize = " + list.size());
 		logger.debug("getTaskList ended.");
+		
+		logger.debug("=====getScheduleList Ended=====");
+		if (tempResultList != null) {
+			resultList = realList(resultList, tempResultList, startDate, endDate, offset);
+		}
 
+		return resultList;
+	}
+	
+	public List<TaskInfoVO> realList (List<TaskInfoVO> resultList, List<TaskInfoVO> tempResultList, String startDate, String endDate, String offset) throws Exception {
+		
+		String vosDate = "";
+		String voeDate = "";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		for (TaskInfoVO svo : tempResultList) {
+			vosDate = commonUtil.getDateStringInUTC(svo.getStartDate(), offset, true);
+			voeDate = commonUtil.getDateStringInUTC(svo.getEndDate(), offset, true);
+			
+			Calendar vosDate_cal = Calendar.getInstance();
+			Calendar voeDate_cal = Calendar.getInstance();
+			Calendar sDate_cal = Calendar.getInstance();
+			Calendar eDate_cal = Calendar.getInstance();
+			
+			vosDate_cal.setTime(sdf.parse(vosDate));
+			voeDate_cal.setTime(sdf.parse(voeDate));
+			sDate_cal.setTime(sdf.parse(startDate));
+			eDate_cal.setTime(sdf.parse(endDate));
+			
+			String sdate1 = sdf.format(sDate_cal.getTime());
+			String edate1 = sdf.format(eDate_cal.getTime());
+			String vosdate1 = sdf.format(vosDate_cal.getTime());
+			String voedate1 = sdf.format(voeDate_cal.getTime());
+			
+			if (vosDate_cal.compareTo(sDate_cal) >= 0 && voeDate_cal.compareTo(eDate_cal) <= 0) {
+				resultList.add(svo);
+			}
+		}
+		
 		return resultList;
 	}
 
