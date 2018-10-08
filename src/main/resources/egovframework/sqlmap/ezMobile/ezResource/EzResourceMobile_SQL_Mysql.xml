@@ -980,7 +980,51 @@
            	FROM 
            		TBL_RS_SCHEDULE A
 			JOIN
-				TBL_USERMASTER B 
+				((SELECT
+					D.cn,
+					D.displayname,
+					D.displayname2,
+					D.description,
+					D.description2,
+					D.department,
+					D.title,
+					D.title2,
+                    D.tenant_id
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.tenant_id = #tenantID#
+				AND
+					D.physicaldeliveryofficename = #v_PCOMPANYID#)
+				UNION ALL
+				(SELECT
+					F.cn,
+					F.displayname ownernm,
+					F.displayname2 ownernm2,
+					G.displayname deptnm,
+					G.displayname2 deptnm2,
+					G.cn department,
+					E.title jobtitle,
+					E.title2 jobtitle2,
+                    F.tenant_id
+				FROM
+					TBL_ADDJOBMASTER E
+				JOIN
+					TBL_USERMASTER F
+				ON
+					E.tenant_id = F.tenant_id
+				AND
+					E.cn = F.cn
+				RIGHT JOIN
+					TBL_DEPTMASTER G
+				ON
+					E.tenant_id = G.tenant_id
+				AND
+					E.deptid = G.cn
+				WHERE
+					E.tenant_id = #tenantID#
+				AND
+					G.extensionattribute2 = #v_PCOMPANYID#)) B
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
 		    JOIN

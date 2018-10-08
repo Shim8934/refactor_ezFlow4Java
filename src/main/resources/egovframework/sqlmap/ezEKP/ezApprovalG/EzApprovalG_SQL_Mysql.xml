@@ -19055,7 +19055,7 @@
 	  	  											 AND
 	  	  											 	A.COMPANYID = #companyID#
 	  	  											 AND 
-	  	  											 	A.User_ID IN ( #charger# ) )
+	  	  											 	A.User_ID IN ( $charger$ ) )
 	  </isNotEmpty>
 	  <isNotEmpty property="transExpire">
 	  	<![CDATA[
