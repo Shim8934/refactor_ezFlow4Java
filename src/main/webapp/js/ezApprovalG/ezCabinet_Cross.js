@@ -1848,7 +1848,8 @@ function btnSearchDelivery_onclick(opnOption) {
 function btnSearchDelivery_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
-
+        
+        g_isSearching = true;
         g_DeliverySearchParamXml = rtnVal[1];
         GetDocDeliveryList(g_DeliverySearchParamXml);
     }
