@@ -559,13 +559,13 @@ function GetRecordList() {
     		
     		g_searchDate.startDate = date;
     	} else {
-    		g_searchDate.startDate = new Date(startDate);
+    		g_searchDate.startDate = new Date(startDate.replace(/-/g,'/'));
     	}
     	
         if (endDate == "") {
         	g_searchDate.endDate = new Date();
         } else {
-        	g_searchDate.endDate = new Date(endDate);
+        	g_searchDate.endDate = new Date(endDate.replace(/-/g,'/'));
         }
         
         
