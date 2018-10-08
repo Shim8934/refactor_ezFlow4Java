@@ -10525,7 +10525,8 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getRecordListCount" parameterClass="ApprGRecordListVO" resultClass="int">
 		SELECT 
-			COUNT(DISTINCT TBL_RECORD.RecordID)
+			COUNT(DISTINCT TBL_RECORD.RecordID,
+				  TBL_SEPERATEATTACH.SeperateAttachNo)
 		FROM 
 	   		TBL_RECORD 
 	   Left Join 
