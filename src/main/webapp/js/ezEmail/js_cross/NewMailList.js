@@ -238,6 +238,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
                 var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
+                var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -429,9 +430,9 @@ function MakeListInfoHTML(ConentObject) {
                     _TR.appendChild(_TDColum);
                     
                  // 180514 보낸사람 클릭 시 메일 작성
-                    if (ssNodeValue == "sender" ) { 
+                    if (ssNodeValue == "sender") { 
                     	var _TDColumSpan = document.createElement("span");
-                    	_TDColumSpan.style.padding = "7px 0";
+                    	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
                     	
                     	if(useMailWriteSenderClick == "YES") {
@@ -440,6 +441,19 @@ function MakeListInfoHTML(ConentObject) {
                     	}
                     	
                     	_TR.lastChild.innerHTML = "";
+                    	
+                    	if (useCountryIP == "YES" && g_foldertype == "" && p_countryCode != "") {
+                    		var _img = document.createElement("img");
+                    		_img.style.width = "18px";
+                    		_img.style.verticalAlign = "bottom";
+                    		_img.style.padding = "0px 0px 1px 0px";
+                			if (p_countryCode =="unknown") {
+                				p_countryCode = "qm";
+                			}
+                			_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+                			_TR.lastChild.appendChild(_img);
+                    	}
+                    	
                     	_TR.lastChild.appendChild(_TDColumSpan);
                     }
                 }
