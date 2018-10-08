@@ -392,7 +392,6 @@
 	    	}
 	    	
 	    	function btn_Save() {
-	    		if(doubleSubmitCheck()) return;
 
 	        	var check = true;
 	        	if (ItemArray[0].length == 0) {
