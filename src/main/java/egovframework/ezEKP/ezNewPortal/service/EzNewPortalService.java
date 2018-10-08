@@ -13,6 +13,8 @@ public interface EzNewPortalService {
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId);
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId);
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount);
-	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId);
+	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang);
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
+	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId);
+	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId);
 }

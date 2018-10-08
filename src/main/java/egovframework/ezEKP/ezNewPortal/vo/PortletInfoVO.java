@@ -9,7 +9,7 @@ public class PortletInfoVO {
 	private String portletUrl; //포틀릿 경로
 	private boolean isGeneral; //포틀릿 타입 : 기본(true), 추가(false)
 	private int defaultOrder; //제공된 포틀릿 기본 순서
-	private int portletCategory; //게시판(0), 메일(1), 결재(2), 외부링크(3)
+	private String portletCategory; //게시판(0), 메일(1), 결재(2), 외부링크(3)
 	private String connectionUrl; //포틀릿 연결 url
 	private boolean portletUsed; //포틀릿 사용 여부 : 사용(true), 사용안함(false)
 	private String portletBoardId; // 포틀릿 연결 게시판 id
@@ -56,10 +56,10 @@ public class PortletInfoVO {
 	public void setDefaultOrder(int defaultOrder) {
 		this.defaultOrder = defaultOrder;
 	}
-	public int getPortletCategory() {
+	public String getPortletCategory() {
 		return portletCategory;
 	}
-	public void setPortletCategory(int portletCategory) {
+	public void setPortletCategory(String portletCategory) {
 		this.portletCategory = portletCategory;
 	}
 	public String getConnectionUrl() {

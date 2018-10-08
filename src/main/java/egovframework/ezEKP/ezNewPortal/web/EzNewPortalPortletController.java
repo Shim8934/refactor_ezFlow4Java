@@ -119,6 +119,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("portletId", req.getParameter("portletId"));
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -131,6 +132,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("qstId", data.get("qstId"));
 			model.addAttribute("pollAnswer", data.get("pollAnswer"));
 			model.addAttribute("pollAnswerCount", data.get("pollAnswerCount"));
+			model.addAttribute("portletName", data.get("portletName"));
 		}
 		
 		return "/ezNewPortal/portlets/votePortlet";
@@ -183,10 +185,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoBoardPortlet Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("startRow", 0);
 		param.put("photoCount", 4);
+		param.put("portletId", portletId);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -197,12 +201,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			String access = data.get("access").toString();
 			model.addAttribute("access", access);
 			model.addAttribute("boardId", data.get("boardId"));
+			model.addAttribute("portletName", data.get("portletName"));
 			
 			if (access.equals("true")) {
 				model.addAttribute("photoBoardList", data.get("photoBoardList"));
 			}
 		}
 		
+		model.addAttribute("portletId", portletId);
 		return "/ezNewPortal/portlets/photoBoardPortlet";
 	}
 	
@@ -365,11 +371,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		int page = Integer.parseInt(req.getParameter("page"));
 		int photoCount = Integer.parseInt(req.getParameter("photoCount"));
 		int startRow = (page - 1) * photoCount;
+		String portletId = req.getParameter("portletId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("photoCount", photoCount);
 		param.put("startRow", startRow);
+		param.put("portletId", portletId);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
 		String result = resultBody.get("status").toString();

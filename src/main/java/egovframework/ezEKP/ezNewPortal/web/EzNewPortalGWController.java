@@ -2,9 +2,12 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.synth.SynthSplitPaneUI;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -15,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -24,11 +30,15 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -65,11 +75,23 @@ public class EzNewPortalGWController {
 	@Resource(name="EzBoardController")
 	private EzBoardController ezBoardController;
 	
+	@Resource(name="EzPersonalService")
+	private EzPersonalService ezPersonalService;
+
+	@Autowired
+	private Properties config;
+	
 	@Autowired
 	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;  
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 
 	/////사용자///////
 	/**
@@ -84,9 +106,55 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String portletLang = info.getLang();
+			
+			//사용자 포틀릿 순서 가져오기
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
+			
+			//사용자 설정 포틀릿 순서가 없으면 회사의 포틀릿 순서를 따름
+			if (portletOrder.isEmpty()) {
+				portletOrder = ezNewPortalService.getPortletOrderComp(portletLang, tenantId, companyId);
+			}
+			
+			//회사의 슬라이더 이미지 가져오기
+			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(companyId, "USER", null, tenantId);
+			
+			String userName = "";
+			String userTitle = "";
+			String deptName = "";
+			String userPhoto = "";
+			
+			//회원정보 불러오기
+			if (portletLang.equals("1")) {
+				userName = info.getUserName();
+				userTitle = info.getTitle();
+				deptName = info.getDeptName();
+			} else {
+				userName = info.getUserName2();
+				userTitle = info.getTitle2();
+				deptName = info.getDeptName2();
+			}
+			
+			//유저이미지
+			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", tenantId);
+			
+			if (imgUrl != null && !imgUrl.equals("")) {
+				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imgUrl;
+			}
+			
+			JSONObject data = new JSONObject();
+			data.put("portletOrder", portletOrder);
+			data.put("sliderList", sliderList);
+			data.put("userName", userName);
+			data.put("userTitle", userTitle);
+			data.put("deptName", deptName);
+			data.put("userPhoto", userPhoto);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1144,6 +1212,11 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
+			int portletId = Integer.parseInt(request.getParameter("portletId"));
+			String portletLang = info.getLang();
+			
+			//포틀릿 정보 가져오기
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
 			
 			//deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -1153,6 +1226,7 @@ public class EzNewPortalGWController {
 
 			JSONObject data = new JSONObject();
 			data.put("voteCount", voteCount);
+			data.put("portletName", portlet.getPortletName());
 			
 			if (voteCount != 0) {
 				//투표 정보 가져오기
@@ -1202,19 +1276,19 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptID();
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
-			int portletId = 0; //포토게시판의 포틀릿 아이디
+			int portletId = Integer.parseInt(request.getParameter("portletId")); //포토게시판의 포틀릿 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
-			
+			String portletLang = info.getLang(); //변경필요
 			String deptPath = info.getDeptPathCode();
 			deptPath += "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 			
 			//회사의 포토게시판의 포틀릿 정보 가져오기
-			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId);
-			//String boardId = portlet.getPortletBoardId();
-			String boardId = "{cd73f88d-e415-43ab-314b-990870b8cf81}";			
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
+			String boardId = portlet.getConnectionUrl();
 			data.put("boardId", boardId);
+			data.put("portletName", portlet.getPortletName());
 			
 			//게시판 권한 체크
 			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);

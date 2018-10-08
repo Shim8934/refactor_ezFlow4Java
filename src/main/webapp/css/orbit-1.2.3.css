@@ -157,11 +157,11 @@ div.slider-nav span {
     cursor: pointer; }
 
 div.slider-nav span.right {
-    background: url(/images/WebPartSliderCI/right-arrow.png);
+    /* background: url(/images/WebPartSliderCI/right-arrow.png); */
     right: 0; }
 
 div.slider-nav span.left {
-    background: url(/images/WebPartSliderCI/left-arrow.png);
+    /* background: url(/images/WebPartSliderCI/left-arrow.png); */
     left: 0; }
 
 /* BULLET NAV

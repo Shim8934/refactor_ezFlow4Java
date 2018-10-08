@@ -5,6 +5,7 @@
 <typeAlias alias="PollQuestionVO" type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
 <typeAlias alias="PollAnswerVO" type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
 <typeAlias alias="BoardItemVO" type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
+<typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 			column="ID" />
@@ -20,6 +21,23 @@
 <result property="title" 				column="TITLE" />
 <result property="boardID" 				column="BOARDID" />
 <result property="filePath" 			column="FILEPATH" />
+</resultMap>
+<resultMap class="PortletInfoVO" id="PortletOrderVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletOrder" 			column="PORTLET_ORDER" />
+<result property="portletName" 				column="PORTLET_NAME" />
+<result property="portletUrl" 				column="PORTLET_URL" />
+</resultMap>
+<resultMap class="PortletInfoVO" id="PortletInfoVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletOrder" 			column="PORTLET_ORDER" />
+<result property="portletName" 				column="PORTLET_NAME" />
+<result property="portletUrl" 				column="PORTLET_URL" />
+<result property="isGeneral" 				column="IS_GENERAL" 		javaType="boolean"/>
+<result property="defaultOrder" 			column="DEFAULT_ORDER" />
+<result property="portletCategory" 			column="PORTLET_CATEGORY" />
+<result property="connectionUrl" 			column="CONNECTION_URL" />
+<result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
 </resultMap>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
@@ -184,6 +202,106 @@ AND
 	TENANT_ID = #tenantId#
 AND
 	COMPANYID = #companyId#
+]]>
+</select>
+
+<!-- 사용자 포틀릿 순서 불러오기 -->
+<select id="ezNewPortal.getPortletOrderUser" parameterClass="Map" resultMap="PortletOrderVO">
+<![CDATA[
+SELECT
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL
+FROM	
+	TBL_PORTAL_PORTLET_USER A
+JOIN
+	TBL_PORTAL_PORTLET_NAME B
+ON
+	A.PORTLET_ID = B.PORTLET_ID
+AND
+	A.MENU_ID = B.MENU_ID
+AND
+	A.COMPANY_ID = B.COMPANY_ID
+AND
+	B.PORTLET_LANG = #portletLang#
+JOIN
+	TBL_PORTAL_PORTLET C
+ON
+	A.PORTLET_ID = C.PORTLET_ID
+WHERE
+	A.USER_ID = #userId#
+AND
+	A.TENANT_ID = #tenantId#
+AND
+	A.COMPANY_ID = #companyId#
+ORDER BY
+	A.PORTLET_ORDER
+]]>
+</select>
+
+<!-- 회사 포틀릿 순서 불러오기 -->
+<select id="ezNewPortal.getPortletOrderComp" parameterClass="Map" resultMap="PortletOrderVO">
+<![CDATA[
+SELECT
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL
+FROM	
+	TBL_PORTAL_PORTLET_COMP A
+JOIN
+	TBL_PORTAL_PORTLET_NAME B
+ON
+	A.PORTLET_ID = B.PORTLET_ID
+AND
+	A.MENU_ID = B.MENU_ID
+AND
+	A.COMPANY_ID = B.COMPANY_ID
+AND
+	B.PORTLET_LANG = #portletLang#
+JOIN
+	TBL_PORTAL_PORTLET C
+ON
+	A.PORTLET_ID = C.PORTLET_ID
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.COMPANY_ID = #companyId#
+ORDER BY
+	A.PORTLET_ORDER
+]]>
+</select>
+
+<!-- 포틀릿 정보 불러오기 -->
+<select id="ezNewPortal.getCompanyPortletInfo" parameterClass="Map" resultMap="PortletInfoVO">
+<![CDATA[
+SELECT
+	A.PORTLET_ID, 
+    B.PORTLET_ORDER, 
+    C.PORTLET_NAME,
+    A.PORTLET_URL,
+    IF(A.PORTLET_TYPE = 'G', 1, 0) AS IS_GENERAL,
+    A.DEFAULT_ORDER,
+    B.PORTLET_CATEGORY,
+    B.CONNECTION_URL,
+    IF(B.PORTLET_USED = 'Y', 1, 0) AS PORTLET_USED
+FROM
+	TBL_PORTAL_PORTLET A
+JOIN
+	TBL_PORTAL_PORTLET_COMP B
+ON
+	A.PORTLET_ID = B.PORTLET_ID
+AND
+	A.MENU_ID = B.MENU_ID
+JOIN 
+	TBL_PORTAL_PORTLET_NAME C
+ON
+	B.PORTLET_ID = C.PORTLET_ID
+AND
+	B.MENU_ID = C.MENU_ID
+AND
+	C.PORTLET_LANG = #portletLang#
+WHERE
+	B.COMPANY_ID = #companyId#
+AND
+	B.TENANT_ID = #tenantId#
+AND
+	A.PORTLET_ID = #portletId#;
 ]]>
 </select>
 </sqlMap>

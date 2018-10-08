@@ -1220,6 +1220,7 @@ public class CommonUtil {
 			String userLang = ezCommonService.selectUserGetLang(userId, tenantId);
 			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
 			user.setOffset(timeZone);
+			user.setLang(userLang);
 			
 			if (userLang != null) {
 				if (user.getPrimary().equals(userLang)) {

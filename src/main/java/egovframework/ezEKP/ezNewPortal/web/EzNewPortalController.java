@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -7,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,9 +104,29 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do")
-	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMainPage Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId;
 		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("portletOrder", data.get("portletOrder"));
+			model.addAttribute("usedTheme", data.get("usedTheme"));
+			model.addAttribute("usedFrame", data.get("usedFrame"));
+			model.addAttribute("sliderList", data.get("sliderList"));
+			model.addAttribute("userPhoto", data.get("userPhoto"));
+			model.addAttribute("userName", data.get("userName"));
+			model.addAttribute("userTitle", data.get("userTitle"));
+			model.addAttribute("deptName", data.get("deptName"));
+			model.addAttribute("unReadMailCount", data.get("unReadMailCount"));
+		}
+		
+		logger.debug("portalMainPage End");
 		return "/ezNewPortal/newPortalPortalPage";
 	}
 }

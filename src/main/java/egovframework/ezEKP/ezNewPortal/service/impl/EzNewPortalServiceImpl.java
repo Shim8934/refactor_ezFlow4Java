@@ -63,13 +63,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId) {
+	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
+		map.put("portletLang", portletLang);
 		
-		return null;
+		return ezNewPortalDAO.getCompanyPortletInfo(map);
 	}
 
 	@Override
@@ -81,6 +82,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("accessId", accessId);
 		
 		return ezNewPortalDAO.getBoardAuthCheck(map);
+	}
+
+	@Override
+	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("portletLang", portletLang);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		return ezNewPortalDAO.getPortletOrderUser(map);
+	}
+
+	@Override
+	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("portletLang", portletLang);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		return ezNewPortalDAO.getPortletOrderComp(map);
 	}
 
 }
