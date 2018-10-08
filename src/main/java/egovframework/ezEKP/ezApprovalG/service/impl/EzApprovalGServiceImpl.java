@@ -20811,6 +20811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<DOCSTATE>" + docList.get(j).getDocState() + "</DOCSTATE>");
 				resultXML.append("<FUNCTIONTYPE>" + docList.get(j).getFunctionType() + "</FUNCTIONTYPE>");
 				resultXML.append("<URGENTAPPROVAL>" + docList.get(j).getUrgentApproval() + "</URGENTAPPROVAL>");
+				resultXML.append("<orgCompanyID>" + docList.get(j).getCompanyID() + "</orgCompanyID>");
 				resultXML.append("</CELL>");
 			}
 			
