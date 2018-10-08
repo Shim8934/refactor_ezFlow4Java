@@ -97,7 +97,8 @@ function getRecvDocNumber(pDeptID) {
         		url : "/ezApprovalG/getCabinetSN.do",
         		data : {
         			docID : pDocID,
-        			deptID : pDeptID
+        			deptID : pDeptID,
+        			orgCompanyID : orgCompanyID
         		},
         		success: function(xml){
         			result = loadXMLString(xml);
