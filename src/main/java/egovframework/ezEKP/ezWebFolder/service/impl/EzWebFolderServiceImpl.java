@@ -709,7 +709,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		int cnt                    = multiFileLists.size();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String[] pFileName         = new String[cnt];
-		double[] fileSize            = new double[cnt];
+		long[] fileSize            = new long[cnt];
 		String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
@@ -770,7 +770,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setFileName(pFileName[i]);
 				fileVO.setDownloadCnt(0);
 				fileVO.setFilePath(getWebFolderDirPath(tenantId) + newName);
-				fileVO.setFileSize(Double.toString(fileSize[i]));
+				fileVO.setFileSize(fileSize[i]);
 				fileVO.setFolderId(folder.getFolderId());
 				fileVO.setTenantId(tenantId);
 				fileVO.setCreateId(userId);
@@ -1059,7 +1059,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
+	public void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, long fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);

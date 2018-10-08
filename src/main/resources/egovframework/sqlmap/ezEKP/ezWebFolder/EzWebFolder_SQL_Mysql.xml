@@ -472,12 +472,7 @@
 		
 		<isNotEqual property="realColmn" compareValue="">
 			ORDER BY
-				<isEqual property="realColmn" compareValue="FILE_SIZE">
-					CAST($realColmn$ AS INT) $order$,
-				</isEqual>
-				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
-					$realColmn$ $order$,
-				</isNotEqual>
+				$realColmn$ $order$,
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 		</isNotEqual>
@@ -539,12 +534,7 @@
 		]]>
 		<isNotEqual property="realColmn" compareValue="">
 			ORDER BY
-				<isEqual property="realColmn" compareValue="FILE_SIZE">
-					CAST($realColmn$ AS INT) $order$,
-				</isEqual>
-				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
-					$realColmn$ $order$,
-				</isNotEqual>
+				$realColmn$ $order$,
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 		</isNotEqual>
@@ -1454,7 +1444,7 @@
 	
 	<select id="EzWebFolderDAO.getTotalFilesSize" resultClass="Double">
 		SELECT
-			IFNULL(SUM(CAST(FILE_SIZE AS INT)), 0)
+			IFNULL(SUM(FILE_SIZE), 0)
 		FROM
 			TBL_WEBFOLDER_FILE
 		WHERE

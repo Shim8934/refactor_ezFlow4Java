@@ -350,7 +350,7 @@
 				SELECT
 					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
 					'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
-					'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+					0 AS FILE_SIZE,             FT.FILE_EXT,                     D.FOLDER_PATH,
 					D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
 					D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
 					D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
@@ -474,7 +474,7 @@
 				SELECT
 					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
 					'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
-					'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+					0 AS FILE_SIZE,             FT.FILE_EXT,                     D.FOLDER_PATH,
 					D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
 					D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
 					D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
@@ -573,7 +573,7 @@
 					SELECT
 						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
 						'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
-						'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+						0 AS FILE_SIZE,             FT.FILE_EXT,                     D.FOLDER_PATH,
 						D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
 						D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
 						D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
@@ -696,7 +696,7 @@
 					SELECT
 						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
 						'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
-						'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+						0 AS FILE_SIZE,             FT.FILE_EXT,                     D.FOLDER_PATH,
 						D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
 						D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
 						D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
@@ -1100,7 +1100,7 @@
 				SELECT
 					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
 					'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
-					'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+					0 AS FILE_SIZE,             FT.FILE_EXT,                     D.FOLDER_PATH,
 					D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
 					D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
 					D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
@@ -1212,7 +1212,7 @@
 					SELECT
 						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
 						'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
-						'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+						0 AS FILE_SIZE,             FT.FILE_EXT,                     D.FOLDER_PATH,
 						D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
 						D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
 						D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
