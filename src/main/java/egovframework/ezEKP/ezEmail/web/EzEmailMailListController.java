@@ -983,6 +983,20 @@ public class EzEmailMailListController {
 			}
 			else {
 				deleteMsgs = sourceFolder.getMessagesByUID(uids);
+				
+				// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
+				if (!cmd.equalsIgnoreCase("BMOVE")) {
+					String subject = null;
+					String receivedDate = null;
+					
+					for (Message message : deleteMsgs) {
+						subject = ezEmailUtil.getSubject(message);								
+						subject = (subject != null) ? subject : "";
+						receivedDate = (message.getReceivedDate() != null) ? message.getReceivedDate().toString() : "";
+						
+						logger.debug("subject=" + subject + ",receivedDate=" + receivedDate);
+					}
+				}
 			}
 			
 			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());

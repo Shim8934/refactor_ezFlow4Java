@@ -397,11 +397,20 @@ public class EzEmailMailSearchController {
 				sourceFolder.open(Folder.READ_WRITE);		
 				
 				Message deleteMsg = sourceFolder.getMessageByUID(uid);	
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale)); //
+				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
 		        
 				if (deleteMsg != null && !folderId.equals(deletedFolder.toString())) {
 					Message[] deleteMsgs = {deleteMsg};
-
+					
+					// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
+					if (!cmd.equalsIgnoreCase("BMOVE")) {
+						String subject = ezEmailUtil.getSubject(deleteMsg);								
+						subject = (subject != null) ? subject : "";
+						String receivedDate = (deleteMsg.getReceivedDate() != null) ? deleteMsg.getReceivedDate().toString() : "";
+						
+						logger.debug("subject=" + subject + ",receivedDate=" + receivedDate);
+					}
+					
 					String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
 					if (useImapMoveCommand.equals("YES")) {
 						if (cmd.equalsIgnoreCase("BMOVE")) {
