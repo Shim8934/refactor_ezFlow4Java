@@ -570,6 +570,24 @@ CREATE TABLE `jmocha_mail_color` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_mail_countryip`
+--
+
+DROP TABLE IF EXISTS `jmocha_mail_countryip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_mail_countryip` (
+  `START_IP` varchar(45) NOT NULL,
+  `END_IP` varchar(45) NOT NULL,
+  `START_IP_NUMBER` bigint(20) NOT NULL,
+  `END_IP_NUMBER` bigint(20) NOT NULL,
+  `COUNTRY_CODE` varchar(45) NOT NULL,
+  `COUNTRY_NAME` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`START_IP_NUMBER`,`END_IP_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_mail_delete`
 --
 
@@ -10996,15 +11014,3 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
-/* 메일 리스트의 보낸사람 국기 출력 */
-CREATE TABLE `jmocha_mail_countryip` (
-  `START_IP` longtext,
-  `END_IP` longtext,
-  `START_IP_NUMBER` bigint(20) NOT NULL,
-  `END_IP_NUMBER` bigint(20) NOT NULL,
-  `COUNTRY_CODE` varchar(45) DEFAULT NULL,
-  `COUNTRY_NAME` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`START_IP_NUMBER`,`END_IP_NUMBER`),
-  KEY `INDEX` (`START_IP_NUMBER`,`END_IP_NUMBER`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
