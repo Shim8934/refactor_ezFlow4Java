@@ -983,14 +983,16 @@ public class EzEmailMailListController {
 				// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
 				if (!cmd.equalsIgnoreCase("BMOVE")) {
 					String subject = null;
+					String from = null;
 					String receivedDate = null;
 					
 					for (Message message : deleteMsgs) {
-						subject = ezEmailUtil.getSubject(message);								
+						subject = ezEmailUtil.getSubject(message);
 						subject = (subject != null) ? subject : "";
+						from = ezEmailUtil.getFullFromAddressOfMessage(message);
 						receivedDate = (message.getReceivedDate() != null) ? message.getReceivedDate().toString() : "";
 						
-						logger.debug("subject=" + subject + ",receivedDate=" + receivedDate);
+						logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
 					}
 				}
 			}
