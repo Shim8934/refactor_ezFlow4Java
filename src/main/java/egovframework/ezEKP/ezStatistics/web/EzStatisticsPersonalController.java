@@ -110,6 +110,7 @@ public class EzStatisticsPersonalController {
 		statApprVO.setEndDate(commonUtil.getDateStringInUTC(eDate + " 23:59:59", userInfo.getOffset(), true));
 		statApprVO.setCompany(company);
 		statApprVO.setOffSet(userInfo.getOffset());
+		statApprVO.setTenantID(userInfo.getTenantId());
 		
 		return ezStatisticsAdminService.getConnInfo(statApprVO);
 	}
@@ -169,6 +170,7 @@ public class EzStatisticsPersonalController {
 		statApprVO.setStartDate(commonUtil.getDateStringInUTC(sDate + " 00:00:00", user.getOffset(), true));
 		statApprVO.setEndDate(commonUtil.getDateStringInUTC(eDate + " 23:59:59", user.getOffset(), true));
 		statApprVO.setCompany(company);
+		statApprVO.setTenantID(user.getTenantId());
 		
 		return ezStatisticsAdminService.getStatConnBrowser(statApprVO);
 	}
@@ -228,6 +230,7 @@ public class EzStatisticsPersonalController {
 		statApprVO.setStartDate(commonUtil.getDateStringInUTC(sDate + " 00:00:00", user.getOffset(), true));
 		statApprVO.setEndDate(commonUtil.getDateStringInUTC(eDate + " 23:59:59", user.getOffset(), true));
 		statApprVO.setCompany(company);
+		statApprVO.setTenantID(user.getTenantId());
 		
 		return ezStatisticsAdminService.getStatConnOS(statApprVO);
 	}

@@ -2524,9 +2524,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			//2018-09-02 구해안 기간이 상이할때 각 사이에 있는 날짜를 하나씩 다 꺼내와서 비교하기 위해 사이에 있는 예약을 다 가져옴
 			Date getD1 = format.parse( commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false) );
 			Date getD2 = format.parse( commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false) );
-			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
+			tmpEndDateTime2 = format.format(getD1.getTime()).substring(0, 10) + format.format(getD2.getTime()).substring(10);
+//			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
+			
+//			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
+			Date getDe1 = format.parse(tmpEndDateTime2);
 			logger.debug("tmpEndDateTime2 : " + tmpEndDateTime2);
-			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
 
 			Calendar getC1 = Calendar.getInstance();
 			Calendar getC2 = Calendar.getInstance();
@@ -2681,9 +2684,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			Date getD1 = format.parse( commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false) );
 			Date getD2 = format.parse( commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false) );
-			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
+			tmpEndDateTime2 = format.format(getD1.getTime()).substring(0, 10) + format.format(getD2.getTime()).substring(10);
+//			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
 			logger.debug("tmpEndDateTime2 : " + tmpEndDateTime2);
-			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
+//			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
+			Date getDe1 = format.parse(tmpEndDateTime2);
 
 			Calendar getC1 = Calendar.getInstance();
 			Calendar getC2 = Calendar.getInstance();

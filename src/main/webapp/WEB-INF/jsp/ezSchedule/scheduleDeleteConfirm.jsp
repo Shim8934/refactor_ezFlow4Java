@@ -26,17 +26,21 @@
 		    }
 		    
 		    function Schedule_Confirm(id) {
-		        if (radio1.checked) {
-		            optionStr = "0";
-		        } else {
-		            optionStr = "1";
-		        }
-		        
-		        if (ReturnFunction != null)
-		            ReturnFunction(optionStr);
-		        else
-		            window.retutnValue = optionStr;
-		        window.close();
+		    	if (confirm("<spring:message code='ezSchedule.t209' />")) {
+			        if (radio1.checked) {
+			            optionStr = "0";
+			        } else {
+			            optionStr = "1";
+			        }
+			        
+			        if (ReturnFunction != null)
+			            ReturnFunction(optionStr);
+			        else
+			            window.retutnValue = optionStr;
+		        	window.close();
+		    	} else {
+		    		return;
+		    	}
 		    }
 	
 		    function Scehdule_Close() {

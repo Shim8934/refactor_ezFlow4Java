@@ -169,7 +169,6 @@
 	            }
 
 	            if (beforeJob != pListTypeValue) {
-		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
 		        if (arr_userinfo[10] == "YES" || arr_userinfo[10] == "Y")
@@ -1352,7 +1351,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
 
-		        var wWeigth = 630;
+		        var wWeigth = 700;
 		        var wHeigth = 480;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
