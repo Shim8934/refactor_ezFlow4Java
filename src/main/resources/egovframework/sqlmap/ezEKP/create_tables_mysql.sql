@@ -470,7 +470,7 @@ CREATE TABLE `jmocha_distribution_sub` (
   `COMPANY_ID` varchar(100) NOT NULL,
   `SUB_MAIL` varchar(100) NOT NULL,
   `SUB_NAME` varchar(100) NOT NULL,
-  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SUB_MAIL`,`SUB_NAME`),
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SUB_MAIL`),
   KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
   CONSTRAINT `distribution_serve_foreign_keys` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `james_recipient_rewrite` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
