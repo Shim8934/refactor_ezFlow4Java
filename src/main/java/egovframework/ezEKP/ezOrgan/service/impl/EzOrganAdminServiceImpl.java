@@ -250,8 +250,25 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		if (parentCn.equals(cn)) {
 			result = "SAME";
-		}else{
-			// skyblue0o0
+		} else {
+			OrganDeptVO parentDept = ezOrganService.getDeptInfo(parentCn, "1", tenantID);
+			String compId = "";
+			
+			if (type.equalsIgnoreCase("group")) {
+				OrganDeptVO deptVO = ezOrganService.getDeptInfo(cn, "1", tenantID);
+				compId = deptVO.getExtensionAttribute2();
+			} else {
+				OrganUserVO userVO = getUserInfo(cn, "1", tenantID);
+				compId = userVO.getPhysicalDeliveryOfficeName();
+			}
+			
+			// 회사 간 사원/부서 이동하지 못하도록 막음
+			if (!parentDept.getExtensionAttribute2().equals(compId)) {
+				result = "DIFF_COMPANY";
+				logger.debug("moveEntry ended. result=" + result);
+				return result;
+			}
+			
 			String oldGroupAddr = "";
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			
@@ -280,12 +297,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			} else {
 				result = "EMAIL_ERROR";
 			}
-			// skyblue0o0 - end
-			
 		}
 		
-		logger.debug("moveEntry ended");
-		
+		logger.debug("moveEntry ended. result=" + result);
 		return result;
 	}
 	

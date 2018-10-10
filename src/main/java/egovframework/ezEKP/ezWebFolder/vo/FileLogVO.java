@@ -4,7 +4,7 @@ public class FileLogVO {
 	private String logId;
 	private String fileType;
 	private String fileName;
-	private String fileSize;
+	private long fileSize;
 	private String fileExt;
 	private String logType;
 	private String createId;
@@ -38,11 +38,11 @@ public class FileLogVO {
 		this.fileName = fileName;
 	}
 
-	public String getFileSize() {
+	public long getFileSize() {
 		return fileSize;
 	}
 
-	public void setFileSize(String fileSize) {
+	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
 
