@@ -529,17 +529,19 @@
 		            	url : "/admin/ezOrgan/movDept.do",
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : selectedCN},
-		            	success : function(result){
-		            		if(result == "SAME"){
+		            	success : function(result) {
+		            		if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t21' />");
-		            		}else if (result == "EMAIL_ERROR") {
+		            		} else if (result == "DIFF_COMPANY") {
+		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else if (result == "EMAIL_ERROR") {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
-		            		}else{
+		            		} else {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t27' />");
 				                getDeptFullTree(selectedCN);
 		            		}
 		            	},
-		            	error : function(){
+		            	error : function() {
 		            		alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
 		            	}
 		            });
@@ -1208,16 +1210,18 @@
 		            	url : "/admin/ezOrgan/movUser.do",
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : data},
-		            	success : function(result){
+		            	success : function(result) {
 		            		if (result == "EMAIL_ERROR") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		}else if (result == "SAME") {
+		            		} else if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		}else{
+		            		} else if (result == "DIFF_COMPANY") {
+		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else {
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");
 		            		}
 		            	},
-		            	error : function(){
+		            	error : function() {
 		            		alert("<spring:message code='ezOrgan.t15' />");
 		            	}
 		            });

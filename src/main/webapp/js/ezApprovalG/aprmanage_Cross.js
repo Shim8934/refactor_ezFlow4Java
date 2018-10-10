@@ -97,11 +97,23 @@ function getDocList_after(xml) {
     
     totalPage = Math.ceil(new Number(lstCnt / pageSize));
     pTotalCnt = lstCnt;
+    
+    //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+    if (totalPage <= 0)
+    	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
+    
     if (pageNum > totalPage) {
         pageNum--;
         getDocList();
         return;
     }
+    
+	// 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+    var preDocList = new ListView();
+   	preDocList.LoadFromID('DocList');
+   	var preSelectedRow = preDocList.GetSelectedRows();
+   	
+   	console.log('preSelectedRow', preSelectedRow);
 
     makePageSelPage();
 
@@ -117,7 +129,7 @@ function getDocList_after(xml) {
         xmlDoc = createXmlDom();
         xmlDoc.appendChild(listNode);
     }
-
+   
     if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
     //if (pListTypeValue == "21") {
     //    var listcnt = SelectNodes(xmlDoc, "LISTVIEWDATA/ROWS/ROW").length;
@@ -127,6 +139,7 @@ function getDocList_after(xml) {
     //        GetChildNodes(row, "VALUE")[4].textContent = GetChildNodes(row, "VALUE")[5].textContent.trim();
     //    }
     //}
+    
     var DocList = new ListView();
     DocList.SetID("DocList");
     DocList.SetMulSelectable(false);
@@ -137,8 +150,13 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
+    // 리스트를 닫기 전에 미리 선택한 row로 재선택
+    if (preSelectedRow.length > 0) {
+    	console.log(preSelectedRow[0].getAttribute('id'));
+    	DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));	
+    }    
     DocList = null;
-
+    
     HiddenMailProgress();
 
     chkUrgent();
@@ -276,6 +294,10 @@ function getReceivedDocList_after(xml) {
         var lstCnt = getNodeText(cntNode);
         totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
+        
+        //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을 때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+        if (totalPage <= 0)
+        	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
 
         if (pageNum > totalPage) {
             pageNum--;

@@ -589,7 +589,9 @@
                         AND 
                         	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
     			        AND 
-	            		    TRIM(COMPANYID) = #company# ) TOTAL
+	            		    TRIM(COMPANYID) = #company#
+    			        AND 
+	            		    TENANT_ID = #tenantID# ) TOTAL
               	  FROM 
               	  		TBL_CONNECTION_INFO 
             	  WHERE  
@@ -598,7 +600,8 @@
                    		CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
                 		TRIM(COMPANYID) = #company#	
-                   		
+                  AND
+                		TENANT_ID = #tenantID#
            	      GROUP BY 
            	      		TO_CHAR(CONNECTTIME + $offSet$/24, 'hh24')
            	      
@@ -613,6 +616,8 @@
            	      	  TBL_CONNECTION_INFO
            	      WHERE
  		              TRIM(COMPANYID) = #company#	
+           	      AND
+ 		              TENANT_ID = #tenantID#
            	      GROUP BY 
            	      	  TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') ) A
         	ORDER BY 
@@ -637,7 +642,9 @@
                   AND 
                   	 CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
                   AND 
-                  	 TRIM(COMPANYID) = #company# ) TOTAL  
+                  	 TRIM(COMPANYID) = #company#
+                  AND 
+                  	 TENANT_ID = #tenantID# ) TOTAL  
 			FROM 
         	    TBL_CONNECTION_INFO 
       		WHERE  
@@ -646,6 +653,8 @@
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
                 TRIM(COMPANYID) = #company#	
+            AND 
+                TENANT_ID = #tenantID#	
       		GROUP BY 
       			CONNECTBROWSER
         	ORDER BY 
@@ -667,8 +676,10 @@
                   	  CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
                   	  CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
-                   AND 
-                	  TRIM(COMPANYID) = #company#) TOTAL  
+                  AND 
+                  	  TRIM(COMPANYID) = #company#
+                  AND 
+                  	  TENANT_ID = #tenantID#) TOTAL  
             FROM 
             	TBL_CONNECTION_INFO 
        		WHERE  
@@ -677,6 +688,8 @@
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
                 TRIM(COMPANYID) = #company#
+            AND 
+                TENANT_ID = #tenantID#
         	GROUP BY 
         		CONNECTOS
       
@@ -697,7 +710,8 @@
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
                 TRIM(COMPANYID) = #company#
-      
+            AND 
+                TENANT_ID = #tenantID#
       		UNION ALL
       		 
       		SELECT 
@@ -715,6 +729,8 @@
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
                 TRIM(COMPANYID) = #company#	
+            AND 
+                TENANT_ID = #tenantID#	
         	ORDER BY 
         		TYPE DESC,
                 CONNECTCNT DESC

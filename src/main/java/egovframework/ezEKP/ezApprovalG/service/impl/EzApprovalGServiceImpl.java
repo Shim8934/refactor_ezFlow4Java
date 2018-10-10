@@ -5190,14 +5190,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String curSN = ezApprovalGDAO.transferCabinetSn(map);
 		
-		if(curSN == null) {
+		if (curSN == null) {
 			curSN = "1";
+			map.put("v_RtnSN", curSN);
+			ezApprovalGDAO.insertTbSerialNumGen(map);
+		} else {
+			map.put("v_RtnSN", curSN);
 		}
-		map.put("v_RtnSN", curSN);
-		// 2018-06-15 황윤호 
-		// 기록물철 인수인계시, 인수받은 부서에 중복된 REGSERIALNO 값 때문에 
-		// 새로운 기록물철 생성이 안됨(주석처리)
-//		ezApprovalGDAO.insertTbSerialNumGen(map);
+		
 		ezApprovalGDAO.updateTbSerialNumGen(map);
 		
 		StringBuffer rowID = new StringBuffer();
@@ -5207,8 +5207,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String cabList[] =cabIDList.split(",");
 			map.put("v_cabList",cabList[j]);
 			map.put("v_SN", j);
-			map.put("v_CNT", String.format("%06d",Integer.parseInt(curSN+Integer.toString(j))));
-			map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d",Integer.parseInt(curSN+Integer.toString(j))));
+			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN) + j));
+			map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d", Integer.parseInt(curSN) + j));
 			ezApprovalGDAO.insertTbCabinetClass(map);
 			ezApprovalGDAO.trigerTbCabinet(map);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map);
@@ -20811,6 +20811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<DOCSTATE>" + docList.get(j).getDocState() + "</DOCSTATE>");
 				resultXML.append("<FUNCTIONTYPE>" + docList.get(j).getFunctionType() + "</FUNCTIONTYPE>");
 				resultXML.append("<URGENTAPPROVAL>" + docList.get(j).getUrgentApproval() + "</URGENTAPPROVAL>");
+				resultXML.append("<orgCompanyID>" + docList.get(j).getCompanyID() + "</orgCompanyID>");
 				resultXML.append("</CELL>");
 			}
 			
@@ -23630,7 +23631,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantID)	throws Exception {
+	public String registerUserContDoc(String docID, String contID, String description, String orgCompanyID, String companyID, String lang, int tenantID)	throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CONTID", contID);
@@ -23639,6 +23640,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("orgCompanyID", orgCompanyID);
 		
 		
 		int docCount = ezApprovalGDAO.userContListCount(map);
@@ -23948,7 +23950,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getUserContList(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet)	throws Exception {
+	public String getUserContList(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet, String userID)	throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
 		String OrderOption2 = "";
@@ -23965,6 +23967,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSUBQUERYLENGTH", pSubQuery.trim().length());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_PUSERID", userID);
 
 		int totalCount = ezApprovalGDAO.getUserContDocListCount(map);
 		
