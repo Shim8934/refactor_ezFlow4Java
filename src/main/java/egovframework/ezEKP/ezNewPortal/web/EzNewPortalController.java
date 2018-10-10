@@ -86,7 +86,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
-		
+		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
 	}
 	
@@ -96,7 +96,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do")
 	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalTopMenu Start");
-		
+		logger.debug("portalTopMenu End");
 		return "/ezNewPortal/newPortalTopMenu";
 	}
 	

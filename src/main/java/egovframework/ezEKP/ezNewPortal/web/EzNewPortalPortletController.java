@@ -148,6 +148,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("portletName", data.get("portletName"));
 		}
 		
+		logger.debug("portalVotePortlet End");
 		return "/ezNewPortal/portlets/votePortlet";
 	}
 	
@@ -222,6 +223,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		
 		model.addAttribute("portletId", portletId);
+		logger.debug("phoroBoardPortlet End");
 		return "/ezNewPortal/portlets/photoBoardPortlet";
 	}
 	
