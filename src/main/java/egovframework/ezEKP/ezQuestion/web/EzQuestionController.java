@@ -57,7 +57,6 @@ import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
-import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
@@ -213,12 +212,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 				qst.setTitle(strbuilder.toString());
 			}				
 		}
+		
+		/* 2018-10-10 홍승비 - 전자설문 검색결과가 없는 경우 메세지 변경을 위해 title 인자 추가 */
 		logger.debug("receve="+receve);
 		model.addAttribute("qstListVO", qstListVO);
 		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("list", list);
 		model.addAttribute("receve", receve);
-		
+		model.addAttribute("titleSearch", title);
+			
 		logger.debug("qstList End");
 		return "/ezQuestion/qstList";
 	}
