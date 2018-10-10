@@ -8,6 +8,12 @@
 <title><spring:message code='ezBoard.khj1' /></title>
 <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+<style>
+	.node_div span {
+		overflow:hidden;
+		text-overflow:ellipsis;
+	}
+</style>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -66,6 +72,21 @@
         var treeView = new TreeView();
         treeView.LoadFromID(pTreeID);
         treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+        
+        /* 2018-10-10 홍승비 - boardLeft.jsp에서 하위게시판 ellipsis 부분 가져옴 */
+        var node = document.getElementById(TreeIdx);
+        var title2 = node.getElementsByClassName("node_div");
+        var nodeLevel = title2[0].getAttribute("nodelevel");
+        if(nodeLevel > 9) {
+        	nodeLevel = 9;
+        }
+        for(var i=0; i<title2.length; i++) {
+        	title3 = title2[i].getElementsByClassName("node_normal");
+        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
+        	title3[0].style.width = 362 - 18*nodeLevel +'px';
+        	title3[0].style.textOverflow = 'ellipsis';
+        	title3[0].style.overflow = 'hidden';
+        }
     }
  	
     function SetTreeConfig() {
