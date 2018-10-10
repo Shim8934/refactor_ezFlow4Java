@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezNewPortal.web;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -22,6 +23,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -29,6 +31,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -59,9 +62,15 @@ public class EzNewPortalGWController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	@Autowired
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "jspw")
+    private String jspw;
 	
 	@Autowired
 	private LoginService loginService;
@@ -92,6 +101,9 @@ public class EzNewPortalGWController {
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
+	
+	@Resource(name="EzApprovalGService")
+	private EzApprovalGService ezApprovalGSerivce;
 
 	@Autowired
 	private Properties config;
@@ -111,7 +123,7 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value= "/rest/ezPortal/settingInfo/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getUserPortalSetting(HttpServletRequest request, @PathVariable String userId) throws Exception {
+	public JSONObject getUserPortalSetting(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserPortalSetting started.");
 		JSONObject result = new JSONObject();
 		
@@ -126,6 +138,9 @@ public class EzNewPortalGWController {
 			String idList = "T";
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);;
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String password = jspw;
 			
 			//사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
@@ -248,6 +263,26 @@ public class EzNewPortalGWController {
 			//회람판 개수 불러오기
 			int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
 			
+			//결재할 문서 개수 불러오기
+			int approvalCount = ezApprovalGSerivce.getWebPartListCount("1", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
+			
+			//읽지 않은 메일 가져오기
+			IMAPAccess ia = null;
+			String folderName = "INBOX";
+			int unreadMailCount = 0;
+			
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				unreadMailCount = ia.getUnreadCount(folderName);
+			} catch (Exception e) {
+				
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("portletOrder", portletOrder);
 			data.put("sliderList", sliderList);
@@ -258,6 +293,8 @@ public class EzNewPortalGWController {
 			data.put("pollCount", pollCount);
 			data.put("circularCount", circularCount);
 			data.put("scheduleCount", scheduleCount);
+			data.put("approvalCount", approvalCount);
+			data.put("unreadMailCount", unreadMailCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -126,6 +126,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("pollCount", data.get("pollCount"));
 			model.addAttribute("circularCount", data.get("circularCount"));
 			model.addAttribute("scheduleCount", data.get("scheduleCount"));
+			model.addAttribute("approvalCount", data.get("approvalCount"));
+			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 		}
 		
 		logger.debug("portalMainPage End");

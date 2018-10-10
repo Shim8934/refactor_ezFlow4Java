@@ -26,6 +26,8 @@
 	var pollCount = "<c:out value='${pollCount}'/>";
 	var circularCount = "<c:out value='${circularCount}'/>";
 	var scheduleCount = "<c:out value='${scheduleCount}' />";
+	var approvalCount = "<c:out value='${approvalCount}'/>";
+	var unreadMailCount = "<c:out value='${unreadMailCount}'/>";
 	var photoBoardPage = 1;
 	var photoCount = 4;
 	
@@ -48,7 +50,6 @@
 			var portletUrl = portletOrder[i].portletUrl;
 			
 			(function (portletId, portletUrl) {
-				console.log(portletId);
 				$.ajax({
 					type : "POST",
 					dataType : "html",
@@ -63,8 +64,6 @@
 		}
 		
 		//ajax로 count 불러오기
-		getNewMailCount(); //읽지 않은 메일 개수
-		getApprCount(); //결재할 문서 개수 불러오기
 		getCountSetting();
 	});
 	
@@ -74,13 +73,13 @@
 			$("#votePlus").on("click", viewQstList);
 			$(".voteBtn").on("click", votePoll);
 		} else if (portletId == 9) {
-			$(".nextBtn").on("click", moveNextPage);
-			$(".preBtn").on("click", movePrevPage);
-			$("#photoBoardPlus").on("click", viewBoardList);
+			$(".nextBtn").on("click", photoBoardMoveNextPage);
+			$(".preBtn").on("click", photoBoardMovePrevPage);
+			$("#photoBoardPlus").on("click", viewPhotoBoardList);
 		}
 	}
 	
-	function moveNextPage() {
+	function photoBoardMoveNextPage() {
 		photoBoardPage = photoBoardPage + 1;
 		var boardId = $(".photo_board").find(".portletText").attr("data1");
 		var portletId = $(".photo_board").parent().parent().attr("id");
@@ -110,7 +109,7 @@
 		})
 	}
 
-	function movePrevPage() {
+	function photoBoardMovePrevPage() {
 		if (photoBoardPage !== 1) {
 			photoBoardPage = photoBoardPage - 1;
 			var boardId = $(".photo_board").find(".portletText").attr("data1");
@@ -139,7 +138,7 @@
 		}
 	}
 
-	function viewBoardList() {
+	function viewPhotoBoardList() {
 		var boardId = $(".photo_board").find(".portletText").attr("data1");
 	    window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
 	}
@@ -207,71 +206,46 @@
 		if (circularCount > 99) {
 			circularCount = "99+";
 			$("#circularCount").addClass("iconCount");
-		} else if (pollCount == 0) {
-			$("#pollCount").addClass("iconCount_none");
+		} else if (circularCount == 0) {
+			$("#circularCount").addClass("iconCount_none");
 		} else {
-			$("#pollCount").addClass("iconCount");
+			$("#circularCount").addClass("iconCount");
 		}
 		
 		if (scheduleCount > 99) {
 			scheduleCount = "99+";
-			$("#pollCount").addClass("iconCount");
-		} else if (pollCount == 0) {
-			$("#pollCount").addClass("iconCount_none");
+			$("#scheduleCount").addClass("iconCount");
+		} else if (scheduleCount == 0) {
+			$("#scheduleCount").addClass("iconCount_none");
 		} else {
-			$("#pollCount").addClass("iconCount");
+			$("#scheduleCount").addClass("iconCount");
+		}
+		
+		if (approvalCount > 99) {
+			approvalCount = "99+";
+			$("#approvalCount").addClass("iconCount");
+		} else if (approvalCount == 0) {
+			$("#approvalCount").addClass("iconCount_none");
+		} else {
+			$("#approvalCount").addClass("iconCount");
+		}
+		
+		if (unreadMailCount > 99) {
+			unreadMailCount = "99+";
+			$("#unreadMailCount").addClass("iconCount");
+		} else if (unreadMailCount == 0) {
+			$("#unreadMailCount").addClass("iconCount_none");
+		} else {
+			$("#unreadMailCount").addClass("iconCount");
 		}
 		
 		$("#pollCount").text(pollCount);
 		$("#circularCount").text(circularCount);
 		$("#scheduleCount").text(scheduleCount);
+		$("#approvalCount").text(approvalCount);
+		$("#unreadMailCount").text(unreadMailCount);
 	}
 	
-	function getNewMailCount() {
-		var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "DATA");
-        createNodeAndInsertText(xmlpara, objNode, "URL", "INBOX");
-		
-	    xmlHttp_getnewmailcount_total = createXMLHttpRequest();
-	    xmlHttp_getnewmailcount_total.open("POST", "/ezEmail/getFolderUnreadCount.do", true);
-	    xmlHttp_getnewmailcount_total.onreadystatechange = event_newmailCount;
-	    xmlHttp_getnewmailcount_total.send(xmlpara);
-	}
-	
-	function event_newmailCount() {
-	    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
-	        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
-	        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
-	        	
-	        	if (unreadcount.length > 2) {
-	        		unreadcount = "99+";
-	        	}			        	
-	        	
-                if(CrossYN()) {
-                    document.getElementById("mailnum").textContent = unreadcount;
-                }
-                else {
-                    document.getElementById("mailnum").innerText = unreadcount;
-                }
-
-                if (unreadcount == "0") {
-                	$("#mailnum").attr("class", "iconCount_none");
-                } else {
-                	$("#mailnum").attr("class", "iconCount");
-                }
-	        }
-	        xmlHttp_getnewmailcount_total = null;
-	    }
-	}
-	
-	function getTodayScheduleCount() {
-		
-	}
-	
-	function getApprCount() {
-		
-	}
 	</script>
 	<style type="text/css">
 		.notEmptySlider {
@@ -339,13 +313,13 @@
 						<dl id="NewMail" onclick="btnSumming_click(this)">
                 			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
                     		<dd class="iconText">새메일</dd>
-                    		<dd class="iconCount" id="mailnum">0</dd>
+                    		<dd id="unreadMailCount">0</dd>
                 		</dl>
                 		<dl id="AprSign" onclick="btnSumming_click(this)">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
                     
                     		<dd class="iconText">결재문서</dd>
-                    		<dd class="iconCount" id="aprnum">0</dd>
+                    		<dd id="approvalCount">0</dd>
                 		</dl>
                 		<dl id="Schedule" onclick="btnSumming_click(this)">
                   		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>

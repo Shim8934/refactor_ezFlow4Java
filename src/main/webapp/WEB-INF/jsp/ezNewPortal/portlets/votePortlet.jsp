@@ -4,6 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
 <div class="layDiv">
 	<dl class="portlet_title">
 		<dt class="portletText"><c:out value="${portletName }"/> (<c:out value='${voteCount }'/>)</dt>
@@ -15,6 +20,7 @@
 	<p class="voteBtn" id="V<c:out value='${qstId }'/>">참여</p>
 	<ul class="voteList">
 		<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
+		<c:if test="${status.index lt 4 }">
 		<li class="voteList_0${status.index + 1 }">
 			<div class="voteT">
 				<span class="Vnum">${status.index + 1 }</span>
@@ -25,6 +31,7 @@
 				<span id="graph${status.index + 1 }" style="width : ${(poll.votesNumber / pollAnswerCount) * 100}%"></span>
 			</div>
 		</li>
+		</c:if>
 		</c:forEach>
 	</ul>
 	</c:when>
@@ -38,3 +45,5 @@
 	</c:otherwise>
 	</c:choose>
 </div>
+</body>
+</html>
