@@ -741,7 +741,7 @@
 		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
 		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
 		            else
-		                RemoveDoc(pCurSelRow.getAttribute("DATA1"));
+		                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 		            if (pListTypeValue == "4")
 		                getReceivedDocList();
 		            else if (pListTypeValue == "6")
