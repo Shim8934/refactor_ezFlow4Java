@@ -67,5 +67,8 @@ public interface EzCommonService {
 	public void createTblIPAccessID() throws Exception;
 	
 	public void createTblIPAccessIP() throws Exception;
-
+	
+	public void addUserMasterManualFlag() throws Exception;
+	
+	public void addDeptMasterManualFlag() throws Exception;
 }
