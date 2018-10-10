@@ -669,6 +669,12 @@
 		        }
 		        
 		        var pCurSelRow = oArrRows[0];
+		        if (pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
 		            //OpenAlertUI(pAlertContent);
@@ -735,7 +741,7 @@
 		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
 		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
 		            else
-		                RemoveDoc(pCurSelRow.getAttribute("DATA1"));
+		                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 		            if (pListTypeValue == "4")
 		                getReceivedDocList();
 		            else if (pListTypeValue == "6")
