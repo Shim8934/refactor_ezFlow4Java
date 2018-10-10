@@ -89,17 +89,20 @@
 					var shareTable = document.getElementById("sharedTable");
 					var listTr     = shareTable.querySelectorAll("tr[class='bnkCabSelect']");
 					if (!listTr || listTr.length == 0) {alert(CabinetMessages.strSelect2); return;}
-					var userList   = [];
-					
-					for(var i = 0, len = listTr.length; i < len; i++) {
-						var userId   = listTr[i].getAttribute("role");
-						var userType = listTr[i].getAttribute("userType");
-						userList.push({userId: userId, userType : userType});
+						
+					if (confirm(CabinetMessages.strDelete4)) {
+						var userList   = [];
+						
+						for(var i = 0, len = listTr.length; i < len; i++) {
+							var userId   = listTr[i].getAttribute("role");
+							var userType = listTr[i].getAttribute("userType");
+							userList.push({userId: userId, userType : userType});
+						}
+						
+						var parentWd = window.opener;
+						if (parentWd && parentWd.CabinetShareItem) {parentWd.CabinetShareItem.deleteUsers(userList);}
+						closeWindow();
 					}
-					
-					var parentWd    = window.opener;
-					if (parentWd && parentWd.CabinetShareItem) {parentWd.CabinetShareItem.deleteUsers(userList);}
-					closeWindow();
 				}
 				
 				function changeShareUsers() {

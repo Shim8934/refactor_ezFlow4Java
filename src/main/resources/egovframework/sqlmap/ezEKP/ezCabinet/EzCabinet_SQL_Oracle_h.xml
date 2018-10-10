@@ -321,9 +321,6 @@
 					tbl_cb_share s join tbl_usermaster u on s.shared_id = u.cn and s.tenant_id = u.tenant_id and s.shared_type = 2
 				where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1
 		]]>
-		<isNotEmpty property="searchValue" prepend="and">
-			$sqlQuery$ LIKE concat('%', concat(#searchValue#, '%'))
-		</isNotEmpty>
 		<![CDATA[
 				union
 				
@@ -339,12 +336,12 @@
 					tbl_cb_share s1 join tbl_deptmaster d on s1.shared_id = d.cn and s1.tenant_id = d.tenant_id and (s1.shared_type = 0 or s1.shared_type = 1)
 				where s1.cabinet_id = #cabinetId# and s1.sharer_id = #userId# and s1.tenant_id = #tenantId# and s1.use_status = 1
 		]]>
-		<isNotEmpty property="searchValue" prepend="and">
-			$sqlQuery$ LIKE concat('%', concat(#searchValue#, '%'))
-		</isNotEmpty>
 		<![CDATA[
 			) s2
 		]]>
+		<isNotEmpty property="searchValue">
+			where $sqlQuery$ like concat('%', concat(#searchValue#, '%'))
+		</isNotEmpty>
 		order by s2.share_date asc
 	</select>
 	

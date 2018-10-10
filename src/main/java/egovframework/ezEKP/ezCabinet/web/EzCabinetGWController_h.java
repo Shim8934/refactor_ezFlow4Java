@@ -130,8 +130,9 @@ public class EzCabinetGWController_h {
 			String sqlQuery  = "";
 			
 			switch(searchOpt) {
-				case "displayname": sqlQuery = primary.equals("1") ? searchOpt : "displayname2" ; break;
-				case "description": sqlQuery = primary.equals("1") ? searchOpt : "description2" ; break;
+				case "displayname": sqlQuery = "display_name"   ; break;
+				case "description": sqlQuery = "department_name"; break;
+				case "cn"         : sqlQuery = "cn"             ; break;
 				default: sqlQuery = searchOpt;
 			}
 			

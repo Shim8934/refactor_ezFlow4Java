@@ -104,5 +104,6 @@ var CabinetMessages = {
 	strAnonymous : "홍길동",
 	strUploading : "아직 업로드 되지 않은 파일이 있습니다.",
 	strUpCancel  : "업로드가 사용자에 의해 취소되었거나 브라우저가 연결을 끊었습니다.",
-	strUpFolder  : "폴더는 업로드 할 수 없습니다."
+	strUpFolder  : "폴더는 업로드 할 수 없습니다.",
+	strDelete4   : "선택한 공유자 삭제하시겠습니까?"
 }
