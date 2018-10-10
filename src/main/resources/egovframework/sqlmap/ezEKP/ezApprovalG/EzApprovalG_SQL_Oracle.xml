@@ -11381,7 +11381,7 @@
 								CN = #v_USERID#
 							AND
 								TENANT_ID = #v_TENANTID# 
-							))
+							)
 		
 		</isEqual>
 		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
@@ -11608,6 +11608,9 @@
 		<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0">
 			AND $v_SPSUBQUERY$
 		</isGreaterThan>
+		<isEqual property="v_LISTTYPE" compareValue="3">
+			)
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCountChildFormCont" parameterClass="Map" resultClass="int"> -->
