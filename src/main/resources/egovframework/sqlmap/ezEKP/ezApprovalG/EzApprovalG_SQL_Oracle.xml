@@ -18607,11 +18607,10 @@
 				   		AND
 	        				COMPANYID = #companyID#
 				   		$v_SUBQUERY$
-<!-- 				   		2018-08-08 강민수 기록물배부대장 목록출력 모든 리스트 안나와서 주석처리 강민수92 -->
-<!-- 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE"> -->
-<!-- 				   			AND  -->
-<!-- 				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE# -->
-<!-- 				   		</isEqual> -->
+				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
+				   			AND 
+				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
+				   		</isEqual>
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
 				   		 		MANAGEDEPTID = #v_MANAGEDEPTID#
@@ -20069,7 +20068,7 @@
        													COMPANYID = #companyID#)  ELSE  1 END AS FLAGCOUNT 
        				FROM (
    							SELECT 
-   								CASE WHEN DocState='017' THEN 'Y' 
+   								CASE WHEN DocState='017' THEN 'Y'
            							 WHEN FunctionType = ' ' OR FunctionType ='000' OR FunctionType IS NULL THEN 'Y' 
            							 WHEN COUNT(DOCSTATE) = 0 THEN 'N'
            							 ELSE 'N' END AS FLAG
@@ -20084,7 +20083,10 @@
        								AND
        									TENANT_ID = #v_TENANTID#
        								AND
-       									COMPANYID = #companyID#)))
+       									COMPANYID = #companyID#)
+       								GROUP BY 
+                                        DocState,FunctionType	
+       									))
        		]]>
    </select>
 
@@ -21258,66 +21260,38 @@
 	   <isEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
 	   			TBL_RECORD_TEMP
-		   			(RecordID, DocID, ProcessDeptName, ProcessDeptName2, ProcessDeptCode, 
-					RegisterYear, RegisterDate, RegisterNo, AprMemberTitle, AprMemberTitle2,        
-					DrafterName, DrafterName2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, 
-		  		 	SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, 
-		  		 	SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate,
-		  		 	DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag,    
-		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID) 
-	   			VALUES 
-	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
-					#v_REGYEAR#, #v_REGISTERDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
-					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, IF(#v_EXECUTEDATE# = '', NULL, #v_EXECUTEDATE#), #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
-	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
-	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
-	   				#v_DELFLAG#, #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, 
-	   				#v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
-	   </isEqual>
-	   <isNotEqual property="v_NONELECRECYN" compareValue="Y">
-	   		INSERT INTO 
-	   			TBL_RECORD 
-		   			(RecordID, DocID, ProcessDeptName, ProcessDeptName2, ProcessDeptCode, 
-					RegisterYear, RegisterDate, RegisterNo, AprMemberTitle, AprMemberTitle2,        
-					DrafterName, DrafterName2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, 
-		  		 	SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, 
-		  		 	SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate,
-		  		 	DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag,    
-		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID, PUBLICITYYN) 
-	   			VALUES 
-	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
-					#v_REGYEAR#, #v_SYSDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
-					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, STR_TO_DATE(#v_EXECUTEDATE#,'%Y-%m-%d %H:%i:%s'), #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
-	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
-	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
-	   				#v_DELFLAG#, #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, 
-	   				#v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
-	   </isNotEqual>
+	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID) 
+	   		VALUES 
+	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_REGISTERDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
+   			INSERT INTO 
+	   			TBL_RECORD
+	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, PUBLICITYYN) 
+	   		VALUES 
+	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
+   		</isNotEqual>
    </insert>
    
    <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
 	   <isEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
-	   			TBL_SEPERATEATTACH_TEMP 
-	   				(DocID, RecordID, SeperateAttachNo, CabinetID, RegisterType, Title,
-	   				 NumOfPage, DelFlag, CreateDate, ModifyFlag, CatalogTransferFlag, 
-	   				 DocTransferFlag, TENANT_ID, COMPANYID)
-	   			Values 
-	   				(#v_DOCID#, #v_RecordID#, #v_SepAttachNo#, #v_CABID#, #v_REGTYPE#, #v_TITLE#, 
-	   				#v_NUMOFPAGE#, '0', #v_SYSDATE#, '0', '0',
-	   				'0', #v_TENANTID#, #companyID#)
-	   </isEqual>
-	   <isNotEqual property="v_NONELECRECYN" compareValue="Y">
+	   			TBL_SEPERATEATTACH_TEMP
+	   		(DocID, RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
+	   		Values 
+	   		(#v_DOCID#, #v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
 	   			TBL_SEPERATEATTACH 
-	   				(RecordID, SeperateAttachNo, CabinetID, RegisterType, Title,
-	   				 NumOfPage, DelFlag, CreateDate, ModifyFlag, CatalogTransferFlag, 
-	   				 DocTransferFlag, TENANT_ID, COMPANYID)
-	   			Values 
-	   				(#v_RecordID#, #v_SepAttachNo#, #v_CABID#, #v_REGTYPE#, #v_TITLE#, 
-	   				#v_NUMOFPAGE#, '0', #v_SYSDATE#, '0', '0',
-	   				'0', #v_TENANTID#, #companyID#)
-	   </isNotEqual>
+	   		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
+	   		Values 
+	   		(#v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		</isNotEqual>
    </insert>
      
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
