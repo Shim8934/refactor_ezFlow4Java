@@ -669,6 +669,12 @@
 		        }
 		        
 		        var pCurSelRow = oArrRows[0];
+		        if (pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
 		            //OpenAlertUI(pAlertContent);
