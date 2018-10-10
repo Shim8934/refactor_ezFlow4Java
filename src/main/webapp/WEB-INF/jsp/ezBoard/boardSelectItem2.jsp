@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 <style>
 	.node_div span {
+		max-width:365px;
 		overflow:hidden;
 		text-overflow:ellipsis;
 	}
