@@ -108,7 +108,7 @@
             {
                 txtTitle.value = SelectSingleNodeValueNew(CabXml, "RESULT/TITLE");
                 selindex = parseInt(SelectSingleNodeValueNew(CabXml, "RESULT/RECTYPECODE")) - 1;
-                SelOptionInSingleSelBox(selRecTypeCode, selindex);
+                selRecTypeCode.selectedIndex = selindex;
                 g_SCFlag = SelectSingleNodeValueNew(CabXml, "RESULT/SPECIALFLAG");
 
                 if (g_SCFlag == "1")
