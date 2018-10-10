@@ -1627,8 +1627,6 @@ function makePageSelPage(pTotalCnt) {
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
     	if (g_isSearching) {
-    	    g_isSearching = false;
-    	    
     		var startDate = g_searchDate.startDate;
     		var endDate = g_searchDate.endDate;
     		
