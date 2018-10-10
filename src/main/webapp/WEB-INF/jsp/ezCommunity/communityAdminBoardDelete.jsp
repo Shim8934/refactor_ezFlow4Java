@@ -26,7 +26,7 @@
 				
 				if(ret) {
 				    var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezCommunity/deleteBoard.do?boardID=" + SelectedBoardID + "&boardName=" + SelectedBoardName + "&code=" + code, false);
+					xmlhttp.open("POST", "/ezCommunity/deleteBoard.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + SelectedBoardName + "&code=" + code, false);
 					xmlhttp.send();
 				
 					if(xmlhttp.responseText.indexOf("OK") > -1) {
@@ -62,33 +62,33 @@
 				
 				switch(pIndex) {
 					case 1:		
-						window.location.href = "/ezCommunity/boardProperty.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardProperty.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 2:		
-					    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+					    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 3:		
-						window.location.href = "/ezCommunity/boardACL.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardACL.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 				    case 4:
-				        window.location.href = "/ezCommunity/boardOrder.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+				        window.location.href = "/ezCommunity/boardOrder.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 				    case 5:		
 				        if (BoardID == BoardGroupID) {
 				            alert("<spring:message code ='ezCommunity.t377' />");
 					    } else {
-							window.location.href = "/ezCommunity/boardMove.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+							window.location.href = "/ezCommunity/boardMove.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						}
 				        
 					    break;
 					case 6:		
-						window.location.href = "/ezCommunity/boardDelete.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardDelete.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 7:		
-						window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 9:		
-						window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 						
 					default:

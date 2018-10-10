@@ -242,7 +242,7 @@
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 			    var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-			    url += "&boardID=" + pBoardID;
+			    url += "&boardID=" + encodeURIComponent(pBoardID);
 			    url += "&title=" + encodeURIComponent(title);
 			    url += "&writerName=" + encodeURIComponent(writerName);
 			    url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -270,7 +270,7 @@
 		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", 750, 721);
 		        }
 		        else {
-	                window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
+	                window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
 			
@@ -350,7 +350,7 @@
 
     		            if (pItemID != "") {
    		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
    		                    
    		                    try {
    		                    	OpenWin.focus();
@@ -371,7 +371,7 @@
 
         		            if (pItemID != "") {
        		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
        		                    
        		                    try {
        		                    	OpenWin.focus();
@@ -420,7 +420,7 @@
 			
 			function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
+				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "TRUE") {
@@ -714,7 +714,7 @@
 					arrList = null;		
 				
 					var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezCommunity/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+					xmlhttp.open("POST", "/ezCommunity/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 					xmlhttp.send();
 					xmlhttp = null;
 					refresh_onclick();
@@ -774,7 +774,7 @@
 				pheigth = pheigth - 200;
 				pwidth = pwidth - 127;
 
-				window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID +"&code=" + code, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
+				window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) +"&code=" + code, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
 			}
 
 			function BoardItemList() {
@@ -805,7 +805,7 @@
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			
 				var url = "/ezCommunity/searchBoardItemPrint.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&strAbstract=" + encodeURIComponent(strAbstract);

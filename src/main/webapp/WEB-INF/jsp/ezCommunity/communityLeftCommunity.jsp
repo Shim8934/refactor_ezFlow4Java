@@ -290,9 +290,9 @@
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA6");
 
 	                if (chkPhotoBrd != "3"){
-	                    window.parent.frames.right.location.href = "/ezCommunity/boardItemList.do?boardID=" + treeNode.GetNodeData("DATA1") + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+	                    window.parent.frames.right.location.href = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 	                }else{
-	                    window.parent.frames.right.location.href = "/ezCommunity/boardItemListPhoto.do?boardID=" + treeNode.GetNodeData("DATA1") + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+	                    window.parent.frames.right.location.href = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 	                }
 	                if (CrossYN()) {
 	                }
@@ -307,7 +307,7 @@
 	        }
 	        
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
-	            xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&classID=" + code, false);
+	            xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&classID=" + code, false);
 	            xmlhttp.send();
 
 	            return xmlhttp.responseXML;

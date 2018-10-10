@@ -101,7 +101,7 @@
 			    var xmlhttp = createXMLHttpRequest();
 			    var xmldom = createXmlDom();
 				
-			    xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+			    xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
 			    xmlhttp.send();
 				
 			    xmldom = loadXMLString(xmlhttp.responseText);

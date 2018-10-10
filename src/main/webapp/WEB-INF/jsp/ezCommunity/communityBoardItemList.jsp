@@ -292,7 +292,7 @@
 
     		            if (pItemID != "") {
    		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
    		                    
    		                    try {
    		                    	OpenWin.focus();
@@ -342,7 +342,7 @@
     		
     		function CheckIfHasReplies() {
     		    var xmlhttp = createXMLHttpRequest();
-    			xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
+    			xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
     			xmlhttp.send();
     			
     			if(xmlhttp.responseText == "TRUE") {
@@ -393,7 +393,7 @@
 					if (newPage == 0) newPage = 1;
 					
 					if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
 					}
 				} else if ($('#tblList tbody').children().length == strListInfo.split(";").length) {
 	    			newPage = CurPage - 1;    			
@@ -401,7 +401,7 @@
 	    			if (newPage == 0) newPage = 1;
 					
 	    			if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
 					}
     			} else {
     				window.location.reload(false);

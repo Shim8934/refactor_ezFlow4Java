@@ -86,7 +86,7 @@
     						listXML += "<tr>";
     						var fileName = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE4").trim();
     						var imgUrl = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE5").trim();
-                            listXML += "<td width='146px' height='116px' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + pBoardID + "&imgUrl=" + imgUrl + "&fileName=" + fileName + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";                       
+                            listXML += "<td width='146px' height='116px' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + encodeURIComponent(pBoardID) + "&imgUrl=" + encodeURIComponent(imgUrl) + "&fileName=" + fileName + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";                       
                             listXML += "</tr></table>";
                             listXML += "<table width='146px' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";
                             listXML += "<tr><td class='photo_tit' style='cursor:pointer;'  onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'>";
@@ -146,7 +146,7 @@
 	            var pTop = (pheight - 720) / 2;
 	            var pLeft = (pwidth - 765) / 2;
 	
-              	window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+              	window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	        }
 	
 			function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
@@ -172,7 +172,7 @@
 	            var pTop = (pheight - 683) / 2;
 	            var pLeft = (pwidth - 750) / 2;
 	            
-	          	window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
+	          	window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
 	        }
 
 	        function refresh_onclick() {
@@ -182,7 +182,7 @@
 	        		if (newPage == 0) {
 	        			newPage = 1;
 	        		} else if (newPage > 0) {
-		                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
+		                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
 					}
 	        	} else {
 		            window.location.reload(false);        		

@@ -212,7 +212,7 @@
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
 			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 사진경로 수정 */
-			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
+			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + encodeURIComponent(itemVO.boardID) + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
@@ -793,9 +793,9 @@
 		        document.getElementById("makeguide").style.display = "none";
 		        document.getElementById("rightfrm").style.height = "659px";
 		        if (chkPhotoBrd != "3") {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + selectedBoardID + "&boardName=" + boardName + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + boardName + "&code=" + code;
 		        } else {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + selectedBoardID + "&boardName=" + boardName + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + boardName + "&code=" + code;
 		        }
 		        
 		        if (CrossYN()) {
