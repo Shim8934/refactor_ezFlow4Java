@@ -1,13 +1,12 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.plaf.synth.SynthSplitPaneUI;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
+import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -30,7 +29,6 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -41,6 +39,14 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.web.EzScheduleController;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
@@ -77,6 +83,15 @@ public class EzNewPortalGWController {
 	
 	@Resource(name="EzPersonalService")
 	private EzPersonalService ezPersonalService;
+	
+	@Resource(name="EzCircularService")
+	private EzCircularService ezCircularSerivce;
+	
+	@Resource(name="EzQuestionService")
+	private EzQuestionService ezQuestionService;
+	
+	@Resource(name="EzScheduleService")
+	private EzScheduleService ezScheduleService;
 
 	@Autowired
 	private Properties config;
@@ -89,9 +104,6 @@ public class EzNewPortalGWController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;  
-	
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
 
 	/////사용자///////
 	/**
@@ -109,6 +121,11 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
+			String offset = info.getOffSet();
+			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			String idList = "T";
+			String deptId = info.getDeptId();
+			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			
 			//사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
@@ -144,6 +161,93 @@ public class EzNewPortalGWController {
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imgUrl;
 			}
 			
+			//전자 설문 개수 불러오기
+			int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset);
+			
+			//오늘 일정 개수 불러오기
+			String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
+			String endTime = commonUtil.getDateStringInUTC(nowDate + " 23:59:59", offset, true);
+			String indiList = "";
+			String pidList = "";
+			String pidListSub = "";
+			String indiListSub = "";
+			
+			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, portletLang, tenantId ,companyId);
+			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, portletLang, tenantId ,companyId);
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, portletLang, tenantId, companyId);
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, tenantId ,companyId);
+			
+			indiList = "'" + userId + "'";
+			
+			if(tList != null && tList.size()>0){
+				for (int i = 0; i < tList.size(); i++) {
+					if (i == 0) {
+						indiListSub += ",";
+					}			
+					ScheduleSecretaryVO data = tList.get(i);			
+					indiListSub += "\'" + data.getSecId()+ "\',";			
+				}				
+			}
+			
+			pidList = "'" + deptId + "'," + "'" + companyId + "'";
+			
+			
+			if(dList != null && dList.size()>0){
+				for (int i = 0; i < dList.size(); i++) {
+					if(tList == null || tList.size()<=0){
+						if (i == 0) {
+							pidListSub += ",";
+						}	
+					}
+					ScheduleDeptVO data = dList.get(i);			
+					pidListSub += "\'" + data.getDeptId()+ "\',";				
+				}				
+			}
+			
+			if(cList != null && cList.size()>0 ){
+				for (int i = 0; i < cList.size(); i++) {							
+					if(dList == null || dList.size()<=0){
+						if (i == 0) {
+							pidListSub += ",";
+						}	
+					}
+					ScheduleCumulerVO data = cList.get(i);			
+					pidListSub += "\'" + data.getDeptId()+ "\',";				
+				}				
+			}
+			
+			for (int i = 0; i < gList.size(); i++) {
+				if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+					if (i == 0) {
+						pidListSub += ",";
+					}
+				}
+					ScheduleGroupListVO data = gList.get(i);			
+					pidListSub += "\'" + data.getGroupId() + "\',";
+				}
+			
+			if(indiListSub.equals("") || indiListSub == null){
+				indiListSub = ",\'\'";
+			}else{				
+				indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+			}
+			
+			indiList += indiListSub;
+			
+			if(pidListSub.equals("") || pidListSub == null){
+				pidListSub = ",\'\'";
+			}else{				
+				pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+			}
+			
+			pidList += pidListSub;
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, nowDate, nowDate, "", offsetMin, "",tenantId, companyId, userId);
+			int scheduleCount = sList.size();
+			
+			
+			//회람판 개수 불러오기
+			int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
+			
 			JSONObject data = new JSONObject();
 			data.put("portletOrder", portletOrder);
 			data.put("sliderList", sliderList);
@@ -151,6 +255,9 @@ public class EzNewPortalGWController {
 			data.put("userTitle", userTitle);
 			data.put("deptName", deptName);
 			data.put("userPhoto", userPhoto);
+			data.put("pollCount", pollCount);
+			data.put("circularCount", circularCount);
+			data.put("scheduleCount", scheduleCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1328,20 +1435,9 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
-			int limit = 3; // 공지사항 갯수
-			
-			// 여기에 데이터를 put해서 넘기면 됨.
-			JSONObject data = new JSONObject();
-			
-			List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-			noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
-			data.put("noticeList", noticeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
