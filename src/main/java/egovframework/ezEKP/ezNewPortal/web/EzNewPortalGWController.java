@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -1536,17 +1537,24 @@ public class EzNewPortalGWController {
 	 * 포탈개인화  G/W [GET] 포틀릿 - 즐겨찾기 양식
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/ezPortal/portlets/approvalFormFavorites", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getApprovalFormFavoritesPortlet(HttpServletRequest request) throws Exception {
+	@RequestMapping(value= "/rest/ezPortal/portlets/getFavoriteForms", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFavoriteForms(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getApprovalFormFavoritesPortlet started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
+			
+			JSONObject data = new JSONObject();
+			data.put("resultList", list);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezNewPortal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -62,4 +64,15 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public PortletInfoVO getCompanyPortletInfo(Map<String, Object> map) {
 		return (PortletInfoVO) select("ezNewPortal.getCompanyPortletInfo", map);
 	}
+	
+	/**
+	 * 이효진
+	 */
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFavoriteForms(Map<String, Object> map) {
+		return (List<ApprGFormVO>) list("ezNewPortal.getFavoriteForms", map);
+	}
+	/** -------------------- */
+	
 }

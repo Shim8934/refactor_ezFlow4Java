@@ -6,8 +6,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
@@ -18,6 +21,8 @@ import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
 @Service("EzNewPortalService")
 public class EzNewPortalServiceImpl implements EzNewPortalService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalServiceImpl.class);
+	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
 	
@@ -115,5 +120,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return ezNewPortalDAO.getPortletOrderComp(map);
 	}
+	
+	
+	/**
+	 * 이효진
+	 */
+	@Override
+	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getFavoriteForms started.");
+		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<ApprGFormVO> list = ezNewPortalDAO.getFavoriteForms(map);
+		
+		LOGGER.debug("getFavoriteForms ended.");
+		
+		return list;
+	}
+	/** -------------------- */
 
 }
