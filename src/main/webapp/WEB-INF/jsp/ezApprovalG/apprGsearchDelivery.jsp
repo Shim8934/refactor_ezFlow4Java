@@ -187,13 +187,13 @@
     }
     function GetRegSDate() {
         if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().length > 0)
-            return $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00.001";
+            return $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00";
         else
             return "";
     }
     function GetRegEDate() {
         if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().length > 0)
-            return $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "23:59:59.999";
+            return $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "23:59:59";
         else
             return "";
     }
