@@ -93,6 +93,7 @@
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = "Show";
+		        parameter[2] = orgCompanyID;
 		
 		        aprendopinion_dialogArgument[0] = parameter;
 		        aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
@@ -141,7 +142,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getEndOpinionInfo.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
