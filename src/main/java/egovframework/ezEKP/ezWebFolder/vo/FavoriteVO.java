@@ -7,7 +7,7 @@ public class FavoriteVO {
 	private String targetIconUrl;
 	private String targetPath;
 	private String targetExt;
-	private int targetSize;
+	private long targetSize;
 
 	private String creatorId;
 	private String creatorName;
@@ -64,11 +64,11 @@ public class FavoriteVO {
 		this.targetExt = targetExt;
 	}
 
-	public int getTargetSize() {
+	public long getTargetSize() {
 		return targetSize;
 	}
 
-	public void setTargetSize(int targetSize) {
+	public void setTargetSize(long targetSize) {
 		this.targetSize = targetSize;
 	}
 

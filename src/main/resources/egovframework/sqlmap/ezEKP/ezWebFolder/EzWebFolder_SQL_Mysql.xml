@@ -457,8 +457,8 @@
 				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
 				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
 				CONCAT(#originalPath#, f.FILE_NAME)                                                                                                                              AS FILE_POSITION,
-				""                                                                                                                                                               AS FOLDER_NAME,
-				""                                                                                                                                                               AS FOLDER_PATH,
+				''                                                                                                                                                               AS FOLDER_NAME,
+				''                                                                                                                                                               AS FOLDER_PATH,
 				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
 				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
 			FROM
@@ -472,12 +472,7 @@
 		
 		<isNotEqual property="realColmn" compareValue="">
 			ORDER BY
-				<isEqual property="realColmn" compareValue="FILE_SIZE">
-					CAST($realColmn$ AS INT) $order$,
-				</isEqual>
-				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
-					$realColmn$ $order$,
-				</isNotEqual>
+				$realColmn$ $order$,
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 		</isNotEqual>
@@ -521,10 +516,10 @@
 					CASE
 						WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
 						WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, IF(#primary# = '1', u.FOLDER_NAME1, u.FOLDER_NAME2)), "/"), f.FILE_NAME)
-						ELSE "" 
+						ELSE '' 
 					END
 				)                                                                                                                                                                AS FILE_POSITION,
-				""                                                                                                                                                               AS FOLDER_NAME,
+				''                                                                                                                                                               AS FOLDER_NAME,
 				u.FOLDER_PATH                                                                                                                                                    AS FOLDER_PATH,
 				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
 				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
@@ -539,12 +534,7 @@
 		]]>
 		<isNotEqual property="realColmn" compareValue="">
 			ORDER BY
-				<isEqual property="realColmn" compareValue="FILE_SIZE">
-					CAST($realColmn$ AS INT) $order$,
-				</isEqual>
-				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
-					$realColmn$ $order$,
-				</isNotEqual>
+				$realColmn$ $order$,
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 		</isNotEqual>
@@ -1454,7 +1444,7 @@
 	
 	<select id="EzWebFolderDAO.getTotalFilesSize" resultClass="Double">
 		SELECT
-			IFNULL(SUM(CAST(FILE_SIZE AS INT)), 0)
+			IFNULL(SUM(FILE_SIZE), 0)
 		FROM
 			TBL_WEBFOLDER_FILE
 		WHERE

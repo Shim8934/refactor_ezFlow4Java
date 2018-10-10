@@ -1055,11 +1055,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
 			
 		int tenantId = Integer.parseInt(tenantIdStr);
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
-		String realPath = commonUtil.getRealPath(request);
-		pDirPath = realPath + pDirPath;
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", tenantId);
+		
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			pDirPath += commonUtil.separator + "largeFile";
+		}
+		
 		String realFilePath = pDirPath + commonUtil.separator + fileDate;
 			
 		try {

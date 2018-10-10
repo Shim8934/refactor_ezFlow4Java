@@ -195,7 +195,7 @@ public class EzEmailMailListController {
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -796,27 +796,23 @@ public class EzEmailMailListController {
 				
 				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
 				String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
-				logger.debug("useCountryIP is " + useCountryIP);
+				
 				if (useCountryIP.equals("YES")) {
-					
 					try {
 						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
-						String code = "";
+						String countryCode = "";
 						
-						if ( ctryCode == null ) {
-							logger.debug("Countrycode is not exists");
-						} else {
-							code = ctryCode[0].toString().toLowerCase();
-							logger.debug("Countrycode is = " + code);
+						if (ctryCode != null && ctryCode[0] != null) {
+							countryCode = ctryCode[0].toLowerCase();
+							logger.debug("countryCode=" + countryCode);
 						}
 						
-						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", code));
-						
+						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
 				}
+				
 				sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
@@ -983,6 +979,22 @@ public class EzEmailMailListController {
 			}
 			else {
 				deleteMsgs = sourceFolder.getMessagesByUID(uids);
+				
+				// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
+				if (!cmd.equalsIgnoreCase("BMOVE")) {
+					String subject = null;
+					String from = null;
+					String receivedDate = null;
+					
+					for (Message message : deleteMsgs) {
+						subject = ezEmailUtil.getSubject(message);
+						subject = (subject != null) ? subject : "";
+						from = ezEmailUtil.getFullFromAddressOfMessage(message);
+						receivedDate = (message.getReceivedDate() != null) ? message.getReceivedDate().toString() : "";
+						
+						logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
+					}
+				}
 			}
 			
 			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
