@@ -65,6 +65,8 @@
 		
 		//ajax로 count 불러오기
 		getCountSetting();
+		
+		$("#personalEnv").on("click", viewPersonalEnv);
 	});
 	
 	function eventSetting(portletId) {
@@ -77,6 +79,10 @@
 			$(".preBtn").on("click", photoBoardMovePrevPage);
 			$("#photoBoardPlus").on("click", viewPhotoBoardList);
 		}
+	}
+	
+	function viewPersonalEnv() {
+	    window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
 	}
 	
 	function photoBoardMoveNextPage() {
@@ -290,7 +296,8 @@
                			<dd class="infoName">${userName} ${userTitle}</dd>
                 		<dd class="infoTeam">${deptName}</dd>
                 		<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
-                		<dd class="infoSet" onclick='goEnv();'><img src="/images/kr/main/info_set.png"></dd>
+                		<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
+                		<dd class="infoSet" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
            			</dl>
 				</article>
 				<article class="time_check">

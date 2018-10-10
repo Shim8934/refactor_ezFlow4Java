@@ -139,8 +139,7 @@ public class EzNewPortalGWController {
 			String idList = "T";
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
-			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);;
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
 			
 			//사용자 포틀릿 순서 가져오기
