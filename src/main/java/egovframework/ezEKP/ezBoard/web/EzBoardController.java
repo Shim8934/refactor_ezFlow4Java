@@ -179,6 +179,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("photoType") != null && !req.getParameter("photoType").equals("")) {
 			photoType = req.getParameter("photoType");	
 		}
+
+		boardID = boardID.replace("{", "%7B").replace("}", "%7D");
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("photoType", photoType);

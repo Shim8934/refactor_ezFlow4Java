@@ -811,6 +811,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			portalPageCategoryXML += "</DATA>";
 			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 		}
+
+		strHTML = strHTML.replace("{", "%7B").replace("}", "%7D");
 		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
@@ -1077,7 +1079,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		String parametersXML = ezPortalService.getPortletParameters(uID, userInfo.getTenantId());
-		
+
 		if (pMoveURL != null && !pMoveURL.equals("")) {
 			pMoveURL = pMoveURL + ezPortalService.loadGetParametersXML(pMoveURL, parametersXML, userInfo);
 			
@@ -1088,6 +1090,9 @@ public class EzPortalController extends EgovFileMngUtil {
 					pMoveURL = pMoveURL + "&pClassID=" + pUserID;
 				}
 			}
+
+			pMoveURL = pMoveURL.replace("{", "%7B").replace("}", "%7D");
+			
 			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
 			resp.getWriter().write("<body onload='window_onload()'></body>");
 		} else {
