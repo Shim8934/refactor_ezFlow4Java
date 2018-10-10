@@ -12,6 +12,7 @@ var noticePortletLoadFunc = function() {
 	var noticeList = JSON.parse('${noticeList}');
 	var str = '';
 	var viewCnt = 3; // 보여주는 공지사항 갯수
+	var boardId = '';
 
 	var noticeDetail = function() {
 		var height = window.screen.availHeight;
@@ -27,8 +28,13 @@ var noticePortletLoadFunc = function() {
 		}
 	}
 	
+	var noticePlus = function() {
+		window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+	}
+	
 	var dataAssembler = function(data, index) {
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
+		boardId = data.boardID;
 		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">'+data.title+'</dd></dl></li>';
 	};	
 	
@@ -52,10 +58,10 @@ var noticePortletLoadFunc = function() {
 			item.addEventListener('click', noticeDetail);	
 		}
 	});
+	
+	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 }
 
-
-// 즉시실행함수처럼 사용하기.
 noticePortletLoadFunc();
 
 </script>
@@ -64,7 +70,7 @@ noticePortletLoadFunc();
 <div class="layDIV">
     <dl class="portlet_title">
 	    <dt class="portletText">공지사항</dt>
-   		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
+   		<dd class="portletPlus" id="noticePlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
     </dl>
     <ul class="noti_portlet_list" id="BoardList_NewBoard">
     </ul>
