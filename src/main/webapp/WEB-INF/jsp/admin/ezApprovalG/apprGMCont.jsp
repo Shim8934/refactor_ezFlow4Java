@@ -6,18 +6,18 @@
 	<head>
 		<title></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var OrderCell = "";
@@ -28,7 +28,8 @@
 	        var CompanyID = "<c:out value='${companyID}'/>";
 	        var TopID = "<c:out value='${companyID}'/>";
 	        var listview = new ListView();
-		    
+		    var sDeptID;
+	        
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = CompanyID;
 	            InitListView();
@@ -64,7 +65,8 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 		        CompanyID = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
-		        getContInfo(treeNode.GetNodeData("CN"));
+		        sDeptID = treeNode.GetNodeData("CN");
+		        getContInfo(sDeptID);
 		    }
 		    
 		    function lvtForm_onSel_Changed() { }
@@ -113,7 +115,7 @@
 		        } else {
 		            para["P_companyID"] = CompanyID;
 		            mconttype_cross_dialogArguments[0] = para;
-		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(290, 390));
+		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(500, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -198,7 +200,7 @@
 	            }
 	        }
 	        
-	        function btnUpdate_onclick_Complete(tempDeptID) {
+	        function btnUpdate_onclick_Complete() {
 	        	getContInfo(tempDeptID);
 	        }
 	        
@@ -213,7 +215,7 @@
 		        	data : {contID : ContID, comID : CompanyID},
 		        	success : function(result){
 		        		if (result == "TRUE") {
-			                listview.GetDataRows()[selRow].parentElement.removeChild(listview.GetDataRows()[selRow]);
+		        			getContInfo(sDeptID);
 			            } else {
 			            	alert("<spring:message code='ezApprovalG.t1587'/>");
 			            }
@@ -225,8 +227,14 @@
 	   	 	}
 	        
 		    function btnDel_onclick() {
+		        listview.LoadFromID("lvtDocForm");
+		        
+		        if (listview.GetSelectedRows() == "") {
+		        	alert("<spring:message code='ezBoard.t179'/>");
+					return;		        	
+		        }
+		        
 		    	if (confirm("<spring:message code='ezApprovalG.t999933'/>")) {
-			        listview.LoadFromID("lvtDocForm");		        
 			        var selRow = listview.GetSelectedIndexes().split(",");
 			        
 			        if (selRow) {
@@ -280,10 +288,10 @@
 	    <table>
 	        <tr>
 	            <td>
-	                <h2><spring:message code='ezApprovalG.t232'/></h2>
+	                <h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>
 	            </td>
 	            <td style="padding-left: 5px; padding-right: 5px">
-	                <h2><spring:message code='ezApprovalG.t904'/></h2>
+	                <h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t904'/></h2>
 	            </td>
 	            <td>&nbsp;</td>
 	        </tr>

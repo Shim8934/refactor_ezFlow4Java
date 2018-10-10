@@ -7,18 +7,18 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t427'/></title>
 	    <meta http-equiv="Content-Type" content="text/html;charset=utf-8;">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" type="text/css" href="/css/Tab.css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TabMenu.js"></script>
-	    <script type="text/javascript" src="/js/escapenew.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" type="text/css" href="${util.addVer('/css/Tab.css')}">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TabMenu.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
 	    <script type="text/javascript">
 	        var OrderCell = "";
 	        var labelcolor = "c6c6c6";
@@ -804,7 +804,7 @@
 	        }
 	        return ReturnVal;
 	    }
-	    var aprlinetempletname_cross_dialogArguments = new Array();
+	    var aprdepttempletname_cross_dialogArguments = new Array();
 	    var tempmode;
 	    function btn_AprDeptTempletSave_onclick(mode) {
 	
@@ -851,7 +851,7 @@
 	            }
 	
 	            if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRecSaveList_TR_noItems") {
-	                var windowName = "/ezApprovalG/aprLineTempletName.do";
+	                var windowName = "/ezApprovalG/aprDeptTempletName.do";
 	                var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
 	                var dialogValue = new Array();
 	                dialogValue[0] = pUserID;
@@ -863,8 +863,8 @@
 	                    dialogValue[3] = templisttviewname;
 	                }
 	                if (CrossYN()) {
-	                    aprlinetempletname_cross_dialogArguments[0] = dialogValue;
-	                    aprlinetempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
+	                	aprdepttempletname_cross_dialogArguments[0] = dialogValue;
+	                	aprdepttempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
 	
 	                    DivPopUpShow(340, 205, windowName);
 	                } else {

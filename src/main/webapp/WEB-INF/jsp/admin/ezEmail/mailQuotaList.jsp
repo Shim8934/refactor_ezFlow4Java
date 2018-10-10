@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"	
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
@@ -7,13 +6,13 @@
 	<head>
 		<title><spring:message code='ezSystem.x0021' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
-		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">	
+		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript">
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
 			var strLang2 = "<spring:message code='ezSystem.x0031'/>";
@@ -26,11 +25,13 @@
 			var totalPage = "";
 			var totalCount = "";
 			var BlockSize = 10;
+			var companyID = "${companyId}"; // 회사 셀랙트 박스 변경 시 변경됨
 
 			// 화면 호출시 실행 함수
 			window.onload = function(){
 				getUserList(1);
 				makePageSelPage();
+				windowResize();
 			}
 			
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -212,11 +213,12 @@
 		    		var selectOption = document.getElementById("searchKeycode");
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
+					var companyIdChk = companyID;
 					
 					 if (pageNum == "-1") {
 						var pageSize = "-1";
 						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
+							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk;
 						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 		
 						saveExcel.location.href = pURL;
@@ -229,7 +231,7 @@
 			    			,async: false
 			    			,dataType: 'json'
 			    			,data: {
-			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum 
+			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum, 'companyId' : companyIdChk 
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -318,7 +320,31 @@
 		  		
 			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
 		    }
+			
+		  	// 회사 셀랙트 박스 변경 시
+		  	function selectCompanyID() {
+				if (companyID != document.getElementById("ListCompany").value) {
+		            companyID = document.getElementById("ListCompany").value
+	
+		            getUserList(1);
+					//getLoginHist(1, searchStartTime, searchEndTime);
+					//makePageSelPage();
+		        }
+			}
 
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 153;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 		<!-- 용량상태 Progress Bar -->
 		<style type="text/css" >
@@ -362,9 +388,9 @@
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
 						<select id="searchKeycode" style="height:22px;"> 
-							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
-							<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
-							<option value="3"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
+							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
+							<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
+							<option value="userId"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
 						</select>
 						<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
 						<a class="imgbtn" >
@@ -376,31 +402,27 @@
 						<a class="imgbtn" >
 							<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
 						</a>
-					</span> 
-				</td>
-				<td width="5%">
-					<a class="imgbtn" style="margin-right:5px;">
-						<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
-					</a>
-				</td>
-			</tr>
-		</table>
-		</div>
-		<div style="width:100%; border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-		<table class="mainlist" style="width:100%;">
-			<thead style="">
-				<tr>
-					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
-					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
-					<th><spring:message code="main.t00011"></spring:message></th>
-					<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
+					</td>
 				</tr>
-			</thead>
-			<tbody id="userListBody" style="overflow: auto;"></tbody>
-		</table>
+			</table>
+		</div>
+		<div id="contentlist" style="width:100%; overflow: auto;">
+			<div>
+				<table class="mainlist" style="width:100%;">
+					<thead style="">
+						<tr>
+							<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
+							<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
+							<th><spring:message code="main.t00011"></spring:message></th>
+							<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
+						</tr>
+					</thead>
+					<tbody id="userListBody" style="overflow: auto;"></tbody>
+				</table>
+			</div>
 		</div>
 		<div id="tblPageRayer" style="width:100%;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>

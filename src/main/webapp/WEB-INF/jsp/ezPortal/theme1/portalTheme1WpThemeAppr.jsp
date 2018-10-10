@@ -5,10 +5,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var arr_userinfo = new Array();
@@ -27,12 +27,14 @@
 	        var strlang = "${userInfo.lang}";
 	        var strLang1 = "<spring:message code='main.t00026' />";
 	        var pNoneActiveX = "${noneActiveX}";
+	        var selTab = "";
 	        
 	        window.onload = window_onload;
 	        
 	        function window_onload() {
 	            getAppr();
-
+	            selTab = "doingTab";
+	            
 	            try { top.onresize() } catch (e) { }
 	        }
 
@@ -170,6 +172,7 @@
 	                switch (obj.id) {
 	                    case "doingTab":
 	                        pListTypeValue = "1";
+	                        selTab = "doingTab";
 	                        document.getElementById("doingTab").className = "on";
 	                        document.getElementById("rejectTab").className = "";
 	                        document.getElementById("draftTab").className = "";
@@ -177,6 +180,7 @@
 
 	                    case "rejectTab":
 	                        pListTypeValue = "4";
+	                        selTab = "rejectTab";
 	                        document.getElementById("doingTab").className = "";
 	                        document.getElementById("rejectTab").className = "on";
 	                        document.getElementById("draftTab").className = "";
@@ -184,6 +188,7 @@
 
 	                    case "draftTab":
 	                        pListTypeValue = "2";
+	                        selTab = "draftTab";
 	                        document.getElementById("doingTab").className = "";
 	                        document.getElementById("rejectTab").className = "";
 	                        document.getElementById("draftTab").className = "on";
@@ -205,20 +210,19 @@
 	                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID=" + escape(pArgument[0]);
 	                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	                }
-	                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + escape(pArgument[0]);
-	                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-	                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	                }
-	                else {
-	                    if (CrossYN()) {
-	                        openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    }
-	                    else {
-	                    	openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    }
-
+	                } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                	if (isIE()) {
+		                    openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
+		                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0" + "&docState=" + escape(pDocState);
+	                	} else {
+	                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                        alert(pAlertContent);
+	                        
+	                        return;
+	                	}
+	                } else {
+                        openLocation = "/ezApprovalG/approvui.do?docID=";
 	                    openLocation = openLocation + escape(pArgument[0]);
 	                    openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
 	                    openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
@@ -247,18 +251,20 @@
 	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
 	                }
 	                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	                    openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
+	                	if (isIE()) {
+		                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
+		                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&listSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+		                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
+		                    openLocation = openLocation + "&listType=" + escape(pArgument[7]);
+	                	} else {
+	                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                        alert(pAlertContent);
+	                        
+	                        return;
+	                	}
 	                }
 	                else {
-	                    if (CrossYN()) {
-	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    }
-	                    else {
-	                    	openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    }
+                    	openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	                    openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
 	                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
 	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
@@ -435,8 +441,8 @@
 	                            openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
 	                        }
 	                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                            var openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                            openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
+	                            var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pDocID) + "&docHref=" + escape(pHref);
+	                            openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&odoc=&isOpinion=&listType=2";
 	                        }
 	                        else {
 	                            <% if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
@@ -478,7 +484,18 @@
 	                    width = parseInt(width) - 10;
 	                }
 	                window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
-	            }	
+	            }
+	            
+	            /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+		        function tabover(tabObj) {
+		        	tabObj.setAttribute("class", "on");
+		        }
+		        function tabout(tabObj) {
+		        	if (tabObj.id != selTab) {
+		        		tabObj.setAttribute("class", "");
+		        	}
+		        }
+		        
 		</script>
 	</head>
 	<body>
@@ -488,15 +505,15 @@
             	<dd onclick="Appmore_btnClick()"><spring:message code='main.t1008'/></dd>
         	</dl>
         	<ul class="content_tabTitle">
-            	<li id="doingTab" class="on" onclick="apprChangeTab(this)">
+            	<li id="doingTab" class="on" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)">
                 	<span class="title"><spring:message code='main.t302'/></span>
                 	<span class="count" id="count1"></span>
             	</li>
-            	<li id="rejectTab" class="" onclick="apprChangeTab(this)">
+            	<li id="rejectTab" class="" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)">
                 	<span class="title"><spring:message code='main.t00004'/></span>
                 	<span class="count" id="count2"></span>
             	</li>
-            	<li id="draftTab" class="" onclick="apprChangeTab(this)">
+            	<li id="draftTab" class="" onclick="apprChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)">
                 	<span class="title"><spring:message code='main.t304'/></span>
                 	<span class="count" id="count3"></span>
             	</li>

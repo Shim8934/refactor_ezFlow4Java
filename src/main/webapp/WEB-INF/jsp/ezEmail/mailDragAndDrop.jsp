@@ -1,15 +1,14 @@
- <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			#lstAttachLink {
 				height: 117px;
@@ -121,9 +120,16 @@
 		            return;
 		        }
 		        
-		        if (bigFileCheck && alertCnt < 2) {
-		            alert(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
-		            alertCnt++;
+		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
+		        if (bigFileCheck && isbigyn == "N") {
+		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
+		        	var bigFileAttachChk = confirm(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
+		        	
+		        	if (!bigFileAttachChk) {
+		        		return;
+		        	}
+		        	
+		            //alertCnt++;
 		        }
 		        
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
@@ -377,9 +383,6 @@
 		                    	var msgId = $(this).closest('tr').attr('_uid');
 		                    	var isBig = $(this).closest('tr').attr('_big');
 		                    	
-		                    	var firstIdx = window.parent.multipartFirstIdx;
-		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
-	                    		
 		                    	FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
 		                    };
 		                }
@@ -672,7 +675,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px;display:none;" />
+        <input id="file" type="file" onchange="filechange(event);this.value=null;return false;" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
   </body>
 </html>

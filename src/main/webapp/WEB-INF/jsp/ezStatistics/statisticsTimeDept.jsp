@@ -5,19 +5,19 @@
 	<head>
 		<title><spring:message code='ezStatistics.t1037'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2'/>" type="text/css" />
-	    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezStatistics.e1'/>"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/control_Cross/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/js/excanvas.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/js/jquery.min.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/js/jquery.jqplot.min.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.barRenderer.min.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/control_Cross/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/excanvas.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.barRenderer.min.js')}"></script>
 	    <script type="text/javascript">
 	        var xmlHttp = createXMLHttpRequest();
 			
@@ -452,18 +452,18 @@
 	    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
 	        <tr>
 	            <td style="width: 99%">
-	                <span id="topmenu" style="float: left; width: 500px"><spring:message code='ezStatistics.t1002'/> : 
-	            	<select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
+	                <span id="topmenu" style="float: left; width: 500px">&nbsp;<spring:message code='ezStatistics.t1002'/> : 
+	            	<select style="height:24px" id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
 	       				&nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
 	             		<input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
+	                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>
 	                <div id="mainmenu" style="float: right; height: 28px;margin:3px 0px !important">
 	                    <ul>
-	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>

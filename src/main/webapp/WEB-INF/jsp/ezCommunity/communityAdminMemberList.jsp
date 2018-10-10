@@ -6,8 +6,8 @@
 	<head>
 		<title>admin_memberlist</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		
 		<script type="text/javascript">
 			function MM_swapImgRestore() { 
@@ -122,7 +122,7 @@
 		        		<input type="radio" name="flag" value="name" checked style="margin:0px 0px 3px 3px">
 		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
 		        		<input style="height:22px" name="ser" id ="ser" type="text">
-		        		<a class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onClick="javascript:sendit();"><spring:message code = 'ezCommunity.t31' /></span></a>
+		        		<a class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
 		        	</td>
 		    	</tr>
 		  	</table>

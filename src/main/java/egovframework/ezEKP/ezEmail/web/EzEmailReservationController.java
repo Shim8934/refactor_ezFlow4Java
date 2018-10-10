@@ -389,7 +389,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
   				+ ",postType=" + postType);
   		
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
-		String multipartFirstIdx = "0";
 		
 		//set cmdOwn
 		if (request.getParameter("cmd") != null) {
@@ -439,9 +438,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			if (attachedFileList.size() > 0) {
                 StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
                 
-                multipartFirstIdx = attachedFileList.get(0).get("index");
-                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
-
                 for (int i = 0; i < attachedFileList.size(); i++) {
 					Map<String, String> fileInfo = attachedFileList.get(i);
 					
@@ -529,6 +525,26 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		if (useFromAddress != null) {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
+				
+				if (fromAddressList.size() >= 2) {
+					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+					
+					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
+					if (!companyDomainName.isEmpty()) {
+						for (int i = 0; i < fromAddressList.size(); i++) {
+							String[] item = fromAddressList.get(i);
+							String type = item[1];
+							
+							if (type.equals("1")) {
+								logger.debug("removing the account email address...");
+								
+								fromAddressList.remove(i);
+								
+								break;
+							}
+						}
+					}
+				}
 				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
@@ -631,7 +647,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("draftsFolderName", draftsFolderName);
-		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
 		
         logger.debug("mailEdit ended.");
         

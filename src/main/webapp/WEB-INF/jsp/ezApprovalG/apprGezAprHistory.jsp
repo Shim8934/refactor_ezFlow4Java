@@ -5,17 +5,21 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t373'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = "${docID}";
 		    var OrderCell = "";
+		    var orgCompanyID = parent.orgCompanyID;
+		    var ext = "${ext}";
+		    var selSpan = "";
+		    
 		    window.onload = function () {
 		        var rtnVal = new Array();
 		        getDocHistory();
@@ -27,25 +31,28 @@
 		        HisDoc.style.display = "none";
 		        HisAttach.style.display = "none";
 		        window.returnValue = rtnVal;
+		        selSpan = "orgSpan3";
 		    };
 		    function lvDocList_DBSelChange() {
-		        var pUrl;
 		        var Arguments = new Array();
 		        var listview = new ListView();
 		        listview.LoadFromID("lvDocList");
 		        var oArrRows = listview.GetSelectedRows();
 		        pUrl = oArrRows[0].getAttribute("DATA2");
 		        Arguments[0] = oArrRows[0].getAttribute("DATA2");
-		        if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "doc") {
+		        var fileExt = pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase();
+		        
+		        if (fileExt == "doc") {
 		            pUrl = "DocViewerWord.aspx?DocHref=" + escapenew(Arguments[0]);
 		        }
-		        else if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "hwp") {
+		        else if (fileExt == "hwp" || fileExt == "ezd") {
 		        	//hwp사용안함
 		            if (CrossYN()) {
-		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
+// 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
+		            	pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		            else {
-		                pUrl = "DocViewerHWP.aspx?DocHref=" + escapenew(Arguments[0]);
+		                pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		        }
 		        else {
@@ -112,7 +119,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getDocHistory.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -135,7 +143,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getLineHistory.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -149,6 +158,7 @@
 		        listview.SetSelectFlag(false);
 		        listview.DataSource(result);
 		        listview.DataBind("divAprLine");
+		        
 		    }
 		    function getAttachHistory() {
 		    	var result = "";
@@ -159,7 +169,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getAttachHistory.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -184,7 +195,8 @@
 		    		url : "/ezApprovalG/getLineHistoryDetail.do",
 		    		data : {
 		    			docID : pDocID,
-		    			changeSN : pChangeSN
+		    			changeSN : pChangeSN,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -211,6 +223,7 @@
 		    function BtnChange(TabButton) {
 		        switch (TabButton) {
 		            case "1":
+		            	selSpan = "orgSpan1";
 		                HisDoc.style.display = "";
 		                HisAttach.style.display = "none";
 		                HisLine.style.display = "none";
@@ -225,6 +238,7 @@
 		                document.getElementById("orgTabButton3").children[0].className = "";
 		                break;
 		            case "2":
+		            	selSpan = "orgSpan2";
 		                HisDoc.style.display = "none";
 		                HisAttach.style.display = "";
 		                HisLine.style.display = "none";
@@ -239,6 +253,7 @@
 		                document.getElementById("orgTabButton3").children[0].className = "";
 		                break;
 		            case "3":
+		            	selSpan = "orgSpan3";
 		                HisDoc.style.display = "none";
 		                HisAttach.style.display = "none";
 		                HisLine.style.display = "";
@@ -281,13 +296,23 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != "hwp" && ext != "ezd") {
 		            parent.DivPopUpHidden();
-		        }
-		        else {
+		        } else {
 		            window.close();
 		        }
-		    }		    
+		    }
+		    
+		    /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -298,9 +323,9 @@
 		<div id="close"><ul><li id="Table1" ><span onClick="close_Click()"></span></li></ul></div>
 		<div class="portlet_tabpart01" style="margin:0px;">
        		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
-       			<p id="orgTabButton3"><span onclick="BtnChange('3')" class="tabon"><spring:message code='ezApprovalG.t375'/></span></p>
-       			<p id="orgTabButton2"><span onclick="BtnChange('2')"><spring:message code='ezApprovalG.t376'/></span></p>
-       			<p id="orgTabButton1"><span onclick="BtnChange('1')"><spring:message code='ezApprovalG.t377'/></span></p>
+       			<p id="orgTabButton3"><span id="orgSpan3" onclick="BtnChange('3')" class="tabon" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezApprovalG.t375'/></span></p>
+       			<p id="orgTabButton2"><span id="orgSpan2" onclick="BtnChange('2')" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezApprovalG.t376'/></span></p>
+       			<p id="orgTabButton1"><span id="orgSpan1" onclick="BtnChange('1')" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezApprovalG.t377'/></span></p>
        		</div>
        	</div>
 		<table> 

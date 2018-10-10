@@ -5,28 +5,28 @@
 <html>
 	<head>
 		<title><spring:message code='ezBoard.t293'/></title>
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style title="ezform_style_1">
 			P {
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 				}
 			<%-- 2018-07-24 홍승비 - 썸네일/포토게시물 이미지 클릭 시 레이어팝업 추가 --%>
-			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
+			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; cursor:pointer;}
 			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
 			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
 			.imgPopupBoxMagnify{width: 700px;height: 760px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
@@ -354,7 +354,7 @@
 					pheigth = pheigth - 200;
 					pwidth = pwidth - 127;
 					
-					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
+					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
 				}
 		        window.onunload = function () {
 		        	//리프레쉬 할 이유가 없는거 같음
@@ -374,7 +374,9 @@
 						checks.item(i).checked = true;
 				}
 		
-				function MemberInfo_onclick(pUserID)
+				/* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+				// 이 기능 사용하지 않음(닷넷 당시의 기능)
+				function MemberInfo_onclick(pUserID, pDeptID)
 				{
 		            var swidth = 420;
 		            var sheight = 490;
@@ -385,7 +387,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		            
-					window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID + "&dept=" + pDeptID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 				}
 		
 				function Bigger()
@@ -433,7 +435,8 @@
 				    DivPopUpHidden();
 				}
 		
-				function OpenUserInfo(pUserID)
+				/* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+				function OpenUserInfo(pUserID, pDeptID)
 				{
 		            var swidth = 420;
 		            var sheight = 450;
@@ -444,7 +447,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 				}
 		
 // 				function OneLineReply_onkeydown(e)
@@ -1075,7 +1078,7 @@
 		            var swidth;
 		            var sheight;
 		
-		            swidth = 430;
+		            swidth = 420;
 		            sheight = 500;
 		            
 		            var pwidth = window.screen.availWidth;
@@ -1225,11 +1228,11 @@
 						htmlString += "</body></html>";
 						
 						imgPopupWindow.document.write(htmlString);
-						imgPopupWindow.document.close();			
+						imgPopupWindow.document.close();
 					});
 			    }
 			    
-			  //썸네일에 마우스 오버할 때 처리.
+			  //썸네일에 마우스 오버할 때 처리.(thumbnail클래스 클릭하여 확대 레이어팝업 띄우는 함수)
 			  	function thumbnailImgMouseOver(e){
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","none");
@@ -1254,7 +1257,8 @@
 				    		
 				    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
 				    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-				    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+				    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+				    		imgPopup.attr("zoom","1");
 			    		});
 		    		} else {
 		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
@@ -1265,7 +1269,8 @@
 			    		
 			    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
 			    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-			    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+			    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+			    		imgPopup.attr("zoom","1");
 		    		}
 		    		
 		    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
@@ -1280,14 +1285,17 @@
 		    		var $imgPopupBox = $("#imgPopupBox");
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
-		    		
+			  		
 			  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
 			  		else{
 			  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
-			  			$imgPopup.css("zoom","");
+			  			$imgPopup.css("width", "");
+			  			$imgPopupDiv.css("overflow", "");
 			  		}
+		  			$imgPopup.attr("zoom","1");
 		    		
 		    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
 					$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
@@ -1318,6 +1326,7 @@
 		    		}
 			  	}
 			  	
+			  //썸네일 이미지 팝업박스를 토글해준다.
 			  	function toggleImgPopupBox(e){
 			  		var imgPopupBox = $("#imgPopupBox");
 			  		var imgPopupDiv = $("#imgPopupDiv");
@@ -1349,43 +1358,40 @@
 			  		var $imgPopupBox = $("#imgPopupBox");
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
+			  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 			  		
 			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-			  		if($imgPopup.css("zoom").indexOf("%") != -1){
-			  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
+			  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+			  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) + zoomOffset;
 			  		}
-			  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+			  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 			  			zoom = 1 + zoomOffset;
 			  		}
 			  		else{
-				  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
+				  		zoom = parseFloat($imgPopup.attr("zoom")) + zoomOffset;
 			  		}
-			  		$imgPopup.css("zoom", zoom);
+			  		zoom = zoom.toFixed(1);
+			  		$imgPopup.attr("zoom", zoom);
 			  		
 			  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 			  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 			  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 		    		var imgPopup = document.getElementById("imgPopup");
 			  		var imgPopupDivCH = imgPopupDiv.clientHeight;
-			  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+			  		$imgPopup.width(imgPopupOrignW * zoom);
+			  		$imgPopupDiv.width(imgPopupOrignW * zoom);
 			  		
 			  		//imgPopup 세로 위치 조정.
 			  		if(thumbImgH < (imgPopupDivCH - 100)){
-			  			var agent = navigator.userAgent.toLowerCase();
 			  			var topOffset = "";
-			  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-		  				}
-		  				else {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-		  				}
+				  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+
 			  			$imgPopup.css("top", topOffset);
-			  			$imgPopupDiv.css("overflow", "hidden");
 			  		}
 			  		else if(thumbImgH > (imgPopupDivCH - 100)){
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
-			  		}		
+			  		}
 			  	}
 			  	
 			  	//줌아웃 버튼 기능.
@@ -1395,32 +1401,36 @@
 			  		var $imgPopupBox = $("#imgPopupBox");
 			  		var $imgPopupDiv = $("#imgPopupDiv");
 			  		var $imgPopup = $("#imgPopup");
+			  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 			  		
 			  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-			  		if($imgPopup.css("zoom").indexOf("%") != -1){
-			  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
+			  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+			  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) - zoomOffset;
 			  		}
-			  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+			  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 			  			zoom = 1 - zoomOffset;
 			  		}
 			  		else{
-				  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
+				  		zoom = parseFloat($imgPopup.attr("zoom")) - zoomOffset;
 			  		}
+			  		zoom = zoom.toFixed(1);
 			  		
-			  		if( zoom > 0 ){
-				  		$imgPopup.css("zoom", zoom);
-			  		}else{
+			  		// 0.1보다 작은 비율로는 축소 불가능
+			  		if ( zoom >= 0.1 ) {
+				  		$imgPopup.attr("zoom", zoom);
+			  		} else {
 			  			return;
 			  		}
 			  		
-			  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+			  		var thumbImgW = imgPopupOrignW * zoom;
 			  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 			  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 			  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 		    		var imgPopup = document.getElementById("imgPopup");
 			  		var imgPopupDivCW = imgPopupDiv.clientWidth;
 		    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		    		$imgPopup.width(thumbImgW);
+		    		$imgPopupDiv.width(thumbImgW);
 		    		
 			  		if(thumbImgW > (imgPopupDivCW - 100)){
 			  			$imgPopup.css("left","");
@@ -1428,26 +1438,20 @@
 			  		
 			  		//imgPopup 세로 위치 조정
 			  		if(thumbImgH < (imgPopupDivCH - 100)){
-			  			var agent = navigator.userAgent.toLowerCase();
 			  			var topOffset = "";
-			  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-		  				}
-		  				else {
-				  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-		  				}
+				  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+
 			  			$imgPopup.css("top", topOffset);
-			  			$imgPopupDiv.css("overflow", "hidden");
 			  		}
 			  		else if(thumbImgH > (imgPopupDivCH - 100)){
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  	}		        
+			  	}
 		</script>
 	</head>
 	<body class="popup">
-		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%">
+		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
 		      <div id="menu">
@@ -1504,7 +1508,7 @@
 		              <th style="width:10%"><spring:message code='ezBoard.t223'/></th>
 			              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="WriteUserNM">
 			              	  <div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto">
-								 <span onclick='OpenUserInfo("${boardItem.writerID}")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
+								 <span onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
 							  </div>
 			              </td> 
 		              <th style="width:10%"><spring:message code='ezBoard.t289'/></th>
@@ -1542,10 +1546,10 @@
 		            <td style="width:100px; padding-left:50px; text-align:center">
 		                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 		            </td>
-		            <td style="padding-left:20px">
+		            <td style="display:inline-block;">
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
-		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
+		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center;">
 		                            <img id="mainimages" class="thumbnail" style="background-color:#ffffff;cursor:pointer;" src=""/>            
 		                        </td>
 		                    </tr>

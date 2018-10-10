@@ -7,21 +7,35 @@
 	<head>
 		<title><spring:message code='ezSchedule.t191' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />	    
+	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
+	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+			#spn_deptName {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: inline-block;
+			}
+			#countInfo {
+				overflow: hidden;
+				display: inline-block;
+			}
+			.countColor {
+				color:#017BEC;
+			}		    	
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>        
-        <script type="text/javascript" src="/js/NameControl.js"></script>
-        <script type="text/javascript" src="/js/Common.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezSchedule/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/ListView_list.js')}"></script>        
+        <script type="text/javascript" src="${util.addVer('/js/NameControl.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
@@ -100,7 +114,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -204,7 +218,9 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right: 3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
+	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -221,7 +237,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -248,17 +264,18 @@
 						deptID : tempDeptID
 					},
 					success : function(result) {
-						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
-						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]";
-			        		} else {
-			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
-// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256+ "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256+ "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
-			        		}
-			            	
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang256 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+									            	
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}
 					},
@@ -887,7 +904,7 @@
 		            return;
 		        }
 		        var id = p_ListOrderObject.getAttribute("_DATA2");
-		        var dept = p_ListOrderObject.getAttribute("_DATA11");
+		        var dept = p_ListOrderObject.getAttribute("_DATA10");
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
@@ -910,6 +927,7 @@
 		                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		                var department = document.getElementById(listContentArry[i]).getAttribute("_data10");
 
 		                var listid = "MsgToList";
 		                var getlistview = new ListView();
@@ -928,7 +946,7 @@
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 		                    pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 		                    pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -990,7 +1008,8 @@
 		                var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
 		                var jickwe = p_ListOrderObject.getAttribute("_data14");
 		                var phone = p_ListOrderObject.getAttribute("_data8");
-
+		                var department = p_ListOrderObject.getAttribute("_data10");
+		                
 		                var listid = "MsgToList";
 
 		                var getlistview = new ListView();
@@ -1007,7 +1026,7 @@
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 		                    pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
 		                    pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
@@ -1111,7 +1130,7 @@
    				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
    				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
    				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
-   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + " (" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION")[i]) + ")" + "]]></VALUE></CELL></ROW>";
+   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";		// 2018-09-27 김민성 - 부서명 뜨는 부분 삭제
    				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
    				            Resultxml = loadXMLString(pparsingXML2);
 
@@ -1326,6 +1345,24 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+		    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+	        function deptNameLong(containLow, strIsLeaf) {
+	        	var deptNameWidth = "";
+	        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+	        	
+	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+	          		if (sum > 359) {
+	          			deptNameWidth = 360 - $("#countInfo").width();
+	          		}
+	          	} else {
+	          		if (sum > 357) {
+	          			deptNameWidth = 358 - $("#countInfo").width();
+	          		}
+	          	}
+	        	
+	        	$("#spn_deptName").css("width", deptNameWidth);
+	        }	        
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">		
@@ -1398,7 +1435,7 @@
 		                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 		                                            <tr>
 		                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-		                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom; margin-top:2px;"></span>
+															<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 		                                                    <span style="float:right;margin-top: 1px;margin-right: 1px;">
 		                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 		                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -1434,7 +1471,7 @@
 		                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 		                        </td>
 		                        <td style="vertical-align: top;">
-		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
+		                            <h2 id="ToTitle" class="receiver_tltype01">
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t00001' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">

@@ -15,10 +15,10 @@
 			</c:choose>
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
+<%-- 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script> --%>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<script type="text/javascript">
 			var companyId = "${companyId}";
 			var typeId = "${typeInfo.typeId}";
@@ -30,11 +30,11 @@
 	            //수정모드일 때
 	            if(typeId != "") {
 	            	//휴가유형명
-	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&#039;", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 					$("#typeName").val(typeName);
 					
 					if (typeName2 != null && typeName2 != "") {
-						typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&#039;", "'"), "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&#034;", '"');
+						typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 						$("#typeName2").val(typeName2);
 					}
 	            }
@@ -50,11 +50,12 @@
 				}
 				
 				//태그 적용 안되게 하기
-// 				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
-				
-// 				if (typeName2) {
-// 					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
-// 				}
+				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'","&#39;"), '"',"&quot;");
+				if (typeName2) {
+					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'","&#39;"), '"',"&quot;");
+				} else {
+					typeName2 = typeName;
+				}
 				
 				$.ajax({
 		        	type : "POST",
@@ -64,8 +65,8 @@
 		        	data : {
 		        		companyId : companyId,
 		        		typeId : typeId,
-		        		typeName : typeName,
-		        		typeName2 : typeName2
+		        		typeName : trim_Cross(typeName),
+		        		typeName2 : trim_Cross(typeName2)
 		        	},
 	            	success : function(resultStatus) {
 	            		if (resultStatus == "success") {

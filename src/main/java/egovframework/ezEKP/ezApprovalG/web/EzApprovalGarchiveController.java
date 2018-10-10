@@ -552,6 +552,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
@@ -568,6 +569,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("dirPath", dirPath);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("regRecordAttach ended");
 		
@@ -1240,7 +1242,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = commonUtil.getRealPath(request);
 		String dirpath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator ;
-		String result = ezApprovalGService.addBebu(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGService.addBebu(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo);
 		
 		logger.debug("addBebu ended");
 		
@@ -1293,7 +1295,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang(),userInfo);
-		
 		logger.debug("getRecSCInfo ended");
 		
 		return result;
@@ -1640,8 +1641,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String contID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String description = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String orgCompanyID = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+		if (orgCompanyID == null || orgCompanyID.equals("")) {
+			orgCompanyID = userInfo.getCompanyID();
+		}
 		
-		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, orgCompanyID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("setUserContDoc ended");
 		
@@ -1755,7 +1760,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
             }
         }
 
-        String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
+        String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId());
 
 		logger.debug("getUserContList ended");
 
@@ -1880,7 +1885,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         }
         
         if (AllFG.equals("0")) {
-        	excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
+        	excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getId());
         } else if(AllFG.equals("1")) {
         	excelValue = ezApprovalGService.getUserContListAll(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());	
         }
@@ -1945,6 +1950,11 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String title2 = "";
 		String docID = request.getParameter("pDocID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        String orgCompanyID = request.getParameter("orgCompanyID");
+        
+        if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
         
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
             susinAdmin = "YES";
@@ -1996,6 +2006,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("title2", title2);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("aprDocAttach ended");
 		
@@ -2010,6 +2021,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String deptID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		
@@ -2027,6 +2044,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("aprDocAttachList started");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		String contID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String pageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -2050,57 +2073,15 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String contID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String orgCompanyID = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		if (orgCompanyID == null || orgCompanyID.equals("")) {
+			orgCompanyID = userInfo.getCompanyID();
+		}
 		
-		String result = ezApprovalGService.deleteUserContDoc(docID, contID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.deleteUserContDoc(docID, contID, orgCompanyID, userInfo.getLang(), userInfo.getTenantId());
 
 		logger.debug("delUserContDoc ended");
 		
-		return result;
-	}
-	
-	
-	/** 전자결재 G 한글 양식 기안*/
-	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String ezDraftUI_HWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String result ="";
-//		  NoneActiveX = GetSystemConfigValue("NONEACTIVEX").ToString();
-//          _HwpToolbar = GetSystemConfigValue("UserInfo_HWPToolbar").ToString();
-//          Use_Editor = GetSystemConfigValue("EDITOR").ToString();
-//          
-//          if (userinfo.RollInfo.IndexOf("a=1") > -1)
-//              _pSusinAdmin = "YES";
-//          else
-//              _pSusinAdmin = "NO";
-
-          String formURL = request.getParameter("formURL");
-          String DraftFlag = request.getParameter("DraftFlag");
-          String formDocType = request.getParameter("formDocType");
-          String susinSN = request.getParameter("susinSN");
-//          if (Request.QueryString["DocState"] != null)
-//              _DocState = ReplaceXSS(Request.QueryString["DocState"]);
-//          if (Request.QueryString["ListType"] != null)
-//              _ListType = ReplaceXSS(Request.QueryString["ListType"]);
-//          if (Request.QueryString["AprState"] != null)
-//              _AprState = ReplaceXSS(Request.QueryString["AprState"]);
-//          if (Request.QueryString["isTmpDoc"] != null)
-//              _isTmpDoc = ReplaceXSS(Request.QueryString["isTmpDoc"]);
-//          if (_ListType == "21")
-//          {
-//              if (Request.QueryString["DocSN"] != null)
-//                  _DocSN = ReplaceXSS(Request.QueryString["DocSN"]);
-//          }
-//          
-//          _dirpath = "/Upload_ApprovalG/" + userinfo.CompanyID + "/doc/" + DateTime.Now.Year.ToString() + "/";
-//
-//          ezApprovalG.ezDoc ezAPI = new ezApprovalG.ezDoc();
-//          _optSignDateFormat = ezAPI.getOptionInfo("A15", "002", userinfo.CompanyID, "CODE", userinfo.Lang);
-//          _optisSplit = ezAPI.getOptionInfo("A33", "001", userinfo.CompanyID, "CODE", userinfo.Lang);
-//          _optSplitKind = ezAPI.getOptionInfo("A33", "002", userinfo.CompanyID, "CODE", userinfo.Lang);
-//          _sihangURL = ezAPI.getOptionInfo("A36", "004", userinfo.CompanyID, "CODE", userinfo.Lang);
-//
-//          ezAPI = null;
 		return result;
 	}
 	
@@ -2170,10 +2151,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String keyword = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-        String strBaseDn = "ou=*" + keyword + "*,";
-        String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2)(docsysteminfo=*))";
+        String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2))";
         int intScope = 3;
-        String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope, strBaseDn);
+        String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope);
         
 		logger.debug("searchOrganGListData ended");
 		return strXML;
@@ -2304,12 +2284,13 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			File file = new File(realPath + savePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(saveXML.toString().getBytes("utf-8"));
+			fop.write(saveXML.toString().getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 
 			saveFlag = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			saveFlag = false;
 		} 
 		
@@ -2347,21 +2328,21 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(extXML);
 		String mapPath = commonUtil.getRealPath(request);
 
-		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("euc-kr")));
 
 		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
 				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
 				case "pubdoc":
-					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("UTF-8")));
-					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
+					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("euc-kr")));
 					break;
 
 				default:
-					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("euc-kr")));
 					break;
 				}
 		}
@@ -2376,50 +2357,91 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	public String sendMsg(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("sendMsg started");
 		userInfo = commonUtil.userInfo(loginCookie);
- 
-		String xmlData = request.getParameter("xmlData");
+		 
+		String extXML = request.getParameter("extXML");
+		Document xmlDom = commonUtil.convertStringToDocument(extXML);
+		String mapPath = commonUtil.getRealPath(request);
 		String xmlPath = request.getParameter("xmlPath");
-		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
+		String path = mapPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
+		logger.debug("xmlPath=" + xmlPath);
+		
+		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("euc-kr")));
 
+		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
+				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
+				case "pubdoc":
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
+					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("euc-kr")));
+					break;
+
+				default:
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("euc-kr")));
+					break;
+				}
+		}
+		
+		String xmlData = ezApprovalGService.createSendMsgXML(xmlDom, mapPath, userInfo);
+		xmlData = xmlData.split("::")[1];
+		xmlData = xmlData.replace("\n", "").replace("\t", "");
+		FileOutputStream fop = null;
+		
 		try {
 			File file = new File(path);
-			FileOutputStream fop = new FileOutputStream(file);
-			fop.write(xmlData.replace("\n", "").replace("\t", "").getBytes("utf-8"));
+			fop = new FileOutputStream(file);
+			fop.write(xmlData.getBytes("utf-8"));
 			fop.flush();
-			fop.close();
-
 		} catch (Exception e) {
-		} 
-		
-		    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-		    DocumentBuilder builder;  
-	        builder = factory.newDocumentBuilder();  
-	        Document xmlDom = builder.parse( new InputSource( new StringReader( xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "").replace("\n", "").replace("\t", "") ) ) );  
-			
-			String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
-			String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
-			String[] arrReceiveID = receiveID.split(";");
-			String strReceiveID = receiveID;
-			
-			if (receiveID.substring(0, 1).equals(";")) {
-				strReceiveID = receiveID.substring(1);
+			e.printStackTrace();
+		} finally {
+			if (fop != null) {
+				try { fop.close(); } catch (Exception e) { }
 			}
-	
-	        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
-	        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
-	        }
-	
-	        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
-	        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-	
-	        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
-	        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
-	
-	        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
-	     
-	        String result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + arrReceiveID[arrReceiveID.length - 1].toString() + strTime, "sendtemp", strXML, userInfo.getTenantId());
-	        logger.debug("sendMsg ended");
-	        return result;
+		}
+		
+		xmlData = xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+	    DocumentBuilder builder = factory.newDocumentBuilder();  
+        xmlDom = builder.parse( new InputSource( new StringReader(xmlData) ) );  
+		
+		String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
+		String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
+		String[] arrReceiveID = receiveID.split(";");
+		String strReceiveID = receiveID;
+		
+		if (receiveID.substring(0, 1).equals(";")) {
+			strReceiveID = receiveID.substring(1);
+		}
+
+        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
+        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
+        }
+
+        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
+        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+
+        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
+        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
+
+        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
+        String result = "";
+        
+        //여러부서 보낼수 있게 수정
+        for (String recevID : arrReceiveID) {
+        	result = ezApprovalGService.getFileName(mapPath, sendID + recevID + strTime, "sendtemp", strXML, userInfo.getTenantId());
+        	
+        	if (result.equals("FALSE")) {
+        		logger.debug("sendMsg Fail : " + sendID + recevID + strTime);
+        		
+        		return result;
+        	}
+		}
+        
+        logger.debug("sendMsg ended");
+        return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/cert.do", produces = "text/xml;charset=utf-8")
@@ -2466,7 +2488,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			 xmlDoc.getElementsByTagName("content").item(0).setTextContent(strContent);
 			
 			 result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + commonUtil.convertDocumentToString(xmlDoc).substring(commonUtil.convertDocumentToString(xmlDoc).indexOf("<pubdoc>"), commonUtil.convertDocumentToString(xmlDoc).length());
-		} catch (Exception e){
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		logger.debug("loadDocXML ended");
@@ -2574,7 +2597,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			userDeptName = "";
 		}
 
-		String result = ezApprovalGService.sendAck(commonUtil.getRealPath(request), docID, type, userName, userDeptName, errMsg, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.sendAck(docID, type, userName, userDeptName, errMsg, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("sendAckforReSend ended");
 		return result;
 	}
@@ -2641,6 +2664,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		String docID = request.getParameter("docID");
 
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getLineModeFlag(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("result = " + result);

@@ -1490,6 +1490,50 @@ function ClearDocCellInfo() {
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
+        
+        //2018-09-27 김보미
+        if (AprState == "015") { //회송일 경우 수신처 결재칸도 비울것. 
+        	susunSN = "1";
+        	for (i = 1; i <= SignCount ; i++) {
+        		fieldname = susunSN + "sign" + i;
+        		field = message.GetListItem(fields, fieldname);
+        		
+        		if (field.textContent != null && field.textContent != " " && field.textContent != "") { //서명이 있을 경우에만 값을 지운다.
+        			if (field) {
+        				field.textContent = " ";
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        			
+        			fieldname = susunSN + "seumyung" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.textContent = " ";
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        			
+        			fieldname = susunSN + "seumyungdate" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.textContent = " ";
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        			
+        			fieldname = susunSN + "jikwe" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.innerHTML = "&nbsp; "; //그냥 공백(" ")을 넣으면 표가 틀어지기 때문에 기호값으로 넣어준다.
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}
+        		}
+        	}
+        }
     }
     catch (e) {
         alert("ClearDocCellInfo()" + e.description);
@@ -1669,8 +1713,7 @@ function SendDraftMappingSign(ret) {
                     }
                     
 					if (signImageType == "NAME") {
-//						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 					}
@@ -1729,8 +1772,7 @@ function SendDraftMappingSign(ret) {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                    	if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -1884,7 +1926,7 @@ function openFormUI() {
         getformcont_cross_dialogArguments[0] = parameter;
         getformcont_cross_dialogArguments[1] = openFormUI_Complete;
 
-        DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do");
+        DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do?fileType=mht");
     } catch (e) {
         alert("openFormUI()" + e.description);
     }
@@ -2376,7 +2418,9 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = "mht";
+        
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
@@ -2442,7 +2486,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
+        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
@@ -2460,7 +2504,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + DraftFlag;
         } else {
-        	url = "/ezApprovalG/aprDocAttach.do";
+        	url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
         }
         	
         if (CrossYN()) {
@@ -2504,6 +2548,7 @@ function openAaprDocAttachUI_Complete(ret) {
 function SaveDraftDocInfo() {
     var rtnVal;
     SaveFile();
+    SignSave();
     rtnVal = SaveDraftDocInfo_ilban("002");
     if (rtnVal.toUpperCase() == "FALSE") {
     	 return rtnVal;
@@ -2627,6 +2672,62 @@ function SaveDraftDocInfo_ilban(pState) {
        } else {
        	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
        }
+        
+        /*
+    	 * 2018-06-14 천성준
+    	 * 비전자문서 데이터 세팅 메소드
+    	 * */
+    	if (nonElecRec == "Y") {
+    		var NonElecXML = createXmlDom();
+    		NonElecXML = loadXMLString(nonElecRecInfoXml);
+    		
+    		createNodeAndInsertText(xmlpara, objNode, "NONELECREC", nonElecRec);
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERTYPE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE"));
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE"));
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERYEAR", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERYEAR"));
+    		createNodeAndInsertText(xmlpara, objNode, "EXECUTEDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE"));
+    		createNodeAndInsertText(xmlpara, objNode, "TITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "TITLE"));
+    		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE"));
+    		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE2"));
+    		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME"));
+    		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME2"));
+    		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER"));
+    		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER2"));
+    		createNodeAndInsertText(xmlpara, objNode, "SENDINGMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SENDINGMEMBER"));
+    		createNodeAndInsertText(xmlpara, objNode, "DELIVERYNO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DELIVERYNO"));
+    		createNodeAndInsertText(xmlpara, objNode, "ORIGINREGSN", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ORIGINREGSN"));
+    		createNodeAndInsertText(xmlpara, objNode, "ELECTRONICRECFLAG", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ELECTRONICRECFLAG"));
+    		createNodeAndInsertText(xmlpara, objNode, "NONELECREC_CABINETID", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "CABINETID"));
+    		
+    		// 시청각 기록물일경우
+    		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "5" || SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "6") {
+    			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECINFO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "AUDIOVISUALRECINFO"));
+    			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECSUMMARY", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SUMMARY"));
+    		}
+    		
+    		// 분리첨부가 존재할 경우
+    		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
+    			var sepAtt, Data, i;
+    			var rtnXml = createXmlDom();
+    	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+    			var sepLVXml = createXmlDom();
+                	sepLVXml = loadXMLString(nonElecRecInfoXml);
+                var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+                
+                for (i = 0; i < rows.length; i++) {
+                    sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID",  SelectSingleNodeValue(rows[i], "CABINETID"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
+                }
+                
+                createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+    		}
+    	}
+    	
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
@@ -2956,14 +3057,19 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN()) {
-        ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined)
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-        else
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-        DivPopUpShow(330, 205, url);
-    }
-    else {
+    	if (isIE() && !document.getElementById("iFrameLayer")) {
+    		var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+    		feature = feature + GetShowModalPosition(330, 205);
+			var rtn = window.showModalDialog(url, parameter, feature);
+    	} else {
+    		ezapralert_cross_dialogArguments[0] = parameter;
+    		if (CompleteFunction != undefined)
+    			ezapralert_cross_dialogArguments[1] = CompleteFunction;
+    		else
+    			ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+    		DivPopUpShow(330, 205, url);
+    	}
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         if (url != "")
@@ -2973,7 +3079,6 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
         	Complete_Deaft2();
         }
     }
-
 }
 
 function OpenAlertUI_Complete() {
@@ -2985,23 +3090,21 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-
         if (url != "")
             var rtn = window.showModalDialog(url, parameter, feature);
         if (rtn) {
-        	 window.close();
+        	 window.returnValue = true; // 한글기안기 반송의견 삭제 안되는 버그로 인해 변경.
+        	 //window.close();
         }
     }
 }
@@ -3038,8 +3141,6 @@ function getDocInfo() {
         if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O")
             pHasOpinionYN = "Y";
        
-        var fields = message.GetFieldsList();
-        var field;
         if (isUsed == "reuse") {
         	if (reuseTitleYN == "YES") {
         		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
@@ -3064,8 +3165,7 @@ function getDocInfo() {
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
     }
 }
-function changeEditMode() {
-}
+
 function HabyuiResultOpinion() {
     try {
         var parameter = new Array();
@@ -3075,7 +3175,9 @@ function HabyuiResultOpinion() {
         parameter[1] = "N";
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = "mht";
+        
         var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no";
         feature = feature + GetShowModalPosition(530, 520);
@@ -3262,7 +3364,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setDrafterAddress() {
@@ -3274,6 +3376,8 @@ function setDrafterAddress() {
 }
 function setFirstDrafter(type, beforDocID) {
     var ret = getAutoAprLine(type, beforDocID);
+    
+    if (nonElecRec == "Y"){return}
 
     if (ret[0] != "NONE") {
         IsSkipDrafter = "FALSE";
@@ -3392,6 +3496,7 @@ function getDeptSymbol(DeptID, DeptName) {
 }
 function getDeptSendName(DeptID) {
 	var result = "";
+	var resultNode;
 	
 	$.ajax({
 		type : "POST",
@@ -3408,7 +3513,13 @@ function getDeptSendName(DeptID) {
 		}        			
 	});
 	
-    return trim(SelectSingleNodeValue(loadXMLString(result), "EXTENSIONATTRIBUTE5"));
+	resultNode = loadXMLString(result);
+	
+	if (resultNode.firstChild) {
+		resultNode = resultNode.firstChild;
+	}
+	
+    return trim(SelectSingleNodeValue(resultNode, "EXTENSIONATTRIBUTE5"));
 }
 function setMenuBar(id, flag) {
     var strCmd, display_Value;
@@ -3439,7 +3550,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -3481,7 +3593,8 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -3491,36 +3604,40 @@ function SaveOrgFile() {
     return result;
 }
 function SignCheck() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
     var SignXML = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-
-    xmlhttp.open("Post", "../ezAPRSIGN/aspx/getSignInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (getXmlString(xmlhttp.responseXML) == "")
+    if (result == "" || result == null) {
         return;
+    }
 
     var NodeList;
-    if (SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO")) {
-        NodeList = SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO");
-        if (NodeList.length <= 0)
-            return;
+    NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
+    
+    if (NodeList.length <= 0) {
+        return;
     }
-    SignXML = xmlhttp.responseXML;
+    
+    SignXML = result;
 
     var rtnVal = putSignXML(SignXML);
+    
     if (rtnVal) {
         SaveFile();
-
-        var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("Post", "../ezAPRSIGN/aspx/delSignInfo.aspx", false);
-        xmlhttp.send(SignXML);
     }
 }
 function putSignXML(SignXML) {
@@ -3627,16 +3744,25 @@ function getSignDate() {
 
     return result;
 }
+
 function getHistory() {
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + ext;
     centerOpenWindow(URL, 740, 450);
 }
+
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {
         if (CrossYN()) {
-            DivPopUpShow(wWeight, wHeight, wfileLocation);
-        }
-        else {
+        	if (isIE() && !document.getElementById("iFrameLayer")) {
+        		var heigth = window.screen.availHeight;
+        		var width = window.screen.availWidth;
+        		var left = (width - wWeight) / 2;
+        		var top = (heigth - wHeight) / 2;
+        		window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+        	} else {
+        		DivPopUpShow(wWeight, wHeight, wfileLocation);
+        	}
+        } else {
             var heigth = window.screen.availHeight;
             var width = window.screen.availWidth;
             var left = (width - wWeight) / 2;
@@ -4052,4 +4178,5 @@ function getAddress(puserIDs) {
 	});
     
     return result;
+    
 }

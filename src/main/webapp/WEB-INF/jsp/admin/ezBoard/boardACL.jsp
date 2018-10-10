@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
 	    <style>
 	    <%-- 2018-07-26 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분, 가로 축소 시 스크롤 수정 --%>
 	    	#AccessListView {
@@ -17,15 +17,15 @@
     			text-overflow: ellipsis;
 	    	} 
 	    </style>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
-	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list_admin.js')}"></script>
 	    <script type="text/javascript">
 	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var strList = "${strList}";
-	        var userLang = "<c:out value='${strUserLang}'/>";
+	        var primary = "${primary}";  // 값을 넘기지 않던(""으로 전달하고 있었음) userLang 대신 primary로 다국어 데이터 표시
 	        var pBoardName = "<c:out value='${pBoardName}'/>";
 	        var pType = "<c:out value='${pType}'/>";
 	        var pParentNeed = "<c:out value='${pParentNeed}'/>";
@@ -45,6 +45,7 @@
 	            FillAccessList();
 	        }
 	
+	        /* 2018-07-19 홍승비 - 권한설정 정보 리스트로 표출하는 분기 스크립트 오류 수정 */
 	        function FillAccessList() {
 	            var xmldom = loadXMLString(strList);
 	            var listTR, listTD, listTDText;
@@ -55,36 +56,40 @@
 	            listview.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
 	            listview.DataBind("AccessList");
 	            var xmldomNode = SelectNodes(xmldom, "DATA/ROW")
-
-	            if (userLang == "2") {
+	            
+	            /* 다국어 설정인 경우, 4번째부터 값을 가져온다. */
+	            if (primary != "1") {
 	                for (i = 0; i < xmldomNode.length; i++) {
 	                    listTR = listview.AddRow(listview.GetRowCount());
 	                    for (j = 4; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
-	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true") {
-	                            listTDText = document.createTextNode("●");
-	                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false") {
-	                            listTDText = document.createTextNode("");
-	                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
-	                            listTDText = document.createTextNode("");
-	                        } else {
-	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1") {
-	                                listTDText = document.createTextNode("●");
-	                            } else if (getNodeText(xmldomNode[i].childNodes[j]) == "0") {
-	                                listTDText = document.createTextNode("");
-	                            } else {
-	                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	                            }
-	                        }
-	                        if (j == 7)
+	                        
+	                       /* 동그라미로 플래그를 그린다.(13~20) */
+	                       if (j >=13) {
+		                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true" || getNodeText(xmldomNode[i].childNodes[j]) == "1") {
+		                            listTDText = document.createTextNode("●");
+		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false" || getNodeText(xmldomNode[i].childNodes[j]) == "0") {
+		                            listTDText = document.createTextNode("");
+		                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
+		                            listTDText = document.createTextNode("");
+		                        }
+	                       }  
+	                       /* 회사(4), 부서(5), 이름(6), 직위직책(7) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
+	                       else {
+	                    	   listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
+	                       }
+	                        if (j == 7) {
 	                            j = 12;
-	                        if (j >= 13)
-	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
+	                        }
+	                        if (j >= 13) {
+								listTD.setAttribute("style", "text-align:center;color:#268fff;");
+	                        }
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
 	                        listTD = null;
 	                        listTDText = null;
 	                    }
+	                    
 	                    listTR.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
@@ -97,32 +102,20 @@
 	                    listTR = listview.AddRow(listview.GetRowCount());
 	                    for (j = 0; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
-
-	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true") {
-	                            listTDText = document.createTextNode("●");
-	                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false") {
-	                            listTDText = document.createTextNode("");
-	                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
-	                            listTDText = document.createTextNode("");
-	                        } else {
-	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1") {
-	                                listTDText = document.createTextNode("●");
-	                            } else if (getNodeText(xmldomNode[i].childNodes[j]) == "0") {
-	                                listTDText = document.createTextNode("");
-	                            } else {
-	                            	if (j == 2) {
-	    	                        	if (SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL") == "Y") {
-// 			                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]) + "(하위부서)");
-			                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	    	                        	} else {
-			                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	    	                        	}
-	    	                        } else {
-	    	                        	listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	    	                        }
-	                            }
-	                        }
 	                        
+	                        if (j >= 13) {
+		                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true" || getNodeText(xmldomNode[i].childNodes[j]) == "1") {
+		                            listTDText = document.createTextNode("●");
+		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false" || getNodeText(xmldomNode[i].childNodes[j]) == "0") {
+		                            listTDText = document.createTextNode("");
+		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
+		                            listTDText = document.createTextNode("");
+		                        }
+	                        }
+	                        /* 회사(0), 부서(1), 이름(2), 직위직책(3) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
+	                        else {
+								listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
+	                        }
 	                        if (j == 3) {
 	                            j = 12;
 	                        }
@@ -134,6 +127,7 @@
 	                        listTD = null;
 	                        listTDText = null;
 	                    }
+	                    
 	                    listTR.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
@@ -216,9 +210,10 @@
 	            var alertContent = "";
 	            
 	            if (type === "one" ) {
-	            	alertContent = "<spring:message code='ezBoard.t197'/>";
+	            	//alertContent = "<spring:message code='ezBoard.t197'/>";
+	            	alertContent = "<spring:message code='ezBoard.pjg04'/>";
 	            } else if (type === "type" ) {
-	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
+	            	alertContent = "<spring:message code='ezBoard.pjg05'/>";
 	            }
 				
 	            if(confirm(alertContent)) {
@@ -260,6 +255,7 @@
 	            }
 	        }
 	
+	        /* 2018-09-03 홍승비 - 관리자 권한 체크 시 모든 동작 '허용'으로 고정 */
 	        function checkbox_onclick(e) {
 	            if (CrossYN()) {
 	                srcElementID = e.target.id;
@@ -267,7 +263,7 @@
 	                srcElementID = window.event.srcElement.id;
 	            }
 	            toggle(srcElementID);
-	            if (srcElementID == "admin_OK" && admin_OK.checked) {
+	            if (admin_OK.checked == true) {
 	                access_OK.checked = true;
 	                list_OK.checked = true;
 	                read_OK.checked = true;
@@ -282,25 +278,53 @@
 	                write_NO.checked = false;
 	                reply_NO.checked = false;
 	                delete_NO.checked = false;
-	
-	                if (pParentBoardID == "top") {
-	                    list_OK.checked = false;
-	                    list_NO.checked = true;
-	                    read_OK.checked = false
-	                    read_NO.checked = true;
-	                    write_OK.checked = false;
-	                    write_NO.checked = true;
-	                    reply_OK.checked = false;
-	                    reply_NO.checked = true;
-	                    delete_OK.checked = false;
-	                    delete_NO.checked = true;
-	                    PostNotice.checked = false;
-	                }
-	
-	                return;
+	                
+	                access_NO.disabled = true;
+	                list_NO.disabled = true;
+	                read_NO.disabled = true;
+	                write_NO.disabled = true;
+	                reply_NO.disabled = true;
+	                delete_NO.disabled = true;
 	            }
+	            else if (admin_NO.checked == true) {
+	            	access_NO.disabled = false;
+                    list_NO.disabled = false;
+                    read_NO.disabled = false;
+                    write_NO.disabled = false;
+                    reply_NO.disabled = false;
+                    delete_NO.disabled = false;
+                    PostNotice.checked = false;
+                    PostSpan.style.display = "none";
+	            }
+	            
+	         // 게시판 그룹의 경우, 오직 '관리자'와 '접근' 권한만 설정 가능.
+                if (pParentBoardID == "top") {
+					list_OK.checked = false;
+                    list_NO.checked = true;
+                    read_OK.checked = false
+                    read_NO.checked = true;
+                    write_OK.checked = false;
+                    write_NO.checked = true;
+                    reply_OK.checked = false;
+                    reply_NO.checked = true;
+                    delete_OK.checked = false;
+                    delete_NO.checked = true;
+                    PostNotice.checked = false;
+                    
+					list_OK.disabled = true;
+                    list_NO.disabled = true;
+                    read_OK.disabled = true
+                    read_NO.disabled = true;
+                    write_OK.disabled = true;
+                    write_NO.disabled = true;
+                    reply_OK.disabled = true;
+                    reply_NO.disabled = true;
+                    delete_OK.disabled = true;
+                    delete_NO.disabled = true;
+	                PostNotice.disabled = true;
+                }	            
 	        }
-	
+	        
 	        function toggle(pSrcElementID) {
 	            if (pSrcElementID == "inherit_OK" && inherit_OK.checked) inherit_NO.checked = false;
 	            if (pSrcElementID == "inherit_OK" && inherit_OK.checked == false) inherit_NO.checked = true;
@@ -343,21 +367,7 @@
 	            if (pSrcElementID == "reply_NO" && reply_NO.checked == false) reply_OK.checked = true;
 	            if (pSrcElementID == "delete_NO" && delete_NO.checked) delete_OK.checked = false;
 	            if (pSrcElementID == "delete_NO" && delete_NO.checked == false) delete_OK.checked = true;
-	
-	            if (pParentBoardID == "top") {
-	                list_OK.checked = false;
-	                list_NO.checked = true;
-	                read_OK.checked = false
-	                read_NO.checked = true;
-	                write_OK.checked = false;
-	                write_NO.checked = true;
-	                reply_OK.checked = false;
-	                reply_NO.checked = true;
-	                delete_OK.checked = false;
-	                delete_NO.checked = true;
-	                PostNotice.checked = false;
-	            }
-	
+	            
 	            if (access_NO.checked) {
 	                read_OK.checked = false;
 	                list_OK.checked = false;
@@ -449,7 +459,7 @@
 	                selectTargetListXML += "</DATA>";
 	            }
 	        }
-	
+	        
 	        function CheckBoxInit() {
 	            admin_OK.checked = false;
 	            access_OK.checked = false;
@@ -461,8 +471,7 @@
 	            inherit_OK.checked = false;
 	            PostSpan.style.display = "none";
 	            PostNotice.checked = false;
-	
-	
+	            
 	            admin_NO.checked = false;
 	            access_NO.checked = false;
 	            list_NO.checked = false;
@@ -471,8 +480,15 @@
 	            reply_NO.checked = false;
 	            delete_NO.checked = false;
 	            inherit_NO.checked = false;
+	            
+	            access_NO.disabled = false;
+                list_NO.disabled = false;
+                read_NO.disabled = false;
+                write_NO.disabled = false;
+                reply_NO.disabled = false;
+                delete_NO.disabled = false;
 	        }
-	
+	        
 	        function CheckBoxInit2() {
 	            admin_OK.checked = false;
 	            access_OK.checked = false;
@@ -493,8 +509,15 @@
 	            reply_NO.checked = true;
 	            delete_NO.checked = true;
 	            inherit_NO.checked = true;
+	            
+	            access_NO.disabled = false;
+                list_NO.disabled = false;
+                read_NO.disabled = false;
+                write_NO.disabled = false;
+                reply_NO.disabled = false;
+                delete_NO.disabled = false;
 	        }
-	
+	        
 	        function FillACLTable() {
 	            CheckBoxInit();
 	
@@ -561,7 +584,32 @@
 	            }
 	
 	            xmldom = null;
+	            
+	            /* 2018-09-03 홍승비 - 관리자 권한을 가진 경우 모든 권한 '허용'에 고정 */
+	            if (admin_OK.checked == true) {
+					access_OK.checked = true;
+	                list_OK.checked = true;
+	                read_OK.checked = true;
+	                write_OK.checked = true;
+	                reply_OK.checked = true;
+	                delete_OK.checked = true;
 	
+	                access_NO.checked = false;
+	                list_NO.checked = false;
+	                read_NO.checked = false;
+	                write_NO.checked = false;
+	                reply_NO.checked = false;
+	                delete_NO.checked = false;
+	                
+	                access_NO.disabled = true;
+	                list_NO.disabled = true;
+	                read_NO.disabled = true;
+	                write_NO.disabled = true;
+	                reply_NO.disabled = true;
+	                delete_NO.disabled = true;
+	            }
+	
+	            // 게시판 그룹의 경우, 오직 '관리자'와 '접근' 권한만 설정 가능.
 	            if (pParentBoardID == "top") {
 	                list_OK.checked = false;
 	                list_NO.checked = true;
@@ -574,6 +622,18 @@
 	                delete_OK.checked = false;
 	                delete_NO.checked = true;
 	                PostNotice.checked = false;
+	                
+	                list_OK.disabled = true;
+                    list_NO.disabled = true;
+                    read_OK.disabled = true
+                    read_NO.disabled = true;
+                    write_OK.disabled = true;
+                    write_NO.disabled = true;
+                    reply_OK.disabled = true;
+                    reply_NO.disabled = true;
+                    delete_OK.disabled = true;
+                    delete_NO.disabled = true;
+	                PostNotice.disabled = true;
 	            }
 	        }
 	
@@ -608,6 +668,7 @@
 	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	        }
+	        /* 2018-09-03 홍승비 - 권한복사팝업 열리는 위치 수정 */
 	        function AclCopy() {
 	            var listview = new ListView();
 	            listview.LoadFromID("AccessListView");
@@ -620,8 +681,8 @@
 	            var pwidth = window.screen.availWidth;
 	            pheigth = parseInt(pheigth) / 2;
 	            pwidth = parseInt(pwidth) / 2;
-	            pheigth = pheigth - 192;
-	            pwidth = pwidth - 260;
+	            pheigth = pheigth - 330;
+	            pwidth = pwidth - 350;
 	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	        function UnderBoardCopy() {
@@ -631,7 +692,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=350px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	    </script>
 		</head>

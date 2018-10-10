@@ -127,8 +127,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityServiceImpl.class);
 	
+	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
 	@Override
-	public String leftCommunityGet2(String code, int tenantID) throws Exception {
+	public String leftCommunityGet2(String code, String companyID, int tenantID) throws Exception {
 		logger.debug("leftCommunityGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -142,8 +143,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
+	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
 	@Override
-	public CommunityClubVO leftCommunityGet4(String code, int tenantID) throws Exception {
+	public CommunityClubVO leftCommunityGet4(String code, String companyID, int tenantID) throws Exception {
 		logger.debug("leftCommunityGet4 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -157,12 +159,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return vo;
 	}
 
+	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
 	@Override
 	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo) throws Exception {
 		logger.debug("getLeftCommunity started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userInfo.getId());
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		logger.debug("leftCommunityGet3 started.");
@@ -319,6 +323,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			return;
 		}
 		
+		// 동일 테넌트 내부에서, companyID의 비교 작업은 필요하지 않다.(boardno 등은 테넌트 공통으로 증가하는 고유 PRI Key이므로)
 		boardNo = commMakeOkGet2(tenantID);
 		boardNo += 1;
 		
@@ -1431,6 +1436,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.getWriter().flush();
 	}
 	
+	/* 2018-06-22 홍승비 - 사간겸직 회원의 설문조사 표출 시 companyID 조건 추가 */
 	@Override
 	public void pollRes(LoginVO userInfo, Model model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
 		logger.debug("pollRes started.");
@@ -1574,7 +1580,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		StringBuilder strHTML = new StringBuilder();
-		String name = pollResGet4(userInfo.getPrimary(), managerVO.getPollRegUser(), tenantID);
+		
+		/* 2018-06-22 홍승비 - 사간겸직 회원의 설문조사 표출 시 companyID 조건 추가 */
+		String name = pollResGet4(userInfo.getPrimary(), managerVO.getPollRegUser(), userInfo.getCompanyID(), tenantID);
 		
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr style='height:25px'>");
 		
@@ -1600,7 +1608,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception {
+	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
 		logger.debug("pollResOk started.");
 		
 		int notResponse = 0;
@@ -1644,9 +1652,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("pollResOk ended.");
 		
+		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + pollManagerID + "&pollState=" + pollState + "';\n");		
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {
@@ -1684,8 +1694,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
-		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getTenantId());
+		/* 2018-07-18 홍승비 - primary 설정 변경 */
+		String primary = userInfo.getPrimary();
+		
+		// 여기서 회원리스트를 받아온다. CommunityCClubUserVO에 deptID, deptName 필드를 추가했다.
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iOutputCount = 0;
 		
@@ -1714,8 +1727,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
 				}
 				
-				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-				sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", userInfo.getPrimary(), userInfo.getTenantId())) + "</td>");
+				// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
+				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
+				// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
+				sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
 				sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 				sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
 				sb.append("<td>");
@@ -1954,11 +1969,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return listData.toString();
 	}
 
+	/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
 	@Override
 	public String adminOuterList(LoginVO userInfo, String code) throws Exception {
 		logger.debug("adminOuterList started.");
 		
-		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, userInfo.getPrimary(), userInfo.getTenantId());
+		// companyID 조건 추가
+		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
@@ -1995,7 +2012,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminMemberList(LoginVO userInfo, String code, String flag, String ser, String strSysopID, String mode) throws Exception {
 		logger.debug("adminMemberList started.");
 		
-		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), userInfo.getPrimary(), ser, userInfo.getTenantId());
+		/* 2018-06-22 홍승비 - 커뮤니티 팝업홈 회원탈퇴/마스터이취임 리스트 companyID 조건 추가*/
+		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag, userInfo.getPrimary(), ser, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iCount = 1;
 		StringBuilder sb = new StringBuilder();
@@ -2029,7 +2047,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		int totalPage = 0;
 		
-		List<String> clubNoList = myCommunityGet(userInfo.getId(), 0, 0, "CNT", userInfo.getTenantId());
+		/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
+		List<String> clubNoList = myCommunityGet(userInfo.getId(), 0, 0, "CNT", userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (clubNoList.size() % 2 == 0) {
 			totalPage = clubNoList.size() / 2;
@@ -2047,12 +2066,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("myCopNewBoardItem started.");
 		
 		StringBuilder rtnVal = new StringBuilder();	
-		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST", userInfo.getTenantId());
+		/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
+		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST", userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("clubNoList.size : " + clubNoList.size());
 		
 		rtnVal.append("<ITEM><DATA>");
 		
+		// 이미 companyID로 걸러진 커뮤니티(동일 테넌트 내에서 CLUBNO로 구분 가능)를 가지고 후작업한다.
 		for (String clubNo : clubNoList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_copNo", clubNo.trim());
@@ -2081,6 +2102,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return rtnVal.toString();
 	}
 
+	/* 2018-06-21 홍승비 - 메인홈 우측 우수+신규 커뮤니티 표출 companyID 조건 추가 */
 	@Override
 	public String getBestNewCommunity(LoginVO userInfo, String mode) throws Exception {
 		logger.debug("getBestNewCommunity started.");
@@ -2089,6 +2111,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		rtnVal.append("<DATA>");
@@ -2097,10 +2120,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (mode.equals("BEST")) {
 			logger.debug("mainPageGet5 started.");
 			
+			/* 2018-06-21 홍승비 - 메인홈 우측 우수커뮤니티 표출 companyID 조건 추가 */
 			List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
-			
 			logger.debug("mainPageGet5 ended.");
 			
+			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업한다.
 			for (CommunityMyCommunityVO vo : list) {
 				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId());
 				vo.setC_memberCnt(String.valueOf(cnt));
@@ -2112,10 +2136,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			
+			/* 2018-06-21 홍승비 - 메인홈 우측 신규커뮤니티 표출 companyID 조건 추가 */
 			List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet6(map);
 			
 			logger.debug("mainPageGet6 ended.");
 			
+			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업한다.
 			for (CommunityMyCommunityVO vo : list) {
 				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId());
 				vo.setC_memberCnt(String.valueOf(cnt));
@@ -2130,8 +2156,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return rtnVal.toString();
 	}
 
+	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
 	@Override
-	public String leftCommunityGet1(String code, String id, int tenantID) throws Exception {
+	public String leftCommunityGet1(String code, String id, String companyID, int tenantID) throws Exception {
 		logger.debug("leftCommunityGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2758,6 +2785,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         map.put("v_pNow", commonUtil.getTodayUTCTime(""));
         map.put("tenantID", tenantID);
         
+        /* 2018-10-02 홍승비 - 게시자의 writerDeptID를 가져오도록 수정 */
         List<CommunityBoardListVO> list = ezCommunityDAO.searchItemXML(map);
         
         sb.append("<NODES>");
@@ -2770,6 +2798,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
 				sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptID>" + commonUtil.cleanValue(boardList.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
 				
@@ -2824,6 +2853,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
+	/* 2018-07-02 홍승비 - 조회자 정보에 companyID 삽입 */
 	@Override
 	public String setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
 		logger.debug("setAsRead started.");
@@ -2840,6 +2870,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 		map.put("v_pUserTitle2", userInfo.getTitle2());
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		try {
@@ -2938,6 +2969,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return "FALSE";
 	}
 
+	/* 커뮤니티 게시물(일반) > 게시자의 writerDeptID를 가져오도록 수정 */
 	@Override
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO userInfo) throws Exception {
 		logger.debug("getItemXML started.");
@@ -3226,8 +3258,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
+	/* 2018-07-17 홍승비 - 사원정보 deptID 파라미터 선택을 위해 companyID 조건 추가 */
 	@Override
-	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("readOneLineReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3236,6 +3269,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pItemID", pItemID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		List<CommunityOneLineReplyVO> list = ezCommunityDAO.readOneLineReply(map);
 		
@@ -3244,6 +3278,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return list;
 	}
 
+	/* 2018-07-02 홍승비 - 댓글 작성 시 작성자의 companyID를 함께 저장함 */
 	@Override
 	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception {
 		logger.debug("saveOneLineReply started.");
@@ -3291,6 +3326,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PCONTENT", pContent);
 		map.put("v_PPASSWORD", pPassword);
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		
 		ezCommunityDAO.saveOneLineReply(map);
@@ -3783,8 +3819,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 //		return list;
 //	}
 	
+	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가) */
 	@Override
-	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
 		// 2018-02-06 김보미 
     	if(pageNum == 0){
@@ -3801,6 +3838,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	map.put("userID", userID);
     	map.put("lang", lang);
     	map.put("tenantID", tenantID);
+    	map.put("companyID", companyID);
     	
     	/* MySQL */
     	map.put("perCount", perCount);
@@ -3839,7 +3877,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				userDeptName =  vo.getUserDeptName();
 			}
 			resultXML.append("<ROW>");
-			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><DEPTID><![CDATA[" + vo.getDeptID() + "]]></DEPTID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");
@@ -4346,14 +4384,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return sysopCheck;
 	}
 
+	/* 겸직사원의 커뮤니티 클릭 시 too many results로 쿼리 터짐 */
 	@Override
-	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, int tenantID) throws Exception {
+	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCommInfoGet2 started.");
 		logger.debug("primary : " + primary + ", sysopID : " + sysopID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_RECORD_C_SYSOPID", sysopID);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		CommunityMemberInfoVO vo = ezCommunityDAO.aspCommInfoGet2(map);
@@ -4705,6 +4745,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
+		/* 2018-10-02 홍승비 - 게시자의 writerDeptID를 가져오도록 수정 */
 		List<CommunityBoardListVO> list = ezCommunityDAO.adminSearchItemXML(map);
         
         sb.append("<NODES>");
@@ -4719,6 +4760,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				sb.append("<ItemID>" + board.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + commonUtil.cleanValue(board.getWriterID()) + "</WriterID>");
 				sb.append("<WriterName>" + commonUtil.cleanValue(board.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptID>" + commonUtil.cleanValue(board.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(board.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(board.getWriterCompanyName()) + "</WriterCompanyName>");
 				
@@ -4787,11 +4829,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public int adminMemberListGet1(String code, int tenantID) throws Exception {
+	public int adminMemberListGet1(String code, String flag, String ser, String primary, int tenantID) throws Exception {
 		logger.debug("adminMemberListGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FLAG", flag);
+		map.put("v_SER", ser);
 		map.put("v_CODE", code);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.adminMemberListGet1(map);
@@ -5224,16 +5269,25 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		
+		// TBL_C_MEMBERINFO에서 승인대기자를 받아올 때, 모든 겸직을 같이 받아와서 레코드 중복이 발생한다. 관리자의 현재 companyID로 조건을 걸어 distinct로 받아오자.
+		// deptID도 받아오도록 한다.
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
-
+		
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
-            sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
-            sb.append("<td>");
-        	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + commonUtil.cleanValue(user.getC_ID().trim()) + "', '" + commonUtil.cleanValue(user.getCompanyID().trim()) + "' )\">" + commonUtil.cleanValue(user.getUserName().trim()) + "</a>");
+			sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
+			sb.append("<td>");
+            
+            logger.debug("lang = " + userInfo.getPrimary() + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName());
+            
+            // 승인대기자의 정보를 표출할 때 해당 겸직부서(또는 원부서) 값을 같이 넘긴다.
+            // userName을 알아서 분기태워 가져오므로(primary로 case 작업), userName2를 사용하지는 않는다.
+            sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName().trim() + "</a>");
+            
             sb.append("</td>");
             sb.append("<td>" + commonUtil.cleanValue(user.getC_ID()) + "</td>");
             sb.append("<td align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
@@ -5275,26 +5329,34 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("okNoSet ended.");
 	}
 
+	/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
 	@Override
-	public int todayCopGet1(int tenantID) throws Exception {
+	public int todayCopGet1(String companyID,  int tenantID) throws Exception {
 		logger.debug("todayCopGet1 started.");
 		
-		int result = ezCommunityDAO.todayCopGet1(tenantID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		int result = ezCommunityDAO.todayCopGet1(map);
 		
 		logger.debug("todayCopGet1 ended.");
 		
 		return result;
 	}
 
+	/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
 	@Override
-	public CommunityClubVO todayCopGet2(int num, int tenantID) throws Exception {
+	public CommunityClubVO todayCopGet2(int num, String companyID, int tenantID) throws Exception {
 		logger.debug("todayCopGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("num", num);
 		map.put("mariaNum", num -1);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
+		// 관리자(sysop)ID를 가져온다.
+		// 해당 테넌트와 회사에 동시에 속한 레코드가 TBL_C_CLUB, TBL_usermaster 테이블에 존재하는지 조인하여 확인한다.
 		String userID = ezCommunityDAO.todayCopGet2SelectUserID(map);
 		int totalCount = ezCommunityDAO.todayCopGet2SelectTotalCount(map);
 		
@@ -5302,12 +5364,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 		
+		// 이미 위쪽 쿼리 2개에서 companyID로 걸러진 userID를 map에 넣어준다.
 		int temp = ezCommunityDAO.todayCopGet2SelectTemp(map);
 		
 		map = new HashMap<String, Object>();
 		map.put("temp", temp);
 		map.put("num", num);
 		map.put("mariaNum", num -1);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		if (num > totalCount) {
@@ -5316,6 +5380,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			map.put("mariaNum", num -1);
 		}
 		
+		// 오늘의 커뮤니티로 표출할 커뮤니티를 가져온다.
 		CommunityClubVO vo = ezCommunityDAO.todayCopGet2List(map);
 
 		logger.debug("todayCopGet2 ended.");
@@ -5370,12 +5435,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat, int tenantID) throws Exception {
+	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat, String companyID, int tenantID) throws Exception {
 		logger.debug("mainPageCategory started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", c_Code);
 		map.put("cat", cat);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		CommunityCCategoryVO vo = ezCommunityDAO.mainPageCategory(map);
@@ -5385,8 +5451,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return vo;
 	}
 
+	/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
 	@Override
-	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, int tenantID) throws Exception {
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, String companyID, int tenantID) throws Exception {
 		logger.debug("categoryListGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5396,6 +5463,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("mariaStart", mariaStart);
 		map.put("v_pEnd", endRow);
 		map.put("mariaEnd", mariaEnd);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityClubVO> list = ezCommunityDAO.categoryListGet(map); 
@@ -5405,8 +5473,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 
+	/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 검색 companyID 조건 추가 */
 	@Override
-	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, int tenantID) throws Exception {
+	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, String companyID, int tenantID) throws Exception {
 		logger.debug("searchCop started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5417,6 +5486,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pEnd", endRow);
 		map.put("mariaEnd", endRow - startRow + 1);
 		map.put("v_mode", mode);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityClubVO> list = ezCommunityDAO.searchCop(map);
@@ -5814,7 +5884,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception {
+	/* 2018-07-02 홍승비 - 커뮤니티 회원목록 회원정보 표출 시 companyID 조건 추가 */
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception {
 		logger.debug("commViewMemberGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5822,6 +5893,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("primary", primary);
 		map.put("v_keyword", keyword);
 		map.put("v_s_radio", sRadio.toUpperCase());
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCClubUserVO> list = ezCommunityDAO.commViewMemberGet1(map);
@@ -5848,12 +5920,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String primary, int tenantID) throws Exception {
+	/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String primary, String companyID, int tenantID) throws Exception {
 		logger.debug("adminOuterListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("primary", primary);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCOutApplicationVO> list = ezCommunityDAO.adminOuterListGet2(map);
@@ -5863,7 +5937,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, int tenantID) throws Exception {
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, String companyID, int tenantID) throws Exception {
 		logger.debug("adminMemberListGet3 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5871,6 +5945,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_FLAG", flag);
 		map.put("primary", primary);
 		map.put("v_SER", ser);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCClubUserVO> list = ezCommunityDAO.adminMemberListGet3(map);
@@ -5880,7 +5955,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 
-	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode, int tenantID) throws Exception {
+	/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
+	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode, String companyID, int tenantID) throws Exception {
 		logger.debug("myCommunityGet started.");
 		logger.debug("id : " + id + ", pStart : " + pStart + ", pEnd : " + pEnd + ", mode : " + mode + ", tenantID : " + tenantID);
 		
@@ -5891,6 +5967,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_PEND", pEnd);
 		map.put("mariaEnd", pEnd);
 		map.put("v_MODE", mode);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<String> list = ezCommunityDAO.myCommunityGet(map);
@@ -6279,6 +6356,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
+		/* 2018-10-02 홍승비 - 게시자의 writerDeptID를 가져오도록 수정 */
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
 		
 		sb.append("<NODES>");
@@ -6291,6 +6369,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
 				sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptID>" + commonUtil.cleanValue(boardList.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
@@ -6339,12 +6418,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return result;
 	}
 	
-	public String pollResGet4(String primary, String pollRegUser, int tenantID) throws Exception {
+	public String pollResGet4(String primary, String pollRegUser, String companyID, int tenantID) throws Exception {
 		logger.debug("pollResGet4 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_POLLREGUSER", pollRegUser);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		String result = ezCommunityDAO.pollResGet4(map);
@@ -6356,6 +6436,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	
 	public String getClubMemberInfo(String pCN, String pSearch, String primary, int tenantID) throws Exception {
 		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, primary, tenantID));
+		
+		logger.debug("xmlDoc DESCRIPTION1      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent());
+		logger.debug("xmlDoc DESCRIPTION2      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent());
 		
 		if (primary.equals("2")) {
 			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
@@ -7268,6 +7351,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("joinOkSendMail ended.");
 	}
 	
+	/* 2018-07-18 - 탈퇴신청 메일 보낼 시 마스터 셀렉트에 companyID 조건 추가 */
 	public void commOutOkSendMail(String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
 		logger.debug("commOutOkSendMail started.");
 		
@@ -7275,6 +7359,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         map.put("v_code", code);
         map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
         map.put("tenantID", userInfo.getTenantId());
+        map.put("companyID", userInfo.getCompanyID());
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
         
@@ -7477,6 +7562,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("deleteReservedBoardItem ended");
 	}
 	
+	/* 커뮤니티 답변메일 -> 보낼 당시에 a링크로 박힌다. 받고 나서 처리하자. */
 	@Override
 	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception {
 		logger.debug("sendReplyNoticeMail started.");

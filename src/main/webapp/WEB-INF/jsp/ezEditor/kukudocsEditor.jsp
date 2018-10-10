@@ -3,11 +3,11 @@
 <html>
 	<head>
 		<title></title>
-	    <link rel="stylesheet" href="/js/ezEditor/kukudocsEditor/stylesheets/style.css" />
-		<script type="text/javascript" src="/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style> html, body {height: 100%; margin: 0; padding: 0; overflow: hidden;} </style>
 		<script type="text/javascript">
 			var type = "${type}";
@@ -27,9 +27,36 @@
 				return kukudocsEditor.GetEditorContent();
 			}
 			
+			function SetEditorTextContent(data) {
+	            try {
+	            	data = data.replace(/&/gi, "&amp;");
+	            	data = data.replace(/</gi, "&lt;");
+	            	data = data.replace(/>/gi, "&gt;");
+	 	            
+	 	    		var line = data.split("\n");
+	 	            var textData = "";
+	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
+	 	            
+	 	            for (var i = 0; i < line.length; i++) {
+	 	            	if (line[i].trim() === "") {
+	 	            		line[i] = "&nbsp;";
+	 	            	}
+	 	            	
+ 	            		textData += "<p " + defaultFontAndSize + ">" + line[i] + "</p>";
+	 	            }
+	            	
+	 	           kukudocsEditor.SetEditorContent(textData);
+	            } catch (e) { }
+	        }
+			
 			function GetEditorTextContent() {
-				return kukudocsEditor.GetEditorTextContent();
-			}
+	            try {
+            	    var resultStr = kukudocsEditor.GetEditorTextContent();
+            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
+					
+            	    return  resultStr;
+	            } catch (e) { return ""; }
+	        }
 			
 			function SetEditorContentURL(pURL) {
                 var tempStr = ConvertMHTtoHTML(pURL);
@@ -93,7 +120,7 @@
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
-								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','paragraph_remove_format','color','background_color'];
+								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor'];
 			
 			// 메일 부재중설정, 커뮤니티 포토게시판일 경우 이미지 업로드 아이콘 제거
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {

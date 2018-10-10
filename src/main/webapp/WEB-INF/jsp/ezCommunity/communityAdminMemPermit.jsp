@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code = 'ezCommunity.t447' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			function MM_swapImgRestore() {
@@ -63,15 +63,15 @@
 				});
 			}
 	
-			function openinfo(a,b,c) {
+			function openinfo(a,b,c, d) {
 			    if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
 			    	var feature = "width=490,height=490";
 				    feature = feature + GetOpenPosition(490, 490);
-				    window.open("/ezCommon/showPersonInfo.do?id=" + b, "", feature);
+				    window.open("/ezCommon/showPersonInfo.do?id=" + b + "&dept=" + d, "", feature);
 			    } else {
 			    	var feature = "dialogHeight:490px; dialogWidth:425px; status:no; help:no; scroll:no";
 				    feature = feature + GetShowModalPosition(425, 490);
-				    var Para = window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + b, null, feature);
+				    var Para = window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + b + "&dept=" + d, null, feature);
 			    }
 			}
 		</script>

@@ -19,9 +19,24 @@
 				<div class="info">
     				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
-        				<dt>${companyNm }<br></dt>
+    					<c:choose>
+	   						<c:when test="${fn:length(companyList) gt 1 }">
+	    						<dt>
+									<select id="selectCompany" style="margin-left:-3px;margin-bottom:2px; width: 195px; font-size: 9pt;" onchange="changeCompany();">
+										<c:forEach items="${companyList }" var="company">
+											<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
+												${company.companyName } (${company.deptName }) (${company.apprCount })
+											</option>
+										</c:forEach>
+									</select>
+								</dt>
+	   						</c:when>
+							<c:otherwise>
+		        				<dt>${companyNm}<br></dt>
+	        				</c:otherwise>
+    					</c:choose>
 			 			<dd>${department} ${title}</dd>
-						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
+						<dd class="gray" title="${loginIP}"><spring:message code="main.t00016" />  ${lastLogin}</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>
@@ -199,9 +214,9 @@
    			</article>
 		</section>
 			
-		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -210,27 +225,27 @@
 			    display: none;
 			}
 		</style>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
 		<c:choose>
 			<c:when test="${checkBrowser == true}">
-				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
 			</c:when>
 			<c:otherwise>
-				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
 			#atti_area span{
 				width:35px;
@@ -270,7 +285,6 @@
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
-		    var pNoneActiveX = "YES";
 			var isCircularUsed = "${isCircularUsed}";
 		    
 			$(document).ready(function(){
@@ -664,37 +678,18 @@
 		                break;
 
 		            case "schedulewrite":
+	                    var wWeight = "790";
+	                    var wHeight = "830";
 
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    var wWeight = "790";
-		                    var wHeight = "830";
+	                    var heigth = window.screen.availHeight;
+	                    var width = window.screen.availWidth;
 
-		                    var heigth = window.screen.availHeight;
-		                    var width = window.screen.availWidth;
-
-		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
-		                    
-		                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                } else {
-		                    var wWeight = "790";
-		                    var wHeight = "760";
-
-		                    var heigth = window.screen.availHeight;
-		                    var width = window.screen.availWidth;
-
-		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
-		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                    }
-		                    else {
-	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                    }
-		                }
+	                    var left = (width - wWeight) / 2;
+	                    var top = (heigth - wHeight) / 2;
+	                    
+	                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	                    
 		                break;
 
 		            case "addresswrite":
@@ -711,7 +706,7 @@
 		                break;
 
 		            case "resourcewrite":
-		                if (CrossYN() || pNoneActiveX == "YES") {
+		                if (CrossYN()) {
 		                    var url = "/ezResource/scheduleAddSelect.do";
 
 		                    schedule_add_select_cross_dialogArguments[0] = "";
@@ -735,8 +730,8 @@
 		                break;
 
 		            case "boardwrite":
-		                var wWeight = "345";
-		                var wHeight = "680";
+		                var wWeight = "460";
+		                var wHeight = "600";
 
 		                var heigth = window.screen.availHeight;
 		                var width = window.screen.availWidth;
@@ -773,11 +768,7 @@
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        } else {
-	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        }
+                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 
 		    var formURL = "";
@@ -796,7 +787,7 @@
 		            url = "/ezApproval/getFormCont.do";
 		        }
 		        
-		        if (CrossYN() || pNoneActiveX == "YES") {
+		        if (CrossYN()) {
 		            getformcont_cross_dialogArguments[0] = parameter;
 		            getformcont_cross_dialogArguments[1] = openForm_Complete;
 		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
@@ -841,18 +832,20 @@
 
 	            var openLocation = "";
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                if (CrossYN() || pNoneActiveX == "YES") {
+	                if (!isIE()) {
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
 	                } else {
-	                   var openLocation = "/ezApprovalG/draftui.do";
+	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
 	                }
 	            } else {
 	                var openLocation = "/ezApprovalG/draftui.do";
-	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
 	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+                
 	            openwindow(openLocation, "", 890, 620);
 	        }
 
@@ -1058,7 +1051,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
@@ -1190,6 +1185,12 @@
 		    }
 		    
 		    window_onload_total();
+		    
+		    function changeCompany(){
+		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
+		    	var TdeptID = $("#selectCompany option:selected").val();
+		    	window.parent.parent.changeCompany(TcompanyID,TdeptID);
+		    }
 		</script>
 	</head>
 </html>

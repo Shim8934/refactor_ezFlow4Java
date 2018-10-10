@@ -397,19 +397,22 @@ function btnRemoveDoc_onclick() {
 
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
-    var selRow = DocList.GetSelectedRows();
+    var tr = DocList.GetSelectedRows();
+    var orgCompanyID = "";
 
-    if (selRow.length <= 0) {
+    if (tr.length <= 0) {
         var InformationString = strLangS385;
-        OpenAlertUI(InformationString);
+        //2018-09-19 김보미 - 알럿창으로 변경
+//        OpenAlertUI(InformationString);
+        alert(InformationString);
         return;
-    }
-
-    var OpinionContent = strLangS387;
-    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
-    
-    if (!CrossYN()) {
-        RemoveDoc_Complete(rtn);
+    } else {
+	    var OpinionContent = strLangS387;
+	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
+	    
+	    if (rtn) {
+	        RemoveDoc_Complete(rtn);
+	    }
     }
 }
 
@@ -427,10 +430,13 @@ function RemoveDoc_Complete(RtnVal)
         var xmlpara = createXmlDom();
         var objNode;
         var tr = selRow[i];
+        
+        var orgCompanyID = tr.getAttribute("ORGCOMPANYID");
 
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
         createNodeAndInsertText(xmlpara, objNode, "ContID", ContainerID);
+        createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
 
         if (DocListType == "UserContDocList")
             xmlhttp.open("POST", "/ezApprovalG/delUserContDoc.do", false);
@@ -591,6 +597,7 @@ function selFirstRow(Resultxml) {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
         
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
@@ -713,7 +720,8 @@ function getDataInfo() {
 		url : pUrl,
 		data : {
 				docID : DocID,
-				mode  : "END"
+				mode  : "END",
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getdoclistSub_after(xml);
@@ -759,6 +767,7 @@ function lvtDoclist_SelChange() {
     var SelList = new ListView();
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();
+    ext = oArrRows[0].getAttribute("DATA3").substr(oArrRows[0].getAttribute("DATA3").lastIndexOf(".")+1);
 
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
@@ -778,7 +787,7 @@ function lvtDoclist_SelChange() {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
-
+        orgCompanyID =  tr.getAttribute("ORGCOMPANYID");
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
             DocState = GetAttribute(tr, "DATA12");
@@ -1065,13 +1074,16 @@ var ezchkpasswd_cross_dialogArguments = new Array();
 function chk_Passwd(pUserID, CompleteFunction) {
     var parameter = pUserID;
     ezchkpasswd_cross_dialogArguments[0] = parameter;
-    if (CompleteFunction != undefined)
-        ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
-    else
-        ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    
+    if (CompleteFunction != undefined) {
+    	ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
+    } else {
+    	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    }
 
+    ezchkpasswd_cross_dialogArguments[2] = true;
     var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
@@ -1207,8 +1219,22 @@ function check_presence2() {
 
     var SelUserCont_dialogArgument = new Array();
     function btnRegUserCont_onclick() {
+    	//2018-09-19 김보미 - 선택된 문서 없을 경우
+        var DocList = new ListView();
+        DocList.LoadFromID("DocList");
+        var selRow = DocList.GetSelectedRows();
+        
+        var orgCompanyID = "";
+
+        if (selRow.length <= 0) {
+            var InformationString = strLangS385;
+            //OpenAlertUI(InformationString);
+            alert(InformationString);
+            return;
+        }
+    	
         SelUserCont_dialogArgument[0] = "";
-        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+        SelUserCont_dialogArgument[1] = RegUserCont_Complete;
         var url = "/ezApprovalG/selUserCont.do";
         ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
         try { ContOpen.focus() } catch (e) { }
@@ -1237,9 +1263,17 @@ function check_presence2() {
                 } else {
                 	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
                 }
+                
                 createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
                 createNodeAndInsertText(xmlpara, objNode, "Desc", "");
 
+                var orgCompnayID = tr.getAttribute("ORGCOMPANYID");
+                if (orgCompanyID != null && orgCompanyID != "") {
+                	createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
+                } else {
+                	createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", "");
+                }
+                
                 xmlhttp.open("POST", "/ezApprovalG/setUserContDoc.do", false);
                 xmlhttp.send(xmlpara);
             }

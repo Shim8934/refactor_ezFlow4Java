@@ -69,7 +69,7 @@ function addOpinion(DocID, pFlag) {
         rtnString = rtnString + "<TR style='height:25px'>";
         for (colidx = 0; colidx < GetChildNodes(Rows[rowidx]).length; colidx++) {
             if (colidx == 0)
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;' bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;' bgColor=#f8f8fa align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 1)
                 rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 3)
@@ -107,7 +107,8 @@ function addAttach(DocID, pFlag) {
    			async : false,
    			url : "/ezApprovalG/getLineMode.do",
    			data : {
-   					docID : DocID
+   					docID : DocID,
+   					orgCompanyID : orgCompanyID
    					},
    			success: function(xml){
    				pFlag = xml;
@@ -121,7 +122,8 @@ function addAttach(DocID, pFlag) {
 		url : "/ezApprovalG/getTotalAttachInfo.do",
 		data : {
 			docID : DocID,
-			mode  : pFlag
+			mode  : pFlag,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -137,7 +139,7 @@ function addAttach(DocID, pFlag) {
     for (rowidx = 0; rowidx < Rows.length; rowidx++) {
         eattach = "true";
 
-        rtnString = rtnString + "<TR style='height:25px'><TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' width=60 bgColor=#d2e2fd align=center>";
+        rtnString = rtnString + "<TR style='height:25px'><TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' width=60 bgColor=#f8f8fa align=center>";
 
         for (colidx = 0; colidx < GetChildNodes(Rows[rowidx]).length; colidx++) {
 
@@ -168,7 +170,8 @@ function addLineInfo(DocID, pFlag) {
 		url : "/ezApprovalG/getLineList.do",
 		data : {
 			docID : DocID,
-			mode  : pFlag
+			mode  : pFlag,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -186,7 +189,7 @@ function addLineInfo(DocID, pFlag) {
 
             if (getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) != "") {
                 if (colidx == 0)
-                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
+                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 bgColor=#f8f8fa align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
                 else if (colidx == 1)
                     rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
                 else

@@ -9,8 +9,23 @@ function getCompanyData(companyId, mode, rootDiv) {
 		dataType: "JSON",
 		async: false,
 		success : function(data) {
-			var result = data.companyTree;
-			renderData(companyId, result, mode, rootDiv);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.companyTree;
+					renderData(companyId, result, mode, rootDiv);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strMessage);
@@ -73,7 +88,19 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
+	spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
 	spanFolderName.onclick = function() {getSelected(this, folderType);};
+	
+	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
+	var spanW = 167 - (18 * list["folderLevel"]);
+	spanFolderName.style.display = "inline-block";
+	spanFolderName.style.textOverflow = "ellipsis";
+	spanFolderName.style.overflowX = "hidden";
+	
+	if (spanW < 0) {
+		 spanW = 0;
+	 }
+	spanFolderName.style.width = spanW + 'px';
 	
 	divElmt.appendChild(imgElmt);
 	divElmt.appendChild(imgElmt2);
@@ -168,9 +195,24 @@ function getDetailTree(obj, folderType) {
 			dataType: "JSON",
 			async: false,
 			success: function(data) {
-				var result = data.subTree;
-				displaySubTree(result, obj.parentElement, folderType);
-				arrSubFolder.push(uniqueId);
+				var code = data.code;
+				
+				switch(code) {
+					case 0: 
+						var result = data.subTree;
+						displaySubTree(result, obj.parentElement, folderType);
+						arrSubFolder.push(uniqueId);
+						break;
+					case 1:
+						alert(resultErr1);
+						break;
+					case 2:
+						alert(resultErr2);
+						break;
+					case 3:
+						alert(resultErr3);
+						break;
+				}
 			},
 			error: function (xhr, status, e){
 				alert(strMessage);
@@ -206,8 +248,23 @@ function getDepartmentData(companyId, mode, rootDiv) {
 		dataType: "JSON",
 		async: false,
 		success : function(data) {
-			var result = data.deptTree;
-			renderData2(companyId, result, mode, rootDiv);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.deptTree;
+					renderData2(companyId, result, mode, rootDiv);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strMessage);

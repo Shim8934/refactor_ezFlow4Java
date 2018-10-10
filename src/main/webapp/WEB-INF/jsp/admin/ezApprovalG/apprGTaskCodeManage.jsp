@@ -13,21 +13,21 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TaskCodeManage_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TaskCodeManage_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var companyID = "<c:out value = '${userInfo.companyID}' />";
@@ -300,6 +300,8 @@
 		 	                    alert(pAlertContent); */
 			                    
 			                    nodeIdx.DeleteNode(treeview.GetID());
+		 	                    //2018-07-30 김보미 - 삭제완료 후 폴더트리 리프레쉬
+			                    getGroupTree(1, 1, 0, true);
 		            		}
 		            	}
 		        	});
@@ -710,13 +712,8 @@
 		</c:choose>
 		
 		<div id="mainmenu">
-			<b><spring:message code = 'ezApprovalG.t1276' /></b>
-			<SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()" style="margin-bottom:10px">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-	        </SELECT>
-			<ul style="margin-top:5px">		        
+			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
+			<ul>		        
 		        <c:choose>
 		        	<c:when test="${approvalFlag == 'S'}">
 		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>

@@ -112,7 +112,8 @@ function save_schedule(pageFrom)
     	}
     }
     
-	if (scheduleid == "") check_name();
+    /* 2018-08-09 김보미 - 일정작성시  참석자 초대 input을 검사 할 필요는 없음 */
+	//if (scheduleid == "") check_name();
 	
 	if (document.getElementById("TextTitle").value.trim() == "")
 	{
@@ -547,6 +548,8 @@ function check_name(type) {
                 for (var j = 0; j < length; j++) {
                     if (g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
                         alert(strLang22);
+                        //2018-08-10 김보미
+                        document.getElementById("receiverinput").value = "";
                         return;
                     }
                 }
@@ -600,6 +603,9 @@ function check_name_Complete(rgParams) {
             for (var j = 0; j < length; j++) {
                 if (g_attendant["id"][j] == rgParams["id"]) {
                     alert(strLang22);
+                  	//2018-08-10 김보미
+                    document.getElementById("receiverinput").value = "";
+                    document.getElementById("receiverinput").focus();
                     return;
                 }
             }
@@ -683,6 +689,38 @@ function allday_change()
 	{
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
+       
+        if (!timeSelect && datetype == "2") { //하루종일 일정일 때 시간
+        	//2018-08-28 김보미 - 현재시간으로 설정
+        	var now = new Date();
+        	
+        	//시작시간
+        	var startTime;
+        	var hour = now.getHours();
+        	var time = now.getMinutes();
+        	
+        	if (parseInt(time) < 30) {
+        		startTime = hour + ":00:00";
+        	} else {
+        		startTime = hour + ":30:00";
+        	}
+        	
+        	//종료시간
+        	var endTime;
+        	now.setMinutes(now.getMinutes() + 30);
+        	
+        	hour = now.getHours();
+        	time = now.getMinutes();
+        	
+        	if (parseInt(time) < 30) {
+        		endTime = hour + ":00:00";
+        	} else {
+        		endTime = hour + ":30:00";
+        	}
+        	
+        	$('#Stimepicker').timepicker('setTime', startTime);
+        	$('#Etimepicker').timepicker('setTime', endTime);
+        }
 	}
 }
 
@@ -1061,8 +1099,29 @@ function check_length(chkstr, maxlength, fieldname)
 
 function ListOwnerID_Change()
 {
-    var pListOwnerID = document.getElementById("ListOwnerID").value;
-	var pListOwnerID =  pListOwnerID.split(";;")[0];
+	//2018-08-16 구해안 checkauth
+	var pListOwnerValue = document.getElementById("ListOwnerID").value;
+	var pListOwnerID =  pListOwnerValue.split(";;")[0];
+	var ListOwnerID = pListOwnerValue.split(";;")[1];
+	
+	if (scheduleid == "") {
+    	if (useAnyoneEdit != "YES") {
+	        if (ListOwnerID == companyID) {
+	            if (pCompanyAdmin != "Y") {
+	                alert(strLang1000);
+	                $("#ListOwnerID option:eq(0)").prop("selected", true);
+	                return;
+	            }
+	        }
+	        else if (ListOwnerID == deptID) {
+	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
+	                alert(strLang1001);
+	                $("#ListOwnerID option:eq(0)").prop("selected", true);
+	                return;
+	            }
+	        }
+    	}
+    }
 	
 	if (pListOwnerID != "1") {
 	    receiverlist.innerHTML = "";

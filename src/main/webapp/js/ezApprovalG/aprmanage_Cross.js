@@ -12,7 +12,7 @@ function getDocList() {
     if (typeof (psearch) == "object")
         document.getElementById("psearch").style.display = "none";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -26,6 +26,8 @@ function getDocList() {
         
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
+    
+    var searchCompanyID = $("#selectCompany option:selected").val();
     
     $.ajax({
 		type : "POST",
@@ -43,7 +45,8 @@ function getDocList() {
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
-				subQuery     : SubQuery
+				subQuery     : SubQuery,
+				searchCompanyID : searchCompanyID
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -94,11 +97,23 @@ function getDocList_after(xml) {
     
     totalPage = Math.ceil(new Number(lstCnt / pageSize));
     pTotalCnt = lstCnt;
+    
+    //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+    if (totalPage <= 0)
+    	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
+    
     if (pageNum > totalPage) {
         pageNum--;
         getDocList();
         return;
     }
+    
+	// 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+    var preDocList = new ListView();
+   	preDocList.LoadFromID('DocList');
+   	var preSelectedRow = preDocList.GetSelectedRows();
+   	
+   	console.log('preSelectedRow', preSelectedRow);
 
     makePageSelPage();
 
@@ -114,7 +129,7 @@ function getDocList_after(xml) {
         xmlDoc = createXmlDom();
         xmlDoc.appendChild(listNode);
     }
-
+   
     if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
     //if (pListTypeValue == "21") {
     //    var listcnt = SelectNodes(xmlDoc, "LISTVIEWDATA/ROWS/ROW").length;
@@ -124,6 +139,7 @@ function getDocList_after(xml) {
     //        GetChildNodes(row, "VALUE")[4].textContent = GetChildNodes(row, "VALUE")[5].textContent.trim();
     //    }
     //}
+    
     var DocList = new ListView();
     DocList.SetID("DocList");
     DocList.SetMulSelectable(false);
@@ -134,8 +150,13 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
+    // 리스트를 닫기 전에 미리 선택한 row로 재선택
+    if (preSelectedRow.length > 0) {
+    	console.log(preSelectedRow[0].getAttribute('id'));
+    	DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));	
+    }    
     DocList = null;
-
+    
     HiddenMailProgress();
 
     chkUrgent();
@@ -178,6 +199,7 @@ function getDocList_after(xml) {
         check_presence2();
     
     try {
+    	parent.frames["left"].pListTypeValue = pListTypeValue;
         parent.frames["left"].getAprCount();
         parent.frames["left"].setPresentValue("");
     } catch (e) { }
@@ -219,7 +241,7 @@ function getReceivedDocList(p_FormCd) {
     }
 
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -272,6 +294,10 @@ function getReceivedDocList_after(xml) {
         var lstCnt = getNodeText(cntNode);
         totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
+        
+        //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을 때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+        if (totalPage <= 0)
+        	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
 
         if (pageNum > totalPage) {
             pageNum--;
@@ -347,6 +373,7 @@ function getReceivedDocList_after(xml) {
 
         }
         try {
+        	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
             parent.frames["left"].setPresentValue("");
         } catch (e) { }
@@ -359,7 +386,7 @@ function getReceivedDocList_after(xml) {
 function getSendOutDocList() {    
     pSelMenu = "all";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -378,7 +405,9 @@ function getSendOutDocList() {
 				pageSize : pageSize,
 				pageNum  : pageNum,
 				orderCell : OrderCell,
-				orderOption : OrderOption
+				orderOption : OrderOption,
+				listType : pListTypeValue,
+				searchQuery  : SQLPARADATA
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
@@ -562,7 +591,8 @@ function DisplayWaitStat() {
 
 function getAprLine(tr) {
     var pDocID,pMode = "",pFlag = "";
-
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
+    
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
@@ -612,7 +642,8 @@ function getAprLine(tr) {
 		data : {
 				docID : pDocID,
 				mode  : pMode,
-				flag  : pFlag
+				flag  : pFlag,
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getAprovSub_after(xml);
@@ -704,6 +735,9 @@ function openUserInfo() {
 }
 
 function openDraftUI(pDraftFlag, pCurSelRow) {
+	// 2018.08.27 재기안은 윈도우 하나만 열리도록 수정
+	var windowName = "";
+	
     if (pDraftFlag.toUpperCase() == "REDRAFT") {
         if (pCurSelRow) {
             var ret = CheckAprLineInfo(pCurSelRow);
@@ -714,6 +748,8 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
                 return;
             }
         }
+        
+        windowName = "openDraftUI_REDRAFT";
     }
 
     var pArgument = new Array();
@@ -721,7 +757,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
     pArgument[3] = formDocType;
-
+    
     var openLocation = "";
     if (pCurSelRow) {
         if (pListTypeValue != "5") {
@@ -744,25 +780,23 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[7] = "";
     }
   
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
-    }
-    else {
+    } else {
     	if (!isIE()) {
-            alert(strLang1103);
+            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
             return;
-        }
-        else {
-            openLocation = "/ezApprovalG/ezDraftUI_HWP.do?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&DocState=" + encodeURI(pArgument[5]) + "&ListType=" + encodeURI(pListTypeValue) + "&AprState=" + encodeURI(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7])
+        } else {
+        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
         }
     }
 
-    openwindow(openLocation, "", 890, 560);
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function openApprovUI(allFlag) {
@@ -777,6 +811,7 @@ function openApprovUI(allFlag) {
         pArgument[1] = GetAttribute(tr[0], "DATA4");		
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
         pArgument[3] = GetAttribute(tr[0], "DATA7");	
+        var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
 
         if (GetAttribute(tr[0], "DATA12") == "017") {
         	   $.ajax({
@@ -798,31 +833,28 @@ function openApprovUI(allFlag) {
             openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
-        }
-        else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-                var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?docID=" + encodeURI(pArgument[0]);
-                openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-                openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
-            }
-            else {
-                var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP.aspx?DocID=" + encodeURI(pArgument[0]);
-                openLocation = openLocation + "&uID=" + encodeURI(pArgument[1]) + "&uName=" + encodeURI(pArgument[2]);
-                openLocation = openLocation + "&uDeptID=" + encodeURI(pArgument[3]) + "&AllFlag=" + encodeURI(allFlag);
-            }
-        }
-        else {
+        } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+        	if (isIE()) {
+        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
+        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+        	} else {
+        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+        		alert(pAlertContent);
+                
+                return;
+        	}
+        } else {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
     else {
         var pAlertContent = strLang870;
-        OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
     }
 }
 
@@ -924,7 +956,6 @@ function openForm_Complete(ret) {
     getformcont_Cross_OpenWin.close();
     formURL = ret[0];
     formDocType = ret[1];
-    formExt = ret[2];
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -941,6 +972,7 @@ function openViewDocInfo(type) {
     var pArgument = new Array();
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -952,44 +984,51 @@ function openViewDocInfo(type) {
         pArgument[5] = GetAttribute(tr, "DATA7");
         pArgument[6] = "OPINION_SHOW";
         pArgument[7] = pListTypeValue;
-    }
-    else if (pListTypeValue != "7" && pListTypeValue != "8" && pListTypeValue != "9") {
+    } else if (pListTypeValue != "7" && pListTypeValue != "8" && pListTypeValue != "9") {
         pArgument[2] = GetAttribute(tr, "DATA11").trim();
         pArgument[3] = GetAttribute(tr, "DATA12").trim();
         pArgument[4] = GetAttribute(tr, "DATA4").trim();
         pArgument[5] = GetAttribute(tr, "DATA2").trim();
-        if (pListTypeValue != "5")
+        
+        if (pListTypeValue != "5") {
             pArgument[6] = "OPINION_SHOW";
-        else
+        } else {
             pArgument[6] = "OPINION_HIDE";
+        }
+        
         pArgument[7] = pListTypeValue;
     }
 
     var openLocation;
+    var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
-        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-            }
-            else {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
+    	// 2018.07.26 (KLIB) - ezd 확장자 처리
+        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+            if (CrossYN() && isIE()) {
+            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+            } else {
+            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                
+                return;
             }
         }
         else {
             openLocation = "/ezApprovalG/contDocView.do";
         }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
+        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
     }
     else {
-        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
-            }
-            else {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx";
+    	// 2018.07.06 (KLIB) - ezd 확장자 처리
+        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+            if (CrossYN() && isIE()) {
+            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
+            } else {
+            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                
+                return;
             }
         }
         else {
@@ -1000,6 +1039,8 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&isOpinion=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
+        openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
+        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -1032,24 +1073,31 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
-            }
-            else {
-                alert(strLang1103);
-                return;
+            } else {
+                if (/chrome/i.test(navigator.userAgent)) {
+                     alert(strLang1103);
+                     return;
+            	 } else {
+            		if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+                    }
+            	 }
             }
             openwindow(openLocation, "receive", 880, 550);
-        }
-        else {
+        } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                alert(strLang1103);
-                return;
-            }
-            else {
+            	if (/chrome/i.test(navigator.userAgent)) {
+            		alert(strLang1103);
+            		return;
+            	} else {
+            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+            	}
+            } else {
                 openLocation = "/ezApprovalG/recev.do";
-                openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             }
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {
@@ -1080,8 +1128,9 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         var pURL = GetAttribute(pCurSelRow, "DATA3");
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            alert(strLang1103);
-            return;
+        	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
+
+            openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
             openLocation = "/ezApprovalG/recevGSusin.do";
@@ -1123,6 +1172,9 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = "";
         temppSelectedRow = pSelectedRow;
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
 
         apropinion_cross_dialogArguments[0] = parameter;
@@ -1255,6 +1307,8 @@ function getAprDocAproveInfo(tr) {
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
+    
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     if (pDocInfoValue == "4") {
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
@@ -1290,7 +1344,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getTotalAttachInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1303,8 +1358,12 @@ function getAprDocAproveInfo(tr) {
         } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
         } else if (pListTypeValue == "10" || pListTypeValue == "99") {
-    		pDocID = GetAttribute(tr, "DATA2");
-    		pFlag = "END";
+        	if (approvalFlag == "S") {
+        		pDocID = GetAttribute(tr, "DATA2");
+        		pFlag = "END";
+        	} else {
+        		pFlag = "APR";
+        	}
     	} else {
     		pFlag = "APR";
     	}
@@ -1331,7 +1390,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getOpinionInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1372,7 +1432,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1409,7 +1470,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getCirculationinfo.do",
     		data : {
     			docID : pDocID,
-    			mode  : pFlag
+    			mode  : pFlag,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			RtnVal = xml;
@@ -1452,11 +1514,12 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
         }
         else if (type != undefined && CompleteFunction != "") {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            ezapralert_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+        	ezapralert_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -1474,10 +1537,9 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
-    var parameter = pInformationContent;
+	var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+    if (CrossYN() && (ext != 'hwp' || CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1489,11 +1551,12 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
         }
         else if (type != undefined && CompleteFunction != "") {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
-            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        	ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -1593,15 +1656,26 @@ function makePageSelPage() {
     var period;
     if (document.getElementById("sel_year").value.toLowerCase() == "all") {
     	var nowyear = nowDate.substring(0,4);
-        var nowmonth = nowDate.substring(5,7);
-        var nowday = nowDate.substring(8,10);
+        var nowmonth = parseInt(nowDate.substring(5,7));
+        var nowday = parseInt(nowDate.substring(8,10));
         
-    	if (SearchCond[5] != null && SearchCond[5] != "" ) {
-    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
-    	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
-    		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
-    	} else {
-    		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        if (approvalFlag == "G") { //2018-10-01 김보미 - G버전일때 추가.
+        	if (SearchCond[3] != null && SearchCond[3] != "") {
+        		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
+        	} else if (SearchCond[9] != null && SearchCond[9] != "") {
+        		period = SearchCond[9] + strLang1028 + " " + SearchCond[10] + strLang1029 + " " + SearchCond[11] + strLang1030 + " ~ " + SearchCond[12] + strLang1028 + " " + SearchCond[13] + strLang1029 + " " + SearchCond[14] + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        	}
+        } else {
+        	if (SearchCond[5] != null && SearchCond[5] != "" ) {
+        		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
+        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
+        	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
+        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        	}
         }
     } else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
@@ -1760,6 +1834,7 @@ function setbuttonenable() {
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
     var pFunctionType = GetAttribute(tr, "DATA10");
+    var orgCompanyID = GetAttribute(tr, "ORGCOMPANYID");
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
@@ -1786,6 +1861,7 @@ function setbuttonenable() {
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
+        document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnSimsa").style.display = "none";
         document.getElementById("tbtnGongRam").style.display = "none";
 
@@ -1814,6 +1890,7 @@ function setbuttonenable() {
             }
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
         }
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -1865,6 +1942,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (GetAttribute(tr, "DATA12") == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
@@ -1879,6 +1957,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
                 if (pFunctionType == "004")
@@ -1901,6 +1980,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
 
                 if (GetAttribute(tr, "DATA9") != "0") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -1930,6 +2010,7 @@ function setbuttonenable() {
 
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
                 document.getElementById("tbtnLinkDraft").style.display = "none";
             }
@@ -1945,6 +2026,7 @@ function setbuttonenable() {
             document.getElementById("tbtnApprove2").style.display = "none";
             document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnReceipt").style.display = "none";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
             document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
@@ -1954,6 +2036,13 @@ function setbuttonenable() {
         }
     } else {
         document.getElementById("tbtnSimsa").style.display = "none";
+        
+		if (approvalFlag == "G") {
+			if(pListTypeValue == "4") {
+				document.getElementById("tbtnNonElecRec").style.display = "";
+			}
+		}
+        
         //20130311 cpno.64
         document.getElementById("tbtnGongRam").style.display = "none";
         if (oArrRows.length != 0) {
@@ -1992,6 +2081,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                //document.getElementById("tbtnNonElecRec").style.display = "";
                 
                 if(approvalFlag == "G") {
                 	document.getElementById("tbtnRegList").style.display = "";
@@ -2021,7 +2111,7 @@ function setbuttonenable() {
     if (oArrRows.length != 0) {
         if (pListTypeValue == 4 && tr.getAttribute("DATA7") != "" && tr.getAttribute("DATA9") == "011") {
             if (approvalFlag == 'G') {
-            	document.getElementById("tDocInfo").style.display = "";
+            	document.getElementById("tDocInfo").style.display = "none";
             }
         } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011") {
         	if (approvalFlag == 'G') {
@@ -2049,6 +2139,7 @@ function setbuttonenable() {
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
+        document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtncallback").style.display = "none";
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -2103,10 +2194,12 @@ function selFirstRow(Resultxml) {
 
         pDocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
     }
     else {
         pDocID = "";
         pURL = "";
+        orgCompanyID = "" ;
     }
 
     switch (pDocInfoValue) {
@@ -2147,7 +2240,8 @@ function getDataInfo(jobState) {
         		url : "/ezApprovalG/getTotalAttachInfo.do",
         		data : {
         				docID : pDocID,
-        				flag  : pFlag
+        				flag  : pFlag,
+        				orgCompanyID : orgCompanyID
         				},
         		success: function(xml){
         			getdoclistSub_after(xml);
@@ -2268,7 +2362,7 @@ function getSimsaDocList() {
     pageSize = "10";
     
     var manager;
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -2483,7 +2577,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 			flag : FLAG,
 			deptName2 : arr_userinfo[16]
 		},
-	success: function(xml){
+		success: function(xml){
 			result = xml;
 		}
 	});
@@ -2499,10 +2593,17 @@ function RemoveDocCabinet(tempDocID, FLAG) {
         return;
     }
     else {
-        if (FLAG == "")
-            var pAlertContent = strLang901;
-        else
-            var pAlertContent = strLang902;
+        if (FLAG == "") {
+        	if (RtnVal == "RESETLINE") {
+        		var pAlertContent = strLangBae1;
+        	} else {
+        		var pAlertContent = strLang901;
+        	}
+        	
+        }
+        else {
+        	var pAlertContent = strLang902;
+        }
         OpenAlertUI(pAlertContent, "", "OPEN");
         return;
     }
@@ -2674,8 +2775,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     pArgument[1] = formURL;
     pArgument[2] = pDraftFlag;
     
+    // 2018.08.27 재기안은 윈도우 하나면 열리게 수정
+    var windowName =  "";
+    
     if (pDraftFlag == "REDRAFT") {
     	pArgument[3] = pCurSelRow.getAttribute("DATA15");
+    	windowName = "openServerDraftUI_REDRAFT";
     } else {
     	pArgument[3] = formDocType;
     }  
@@ -2699,13 +2804,24 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
 
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
-    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-
-    openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
-
-
-    openwindow(openLocation, "", 890, 560);
+    
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
+    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+    	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
+    } else {
+    	if (!isIE()) {
+    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
+            alert(strLang1103);
+            return;
+        } else {
+        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
+        }
+    }
+    
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function RemoveTmpDoc(pDocID) {

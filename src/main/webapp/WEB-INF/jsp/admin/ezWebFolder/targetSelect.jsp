@@ -5,15 +5,15 @@
 <html>
 	<head>
 		<title><spring:message code='ezWebFolder.t165' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"              ></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"           ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/TreeView.js"     ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js" ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"    ></script>
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/organJson.js')}"></script>
 		<script type="text/javascript">
 			var pCompanyID        = "<c:out value='${pCompanyID}'/>";
 			var primary           = "<c:out value='${primary}'/>";
@@ -66,7 +66,11 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<h2><spring:message code='ezWebFolder.t179' /></h2>
+					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179'/></h2>
+					<span style="float:right;padding-top:3px">
+						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px" />
+						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezWebFolder.t123' /></span></a>
+					</span>
 					<div class="listview" style="margin-top:5px;margin-bottom:5px">
 						<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0">
 							<table id="Organ" class="mainlist" style="width: 100%;">
@@ -95,14 +99,9 @@
 				</td> 
 			</tr>
 			<tr>
-				<td>
-					<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
-					<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" ><span><spring:message code='ezWebFolder.t123' /></span></a>
-				</td>
-				<td></td>
-				<td>
-					<div class="btnposition" style="margin-top:0px;padding-top:0px">
-						<a class="imgbtn btnSave"   name="Submit"  onClick="set_range();"     ><span><spring:message code='ezWebFolder.t116' /></span></a>
+				<td colspan="3">
+					<div class="btnposition btnpositionNew">
+						<a class="imgbtn btnSave"   name="Submit"  onclick="set_range();"><span><spring:message code='ezWebFolder.t116'/></span></a>
 					</div>
 				</td>
 			</tr>

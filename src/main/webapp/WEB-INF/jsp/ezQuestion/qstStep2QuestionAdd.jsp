@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code='ezQuestion.t533' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezQuestion.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezQuestion/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script language="javascript" type="text/javascript">
 			var index = -1;
 			var g_DelAttachList = "";
@@ -343,10 +343,11 @@
         		}
     		}
     		function Form_Check() {
-        		if (document.Ques_Answer.txtQuestion.value=="") {
+    			//2018-09-05 천성준- 단일문항일 때만 질문란 작성 여부를 검사해서 표 형식도 검사 할 수 있게 검사 로직 fun_QuesSave()으로 이동
+        		/* if (document.Ques_Answer.txtQuestion.value=="") {
             		alert("<spring:message code='ezQuestion.t492' />");
             		return false;
-        		}
+        		} */
         		if (document.Ques_Answer.selView[0].checked) {
             		if (document.Ques_Answer.input_Ans.length < 1) {	
                 		alert("<spring:message code='ezQuestion.t493' />");
@@ -412,6 +413,11 @@
     		}
     		
     		function fun_QuesSave() {
+    			if (document.Ques_Answer.txtQuestion.value=="") {
+            		alert("<spring:message code='ezQuestion.t492' />");
+            		document.Ques_Answer.txtQuestion.focus();
+            		return;
+        		}
         		if(Ques_Answer.selType[0].checked){
             		if (Form_Check()==false)
                 		return;
@@ -487,7 +493,7 @@
                     		DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
                     		createNodeAndAppandNodeText(xmlDoc, DeptNode, objNode, "ANSWERTITLE", Ques_Answer.input_Ans[ii].value);
 
-                    	if (Ques_Answer.input_Ans[ii].AnsInfo != null) {
+                    		if (Ques_Answer.input_Ans[ii].AnsInfo != null) {
                         		var xmlDom_AnswerAttach;
 		                        if (CrossYN()) {
         		                    xmlDom_AnswerAttach = loadXMLString(Ques_Answer.input_Ans[ii].AnsInfo);
@@ -504,6 +510,29 @@
                         		} else {
 		                            xmlDom_AnswerAttach = GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo);
         		                    DeptNode.appendChild(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"));
+                        		}
+                    		}
+                    		else if (Ques_Answer.txtQuestion.getAttribute("AnsInfo") != null) {//2018-08-13 김보미 - 질문 수정시 파일이 삭제되는 버그 수정
+                        		var xmlDom_AnswerAttach;
+		                        if (CrossYN()) {
+       		                    	if (Ques_Answer.input_Ans.options[ii].getAttribute("AnsInfo") != null && Ques_Answer.input_Ans.options[ii].getAttribute("AnsInfo") != "") {
+        		                    	xmlDom_AnswerAttach = loadXMLString(Ques_Answer.input_Ans.options[ii].getAttribute("AnsInfo"));
+        		                    	if (document.importNode) {
+	                        		        var imported = xmlDoc.importNode(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"), true);
+	                                		if (imported) {
+	                                    		DeptNode.appendChild(imported);
+	                                		} else {
+	                                		}
+	                            		} else {
+	                                		var importedNode = SelectSingleNode(xmlDom_AnswerAttach, "ATTACH").cloneNode(true);
+	                                		DeptNode.appendChild(importedNode);
+	                            		}
+       		                    	}
+                        		} else {
+		                            xmlDom_AnswerAttach = Ques_Answer.input_Ans.options[ii].getAttribute("AnsInfo");
+		                            if (SelectSingleNode(xmlDom_AnswerAttach, "ATTACH") != null && SelectSingleNode(xmlDom_AnswerAttach, "ATTACH") != "") {
+	        		                    DeptNode.appendChild(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"));
+		                            }
                         		}
                     		}
                 		}
@@ -529,6 +558,8 @@
 		        var view = "";
 		        var attach = "";
         		var attachQ = "";
+        		//2018-08-13 김보미 - 질문 수정시 파일이 삭제되는 버그 수정
+        		/*
         		if (Ques_Answer.txtQuestion.AnsInfo != null) {
             		if(CrossYN()) {
             			attachQ = GetAttachList(Ques_Answer.txtQuestion.AnsInfo);
@@ -553,6 +584,47 @@
 		                }
             		}
         		}
+        		*/
+        		if (Ques_Answer.txtQuestion.AnsInfo != null) {
+            		if(CrossYN()) {
+            			if (Ques_Answer.txtQuestion.AnsInfo != null) {
+	            			attachQ = GetAttachList(Ques_Answer.txtQuestion.AnsInfo);
+            			} else {
+	            			attachQ = Ques_Answer.txtQuestion.getAttribute("AnsInfo");
+            			}
+            		} else {
+            			if (Ques_Answer.txtQuestion.AnsInfo != null) {
+	            			attachQ = GetAttachList_ie(Ques_Answer.txtQuestion.AnsInfo).xml;
+            			} else {
+	            			attachQ = Ques_Answer.txtQuestion.getAttribute("AnsInfo").xml;
+            			}
+            		}
+                		
+        		}
+        		if(Ques_Answer.selType[0].checked){
+		            if (viewcnt > 0) {
+        		        for(var ii=0 ; ii < viewcnt ; ii++) {
+                		    view += Ques_Answer.input_Ans[ii].text +  ";";
+
+							var attachTemp;
+							if (Ques_Answer.input_Ans.options[ii].AnsInfo != null) {
+								attachTemp = Ques_Answer.input_Ans.options[ii].AnsInfo;
+							} else {
+								attachTemp = Ques_Answer.input_Ans.options[ii].getAttribute("AnsInfo");
+							}
+							
+                    		if( attachTemp != null ) {
+                        		if(CrossYN()) {
+                        			attach += attachTemp;
+                        		} else {
+                        			attach += attachTemp.xml;
+                        		}
+                    		}
+                    		attach += "^";
+		                }
+            		}
+        		}
+        		
         		var pAttachYN = "";
         		attach = attach.replace(/\^/g, "");
         		

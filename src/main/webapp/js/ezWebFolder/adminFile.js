@@ -37,6 +37,7 @@ function init(mode) {
 
 function setButtons(mode) {
 	tableView.setTableId("tblFileList");
+	tableView.setTabledHeader("tblFileList1");
 	tableView.setTableType("filelist");
 	tableView.setSelectedClass("bnkWebFolder2");
 	tableView.setUnselectClass("bnkWebFolder");
@@ -93,8 +94,7 @@ function setButtons(mode) {
 	searchBttns[0].firstElementChild.onclick = function() {startSearch();};
 	searchBttns[1].firstElementChild.onclick = function() {openSearchPanel();};
 	
-	var closeSearchBttn     = document.getElementsByClassName("wfCloseBttn")[0];
-	closeSearchBttn.onclick = function() {openSearchPanel();};
+	document.getElementById("wfSearchCloseBttn").onclick = function() {openSearchPanel();};
 	var fileUpElmt          = document.getElementById("file");
 	fileUpElmt.onchange     = function() {onDrop();};
 	fileUpElmt.onclick      = function() {this.value = null;};
@@ -123,8 +123,9 @@ function reloadSelectBox() {
 
 function preProcessing() {
 	var divList          = document.getElementById("dragDropArea");
-	var reheight         = document.documentElement.clientHeight - 195;
+	var reheight         = document.documentElement.clientHeight - 240;
 	divList.style.height = reheight + "px";
+	scroll();
 }
 
 function openSearchPanel() {
@@ -133,7 +134,7 @@ function openSearchPanel() {
 	if (searchPanel.style.display == "none") {
 		openLeftPanel();
 		fogPanel.style.display    = "";
-		var position              = DivPopUpPosition(516, 247);
+		var position              = DivPopUpPosition(500, 247);
 		searchPanel.style.top     = position[0] + "px";
 		searchPanel.style.right   = position[1] + "px";
 		searchPanel.style.display = "";
@@ -176,19 +177,28 @@ function search_Set(pPage) {
 		async: false,
 		success : function(data) {
 			hideProgress();
-			var reason = data.reason;
-			if (reason) {
-				alert(reason);
-				return;
-			}
+			var code = data.code;
 			
-			var result  = data.fileList;
-			totalRows   = data.totalRows;
-			totalPages  = data.totalPages;
-			currentPage = pPage > totalPages                    ? totalPages : pPage;
-			currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
-			makePageSelPage();
-			renderData(result);
+			switch(code) {
+				case 0: 
+					var result  = data.fileList;
+					totalRows   = data.totalRows;
+					totalPages  = data.totalPages;
+					currentPage = pPage > totalPages                    ? totalPages : pPage;
+					currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
+					makePageSelPage();
+					renderData(result);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			hideProgress();
@@ -200,6 +210,7 @@ function search_Set(pPage) {
 function renderData(result) {
 	tableView.setDataSource(result);
 	tableView.renderTable();
+	scroll();
 }
 
 function startSearch() {

@@ -5,16 +5,16 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"                ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"                             ></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"        ></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"                  ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/popup.js"                       ></script>
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}"   type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" >
 			var blockSize    = 10;
 			var currentPage  = null;
@@ -31,6 +31,8 @@
 			var strActType4  = "<spring:message code='ezWebFolder.t111'/>";
 			var strActType5  = "<spring:message code='ezWebFolder.t19' />";
 			var strActType6  = "<spring:message code='ezWebFolder.t287'/>";
+			var strActType7  = "<spring:message code='ezWebFolder.t121'/>";
+			var strActType8  = "<spring:message code='ezWebFolder.t122'/>";
 			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
@@ -44,7 +46,8 @@
 				closeAllPopup();
 				document.onselectstart = function() {return false;}
 				
-				tableView.setTableId("tblFileHistory");
+				tableView.setTableId("tblFileList");
+				tableView.setTabledHeader("tblFileList1");
 				tableView.setTableType("filelog");
 				tableView.setSelectedClass("bnkWebFolder2");
 				tableView.setUnselectClass("bnkWebFolder");
@@ -111,12 +114,38 @@
 				};
 				
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+
+				// listoption 다른 곳 클릭시 숨김 처리
+				var listOptionHidden = function(event) {
+					if (document.getElementById("webfolderlistoptiondiv").getAttribute('mode') == "on"
+							&& !document.getElementById("layer_Viewpopup").contains(event.target)
+							&& event.target.id !== "webfolderlistoptiondiv") {
+						optionHidden();
+					}
+				};
+				document.addEventListener("mouseup", listOptionHidden, true);
+				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+				
+				// listoption 클릭 이벤트
+				document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
+					event.stopPropagation();
+					optionView(event.target);
+				});
+				
+				document.getElementById("listCount").addEventListener("change", function() {
+					optionHidden();
+					pagination.setListSize(this.value);
+					refreshView();
+				});
+				scroll();
+				
 			});
 			
 			function preProcessing() {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 185;
+				var divList          = document.getElementById("dragDropArea");
+				var reheight         = document.documentElement.clientHeight - 215;
 				divList.style.height = reheight + "px";
+				scroll();
 			}
 			
 			function keyPressPanel(e) {
@@ -182,19 +211,28 @@
 					async: true,
 					success : function(data) {
 						hideProgress();
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result  = data.fileLogList;
+								totalRows   = data.totalRows;
+								totalPages  = data.totalPages;
+								currentPage = pPage;
+								
+								makePageSelPage();
+								renderData(result);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result  = data.fileLogList;
-						totalRows   = data.totalRows;
-						totalPages  = data.totalPages;
-						currentPage = pPage;
-						
-						makePageSelPage();
-						renderData(result);
 					},
 					error : function(error) {
 						hideProgress();
@@ -206,6 +244,7 @@
 			function renderData(result) {
 				tableView.setDataSource(result);
 				tableView.renderTable();
+				scroll();
 			}
 			
 			function startSearch() {
@@ -310,13 +349,22 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-						}
-						else {
-							var url      = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
-							AttachDownFrame.location.href = url;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var url = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
+								AttachDownFrame.location.href = url;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
 						}
 					},
 					error : function(error) {
@@ -324,6 +372,53 @@
 					}
 				});
 			}
+
+			function optionHidden() {
+		 	    document.getElementById("layer_Viewpopup").style.display = "none";
+		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+		 	}
+			function optionView(obj) {
+		   		 if (obj.getAttribute("mode") == "off") {
+		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+//		    	        if(pAdminType == "y")
+		   	            document.getElementById("layer_Viewpopup").style.top = "130px";
+//		    	        else
+//		    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+		   	        document.getElementById("layer_Viewpopup").style.display = "";
+		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+		   	        obj.setAttribute("mode", "on");
+		   	    } else {
+		   	        optionHidden();
+		   	    }
+		   	}
+		   	
+			function scroll() {
+				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+				
+				 if (BoardList_BODYHeight > BoardListDivHeight) {
+					if ($("#tblFileList1 tr th#forScroll").length > 0) {
+						$("#tblFileList1 tr th#forScroll").remove();
+					}
+				} else {
+					if ($("#tblFileList1 tr th#forScroll").length < 1) {
+						$("#tblFileList1 tr th#forScroll").remove();
+						$("#tblFileList1 tr").append("<th></th>");
+						
+							var lastTh = $("#tblFileList1 tr th").last();
+							lastTh.attr("id", "forScroll");
+							lastTh.css("width", "15px");
+							
+					}
+				}
+				 
+				/*var lastTh = $("#BoardList_TH th").last();
+				if (lastTh.attr("id") == null) {
+					lastTh.css("display", "none");
+				}*/
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -356,16 +451,7 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li id="right">
-					<span><spring:message code='ezWebFolder.t29'/></span>
-					<select id="listCount" class="wfListCnt" onchange="search_Set(1);">
-						<option selected="selected">10</option>
-						<option>20</option>
-						<option>30</option>
-						<option>40</option>
-						<option>50</option>
-					</select>
-				</li>
+				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
 			</ul>
 		</div>
 		
@@ -373,23 +459,19 @@
 			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 534px; border: 1px solid #666666; background-color: #fff; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
-			<div style="margin: 20px;">
-				<table class="content" style="border-collapse: collapse; width: 100%;">
+		<div id="searchPanel" class="popup wfSearchPanel" style="display: none;">
+			<h1><spring:message code='ezWebFolder.t24'/></h1> 
+			<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
+			<div style="margin: 10px 0px 15px;">
+				<table class="content wftable">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t24'/></th>
-					</tr>
-					<tr>
-						<td class="wfSearchTh2" colspan="2"></td>
-					</tr>
-					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
+						<td>
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t152'/></th>
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<input id="fileExtVal" type="text" style="height: 23px; width: 200px;">
 							<select style="height: 25px; padding: 0px; width: 85px;" id="fileTypeVal">
@@ -403,20 +485,20 @@
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t153'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
-							<input id="fileNameVal" type="text" style="height: 23px; width: 200px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t153'/></th>
+						<td class="wfSearchTd">
+							<input id="fileNameVal" type="text" style="height: 23px;">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t154'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
-							<input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
+						<td class="wfSearchTd">
+							<input id="fileCreatorVal" type="text" style="height: 23px;">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t158'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t158'/></th>
+						<td>
 							<select style="height: 25px; padding: 0px; width: 85px;" id="actionType">
 								<option value="M" selected><spring:message code='ezWebFolder.t191'/></option>
 								<option value="C"         ><spring:message code='ezWebFolder.t160'/></option>
@@ -429,25 +511,33 @@
 						</td>
 					</tr>
 				</table>
-				<div style="margin: 12px 0px; text-align: center;">
-					<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-					<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
-				</div>
 			</div>
-			<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
+			<div class="wfdivBttn">
+				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
+				<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+			</div>
 		</div>
 		
-		<div id="mainSetting" style="margin: 10px 0px 10px 5px; height:500px; overflow: auto;">
-				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
-				<tr>
-					<th headers="ft" style="text-align: center; width: 40px;"><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" style="width: 50%;"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" style="width: 8%;"><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" style="width: 10%;"><spring:message code='ezWebFolder.t154'/></th>
-					<th headers="at" style="width: 8%;"><spring:message code='ezWebFolder.t158'/></th>
-					<th headers="ad" style="text-align: center; width: 24%;"><spring:message code='ezWebFolder.t159'/></th>
-				</tr>
-			</table>
+		<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th headers="ft" class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileLogName"><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileFavoriteSize"><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t339'/></th>
+							<th headers="at" class="wfActive" ><spring:message code='ezWebFolder.t158'/></th>
+							<th headers="ad" class="wfFileLogDate" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+						</tr>
+					</thead>
+				</table>
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+				
+					</table>
+				</div>
+			</div>
 		</div>
 		
 		<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
@@ -457,7 +547,35 @@
 		<div id="tblPageRayer"></div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
-		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
+		<!-- 파일 리스트 10~ 50 선택 -->
+	    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+	        <div class="popupwrap1">	
+	            <div class="popupwrap2">
+	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
+	                    <caption></caption>
+	                    <colgroup>
+	                        <col style="width: 80px;">
+	                        <col>
+	                    </colgroup>
+	                    <tr>
+	                        <th><spring:message code='ezBoard.t10021' /></th>
+	                        <td>
+	                            <select id="listCount" class="wfListCnt">
+	                                <option value="10">10</option>
+	                                <option value="20">20</option>
+	                                <option value="30">30</option>
+	                                <option value="40">40</option>
+	                                <option value="50">50</option>
+	                            </select>    
+	                        </td>
+	                    </tr>
+	                </table>
+	            </div>
+	        </div>
+	        <div class="shadow">
+	        </div>
+	 	</div>
+		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	</body>
 </html>

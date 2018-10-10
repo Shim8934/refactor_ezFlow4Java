@@ -116,7 +116,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -454,9 +454,11 @@ function MakeFormConnXML() {
                     if (SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "keys") == null) { pCheck = false; }
 
                     if (pCheck) {
-                        pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime");
-                    }
-                    else {
+                    	//2018-07-03 이효진 query qtype에 service넣었을때 서버측 동작하게하려고 시점 중복시킴
+                    	if (GetAttribute(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "query"), "qtype") != "service") {
+                    		pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime");
+                    	}
+                    } else {
                         pDataCheck = false;
                         pErrorMsg = strLang1017;
                         break;
@@ -585,6 +587,7 @@ function MakeFormRecevGroupXML_Detail() {
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTID", GetAttribute(selRow[i], "data1"));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "USERID", GetAttribute(selRow[i], "data2"));
+            createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTNAME", selRow[i].cells[0].innerText);
         }
     }
     return getXmlString(xmlpara.childNodes[0]);

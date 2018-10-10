@@ -17,10 +17,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.zip.ZipEntry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ import org.json.simple.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -591,12 +595,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, int tenantId) throws Exception {
+	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",    userId);
 		map.put("deptId",    deptId);
 		map.put("compFolderId", compFolderId);
 		map.put("tenantId",  tenantId);
+		map.put("compId",  compId);
 		
 		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
 		
@@ -704,7 +709,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		int cnt                    = multiFileLists.size();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String[] pFileName         = new String[cnt];
-		Long[] fileSize            = new Long[cnt];
+		double[] fileSize            = new double[cnt];
 		String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
@@ -765,7 +770,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setFileName(pFileName[i]);
 				fileVO.setDownloadCnt(0);
 				fileVO.setFilePath(getWebFolderDirPath(tenantId) + newName);
-				fileVO.setFileSize(Long.toString(fileSize[i]));
+				fileVO.setFileSize(Double.toString(fileSize[i]));
 				fileVO.setFolderId(folder.getFolderId());
 				fileVO.setTenantId(tenantId);
 				fileVO.setCreateId(userId);
@@ -843,8 +848,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 		}
 		else {
-			String guid                     = UUID.randomUUID().toString();
-			String fileName                 = guid + ".zip";
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date today = new Date();
+			String fileName                     = "webfolder_download_" + formatter.format(today) + ".zip";
 			ZipOutputStream zipOutputStream = null;
 			FileInputStream fileInputStream = null;
 			
@@ -1024,7 +1030,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	public String getWebFolderDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
+		return commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
 	}
 	
 	@Override
@@ -1103,109 +1109,90 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (fileArr.length == 0) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
-		try {
-			if (mode.equals("move")) {
-				//Check privileges
-				if (!privileges.equals("normal")) {
+		if (mode.equals("move")) {
+			//Check privileges
+			if (!privileges.equals("normal")) {
+				//move files
+				for (String fileId : fileArr) {
+					FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+					moveFile(fileId, folderId, tenantId);
+					saveLog("MV", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				}
+			}
+			else {
+				int count = checkFilesOwner(userId, fileList, tenantId);
+				
+				if (totalFiles == count) {
 					//move files
 					for (String fileId : fileArr) {
 						FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
 						moveFile(fileId, folderId, tenantId);
-						saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+						saveLog("MV", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 					}
-				}
-				else {
-					int count = checkFilesOwner(userId, fileList, tenantId);
-					
-					if (totalFiles == count) {
-						//move files
-						for (String fileId : fileArr) {
-							FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-							moveFile(fileId, folderId, tenantId);
-							saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-						}
-					}
-					else {
-						logger.debug("Privileges!");
-						result.put("status", "error");
-						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
-						result.put("code", "1");
-						return result;
-					}
-				}
-			}
-			else {
-				//copy files
-				
-				//Check upload conditions
-				double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
-				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
-				
-				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
-				
-				if (totalUploadSize > (totalCapa - totalUsed)) {
-					logger.debug("Not enough storage to move/copy these files!");
+				} else {
+					logger.debug("Privileges!");
 					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-					result.put("code", 1);
-					result.put("data", "");
+					result.put("code", 4);
 					return result;
 				}
-				
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date date                  = new Date();
-				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-				
-				for (String fileId : fileArr) {
-					FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-					fileVO.setFolderId(folderId);
-					fileVO.setFileId(getMaxFileID(tenantId));
-					fileVO.setCreateDate(timeUTC);
-					fileVO.setCreateId(userId);
-					fileVO.setCreateName1(userName1);
-					fileVO.setCreateName2(userName2);
-					fileVO.setUpdateId(userId);
-					fileVO.setUpdateDate(timeUTC);
-					
-					String fileName = fileVO.getFileName();
-					int dotPos      = fileName.lastIndexOf(".");
-					String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-					String newName  = UUID.randomUUID().toString() + "." + extend;
-					String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
-					File srcFile    = new File(realPath + fileVO.getFilePath());
-					File destFile   = new File(realPath  + newPath);
-					destFile.getParentFile().mkdirs(); 
-					destFile.createNewFile();
-					
-					try {
-						FileUtils.copyFile(srcFile, destFile);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-					fileVO.setFilePath(newPath);
-					insertFile(fileVO);
-					
-					saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-				}
+			}
+		}
+		else {
+			//copy files
+			//Check upload conditions
+			double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			
+			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
+			
+			if (totalUploadSize > (totalCapa - totalUsed)) {
+				logger.debug("Not enough storage to move/copy these files!");
+				result.put("status", "error");
+				result.put("code", 4);
+				return result;
 			}
 			
-			result.put("status", "ok");
-			result.put("code", 0);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-			result.put("code", 1);
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			
+			for (String fileId : fileArr) {
+				FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+				fileVO.setFolderId(folderId);
+				fileVO.setFileId(getMaxFileID(tenantId));
+				fileVO.setCreateDate(timeUTC);
+				fileVO.setCreateId(userId);
+				fileVO.setCreateName1(userName1);
+				fileVO.setCreateName2(userName2);
+				fileVO.setUpdateId(userId);
+				fileVO.setUpdateDate(timeUTC);
+				
+				String fileName = fileVO.getFileName();
+				int dotPos      = fileName.lastIndexOf(".");
+				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+				String newName  = UUID.randomUUID().toString() + "." + extend;
+				String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
+				File srcFile    = new File(realPath + fileVO.getFilePath());
+				File destFile   = new File(realPath  + newPath);
+				destFile.getParentFile().mkdirs(); 
+				destFile.createNewFile();
+				
+				FileUtils.copyFile(srcFile, destFile);
+				
+				fileVO.setFilePath(newPath);
+				insertFile(fileVO);
+				
+				saveLog("CP", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+			}
 		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
 		
 		return result;
 	}

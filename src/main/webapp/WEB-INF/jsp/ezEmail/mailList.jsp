@@ -2,25 +2,22 @@
 <%@ page session="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%
-	out.clear();
-%>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>mail_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>		
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "${url}";
@@ -94,9 +91,14 @@
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
 		    var useMailNewWindow = "${useMailNewWindow}";
+		    var currentMoverId = '';
+		    var currentFixingId = '';
 		    var useReceivingChk = false;
 		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
+		    var isSentItems = "${isSentItems}";
+		    var importExportMode = false;
+		    var useCountryIP = "${useCountryIP}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -117,6 +119,11 @@
 		    var window_onunload_Event = false;
 		    window.onload = function () {
 		    	
+		    	var listWidth = 0;
+		    	$(document).on("click","#ifrmPreViewW_div",function(event){
+		    		window.parent.event_secondRightClick();
+		          })
+
 		    	if (useReSend == "YES" && g_szRootFolderName == compareFolderName) {
 		    		$('#liReSend').css('display', 'block');
 		    	}
@@ -125,10 +132,16 @@
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";
+		    		$('#liReSend').css('display', 'block');
+		    		document.getElementById("MailHeader").style.minWidth = "600px";
+		    		document.getElementById("contentlist").style.minWidth = "600px";
 		    		useReceivingChk = true;
 		    		g_foldertype = g_moveUrl;
 		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
 		    		select.selectedIndex = 3;
+		    	} else {
+		    		document.getElementById("MailHeader").style.minWidth = "400px";
+		    		document.getElementById("contentlist").style.minWidth = "400px";
 		    	}
 		    	
 		        CurrentHeight = document.body.clientHeight;
@@ -215,6 +228,7 @@
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
 		                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
 		                
+		                listWidth = CurrenWidth;
 		            } else {
 		            	
 		                if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -242,14 +256,7 @@
 		                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
 		                
-		                if (pMailListWidthH <= 470) {
-		                    if (g_foldertype != "sent") {
-		                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
-		                        SmallSizeList = true;
-		                        OldSmallSizeList = true;
-		                    }
-		                }
-		                
+		                listWidth = pMailListWidthH;
 		            }
 		            
 		        } else {
@@ -257,8 +264,23 @@
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
 		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+
+	                listWidth = document.documentElement.clientWidth - 20;
 		        }
-		
+		     	
+		        if (listWidth <= 470) {
+                    if (!useReceivingChk) {
+                    	if (g_foldertype == "sent" || g_foldertype == "draft") {
+                			p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2_1.xml";
+                		} else {
+                        	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+                		}
+                    	
+                        SmallSizeList = true;
+                        OldSmallSizeList = true;
+                    }
+                }
+		        
 		        var HeaderObject = document.getElementById("MailHeader");
 		        var ContentObject = document.getElementById("MailList");	        
 		        HeaderIni(HeaderObject);       
@@ -324,13 +346,10 @@
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
-		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
-		            	if (!searchMode) {
-			                MailListRefresh();
-			                
-			                // 다음 자동 갱신 시간을 기록한다.
-			                recordNextMailListRefreshTime();
-		            	}
+
+		                MailListRefresh();
+		                recordNextMailListRefreshTime();
+
 		            }, pSaveInterval);
 		        }
 		    }
@@ -351,12 +370,9 @@
  		           
  		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
  		            if (remainingTime <= 0) {
- 		                console.log('refresh time already passed. Refresing...')
+ 		                console.log('refresh time already passed. Refresing...');
  		                
- 		                // 수정 재은 
- 		                if (!searchMode) {
- 		                	MailListRefresh();
- 		                }
+	                	MailListRefresh();
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -364,21 +380,20 @@
  		                setMailListRefreshTimer();
  		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
  		            } else {
- 		               console.log('refresh time not yet passed. Registering Timer...')
- 		               
- 		               refreshTimeoutTimerId = setTimeout(function() {
- 		            	   
- 		            	   // 수정 재은
- 		            	   if (!searchMode) {
- 		            		   MailListRefresh();
- 		            	   }
- 		                   
- 	                       // 다음 자동 갱신 시간을 기록한다.
- 	                       recordNextMailListRefreshTime();
- 		                   
- 		                   // 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
- 		                   setMailListRefreshTimer();
- 		               }, remainingTime);
+
+ 		            	console.log('refresh time not yet passed. Registering Timer...');
+ 		            	
+ 		            	refreshTimeoutTimerId = setTimeout(function() {
+ 		            		
+ 		            		MailListRefresh();
+ 		            		
+ 		            		// 다음 자동 갱신 시간을 기록한다.
+ 		            		recordNextMailListRefreshTime();
+ 		            		
+ 		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
+ 		            		setMailListRefreshTimer();
+ 		            	}, remainingTime);
+
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
@@ -465,8 +480,10 @@
 		        }
 		    }
 		    
+		    var searchFromList = false;
 		    function start_search() {
-		        searchMode = true;
+		        ContextMenuHidden();
+		    	searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
 		        
 		        if (inputkeyword.value.indexOf("%") != -1) {
@@ -484,6 +501,92 @@
 		        
 		        goToPageByNum("1");
 		    }
+		    
+		    function searchInThisBoxByName() {
+		    	searchMode = true;
+		        var keywordFromList = "";
+		        if (isSentItems == "true") {
+		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
+		    		
+		    		if (receiver.indexOf(';') != -1) {
+			    		receiver = receiver.split(';')[0];
+		    		} else {
+		    			receiver = currentFixingId.cells[5].getAttribute('data-name');	
+		    		}
+		    		
+		    		if (receiver.indexOf('\"') != -1) {
+		    			keywordFromList = receiver.replace(/\"/g,"");
+		    		} else {
+		    			keywordFromList = receiver;
+		    		}
+		    		
+		    	} else {
+		    		keywordFromList = currentFixingId.cells[5].getAttribute('data-name');
+		    		
+                    if (keywordFromList.indexOf('\"') != -1) {
+                        keywordFromList = keywordFromList.replace(/\"/g,"");
+                    }		    		
+		    	}
+		       
+		    	
+		    	if (g_foldertype != "sent" && g_foldertype != "draft") {
+		    		$("#searchCheck").val("FROM").prop("selected", true);
+		    	} else {
+		    		$("#searchCheck").val("RECEIVE").prop("selected", true);
+		    	}
+
+		    	var searchField = $("#searchCheck").val();
+
+		    	var inputkeyword = document.getElementsByName('keyword').item(0);
+		    	inputkeyword.value = keywordFromList;
+		    	 
+		    	SearchKeyword = searchField + "=" + inputkeyword.value;
+		        goToPageByNum("1");
+		    	
+		    }
+		    
+		    function searchAllBoxByName() {
+		        var keywordFromList = "";
+		        
+		        if (isSentItems == "true") {
+		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
+		    		
+		    		if (receiver.indexOf(';') != -1) {
+			    		receiver = receiver.split(';')[0];
+		    		} else {
+		    			receiver = currentFixingId.cells[5].getAttribute('data-name');	
+		    		}
+		    		
+		    		if (receiver.indexOf('\"') != -1){
+		    			keywordFromList = receiver.replace(/\"/g,"");
+		    		} else {
+		    			keywordFromList = receiver;
+		    		}
+		    		
+		    	} else {
+		    		keywordFromList = currentFixingId.cells[5].getAttribute('data-name');
+		    	}
+		    	
+		        if (g_foldertype != "sent" && g_foldertype != "draft") {
+		    		$("#searchCheck").val("FROM").prop("selected", true);
+		    	} else {
+		    		$("#searchCheck").val("RECEIVE").prop("selected", true);
+		    	}
+		        
+		        var searchField = $("#searchCheck").val();
+				searchFromList = true;
+		    	
+	            try {
+	                var url;
+	                url = "/ezEmail/mailSearchView.do?keywordFromList="+encodeURIComponent(keywordFromList)+"&searchCheck=" +encodeURIComponent(searchField)+"&searchFromList=" +encodeURIComponent(searchFromList);
+	                window.open(url, "right");
+	            } catch (e) { }
+	            
+	            var inputkeyword = document.getElementsByName('keyword').item(0);
+		    	inputkeyword.value = keywordFromList;
+	            
+		        SearchKeyword = searchField + "=" + inputkeyword.value;
+	        }
 		    
 		    function reloadReadContent(url) {
 		    	g_moveUrl = url.split('/')[0];
@@ -535,6 +638,7 @@
 		    	
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
+ 					importExportMode = true;
 		        	var obj = JSON.parse(message.data);
 		        	
 		        	if (obj.status == "transferStart") {
@@ -589,10 +693,12 @@
 		        // 웹소켓 연결 해제시 실행 되는 함수
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
+		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 			        webSocket = null;
+			        importExportMode = false;
 		        };
 		    }
 			
@@ -639,6 +745,7 @@
 			
 		        webSocket.onmessage = function(message){
 		        	
+		        	importExportMode = true;
 		            var curr = "";
 		        	var obj = JSON.parse(message.data);
 		            ShowMailProgressNew();
@@ -669,10 +776,12 @@
 		        
 		        webSocket.onclose = function(event){
 		        	webSocket = null;
+		        	importExportMode = false;
 		        };
 		        
 		        window.onbeforeunload = function(){
 		        	webSocket = null;
+		        	importExportMode = false;
 		        };
 		        				
 			}
@@ -801,6 +910,25 @@
 	        	webSocket.close();
 	        	location.reload();
 			}
+			
+			function mailListScroll(di) {
+				$(di).parent("div").find("#MailHeaderDiv").scrollLeft(di.scrollLeft);	
+				ContextMenuHidden();
+			}
+			
+			function on_changeViewList(value) {
+				on_changeView(value);
+				ContextMenuHidden();
+			}
+			
+			function event_listContextMenuAndId(event){
+		        if (currentMoverId != '') {
+		        	currentFixingId = document.getElementById(currentMoverId);
+		        } else {
+		        	currentFixingId = document.getElementById(listContentArry[listContentArry.length-1]);
+		        }
+				event_listContextMenu(event);
+			}
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -881,7 +1009,7 @@
                   <tr>
                     <th><spring:message code="ezEmail.t99000035" /></th>
                     <td>
-                    	<select name="select" id="select" onChange="on_changeView(this.value)" style="height:20px;width:120px;">       
+                    	<select name="select" id="select" onChange="on_changeViewList(this.value)" style="height:20px;width:120px;">       
                     		<option VALUE="BASE" selected><spring:message code="ezEmail.t518" /></option>
                     		<option VALUE="PREVIEW"><spring:message code="ezEmail.t843" /></option>
                     		<option VALUE="UNREAD"><spring:message code="ezEmail.t519" /></option>
@@ -894,7 +1022,7 @@
           </div>
 	      <div class="shadow"></div>
         </div>
-        <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" >&nbsp;</div>
+        <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;</div>
         <div style="width:8px;height:100%;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarH"></div>
         <div style="width:100px;height:8px;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarW"></div>
         <div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
@@ -906,22 +1034,28 @@
            
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <table style="width:100%;border:1px solid #ddd;" id="MailHeader" class="mainlist" >               
-            </table>
-            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur  onscroll="ContextMenuHidden()">
-                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
-                </table>
-            </div>
-            <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
+		    <div>
+		        <div id="MailHeaderDiv" style="overflow-x: hidden; ">
+	    	        <table style="width:100%;border:1px solid #ddd; min-width:400px;" id="MailHeader" class="mainlist" >               
+	        	    </table>
+	        	</div>
+	        	<div id="contentlistDiv" style="overflow-y: auto;" onscroll="mailListScroll(this);ContextMenuHidden()" onclick="event_secondRightClick();">
+		            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;min-width:400px;" onblur  onscroll="ContextMenuHidden()">
+		                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenuAndId(event); return false;">
+		                </table>
+		            </div>
+		        </div>
+		    </div>
+            <div id="tblPageRayer"  style="width:470px; margin:6px auto;" onclick="event_secondRightClick();"></div>
         </span>
-        <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;">
+        <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;" onclick="event_secondRightClick();">
             <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor:w-resize;display:inline-block;">
 				<p class="hbar_dotted"><img src="/images/prevview_hbar_dotted.gif"></p>
             </span>
             <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
-                <span style="width:100%;height:100px;display:block;">            
+                <span style="width:100%;height:100px;display:block;" onclick="event_secondRightClick();">            
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width:100%;display:none;">
+                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width:100%;display:none;" onclick="event_secondRightClick();">
 		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
 		                    <dl class="mail_item">
@@ -944,8 +1078,8 @@
 		                    </dl>
                         </div>
 	                </span>
-					<span style="width: 100%;">
-						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
+					<span style="width: 100%;" onclick="event_secondRightClick();">
+						<iframe onclick="event_secondRightClick();" id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
 					</span>
                 </span>
             </span>
@@ -955,7 +1089,7 @@
 				<img src="/images/prevview_bar_dotted.gif">
             </span>
             <span id="PreContent_RayerW" style="display:block;border:0px solid red;">
-                <span style="width:100%;height:100px;display:block;">
+                <span style="width:100%;height:100px;display:block;" onclick="event_secondRightClick();">
 	                <span class="previewmail_info" style="display:block;width:100%;">
                         <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display:none;">
 		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
@@ -989,7 +1123,7 @@
 			<table style="width:100%;" id="GroupSubHeader" class="mainlist_depth" >               
 			</table>
 			<div id="GroupSubContentlist"  style="border:0px solid red;height:auto;width:100%;overflow-y:auto;">
-			    <table class="mainlist" style="width:100%;" id="GroupSubList" oncontextmenu="event_listContextMenu(event); return false;">
+			    <table class="mainlist" style="width:100%;" id="GroupSubList" oncontextmenu="event_listContextMenuAndId(event); return false;">
 			    </table>
 			</div>
 		</div>
@@ -1018,6 +1152,15 @@
 		    </tr>
 		    <tr>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="toggle_flag();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-flag.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t550" /></span></td>
+		    </tr>
+		    <tr>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/i_nsearch.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.kr.lsd03" /></span></td>
+		    </tr>
+		    <tr>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="searchInThisBoxByName();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;">&nbsp;&nbsp; - <spring:message code="ezEmail.kr.lsd06" /></span></td>
+		    </tr>
+		    <tr>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="searchAllBoxByName();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;">&nbsp;&nbsp; - <spring:message code="ezEmail.kr.lsd07" /></span></td>
 		    </tr>
 		    </table>
 		</div>

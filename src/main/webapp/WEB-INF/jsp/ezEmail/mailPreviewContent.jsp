@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,12 +6,12 @@
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-	    <script language="javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
+	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+	    <script language="javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
@@ -40,6 +39,10 @@
 	        	
 			    sentDateView();
 	        });
+	        
+	        function frameClick(){
+	        	parent.event_secondRightClick();
+	        }
 		    
 		    function AttachDetail_view(obj) {
 		       
@@ -293,9 +296,9 @@
 	        function sentDateView(msg) {
 	     		var preViewInfoParent = $(".previewmail_info", parent.document).parent();
 	     		preViewInfoParent.find(".sentDateStr").remove();
-
+				
 	     		if (sentDateMsg != "") {
-	     			preViewInfoParent.prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+	     			preViewInfoParent.prepend("<div class='sentDateStr' id='sentDateStr'>" + sentDateMsg + "</div>");
 	     			preViewInfoParent.find(".sentDateStr").css({
 			    		"height" : "27px",
 			        	"box-sizing" : "border-box",
@@ -316,7 +319,7 @@
 	    </script> 
 	</head>
 
-	<body style="margin:10px 13px" onload="javascript:window_onload()">
+	<body style="margin:10px 13px" onload="javascript:window_onload()" onclick="frameClick();">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span style="float:right;">

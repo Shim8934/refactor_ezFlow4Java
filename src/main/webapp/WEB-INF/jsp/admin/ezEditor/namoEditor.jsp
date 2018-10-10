@@ -4,9 +4,9 @@
 <html>
 	<head>
 		<title></title>
-		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script  type="text/javascript" src="/js/ezEditor/namoEditor/js/namo_scripteditor.js"></script>
-		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/namoEditor/js/namo_scripteditor.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		var userLang = "${userInfo.lang}";
 		var type = "${type}";
@@ -91,14 +91,23 @@
 	                selCell.removeAttribute("id");
             	}
             	
-                if (selCell.classList.contains("FIELD"))
+                if (selCell.classList.contains("FIELD")) {
                     selCell.classList.remove("FIELD");
+                
+	                BlockArr.push(selCell);
+	                selCell.style.backgroundColor = "#BEE7FC";
+                }
             }
             else if (type == "LOCK") {
-                if (selCell.getAttribute("free") != null)
+                if (selCell.getAttribute("free") != null) {
                     selCell.removeAttribute("free");
-                else
+                }
+                else {
                     selCell.setAttribute("free", "");
+                }
+                
+                BlockArr.push(selCell);
+                selCell.style.backgroundColor = "#BEE7FC";
             }
             else {
             	// 일지양식작성에서 사용하는 부분
@@ -110,11 +119,16 @@
 	                selCell.setAttribute("id", id);
                 }
             	
-                if (!selCell.classList.contains("FIELD"))
+                if (!selCell.classList.contains("FIELD")) {
                     selCell.classList.add("FIELD");
+                }
+                
+	            BlockArr.push(selCell);
+	            selCell.style.backgroundColor = "#BEE7FC";
             }
-            BlockArr.push(selCell);
-            selCell.style.backgroundColor = "#BEE7FC";
+          	   //2018-10-01 김보미 - 값이 비어있는 부분 클릭 후 취소시 포커스(배경색이 파란색으로)되지 않도록 변경
+//             BlockArr.push(selCell);
+//             selCell.style.backgroundColor = "#BEE7FC";
         }
 
         function View_CellProperty(g_toggleFlag) {

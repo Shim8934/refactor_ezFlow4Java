@@ -8,17 +8,17 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top: 0px;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 			var xmldom = "";
@@ -57,38 +57,68 @@
 		        DocList = null;
 		    }
 
+		    /* 2018-10-02 홍승비 - 좌측영역에서 좌측이동 시 예외처리 추가 */
 		    function leftmoveboard(val) {
-		        switch (val) {
-		            case 1:
-		                boardlistup("lvboardForm2");
-		                break;
-		            case 2:
-		                boardlistdown("lvboardForm2");
-		                break;
-		            case 3:
-		                adddeletelist("lvboardForm", "lvboardForm2");
-		                break;
-		            case 4:
-		                adddeletelist("lvboardForm2", "lvboardForm");
-		                break;
-		        }
+		    	listviewL = new ListView();
+		        listviewM = new ListView();
+		        
+		        listviewL.LoadFromID("lvboardForm2");
+		        listviewM.LoadFromID("lvboardForm");
+		        
+		        var selectL = listviewL.GetSelectedIndexes();
+		        var selectM = listviewM.GetSelectedIndexes();
+		        
+				if((val == "3") && (selectL != "") && (selectM == "")) {
+					alert("\"" + listviewL.GetSelectedRows()[0].cells[0].innerText + "\"" + " <spring:message code = 'ezCommunity.t342' />");
+				}
+				else {
+			        switch (val) {
+			            case 1:
+			                boardlistup("lvboardForm2");
+			                break;
+			            case 2:
+			                boardlistdown("lvboardForm2");
+			                break;
+			            case 3:
+			                adddeletelist("lvboardForm", "lvboardForm2");
+			                break;
+			            case 4:
+			                adddeletelist("lvboardForm2", "lvboardForm");
+			                break;
+			        }
+		 	  	}
 		    }
 
+		    /* 2018-10-02 홍승비 - 우측영역에서 우측이동 시 예외처리 추가 */
 		    function rightmoveboard(val) {
-		        switch (val) {
-		            case 1:
-		                boardlistup("lvboardForm3");
-		                break;
-		            case 2:
-		                boardlistdown("lvboardForm3");
-		                break;
-		            case 3:
-		                adddeletelist("lvboardForm3", "lvboardForm");
-		                break;
-		            case 4:
-		                adddeletelist("lvboardForm", "lvboardForm3");
-		                break;
-		        }
+		    	listviewR = new ListView();
+		        listviewM = new ListView();
+		        
+		        listviewR.LoadFromID("lvboardForm3");
+		        listviewM.LoadFromID("lvboardForm");
+		        
+		        var selectR = listviewR.GetSelectedIndexes();
+		        var selectM = listviewM.GetSelectedIndexes();
+		        
+				if((val == "4") && (selectR != "") && (selectM == "")) {
+					alert("\"" + listviewR.GetSelectedRows()[0].cells[0].innerText + "\"" + " <spring:message code = 'ezCommunity.t342' />");
+				}
+				else {
+			        switch (val) {
+			            case 1:
+			                boardlistup("lvboardForm3");
+			                break;
+			            case 2:
+			                boardlistdown("lvboardForm3");
+			                break;
+			            case 3:
+			                adddeletelist("lvboardForm3", "lvboardForm");
+			                break;
+			            case 4:
+			                adddeletelist("lvboardForm", "lvboardForm3");
+			                break;
+			        }
+				}
 		    }
 
 		    function adddeletelist(dellist, addlist) {

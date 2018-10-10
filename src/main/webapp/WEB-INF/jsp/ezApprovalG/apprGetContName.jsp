@@ -6,9 +6,9 @@
 <head>
     <title>${Title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script id="clientEventHandlersJS" type="text/javascript">
         if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
             window.onblur = function () {
@@ -110,7 +110,7 @@
             else
                 url = "/ezApprovalG/ezAprAlert.do";
 
-            if (CrossYN() || pNoneActiveX == "YES") {
+            if (CrossYN()) {
                 ezapralert_cross_dialogArguments[0] = parameter;
                 ezapralert_cross_dialogArguments[1] = CompleteFunction;
 

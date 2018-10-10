@@ -7,22 +7,24 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1'/></title>
 		<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ApprovUI_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprovUI_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -101,13 +103,13 @@
 		    arr_userinfo[8]  = "${userInfo.email}";
 		    arr_userinfo[9]  = "";
 		    arr_userinfo[10] = "${susinAdmin}";
-		    var pCompanyID = "${userInfo.companyID}";
 		    arr_userinfo[11]  = "${userInfo.displayName1}";
 		    arr_userinfo[12]  = "${userInfo.displayName2}";
 		    arr_userinfo[13]  = "${userInfo.title1}";
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var pCompanyID = "${userInfo.companyID}";
 		    var KuyjeType = "002";
 		    var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optIsSplit}";
@@ -133,7 +135,6 @@
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
-		    var hideCabinet = "${hideCabinet}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
 		  	//회람
 			var type = "ING";
@@ -149,8 +150,17 @@
 			var agreeReturnType = "${agreeReturnType}";
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
+			var isHWP = "";
+			var ext = "mht";
+			var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 			
 			var docState = "${docState}";
+			var orgCompanyID = "${orgCompanyID}";
+			
+			//최종결재시 채번
+			var useReceiveDocNo = "${useReceiveDocNo}";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -159,6 +169,11 @@
 		    	if(approvalFlag == "G") {
 	        		$("#btnAddSepAttach").css("display","");
 	        	} 
+		    	
+		    	if (nonElecRec == "Y") {
+			        getNonElecInfoSusinInit();
+					document.getElementById("btnAddSepAttach").style.display = "none";
+		        }
 		    };
 		    
 		    function getNextDocList()
@@ -263,8 +278,8 @@
 		            }
 		        }
 		    }
-		    function openOtherApprovUI()
-		    {
+		    
+		    function openOtherApprovUI() {
 		        var pArgument = new Array();
 		        pArgument[0] = NextDocID;
 		        pArgument[1] = NextDocUserID;
@@ -272,20 +287,15 @@
 		        pArgument[4] = NextDocUserName2;
 		        pArgument[3] = NextDocDeptID;
 		        var formURL = NextDocHref;
-		        if (NextDocExtended.toLowerCase() == "doc")
-		        {
+		        if (NextDocExtended.toLowerCase() == "doc") {
 		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else if (NextDocExtended.toLowerCase() == "hwp")
-		        {
-		            var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID="+escape(pArgument[0]);
-		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
-		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else
-		        {
+		        } else if (NextDocExtended.toLowerCase() == "hwp") {
+		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else {
 		            var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_CK.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
@@ -300,6 +310,7 @@
 		            btnClose_onclick();
 		        }
 		    }
+		    
 		    function DocumentComplete()
 		    {
 		        if (flag == false) 
@@ -557,9 +568,8 @@
 		                }
 		            }		
 		        }
- 		        <%--2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 사인칸에 표기안되서 주석해제 --%>
-		        //없이 테스트
- 		        SignCheck(); 
+		        
+//  		        SignCheck(); 
 		        
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
@@ -690,7 +700,31 @@
 			                }
 			            }
 		        	}
+		        } else {
+		        	//useReceiveDocNo 처리
+		        	if (useReceiveDocNo == 'NO') {
+			        	if (approvalFlag == "S") {
+			        		//일반 미처리
+			        	} else {
+			        		// 일단 복사해봄
+			        		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+				            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+				                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+				                    var rtnval;
+				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+				                    
+				                    if (!rtnval) {
+				                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+				                        OpenAlertUI(pAlertContent);
+				                        setMenuDisable("btnApprove", false);
+				                        return;
+				                    }
+				                }
+				            }
+			        	}
+		        	}
 		        }
+		        
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                var rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
@@ -878,8 +912,7 @@
 		        }
 		        check_openSingUI();
 		    }
-		    function btnReject_onclick()
-		    {
+		    function btnReject_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
 		        OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
 		    }
@@ -953,8 +986,7 @@
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
-		    function btnStay_onclick() 
-		    {
+		    function btnStay_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t39'/>";
 		       OpenInformationUI(pInformationContent, btnStay_onclick_Complete);
 		    }
@@ -1147,7 +1179,7 @@
 	        var pTop = (pheight - conHeight) / 2;
 	        var pLeft = (pwidth - 890) / 2;
 	        //기존
-	        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
+	        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref)+"&orgCompanyID="+orgCompanyID;
 	        //수정
 //		        var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pDocHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";
 	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -1231,11 +1263,12 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+		        para[3] = ext;
+		        
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
-		
-		        DivPopUpShow(730, 630, "/ezApprovalG/insSepAttach.do");
+
+		        DivPopUpShow(920, 630, "/ezApprovalG/insSepAttach.do");
 		    }
 		
 		    function btnAddSepAttach_onclick_Complete(rtn) {
@@ -1304,6 +1337,19 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+			    
+			    if (nonElecRec == "Y") {
+			    	if (pGubun != "1") {
+			        	parameter[47] = cabinetID;
+		        	} else {
+			        	parameter[47] = "nonElecRecTempCabinet";
+		        	}
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml;
+			        parameter[51] = sepAttachCheckYN;
+		        }
 		        
 		        if (approvalFlag == "S") {
 		        	parameter[13] = pOrgAprUserID;
@@ -1326,14 +1372,14 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
-		                var savexmlhttp = createXMLHttpRequest();
 		                //결재선 저장
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
@@ -1344,7 +1390,8 @@
 			                    		async : false,
 			                    		url : "/ezApprovalG/aprLineSave.do",
 			                    		data : {
-			                    				ret    : ret[1]
+			                    				ret    : ret[1],
+			                    				orgCompanyID : orgCompanyID
 			                    				},
 			                    		success : function(result){
 			                    			
@@ -1357,8 +1404,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                } else {
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
@@ -1369,7 +1414,8 @@
 			                    		async : false,
 			                    		url : "/ezApprovalG/aprLineSave.do",
 			                    		data : {
-			                    				ret    : ret[1]
+			                    				ret    : ret[1],
+			                    				orgCompanyID : orgCompanyID
 			                    				},
 			                    		success : function(result){
 			                    			
@@ -1382,20 +1428,19 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                }
-		
+		                
 		                if (pSuSinFlag == "Y") {
-		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                    	$.ajax({
 		                    		type : "POST",
 		                    		dataType : "text",
 		                    		async : false,
 		                    		url : "/ezApprovalG/aprDeptSave.do",
 		                    		data : {
-		                    				aprDeptInfo : ret[2]
+		                    				aprDeptInfo : ret[2],
+		                    				orgCompanyID : orgCompanyID
 		                    				},
 		                    		success : function(result){
 		                    			if (result == 'TRUE') {
@@ -1444,7 +1489,18 @@
 			                pPageNum = ret[13];
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
-			                setPublicFlag2();
+			                setPublicFlag();
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+				            	sepAttachCheckYN = ret[26];
+				            	if (ext == "hwp") {
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	}
+				            }
+			                
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
@@ -1469,7 +1525,6 @@
 		
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
 		            }
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
@@ -1546,7 +1601,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -1566,7 +1621,8 @@
 		    		url : "/ezApprovalG/getCabinetSN.do",
 		    		data : {
 		    			docID : pDocID,
-		    			deptID : draftDeptID
+		    			deptID : draftDeptID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = xml;

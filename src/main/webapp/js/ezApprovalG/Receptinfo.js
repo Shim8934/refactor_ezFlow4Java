@@ -1,17 +1,33 @@
-﻿//#############################################################################################################################################수신처 초기화
+﻿﻿//#############################################################################################################################################수신처 초기화
 function Receptinfo_ini() {
     if (!Recinfoini) {
         Recinfoini = true;
         Tree_setconfig();
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
-        if(approvalFlag == "S") {
+        
+        if (approvalFlag == "G") {
+        	if (receptGubunYN == "Y") {
+        		if (pDocType == "001") { //시행문
+        			ChangeReceptTab(document.getElementById("3tab4"));
+        			initReceptListView();
+        			document.getElementById("3tab4").onclick();
+        		} else { //수신문
+        			ChangeReceptTab(document.getElementById("3tab1"));
+        			initReceptListView();
+        			document.getElementById("3tab1").onclick();
+        		}
+        	} else {
+        		ChangeReceptTab(document.getElementById("3tab1"));
+        		initReceptListView();
+        		document.getElementById("3tab1").onclick();
+        	}
+        } else {
         	RdisplayUserList(arr_userinfo[4]);
+        	
+        	ChangeReceptTab(document.getElementById("3tab1"));
+        	initReceptListView();
+        	document.getElementById("3tab1").onclick();
         }
-        ChangeReceptTab(document.getElementById("3tab1"));
-        initReceptListView();
-        document.getElementById("3tab1").onclick();
-        //2015-06-23 표준모듈:추가 - KSK
-        SelDivName = "Organ";
     }
 }
 //#############################################################################################################################################수신처 내부 버튼 클릭 이벤트
@@ -65,7 +81,12 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptOrgan").style.display = "none";
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "";
-        document.getElementById("btnaddressChange").style.display = "";
+        if (useReceiveInfoName == '1') {
+//        	document.getElementById("btnaddressChange").style.display = "";
+        } else {
+        	document.getElementById("btnaddressChange").style.display = "";
+        }
+        
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "none";
         document.getElementById("AprDeptOuterAdd").style.display = "";
@@ -105,21 +126,25 @@ function initReceptListView() {
 		url : "/ezApprovalG/aprDeptRequest.do",
 		data : {
 			docID : docIDorSN,
-			mode  : pMode
+			mode  : pMode,
 			//2018-06-21 재사용시 수신처정보 완료문서정보가 아닌 고정수신처 정보로 초기화
 //			isUsed : isUsed
+			orgCompanyID : companyID
 		},
 		success: function(xml){
 			result = loadXMLString(xml);
 		}        			
 	});
 
-    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 9) {
-        document.getElementById("inputSummaryOuterReceiverList").focus();
-        document.getElementById("trSummaryOuterReceiverList").style.display = "";
-        document.getElementById("btnaddress").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+    //시행문
+    if (pDocType != null && pDocType != undefined && pDocType == "001") {
+	    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
+	    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 8) {
+	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	        document.getElementById("btnaddress").style.display = "none";
+	        document.getElementById("btnaddressChange").style.display = "none";
+	    }
     }
 
     document.getElementById('RECEPTLIST').innerHTML = "";
@@ -176,6 +201,7 @@ function TreeViewinitialize_tree2(targetDeptID, TopDeptID, tProperty, ServerName
         var treeView = new TreeView();
         treeView.SetID("tvTreeView2");
         treeView.SetUseAgency(true);
+        treeView.SetUseSusinColor4AprG(true);
         treeView.SetRequestData("RequestData2");
         treeView.SetNodeClick("TreeViewNodeClick2");
         treeView.DataSource(xmlDomRet);
@@ -522,7 +548,19 @@ function AprLineAddDept(nodeIdx, tr) {
     setNodeText(GetChildNodes(objNodes[0])[11], treeNode.GetNodeData("DISPLAYNAME2"));
     setNodeText(GetChildNodes(objNodes[0])[12], "");
     setNodeText(GetChildNodes(objNodes[0])[13], "");
-    setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+//    setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+    //2018-08-20 이효진
+    if (useReceiveInfoName == '1') {
+    	//현재부서명 + 장
+    	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + "장");
+    } else if (useReceiveInfoName == '2') {
+    	//추가 개발 시 상위부서명 + 장
+    } else {
+    	//default
+    	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+    }
+    
+    
     //setNodeText(GetChildNodes(objNodes[2])[0], "-");
 
 
@@ -886,7 +924,7 @@ function btnSearchDept_onClick() {
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
             rgParams["deptid"] = "";
-            if (CrossYN()) {
+            if (CrossYN() && ext !='hwp') {
                 checkname2_cross_dialogArguments[0] = rgParams;
                 checkname2_cross_dialogArguments[1] = btnSearchDept_onClick_Complete2;
 
@@ -1078,7 +1116,12 @@ function btnSearchDept_onClick() {
                         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                         document.getElementById("inputSummaryOuterReceiverList").value = "";
                         document.getElementById("btnaddress").style.display = "";
-                        document.getElementById("btnaddressChange").style.display = "";
+                        if (useReceiveInfoName == '1') {
+//                        	document.getElementById("btnaddressChange").style.display = "";
+                        } else {
+                        	document.getElementById("btnaddressChange").style.display = "";
+                        }
+                        
                     }
 
                 } else {
@@ -1241,7 +1284,11 @@ function btnSearchDept_onClick() {
                             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                             document.getElementById("inputSummaryOuterReceiverList").value = "";
                             document.getElementById("btnaddress").style.display = "";
-                            document.getElementById("btnaddressChange").style.display = "";
+                            if (useReceiveInfoName == '1') {
+//                            	document.getElementById("btnaddressChange").style.display = "";
+                            } else {
+                            	document.getElementById("btnaddressChange").style.display = "";
+                            }
                         }
 
                     } else {
@@ -1417,7 +1464,11 @@ function btnSearchDept_onClick_Complete(reParam) {
                 document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                 document.getElementById("inputSummaryOuterReceiverList").value = "";
                 document.getElementById("btnaddress").style.display = "";
-                document.getElementById("btnaddressChange").style.display = "";
+                if (useReceiveInfoName == '1') {
+//                	document.getElementById("btnaddressChange").style.display = "";
+                } else {
+                	document.getElementById("btnaddressChange").style.display = "";
+                }
             }
         } else {
             var pAlertContent = strLang247 + "<br>  " + strLang248;
@@ -1579,7 +1630,11 @@ function btnSearchDept_onClick_Complete(reParam) {
                     document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                     document.getElementById("inputSummaryOuterReceiverList").value = "";
                     document.getElementById("btnaddress").style.display = "";
-                    document.getElementById("btnaddressChange").style.display = "";
+                    if (useReceiveInfoName == '1') {
+//                    	document.getElementById("btnaddressChange").style.display = "";
+                    } else {
+                    	document.getElementById("btnaddressChange").style.display = "";
+                    }
                 }
 
             } else {
@@ -1602,6 +1657,7 @@ function event_getDeptFullTree() {
             treeView.SetID("tvTreeView2");
             treeView.SetUseAgency(true);
             treeView.SetRequestData("RequestData");
+            treeView.SetUseSusinColor4AprG(true);
             treeView.SetNodeClick("TreeViewNodeClick2");
             treeView.SetNodeDblClick("TreeViewNodeDbClick");
             treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
@@ -1632,6 +1688,7 @@ function event_GetReceptOuterTempletList() {
         var treeView = new TreeView();
         treeView.SetID("tvTreeView3");
         treeView.SetUseAgency(true);
+        treeView.SetUseSusinColor4AprG(true);
         treeView.SetRequestData("RequestDataG");
         treeView.SetNodeClick("TreeViewNodeClick");
         treeView.DataSource(xmlhttp2.responseXML);
@@ -1857,6 +1914,7 @@ function AprLineAddDeptG(nodeIdx, tr) {
 
     DeptAddIndex = DeptAddIndex + 1;
 
+    InitTr = listview.GetDataRows();
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
     if (InitTr.length > 8) {
         document.getElementById("inputSummaryOuterReceiverList").focus();
@@ -1867,7 +1925,11 @@ function AprLineAddDeptG(nodeIdx, tr) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
-        document.getElementById("btnaddressChange").style.display = "";
+        if (useReceiveInfoName == '1') {
+//        	document.getElementById("btnaddressChange").style.display = "";
+        } else {
+        	document.getElementById("btnaddressChange").style.display = "";
+        }
     }
 
 }
@@ -1960,7 +2022,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length < 10) {
+    if (listview.GetDataRows().length < 9) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
@@ -1997,45 +2059,52 @@ function btnAddAddress() {
 
     var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
     //2017-03-16 이효민 : 안타는 코드 주석 
+    //2018-03-12 이효진 : 타는코드라 주석 살림 (IE일떄 CrossYN 안타게)
+    //2018-07-19 강민수92 : CrossYN 분기 태우지 않고 한 코드로 동작
 //    if (CrossYN()) {
+//	if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
         aprdeptaddressusername_cross_dialogArguments[0] = "";
         aprdeptaddressusername_cross_dialogArguments[1] = btnAddAddress_Complete;
 
         DivPopUpShow(360, 220, windowName);
-//    }
-//    else {
+//    } else {
 //        var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
 //        parameter = parameter + GetShowModalPosition(330, 205);
 //        var dialogValue = "";
 //        var AddressUserName = window.showModalDialog(windowName, dialogValue, parameter);
-//        if (AddressUserName == "cancel" || AddressUserName == "")
+//        
+//        if (AddressUserName == "cancel" || AddressUserName == "") {
 //            return;
-//
+//        }
+//        
 //        var Para = window.showModalDialog("/ezAddress/addressZipCodePopUp.do", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
-//        var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
+//        var windowName = "/ezApprovalG/aprDeptAddressName.do";
 //        var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
 //        parameter = parameter + GetShowModalPosition(330, 205);
 //        var dialogValue = "";
 //
 //        if (typeof (Para) != "undefined") {
-//            if ((typeof (Para) != "undefined" && Para[0] != "cancel") || Para[0] == "")
-//                dialogValue = strLang253 + Para[0].substring(0, 3) + "-" + Para[0].substring(4, 7) + " " + Para[1] + " " + Para[2] + " " + Para[3] + " ";
-//            else
+//            if ((typeof (Para) != "undefined" && Para[0] != "cancel") || Para[0] == "") {
+//                dialogValue = strLang253 + Para[0] + " " + Para[1] + " ";
+//            } else {
 //                dialogValue = "";
-//        }
-//        else
+//            }
+//        } else {
 //            dialogValue = "";
+//        }
 //
 //        var AddressName = "";
-//        if (dialogValue != "")
+//        if (dialogValue != "") {
 //            AddressName = window.showModalDialog(windowName, dialogValue, parameter);
+//        }
 //
 //        var strAddress = "";
-//        if (AddressName != "" && AddressName != "cancel")
+//        if (AddressName != "" && AddressName != "cancel") {
 //            strAddress = AddressUserName + " (" + dialogValue + AddressName + ")";
-//        else
+//        } else {
 //            strAddress = AddressUserName + "(" + dialogValue + ")";
-//
+//        }
+//        
 //        if (CheckLen(strAddress, 100) == false) {
 //            var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
 //            var parameter = "status:no;dialogWidth:335px;dialogHeight:185px;scroll:no;edge:sunken;help:no;";
@@ -2043,9 +2112,11 @@ function btnAddAddress() {
 //            var dialogValue = strAddress;
 //            strAddress = window.showModalDialog(windowName, dialogValue, parameter);
 //
-//            if (strAddress == "cancel")
+//            if (strAddress == "cancel") {
 //                return;
+//            }
 //        }
+//        
 //        if (AddressName != "cancel" || strAddress != "cancel") {
 //            AprLineAddDeptAddress(strAddress);
 //        }
@@ -2275,7 +2346,7 @@ function InsertRecAll() {
     	}
     	if (isReceiverChk(deptid)) {
             
-	        if (CrossYN()) {
+	        if (CrossYN() && ext != 'hwp') {
 	            var pAlertContent = T1361andT1362;
 	            var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
 	        } else {
@@ -2294,7 +2365,6 @@ function InsertRecAll() {
 }
 
 function InsertRecAll_Complete(_RESPONSE) {
-
     if (SelDivName == "Organ" && _RESPONSE == true) {
         var treeNode = new TreeNode();
         treeNode.LoadFromID(nodeIdx);
@@ -2709,7 +2779,11 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
             document.getElementById("inputSummaryOuterReceiverList").value = "";
             document.getElementById("btnaddress").style.display = "";
-            document.getElementById("btnaddressChange").style.display = "";
+            if (useReceiveInfoName == '1') {
+//            	document.getElementById("btnaddressChange").style.display = "";
+            } else {
+            	document.getElementById("btnaddressChange").style.display = "";
+            }
         }
 
     } catch (e) {

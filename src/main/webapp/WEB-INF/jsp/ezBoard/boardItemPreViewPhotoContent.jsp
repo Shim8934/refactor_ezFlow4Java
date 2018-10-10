@@ -4,19 +4,19 @@
 <html>
 	<head>
 		<title><spring:message code="ezBoard.t293"/></title>
-		<link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
-		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<STYLE title="ezform_style_1">
 			P {
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 			  }
 		  	<%-- 2018-07-24 홍승비 - 썸네일/포토게시물 미리보기 이미지 클릭 시 레이어팝업 추가 --%>
-			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
+			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; cursor:pointer;}
 			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
 			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
 			.imgPopupBoxMagnify{width: 685px;height: 614px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
@@ -293,6 +293,7 @@
 	            var temp;
 	            for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
 	                temp = i + 1;
+	                /* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
 	                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><p>";
 	            }
 	            if (i == 0)
@@ -677,7 +678,7 @@
 				}).on("click", "#imgPopup", function(e){
 					var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
-		            var htmlString = "";				
+		            var htmlString = "";
 		            var imgPopupWindow = window.open("" , "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ pheight + ",width="+ pwidth + ",top=0,left=0", "");
 		            
 					htmlString = "<html><head><title><spring:message code='ezPortal.t49'/></title></head>";
@@ -690,7 +691,7 @@
 				});
 		    }
 		    
-		  //썸네일에 마우스 오버할 때 처리.
+		  //썸네일에 마우스 오버할 때 처리.(thumbnail클래스 클릭하여 확대 레이어팝업 띄우는 함수)
 		  	function thumbnailImgMouseOver(e){
 	    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
 	    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","none");
@@ -715,8 +716,8 @@
 	    	    		
 	    	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
 	    	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-	    	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
-	    	    		
+	    	    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+	    	    		imgPopup.attr("zoom","1");
 		    		});
 	    		} else {
 	    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
@@ -727,7 +728,8 @@
     	    		
     	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
     	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-    	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+    	    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+    	    		imgPopup.attr("zoom","1");
 	    		}
 	    		
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
@@ -745,12 +747,15 @@
 	    		
 		  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		  		else{
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
-		  			$imgPopup.css("zoom","");
+		  			$imgPopup.css("width", "");
+		  			$imgPopupDiv.css("overflow", "");
 		  		}
-	    		
+		  		$imgPopup.attr("zoom","1")
+		  		
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
 				$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
 	    		$imgPopupDiv.toggleClass("imgPopupDiv imgPopupDivMagnify");
@@ -812,38 +817,35 @@
 		  		var $imgPopupBox = $("#imgPopupBox");
 		  		var $imgPopupDiv = $("#imgPopupDiv");
 		  		var $imgPopup = $("#imgPopup");
+		  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($imgPopup.css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
+		  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) + zoomOffset;
 		  		}
-		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 		  			zoom = 1 + zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
+			  		zoom = parseFloat($imgPopup.attr("zoom")) + zoomOffset;
 		  		}
-		  		$imgPopup.css("zoom", zoom);
+		  		zoom = zoom.toFixed(1);
+		  		$imgPopup.attr("zoom", zoom);
 		  		
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+				$imgPopup.width(imgPopupOrignW * zoom);
+				$imgPopupDiv.width(imgPopupOrignW * zoom);
 		  		
 		  		//imgPopup 세로 위치 조정.
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
-		  			var agent = navigator.userAgent.toLowerCase();
 		  			var topOffset = "";
-		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-	  				}
-	  				else {
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-	  				}
+					topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+					
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);
@@ -858,32 +860,37 @@
 		  		var $imgPopupBox = $("#imgPopupBox");
 		  		var $imgPopupDiv = $("#imgPopupDiv");
 		  		var $imgPopup = $("#imgPopup");
+		  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($imgPopup.css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
+		  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) - zoomOffset;
 		  		}
-		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 		  			zoom = 1 - zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
+			  		zoom = parseFloat($imgPopup.attr("zoom")) - zoomOffset;
 		  		}
+		  		zoom = zoom.toFixed(1);
 		  		
-		  		if( zoom > 0 ){
-			  		$imgPopup.css("zoom", zoom);
-		  		}else{
+		  		// 0.1보다 작은 비율로는 축소 불가능
+		  		if ( zoom >= 0.1 ) {
+			  		$imgPopup.attr("zoom", zoom);
+		  		} else {
 		  			return;
 		  		}
 		  		
-		  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+		  		var thumbImgW = imgPopupOrignW * zoom;
 		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCW = imgPopupDiv.clientWidth;
 	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-	    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+				$imgPopup.width(thumbImgW);
+		    	$imgPopupDiv.width(thumbImgW);
+		    		
 	    		
 		  		if(thumbImgW > (imgPopupDivCW - 100)){
 		  			$imgPopup.css("left","");
@@ -891,16 +898,10 @@
 		  		
 		  		//imgPopup 세로 위치 조정
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
-		  			var agent = navigator.userAgent.toLowerCase();
 		  			var topOffset = "";
-		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-	  				}
-	  				else {
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-	  				}
+			  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+			  		
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);

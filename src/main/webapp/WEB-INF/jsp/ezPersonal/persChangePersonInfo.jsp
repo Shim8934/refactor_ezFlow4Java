@@ -6,29 +6,29 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>ChangePersonInfo</title>
-		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPersonal/controls/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/ezPersonal/controls/composeappt.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
 		<script type="text/javascript">
 			var rsa = new RSAKey();
 			
 			var getBirthDay = "${birthDay}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
-			
+			var locale = "${locale}";
 			$(function () {
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -88,6 +88,9 @@
 						$(".imgbtn span").css("line-height","22px");
 			    	}
 			    	
+			    	if (locale != 'ko') {
+			        	$(".onlyUseKo").css("display", "none");
+			        }
 			    }
 			    
 			    var personpicture_cross_dialogArguments = new Array();
@@ -366,7 +369,7 @@
         		</tr> 
         		<tr> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
-            		<td colspan="3">
+            		<td colspan="3" class="onlyUseKo">
                 		<c:if test="${primaryLang == '1'}">
                 			<c:if test="${useZipCodeSearch == 'YES'}">
                 				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
@@ -394,19 +397,19 @@
                 			&nbsp;&nbsp;
              			   <c:choose>
                 				<c:when test="${birthType eq 'Y'}">
-                					<input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/>
-                					<input type="radio" id="RadBirthType2" name="radioGroup"  ><spring:message code='ezPersonal.t2002'/>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/></span>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup" ><spring:message code='ezPersonal.t2002'/></span>
                 				</c:when>
                 				<c:otherwise>
-                					<input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/>
-                					<input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/></span>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/></span>
                 				</c:otherwise>
                 			</c:choose>
 		            </td>
 		        </tr>
         		<tr> 
             		<th><spring:message code='ezPersonal.t1820'/><br><spring:message code='ezPersonal.t182'/></th> 
-            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px" maxlength="450">${txtInfo}</textarea></td> 
+            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
     		<div class="btnpositionJsp">

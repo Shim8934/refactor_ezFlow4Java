@@ -310,6 +310,10 @@ var strLangKYJ02 = "再利用するメールを選択してください。";
 var strLangKYJ03 = "スペースは入力できません。";
 var strLangLSD02 = "選択した部署に部署員が登録されていないため、宛先指定できません。";
 
+/* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
+var strLangHSB01 = "この掲示は";
+var strLangHSB02 = "で照会できます。";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

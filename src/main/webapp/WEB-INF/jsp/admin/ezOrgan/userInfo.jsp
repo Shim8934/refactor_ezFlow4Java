@@ -6,17 +6,17 @@
 	<head>
 		<title><spring:message code="ezOrgan.t250" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href='/css/Tab.css' type="text/css" />
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>   
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>   
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <!-- data picker -->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<!-- data picker -->
 		<script type="text/javascript">
 			var DeptID = "";
@@ -27,7 +27,8 @@
 		    var RetValue;
 	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
 	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
-		    
+	    	var locale = "<c:out value='${locale}'/>";
+	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -182,6 +183,9 @@
 			                }
 						}
 		            });
+		        }
+		        if (locale != 'ko') {
+		        	$(".onlyUseKo").css("display", "none");
 		        }
 			});
 			
@@ -632,7 +636,9 @@
 	            <td style="width: 240px;">
 	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly"/>	                
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
+	                <c:if test="${locale eq 'ko'}">
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
+	                </c:if>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >
@@ -683,7 +689,7 @@
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
 	        </tr>
-	        <tr>
+	        <tr class="onlyUseKo">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
                     <c:if test="${primaryLang == '1'}">

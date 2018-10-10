@@ -6,19 +6,19 @@
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ErrorHandler.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			window.offscreenBuffering = true;
@@ -110,13 +110,14 @@
 	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 	    	}
 			
+	    	/* 2018-08-03 홍승비 - 커뮤니티 게시물(포토게시물 제외) 리사이즈 수정*/
 		    window.onresize = function () {
 		        if (gubun != "3") { 
 		            var contentHeight;
 		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 338;
+		                contentHeight = document.documentElement.clientHeight - 261;
 		            } else {
-		                contentHeight = document.documentElement.clientHeight - 363;
+		                contentHeight = document.documentElement.clientHeight - 281;
 		            }
 		            if(contentHeight < 40){
 		            	contentHeight = 40;
@@ -365,15 +366,17 @@
 				    return;
 				}
 	            
+	            var wWeight = "355";
+    			var wHeight = "600";
+
 	            var pheigth = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
-	            pheigth = parseInt(pheigth) / 2;
-	            pwidth = parseInt(pwidth) / 2;
-	            pheigth = pheigth - 200;
-	            pwidth = pwidth - 127;
+	            
+	        	var left = (pwidth - wWeight) / 2;
+    			var top = (pheigth - wHeight) / 2;
 				//2018-07-13 김보미 - 파라메터 추가
-// 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+// 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
 	        }
 
 	        function btnClose_onclick() {
@@ -568,6 +571,7 @@
 	        }
 		    var item_readlist_cross_dialogArguments = new Array();
 
+		    /* 2018-07-02 홍승비 - 커뮤니티 게시물 조회자 정보 > 겸직부서의 정보로 표출 */
 	        function ReaderList() {
 // 	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
 // 	            GetOpenWindow(szHref, "", 520, 400);
@@ -597,10 +601,10 @@
 	            window.open(url, "", feature);
 	        }
 
-	        function OpenUserInfo(pUserID) {
+	        function OpenUserInfo(pUserID, pDeptID) {
 	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 438);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 	        }
 
 	        function OneLineReply_onkeydown() {
@@ -733,6 +737,7 @@
 	            getOneLineReply();
 	        }
 
+	        // 댓글 작성자 클릭 시 정보 보여주는 부분 필요!
 	        function getOneLineReply() {
 	        	$.ajax({
 					type : "POST",
@@ -942,7 +947,8 @@
 	                        <c:choose>
 	                        	<c:when test="${boardInfo.gubun != '2' }">
 	                        		<td id="WriteUserNM" style="white-space: nowrap; width:40%;">
-	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}")'><c:out value='${item.writerName}' /></div>
+	                        		<%-- 게시글 작성자 클릭 시 겸직정보 표출 --%>
+	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}", "${item.writerDeptID}")'><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:when>
 	                        	

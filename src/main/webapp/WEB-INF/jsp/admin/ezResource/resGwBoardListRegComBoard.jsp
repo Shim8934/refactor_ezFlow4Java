@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t30" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
-		<script type="text/javascript" src="/js/XmlHttpRequest.js" ></script>
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pCompanyID	= "${selCompanyID}";
 			var pUserID		= "${userInfo.id}";
@@ -130,18 +130,17 @@
 			    	objRootNode.appendChild(objNode);
 				}
 
+				/* 2018-09-05 홍승비 - 자원관리 일반설정 수정 시 에러 alert 메세지 수정 */
 				xmlHttp.open("Post", "/admin/ezResource/callBrdMod.do", false);
 				xmlHttp.send(xmlPara)
-
 				if (xmlHttp.status != 200){
-					alert("1. <spring:message code='ezResource.t42' />");
+					alert("<spring:message code='ezResource.t42' />");
 					return;
 				}
 
 				var rtnText = xmlHttp.responseText
-
 				if (rtnText == "" || rtnText == "False"){
-					alert("2. <spring:message code='ezResource.t42' />");
+					alert("<spring:message code='ezResource.t42' />");
 					return;
 				}else{
 			    	alert("<spring:message code='ezResource.t43' />");

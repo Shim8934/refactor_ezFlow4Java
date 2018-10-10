@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
@@ -7,8 +6,8 @@
 	<head>
 		<title><spring:message code='main.kms1'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var timeZone = "${configMap.PrimaryTimeZone}";
 			var list = [];
@@ -102,7 +101,7 @@
 	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0038"/></th><td><input id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="${configMap.MaxAllowedCountOfLoginFail}"> (<spring:message code="ezSystem.x0014"/>)</td></tr>            
 	            <tr><th><spring:message code="ezSystem.x0006"/></th><td><input id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="${configMap.INDIVIDUALMAILUSER}"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td><td></tr>
-	            <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select>	
+	            <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang" style="display:none;"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select>	
 	           			<select id="PrimaryTimeZone">
          					<option value="000|-12:00">(GMT-12:00) <spring:message code='ezPersonal.s5'/></option>
          					<option value="001|-11:00">(GMT-11:00) <spring:message code='ezPersonal.s6'/></option>

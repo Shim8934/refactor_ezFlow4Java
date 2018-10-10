@@ -1,25 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <title>mail_outofoffice</title>
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/composeappt.js')}"></script>
 	    <!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 	    <!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 	    <script type="text/javascript">
 	    	var offsetMin = "${offsetMin}";
 		    var g_oofstate = "${gOofState}";
@@ -314,7 +313,7 @@
 	<br>
 	<span class="txt">▒ <spring:message code='ezEmail.t204' /><br>
 	▒ <spring:message code='ezEmail.t205' /></span>
-	<table style="width:720px;margin-top:5px;" class="box">
+	<table style="width:768px;margin-top:5px;" class="box">
 	  <tr>
 	    <td style="padding:5px">
 	       <input name="SetRadio0" type="radio" onclick="SetToggle('0')" id = "SetRadio0">
@@ -325,7 +324,7 @@
 	      <spring:message code='ezEmail.t208' /></td>
 	  </tr>
 	</table>
-	<table class="content" style="width:720px;margin-top:5px;">
+	<table class="content" style="width:768px;margin-top:5px;">
 	  <tr>
 	    <th><spring:message code='ezEmail.t209' /></th>
 	    <td>
@@ -339,10 +338,10 @@
 	    </td>
 	  </tr>
 	</table>
-	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
+	<div class="nobox" style="width:768px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div>
-	<table id="externalTable" style="width:720px; margin-top:10px;" class="box">
+	<table id="externalTable" style="width:768px; margin-top:10px;" class="box">
 	  <tr>
 	    <td style="padding:5px"><input type="checkbox" name="chkOut" onclick="CheckOut()" id="chkOut">
 	      <spring:message code='ezEmail.t218' /><br>
@@ -352,10 +351,10 @@
 	      <spring:message code='ezEmail.t220' /></td>
 	  </tr>
 	</table>
-	<div id="externalDiv" class="nobox" style="width:720px; height:500px;margin-top:5px;">
+	<div id="externalDiv" class="nobox" style="width:768px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 
-	<div style="width:700px;text-align:center;">
+	<div style="width:735px;text-align:center;">
 		<div class="btnpositionJsp">
 	    	<a class="imgbtn" onClick="Save()"><span><spring:message code='main.sp09' /></span></a>
 	    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>

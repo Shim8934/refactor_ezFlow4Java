@@ -6,11 +6,11 @@
 	<head>
 	    <title>address_search</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezAddress/Address_List.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Address_List.js')}"></script>
 	    <script type="text/javascript">
 	
 	        var pCurrentPage = "1";
@@ -150,13 +150,18 @@
 	                        subxmlHTTP.send(xmlDom);
 	                        xmlDom = subxmlHTTP.responseXML;
 	                        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
-	                        for (var Cnt2 = 0; Cnt2 < emailRows.length; Cnt2++) {
-	                            var name = SelectSingleNodeValue(emailRows[Cnt2], "NAME");
-	                            var useremail = SelectSingleNodeValue(emailRows[Cnt2], "EMAIL");
-	                            if (email == "")
-	                                email = "\"" + name + "\" <" + useremail + ">";
+	                        
+	                        if (emailRows.length > 0) {
+	                        	var addrname = AddressObj.getAttribute("_Sname");
+	                        	if (AddressObj.getAttribute("_foldertype") == "P")
+	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|P";
 	                            else
-	                                email += ",\"" + name + "\" <" + useremail + ">";
+	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|D";
+	                        	
+	                        	if (email == "")
+	                                email = "\"" + addrname + "\" <" + addremail + ">";
+	                            else
+	                                email += ",\"" + addrname + "\" <" + addremail + ">";
 	                        }
 	                    }
 	                }
@@ -171,13 +176,8 @@
 	                var pTop = (pheight - conHeight) / 2;
 	                var pLeft = (pwidth - 890) / 2;
 	
-	                if (CrossYN() || pNoneActiveX == "YES")
-	                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-	                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                else {
-                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                }
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+	                    "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
 	        }
 	        

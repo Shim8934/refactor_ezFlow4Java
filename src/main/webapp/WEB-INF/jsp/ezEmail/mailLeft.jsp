@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,19 +6,19 @@
 	<head>
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <!-- 재은 수정 -->
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
@@ -33,6 +32,7 @@
 	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
+	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -292,22 +292,24 @@
 	        
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
-	        	
-	        	if (event.which != 3) {
-	        		var nodeIdx = PostTreeView.selectedIndex();
-		            var href = PostTreeView.getvalue(nodeIdx, "href");
-		            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
-		            
-		            try {
-		                if (typeof (parent.frames["right"]) != "undefined")
-		                    parent.frames["right"].Window_onunload();
-		            } catch (e) { }
-		            if (g_firstOpen)
-		                g_firstOpen = false;
-		            else
-		                window.open(url, "right");
-		            get_unreadcount();
-	        	}        	
+				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
+	        	if (event != undefined) {
+		        	if (event.which != 3) {
+		        		var nodeIdx = PostTreeView.selectedIndex();
+			            var href = PostTreeView.getvalue(nodeIdx, "href");
+			            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+			            
+			            try {
+			                if (typeof (parent.frames["right"]) != "undefined")
+			                    parent.frames["right"].Window_onunload();
+			            } catch (e) { }
+			            if (g_firstOpen)
+			                g_firstOpen = false;
+			            else
+			                window.open(url, "right");
+			            get_unreadcount();
+		        	}
+	        	}
 	        }
 	        
 	        function email_dragdrop(event) {
@@ -858,13 +860,17 @@
 			      	//지운편지함의 메일 영구삭제
 			        if (folderPath == trashBoxURL) {
 			            if (confirm("<spring:message code='ezEmail.t470' />")) {
-			                delete_mail(folderPath, true, "");
+				            if (confirm("<spring:message code='ezEmail.ksa03' />")) {
+				                delete_mail(folderPath, true, "");
+				            }
 			            }
 			        }
-			      	//편지함의 메일 지운편지함으로 이동
+			      	//편지함의 메일 지운편지함으로 이동  
 			        else {
 			            if (confirm("<spring:message code='ezEmail.t475' />")) {
-			                delete_mail(folderPath, false, trashBoxURL);
+			            	if (confirm("<spring:message code='ezEmail.ksa04' />")) {
+				                delete_mail(folderPath, false, trashBoxURL);	
+			            	}
 			            }
 			        }
 			      	
@@ -1003,6 +1009,22 @@
 	            get_unreadcount();
 			}
 			
+			function operatorSendMail() {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        
+		        if (conWidth > 890) {
+		            conWidth = 890;
+		        }
+		        
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+
+		        window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", feature);
+		    }
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1057,7 +1079,7 @@
 	        </ul>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow-x:hidden; overflow-y: auto; padding-left: 20px;" id="AddressTreeView"></div>
 	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
 	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>	        
@@ -1077,6 +1099,9 @@
 		            <dd id="usePer"></dd>
 		        </dl>
 		    </div>
+		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
+		    <h4 onclick="operatorSendMail()"><span><spring:message code="ezEmail.0hun01" /></span></h4>
+		    </c:if>
 	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>

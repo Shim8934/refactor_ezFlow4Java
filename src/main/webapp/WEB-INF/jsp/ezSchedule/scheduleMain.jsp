@@ -6,29 +6,29 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-        <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
-        <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-        <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
-        <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />  
+        <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
         <script type="text/javascript">
         	var UserOffset = "<c:out value='${pOffset}'/>";
         </script>      
-        <script type="text/javascript" src="/js/Holiday.js"></script>        
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>   
-	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+        <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>        
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>   
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	    <!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- 2018-06-12 구해안 -->
-		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<style type="text/css">
  		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
  			margin: 0 auto; 
@@ -46,6 +46,7 @@
 		.chk_noneDisplay {
 			display:none;
 		}
+		
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
@@ -70,6 +71,32 @@
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var LunarUse = false;		    
 		    select_memorialDays(uselang);
+		    
+		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+	        window.onunload = function () {
+	        	if (parent.frames["left"]) {
+	        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+	        			$(parent.frames["left"].document.body).css("overflow", "");
+	        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	} else if (parent.frames["attitude_menu"]) {
+	        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+	        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	}
+	        	      
+	        	if (parent.parent.frames["left"]) {
+	        		if (parent.parent.frames["board_menu"]) {  		  
+	        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+	        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+	        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+	        		}
+	        	}
+	        }
 		    
 		    function schedule_get_holiday() {		        
 		        $.ajax({
@@ -155,7 +182,7 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-			    $.ajax({
+			    /* $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
@@ -170,10 +197,13 @@
 		    				LunarUse = true;
 		    			} else {
 		    				LunarUse = false;
-		    			}		    			
+		    			}
 		    			schedule_get_holiday();
 		    		}
-		        });
+		        }); */
+		        
+		        // #13470 일본은 음력사용 안함
+		    	schedule_get_holiday();
 			}
 
 		    var schedule_receive_attendant_cross_dialogArguments = new Array();

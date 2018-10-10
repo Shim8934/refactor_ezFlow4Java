@@ -121,6 +121,7 @@ public class EzEmailMailListController {
 		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
 		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
 		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId()); 
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -189,6 +190,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useSearchContent", useSearchContent);
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
+		model.addAttribute("useCountryIP", useCountryIP);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -394,7 +396,6 @@ public class EzEmailMailListController {
 				String readDate = "";
 				int nameLength = 1;
 				int readCount = 0;
-				msgto = "";
 				
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				
@@ -427,7 +428,6 @@ public class EzEmailMailListController {
 						String email = ((InternetAddress)address).getAddress();
 						
 						if (email != null) {
-							msgto += email + ";";
 							
 							if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
 								email = aliasAddressList.get(email);
@@ -456,12 +456,6 @@ public class EzEmailMailListController {
 					nameLength = Integer.parseInt(returnValue1.split(";")[0]);
 					
 					if (nameLength > 1) {
-//						if (readCount == 0) {
-//							name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
-//						} else {
-//							name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
-//						}
-						
 						readDate = "";
 					} else {
 						readDate = returnValue1.split(";")[1];
@@ -800,6 +794,30 @@ public class EzEmailMailListController {
 					}
 				}
 				
+				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
+				String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+				logger.debug("useCountryIP is " + useCountryIP);
+				if (useCountryIP.equals("YES")) {
+					
+					try {
+						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+						String code = "";
+						
+						if ( ctryCode == null ) {
+							logger.debug("Countrycode is not exists");
+						} else {
+							code = ctryCode[0].toString().toLowerCase();
+							logger.debug("Countrycode is = " + code);
+						}
+						
+						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", code));
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+				sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
 

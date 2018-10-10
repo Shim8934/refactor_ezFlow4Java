@@ -5,29 +5,45 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<section  class="body_bg1">
       		<article class="portlet_notice">
         		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
         		<dl class="notice_tab">
-          			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on"><span>${pCompanyBDNM}</span></dt>
-          			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)"><span>${pDeptBDNM}</span></dt>
-          			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)"><span>${pNewsBDNM}</span></dt>
+          			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pCompanyBDNM}</span></dt>
+          			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pDeptBDNM}</span></dt>
+          			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pNewsBDNM}</span></dt>
         		</dl>
           		<div id="BoardList_NewBoard" >
         		</div>
       		</article>
 		</section>
 
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<style>
+			.notice_tab {
+				background-color: #f9f9f9;
+				border: 1px solid #e8e8e8;
+			}
+ 			.notice_tab dt {
+				margin: -1px -1px 0px -1px;
+				height: 27px;
+			}
+			.notice_tab dt.on {
+				margin: -1px -1px 0px -1px;
+				height: 27px;
+				padding: 0px 5px;
+			}
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
     		var pBoardType_NewBoard = "";
     		var BoardCnt_NewBoard = 0;
     		var strLang1_NewBoard = "<spring:message code='main.t00025'/>";
     		var strLang2_NewBoard = "<spring:message code='main.t00026'/>";
-
+			var selTab = "";
+			
         	document.onselectstart = function () { return false; };
         
 	        function window_onload_Newboard(){
@@ -40,7 +56,19 @@
             	}
     	        // 2016-08-03 첫화면에 공지게시판 불러오기
 				getBoardList_NewBoard();
-    	        
+				selTab = "Board0_Newboard";
+				
+				/* 2018-09-27 홍승비 - 포틀릿에 게시판이 등록되어있지 않다면 셀 나타내지 않도록 수정 */
+				if ("${pCompanyBoard }" == "") {
+					document.getElementById("Board0_Newboard").style.display = "none";
+				}
+				if ("${pDeptBoardID }" == "") {
+					document.getElementById("Board1_Newboard").style.display = "none";
+				}
+				if ("${pNewsBoardID }" == "") {
+					document.getElementById("Board2_Newboard").style.display = "none";
+				}
+				
             	try { top.onresize() } catch (e) { }
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();
@@ -100,7 +128,7 @@
                         /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목 특수문자 처리 */
                         var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
-                        listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.gif' width='83' height='54' alt=''></dd>";
+                        listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.jpg' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
                         listHTML += "</dl>";
 
@@ -141,9 +169,18 @@
             	var pTop = (pheight - 720) / 2;
             	var pLeft = (pwidth - 765) / 2;
 
-            	if (boardType == "3" || boardType == "4")
-	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-            	else {
+            	/* 2018-09-19 홍승비 - 포탈 포틀릿에서 포토/썸네일게시물 보기 시 창 크기 수정 */
+				if (boardType == "3" || boardType == "4") {
+					if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+						var height = 789;
+					} else {
+						var height = 785;
+					}
+					pTop = (pheight - 789) / 2;
+					pLeft = (pwidth - 764) / 2;
+					
+	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+            	} else {
 	                if (CrossYN())
     	                window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
         	        else
@@ -200,7 +237,7 @@
                     	DocContentObject.innerHTML = DocContentObject_Div.innerText.replace(/(\r\n)/g, "");
             	    }
             	    /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목+내용 특수문자 처리 */
-            	    DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
+            	    //DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
                 	document.getElementById("content").appendChild(DocContentObject);
 	            }
     	        catch (e) {
@@ -210,18 +247,21 @@
     	    function boardChangeTab_Newboard(obj) {
         	    switch (obj.id) {
             	    case "Board0_Newboard":
+						selTab = "Board0_Newboard";
                 	    document.getElementById("Board0_Newboard").className = "on";
                     	document.getElementById("Board1_Newboard").className = "";
                     	document.getElementById("Board2_Newboard").className = "";
                     	break;
 
 	                case "Board1_Newboard":
+	                	selTab = "Board1_Newboard";
     	                document.getElementById("Board0_Newboard").className = "";
         	            document.getElementById("Board1_Newboard").className = "on";
             	        document.getElementById("Board2_Newboard").className = "";
                 	    break;
 
                 	case "Board2_Newboard":
+                		selTab = "Board2_Newboard";
 	                    document.getElementById("Board0_Newboard").className = "";
     	                document.getElementById("Board1_Newboard").className = "";
         	            document.getElementById("Board2_Newboard").className = "on";
@@ -248,7 +288,17 @@
                 	getBoardList_NewBoard();
             	}
         	}
-
+        	
+        	/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "on");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selTab) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
         	window_onload_Newboard();
 	</script>
 </html>

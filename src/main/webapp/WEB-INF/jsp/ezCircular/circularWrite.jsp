@@ -16,16 +16,16 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
-		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circular_write_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circularComment.js')}"></script>
 		
 		<script type="text/javascript">
 	    	var msgRtn = "";
@@ -39,6 +39,7 @@
 	    	var userMyName = "${userMyName}";
 	    	var userMyName2 = "${userMyName2}";
 	    	var listSize = "${listSize}";
+	    	var defaultFontAndSize  = "${defaultFontAndSize}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -315,8 +316,12 @@
 	    		}
 	    	}
 
+	    	/* 2018-09-17 김민성 - 에디터 폰트 설정값 로직 수정 */
 			function Editor_Complete() {
-    	    	message.SetEditorContent(sigBody.innerHTML);
+    	    	if(mode != "write")
+		    		message.SetEditorContent(sigBody.innerHTML);
+    	    	else
+					message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
     	    }
 			
 			function btn_Close() {

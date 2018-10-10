@@ -1891,7 +1891,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return result;
 	}
 	
-	public String createNewPortlet (String pCompanyID, int tenantID) {
+	public String createNewPortlet (String pCompanyID, int tenantID, String primaryLang) {
 		logger.debug("createNewPortlet started");
 
 		String newUID = UUID.randomUUID().toString();
@@ -1901,6 +1901,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_pNEWID", newUID);
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("tenantID", tenantID);
+		map.put("primaryLang", primaryLang);
 		
 		ezPortalAdminDAO.createNewPortlet(map);
 
@@ -1909,7 +1910,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return newUID;
 	}
 	
-	public String createNewLogoItem (String pParentUID, String pPageID, int tenantID) {
+	public String createNewLogoItem (String pParentUID, String pPageID, String primaryLang, int tenantID) {
 		logger.debug("createNewLogoItem started");
 
 		String newUID = UUID.randomUUID().toString();
@@ -1919,7 +1920,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PUID", newUID);
 		map.put("v_PPAGEID", pPageID);
 		map.put("v_PSKINNUM", 1);
-		map.put("v_PDISPLAYNAME", "로고아이템");
+		if (primaryLang.equals("3")) {
+			map.put("v_PDISPLAYNAME", "ロゴアイテム");
+		} else {
+			map.put("v_PDISPLAYNAME", "로고아이템");
+		}
 		map.put("v_PDISPLAYNAME2", "LogoItem");
 		map.put("tenantID", tenantID);
 		
@@ -1931,7 +1936,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return newUID;
 	}
 	
-	public String createNewSubMenuItem (String pParentUID, String pPageID, int tenantID) {
+	public String createNewSubMenuItem (String pParentUID, String pPageID, String primaryLang, int tenantID) {
 		logger.debug("createNewSubMenuItem started");
 
 		String newUID = UUID.randomUUID().toString();
@@ -1941,7 +1946,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_NEWUID", newUID);
 		map.put("v_PARENTUID", pParentUID);
 		map.put("v_PAGEID", pPageID);
-		map.put("v_DISPLAYNAME", "서브메뉴아이템");
+		if (primaryLang.equals("3")) {
+			map.put("v_DISPLAYNAME", "サブメニューアイテム");
+		} else {
+			map.put("v_DISPLAYNAME", "서브메뉴아이템");
+		}
 		map.put("v_DISPLAYNAME2", "SubMenuItem");
 		map.put("tenantID", tenantID);
 		
@@ -2204,7 +2213,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
-	public String createNewMenuItem (String pParentUID, String pPageID, int tenantID) {
+	public String createNewMenuItem (String pParentUID, String pPageID, String primaryLang, int tenantID) {
 		logger.debug("createNewMenuItem started");
 
 		String newUID = UUID.randomUUID().toString();
@@ -2214,7 +2223,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PUID", newUID);
 		map.put("v_PPARENTUID", pParentUID);
 		map.put("v_POWNERPAGEID", pPageID);
-		map.put("v_PDISPLAYNAME", "메뉴아이템");
+		if (primaryLang.equals("3")) {
+			map.put("v_PDISPLAYNAME", "メニューアイテム");
+		} else {
+			map.put("v_PDISPLAYNAME", "메뉴아이템");
+		}
 		map.put("v_PDISPLAYNAME2", "MenuItem");
 		map.put("tenantID", tenantID);
 		
@@ -2271,7 +2284,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			String result1Str = commonUtil.getQueryResult(result1);
 			Document xmlDom2 = commonUtil.convertStringToDocument(result1Str);
 			
-			if (xmlDom2.getElementsByTagName("ROW").getLength() > 0) {
+			if (xmlDom2 != null && xmlDom2.getElementsByTagName("ROW").getLength() > 0) {
 				strXML = "<DATA>" + resultStr + "<IMAGEDATA>" + result1Str + "</IMAGEDATA></DATA>";
 			} else {
 				strXML = "<DATA>" + resultStr + "<IMAGEDATA></IMAGEDATA></DATA>";

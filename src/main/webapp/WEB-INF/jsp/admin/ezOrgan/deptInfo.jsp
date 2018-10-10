@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code="ezOrgan.t208" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">		
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var OldDeptName = "";
 			var OldDeptName2 = "";
@@ -92,18 +92,26 @@
 			        }
 			    }
 			    catch (e){ }
-			    */
+			   */
+			   
+			   if(approvalFlag === "S") {
+			   	$(".onlyUseG").css("display", "none");
+			   }
 			});
 			
 			function Check_ID(pValue){
 				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
-					if(pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90){
+					if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
 						// A-Z
-					}else if(pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122){
+					} else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
 						// a-z
-					}else if(pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57){
+					} else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
 						// 0-9
-					}else{
+					} else if (pValue.charCodeAt(iCnt) == 45) {
+		                // -
+		            } else if (pValue.charCodeAt(iCnt) == 95) {
+                        // _
+                    } else {
 						return false;
 					}
 				}				
@@ -234,19 +242,19 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t222' /></th> 
 		    	<td><input type="text" id=SusinSymbol style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr>
+		  	<tr class="onlyUseG">
 		    	<th><spring:message code='ezOrgan.t223' /></th> 
 		    	<td><input type="text" id=BalsinPerson style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
 		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,8 +6,8 @@
 	<head>
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
@@ -17,20 +16,35 @@
 	    	.mainlist_free tr td {
 			    height: 0px;
 			}
+			
+	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+			#spn_deptName {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: inline-block;
+			}
+			#countInfo {
+				overflow: hidden;
+				display: inline-block;
+			}
+			.countColor {
+				color:#017BEC;
+			}			
 	    </style>
-	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
-		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
-	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezPersonal/controls/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	    <script type="text/javascript" src="/js/jquery-ui/jquery.multipleSortable.js"></script>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview_namespace.htc.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -66,7 +80,8 @@
 	        var strLang_2 = "<spring:message code='ezEmail.t655' />";
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
-	        var tabSel = "";
+	        var selTab = "";
+	        var selSpan = "";
 	        var divListArry = [];
 	        
 	        document.onselectstart = function () {
@@ -152,7 +167,11 @@
 	            ListTypeChangeIcon();
 	
 	            if (ReturnFunction == null)
-	                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	if (CrossYN()) {
+                        g_fnaddReceiver = opener.addReceiver;
+	            	} else {
+		                g_fnaddReceiver = window.dialogArguments["addReceiver"];
+	            	}
 	            try {
 	                var xmlpara = createXmlDom();
 	                var xmlTree = createXmlDom();
@@ -232,7 +251,7 @@
 	                document.title = " <spring:message code='ezEmail.t99000080' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "none";
-	                document.getElementById("dlTabButton").style.display = "none";
+	                //document.getElementById("dlTabButton").style.display = "none";
 	                document.getElementById("ListMsgTo").style.display = "none";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
@@ -505,6 +524,7 @@
 		    function orgTabButton_onClick() {
 		    	methodForTabAction(1);
 		        selTab = "orglistView";
+		        selSpan = "orgSpan";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "normal";
@@ -521,6 +541,7 @@
 		    function contactTabButton_onClick() {
 		    	methodForTabAction(2);
 		        selTab = "AddressListView";
+		        selSpan = "contactSpan";
 		        if (g_bContactLoaded == false) {
 		            g_bContactLoaded = true;
 		            LoadAddressTree();
@@ -539,6 +560,8 @@
 		    }
 		    function dlTabButton_onClick() {
 		    	methodForTabAction(3);
+		    	selTab = "DistributionList";
+		    	selSpan = "dlSpan";
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -592,6 +615,7 @@
 	        function inputTabButton_onClick() {
 	        	methodForTabAction(4);
 	            gubunpage = "direct";
+	            selSpan = "inputSpan";
 	            if (g_binputLoaded == false) {
 	                g_binputLoaded = true;
 	            }
@@ -691,7 +715,7 @@
 	                    return;
 	                }
 	            }
-	            else {
+	            else if (selTab == "AddressListView") {
 	                var pListViewDL = new ListView();
 	                pListViewDL.LoadFromID("Address");
 	                var arrRows = pListViewDL.GetSelectedRows();
@@ -701,6 +725,17 @@
 	                        alert("<spring:message code='ezEmail.t99000076' />");
 	                        return;
 	                    }
+	                }
+	                else {
+	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    return;
+	                }
+	            } else if (selTab == "DistributionList") {
+	            	var pListViewDL = new ListView();
+	                pListViewDL.LoadFromID("pListViewDL");
+	                var arrRows = pListViewDL.GetSelectedRows();
+	                if (arrRows.length > 0) {
+	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
 	                }
 	                else {
 	                    alert("<spring:message code='ezEmail.t1014' />");
@@ -1211,9 +1246,16 @@
 	            
 	            
 	            for (var i = 0; i < listContentArry.length; i++) {
-	            	for (var j = 0; j < 3; j++) {
-	            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+	            	if (keyword.value == "") {
+		            	for (var j = 0; j < 3; j++) {
+		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            	}
+	            	} else {
+		            	for (var j = 0; j < 4; j++) {
+		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            	}
 	            	}
+	            	
 	            }
 	            listContentArry = [];
 	            
@@ -1391,7 +1433,9 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            	+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
+	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -1405,7 +1449,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", page: CurPage, type : "user"},
+		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", page: CurPage, type : "user"},
 		        	success : function(result){
 		                pListXML_Info = loadXMLString(result);
 		        		
@@ -1426,17 +1470,18 @@
 						deptID : tempDeptID
 					},
 					success : function(result) {
-						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
-						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>]";
-			        		} else {
-			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
-// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang300 + "</span>]";
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang300 + "</span>]";
-			        		}
-			            	
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang300 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang300 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang300 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+							
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}
 					},
@@ -1947,7 +1992,7 @@
 		        	data : {
 		        			search : document.getElementById("search_type").value + "::" + keyword.value, 
 		        			cell : "company;description;displayName;title;telephoneNumber;"+ document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2", 
+		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2;department", 
 		        			page : CurPage, 
 		        			type : "user"},
 		        	success : function(result){	
@@ -2151,7 +2196,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            //var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            var dept = p_ListOrderObject.getAttribute("_DATA10");
 	            var rtn
 	            var width = 420, height = 450;
 	            var leftPosition, topPosition;
@@ -3359,6 +3405,35 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+	        //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+	        function deptNameLong(containLow, strIsLeaf) {
+	        	var deptNameWidth = "";
+	        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+	        	
+	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+	          		if (sum > 365) {
+	          			deptNameWidth = 366 - $("#countInfo").width();
+	          		}
+	          	} else {
+	          		if (sum > 363) {
+	          			deptNameWidth = 364 - $("#countInfo").width();
+	          		}
+	          	}
+	        	
+	        	$("#spn_deptName").css("width", deptNameWidth);
+	        }
+	        
+	        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3438,16 +3513,16 @@
 	            	<div class="portlet_tabpart01" style="margin:0px;">
 	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton">
-	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+	            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
 	            			</p>
 	            			<p id="contactTabButton">
-	            				<span onclick="contactTabButton_onClick()"><spring:message code='ezEmail.t592' /></span>
+	            				<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
 	            			</p>
 	            			<p id="dlTabButton">
-	            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
+	            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
 	            			</p>
 	            			<p id="inputTabButton" style="display: none;">
-	            				<span onclick="inputTabButton_onClick()"><spring:message code='ezEmail.t244' /></span>
+	            				<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
 	            			</p>
 	            		</div>
 	            	</div>
@@ -3511,7 +3586,7 @@
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-	                                                    <span id="SelectDeptNM" style="font-weight: normal;margin-top:2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+														<span id="SelectDeptNM" style="font-weight: normal; width: 385px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>

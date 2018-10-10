@@ -104,8 +104,9 @@ function PreviewRayerChange(pGubun) {
             }
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
+            /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
             if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
+            	document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
             } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
             }
@@ -381,6 +382,7 @@ function event_ItemPreviewRead_photo() {
             }
             var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
             var WriterName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterName");
+            var WriterDeptID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterDeptID");
             var WriterDeptName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterDeptName");
             var WriterCompanyName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterCompanyName");
             var WriteDate = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriteDate");
@@ -408,7 +410,9 @@ function event_ItemPreviewRead_photo() {
                     pOCS = "<img src='/images/presence/unknown.gif' id='" + GetGUID() + "' onload=\"PresenceControl('" + pSIPUri + "',this);\" style='vertical-align:middle;padding-right:5px;'/>";
                 }
             }
-            pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + GetAttribute(selobj, "DATA3").trim() + "\")'>" + WriterName + "</span>";
+            /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+            pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName
+            			+ "' onclick='MemberInfo_onclick(\"" + GetAttribute(selobj, "DATA3").trim() + "\", \"" + WriterDeptID + "\")'>" + WriterName + "</span>";
 
             if (document.getElementById('ifrmPreViewH') != null) {
                 document.getElementById('ifrmPreViewH_photo').style.display = "";
@@ -452,6 +456,7 @@ function event_ItemPreviewRead() {
             ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
             WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
             WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
+            WriterDeptID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptID");
             WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
             WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
@@ -478,7 +483,8 @@ function event_ItemPreviewRead() {
 
 function previewItemSet() {
 	pOCS = "";
-    pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
+    pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName
+    			+ "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3")  + "\", \"" + WriterDeptID + "\")'>" + WriterName + "</span>";
 
     if (document.getElementById('ifrmPreViewH_photo') != null) {
         document.getElementById('ifrmPreViewH_photo').style.display = "none";
@@ -649,10 +655,15 @@ function MailPreviewEnd(e) {
             document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-            else
+            /* 2018-09-18 홍승비 - 하단 미리보기 리사이즈 시 상단 게시물리스트 영역 height 수정 */
+            document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
+            
+            /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+				document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+            } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+            }
             pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
             pMailPreVDiv = (pMailPreHeightW / CurrentHeight) * 100;
         }
@@ -803,10 +814,12 @@ function Window_resize() {
                 	document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
                 document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-                if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
-                    document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-                else
+                /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
+                if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+                    document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+                } else {
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+                }
                 document.getElementById("PreW_subject").style.width = (CurrenWidth - 200) + "px";
                 pPreviewShow_HOW = "W";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);

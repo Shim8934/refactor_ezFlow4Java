@@ -38,7 +38,7 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .previewmail_addfile .title_btn { font-weight:normal;margin:0px 5px;}
 .previewmail_addfile .title_btn a {text-decoration:underline;}
 .previewmail_addfile  ul { margin:0px; padding:0px; list-style:none; z-index:1;border-top:1px solid #e8e8e8;border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;}
-.previewmail_addfile  ul li { position:relative;border-bottom:1px solid #e8e8e8;  line-height:18px; padding:5px 50px 5px 10px; margin:0px;}
+.previewmail_addfile  ul li { position:relative;border-bottom:1px solid #e8e8e8; padding:7px 5px 5px 10px; margin:0px;}
 .previewmail_addfile  ul li span{font-size:12px;}
 .previewmail_addfile  ul li .icon_rbtn{position:absolute; right:10px;cursor:pointer;}
 .previewmail_addfile a{color:#666;text-decoration:none}
@@ -46,3 +46,4 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .previewmail_addfile .icon_btn {cursor:none; margin:0px 5px 0px 5px;}
 .previewmail_addfile .icon_btn img {vertical-align:middle;}
 .previewmail_addfile  span { font-size:12px; }
+.previewmail_addfile .attachFileName { display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}

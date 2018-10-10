@@ -7,11 +7,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
-		<link rel="stylesheet" href="/css/orbit-1.2.3.css" type="text/css" />
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.orbit-1.2.3.min.js""></script>	
+		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>	
 	    <style type="text/css">
         	div {
             	margin: auto;
@@ -33,7 +33,8 @@
         	var strLang1 = "<spring:message code='main.t00025'/>";
         	var strLang2 = "<spring:message code='main.t00026'/>";
         	var pNoneActiveX = "${noneActiveX}";
-
+        	var selTab = "";
+        	
         	document.onselectstart = function () { return false; };
         	window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -44,7 +45,8 @@
                 	document.body.style.UserSelect = 'none';
             	}
             	getBoardList();
-
+				selTab = "Board0";
+            	
             	try { top.onresize() } catch (e) { }
                         
         	}
@@ -186,18 +188,21 @@
         	function boardChangeTab(obj) {
 	            switch (obj.id) {
                 	case "Board0":
+                		selTab = "Board0";
                     	document.getElementById("Board0").className = "on";
                     	document.getElementById("Board1").className = "";
                     	document.getElementById("Board2").className = "";
                     	break;
 
                 	case "Board1":
+                		selTab = "Board1";
                     	document.getElementById("Board0").className = "";
                     	document.getElementById("Board1").className = "on";
                     	document.getElementById("Board2").className = "";
                     	break;
 
                 	case "Board2":
+                		selTab = "Board2";
 	                    document.getElementById("Board0").className = "";
                     	document.getElementById("Board1").className = "";
                     	document.getElementById("Board2").className = "on";
@@ -232,15 +237,26 @@
             	var top = (heigth - 400) / 2;
             	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
         	}
+        	
+        	/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "on");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selTab) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+        	
 		</script>
 	</head>
 	<body  class="body_bg1">
     	<article class="portlet_notice">
         	<p class="title"><img src="/images/<spring:message code='main.t00025'/>/main/notice_title.gif" alt=""> <span onclick='Boardmore_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025'/>/main/btn_more01.gif" alt="more"></span></p>
         	<dl class="notice_tab">
-          		<dt id="Board0" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab(this)" class="on"><span>${pCompanyBDNM}</span></dt>
-          		<dt id="Board1" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab(this)"><span>${pDeptBDNM}</span></dt>
-          		<dt id="Board2" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab(this)"><span>${pNewsBDNM}</span></dt>
+          		<dt id="Board0" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab(this)" class="on" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pCompanyBDNM}</span></dt>
+          		<dt id="Board1" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pDeptBDNM}</span></dt>
+          		<dt id="Board2" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><span>${pNewsBDNM}</span></dt>
         	</dl>
           <div id="BoardList" ></div>
       	</article>

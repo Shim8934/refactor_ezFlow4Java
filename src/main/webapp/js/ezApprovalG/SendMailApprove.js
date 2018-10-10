@@ -1,4 +1,4 @@
-﻿var g_szAuthor = "";
+﻿﻿var g_szAuthor = "";
 var SaveSendBoxFlag = "Y";
 var MDrafttitle = "";
 var MdraftName = "";
@@ -15,7 +15,8 @@ function getAprLinefor(mode, docid) {
 		url : "/ezApprovalG/getLineList.do",
 		data : {
 			docID : docid,
-			mode  : mode
+			mode  : mode,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -85,6 +86,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         return;
     var id = to;
     var to = getmailaddress(id);
+    var docExt = checkHWP(pDocID);
     var deptid = to.split(",")[2];
     to = to.split(",")[0] + "," + to.split(",")[1];
     var from = "\"" + arr_userinfo[2] + "\" <" + arr_userinfo[8] + ">\ ";
@@ -125,7 +127,11 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     if(Subject == strLang1122) {
     	if (Method != "007") {
-    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    		if (docExt == "hwp") {
+    			Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    		} else {
+    			Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    		}
     	}
     }
     
@@ -1272,4 +1278,22 @@ function GetAprOrgDocinfoXml(pOrgDocID) {
     xmldoc = xmlhttp.responseXML;
 
     return xmldoc;
+}
+
+function checkHWP(pDocID) {
+	var docExt = "";
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/checkDocExt.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			docExt = xml;
+		}        			
+	});
+    
+    return docExt;
 }

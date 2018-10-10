@@ -7,19 +7,19 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t367'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/whokyulSign_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/sendMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/whokyulSign_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/sendMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = '${docID}';
 		    var pDocHref = '${docHref}';
@@ -64,8 +64,11 @@
 		    var docState = "${docState}";
 		    var WhoKyulCNT = "${whoKyulCount}";
 		    var checkPwdFlag = "${checkPwdFlag}";
+		    var ext = "${ext}";
 		    var opinionFlag;
 		    var includeOpinion = false;
+		    var signImageType = "${signImageType}";
+		    var orgCompanyID = "${orgCompanyID}";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -211,7 +214,7 @@
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != 'hwp') {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -317,7 +320,7 @@
 		    var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -351,7 +354,7 @@
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
+		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "mht" );
 		    }
 		      
 		    function btnhistory_onclick_Complete() {
@@ -559,7 +562,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID=" + orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -580,7 +583,7 @@
 		            parameter[0] = arr_userinfo[4];
 		            parameter[1] = "A01000";
 
-		            if (CrossYN() || pNoneActiveX == "YES") {
+		            if (CrossYN()) {
 		            	getformcont_cross_dialogArguments[0] = parameter;
 		            	getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
 		                var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
@@ -640,7 +643,7 @@
 		        pListTypeValue = "1";
 		        
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-		            if (CrossYN() || pNoneActiveX == "YES") {
+		            if (CrossYN()) {
 		                alert(strLang1103);
 		                return;
 		            } else {
@@ -702,7 +705,13 @@
 		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
 		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
 		                        strimg = strimg + " width=" + signWidth;
-		                        strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+		                        
+		                        
+		                        if (signImageType = "NAME") {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >" + "<br>" + arr_userinfo[2];
+	                            } else {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+	                            }
 
 		                        field.innerHTML = strimg;
 
@@ -765,7 +774,7 @@
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 
-   				  <c:if test="${approvalFlag != 'G'}">
+   				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID}">
 		          <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 		        </ul>

@@ -5,10 +5,10 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1201'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	</head>
 	<script type="text/javascript" ID="clientEventHandlersJS">
 	    var ReturnFunction;
@@ -24,6 +24,7 @@
 	        var vdocdisplay, vPublicFlag;
 	        vdocdisplay = "${specialRecordCode}";			//특수기록물 5자리
 	        vPublicFlag = "${publicityCode}";			//공개여부 9자리
+	        var summary = "${summary}"; // 요약전
 	
 	        document.getElementById("selSecLevel").value = "${securityCode}";
 	        document.getElementById("selSecLevel").style.display = "none";
@@ -35,6 +36,9 @@
 	
 	        if (vPublicFlag != "")
 	            setPublicFlag(vPublicFlag);
+	        
+			if (summary != null && summary.trim() != "")
+				txtAreaSW();
 	    };
 	    function setPublicFlag(vPublicFlag) {
 	        var TypeText = "";
@@ -109,6 +113,12 @@
 	            window.close();
 	        }
 	    }
+	    function txtAreaSW() {
+			var txtArea = document.getElementById("taSummary");
+			if (txtArea != null && txtArea != undefined) {
+				txtArea.disabled = false;
+			}
+	    }
 	</script>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1201'/></h1>
@@ -118,7 +128,7 @@
 		  </ul>
 		</div>
 		<h2><spring:message code='ezApprovalG.t1203'/></h2>
-		<TEXTAREA id="taSummery" name="taSummery" style="HEIGHT: 142px; WIDTH:97%; resize:none;" readonly>${summary}</TEXTAREA>
+		<TEXTAREA id="taSummary" name="taSummary" style="HEIGHT: 142px; WIDTH:97%; resize:none;" readonly disabled="disabled">${summary}</TEXTAREA>
 		
 		<h2><spring:message code='ezApprovalG.t1204'/></h2>
 		<table class="content">

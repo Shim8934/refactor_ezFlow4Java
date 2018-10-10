@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <tree>
   <config>
-    <iconsize width="18" height="18" />
+    <iconsize width="18px" height="18px" />
 		<baseimage>
       <dot_normal path="/images/OrganTree_cross/dot_normal.gif" />
       <dot_continue path="/images/OrganTree_cross/dot_continue.gif" />
@@ -20,7 +20,7 @@
 			<hover name="" />
 		</baseclass>
 		<images>
-			<base path="/images/OrganTree_cross/folder.gif" />
+			<base path="/images/OrganTree_cross/ic-open.gif" />
 			<iconcomp path="/images/OrganTree_cross/ic-company.gif" />
 		</images>
 	</config>

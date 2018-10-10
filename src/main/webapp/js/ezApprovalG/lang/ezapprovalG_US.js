@@ -61,6 +61,7 @@ var strLang107 = "Classified"
 // DraftUI\draft.js
 var strLang124 = "Approval status"
 var strLang125 = "Status"
+var strLang126 = "Public"
 var strLang128 = "group"
 var strLang131 = "Error occurred."
 var strLang132 = "Please select the document again!"
@@ -507,6 +508,7 @@ var strLang713 = "Can not find the documentary information."
 var strLang714 = "Additional information initialization"
 var strLang715 = "Classification information initialization"
 var strLang716 = "Failed loading documentary classification information!"
+var strLang717 = "The opinion about contents of body is follow.]\15"
 // ezDocInfo\setLogData.js
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js
@@ -1008,5 +1010,17 @@ var strLangSpjj32 = "There was an error in hugyeol approval."
 var strLangSpjj33 = "Shortcut approval documents";
 var strLangSpjj34 = "The settlement documents are drafted's arrived <br> To the payment, please click the link below.";
 
+var strLang129 = "수신자"
+
 //2018-06-27 강민수92
 var strLanggarm01 = "Please add a department."
+	
+//2018-08-23 배현상
+var strLangBae1 = "결재선을 재지정한 반송문서는 대장등록이 불가능합니다."
+
+//2018-08-21 김보미
+var strLangKBM01 = "기안자의 부서가 변경되었거나<br>겸직부서 선택이 잘못되었습니다.";
+
+//2018-09-12 천성준
+var strLangCSJ01 = "Document";
+

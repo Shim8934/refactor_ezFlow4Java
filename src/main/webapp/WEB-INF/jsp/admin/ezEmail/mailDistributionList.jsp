@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,7 +6,7 @@
 	<head>
 		<title>mail_distributionlist</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr td {
 				padding:0px;
@@ -22,12 +21,14 @@
 				padding-left:10px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">
+			var companyId = "${userCompany}";
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -35,14 +36,14 @@
 		            return true;
 		    };
 		    window.onload = function () {
-		        if (document.all("ListCompany").length == 0)
+		        if (document.all("ListCompany") != null && document.all("ListCompany").length == 0)
 		            alert("<spring:message code='ezEmail.t49' />");
 		        else {
 		            company_change();
 		        }
 		    }
 		    function company_change() {
-		
+		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		        document.getElementById("DIV_Member").innerHTML = "";
 		
 		        var xmlDom = createXmlDom();
@@ -51,7 +52,7 @@
 		        var objRoot;
 		        createNodeInsert(xmlDom, objRoot, "DATA");
 		        createNodeAndInsertText(xmlDom, objRoot, "CN", null);
-		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", document.all("ListCompany").value);
+		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyId);
 		
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistribution.do", false);
 		        xmlHTTP.send(xmlDom);
@@ -63,8 +64,6 @@
 		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
 		            alert("<spring:message code='ezEmail.t50' />");
 		        else {
-		
-		
 		            var headerData = createXmlDom();
 		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 		
@@ -172,40 +171,43 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
-		        var selectedCount = listview.GetSelectedIndexes().length;
+		        var selectedCount = listview.GetSelectedRows().length;
+		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if (selectedCount > 0) {
-			        for (i = 0; i < selectedCount; i++) {
-			            createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+		        if (ret) {
+			        if (selectedCount > 0) {
+				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
+				        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
+				        
+				        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
+				        xmlHTTP.send(xmlDom);
+				        
+				        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+				            alert("<spring:message code='ezEmail.t53' />");
+				            company_change();
+				            return;
+				        }
+				        
+				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
+				        company_change();
+			        } else {
+			            alert("<spring:message code='ezEmail.t51' />");		            
 			        }
-			        
-			        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
-			        xmlHTTP.send(xmlDom);
-			        
-			        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-			            alert("<spring:message code='ezEmail.t53' />");
-			            company_change();
-			            return;
-			        }
-			        
-			        alert(listview.GetSelectedIndexes().length + "<spring:message code='ezEmail.t54' />");
-			        company_change();
-		        } else {
-		            alert("<spring:message code='ezEmail.t51' />");		            
 		        }
 		    }
+		    
 		    var mail_add_distributionlist_cross_dialogArguments = new Array();
 		    function add_dl() {
 		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
 		        feature = feature + GetShowModalPosition(970, 670);
 		        if (CrossYN()) {
-		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
+		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do", "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do", document.all("ListCompany").value,
+		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do", companyId,
 		                    feature);
 		            if (typeof (rtnValue) != "undefined")
 		                company_change();
@@ -231,14 +233,14 @@
 		        feature = feature + GetShowModalPosition(970, 670);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
-		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
+		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText), "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID +
-		                    "&name=" + encodeURIComponent(selnode[0].innerText), document.all("ListCompany").value,
+		                    "&name=" + encodeURIComponent(selnode[0].innerText), companyId,
 		                    feature);
 		            if (typeof (rtnValue) != "undefined")
 		                company_change();
@@ -260,8 +262,8 @@
 	<form id="Form1" method="post">
 		<h1><spring:message code='ezEmail.t58' /></h1>
 		<div id="mainmenu">
-			<span><b> <spring:message code='ezEmail.t59' /> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+			<span style="display:none;"><b> <spring:message code='ezEmail.t59' /></b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px; display:none;">
 				<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		

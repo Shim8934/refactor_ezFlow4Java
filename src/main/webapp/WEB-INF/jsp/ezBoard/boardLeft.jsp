@@ -5,8 +5,8 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <style>
 	    	.tree {
 	    		min-height : 100px;
@@ -17,10 +17,10 @@
 				text-overflow:ellipsis;
 			}
 	    </style>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 		<script type="text/javascript" >
 	        var SSUserID = "${userInfo.id}";
 	        var SSUserName = "${userInfo.name}";
@@ -38,7 +38,8 @@
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
-	        var items = "${resultCount}";	        
+	        var items = "${resultCount}";
+	        var rightFrame = "";
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -55,6 +56,8 @@
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
+		    	rightFrame = window.parent.document.getElementsByName("right")[0];
+		    	
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -73,15 +76,19 @@
 					WebPartToggle(level1El.item(level1El.length - 1));
 					ladder_Func(1);
 				}
-		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
+		        /* 2018-09-20 홍승비 - 윈도우 온로드 시 마이게시판 우선적으로 열리는 부분 주석처리 */
+		       /*  else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
-		        }
+		        } */
 		
+		        /* 2018-09-20 홍승비 - 게시판 서브메뉴로 나의게시물, 예약게시물 진입 시 좌측메뉴 하이라이트 수정 */
 		        if (Func != "1" && Func != "3" && Func != "4") {
 		            if (subFunc == "1") {
+		            	ShowMyBoardItem();
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
+		            	ShowMyBoardItem();
 		                ReservationItem_onclick();
 		            }
 		            else {
@@ -91,8 +98,13 @@
 		                        return;
 		                    }
 
-		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
-		                }
+		                    if (typeof window.parent.frames["right"] == "undefined") {
+								rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
+		                    }
+		                    else {
+		                    	window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
+		                	}
+						}
 		
 		                var menuSize = (parseInt(items) + 2) * 30;
 		                /* 18-05-18 김민성 - 게시판 maxHeight 제거 */
@@ -233,12 +245,17 @@
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		        if(nodeLevel > 9)
-		        	nodeLevel = 9;
+		             
 		        for(var i=0; i<title2.length; i++) {
+		        	var spanW = 152 - (18 * nodeLevel);	
 		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+		        	
+		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+		        	if (spanW < 0) {
+						 spanW = 0;
+					 }
+		        	title3[0].style.width = spanW + 'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -255,21 +272,38 @@
 		            if (selectedBoardtype == "BOARD" || SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		
 		                GetBoardInfo(SelectedBoardID);
-		
-		                if (gubun == 3){
-		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-		                }
-		                else if (gubun == 4){
-		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-		                }
-		                else {
-		                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
-		                    }
-		                    else{
-		                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-		                    }
-		                }
+		                
+		                /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
+						  if (typeof window.parent.frames["right"] == "undefined") {
+							if (gubun == 3) {
+								rightFrame.src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+							} else if (gubun == 4) {
+								rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				            } else {
+				                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
+				                }
+				                else {
+				                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				                }
+				            }
+						}
+						else {
+			                if (gubun == 3) {
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+			                }
+			                else if (gubun == 4) {
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+			                }
+			                else {
+			                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
+			                    }
+			                    else {
+			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+			                    }
+			                }
+			            }
 		            }
 		        }
 		        catch (e) {
@@ -347,18 +381,36 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            if (chkPhotoBrd == 3)
-		                window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-		            else if (chkPhotoBrd == 4)
-		                window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-		            else {
-		                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-		                }
-		                else{
-		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-		                }
-		            }
+		            
+		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
+				  	if (typeof window.parent.frames["right"] == "undefined") {
+						if (chkPhotoBrd == 3) {
+							rightFrame.src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+						} else if (chkPhotoBrd == 4) {
+							rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			            } else {
+			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
+			                }
+			                else {
+			                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			                }
+			            }
+					}
+					else {
+			            if (chkPhotoBrd == 3) {
+			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			            } else if (chkPhotoBrd == 4) {
+			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			            } else {
+			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
+			                }
+			                else{
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			                }
+			           }
+					}
 		        }
 		        catch (e) {
 		            alert(e.description);
@@ -439,12 +491,13 @@
 //					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
 
 				//TopBoard가 아닌 게시판의 왼쪽 게시판 리스트를 닫는다.
-				$(".fList h2").attr("class", "off");
-				$(".qst h2").attr("class", "off");
-				$(".pollDiv h2").attr("class", "off");
-				$(".myb h2").attr("class", "off");
+				$(".fList h2").attr("class", "off"); // 즐겨찾기 off
+				$(".qst h2").attr("class", "off"); // 전자설문 off
+				$(".pollDiv h2").attr("class", "off"); // 투표 off
+				$(".myb h2").attr("class", "off"); // 마이게시판 상위 off
 				$(".myb").next().attr("class", "off");//마이게시판 하위 ul off
 				$(".ApprDiv").attr("class", "off");
+				$(".ladder h2").attr("class", "off"); // 사다리게임 off
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -524,20 +577,30 @@
 		    	$(".qst h2").attr("class", "on");
 				$(".qst").next().attr("class", "on");
 				
-		        if (CrossYN()) {
-		            if (idx == 1) {
-		                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
-		            }
-		            else {
-		                window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-		            }
-		        } else {
-		            if (idx == 1)
-		                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
-		            else
-						window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-		            SetTreeviewUnSelect("");		            
-		        }		        
+				if (typeof window.parent.frames["right"] == "undefined") {
+					if (idx == 1) {
+						rightFrame.src = "/ezQuestion/qstList.do?brdID=5";
+					}
+					else {
+						rightFrame.src = "/ezQuestion/qstStep1.do?brdID=5";
+					}
+				}
+				else {
+			        if (CrossYN()) {
+			            if (idx == 1) {
+			                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
+			            }
+			            else {
+			                window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
+			            }
+			        } else {
+			            if (idx == 1)
+			                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
+			            else
+							window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
+			            SetTreeviewUnSelect("");
+			        }
+				}
 		    }
 
 			function Poll_Open(idx) {
@@ -545,24 +608,35 @@
 				$(".pollDiv h2").attr("class", "on");
 				$(".pollDiv").next().attr("class", "on");
 				
-				if (CrossYN()) {
-		            if (idx == 1) {
-		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
-		                qstId = "";
-		            }
-		            else {
-		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
-		            }
-		        } else {
-		            if (idx == 1) {
-		            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
-		            	qstId = "";
-		            }
-		            else {
-		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
-		            }
-		            SetTreeviewUnSelect("");
-		        }	    
+				if (typeof window.parent.frames["right"] == "undefined") {
+					 if (idx == 1) {
+						rightFrame.src = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+						qstId = "";
+					}
+					else {
+						rightFrame.src = "/ezPoll/pollCreate.do?brdID=6";
+					}
+				}
+				else {
+					if (CrossYN()) {
+			            if (idx == 1) {
+			                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+			                qstId = "";
+			            }
+			            else {
+			                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+			            }
+			        } else {
+			            if (idx == 1) {
+			            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+			            	qstId = "";
+			            }
+			            else {
+			            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+			            }
+			            SetTreeviewUnSelect("");
+			        }
+				}
 		    }
 			
 			function ladder_Func(idx) {
@@ -570,12 +644,17 @@
 				$(".ladder h2").attr("class", "on");
 				$(".ladder").next().attr("class", "on");
 				
-				if (CrossYN()) {
-					window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-		        } else {
-		        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-		        }
-	            SetTreeviewUnSelect("");
+				if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezLadder/ladderMain.do?brdID=7";
+				}
+				else {
+					if (CrossYN()) {
+						window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
+			        } else {
+			        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
+			        }
+		            SetTreeviewUnSelect("");
+				}
 			}
 
 		    function toggleQuestionList() {
@@ -623,23 +702,43 @@
 		    	$(".fList h2").attr("class", "on");
 		    	$(".fList").next().attr("class", "on");
 		    	
-		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardItemList_favorite.do";
+				} else {
+		       		window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
+				}
 		    }
 		    function ConfigMyBoard() {
 		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(525, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function MyBoard() {
-		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListMyList.do";
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardItemListMyList.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMyList.do";
+				}
 		    }
 		    function TempBoard() {
-		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListTemp.do";
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardItemListTemp.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardItemListTemp.do";
+				}
 		    }
 		    function boardConfig() {
-		        window.parent.frames["right"].location.href = "/ezBoard/boardConfig.do";
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardConfig.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardConfig.do";
+				}
 		    }
 		    function ReservationItem_onclick() {
-		        window.parent.frames["right"].location.href = "/ezBoard/boardReservedItemList.do";
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardReservedItemList.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardReservedItemList.do";
+				}
 		    }
 		    function Apprboard() {
 		    	$(".ApprDiv").attr("class", "on");
@@ -658,10 +757,18 @@
 		        
 		       	$(document.getElementById("applyCount")).text("(" + applyCount + ")");
 		       	
-		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
+		       	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardItemListAppr.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
+				}
 		    }
 		    function boardSearch(){
-		    	window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
+		      	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardSearchView.do";
+				} else {
+		    		window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
+				}
 		    }
 	    </script>
 	</head>
@@ -677,31 +784,33 @@
 	        	</div>
 	        	<ul></ul>		        
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		            <h2>
+		        <%-- 2018-09-20 홍승비 - window.onload 시 마이게시판 디폴트 클래스를 off로 수정 --%>
+		            <h2 class="off">
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" width="14px" />
 		            </h2>
 		        </div>
-		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
+		        <ul id="TreeCtrl_MyBoardTree_ul" class="off">
+		            <div class="tree" style='width:auto;overflow-x:hidden;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
 		        </ul>
 	        </c:if>
+	        <%-- 2018-09-20 홍승비 - window.onload 시 게시판리스트 디폴트 클래스를 off로 수정 --%>
 	        <div id='TopBoardsList'>
 	        	<script type="text/javascript">
 	        		parser = new DOMParser();
         		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
-       			        document.write("<h2>");
+       			        document.write("<h2 class='off'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
-           				document.write("<ul>\n");
-           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
+           				document.write("<ul class='off'>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
         			});
@@ -716,12 +825,12 @@
 	        	</div>
 	        	<ul></ul>
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		            <h2>
+		            <h2 class="off">
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" align="middle" />
 		            </h2>
 		        </div>
-		        <ul id="TreeCtrl_MyBoardTree_ul">
+		        <ul id="TreeCtrl_MyBoardTree_ul" class="off">
 		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>

@@ -171,11 +171,17 @@ public class EzPersonalController extends EgovFileMngUtil {
 //				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
 //			}
 			
-			if (proxyInfo.split(":")[0].trim().equals("")) {
+		/*	if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
+			}*/
+			if (proxyInfo.split("|")[0].trim().equals("")) {
+				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+			} else {
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
 			}
+			
 		}
 
 		logger.debug("saveBujae ended");
@@ -347,14 +353,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
 				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
 				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
-				startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
-				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
-				
-				startDate = startDate.substring(0, startDate.length()-2);
-				endDate = endDate.substring(0, endDate.length()-2);
-				
-				startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
-				endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
+				/*startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);*/
+				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
+				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
 				
 				textProxyName = proxyUserName;
 			}
@@ -973,11 +975,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			radBirthType2 = messageSource.getMessage("ezPersonal.t2002", locale);
 		}*/
 		
+		/* 2018-09-13 홍승비 - 개인정보관리 담당업무 자기소개 특수문자 처리 */
 		String pInfo = xmlDom.getElementsByTagName("INFO").item(0).getTextContent();
-		pInfo = pInfo.replace("&quot;", "\"");
-		pInfo = pInfo.replace("&gt;", ">");
-		pInfo = pInfo.replace("&lt;", "<");
-		pInfo = pInfo.replace("&amp;", "&");
+		pInfo = commonUtil.cleanValue(pInfo);
 		
 		if (xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
 			literalPhoto = "<img id=myimg " + messageSource.getMessage("ezPersonal.i1",locale) + ">";
@@ -1020,6 +1020,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";
@@ -1194,7 +1195,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 					}
 				}
 				//loginCookie에 lang값, locale값 설정
-				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId();
+				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID();
 				
 				Cookie cookieID = new Cookie("loginCookie", egovFileScrty.encryptAES(cInfo));
 				cookieID.setPath("/");

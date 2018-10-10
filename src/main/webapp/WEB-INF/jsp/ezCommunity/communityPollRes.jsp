@@ -6,8 +6,8 @@
 	<head>
 		<title>poll_res</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<link rel="stylesheet" type="text/css" href="/css/community.css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
 		<style>
 			.graphback {
 				background-color: #f8f8fa;
@@ -21,7 +21,7 @@
 			    border: 1px solid rgb(225, 97, 100);
 			}
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			function sendIt() {
 				if ("${isSave}" == 0) {
@@ -47,6 +47,8 @@
 	<body class = "cmhome_body">
 		<form name = "poll_res_ok" action = "/ezCommunity/pollResOk.do" method = "post">
 			<input type = "hidden" name = "code" value = "${code}" />
+			<input type = "hidden" name = "pollManagerID" value = "${pollManagerID}" />
+			<input type = "hidden" name = "pollState" value = "${pollState}" />
 			
 			<h1 class = "type1_h1"><spring:message code = 'ezCommunity.t598' /></h1>
 			<div id="mainmenu" style="margin-bottom:12px">

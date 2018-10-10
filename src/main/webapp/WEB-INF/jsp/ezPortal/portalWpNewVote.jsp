@@ -6,12 +6,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='main.t1006' /></title>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
 		<script type="text/javascript">			
 		    var qstId 			= "${qstId}";
 		    var votesArr 		= [];
@@ -27,6 +27,11 @@
 		    		updateGraph();
 		    	}
 		    }
+		    /* 2018-07-30 홍승비 - 영문 리소스 span 위치 조절용 jquery */
+		    $(document).ready(function () { 	
+		    	var voteTW = $(".title_txt").width();
+		    	$("#todayVotes").css("left", voteTW + 14);    	
+		    });
 
 		    function getConnect(){
 			    var socket = new SockJS('/hello');
@@ -151,7 +156,7 @@
 	<body>
 		<section class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 14px; left: 41px;" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt" style="display: inline-block;"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 14px; left: 41px;" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
   				<div class="pollcont" style="overflow-y: hidden; overflow-x: hidden;">
  	 				<c:choose>
   						<c:when test="${qstId != -1}">

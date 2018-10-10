@@ -6,9 +6,9 @@
 	<head>
 		<title><spring:message code='ezAddress.t302' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			select {
 				background: none;
@@ -80,7 +80,7 @@
 				window.close();
 			}
 		    function write_letter() {
-			    if(document.getElementById("ListMember").length > 0){
+			    if(document.getElementById("ListMember").getElementsByTagName("tr").length > 0){
 			                
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlDom = createXmlDom();

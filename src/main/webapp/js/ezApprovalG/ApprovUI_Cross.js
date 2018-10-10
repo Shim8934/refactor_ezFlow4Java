@@ -142,8 +142,7 @@ function ApprovMappingSign(ret) {
                 strimg = strimg + " width=" + signWidth;
                 
                 if (signImageType == "NAME") {
-//                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
 				} else {
 				    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 				}
@@ -357,8 +356,7 @@ function ApprovMappingSign(ret) {
                         strimg = strimg + " width=" + signWidth;
                         
                         if (signImageType == "NAME") {
-//                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
-                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 						} else {
 						    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 						}
@@ -566,8 +564,7 @@ function ApprovMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -673,8 +670,7 @@ function ApprovMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 					}
@@ -863,6 +859,9 @@ function openOpinionUI(ret, CompleteFunction) {
     parameter[2] = KuyjeType;
     parameter[3] = pOrgDocID;
     parameter[5] = window;
+    
+    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+    parameter[99] = ext;
 
     apropinion_cross_dialogArguments[0] = parameter;
     if (CompleteFunction != undefined)
@@ -870,7 +869,7 @@ function openOpinionUI(ret, CompleteFunction) {
     else
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do?orgCompanyID=" + orgCompanyID + "&orgDeptID=" + OrgAprUserDeptID);
 }
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
@@ -927,7 +926,7 @@ function makeOpinionList(OpinionXML) {
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
-    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID);
+    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext;
 
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
@@ -1182,7 +1181,8 @@ function getApprovInfo() {
 	 			async : false,
 	 			url : "/ezApprovalG/getLineMode.do",
 	 			data : {
-	 					docID : pDocID
+	 					docID : pDocID,
+	 					orgCompanyID : pCompanyID
 	 					},
 	 			success: function(xml){
 	 				if (xml == "END") {
@@ -1203,7 +1203,8 @@ function getApprovInfo() {
     			userID : pUserID,
     			deptID : OrgAprUserDeptID,
     			mode : pMode,
-    			chamState : docState
+    			chamState : docState,
+    			orgCompanyID : pCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -1234,6 +1235,8 @@ function getApprovInfo() {
         var dataNodes = GetElementsByTagName(xmlpara, "DATA6");
         var lastIdx = dataNodes.length;
         drafterDeptid = getNodeText(dataNodes[lastIdx - 1]);
+        
+        aprDocTimeStamp = getNodeText(SelectSingleNodeNew(result, "APROVEDATA/APRDOCTIMESTAMP"));
 
         pdocXML = SelectSingleNodeNew(result, "APROVEDATA/DOCFLAGINFO");
         xmlString = getXmlString(pdocXML);
@@ -1371,7 +1374,7 @@ function getCurApproverAprLine(type) {
 				docID    : pDocID, 
 				userID 	 : "",
 				formID   : "",
-				deptID   : arr_userinfo[4],
+				orgCompanyID : orgCompanyID,
 				isUsed   : type,
 				mode     : pMode
 				},
@@ -1433,9 +1436,6 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
-	 if (pAprLineType == "009") {
-		   SignCheck();
-	  }
     SaveFile();
     SignSave();
 
@@ -1461,57 +1461,89 @@ function SaveApproveInfo(pApproveFlag) {
     pDocTitle = field.textContent;
     createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
     // 경우에 따른 DOCNO 설정.
+    
     if (pApproveFlag == "2") {
-    	var field = message.GetListItem(fields, "deptshortedname");
-    	if (field) {
-    		var forTest = getfieldValue(field).slice(-1);
-    		if (getfieldValue(field).slice(-1) == "-") {
-    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
-    		} else {
-    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    		}
-    	} else {
-    		var field = message.GetListItem(fields, "docnumber");
+    	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
     		if (field) {
     			var forTest = getfieldValue(field).slice(-1);
     			if (getfieldValue(field).slice(-1) == "-") {
-        			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
-        		} else {
-        			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-        		}
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    			} else {
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    			}
     		} else {
-    			var field = message.GetListItem(fields, "bedocnumber");
+    			var field = message.GetListItem(fields, "receiptnumber");
     			if (field) {
     				var forTest = getfieldValue(field).slice(-1);
     				if (getfieldValue(field).slice(-1) == "-") {
-    	    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
-    	    		} else {
-    	    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    	    		}
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    				} else {
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    				}
+    			}
+    		}
+    	} else {
+    		var field = message.GetListItem(fields, "deptshortedname");
+    		if (field) {
+    			var forTest = getfieldValue(field).slice(-1);
+    			if (getfieldValue(field).slice(-1) == "-") {
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
     			} else {
-    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    			}
+    		} else {
+    			var field = message.GetListItem(fields, "docnumber");
+    			if (field) {
+    				var forTest = getfieldValue(field).slice(-1);
+    				if (getfieldValue(field).slice(-1) == "-") {
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    				} else {
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    				}
+    			} else {
+    				var field = message.GetListItem(fields, "bedocnumber");
+    				if (field) {
+    					var forTest = getfieldValue(field).slice(-1);
+    					if (getfieldValue(field).slice(-1) == "-") {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    					} else {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    					}
+    				} else {
+    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    				}
     			}
     		}
     	}
     } else {
-    	var field = message.GetListItem(fields, "deptshortedname");
-    	if (field) {
-    		createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+    		var field = message.GetListItem(fields, "deptshortedname");
+        	if (field) {
+        		createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+        	} else {
+        		var field = message.GetListItem(fields, "receiptnumber");
+        		if (field) {
+        			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+        		}
+        	}
+    	} else {
+    		var field = message.GetListItem(fields, "deptshortedname");
+        	if (field) {
+        		createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+        	} else {
+        		var field = message.GetListItem(fields, "docnumber");
+        		if (field) {
+        			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+        		} else {
+        			var field = message.GetListItem(fields, "bedocnumber");
+        			if (field) {
+        				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+        			} else {
+        				createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+        			}
+        		}
+        	}
     	}
-    	else {
-    		var field = message.GetListItem(fields, "docnumber");
-    		if (field) {
-    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    		} else {
-    			var field = message.GetListItem(fields, "bedocnumber");
-    			if (field) {
-    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    			} else {
-    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
-    			}
-    		}
-    	}
-    	
     }
 
     if (pHasAttachYN == "") {
@@ -1562,6 +1594,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
     createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
     createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
+    createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 
     var g_SepAttachLVXml = "";
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
@@ -1587,6 +1620,104 @@ function SaveApproveInfo(pApproveFlag) {
    } else {
    	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
    }
+    
+    if (nonElecRec == "Y") {
+		var NonElecXML = createXmlDom();
+		NonElecXML = loadXMLString(nonElecRecInfoXml);
+		
+		createNodeAndInsertText(xmlpara, objNode, "NONELECREC", nonElecRec);
+		createNodeAndInsertText(xmlpara, objNode, "REGISTERTYPE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE"));
+		createNodeAndInsertText(xmlpara, objNode, "REGISTERDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE"));
+		createNodeAndInsertText(xmlpara, objNode, "REGISTERYEAR", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERYEAR"));
+		createNodeAndInsertText(xmlpara, objNode, "EXECUTEDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE"));
+		createNodeAndInsertText(xmlpara, objNode, "TITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "TITLE"));
+		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE"));
+		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE2"));
+		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME"));
+		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME2"));
+		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER"));
+		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER2"));
+		createNodeAndInsertText(xmlpara, objNode, "SENDINGMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SENDINGMEMBER"));
+		createNodeAndInsertText(xmlpara, objNode, "DELIVERYNO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DELIVERYNO"));
+		createNodeAndInsertText(xmlpara, objNode, "ORIGINREGSN", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ORIGINREGSN"));
+		createNodeAndInsertText(xmlpara, objNode, "ELECTRONICRECFLAG", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ELECTRONICRECFLAG"));
+		createNodeAndInsertText(xmlpara, objNode, "NONELECREC_CABINETID", cabinetID);
+		
+		// 시청각 기록물일경우
+		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "5" || SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "6") {
+			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECINFO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "AUDIOVISUALRECINFO"));
+			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECSUMMARY", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SUMMARY"));
+		}
+		
+		// 분리첨부가 존재할 경우
+		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
+			var sepAtt, Data, i;
+			var rtnXml = createXmlDom();
+	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+			var sepLVXml = createXmlDom();
+            	sepLVXml = loadXMLString(nonElecRecInfoXml);
+            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+            
+            for (i = 0; i < rows.length; i++) {
+                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
+            }
+            
+            createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+            
+		} else if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
+			var sepAtt, Data, i;
+			var rtnXml = createXmlDom();
+	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+			var sepLVXml = createXmlDom();
+            	sepLVXml = loadXMLString(nonElecRecInfoXml);
+            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+            
+            for (i = 0; i < rows.length; i++) {
+                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i],"SEPCABINETID"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
+            }
+            createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+		}
+		
+		// 특수목록이 존재하는 기록물 철 일경우
+		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SPECIALCATALOGFLAG") == "1") {
+			if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA").length > 0) {
+    			var sepAtt, Data, i;
+    			var rtnXml = createXmlDom();
+    			var root = createNodeInsert(rtnXml, root, "SPECIALCATALOGINFO");
+    			var sepLVXml = createXmlDom();
+    				sepLVXml = loadXMLString(nonElecRecInfoXml);
+    			var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA");
+    			var rows2 = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCNAME");
+    			
+    			sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCNAME");
+    			Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows2[0], "LIST1"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows2[0], "LIST2"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows2[0], "LIST3"));
+    			
+    			for (i = 0; i < rows.length; i++) {
+    				sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCDATA");
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SN", SelectSingleNodeValue(rows[i], "SN"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows[i], "LIST1"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows[i], "LIST2"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows[i], "LIST3"));
+    			}
+    			
+    			createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SPECIALCATALOGINFO", getXmlString(rtnXml));
+			}
+		}
+	}
     
     if (pApproveFlag == "1") {
         xmlhttp.open("POST", "/ezApprovalG/doApprov.do", false);
@@ -1638,7 +1769,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -1679,7 +1811,8 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -2615,6 +2748,7 @@ function getSusinSNInfo() {
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
 
     xmlhttp.open("POST", "/ezApprovalG/getSusinSN.do", false);
     xmlhttp.send(xmlpara);
@@ -2719,7 +2853,9 @@ function HabyuiResultOpinion() {
         parameter[1] = "N";
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
         feature = feature + GetShowModalPosition(530, 520);
@@ -2761,15 +2897,14 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
 
@@ -2819,7 +2954,7 @@ function chk_Passwd(pPwd, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function sendMail() {
@@ -2907,7 +3042,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
     } catch (e) {
         alert(e.description);
@@ -2936,6 +3071,7 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
@@ -3005,6 +3141,8 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
                 
+                var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
+                
                 //2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 서명란에 표기안되서 주석
 //                if (!(SignName.indexOf("habyui") > -1)) {
 //                	continue;
@@ -3048,9 +3186,10 @@ function putSignXML(SignXML) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            if (signImage = "NAME") {
+                            if (signImageType == "NAME") {
+                            	//이효진 signImageType Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
 //                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
-                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
                             } else {
                                 strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             }
@@ -3214,7 +3353,7 @@ function getSignDate() {
 }
 var ezaprhistory_cross_dialogArguments = new Array();
 function getHistory() {
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + ext;
 
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
@@ -3233,7 +3372,8 @@ function UpdateDocHistory(pHtml) {
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
     createNodeAndInsertText(xmlpara, objNode, "pHtml", ConvertHTMLtoMHT(pHtml));
-
+    createNodeAndInsertText(xmlpara, objNode, "mode", "mht");
+    
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
 
@@ -3253,6 +3393,7 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
@@ -3291,15 +3432,14 @@ function UpdateLineHistory() {
 			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16]
+			userDeptName2 : arr_userinfo[16],
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
 			
 			var DataNodes = GetChildNodes(loadXMLString(result));
-		    if (getNodeText(DataNodes[0]) == "TRUE") {
-		    }
-		    else {
+		    if (getNodeText(DataNodes[0]) != "TRUE") {
 		        var pAlertContent = strLang91;
 		        OpenAlertUI(pAlertContent);
 		    }
@@ -3309,12 +3449,6 @@ function UpdateLineHistory() {
 	        OpenAlertUI(pAlertContent);
 		}
 	});
-	
-    if (result == "TRUE") {
-    } else {
-        var pAlertContent = strLang91;
-        OpenAlertUI(pAlertContent);
-    }
 }
 
 function setRecevInfo(ret) {
@@ -3436,7 +3570,7 @@ function setRecevInfo(ret) {
         }
     }
     message.DocumentBodySetAttribute("sendMailInfo", strMailAdd);
-
+    
     var field = message.GetListItem(fields, "recipient");
     if (field) {
         if (precipent == strLang92) {
@@ -3543,6 +3677,11 @@ var NextDocExtended = "";
 function getNextDocInfo() {
     try {
     	var result = "";
+    	var isIEFlag = "Y";
+    	
+    	if (!isIE()) {
+    		isIEFlag = "N";
+    	}
     	
     	$.ajax({
     		type : "POST",
@@ -3552,7 +3691,9 @@ function getNextDocInfo() {
     		data : {
     			docID : pDocID,
     			userID  : pUserID,
-    			userDeptID  : arr_userinfo[4]
+    			userDeptID  : arr_userinfo[4],
+    			orgCompanyID : orgCompanyID,
+    			isIEFlag  : isIEFlag
     		},
     		success: function(xml){
     			result = xml;
@@ -3578,6 +3719,8 @@ function getNextDocInfo() {
             NextDocAprType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRTYPE"));
             NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
             NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
+            pCompanyID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "COMPANYID"));
+            orgCompanyID = pCompanyID;
         }
     } catch (e) { }
 }

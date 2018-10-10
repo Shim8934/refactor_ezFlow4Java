@@ -1395,6 +1395,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return result;
 	}
 	
+	/* 현재는 메일 작성창을 띄우므로 사용하지 않고 있음.
 	@Override
 	public void absentedListSendMail(List<AdminAttitudeVO> duplicatedList, List<AdminAttitudeVO> distinctList, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception {
 		LOGGER.debug("absentedListSendMail started.");
@@ -1429,7 +1430,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		int i = 0;
 		
 		for (AdminAttitudeVO distinctVO : distinctList) {
-			InternetAddress temp = new InternetAddress(distinctVO.getWriterId() + "@" + fromEmail.split("@")[1], distinctVO.getUserName());
+			String emailAdress = "";
+			
+			if (distinctVO.getUserEmail() != null && distinctVO.getUserEmail() != "") {
+				emailAdress = distinctVO.getUserEmail().split("@")[1];
+			} else {
+				emailAdress = fromEmail.split("@")[1];
+			}
+			
+			InternetAddress temp = new InternetAddress(distinctVO.getWriterId() + "@" + emailAdress, distinctVO.getUserName());
 			
 			to[i] = temp;
 			i++;
@@ -1439,6 +1448,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("absentedListSendMail ended.");
 	}
+	*/
 
 	@Override
 	public void changeUsersModifyAtt(String companyId, int tenantId,
@@ -1641,7 +1651,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeAuthDeptList started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
-			if (rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wa=1")) {
+			if (rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("a1=1")) {
 				// 전체, 회사, 근태관리자 -> 모든부서 관리권한
 				userAuthType = "all";
 			} else if (rollInfo.contains("g=1")) {

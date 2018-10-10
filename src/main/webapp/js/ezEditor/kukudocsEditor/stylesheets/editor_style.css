@@ -3,8 +3,8 @@
 html {
     width: auto !important;
     height: auto !important;
-    margin: 0!important;
-    padding-top: 10px!important;
+    margin: 0 !important;
+    padding-top: 10px !important;
     padding-left: 10px !important;
 }
 
@@ -15,15 +15,15 @@ body {
     font-size: 12pt;
     overflow-y: auto !important;
     overflow-x: auto !important;
-    margin-top: -10!important;
-    margin-left: -10!important;
-    margin-right: 0!important;
-    margin-bottom: 0!important;
+    margin-top: -10 !important;
+    margin-left: -10 !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
     padding-top: 10px !important;
     padding-left: 10px !important;
     padding-right: 10px !important;
     padding-bottom: 0 !important;
-    height: 100%!important;
+    height: 100% !important;
 }
 
 table {
@@ -52,8 +52,8 @@ hr {
 }
 
 /*font, span {background:rgba(255,255,255,0)}*/
-font:only-child,
-span:only-child {line-height: 1.2;}
+/*font:only-child,*/
+/*span:only-child {line-height: inherit;}*/
 font:empty:before,
 span:empty:before {content:'\200B'}
 br:only-child:before {content:'\200B'}

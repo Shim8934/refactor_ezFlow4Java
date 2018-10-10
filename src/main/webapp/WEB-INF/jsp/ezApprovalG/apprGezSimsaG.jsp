@@ -5,17 +5,17 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t257'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>	
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezSimsaG_Cross.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></SCRIPT>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezSimsaG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></SCRIPT>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pDocID = "${docID}";
 		    var pDocHref = "${docHref}";
@@ -83,6 +83,9 @@
 		    var flag = false;
 		    var pUse_Editor = "${useEditor}";
 		    var PrtBodyContent;
+		    var orgCompanyID = "";
+		    var ext = "mht";
+		    
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
@@ -219,7 +222,7 @@
 		        ezchkpasswd_cross_dialogArguments[0] = parameter;
 		        ezchkpasswd_cross_dialogArguments[1] = Complete_Function;
 		
-		        DivPopUpShow(330, 205, "/ezApprovalG/ezchkPasswd.do");
+		        DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 		    }
 		    function setArrAttachInfo() {
 		        // lstAttachLink.getElementsByTagName("a").length
@@ -269,7 +272,7 @@
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
-		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID);
+		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
 		    }
 		    function btnOpinion_onclick() {
 		        var parameter = new Array();
@@ -392,7 +395,7 @@
 // 		        SaveFile();
 		
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
@@ -451,7 +454,9 @@
 		        parameter[1] = ret;
 		        parameter[2] = "002";
 		        parameter[3] = pOrgDocID;
-		
+		        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+		        parameter[99] = "mht";
+		        
 		        apropinion_cross_dialogArguments[0] = parameter;
 		        apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 		
@@ -579,7 +584,8 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : pDocID,
-		    			html  : mhtBody
+		    			html  : mhtBody,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(text){
 		    			result = text;

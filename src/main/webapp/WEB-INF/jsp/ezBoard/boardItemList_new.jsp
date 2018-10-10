@@ -6,15 +6,15 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 		<script type="text/javascript">
 			var pBoardID = "${boardID}";
 		    var SSUserID = "${userInfo.id}";    
@@ -69,7 +69,9 @@
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
 		    var pNoneActiveX = "YES";
 		    var useRunTime = "${useRunTime}"
+			var window_onunload_Event = false;
 		    
+			window.onunload = Window_onunload;
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -86,6 +88,7 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
+		        window_onunload_Event = true;
 		    }
 		    
 		    $(document).ready(function() {
@@ -121,6 +124,50 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    });
+		    
+		    /* 2018-09-17 홍승비 - 새게시물탭에서 설정한 미리보기 비율 저장 */
+		    var Save_unloadSave = false;
+		    function Window_onunload() {
+		        if (window_onunload_Event && !Save_unloadSave) {
+		            var divStyle;
+		            var listCount = 0;
+		            
+		            if (document.getElementById("listcount") != null){
+		            	listCount = document.getElementById("listcount").value;
+		            } else {
+		            	listCount = 20;
+		            }
+		            
+		            if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H);
+		            } else {
+		                divStyle = 0;
+		            }
+		            
+		            if (divStyle < 24) {
+		                divStyle = 24;
+		            }
+		
+		            $.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezBoard/boardGeneralListSave2.do",
+						data : { userID 	 : SSUserID, 
+								 listCount 	 : listCount, 
+								 previewMode : pPreviewShow_HOW,
+								 list 		 : divStyle,
+								 content 	 : (100 - divStyle)
+								},
+						success: function(){
+						}        			
+					});
+		            
+				    Save_unloadSave = true;
+		        }
+		    }
 		
 		    function getBoardList() {
 		        starttime = new Date().getTime();
@@ -156,6 +203,13 @@
 		            var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
 		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+		            
+		            /* 2018-09-17 홍승비 - 새게시물탭에서도 저장된 미리보기 비율 적용 */
+		            pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));
+		
 		            pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 		            if (listNode == null) return;
 
@@ -195,7 +249,6 @@
 		            DocList.DataSource(xmlDoc);
 		            DocList.DataBind("lvBoardList");
 		            DocList = null;
-		              
 
 		            allListCnt = GetElementsByTagName(xmlDoc, "ROW").length;
 
@@ -527,9 +580,10 @@
 				}
 			}
 		    
-			function MemberInfo_onclick(pUserID) {
+		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+			function MemberInfo_onclick(pUserID, pDeptID) {
 				if (gubun == "2") return;
-				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}
 			function ReservationItem_onclick() {
 			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;	
@@ -700,7 +754,7 @@
 		    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 		
 		    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-		        <div style="width:100%; overflow:AUTO;" id="divList">
+		        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 		            <div id="lvBoardList"></div>
 		        </div>
 		        <div id='runtime' style="color:#666;padding-top:5px"></div>

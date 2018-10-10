@@ -73,9 +73,17 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 왼쪽화면 호출함수
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleLeft.do")
-	public String  scheduleAdminLeft() throws Exception {
+	public String  scheduleAdminLeft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminLeft started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang = userInfo.getLang();
+		
+		logger.debug("lang : " + lang);
+		
+		model.addAttribute("lang", lang);
 		
 		return "/admin/ezSchedule/scheduleLeft";
 	}
@@ -102,7 +110,7 @@ public class EzScheduleAdminController {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 				
-		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId());
+		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
 		
 		return result;
 	}
@@ -152,8 +160,9 @@ public class EzScheduleAdminController {
 		int tenantID = loginVO.getTenantId();
 		String userID = request.getParameter("userID");
 		String deptID = request.getParameter("deptID");
+		String companyID = loginVO.getCompanyID();
 		
-		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID);
+		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID, companyID);
 		
 		if (checkCnt == 0) {
 			loginVO.setId(userID);
@@ -170,7 +179,7 @@ public class EzScheduleAdminController {
 			String deptName = organDeptVO.getDisplayName();
 			String deptName2 = organDeptVO.getDisplayName2();
 	
-			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID);
+			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID, companyID);
 			
 			return "SUCCESS";
 		} else {
@@ -198,17 +207,22 @@ public class EzScheduleAdminController {
 		
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
+		StringBuffer companyList = new StringBuffer();
+		
 		for (int i =0 ; i < list.size() ; i++) {
 			OrganDeptVO vo = list.get(i);
 			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
+				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
 			}
 		}
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("companyList", companyList);
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}
@@ -364,21 +378,31 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveLunarUse.do")
 	@ResponseBody
-	public void	scheduleSaveLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+	public String scheduleSaveLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleSaveLunarUse started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-		String cID = request.getParameter("COMPANYID");
-		String lunarUse = request.getParameter("LUNARUSE");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		String count = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
-		
-		if (count.equals("0")) {
-			ezScheduleAdminService.scheduleInsertLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
-		} else {
-			ezScheduleAdminService.scheduleUpdateLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
+		if (userInfo == null) {
+			return "0";
+		}else{
+			
+			
+			loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
+			String cID = loginSimpleVO.getCompanyID();
+			String lunarUse = request.getParameter("LUNARUSE");
+			
+			String count = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
+			
+			if (count.equals("0")) {
+				ezScheduleAdminService.scheduleInsertLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
+			} else {
+				ezScheduleAdminService.scheduleUpdateLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
+			}
+			return "1";
 		}
+		
 	}
 	
 	/**
@@ -421,21 +445,32 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveRegi.do")
 	@ResponseBody
-	public void	scheduleSaveRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+	public String scheduleSaveRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleSaveRegi started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-		String cID = request.getParameter("COMPANYID");
-		String regi = request.getParameter("PREVIOSLYREGIUSE");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
-		
-		if (count.equals("0")) {
-			ezScheduleAdminService.scheduleInsertRegi(cID, regi, loginSimpleVO.getTenantId());
-		} else {
-			ezScheduleAdminService.scheduleUpdateRegi(cID, regi, loginSimpleVO.getTenantId());
+		if (userInfo == null) {
+			return "0";
+		}else{
+			
+			loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
+			/*String cID = request.getParameter("COMPANYID");*/
+			String cID = loginSimpleVO.getCompanyID();
+			String regi = request.getParameter("PREVIOSLYREGIUSE");
+			
+			String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
+			
+			if (count.equals("0")) {
+				ezScheduleAdminService.scheduleInsertRegi(cID, regi, loginSimpleVO.getTenantId());
+			} else {
+				ezScheduleAdminService.scheduleUpdateRegi(cID, regi, loginSimpleVO.getTenantId());
+			}
+			
+			return "1";
 		}
+		
 	}
 	
 }

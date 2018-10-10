@@ -472,7 +472,7 @@ public class EzAttitudeController {
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		boolean attitudeAdminCheck = false;
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -763,6 +763,7 @@ public class EzAttitudeController {
 		String userId = userInfo.getId();
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/holidays";
+		String isRest = request.getParameter("isRest");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -771,7 +772,8 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userId);
+				.queryParam("userId", userId)
+				.queryParam("isRest", isRest);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -874,14 +876,10 @@ public class EzAttitudeController {
 			}
 		}
 		
-		//현재시간
-		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
-		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
-		model.addAttribute("time", time);
 		model.addAttribute("mode", mode);
 		
 		LOGGER.debug("/ezAttitude/attitudeNewItem ended");
@@ -1491,7 +1489,7 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
@@ -1897,7 +1895,7 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2101,7 +2099,7 @@ public class EzAttitudeController {
 		String url = "";
 		
 		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2283,7 +2281,7 @@ public class EzAttitudeController {
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||searchDeptId =" + searchDeptId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			isAdmin = "Y";
 		}
 		
@@ -2402,7 +2400,7 @@ public class EzAttitudeController {
 		} 
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2817,7 +2815,7 @@ public class EzAttitudeController {
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
 		
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -3032,10 +3030,8 @@ public class EzAttitudeController {
 			row.getCell(3).setCellStyle(headerStyle);
 			row.createCell(4).setCellValue("날짜");
 			row.getCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue("시간");
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
 			row.getCell(5).setCellStyle(headerStyle);
-			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
-			row.getCell(6).setCellStyle(headerStyle);
 			
 			//body
 			for (int i = 0 ; i < attitudeList.size(); i++) { 
@@ -3053,13 +3049,7 @@ public class EzAttitudeController {
 					row.createCell(4).setCellValue(vo.getStartDate());
 				}
 				
-				if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
-					row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
-				} else {
-					row.createCell(5).setCellValue(vo.getStartTime());
-				}
-				
-				row.createCell(6).setCellValue(vo.getTypeName());
+				row.createCell(5).setCellValue(vo.getTypeName());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
@@ -3067,7 +3057,6 @@ public class EzAttitudeController {
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
-				row.getCell(6).setCellStyle(bodyStyle);
 			}
 			
 			//width 조정

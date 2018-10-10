@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code="ezOrgan.t112" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">		
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var ReturnFunction;
 			var isAdd = true;
@@ -61,6 +61,7 @@
      						} else {
      							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
      						}
+		     				getCompanyInfo();
      					}
      				});
 			    }
@@ -68,13 +69,17 @@
 			
 			function Check_ID(pValue){
 				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
-					if(pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90){
+					if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
 						// A-Z
-					}else if(pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122){
+					} else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
 						// a-z
-					}else if(pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57){
+					} else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
 						// 0-9
-					}else{
+					} else if (pValue.charCodeAt(iCnt) == 45) {
+		                // -
+		            } else if (pValue.charCodeAt(iCnt) == 95) {
+                        // _
+                    } else {
 						return false;
 					}
 				}				
@@ -82,23 +87,28 @@
 			}
 
 			function OK_Click(){
-				if (CompanyID.value == ""){
+				if (CompanyID.value == "") {
 					OpenAlertUI("<spring:message code='ezOrgan.t113'/>");
 					return;
 				}
 				
-				if (CompanyID.value.length < 3){
+				if (CompanyID.value.length < 3) {
 					OpenAlertUI("<spring:message code='ezOrgan.t114'/>");
 					return;
 				}
 				
-				if (!Check_ID(CompanyID.value)){
+				if (!Check_ID(CompanyID.value)) {
 					OpenAlertUI("<spring:message code='ezOrgan.t115'/>");
 					return;
 				}
 							
-				if (CompanyName.value == ""){
+				if (CompanyName.value == "") {
 					OpenAlertUI("<spring:message code='ezOrgan.t116'/>");
+					return;
+				}
+
+				if (operatorID.value != "" && operatorID.value.indexOf("@") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t267'/>");
 					return;
 				}
 				
@@ -133,7 +143,7 @@
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/saveCompanyInfo.do",
 		        	async : false,
-		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId},
+		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId , operatorId: operatorID.value},
 		        	success : function(result){
 		        		 var retVal = result;
 		        		 
@@ -202,6 +212,21 @@
 		        DivPopUpHidden();
 		    }
 		    
+		    function getCompanyInfo() {
+		    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/getComanyConfig.do",
+						async : false,
+						data : {cn : CompanyID.value},
+						success : function(result) {
+							if (result != "") {
+	    						operatorID.value = result;
+							}
+						}
+					});	
+		    }
+		    
 	    </script>
 	</head>
 	<body class="popup">
@@ -214,11 +239,15 @@
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /></th> 
-		    	<td><input id=CompanyID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20"></td> 
+		    	<td><input id="CompanyID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20"></td> 
 		  	</tr> 
 		  	<tr> 
 		  		<th id="parentHeader"><spring:message code='ezOrgan.t122' /></th> 
-		    	<td> <input id=ParentID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly="readonly"></td> 
+		    	<td> <input id="ParentID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly="readonly"></td> 
+		  	</tr> 
+		  	<tr> 
+		  		<th><spring:message code='ezEmail.0hun02' /></th> 
+		    	<td> <input id="operatorID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		  	</tr> 
 		  	<tr>
 			    <th><spring:message code='ezOrgan.t123' /></th>
@@ -226,11 +255,11 @@
 			    	<table style="width:100%;-moz-box-sizing:border-box;box-sizing:border-box;">
 			    		<tr class="primary">
 		        			<th><c:out value='${primary}'/></th>
-		        			<td><input name="Input" id=CompanyName style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td>
+		        			<td><input name="Input" id="CompanyName" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td>
 		      			</tr>
 		      			<tr class="secondary">
 		        			<th><c:out value='${secondary}'/></th>
-		        			<td><input id=CompanyName2 type="text" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
+		        			<td><input id="CompanyName2" type="text" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		      			</tr>
 		    		</table>
 		    	</td>

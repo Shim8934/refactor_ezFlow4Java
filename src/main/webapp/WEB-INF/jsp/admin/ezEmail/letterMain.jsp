@@ -5,25 +5,25 @@
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">	
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">	
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/FormCont.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
-	    	var companyID = "";
+	    	var companyID = "${userInfo.companyID}";
 	    	
 	        window.onload = function () {
-	        	companyID = document.getElementById("ListCompany").value;
+	        	companyID = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 	        };
 	        
 	        function selectCompanyID() {
-	        	var company = document.getElementById("ListCompany").value;
+	        	var company = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
 	        	if (companyID != company) {
 	        		companyID = company;
 	        		
@@ -159,19 +159,19 @@
 	</head>
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
-		    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
-			    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
-		        	<c:forEach var="item" items="${list}">
-		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select>
-		    </span><br>
+	    <span style="display:none"><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+		    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
+	        	<c:forEach var="item" items="${list}">
+	        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+		    </select><br>
+	    </span>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        	<p><span id="tagsub1"><spring:message code='ezEmail.letter20'/></span></p>
 			    <p><span id="tagsub2"><spring:message code='ezEmail.t824'/></span></p>
 	        </div>
 	    </div>
-	    <iframe id="Letter_ifrm" style="width: 1200px; height:650px;" frameborder="0"></iframe> 
+	    <iframe id="Letter_ifrm" style="width: 1200px; height:535px;" frameborder="0"></iframe> 
 	</body>
 </html>

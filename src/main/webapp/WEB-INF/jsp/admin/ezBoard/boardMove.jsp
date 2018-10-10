@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezBoard.t65" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />	    
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 	    <style>
 	    .mwidth tr td:firstchild {
 	    	border : 1px solid #ddd;
@@ -15,9 +15,9 @@
 	    	border : 1px solid #d2d2d2;
 	    }
 	    </style>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 		<script type="text/javascript" language="javascript">			
 			var SelectedBoardID = "";
 			var SelectedBoardName = "";
@@ -35,7 +35,7 @@
 			    //if (CrossYN()) {
 		        boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open("/admin/ezBoard/boardMoveSelect.do", "boardMoveSelect", GetOpenWindowfeature(340, 656));
+		        var BoardMoveSelect_Cross = window.open("/admin/ezBoard/boardMoveSelect.do", "boardMoveSelect", GetOpenWindowfeature(355, 600));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}

@@ -6,8 +6,8 @@
 	<head>
 		<title>main_page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
 		<style>
 			.category_select span {
@@ -25,11 +25,11 @@
    				padding-right:5px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
@@ -270,6 +270,7 @@
 						},
 						success: function(result){
 							event_get_myCommunity(result);
+							commuTitleWidth(); //타이틀 너비 조정
 						}
 				});
 	        }
@@ -525,6 +526,7 @@
 	            CurPage = Value;
 	            makePageSelPage();
 	            movePage(CurPage);
+	            commuTitleWidth();//타이틀 너비 조정
 	        }
 	        
 	        function selbeforeBlock() {
@@ -703,7 +705,7 @@
 	                    retval = "<spring:message code = 'ezCommunity.t1508' />";
 	                    break;
 	                case "t1509":
-	                    retval = "<spring:message code = 'ezCommunity.t1499' />";
+	                    retval = "<spring:message code = 'ezCommunity.t1509' />";
 	                    break;
 	                case "t1510":
 	                    retval = "<spring:message code = 'ezCommunity.t1510' />";
@@ -1343,6 +1345,30 @@
 		            }
 		        }
 		    }
+	        
+	        //2018-08-27 김보미 - 커뮤니티 타이틀 너비 조정
+	        window.onresize = function () {   	
+	        	commuTitleWidth();
+		    }
+	        
+			function commuTitleWidth() {
+				var titleWidth = "";
+
+				if (document.getElementById("tagsub1").className != "") {
+					if ($(".tabpartMycommunityTitle").eq(1).width() != null) { //커뮤니티가 2개일 경우 화면을 줄였을때 카테고리별 커뮤니티탭이 아래로 내려왔을경우 짤리는 현상 없게 하기 위해 2번째 커뮤니티 타이틀 너비를 이용한다.
+						titleWidth = $(".tabpartMycommunityTitle").eq(1).width() - $(".tabpartMycommunityTitle dd").eq(1).width() - 40; // 40은 커뮤니티명 앞에 이미지 너비때문에 빼는것. 
+					} else {
+						titleWidth = $(".tabpartMycommunityTitle").eq(0).width() - $(".tabpartMycommunityTitle dd").eq(0).width() - 40;
+					}
+					
+					$(".tabpartMycommunityTitle dt").css("width", titleWidth + "px");
+				}
+			}
+			
+			/* 2018-09-13 홍승비 - 커뮤니티 메인홈의 새로고침 함수 추가 */
+			function refresh_onclick() {
+				window.location.reload(false);	
+			}
 		</script>
 	</head>
 	<body>
@@ -1390,8 +1416,8 @@
 			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">
 			                        <ul class="left_tabpartTitle">
-			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>
-			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t81' /></span></li>
+			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span style="text-align: center"><spring:message code = 'ezCommunity.t80' /></span></li>
+			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span style="text-align: center"><spring:message code = 'ezCommunity.t81' /></span></li>
 			                        </ul>			                        
 			                        <div class="left_tabpartList_layout" id ="categorytab"></div>
 			                    </div>

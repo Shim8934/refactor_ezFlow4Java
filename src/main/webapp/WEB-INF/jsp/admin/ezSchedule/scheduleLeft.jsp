@@ -7,10 +7,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_schedule</title>
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript">
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -48,7 +48,8 @@
   			<div class="left_admin" title="<spring:message code='ezSchedule.t14' />"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='ezSchedule.t1010' /></div> 
   			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span><ul></ul></h2>
   			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span><ul></ul></h2>
-  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span><ul></ul></h2>
+  			<!-- #13470 일본은 음력사용 안함 -->
+  			<%-- <h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span><ul></ul></h2> --%>
   			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span><ul></ul></h2>
 		</div>
 		<script type="text/javascript">

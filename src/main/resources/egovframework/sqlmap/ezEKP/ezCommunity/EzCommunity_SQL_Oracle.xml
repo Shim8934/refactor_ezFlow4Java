@@ -741,6 +741,8 @@
 						userid = #v_PUSERID#
 					AND
 						boardid = #v_PBOARDID# 
+					AND
+						tenant_id = #tenantID#
 					GROUP BY
 						itemid,
 						tenant_id
@@ -752,9 +754,11 @@
   				WHERE 
 					boardid = #v_PBOARDID#
 				AND
-					startdate < #v_pNow#
+					startdate <= #v_pNow#
 				AND
 					enddate > #v_pNow#
+				AND
+					A.tenant_id = #tenantID#
 		]]>
 		
 		<isEqual property="v_PSORTBY" compareValue="">
@@ -3385,7 +3389,7 @@
 							)
 				)
 			AND
-				A.startdate < #v_pNow#
+				A.startdate <= #v_pNow#
 			AND
 				A.startdate > #v_pFromNow#
 			AND
@@ -3405,7 +3409,7 @@
 			WHERE
 				boardid = #v_pBoardID#
 			AND
-				startdate < #v_pNow#
+				startdate <= #v_pNow#
 			AND
 				enddate > #v_pNow#
 			AND
@@ -6930,7 +6934,7 @@
 								AND
 									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 			AND
-				B.ENDDATE < ADDDATE(utc_timestamp(), - A.DELETEAFTER)
+				B.ENDDATE < TO_CHAR(SYSDATE - A.DELETEAFTER, 'YYYY-MM-DD HH24:MI:SS')
 		]]>
   	</select>
   

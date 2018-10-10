@@ -1,18 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>mail_filter</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript">
 		    var Xmlhttp = null;
 		    var sortRuleNameStatNum = 0;
@@ -787,10 +786,10 @@
 			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
-		          <li><span onclick="New_InboxRule();"><img src="/images/ImgIcon/rul-sml.gif"  style="margin-top:-2px;" /><spring:message code='ezEmail.t804' /></span></li>
-		          <li><span onclick="Detail_InboxRule();"><img src="/images/ImgIcon/options.gif"   style="margin-top:-2px;"  /><spring:message code='ezEmail.t805' /></span></li>
-		          <li><span onclick="event_DeleteRule();"><img src="/images/ImgIcon/delete.gif"   style="margin-top:-2px;"  /><spring:message code='ezEmail.t95' /></span></li>
-		          <li><span onclick="Rule_Reload();"><img src="/images/ImgIcon/recur.gif"    style="margin-top:-2px;"  /><spring:message code='ezEmail.t515' /></span></li>
+		          <li><span onclick="New_InboxRule();"><spring:message code='ezEmail.t804' /></span></li>
+		          <li><span onclick="Detail_InboxRule();"><spring:message code='ezEmail.t805' /></span></li>
+		          <li><span onclick="event_DeleteRule();"><spring:message code='ezEmail.t95' /></span></li>
+		          <li><span onclick="Rule_Reload();"><spring:message code='ezEmail.t515' /></span></li>
 		          <li class="prevLi"><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
 		          <li class="prevLi"><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t834' />" /></span></li>
 		          </ul>        

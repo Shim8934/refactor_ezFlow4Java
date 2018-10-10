@@ -1200,9 +1200,20 @@ function on_keydown(e) {
 }
 
 function onblurOnRecipientInputField(value) {
-    if (value != null && value != '') {
-        NameCertify_onClick(null);
-    }
+    if (navigator.userAgent.toLowerCase().search("trident") > -1) {
+        setTimeout(function() {
+            if (value != null && value != '' 
+                && $("#ui-id-1").css('display') == 'none'
+                && $("#ui-id-2").css('display') == 'none'
+                && $("#ui-id-3").css('display') == 'none') {
+                NameCertify_onClick(null);
+            }
+        }, 1);
+    } else {
+        if (value != null && value != '') {
+            NameCertify_onClick(null);
+        }
+    }    
 }
 
 var NameCertify_onClick_returnFunction;
@@ -1358,7 +1369,7 @@ function GetMailAddresses(name) {
             m_addrBook["type"][count + adCount] = "mailgroup";
             m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
             m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
-            m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FLODERTYPE");
+            m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
         }
         m_addrBook["company"][count + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
         m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
@@ -1680,15 +1691,20 @@ function CompleteEmailAddress_Complete(rgParams) {
                 }
             }
         }
+        
         var szFromName = "";
+       
         for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
-        		szFromName += checkname_cross_dialogArguments[3][count1-1];
-                if (count1 != checkname_cross_dialogArguments[3].length-1) szFromName += ";";
-        	/*szFromName += checkname_cross_dialogArguments[3][count1];
-            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
+    		szFromName += checkname_cross_dialogArguments[3][count1];
+           
+    		if (count1 != checkname_cross_dialogArguments[3].length-1) {
+            	szFromName += ";";
+            }
         }
+        
         checkname_cross_dialogArguments[6].value = szFromName;
     }
+    
     ToTalCompletEmailAddress();
 }
 
@@ -1717,7 +1733,12 @@ var AttachFlag = false;
 function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     AttachFlag = true;
     var docAttach = "";
-
+    
+    var ofileName = new Array();
+    var ofileHref = new Array();
+    var ofileAttachSize = new Array();
+    var attachcount = 0;
+    
     if (DocHref.toLowerCase().indexOf(".doc") == -1 && DocHref.toLowerCase().indexOf(".hwp") == -1) {
         if (DocHref == "IMAGE") {
             var HtmlBody = "<div style='position:relative;display:inline-block' class='margin' id='ezFormProc_div'><hr></hr><div align='center'>";
@@ -1750,22 +1771,43 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
                 var htmlData = getNodeText(XmlBodyDATA);
                 document.getElementById('docContent').innerHTML = htmlData;
                 document.getElementById('docContent').style.height = "220px";
-            }
+            } 
         }
+    } else {
+	   	 var fileext = DocHref.toLowerCase().substr(DocHref.length - 4);
+	   	 
+	   	 // 2018.07.03 (KLIB) 암호화된 파일 확장자 처리 (ezd 확장자라면 원래 확장자로 변경해줌)
+	   	 if (fileext === ".ezd") {
+	   		// 최소 8글자 이상이 보장됨
+	   		fileext = DocHref.toLowerCase().substr(DocHref.length - 8, 4);
+	   	 }
+	   	 
+	     /*var ezUtil = new ActiveXObject("ezUtil.RegScript");
+	     var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
+	     ezUtil = null;*/
+	   	 
+	   	 var regData = "";
+	
+	     var fullPath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath="+ escape(DocHref) + "&filename=" + escape(strLang116 + fileext) + "&regData=" + regData;
+	
+	     ofileName[attachcount] = strLang116 + fileext;
+	     ofileHref[attachcount] = docHref;
+//	     ofileAttachSize[attachcount] = docfilesize.toString();
+	     attachcount++;
     }
     var xmlHTTP = createXMLHttpRequest();
     var xmlpara = createXmlDom();
     var xmlstring = "<DocID>" + DocID + "</DocID>";
     xmlpara = loadXMLString(xmlstring);
     if (Target == "APPROVALG")
-        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do?orgCompanyID="+orgCompanyID, false);
     else
-        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do?orgCompanyID="+orgCompanyID, false);
     xmlHTTP.send(xmlpara);
 
     if (xmlHTTP.status == 200) {
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
-        if (DocHref.toLowerCase().indexOf(".doc") > 0 || DocHref.toLowerCase().indexOf(".hwp") > 0) {
+        if (DocHref.toLowerCase().indexOf(".doc") > 0) {
             var FileExtention = DocHref.substring(DocHref.toLowerCase().lastIndexOf(".") + 1);
             var pstrXML = "";
             pstrXML += "<LISTVIEWDATA><HEADERS>";
@@ -1804,7 +1846,125 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
                 pAttachListXml = Rtnxml;
             }
         }
+        
         eSubject.value = strLang117 + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        
+        if (DocHref.toLowerCase().indexOf(".doc") < 0 && DocHref.toLowerCase().indexOf(".hwp") < 0) {
+	        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
+	        var pstrXML = "";
+	        if (AttachRows.length > 0) {
+	            pstrXML += "<LISTVIEWDATA><HEADERS>";
+	            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+	            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	            pstrXML += "</HEADERS><ROWS>";
+	        }
+	
+	        for (var i = 0; i < AttachRows.length; i++) {
+	            var filepath = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
+	            var filename = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
+	            var filesize = SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
+	            if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+	                filename = filename + ".hwp";
+	                filesize = strLang116;
+	            }
+	            else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+	                filename = filename + ".mht";
+	                filesize = strLang116;
+	            }
+	
+	            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+	            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+	            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+	            pstrXML += "<DATA3></DATA3>";
+	            pstrXML += "<DATA4>APPROVAL</DATA4>";
+	            pstrXML += "<DATA5>N</DATA5>";
+	            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+	            if (filesize > BigSizeAttachSize)
+	                pstrXML += "<DATA7>Y</DATA7>";
+	            else
+	                pstrXML += "<DATA7>N</DATA7>";
+	
+	            pstrXML += "</CELL><CELL>";
+	            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+	            pstrXML += "</CELL></ROW>";
+	        }
+	        if (pstrXML != "") {
+	            pstrXML += "</ROWS></LISTVIEWDATA>";
+	            objXML = loadXMLString(pstrXML);
+	            if (pAttachListXml == "") {
+	                pAttachListXml = objXML;
+	            }
+	            else {
+	                if (typeof (pAttachListXml) == "string")
+	                    Rtnxml = loadXMLString(pAttachListXml);
+	                else
+	                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+	
+	                GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
+	                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+	                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+	//                  if (CrossYN())
+	//                     var Node = Rtnxml.importNode(objNewAttachNodes, true);
+	//                  else
+	                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+	                }
+	                pAttachListXml = Rtnxml;
+	            }
+	            if (DragDropAttachObjetLoading) {
+	//            	AppendFileAttachInfo(pAttachListXml);
+	            	dadiframe.fileupload2(pAttachListXml);            	
+	            }
+	        } 
+        } else {
+//	            var ezUtil = new ActiveXObject("ezUtil.RegScript");
+//	            var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
+//	            ezUtil = null;
+		        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
+
+	            for (var i = 0; i < SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW").length; i++) {
+	
+	                var fileName = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
+	                var fileHref = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
+	                var fileAttachSize =  SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
+	                
+		            if ((fileAttachSize == "0" || fileAttachSize == "") && (fileHref.indexOf(".hwp") > -1 || fileHref.indexOf(".mht") > -1)) {
+		            	fileAttachSize = strLang116;
+		            }
+	                
+	                fileName = fileName.replace("&amp;","&");
+	
+	                fileName = ReplaceText(fileName, "\\\\", "");
+	                fileName = ReplaceText(fileName, "/", "");
+	                fileName = ReplaceText(fileName, ":", "_");
+	                fileName = ReplaceText(fileName, "\\*", "");
+	                fileName = ReplaceText(fileName, "\\?", "");
+	                fileName = ReplaceText(fileName, "\"", "");
+	                fileName = ReplaceText(fileName, "<", "");
+	                fileName = ReplaceText(fileName, ">", "");
+	                fileName = ReplaceText(fileName, "\\|", "");
+	
+	                var tmpExt = fileHref.substr(fileHref.length - 3, 3);
+	                // 2018.07.04 (KLIB) 암호화된 ezd 확장자 파일일 경우 원래 확장자로 처리
+	                if (tmpExt === 'ezd') {
+	                	tmpExt = fileHref.substr(fileHref.length - 7, 3);
+	                }
+	                
+	                if (fileName.length > 3) {
+	                    if (fileName.substr(fileName.length - 3, 3) != tmpExt)
+	                        fileName += "." + tmpExt;
+	                } else {
+	                	fileName += "." + tmpExt;
+	                }
+	
+	                var fullPath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(fileHref) + "&filename=" + escape(fileName) + "&regData=" + regData;
+	                ofileName[attachcount] = fileName;
+	                ofileHref[attachcount] = fileHref;
+	                ofileAttachSize[attachcount] = fileAttachSize;
+	
+	                attachcount++;
+	            }
+	            attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize);
+/*=======
         document.title = getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
         
         var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
@@ -1871,6 +2031,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 //            	AppendFileAttachInfo(pAttachListXml);
             	dadiframe.fileupload2(pAttachListXml);            	
             }
+>>>>>>> master*/
         }
     }
 }
@@ -2031,9 +2192,9 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
             var filename = SelectSingleNodeValue(AttachRows[i], "FileName");
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
             
-            pstrXML += "<ROW><CELL><VALUE>" + filename + "</VALUE>";
-            pstrXML += "<DATA1>" + filename + "</DATA1>";
-            pstrXML += "<DATA2>" + uploadCommunityPath + "/" + filepath + "</DATA2>";
+            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+            pstrXML += "<DATA2><![CDATA[" + uploadCommunityPath + "/" + filepath + "]]></DATA2>";
             pstrXML += "<DATA3></DATA3>";
             pstrXML += "<DATA4>BOARD</DATA4>";
             pstrXML += "<DATA5>N</DATA5>";
@@ -2902,6 +3063,7 @@ function NameChange_onClick_Complete(rgParams) {
 
             checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
         }
+        return;
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     }
 }
@@ -3616,6 +3778,213 @@ function getEmailAddressList2(ReceiverList, pollSendType) {
     return retVal;
 }
 
+function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
+    //파일리스트 가져오기
+    g_fileList = ofileName;
+
+    //파일 사이즈 체크
+    var fileSize = 0;
+    var fileSize2 = 0;
+    var tmpFileSize = 0;
+    var pBigFileUploadYN = "N";
+    var fileLen = g_fileSizelist.length;
+    var strPrint = "";
+    if (g_fileList.length == 0)
+        return;
+
+    for (var i = 0; i < g_fileList.length; i++) {
+        tmpFileSize = Number(ofileAttachSize[i]);
+        if (tmpFileSize == 0) {
+            alert(strLang167);
+            return;
+        }
+        g_fileSizelist[fileLen + i] = tmpFileSize;
+        if (BigSizeAttachSize < tmpFileSize) {
+            pBigFileUploadYN = "Y";
+            totfileSize2 += tmpFileSize;
+            fileSize2 += tmpFileSize;
+        }
+        else {
+            totfileSize += tmpFileSize;
+            fileSize += tmpFileSize;
+        }
+
+    }
+    if (totfileSize > totSizeAttachSize) {
+        alert(strLang75 + totSizeAttachMBSize + "MB" + strLang76);
+        totfileSize = totfileSize - fileSize;
+        return;
+    }
+    else if (totfileSize2 > totBigSizeAttachSize) {
+        alert(strLang168 + totBigSizeAttachMBSize + "MB" + strLang169);
+        totfileSize2 = totfileSize2 - fileSize2;
+        return;
+    }
+
+    if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
+        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLang79);
+        BigSizeAttach = true;
+        pBigFileUpload = "Y";
+    }
+
+    //EzHTTPTrans.AddUploadFile("", "");
+
+    //파일 추가
+    var nCount = 0;
+    var extFlag = false;
+    var xmlDoc = createXmlDom();
+    var objRoot = createNodeInsert(xmlDoc, objRoot, "DATA");
+    createNodeAndInsertText(xmlDoc, objRoot, "CMD", "ADD");
+    createNodeAndInsertText(xmlDoc, objRoot, "URL", g_url);
+    var objNode = createNodeAndAppandNode(xmlDoc, objRoot, objNode, "FILELIST");
+
+    var fileNamelist = "";
+    var fileName = "";
+    var savefileNamelist = "";
+    var pBigSizefileListYN = "Y";
+    var g_fileGBList = new Array();
+    for (var i = 0; i < g_fileList.length; i++) {
+        try {
+            var pTmpBigFileUpload = "N";
+            if (g_fileSizelist[fileLen + i] > BigSizeAttachSize) {
+                pTmpBigFileUpload = "Y";
+                g_fileBigSizeYN[i] = "Y";
+            }
+            else {
+                g_fileBigSizeYN[i] = "N";
+                pBigSizefileListYN = "N";
+            }
+
+            //EzHTTPTrans.AddUploadFile(g_fileList[i], pTmpBigFileUpload);
+            g_fileGBList[i] = pTmpBigFileUpload;
+            if (pTmpBigFileUpload != "Y") {
+            }
+
+            var strFileName = g_fileList[i].substr(0, g_fileList[i].lastIndexOf('.'));
+            var strFileExt = g_fileList[i].substr(g_fileList[i].lastIndexOf('.') + 1);
+
+            //첨부파일 업로드
+            var xmlhttp2 = createXMLHttpRequest();
+            var xmlDoc2 = createXmlDom();
+            var objRoot = createNodeInsert(xmlDoc2, objRoot, "DATA");
+            createNodeAndInsertText(xmlDoc2, objRoot, "guid", "");
+            createNodeAndInsertText(xmlDoc2, objRoot, "ext", strFileExt);//확장자
+            createNodeAndInsertText(xmlDoc2, objRoot, "dir", "/Upload_DocManagement");
+            createNodeAndInsertText(xmlDoc2, objRoot, "prefix", "DocManagement");
+            createNodeAndInsertText(xmlDoc2, objRoot, "newid", g_newid);
+            createNodeAndInsertText(xmlDoc2, objRoot, "name", strFileName);//첨부파일명
+            createNodeAndInsertText(xmlDoc2, objRoot, "filedata", pTmpBigFileUpload);//대용량첨부YN
+            createNodeAndInsertText(xmlDoc2, objRoot, "filename", "");
+            createNodeAndInsertText(xmlDoc2, objRoot, "sid", "");
+            createNodeAndInsertText(xmlDoc2, objRoot, "filehref", ofileHref[i]);
+            xmlhttp2.open("POST", "/ezApprovalG/mail_interuploadX_Server.do", false);
+            xmlhttp2.send(xmlDoc2);
+            var rtnInfo = xmlhttp2.responseText;
+
+            if (rtnInfo != "ERROR") {
+                var filename = g_fileList[i];
+                var filesize = ofileAttachSize[i];
+                var filePath = rtnInfo.split('_kaonisplit_')[0];
+                var BigYN = rtnInfo.split('_kaonisplit_')[1].split('_')[0];
+                var extYN = rtnInfo.split('_kaonisplit_')[1].split('_')[1];
+
+                if (extYN == "OK") {
+                    var subNodes, subNode;
+                    subNodes = createNodeAndAppandNode(xmlDoc, objNode, subNodes, "FILE");
+                    createNodeAndAppandNodeText(xmlDoc, subNodes, subNode, "NAME", filename);
+                    createNodeAndAppandNodeText(xmlDoc, subNodes, subNode, "PATH", filePath);
+                    createNodeAndAppandNodeText(xmlDoc, subNodes, subNode, "BIG", BigYN);
+                    createNodeAndAppandNodeText(xmlDoc, subNodes, subNode, "SIZE", filesize);
+                    createNodeAndAppandNodeText(xmlDoc, subNodes, subNode, "ITEMID", "Y");
+                }
+                else {
+                    extFlag = true;
+                }
+
+                nCount++;
+            }
+
+        }
+        catch (e) {
+            alert(g_fileList[i] + " " + strLang85 + "\n\n" + e.number + " - " + e.description);
+            return;
+        }
+    }
+    
+    
+    if (nCount == 0) {
+        alert(strLang89);
+        var isBigSizeAttach = false;
+
+        for (var i = 0 ; i < g_fileBigSizeYN.length ; i++) {
+            if (g_fileBigSizeYN[i] == "Y") {
+                isBigSizeAttach = true;
+            }
+        }
+
+        if (isBigSizeAttach) {
+            BigSizeAttach = true;
+        }
+        else {
+            BigSizeAttach = false;
+        }
+        return false;
+    }
+
+    if (extFlag)
+        alert(strLang323);
+    
+    var pstrXML = "";
+    if (g_fileList.length > 0) {
+        pstrXML += "<LISTVIEWDATA><HEADERS>";
+        pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+        pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+        pstrXML += "</HEADERS><ROWS>";
+    }
+
+    for (var i = 0; i < g_fileList.length; i++) {
+        var filepath = ofileHref[i];
+        var filename = ofileName[i];
+        var filesize = ofileAttachSize[i];
+        if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+            filename = filename + ".hwp";
+            filesize = strLang116;
+        }
+        else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+            filename = filename + ".mht";
+            filesize = strLang116;
+        }
+
+        pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+        pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+        pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+        pstrXML += "<DATA3></DATA3>";
+        pstrXML += "<DATA4>APPROVAL</DATA4>";
+        pstrXML += "<DATA5>N</DATA5>";
+        pstrXML += "<DATA6>" + filesize + "</DATA6>";
+        if (filesize > BigSizeAttachSize)
+            pstrXML += "<DATA7>Y</DATA7>";
+        else
+            pstrXML += "<DATA7>N</DATA7>";
+
+        pstrXML += "</CELL><CELL>";
+        pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+        pstrXML += "</CELL></ROW>";
+    }
+    if (pstrXML != "") {
+        pstrXML += "</ROWS></LISTVIEWDATA>";
+        objXML = loadXMLString(pstrXML);
+        if (pAttachListXml == "") {
+            pAttachListXml = objXML;
+        }
+    }
+        
+        dadiframe.fileupload2(pAttachListXml);            	
+    xmlhttp = null;
+}
+//end
 function replaceAll(str, searchStr, replaceStr) {
 	return str.split(searchStr).join(replaceStr);
 }
+//end
+

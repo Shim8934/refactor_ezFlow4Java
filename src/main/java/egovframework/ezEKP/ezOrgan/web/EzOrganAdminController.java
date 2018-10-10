@@ -21,12 +21,14 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +51,11 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -84,10 +84,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-	
-	@Autowired
-	private EzSystemAdminService ezSystemAdminService;
-		
+			
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -114,9 +111,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+    
+    @Autowired
+	private Properties globals;
 
-	
+    @PostConstruct
+	public void init() throws Exception {
+    	logger.debug("init started.");
 
+    	ezCommonService.createTblCompanyConfig();
+    	ezCommonService.addMailToJMochaDistribution();
+    	ezCommonService.addAddJobMasterOrderBy();
+    	ezCommonService.createTblIPAccessID();
+    	ezCommonService.createTblIPAccessIP();
+    	
+    	logger.debug("init ended.");
+    }
 
 	/**
 	 * 조직도관리 메인화면 호출 함수
@@ -133,6 +143,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+		String cChk = "0";
+		
+		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
 		
 		// set useLetter
 		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
@@ -144,6 +159,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";
 	}
@@ -160,11 +176,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String topid = "";
+		String deptTreeTopId = "";
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topid = user.getCompanyID();
+			deptTreeTopId = topid;
 		} else {
 			topid = "Top";
+			deptTreeTopId = topid + "/organ";
 		}
 		
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
@@ -182,9 +201,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("locale", user.getLocale());
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -226,10 +247,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		extensionAttribute15 = extensionAttribute15 != null ? extensionAttribute15 : "";		
 		String skipInitData = request.getParameter("skipInitData");
 		skipInitData = skipInitData != null ? skipInitData : "";
+		String operatorId = request.getParameter("operatorId");
+		operatorId = operatorId != null ? operatorId : "";
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
 				+ ",displayName2=" + displayName2 + ",mailId=" + mailId
-				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData);
+				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData + ",operatorId=" + operatorId);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -244,8 +267,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		logger.debug("domain=" + domain);
-        
+		        
 		String result = "";
+		
+		String operatorMailIdPropertyName = "operatorMailId";
 		
 		// 회사정보를 수정하는 경우
         if (parentCn == null || parentCn.isEmpty()) {
@@ -259,11 +284,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
         	
         	ezOrganAdminService.updateDBData_company(cn, displayName, displayName2, mailAddr, tenantID);
+        	
+			String existingOperatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, operatorMailIdPropertyName);
+        	
+        	if (!operatorId.equals("")) {				
+				if (!existingOperatorMailId.equals("")) {
+					ezCommonService.updateCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
+				} else {
+					ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
+				}
+        	} else {
+        		if (!existingOperatorMailId.equals("")) {
+        			ezCommonService.deleteCompanyConfig(tenantID, cn, operatorMailIdPropertyName);
+        		}
+        	}
         // 새로운 회사를 생성하는 경우	
         } else {			
 			String ldapPath = "";
 			
 	        // 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
 	        int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 	        
 	        logger.debug("userCheck cnt=" + cnt);
@@ -297,7 +337,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					String journalStatus = (String) journalResult.get("status");
 					
-					if (journalStatus.equals("ok")) {
+					if (!journalStatus.equals("ok")) {
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 					}
 					
@@ -309,6 +349,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
+							
+							if (!operatorId.equals("")) {
+								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
+							} 
+							
 							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -317,10 +362,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeGroup(mailAddr);
 							result = "EMAIL_ERROR";
-						}
-						
-						
-									
+						}									
 					} else {
 					    ezEmailUserAdminService.removeGroup(mailAddr);
 						result = "EMAIL_ERROR";
@@ -417,6 +459,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						}
 				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
+    					
+    					removeEmailAddressBasedOnCompanyDomainName(cn, dept.getExtensionAttribute2(), userInfo);
+    					
     					result = "OK";
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
@@ -462,6 +507,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
+        model.addAttribute("locale", userInfo.getLocale());
         
         logger.debug("deptInfo ended");
         
@@ -531,6 +577,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String cn = vo.getCn();
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
 			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 			
 			logger.debug("cn=" + cn + ",cnt=" + cnt);
@@ -581,6 +628,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								}						
 							}
 							
+							mailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, cn, vo.getParentCn(), userInfo);
+									
 							vo.setMail(mailAddr);
 							
 							ezOrganAdminService.insertDBData_dept(vo);
@@ -607,6 +656,84 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("saveDeptInfo ended");
 		
 		return result;
+	}
+	
+	private String getEmailAddressBasedOnCompanyDomainName(
+			String originalMailAddr, String cn, String parentCn, LoginVO userInfo) {
+		try {
+			// 상위 부서를 통해 Company ID를 구한다.
+			OrganDeptVO parentDeptVO = ezOrganService.getDeptInfo(parentCn, userInfo.getPrimary(), userInfo.getTenantId());
+			String parentCompanyId = parentDeptVO.getExtensionAttribute2();
+			parentCompanyId = parentCompanyId != null ? parentCompanyId : "";
+			
+			logger.debug("parentCompanyId=" + parentCompanyId);
+			
+			if (!parentCompanyId.isEmpty()) {
+				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), parentCompanyId, "DomainName");
+				
+				logger.debug("companyDomainName=" + companyDomainName);
+	
+				// 회사별 이메일 도메인명이 설정되어 있으면 tbl_tenant_config에 있는 DomainName 대신에
+				// 해당 도메인명을 사용해 이메일 주소를 생성한다.								
+				if (!companyDomainName.isEmpty()) {
+					logger.debug("Setting originalMailAddr based on companyDomainName...");
+					
+					String newMailAddr = cn + "@" + companyDomainName;
+					
+					// 해당 주소를 Alias 주소로 등록한다.
+					int rc = ezEmailUserAdminService.addGroup(newMailAddr);
+					
+					logger.debug("addGroup rc=" + rc);
+					
+					if (rc == 0) {
+						// 해당 주소의 멤버로 원 이메일 주소를 등록한다.
+						rc = ezEmailUserAdminService.updateGroupAdd(newMailAddr, originalMailAddr);
+						
+						logger.debug("updateGroupAdd rc=" + rc);
+						
+						if (rc == 0) {
+							// 해당 주소로 원 이메일 주소를 교체한다.
+							originalMailAddr = newMailAddr;
+							
+							logger.debug("newMailAddr=" + newMailAddr);
+						} else {
+							ezEmailUserAdminService.removeGroup(newMailAddr);
+						}
+					}
+				}
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return originalMailAddr;		
+	}
+	
+	private void removeEmailAddressBasedOnCompanyDomainName(
+			String cn, String companyId, LoginVO userInfo) {
+		try {
+			companyId = companyId != null ? companyId : "";
+			
+			logger.debug("companyId=" + companyId);
+			
+			if (!companyId.isEmpty()) {
+				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "DomainName");
+				
+				logger.debug("companyDomainName=" + companyDomainName);
+	
+				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 james_recipient_rewrite 테이블에서 제거한다.								
+				if (!companyDomainName.isEmpty()) {
+					logger.debug("Removing Email Address based on companyDomainName...");
+					
+					String newMailAddr = cn + "@" + companyDomainName;
+					
+					// 해당 주소를 james_recipient_rewrite 테이블에서 제거한다.
+					ezEmailUserAdminService.removeGroup(newMailAddr);					
+				}
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}				
 	}
 	
 	/**
@@ -685,7 +812,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		if (result.equals("OK")) {
-	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
+	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getOffset(), tenantID);
 	
 	        logger.debug("moveEntry result=" + result);
 		}
@@ -721,15 +848,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID);
 	    
+        String column = "EXTENSIONATTRIBUTE15";
+        String deptID = request.getParameter("deptId");
+        String userType = request.getParameter("userType");
 		String pClass = request.getParameter("pClass");
 		String cn = request.getParameter("cn");
 		String[] cnDatas = cn.split(",");
+		String[] userTypeDatas = userType.split(",");
 		String result = "";
 		
-		logger.debug("pClass=" + pClass + ",cn=" + cn);
+		logger.debug("pClass=" + pClass + ",cn=" + cn + ",userType=" + userType);
 		
+		String pClassTemp = pClass;
 		for (int i = 0; i < cnDatas.length; i++) {
-			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass, tenantID);	
+			if (pClassTemp.toLowerCase().equals("user")) {
+				pClass = userTypeDatas[i];
+				column = pClass.equals("addJob") ? "ORDERBY" : "EXTENSIONATTRIBUTE15";
+			}
+
+			ezOrganAdminService.updateProperty(cnDatas[i], column, i+"", pClass, tenantID, deptID);	
 		}
 		
 		logger.debug("saveOrderList ended.");
@@ -774,6 +911,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
 				
 		logger.debug("userInfo ended");
 		
@@ -827,7 +965,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String filePath = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
 			
 			if (fileName != null && !fileName.equals("")) {
-				ezCommonService.responseAttach(filePath, "", true, request, response);
+				downImage(filePath, request, response);
 			}
 		}	
 	}
@@ -894,11 +1032,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
 		String adminPassword = userCookieInfo.get(1);
         
-        int tenantID = userInfo.getTenantId();        
+        int tenantID = userInfo.getTenantId();
+        String offset = userInfo.getOffset();
         
         String cnList = request.getParameter("cn");
         
-        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
+        logger.debug("tenantID=" + tenantID + ",offset=" + offset +",cnList=" + cnList);
         	    
 		String cn[] = cnList.split(",");
 		String result = "OK";
@@ -930,7 +1069,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
 					try {
 						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
-						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID);
+						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID, offset);
 					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);
@@ -1020,7 +1159,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}
 		    
-			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", tenantID);
+			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", userInfo.getOffset(), tenantID);
 		
 			logger.debug("moveEntry result=" + result);
 			
@@ -1377,6 +1516,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			logger.debug("domain=" + domain + ",cn=" + cn);
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
 			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 			
 			logger.debug("cnt=" + cnt);
@@ -1566,7 +1706,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("filePath=" + filePath);
 		
 		if (fileName != null && !fileName.equals("")) {
-			ezCommonService.responseAttach(filePath, fileName, false, request, response);
+			downImage(filePath, request, response);
 		}
 		
 		logger.debug("getPersonalInfo ended");
@@ -2059,11 +2199,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + user.getLang(), user.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + user.getLang(), user.getTenantId());
+		String deptTreeTopId = "";
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
+			deptTreeTopId = topID;
 		} else {
 			topID = "Top";
+			deptTreeTopId = topID + "/organ";
 		}
 
 		model.addAttribute("topID", topID);
@@ -2073,6 +2216,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("userInfo", user);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		
 		logger.debug("addJobConfig ended.");
 		
@@ -2091,8 +2235,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		if (companyID == null || companyID.equals("")) {
 			companyID = "Top";
+			
+			if (user.getRollInfo().indexOf("c=1") != -1) { // 전체관리자일때
+				companyID += "/organ";			
+			}
 		}
-		
+
 		logger.debug("companyID=" + companyID);
 		        
 		model.addAttribute("companyID", companyID);
@@ -2119,6 +2267,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -2138,6 +2292,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalForDoc", approvalForDoc);
+        //2018-07-31 김보미 - 근태 추가
+        model.addAttribute("use_attitude", use_attitude);
+        model.addAttribute("useWebfolder", useWebfolder);
 		
 		logger.debug("permissionsList ended.");
 		
@@ -2237,15 +2394,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
 		String topID = "";
+		String deptTreeTopId = "";
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
+			deptTreeTopId = topID;
 		} else {
 			topID = "Top";
+			deptTreeTopId = topID + "/organ";
 		}
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -2254,6 +2421,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("use_attitude", use_attitude);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
+		model.addAttribute("useWebfolder", useWebfolder);
 		
 		logger.debug("permissionsCheck ended.");
 		
@@ -2274,23 +2444,52 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-        int tenantID = user.getTenantId();        
+   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+   		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+   		
+   		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+
+   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("companylist", companylist);
+   		
+   		logger.debug("retireUserManage ended");
+   		
+		return "admin/ezOrgan/retireUserManage";
+	}	
+	
+	/**
+	 * 조직도관리 퇴직자 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getRetireUserList.do")	
+	public String getRetireUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("getRetireUserList started");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+        int tenantID = user.getTenantId(); 
+        String strLang = user.getPrimary();
+        String offset = user.getOffset();
         
-        logger.debug("tenantID=" + tenantID);
+        logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
 		
-		String strLang = user.getPrimary();
 		int pPageRow = 20;
-   		int pPage = 1;
+   		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
+   		String searchStartDate = (request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "");
+   		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");
+   		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
+   		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
+   		String searchCompanyID = (request.getParameter("searchCompanyID") != null ? request.getParameter("searchCompanyID") : "");
    		
-   		if (request.getParameter("page") != null) {
-   			pPage = Integer.parseInt(request.getParameter("page"));
-   		}
+   		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
    		
-   		logger.debug("strLang=" + strLang + ",pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		
-   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID);
-   		int totalPage = 0;
-   		
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow, tenantID, searchStartDate, searchEndDate, searchKeycode, searchKeyword, searchCompanyID);
+   		int totalPage = 1;
+
 		if (totalCount > 0) {
 			if (totalCount > pPageRow) {
 				totalPage = totalCount / pPageRow;
@@ -2298,33 +2497,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (totalCount % pPageRow != 0) {
 				    totalPage++;
 				}
-			} else {
-				totalPage = 1;
 			}
-		} else {
-			totalPage = 1;
 		}
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID);
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow, tenantID, offset, searchStartDate, searchEndDate, searchKeycode, searchKeyword, searchCompanyID);
 		
-		model.addAttribute("lang", strLang);
+   		model.addAttribute("lang", strLang);
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
    		model.addAttribute("totalCount", totalCount);
-   		model.addAttribute("pPageRow", pPageRow);
 		
-   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
-   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+   		logger.debug("getRetireUserList ended");
    		
-		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
-		model.addAttribute("dotNetIntegration", dotNetIntegration);
-   		
-   		logger.debug("retireUserManage ended");
-   		
-		return "admin/ezOrgan/retireUserManage";
+		return "json";
 	}	
 	
 	/**
@@ -2344,10 +2532,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
         
         int tenantID = userInfo.getTenantId();        
-        
         String cnList = request.getParameter("cn");
+        String offset = userInfo.getOffset();
         
-        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
+        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList + ",offset=" + offset);
 	    
 		String deptID = request.getParameter("deptID");
 		String[] cn = cnList.split(",");
@@ -2379,7 +2567,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc == 0) { // updateGroupAdd 성공
 					try {
 						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
-						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID);
+						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID, offset);
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.retireUser(mailAddr);
@@ -2711,9 +2899,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				return returnValue;
 			}
 			
-			ezOrganAdminService.syncWithBizmekaTalkAccounts(userInfo.getTenantId());
+			String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrl", userInfo.getTenantId());
+			String queryString = "/ezTalkSyncServer/syncAccounts";
+			String inputParams = "tenantId=" + userInfo.getTenantId();
 			
-			returnValue = "OK";
+			String resultCode = ezEmailUtil.getWebServiceResult(ezTalkServerUrl + queryString, inputParams);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject obj = (JSONObject) parser.parse(resultCode);
+			logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
+			
+			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
+				returnValue = "OK";
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2864,6 +3063,39 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("result=" + result);
 		logger.debug("mailSaveDistributionList ended.");
 		return result;
+	}
+	
+	/**
+	 * 회사 추가,수정시 운영자 전자우편 ID 가져오기
+	 */
+	@RequestMapping(value="/admin/ezOrgan/getComanyConfig.do")
+	@ResponseBody
+	public String getComanyConfig(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model,  HttpServletRequest request) throws Exception{
+		//관리자 권한체크
+		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyID = request.getParameter("cn");
+		
+		logger.debug("getComanyConfig started.");
+		logger.debug("companyID=" + companyID);
+		
+		int tenantID = auth.getTenantId();
+		String operatorMailId = "";
+		
+		try {
+			operatorMailId = ezCommonService.getCompanyConfig(tenantID, companyID, "operatorMailId");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("operatorMailId=" + operatorMailId);
+		logger.debug("getComanyConfig ended.");
+		return operatorMailId;
 	}
 	
 	private boolean createThumbnail(File sourceFile, File targetFile) {

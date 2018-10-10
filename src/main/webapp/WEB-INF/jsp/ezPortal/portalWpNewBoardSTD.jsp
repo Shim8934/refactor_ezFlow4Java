@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<section  class="body_bg1">
       		<article class="portletbox boardbox ">
@@ -16,14 +16,15 @@
    		 	</article>
 		</section>
 
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		 	var pBoardID_NewBoardSTD = "${pBoardID}";
 		    var pBoardType_NewBoardSTD = "${pBoardGubun}";
 		    var BoardCnt_NewBoardSTD = parseInt("${pHeaderCount}");
 		    var strLang1_NewBoardSTD = "<spring:message code='main.t00026' />";
 		    var pNoneActiveX = "${pNoneActiveX}";
+		    var selTab = "";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -38,6 +39,7 @@
 		        GetMyBoardItem();
 		        getTabList();
 		        getBoardList_NewBoardSTD();
+		        selTab = "Board0";
 		    }
 
 		    function getTabList() {
@@ -64,11 +66,11 @@
 		                    else
 		                        BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
 		                    if (i == 0) {
-		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' " + classon + " DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'" + "><span> " + BoardName + " </span></dt>";
+		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' " + classon + " DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'" + " onmouseover='tabover(this)' onmouseout='tabout(this)'><span> " + BoardName + " </span></dt>";
 		                        pBoardType_NewBoardSTD = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 		                    }
 		                    else
-		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'><span> " + BoardName + " </span></dt>";
+		                        listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' DATA1='" + getNodeText(SelectSingleNode(xmlnode[i], "BOARDID")) + "' DATA5='" + getNodeText(SelectSingleNode(xmlnode[i], "GUBUN")) + "'  onmouseover='tabover(this)' onmouseout='tabout(this)'><span> " + BoardName + " </span></dt>";
 		                }
 
 		                listHTML += "</dl>";
@@ -158,7 +160,7 @@
 		                        }
 		                        
 		                        listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
-		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''></dd>";
+		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.jpg' width='86' height='61' alt=''></dd>";
 		                        listHTML += "<dd id='content' class='txt'></dd>";
 		                        listHTML += "</dl>";
 		                        listHTML += "<ul class=\"listtype_txt \">";
@@ -239,8 +241,17 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 
+		            /* 2018-09-19 홍승비 - 포탈 포틀릿에서 포토/썸네일게시물 보기 시 창 크기 수정 */
 		            if (pType == "3" || pType == "4") {
-		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            	 if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+		 	    	    	var height = 789;
+		 	    	    } else {
+		 	    	    	var height = 785;
+		 	    	    }
+		            	pTop = (pheight - 789) / 2;
+				        pLeft = (pwidth - 764) / 2;
+				        
+		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		            } else {
 		                if (CrossYN()) {
 		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
@@ -307,13 +318,14 @@
 	                }
 	                
 	                /* 2018-07-16 홍승비 - 포틀릿 게시판 특수문자 처리 */
-	                DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
+	                //DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
 	                document.getElementById("content").appendChild(DocContentObject);
 		        }
 
 		        function boardChangeTab(obj) {
 		            switch (obj.id) {
 		                case "Board0":
+		                	selTab = "Board0";
 		                    document.getElementById("Board0").className = "on";
 		                    for (var i = 1; i < BoardCnt_NewBoardSTD; i++) {
 		                        document.getElementById("Board" + i).className = "";
@@ -321,7 +333,7 @@
 		                    break;
 
 		                case "Board1":
-
+		                	selTab = "Board1";
 		                    document.getElementById("Board0").className = "";
 		                    document.getElementById("Board1").className = "on";
 		                    if (BoardCnt_NewBoardSTD == 3)
@@ -329,7 +341,7 @@
 		                    break;
 
 		                case "Board2":
-
+		                	selTab = "Board2";
 		                    document.getElementById("Board0").className = "";
 		                    document.getElementById("Board1").className = "";
 		                    document.getElementById("Board2").className = "on";
@@ -359,7 +371,17 @@
 		                getBoardList_NewBoardSTD();
 		            }
 		        }
-
+		        
+		        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+		        function tabover(tabObj) {
+		        	tabObj.setAttribute("class", "on");
+		        }
+		        function tabout(tabObj) {
+		        	if (tabObj.id != selTab) {
+		        		tabObj.setAttribute("class", "");
+		        	}
+		        }
+		        
 		        window_onload_NewBoardSTD();	
 		</script>
 	</head>	

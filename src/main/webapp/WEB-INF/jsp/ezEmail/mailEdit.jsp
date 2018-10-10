@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,7 +6,7 @@
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
@@ -16,17 +15,17 @@
 			.selectbox select { width: 100%; height: auto; /* 높이 초기화 */ line-height: normal; /* line-height 초기화 */ font-family: inherit; /* 폰트 상속 */ border: 0; opacity: 0; /* 숨기기 */ filter:alpha(opacity=0); /* IE8 숨기기 */ -webkit-appearance: none; /* 네이티브 외형 감추기 */ -moz-appearance: none; appearance: none; }
 		</style>
 		</c:if>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
         <c:if test="${isCrossBrowser != true}">
-        <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+        <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>  
 		<script>
 			var g_szAuthor = "";
@@ -59,7 +58,7 @@
 			var g_font = "<spring:message code='ezEmail.t409' />";
 			var g_showdisplay = "${showDisplay}";
 			var g_simplemimeencoding = "7bit";
-			var g_simplemime = "";
+			var g_simplemime = "0";
 			var g_xmldoc = createXMLHttpRequest();
 			var useMultiLangMail = "${useMultiLangMail}";
 			var g_isFormat = false;
@@ -111,7 +110,6 @@
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
 		    var folderPath = "${draftsFolderName}";
-		    var multipartFirstIdx = "${multipartFirstIdx}";
 		    
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -122,7 +120,7 @@
 	                ezUtil.UseUTF8 = true;              
 	            }
 			    
-				if (useMultiLangMail == "1") LoadLanguageConfig();
+				//if (useMultiLangMail == "1") LoadLanguageConfig();
 				
 				if (g_unread == "1")
 				{
@@ -399,9 +397,21 @@
 			    var type = "config";
 			    var receiverData = new Array();
 			    receiverData["window"] = this;
-			    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+			    mail_newreceiverchoose_dialogArguments[0] = receiverData;
+		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
+			    if (CrossYN()) {
+				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=970,height=655,status=no');
+		            try { OpenWin.focus(); } catch (e) { }
+			    } else {
+				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+                }
 		        Simple_Choice();
 		    }
+			
+			function new_Address_Complete() {
+		        Simple_Choice();
+		    }
+			
 		    function Simple_Choice()
 		    {  
 		        document.all("SelectToAddress").innerHTML = "";
@@ -569,7 +579,7 @@
 		        DocumentComplete();
 		        
 		        var g_originalHTML = message.GetEditorContent();
-			    document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+			    document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 		    }
 		    function DocumentComplete() {
 		        if(initFlag == false)
@@ -672,7 +682,7 @@
 			                					+ "&tid=" + tid;
 			                } else {
 			                	// 일반파일 첨부시
-				                aitem = "/ezEmail/downloadAttach.do?" 
+				                aitem = "/ezEmail/downloadAttachInWriter.do?" 
 				                				+ "mode=Attach"
 				                				+ "&folderPath=" + encodeURIComponent(folderPath)
 				                				+ "&filename=" + encodeURIComponent(filename);
@@ -699,19 +709,7 @@
 		    function changeTextOption(bodyType) {
 		    	if (bodyType == "1") {
 		        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-		        		message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-	                    
-		        		if (pUse_Editor == "NAMO") {
-	                    	if (message.GetEditorTextContent().includes("----------------------------------------------------------------------------------------------------")) {
-	                    		document.getElementById("plainTextArea").value = "\r\n\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-	                    	} else {
-	                    		document.getElementById("plainTextArea").value = "\r\n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-	                    	}
-	                        		
-	                    } else {
-	                    	document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");	
-	                    }
-			        	
+		        		document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 		        		document.getElementById("message").style.display = "none";
 						document.getElementById("plainTextArea").style.display = "";
 		        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -921,7 +919,7 @@
 		        </tr>
                 <c:if test="${isCrossBrowser == true}">          
 		        <tr>
-		            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
+		            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
 		                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 		                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" frameborder="0" src="/ezEmail/dragAndDrop.do"></iframe>
 		            </td>

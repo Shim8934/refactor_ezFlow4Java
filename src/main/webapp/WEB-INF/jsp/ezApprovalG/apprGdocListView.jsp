@@ -5,15 +5,14 @@
 <head>
 <title><spring:message code='ezApprovalG.t1001'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/docListView_Cross.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-<%-- <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/Common/Kaoni_ActiveX.js") %>"></script> --%>
+<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docListView_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 <script ID="clientEventHandlersJS" type="text/javascript">
     var OrderCell = "";
     var flag = false;
@@ -111,14 +110,14 @@
         var endcnt = parseInt(EndNum.value);
         if (StartNum.value == "" || EndNum.value == "") {
             alert("<spring:message code='ezApprovalG.t1004'/>");
-        }
-        else if (startcnt > endcnt) {
+        } else if (startcnt < 1) {
+        	alert("<spring:message code='ezApprovalG.garm03'/>")
+        	$('#StartNum').val(1);
+        } else if (startcnt > endcnt) {
             alert("<spring:message code='ezApprovalG.t1005'/>");
-        }
-        else if ((endcnt - startcnt) >= 1000) {
+        } else if ((endcnt - startcnt) >= 1000) {
             alert("<spring:message code='ezApprovalG.t1900'/>");
-        }
-        else {
+        } else {
             document.getElementById("lvtDoclist").innerHTML = "<table style='width:100%;height:100%;'><tr><td style='text-align:center'><img src='/images/email/progress_01.gif' style='vertical-align:middle'><td></tr></table>";
             RecDocLoad();
         }
@@ -294,7 +293,7 @@
 			<input name="StartNum" id="StartNum" type="text" size="4" onkeyup="fn_onlyNumber(this)" onkeydown="return checkForNumber()">
 			~
 			<input name="EndNum" id="EndNum" type="text" size="4" onkeyup="fn_onlyNumber(this)" onkeydown="return checkForNumber()">
-			<a class="imgbtn" style="vertical-align:middle"><span onclick="return PrintLimit_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
+			<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="return PrintLimit_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 			<span id = countInfo class="point"> </span>
 		</td>
 	</tr>

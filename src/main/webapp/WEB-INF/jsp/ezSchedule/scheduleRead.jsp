@@ -7,10 +7,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>        
+	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
 		<title>
 			<spring:message code='ezSchedule.t298'/>
 			<c:if test="${scheduleInfo.scheduleType == 1}"><spring:message code='ezSchedule.t321' /></c:if>
@@ -37,6 +37,7 @@
 			var scheduletype = "<c:out value='${scheduleInfo.scheduleType}' />";
 			var scheduleid = "<c:out value='${_scheduleid}' />";			
 			var datetype = "<c:out value='${scheduleInfo.dateType}' />";			
+			var commpanyid = "<c:out value='${scheduleInfo.companyid}' />";
 			var changekey = "";
 			var pattern = "<c:out value='${_pattern}' />";
 			var pageFrom = "<c:out value='${pageFrom}' />";			
@@ -94,16 +95,32 @@
 	        }
 				
 	        function show_personinfo(userid) {
+	        	var deptID = "";
+	        	
 	            if (userid == "0")
 	                userid = creatorid;
 	            else if (userid == "1")
 	                userid = modifierid;
 	            
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleGetCumDeptID.do",
+					data : { 						
+						userID : userid,
+						companyID : commpanyid
+					},
+					success: function(result){
+						deptID = result;
+					}
+				});
+	        	
 	            var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
-	                window.open("/ezCommon/showPersonInfo.do?email=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            else
-	                window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        }
 	
 			/* function group_info() {
@@ -154,28 +171,30 @@
 	        function repetiton_check() {	
 	        	schedule_delete_confirm_cross_dialogArguments[0] = "";
 	        	schedule_delete_confirm_cross_dialogArguments[1] = deleteSchedule_Complete;
-	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 400, 170);
+	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 500, 170);
 	        }
 	        
-	        function deleteSchedule_Complete(ret) {
+	        function deleteSchedule_Complete(ret) {	        	
 				if (ret == "0") {
 					once_delete_schedule();
 				} else if (ret == "1") {
 					delete_schedule();
-				}
+				} 
 		    }
 	        
 	        function check_schedule() {
 	        	if ("${scheduleInfo.dateType}" == "3") {
 	        		repetiton_check();	        	
 	        	} else {
-	        		delete_schedule();
+	        		if (confirm("<spring:message code='ezSchedule.t209' />")) {
+	        			delete_schedule();
+		        	} 
 	        	}
 	        }
 	
 	        function delete_schedule() {	        	
-	            if (!confirm("<spring:message code='ezSchedule.t209' />"))
-	                return;
+	            //if (!confirm("<spring:message code='ezSchedule.t209' />"))
+	            //    return;
 	
 	            var ResourceDel = "FALSE";;
 	            if (ResourceInfo != "0") {
@@ -208,8 +227,8 @@
 	        }
 	        
 	        function once_delete_schedule() {
-	        	if (!confirm("<spring:message code='ezSchedule.t209' />"))
-	                return;
+	        	//if (!confirm("<spring:message code='ezSchedule.t209' />"))
+	            //    return;
 		            
 	            $.ajax({
 					type : "POST",
@@ -439,8 +458,11 @@
 	                                <div style="overflow-y: auto; height: 30px; padding-top: 2px" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
-	                                	 		<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
-	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
+	                                	 		<!-- 2018-08-08 김보미 -->
+	                                	 		<!--<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>-->
+	                                	 		<c:if test="${primary == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${primary != '1'}"><c:out value="${item.attendantName2}" /></c:if>
                                     			<c:if test="${item.status == '1'}">(<spring:message code='ezSchedule.t251' />)</c:if>
 	                                			<c:if test="${item.status == '2'}">(<spring:message code='ezSchedule.t168' />)</c:if>
 	                                			<c:if test="${item.status == '3'}">(<spring:message code='ezSchedule.t169' />)</c:if>
@@ -476,7 +498,7 @@
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelSubject">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 16px; padding-top: 2px" id="LabelSubject">	                                    
 	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>

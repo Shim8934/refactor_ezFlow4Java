@@ -249,15 +249,12 @@ function AppendFileAttachInfo(ret) {
                         		var filename = $(this).closest('tr').attr('_itemid');
                         		var isBig = $(this).closest('tr').attr('_big');
                         		var msgId = g_url;
-                        		var reqUrl = "/ezEmail/downloadAttach.do?" 
+                        		var reqUrl = "/ezEmail/downloadAttachInWriter.do?" 
 		                            			+ "mode=Attach"
 		                            			+ "&folderPath=" + encodeURIComponent(folderPath)
 		                            			+ "&filename=" + encodeURIComponent(filename);
                         		
                         		$(this).attr('_href', reqUrl);
-                        		
- 		                    	var firstIdx = multipartFirstIdx;
- 		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
 	                    	
  		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
  		                    };
@@ -347,7 +344,7 @@ function AppendFileAttachInfo(ret) {
                             	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
                             	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
                             } else {
-                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                            	objTd2.innerHTML = "<span style='display:block; text-overflow:ellipsis; overflow:hidden;'>" + replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;") + "</span>";
                             	
                             	/* 20180510 김윤진 - 수정창에서 파일클릭시 다운로드링크 적용 */
                             	objTd2.onclick = function () { 
@@ -355,16 +352,13 @@ function AppendFileAttachInfo(ret) {
                             		var filename = $(this).closest('tr').attr('_itemid');
                             		var isBig = $(this).closest('tr').attr('_big');
                             		var msgId = g_url;
-                            		var reqUrl = "/ezEmail/downloadAttach.do?" 
+                            		var reqUrl = "/ezEmail/downloadAttachInWriter.do?" 
 			                            			+ "mode=Attach"
 			                            			+ "&folderPath=" + encodeURIComponent(folderPath)
 			                            			+ "&filename=" + encodeURIComponent(filename);
                             		
                             		$(this).attr('_href', reqUrl);
                             		
-     		                    	var firstIdx = multipartFirstIdx;
-     		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
-		                    	
      		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
      		                    };
      		                    

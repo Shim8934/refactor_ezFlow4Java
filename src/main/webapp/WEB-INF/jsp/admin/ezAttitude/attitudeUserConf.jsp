@@ -6,14 +6,14 @@
 	<head>
 		<title><spring:message code = 'ezAttitude.t4' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code ='ezAttitude.i1' />" type="text/css"/>
-		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAttitude/ListView_list.js')}"></script>
 	    
  	    <style> 
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
@@ -101,8 +101,11 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 155 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
+	        	var height = document.documentElement.clientHeight - 212 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	    	
@@ -355,10 +358,10 @@
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
 					</td>
 					<td style=" width:*;" colspan=2>
-						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.t123' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="editDeptConfList();"><spring:message code='ezAttitude.t225' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.t121' /></span></a>
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
+						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.t123' /></span></a>
+						<a class="imgbtn"><span onclick="editDeptConfList();"><spring:message code='ezAttitude.t225' /></span></a>
 					</td>
 				</tr>
 			</tbody>

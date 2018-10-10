@@ -1,13 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title></title>
-		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezEditor/tfxEditor/js/xfe_main.js"></script>
-		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/tfxEditor/js/xfe_main.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>.xfeToolbar {border-top-left-radius : 0px !important; border-top-right-radius : 0px !important;}</style>
 		<script  type="text/javascript">
 			var type = "${type}";
@@ -30,11 +29,55 @@
 				} catch (e) { return ""; }
 	        }
 			
+			function SetEditorTextContent(data) {
+	            try {
+	            	data = data.replace(/&/gi, "&amp;");
+	            	data = data.replace(/</gi, "&lt;");
+	            	data = data.replace(/>/gi, "&gt;");
+	 	            
+	 	    		var line = data.split("\n");
+	 	            var textData = "";
+	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
+	 	            
+	 	            for (var i = 0; i < line.length; i++) {
+	 	            	if (line[i].trim() === "") {
+	 	            		line[i] = "&nbsp;";
+	 	            	}
+	 	            	
+ 	            		textData += "<p " + defaultFontAndSize + ">" + line[i] + "</p>";
+	 	            }
+	            	
+	 	           xfe.setHtmlValue(textData);
+	            } catch (e) { }
+	        }
+			
 			function GetEditorTextContent() {
 	            try {
-	                return xfe.getTextValue();
+            	    var resultStr = xfe.getBodyValue();
+            	    
+            	    resultStr = resultStr.replace(/\r\n/gi, "");
+            	    resultStr = resultStr.replace(/\n/gi, "");
+            	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+            	    resultStr = resultStr.replace(/<p><br>/gi, "\n");
+            	    resultStr = resultStr.replace(/<p>/gi, "\n");
+            	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
+            	    resultStr = resultStr.replace(/<br>/gi, "\n");
+            	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+            	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
+            	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
+            	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
+            	    resultStr = resultStr.replace(/<.*?>/gi, "");
+            	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
+            	    resultStr = resultStr.replace(/&lt;/gi, "<");
+            	    resultStr = resultStr.replace(/&gt;/gi, ">");
+            	    resultStr = resultStr.replace(/&quot;/gi, "\"");
+            	    resultStr = resultStr.replace(/&#39;/gi, "'");
+            	    resultStr = resultStr.replace(/&amp;/gi, "&");
+            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
+					
+            	    return  resultStr;
 	            } catch (e) { return ""; }
-			}
+	        }
 			
 			function GetBodyValue() {
 	            try {

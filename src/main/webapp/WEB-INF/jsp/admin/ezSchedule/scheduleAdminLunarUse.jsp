@@ -7,12 +7,12 @@
 	<head>
 		<title><spring:message code='ezSchedule.t6000' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">		    
 		    var userlang = "<c:out value='${primary}'/>";
 		    var companylist = "${companyList}";
@@ -35,7 +35,7 @@
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetLunarUse.do",
 		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
+		    			/* COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value */		    			
 		    		},
 		    		success: function(text) {
 		    			if (text == "0") {
@@ -58,11 +58,18 @@
 		    		async : false,
 		    		url : "/admin/ezSchedule/scheduleSaveLunarUse.do",
 		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value,
+		    			/* COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value, */
 		    			LUNARUSE : (document.getElementsByName("USE")[0].checked ? "1" : "2")
 		    		},
 		    		success: function(text) {
+		    			
+		    			if(text='0'){
+		    				alert("<spring:message code='ezAddress.t1' />");
+		    			}else if(text='1'){
+		    				
 		    			alert("<spring:message code='ezSchedule.t4012' />");
+		    			}
+		    			
 		    		}
 		        });
 		    }
@@ -71,14 +78,15 @@
 	<body class="mainbody"> 
 		<h1><spring:message code='ezSchedule.t6000' /></h1>
 		<form id="Form1" method="post">
-			<div id="mainmenu">
-				<span><b><spring:message code='ezResource.t28' /> : </b></span>
+			<!-- 2018-07-26 자시회사만 나올 수 있도록 수정 -->
+			<%-- <div id="mainmenu">
+				<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
 	            <select id="ListCompany" onchange="schedule_get_lunaruse()">
 	            	<c:forEach var="item" items="${list}">
            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
           				</c:forEach>
 	            </select>
-			</div>
+			</div> --%>
 			<br />
 			<table class="content" style="width: 450px;">
 			    <tr>
@@ -93,9 +101,9 @@
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t4' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
-		    <script type="text/javascript">
+		  <!--   <script type="text/javascript">
 		    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script>
+			</script> -->
 		</form>
 	</body>
 </html>

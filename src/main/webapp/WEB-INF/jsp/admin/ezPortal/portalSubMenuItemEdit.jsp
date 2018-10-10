@@ -7,10 +7,10 @@
 	<head>
 		<title><spring:message code='ezPortal.t218'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript">
 			var imageWidth = "${imgWidth}";
 			var imageHeight = "${imgHeight}";
@@ -543,7 +543,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeNormalImage()" style="width: 20px">
+											<span onclick="removeNormalImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -575,7 +575,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeOverImage()" style="width: 20px">
+											<span onclick="removeOverImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -627,7 +627,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeNormalImage()" style="width: 20px">
+											<span onclick="removeNormalImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -653,7 +653,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeOverImage()" style="width: 20px">
+											<span onclick="removeOverImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -788,7 +788,7 @@
     				<td align="center">
     					<div class="btnpositionJsp">
 							<a class="imgbtn">
-								<span onclick="DeleteRight('${item.accessID}')" style="width: 20px">
+								<span onclick="DeleteRight('${item.accessID}')">
 									<spring:message code='ezPortal.t67'/>
 								</span>
 							</a>

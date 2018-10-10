@@ -7,12 +7,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t073" /></title>
-		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/ladderList.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladderPreList.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezLadder/ladderList.js')}"></script>
 		
 		<script type="text/javascript">
 			var currPage = <c:out value="${currPage}" />;
@@ -289,37 +289,40 @@
 				$("#searchInput").val("");
 			}
 			
+			function window_close() {
+	             window.returnValue = 0;
+	             window.close();
+	        } 
 		</script>
 </head>
 	<body class="popup">
 		<h1 id="h1Title"><spring:message code="ezLadder.t073" /></h1>
 		<div id="close">
-            <ul>
-                <li><span value="<spring:message code='ezEmail.t39' />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName"></span></li>
-            </ul>
-        </div>
-		<!-- 다시 -->
-		<div class="ladderPreList_wrap">
-			<div class="ladderPreList_contents">
-				<div class="ladderPreList_left">
-					<div class="search_title">
-						<input type="text" id="searchInput" class="input_text" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
-						<input id="searchOption" value="title" style="display: none;">
-						<input type="image" src="/images/ezLadder/search_btn.gif" alt="" class="search_btn" onclick="searchLadder();" />
+		    <ul>
+		    	<li><span onclick="window_close()"></span></li>
+		    </ul>
+	    </div>
+			<div class="ladderPreList_wrap">
+				<div class="ladderPreList_contents">
+					<div class="ladderPreList_left">
+						<div class="search_title">
+							<input type="text" id="searchInput" class="input_text" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
+							<input id="searchOption" value="title" style="display: none;">
+							<input type="image" src="/images/ezLadder/search_btn.gif" alt="" class="search_btn" onclick="searchLadder();" />
+						</div>
+						<ul id="columnsbnk" class="game_list content">
+							<c:forEach items="${list}" var="prelist" varStatus="status">
+								<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
+							</c:forEach>
+						</ul>
+						<div id="tblPageRayer" style="margin-top: 10px;"></div>
 					</div>
-					<ul id="columnsbnk" class="game_list content">
-						<c:forEach items="${list}" var="prelist" varStatus="status">
-							<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
-						</c:forEach>
-					</ul>
-					<div id="tblPageRayer" style="margin-top: 10px;"></div>
-				</div>
-				<div class="ladderPreList_right" style="position: relative;">
-					<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000; background: white; opacity: 0;"></div>
-					<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;" onload="onMyFrameLoad(this)"></iframe>
+					<div class="ladderPreList_right" style="position: relative;">
+						<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000; background: white; opacity: 0;"></div>
+						<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;" onload="onMyFrameLoad(this)"></iframe>
+					</div>
 				</div>
 			</div>
-		</div>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"><span><spring:message code='ezEmail.t38' /></span></a>
 			<%-- <input type="submit" value="<spring:message code='ezEmail.t38' />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName"> --%>

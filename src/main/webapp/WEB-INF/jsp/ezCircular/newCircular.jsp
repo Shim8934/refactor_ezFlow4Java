@@ -6,17 +6,17 @@
 	<head>
 		<title><spring:message code='ezCircular.t2' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-<%-- 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script> --%>
-		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+<%-- 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script> --%>
+		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/PreviewItem.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circular.js')}"></script>
 		
 		<style>
 			#layer_Viewpopup { 
@@ -631,7 +631,7 @@
 	    <h1><spring:message code='ezCircular.t2'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<!-- 2018-07-12 김민성 - 회람판 검색 select box로 수정 -->
-	       		<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #cbcbcb; vertical-align: middle; ">
+	       		<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #cbcbcb;">
 	        		<option value="subject"><spring:message code='ezCircular.t32'/></option>
 	        		<option value="writer"><spring:message code='ezCircular.t166'/></option>
 	        	</select>

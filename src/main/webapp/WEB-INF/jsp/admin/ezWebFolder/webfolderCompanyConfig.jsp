@@ -5,10 +5,10 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var currPersonalLimit = "";
 			var currUploadLimit   = "";
@@ -36,27 +36,34 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
+						var code = data.code;
 						
-						if (reason) {
-							alert(reason);
-							return;
+						switch(code) {
+							case 0: 
+								var result = data.config;
+								
+								if (!result) {
+									currPersonalLimit = "";
+									currUploadLimit   = "";
+								}
+								else {
+									currPersonalLimit = result["totalLimit"];
+									currUploadLimit   = result["uploadLimit"];
+								}
+								
+								document.getElementById("uploadLimit").value   = currUploadLimit;
+								document.getElementById("personalLimit").value = currPersonalLimit;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result = data.webfolderConfig;
-						
-						if (!result) {
-							currPersonalLimit = "";
-							currUploadLimit   = "";
-						}
-						else {
-							currPersonalLimit = result["totalLimit"];
-							currUploadLimit   = result["uploadLimit"];
-						}
-						
-						document.getElementById("uploadLimit").value   = currUploadLimit;
-						document.getElementById("personalLimit").value = currPersonalLimit;
-						
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -80,12 +87,7 @@
 					document.getElementById("personalLimit").focus();
 					return;
 				}
-				
-				if (parseInt(uploadLimitVal) > parseInt(personalLimitVal)) {
-					alert("<spring:message code='ezWebFolder.t185'/>");
-					return;
-				}
-				
+
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/saveConfig.do",
@@ -97,14 +99,22 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-						}
-						else {
-							alert("<spring:message code='ezWebFolder.t182'/>");
-							currPersonalLimit = personalLimitVal;
-							currUploadLimit   = uploadLimitVal;
+						var code = data.code;
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t182'/>");
+								currPersonalLimit = personalLimitVal;
+								currUploadLimit   = uploadLimitVal;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
 					},
 					error : function(error) {
@@ -159,9 +169,9 @@
 					</tr>
 				</table>
 			</div>
-			<div style="width:400px;text-align: center">
-				<a class="imgbtn"><span onclick="save();" ><spring:message code='ezWebFolder.t133'/></span></a>
-				<a class="imgbtn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
+			<div class="wfcompstdiv">
+				<a class="webfolderBttn"><span onclick="save();" ><spring:message code='ezWebFolder.t133'/></span></a>
+				<a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>	
 	</body>

@@ -804,6 +804,21 @@ function newSchedule_onclick(e) {
         selsd = GetAttribute(srcEl,"dispDate");
         seled = GetAttribute(srcEl,"dispDate");
     }
+    //2018-09-13 천성준 - #13590
+    if (selsd == "" && seled == "") {
+    	var date = new Date();
+    	var year = date.getFullYear();	//2018
+    	var month = date.getMonth()+1;	//0~11
+    	var day = date.getDate(); 		//1~31
+    	
+    	if (month < 10)
+    		month = "0" + month;
+    	if (day < 10)
+    		day = "0" + day;
+    	
+    	selsd = year + "-" + month + "-" + day;
+    	seled = year + "-" + month + "-" + day;
+    }
     
     if (CrossYN() || pNoneActiveX == "YES") {
         var feature = GetOpenPosition(820, 700);
@@ -1565,18 +1580,35 @@ function hideTooltip() {
     document.getElementById('tooltip').style.visibility = 'hidden';
 }//자원 클릭이벤트시 툴팁
 
-
+//2018-08-07 김민성 - 자원관리 tooltip 윈도우 사이즈 별 위치 수정
 function getMouseXLocation(e) {
     if (e)
         var E = e;
     else
         var E = window.event;
 
-    if (E.clientX > 1000) {
-        var tTip = document.getElementById("tooltip");
-        var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
-    } else {
-    	var locationX = E.clientX + document.body.scrollLeft + 20;
+    var tTip = document.getElementById("tooltip");
+    if (navigator.userAgent.indexOf('Firefox') != -1) {
+        if (E.clientX > 1000) {
+            var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+        } else {
+            if (E.clientX > 300) {
+                var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+            }
+            else
+                var locationX = E.clientX + document.documentElement.scrollLeft;
+        }
+    }
+    else {
+        if (E.clientX > 1000) {
+            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+        } else {
+            if (E.clientX > 300) {
+                var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+            }
+            else
+                var locationX = E.clientX + document.body.scrollLeft;
+        }
     }
 
     return locationX
@@ -1592,35 +1624,44 @@ function getMouseYLocation(e) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
-        } else {
+            locationY -= 12;
+        }
+        else {
             if (document.documentElement.scrollTop > 0) {
-                //var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+                
                 var locationY
-                //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면 - 메디톡스 수정
+                
                 if (tTip.clientHeight > E.clientY) {
                     locationY = E.clientY + document.documentElement.scrollTop;
                 } else {
                     locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
                 }
-            } else {
+            }
+            else {
                 var locationY = E.clientY + document.documentElement.scrollTop;
             }
+            locationY += 12;
         }
-    } else {
+    }
+    else {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
-        } else {
+            locationY -= 12;
+        }
+        else {
             if (document.body.scrollTop > 0) {
                 var locationY
-                //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면 - 메디톡스 수정
+                
                 if (tTip.clientHeight > E.clientY) {
                     locationY = E.clientY + document.body.scrollTop;
                 } else {
                     locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
                 }
-            } else {
+            }
+            else {
                 var locationY = E.clientY + document.body.scrollTop;
             }
+            locationY += 12;
         }
     }
 

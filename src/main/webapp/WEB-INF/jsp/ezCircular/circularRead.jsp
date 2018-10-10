@@ -7,16 +7,16 @@
 	<head>
 		<title><spring:message code='ezCircular.t111'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/composeappt_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circularComment.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circular.js')}"></script>
 		
 		<style>
 			#btnCircularConfirm {
@@ -37,6 +37,10 @@
 				cursor: pointer;
 			}
 			
+			#divCross p {
+				margin-top: 0px; margin-bottom: 0px;
+			}
+			
 		</style>
 		
 		<script type="text/javascript" >
@@ -47,9 +51,25 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 			var type = "${type}";
+			var wcompanyID = "${result.companyID}"
+			var ucompanyID = "${userInfo.companyID}";
 			var attachList = "";
+			var deptID = "${deptID}";
+			var company = "${company}"
 
 			$(document).ready(function() {
+				if(circularID == "") {
+					alert("<spring:message code='ezCircular.kmsc05'/>");
+					window.close();
+					return;
+				}
+				
+				if(ucompanyID != wcompanyID) {
+					alert("<spring:message code='ezCircular.kmsc03' /> " + company +"<spring:message code='ezCircular.kmsc04' />");
+					window.close();
+					return;
+				}
+				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -69,6 +89,7 @@
 				titleSpace();
 				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
 				titleHeight();
+				
 	        });
 			
 			window.onresize = function () {
@@ -448,7 +469,7 @@
 			function OpenUserInfo() {
 	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 438);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID + "&dept=" + deptID, "", feature);
 	        }
 			
 			function CircularClose_onclick() {
@@ -642,7 +663,7 @@
 		            		</td>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
 		            		<td>
-		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
+		            			<div id="endDate" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 		        		</tr>
 	        		</table>
@@ -799,7 +820,7 @@
 		            		</td>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
 		            		<td>
-		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
+		            			<div id="endDate" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 						</tr>
 					</table>

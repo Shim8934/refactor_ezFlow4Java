@@ -6,19 +6,19 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1310' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
 			#div_AprLine .mainlist tr th {
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/FormMain_Cross.js')}"></script>
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var OrderCell = "";
@@ -566,16 +566,18 @@
 	                    var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
 	                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글양식 읽기
-	                    var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
-	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
-	                } else {
-	                    if (CrossYN()) {
-	                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
-	                        openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=";
+	                	if (isIE()) {
+		                    var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+		                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=";
 	                    } else {
-	                        var openLocation = "/myoffice/ezApprovalG/AprDocView.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
-	                        openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
+	                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                    	alert(pAlertContent);
+	                        
+	                        return;
 	                    }
+	                } else {
+                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
+                        openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=";
 	                }
 	                openwindow(openLocation, "", 880, 550);
 	            }
@@ -691,12 +693,38 @@
 
                             if (AttachUrl != "null") {
                                 var tempINGFlag = "";
-                                
-                                if (GetAttribute(tr,"data4") == "file") {
+                                /* if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
                                 } else {
                                     window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
-                                }
+                                } */
+                                
+                              	//2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
+								try {
+									if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
+	                                	var tempStr = AttachUrlA1.split("/");
+	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+	                                    var openLocation;
+	                                    
+	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    	if (isIE()) {
+	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                                    	} else {
+	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                		                	alert(pAlertContent);
+	                		                	return;
+	                                    	}
+	                                    } else {
+	                                    	openLocation = "/ezApprovalG/contDocView.do";
+	                                    }
+	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
+	                                    openwindow(openLocation, "", 880, 570);
+									} else {
+	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+	                                }
+								} catch(e) {
+									console.log(e);
+								}
                             }
                         }
 			    	}
@@ -860,6 +888,9 @@
 				
 					var param = "?docID=" + docID + "&url=" + encodeURIComponent(pURL) + "&companyID=" + pCompanyID;
 					GetOpenWindow(url + param, "", 825, 850, "no");
+				} else {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 				}
 		    }		    
 		</script>
@@ -888,12 +919,7 @@
     	</h1>
     	<div id="mainmenu">
     		<c:if test="${type == 'admin' }">
-            	<b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-		        </select><br /><br />
+    			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
         	<ul>        		
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
@@ -931,7 +957,8 @@
 			<div class="portlet_tabpart01_top" id="tab1">
 			    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
 			    <c:if test="${approvalFlag == 'S'}">
-			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t999932' /></span></p>
+			    	<%-- <p><span id="tagsub2"><spring:message code = 'ezApprovalG.t999932' /></span></p> --%>
+			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t950' /></span></p>
 			    </c:if>
 			    <c:if test="${approvalFlag != 'S'}">
 			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t950' /></span></p>

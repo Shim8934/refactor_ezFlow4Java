@@ -6,8 +6,8 @@
     <head>
 	    <title>address_list</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 	    <style>
 	    	.emptyDiv {
 	    		height: 140px;
@@ -17,12 +17,12 @@
 	    		font-weight: bold;
 	    	}
 	    </style>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/Address_List.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Address_List.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
 	    <script type="text/javascript">
 	        var pFolderID = "${pFolderId}";
 	        var pFolderType = "${pFolderType}";
@@ -70,6 +70,16 @@
 	            	document.getElementById("address_wordmenu_japan").style.display = "none";
 	            }
 	            
+	            //일본어일 경우 초성 검색 숨김 (한자까지 지원할 수 없어서)
+	            if (uLang == "3") {
+	            	document.getElementById("address_wordmenu_div").style.display = "none";
+	            	document.getElementById("address_wordmenu").style.borderBottom = "0px";
+	            	document.getElementById("address_wordmenu").style.minHeight = "0px";
+	            	document.getElementById("address_wordmenu").style.margin = "0px";
+	            	document.getElementById("address_wordmenu").style.padding = "7px";	            	
+	            	document.getElementById("contentlist").style.marginBottom = "48px";
+	            }
+	            
 	            if (CrossYN() || (pNoneActiveX == "YES")) {
 	                document.getElementById("importaddress").style.display = "none";
 	                document.getElementById("exportaddress").style.display = "none";
@@ -85,6 +95,32 @@
 	            Window_onresize();
 	            Get_AddressList();
 	
+	        }
+	        
+	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+	        window.onunload = function () {
+	        	if (parent.frames["left"]) {
+	        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+	        			$(parent.frames["left"].document.body).css("overflow", "");
+	        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	} else if (parent.frames["attitude_menu"]) {
+	        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+	        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	}
+	        	      
+	        	if (parent.parent.frames["left"]) {
+	        		if (parent.parent.frames["board_menu"]) {  		  
+	        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+	        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+	        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+	        		}
+	        	}
 	        }
 	        
 	        $(window).on("resize", function(){
@@ -531,7 +567,9 @@
 	            		return;
 	            	}
 	            }
+	            /* 2018-09-03 홍승비 - 간단추가 완료 이후 추가한 정보 td에서 제거 */
 	            else {
+	            	quick_add_close();
 	            	$.modal.close();
 	            	Get_AddressList();
 	            }	            
@@ -786,125 +824,129 @@
 				</li>
 			</ul>
 		</div>
-		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:0px;">
-			<c:choose>
-				<c:when test="${userInfo.lang eq '1'}">
-					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
-				</c:when>
-				<c:when test="${userInfo.lang eq '3'}">
-					<li style="width:68px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
-				</c:when>
-				<c:otherwise>
-					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
-				</c:otherwise>
-			</c:choose>
-			<span id="address_wordmenu_korea">
-				<li><span onClick="pFilterDB='INDEX_KO,ㄱ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㄴ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㄷ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄷ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㄹ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄹ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅁ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅁ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅂ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅂ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅅ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅅ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅇ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅇ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅈ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅈ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅊ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅊ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅋ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅋ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅌ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅌ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅍ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅍ</span></li>
-				<li><span onClick="pFilterDB='INDEX_KO,ㅎ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅎ</span></li>
-			</span>
-			<span id="address_wordmenu_japan">
-				<li><span onClick="pFilterDB='INDEX_JA,あ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">あ</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,か';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">か</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,さ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">さ</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,た';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">た</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,な';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">な</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,は';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">は</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,ま';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ま</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,や';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">や</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,ら';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ら</span></li>
-				<li><span onClick="pFilterDB='INDEX_JA,わ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">わ</span></li>
-			</span>
-			<li><span onClick="pFilterDB='INDEX_EN,A';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">A</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,B';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">B</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,C';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">C</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,D';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">D</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,E';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">E</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,F';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">F</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,G';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">G</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,H';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">H</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,I';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">I</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,J';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">J</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,K';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">K</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,L';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">L</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,M';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">M</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,N';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">N</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,O';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">O</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,P';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">P</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,Q';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Q</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,R';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">R</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,S';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">S</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,T';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">T</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,U';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">U</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,V';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">V</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,W';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">W</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,X';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">X</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,Y';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Y</span></li>
-			<li><span onClick="pFilterDB='INDEX_EN,Z';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
-			<c:choose>
-				<c:when test="${userInfo.lang eq '1'}">
-					<li style="width:40px"><span onClick="pFilterDB='INDEX_KO,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
-						<spring:message code='ezAddress.t259' /></span>
-					</li>
-				</c:when>
-				<c:when test="${userInfo.lang eq '3'}">
-					<li style="width:40px"><span onClick="pFilterDB='INDEX_JA,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
-						<spring:message code='ezAddress.t259' /></span>
-					</li>
-				</c:when>
-				<c:otherwise>
-					<li style="width:40px"><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
-						<spring:message code='ezAddress.t259' /></span>
-					</li>
-				</c:otherwise>
-			</c:choose>
+		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:15px;">
+			<div id="address_wordmenu_div">
+				<c:choose>
+					<c:when test="${userInfo.lang eq '1'}">
+						<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+					</c:when>
+					<c:when test="${userInfo.lang eq '3'}">
+						<li style="width:68px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+					</c:when>
+					<c:otherwise>
+						<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+					</c:otherwise>
+				</c:choose>
+				<span id="address_wordmenu_korea">
+					<li><span onClick="pFilterDB='INDEX_KO,ㄱ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㄴ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㄷ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄷ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㄹ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄹ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅁ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅁ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅂ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅂ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅅ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅅ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅇ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅇ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅈ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅈ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅊ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅊ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅋ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅋ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅌ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅌ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅍ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅍ</span></li>
+					<li><span onClick="pFilterDB='INDEX_KO,ㅎ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅎ</span></li>
+				</span>
+				<span id="address_wordmenu_japan">
+					<li><span onClick="pFilterDB='INDEX_JA,あ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">あ</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,か';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">か</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,さ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">さ</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,た';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">た</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,な';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">な</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,は';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">は</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,ま';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ま</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,や';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">や</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,ら';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ら</span></li>
+					<li><span onClick="pFilterDB='INDEX_JA,わ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">わ</span></li>
+				</span>
+				<li><span onClick="pFilterDB='INDEX_EN,A';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">A</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,B';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">B</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,C';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">C</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,D';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">D</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,E';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">E</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,F';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">F</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,G';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">G</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,H';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">H</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,I';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">I</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,J';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">J</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,K';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">K</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,L';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">L</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,M';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">M</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,N';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">N</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,O';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">O</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,P';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">P</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,Q';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Q</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,R';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">R</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,S';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">S</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,T';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">T</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,U';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">U</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,V';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">V</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,W';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">W</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,X';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">X</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,Y';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Y</span></li>
+				<li><span onClick="pFilterDB='INDEX_EN,Z';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
+				<c:choose>
+					<c:when test="${userInfo.lang eq '1'}">
+						<li style="width:40px"><span onClick="pFilterDB='INDEX_KO,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+							<spring:message code='ezAddress.t259' /></span>
+						</li>
+					</c:when>
+					<c:when test="${userInfo.lang eq '3'}">
+						<li style="width:40px"><span onClick="pFilterDB='INDEX_JA,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+							<spring:message code='ezAddress.t259' /></span>
+						</li>
+					</c:when>
+					<c:otherwise>
+						<li style="width:40px"><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+							<spring:message code='ezAddress.t259' /></span>
+						</li>
+					</c:otherwise>
+				</c:choose>
 			
 			<%--개인주소록, 부서주소록 소팅 기능임 삭제 하지 마시오--%>
 			<%--
 			<li><span onClick="pFilter=&quot;KIND,IPM.Contact&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Person</span></li>
 			<li><span onClick="pFilter=&quot;KIND,IPM.DistList&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Group</span></li>
 			--%>
+			</div>
 		</ul>
-		<br />
-		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
-			<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
-			    <tr>
-					<th style="cursor:pointer;text-align:center;width:20px;">
-				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
-					</th>
-					<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
-					<th id="CompanyName" style="padding-left:5px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
-					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
-					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
-					<th id="width2" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_MOBILE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
-					<th style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_EMAIL" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
-					<th id="FolderType" style="CURSOR:pointer;width:10%;white-space:nowrap;display:none;padding:0px" _OrderOption="0" _OrderName="S_TYPE" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
-				</tr>
-			</table>
-			<div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
+		<div style="vertical-align:top;border:0px solid red; white-space:nowrap; overflow-x:auto; overflow-y:hidden;" id="list_Layer">
+			<div style="min-width:700px;">
+				<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
+				    <tr>
+						<th style="cursor:pointer;text-align:center;width:20px;">
+					    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
+						</th>
+						<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
+						<th id="CompanyName" style="padding-left:5px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
+						<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
+						<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
+						<th id="width2" style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_MOBILE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
+						<th style="CURSOR:pointer;width:20%;white-space:nowrap;padding:0px" _OrderOption="0" _OrderName="S_EMAIL" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
+						<th id="FolderType" style="CURSOR:pointer;width:10%;white-space:nowrap;display:none;padding:0px" _OrderOption="0" _OrderName="S_TYPE" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
+					</tr>
+				</table>
+			</div>
+			<div id="contentlist" name="contentlist" style="min-width:700px;border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
 				<table class="mainlist" style="width: 100%; table-layout: fixed;" id="MailList" ></table>
 				<div style="height:100%;display:none;" id="MailListCard" ></div>
 			</div>
-			<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>
+			
 		</div>
+		<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>
 		<div style="width:100%;height:100%;position:absolute;top:0px;left:0px;display:none;z-index:5000;" id="mailPanel" onclick="ShowQuickAddres();" >&nbsp;</div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>		
 		<div id="addpopup" class="popupwrap1" style="display:none;margin-bottom:60px;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezAddress.t2003' /></div>
+				<div class="title"><spring:message code='ezAddress.t2002' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="quick_add_close()"></span></a></li>

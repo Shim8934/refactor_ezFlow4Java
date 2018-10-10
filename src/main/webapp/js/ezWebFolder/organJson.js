@@ -106,9 +106,24 @@ function getData(deptId, companyId) {
 		dataType: "JSON",
 		async: true,
 		success : function(data) {
-			var result = data.deptTree;
-			var dept   = data.currentDept;
-			renderData(result, dept);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.deptTree;
+					var dept   = data.currentDept;
+					renderData(result, dept);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strErrMsg + error);
@@ -163,6 +178,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	spanDeptName.setAttribute("class", "spanName");
 	spanDeptName.setAttribute("name", list["deptId"]);
 	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.setAttribute("title", list["deptName"]);
 	spanDeptName.onclick    = function() {getSelected(this);};
 	spanDeptName.ondblclick = function() {addDept(this)};
 	
@@ -233,9 +249,24 @@ function getDetailTree(obj) {
 			dataType: "JSON",
 			async: true,
 			success: function(data) {
-				var result = data.subTree;
-				displaySubTree(result, obj.parentElement);
-				arrSubFolder.push(uniqueId);
+				var code = data.code;
+				
+				switch(code) {
+					case 0: 
+						var result = data.subTree;
+						displaySubTree(result, obj.parentElement);
+						arrSubFolder.push(uniqueId);
+						break;
+					case 1:
+						alert(resultErr1);
+						break;
+					case 2:
+						alert(resultErr2);
+						break;
+					case 3:
+						alert(resultErr3);
+						break;
+				}
 			},
 			error: function (xhr, status, e){
 				alert(strErrMsg);
@@ -277,7 +308,6 @@ function getSelected(obj) {
 	obj.style.color      = "#004a87";
 	obj.style.fontWeight = "bold";
 	
-	
 	$.ajax({
 		type: "POST",
 		url: "/ezWebFolder/getDeptMembers.do",
@@ -287,8 +317,23 @@ function getSelected(obj) {
 		dataType: "JSON",
 		async: true,
 		success : function(data) {
-			var result = data.listMembers;
-			processUsersList(result);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.listMembers;
+					processUsersList(result);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strErrMsg + error);
@@ -630,9 +675,24 @@ function getSelectedDeptsForChief() {
 		method : 'POST',
 		dataType : 'JSON',
 		data : {},
-		success : function(data, textStatus, jqXHR) {
-			var result = data.selectedDepts;
-			renderSelectedDepts(result);
+		success : function(data) {
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result = data.selectedDepts;
+					renderSelectedDepts(result);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert('Error : ' + jqXHR.status + ", " + textStatus);
@@ -648,10 +708,25 @@ function getDataForChief() {
 		dataType: "JSON",
 		async: false,
 		success : function(data) {
-			var result        = data.deptTree;
-			userDept          = data.userDept;
-			var selectedDepts = data.selectedDepts;
-			renderDepts(result, selectedDepts);
+			var code = data.code;
+			
+			switch(code) {
+				case 0: 
+					var result        = data.deptTree;
+					userDept          = data.userDept;
+					var selectedDepts = data.selectedDepts;
+					renderDepts(result, selectedDepts);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			alert(strErrMsg + error);
@@ -700,6 +775,7 @@ function showSelectedDept(mainElmt, deptName, deptId) {
 	imgElmt.setAttribute("class", "webFolderImg2");
 	imgElmt.src = "/images/OrganTree_cross/ic-open.gif";
 	spanElmt.setAttribute("class", "spanName2");
+	spanElmt.setAttribute("title", deptName);
 	spanElmt.textContent = deptName;
 	divElmt.setAttribute("class", "webFolderDiv");
 	divElmt.setAttribute("nodeId", deptId);
@@ -758,6 +834,7 @@ function displaySubDepts(divTree, divElmt, list) {
 	spanDeptName.setAttribute("class", "spanName");
 	spanDeptName.setAttribute("name", list["deptId"]);
 	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.setAttribute("title", list["deptName"]);
 	spanDeptName.onclick    = function() {getSelectedDept(this);};
 	spanDeptName.ondblclick = function() {addSelectedDept(this)};
 	
@@ -828,9 +905,24 @@ function getDetailTree2(obj) {
 			dataType: "JSON",
 			async: true,
 			success: function(data) {
-				var result = data.subTree;
-				displaySubTree2(result, obj.parentElement);
-				arrSubFolder.push(uniqueId);
+				var code = data.code;
+				
+				switch(code) {
+					case 0: 
+						var result = data.subTree;
+						displaySubTree2(result, obj.parentElement);
+						arrSubFolder.push(uniqueId);
+						break;
+					case 1:
+						alert(resultErr1);
+						break;
+					case 2:
+						alert(resultErr2);
+						break;
+					case 3:
+						alert(resultErr3);
+						break;
+				}
 			},
 			error: function (xhr, status, e){
 				alert(strErrMsg);

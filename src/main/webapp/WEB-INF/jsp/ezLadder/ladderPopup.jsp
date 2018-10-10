@@ -9,11 +9,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t009" /></title>
 		
-		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
-		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/ladder.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladder_CSS.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezLadder/ladder.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var retVal;
@@ -52,7 +52,7 @@
 					var retValLen = retVal["userId"].length;
 					
 					for(var i = 0; i < retValLen; i++) {
-						html += '<span _userId="' + retVal["userId"][i] + '" class="spanWrap spanDefault" onmouseenter="mouseHover(this, event);" onmouseleave="mouseHover(this, event);" onclick="userClick(this, event);"><span class="o_name">' + retVal["userName"][i] + '</span><span class="o_dept">' + retVal["deptName"][i] + '</span><span class="o_id">' + retVal["userId"][i] + '</span></span>';
+						html += '<span _userId="' + retVal["userId"][i] + '"_deptName="' + retVal["deptName"][i] + '" class="spanWrap spanDefault" onmouseenter="mouseHover(this, event);" onmouseleave="mouseHover(this, event);" onclick="userClick(this, event);"><span class="o_name">' + retVal["userName"][i] + '</span><span class="o_dept">' + retVal["deptName"][i] + '</span><span class="o_id">' + retVal["userId"][i] + '</span></span>';
 					}
 					$userInfo.append(html);
 				}
@@ -97,16 +97,19 @@
 			});
 			
 			function addAttendant(flag) {
+				var tempRetunVal =  {"userId": [], "userName": [],  "deptName": [], "description": [], "description2": []};
 				if(typeof retFunc == "function") {
 					if(poptype == "overlapOnlyName") {
 						var $active = $(".spanMouseActiveClick");
 						
 						$active.each(function(i, obj) {
-							var removeIdx = retVal["userId"].indexOf(obj.getAttribute("_userId"));
+							var removeIdx = retVal["deptName"].indexOf(obj.getAttribute("_deptName"));
 							
 							retVal["userId"].splice(removeIdx, 1);
 							retVal["userName"].splice(removeIdx, 1);
 							retVal["deptName"].splice(removeIdx, 1);
+							retVal["description"].splice(removeIdx, 1);
+							retVal["description2"].splice(removeIdx, 1);
 						});
 					}
 					

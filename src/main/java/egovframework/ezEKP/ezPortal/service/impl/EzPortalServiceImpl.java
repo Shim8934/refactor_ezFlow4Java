@@ -57,6 +57,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
@@ -234,7 +235,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("temp", temp);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
-
+logger.debug("map.toString()" + map.toString());
 		logger.debug("getPortalParentUID ended");
 		
 		return ezPortalDAO.getPortalParentUID(map);
@@ -617,7 +618,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getPortalConfigItem(String pItemName, String pPageID, int tenantID) throws Exception {
+	public String getPortalConfigItem(String pItemName, String pPageID, int tenantID, String companyID) throws Exception {
 		logger.debug("getPortalConfigItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -625,6 +626,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPAGEID", pPageID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 
 		logger.debug("getPortalConfigItem ended");
 		
@@ -882,11 +884,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
-		
+
 		String temp = ezPortalDAO.getPorletProperties_S(map);
 
 		logger.debug("getPorletProperties ended");
-		
+
 		if (temp != null && temp.equals("1")) {
 			return ezPortalDAO.getPorletProperties(map);
 		} else {
@@ -2095,6 +2097,17 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("getMainMenuHTML started");
 
 		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+
+		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		if (use_journal == null || use_journal.equals("")) {
+			use_journal = "YES";
+		}
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -2125,6 +2138,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
+			
+			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
+				continue;
+			}
+			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
 			
 			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
 			sb.append("<li ");
@@ -2166,7 +2187,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		logger.debug("getSubMenuHTML started");
-
+System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
@@ -2349,11 +2370,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		if (pMode.equals("view")) {
 			if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId())) {
-				return "<table width=100% height=100% border=0><tr><td align=center>페이지를 볼 권한이 없습니다.</td></tr></table>";
+				return "<table width=100% height=100% border=0><tr><td align=center>" + egovMessageSource.getMessage("ezPortal.t286", userInfo.getLocale()) + "</td></tr></table>";
 			}
 			
 			String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId());
-			
+
 			if (cacheValue != null && !cacheValue.trim().equals("")) {
 				return cacheValue;
 			}
@@ -2398,10 +2419,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return defaultValue;
 		}
 		
-		pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
-		pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
-		pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
-		pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+		String companyID = userInfo.getCompanyID();
+		
+		pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId(), companyID);
+		pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId(), companyID);
+		pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId(), companyID);
+		pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId(), companyID);
 		
 		logger.debug("pageWidth="+pageWidth + " , pageHeight=" + pageHeight + " , pageColumnLength= " + pageColumnLength + " , pageColumnSplit=" + pageColumnSplit);
 		
@@ -2496,7 +2519,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         String RootParentUID = getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
         String boarderValue = "0";
         int i= 0;
-        
+
         if (pPortalPageID.equals(RootParentUID)) {
         	userInfo.setRootPage(true);
         }
@@ -2526,10 +2549,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         	return defaultValue;
         }
         
-        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
-        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
-        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
-        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
+        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
+        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
+        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId(), userInfo.getCompanyID());
         
         if (pMode.equals("edit")) {
         	sb.append("<table id=\"main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"\" border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
@@ -2723,8 +2746,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
 			String portletMandatory = result.get(i).getMandatory();
 			String portletMoveURL = "";
-			
+
 			if (pMode.equals("edit")) {
+				logger.debug("in the edit");
 				if (portletHeight != 0) {
 					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");
 				} else {
@@ -3071,45 +3095,43 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return boardInfo;
 	}
 	
+	/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
 	public String addBestTable (LoginVO userInfo) throws Exception {
 		logger.debug("addBestTable started");
 
 		StringBuilder strData = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
-		
-		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
-		for (int i=0; i<2; i++) {
-			
-			if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
-				strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
-			}
-			else {
-				strData.append("<dl class='listtype_photo'>");
-			}
-			
+
+		/* 2018-06-28 홍승비 - 커뮤니티가 존재하지 않는 경우, 1개만 존재하는 경우 분기 처리 */
+		if (list.size() == 0) {
+			return strData.toString();
+		}
+		else if (list.size() == 1) {
+			strData.append("<dl class='listtype_photo'>");
 			strData.append("<dt class='tit' style='cursor:pointer'");
 			
-			if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+			if (list.get(0).getC_ClubGubun() != null && list.get(0).getC_ClubGubun().equals("3")) {
+				strData.append("onclick=\"go_best('" + list.get(0).getC_ClubNo() + "','" + memberChk(list.get(0).getC_ClubNo(), userInfo) + "')\">");
 			} else {
-				strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+				strData.append("onclick=\"go_best('" + list.get(0).getC_ClubNo() + "','" + "0" + "')\">");
 			}
 			
 			strData.append("<strong>");
-			strData.append(list.get(i).getC_ClubName());
+			strData.append(list.get(0).getC_ClubName());
 			strData.append("</strong></dt>");
 			strData.append("<dd class='photo'>");
 			
 			String bannerSrc = "";
 			
-			if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-				bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+			if (list.get(0).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+				bannerSrc = "/images/ezCommunity/logo/" + list.get(0).getC_Logo_Thumbnail().trim();
 			} else {
-				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(0).getC_Logo_Thumbnail();
 			}
 			
 			logger.debug("bannerSrc="+bannerSrc);
@@ -3118,10 +3140,53 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			strData.append("<span class='iconbest'></span>");
 			strData.append("</dd'>");
 			strData.append("<dd  class='txt'>");
-			strData.append(list.get(i).getC_ClubDesc());
+			strData.append(list.get(0).getC_ClubDesc());
 			strData.append("</dd>");
 			strData.append("</dl>");
-			
+		}
+		else {
+		/* 2018-06-04 홍승비 - 포탈 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
+			for (int i=0; i<2; i++) {
+				
+				if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
+					strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
+				}
+				else {
+					strData.append("<dl class='listtype_photo'>");
+				}
+				
+				strData.append("<dt class='tit' style='cursor:pointer'");
+				
+				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
+					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+				} else {
+					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+				}
+				
+				strData.append("<strong>");
+				strData.append(list.get(i).getC_ClubName());
+				strData.append("</strong></dt>");
+				strData.append("<dd class='photo'>");
+				
+				String bannerSrc = "";
+				
+				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+				} else {
+					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+				}
+				
+				logger.debug("bannerSrc="+bannerSrc);
+				
+				strData.append("<img src='" + bannerSrc + "' width='86' height='61'>");
+				strData.append("<span class='iconbest'></span>");
+				strData.append("</dd'>");
+				strData.append("<dd  class='txt'>");
+				strData.append(list.get(i).getC_ClubDesc());
+				strData.append("</dd>");
+				strData.append("</dl>");
+				
+			}
 		}
 		return strData.toString();
 	}
@@ -3700,5 +3765,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		return resultMap;
+	}
+
+	@Override
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		return ezPortalDAO.getAllCompanyList(map);
 	}
 }

@@ -26,7 +26,6 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
     if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
@@ -34,8 +33,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -716,7 +714,7 @@ function btn_addDepartment() {
 				}
 			}
 		});
-	} else {*/
+	} else {
 		var listView = new ListView();
 		listView.LoadFromID("DivUserList");
 		var listObj = listView.GetDataRows();
@@ -728,7 +726,14 @@ function btn_addDepartment() {
 				}
 			}
 		}
-	//}
+	}*/ // 부서추가 버튼이 조직도 트리뷰의 선택한 부서의 부서원 입력이 아닌, 이름 검색 시 트리뷰 하단에 검색 결과가 나오는데 그것을 전부 입력하는 동작을 하여서 주석처리
+	
+	//2018-08-08 천성준 - 부서추가 버튼 클릭 시, 조직도 트리뷰에서 선택한 부서의 CN을 가져와서 부서원 입력  
+	var treeView = new TreeView();
+	treeView.LoadFromID("FromTreeView");
+	var selnode = treeView.GetSelectNode();
+	var deptID = selnode.GetNodeData("CN");
+	getUserInDept(deptID);
 }
 // 부서원 정보를 가져온다.
 function getUserInDept(dept) {

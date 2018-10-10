@@ -539,12 +539,18 @@ function MyCabinet_ini(xml) {
     SelListView.SetID("DivMyTaskSCateList");
     SelListView.SetSelectFlag(false);
     SelListView.SetMulSelectable(false);
-    SelListView.SetRowOnClick("MyTaskSCateList_onclick");
+    //SelListView.SetRowOnClick("MyTaskSCateList_onclick"); 2018-08-07 천성준 - .aspx 오류나서 주석처리함
+    SelListView.SetRowOnClick("MyTaskSCateList_onclick2"); //2018-08-09 즐겨찾기 클릭 시 기존 철 선택에서 select가 그대로 되어있는 현상 제거
     SelListView.DataSource(headerData);
     SelListView.DataBind("MyTaskSCateList");
 
 }
 
+function MyTaskSCateList_onclick2() {
+	var TaskList = new ListView();
+    TaskList.LoadFromID("DivTaskSCateList");
+    TaskList.SetUnSelected("DivTaskSCateList");
+}
 function MyTaskSCateList_onclick()
 {
     var TaskList = new ListView();

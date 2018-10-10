@@ -6,13 +6,13 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t364'/></title>    
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <script type="text/javascript" src="/js/ezApprovalG/aprDocAttach_Cross.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/Pagenation_Cross.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprDocAttach_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Pagenation_Cross.js')}"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
@@ -42,7 +42,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var companyID = "${userInfo.companyID}";       
-		 
+		 	var orgCompanyID = "${orgCompanyID}";
+		 	
 	        subCondition = "";
 	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -62,11 +63,16 @@
 	        window.onload = function () {
 	            pUserID = arr_userinfo[1];
 	            pUserName = arr_userinfo[2];
-	            pUserJobTitle = arr_userinfo[3];
-	            pDeptID = arr_userinfo[4];
-	            pDeptName = arr_userinfo[5];
+	            pUserJobTitle = "${title }";
+	            pDeptID = "${detpID }";
+	            pDeptName = "${detpNM }";
+// 	            pUserID = arr_userinfo[1];
+// 	            pUserName = arr_userinfo[2];
+// 	            pUserJobTitle = arr_userinfo[3];
+// 	            pDeptID = arr_userinfo[4];
+// 	            pDeptName = arr_userinfo[5];
 	
-	            if (CrossYN() || pNoneActiveX == "YES") {
+	            if (CrossYN()) {
 	                pDocID = parent.aprcabinetattach_cross_dialogArguments[0];
 	                ReturnFunction = parent.aprcabinetattach_cross_dialogArguments[1];
 	            }
@@ -140,7 +146,7 @@
 	                }
 	
 	                var AprDocAttachxml = DocMoveParser();
-	                if (CrossYN() || pNoneActiveX == "YES") {
+	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
 	                else {
@@ -151,7 +157,7 @@
 	            else {
 	                delAttachDoc();
 	                var AprDocAttachxml = DocMoveParser();
-	                if (CrossYN() || pNoneActiveX == "YES") {
+	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
 	                else {
@@ -161,7 +167,7 @@
 	            }
 	        }
 	        function bt_Cancel_onclick() {
-	            if (CrossYN() || pNoneActiveX == "YES") {
+	            if (CrossYN()) {
 	                ReturnFunction("cancel");
 	            }
 	            else {
@@ -176,7 +182,7 @@
 	            var para;
 	            var url = "/ezApprovalG/setSearchInfo.do";
 	
-	            if (CrossYN() || pNoneActiveX == "YES") {
+	            if (CrossYN()) {
 	            	setsearchinfo_cross_dialogArguments[0] = "";
 	            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
 	                DivPopUpShow(510, 375, url);

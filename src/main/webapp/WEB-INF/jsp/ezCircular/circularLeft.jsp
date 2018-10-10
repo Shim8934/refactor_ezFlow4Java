@@ -6,15 +6,15 @@
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>	    
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			#left ul li.on{
 				font-weight:bold;
@@ -305,12 +305,12 @@
 	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"><span><spring:message code="ezCircular.t1" /></span></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
-	        	<li><span style="width:100%;display:inline-block;" id="newCircular" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id="newCircularCount"></span></span></li>
-				<li><span style="width:100%;display:inline-block;" id="circularComplete" onClick="circularComplete()"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span></li>
-				<li><span style="width:100%;display:inline-block;" id="circularMyCircular" onClick="circularMyCircular()"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>				
-				<li><span style="width:100%;display:inline-block;" id="circularTemp" onClick="circularTemp()"><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
-				<li><span style="width:100%;display:inline-block;" id="circularDelete" onClick="circularDelete()"><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
-				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	            
+	        	<li onclick="newCircular()"><span style="width:100%;display:inline-block;" id="newCircular"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id="newCircularCount"></span></span></li>
+				<li onclick="circularComplete()"><span style="width:100%;display:inline-block;" id="circularComplete"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span></li>
+				<li onclick="circularMyCircular()"><span style="width:100%;display:inline-block;" id="circularMyCircular"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>				
+				<li onclick="circularTemp()"><span style="width:100%;display:inline-block;" id="circularTemp"><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
+				<li onclick="circularDelete()"><span style="width:100%;display:inline-block;" id="circularDelete"><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
+				<li id="circularDoc" onclick="openFolder()"><span style="width:100%;display:inline-block;"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	            
 	        </ul>
 	        <div class="tree" style="height: 0px;background-color: #ffffff; overflow: auto; padding:0px; border-bottom:1px solid #eaeaea;" id="PostTreeView"></div>
 	        <%-- <ul id="extra">    

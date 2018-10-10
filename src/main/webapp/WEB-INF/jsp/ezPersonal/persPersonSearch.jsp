@@ -4,21 +4,35 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
+	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+	    	#spn_deptName {
+	    		text-overflow: ellipsis;
+	    		white-space: nowrap;
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	#countInfo {
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	.countColor {
+	    		color:#017BEC;
+	    	}
 	    </style>
 		<title><spring:message code='ezPersonal.t210'/></title>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var bSearch = false;
 	    	var pListType = "IMG";
@@ -54,7 +68,7 @@
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -120,8 +134,9 @@
 	    	    var treeView = new TreeView();
 	        	treeView.LoadFromID("FromTreeView");
 	        	var nodeIdx = treeView.GetSelectNode();
-
-	        	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + MakeXMLString(nodeIdx.GetNodeData("VALUE"));
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+	        		+ "<span id='spn_deptName' title='" + MakeXMLString(nodeIdx.GetNodeData("VALUE")) + "'>" + MakeXMLString(nodeIdx.GetNodeData("VALUE")) + "</span>"
+	        		+ "<span id='countInfo'></span>";
 	        	SelectDeptNM.setAttribute("countinfo","")
 	        	displayUserList(nodeIdx.GetNodeData("CN"));
 
@@ -139,7 +154,7 @@
 	  				data : {
 	  					deptID : tempDeptID ,
 	  					cell : "company;description;displayName;title;telephoneNumber",
-	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 	  					page : CurPage ,
 	  					type : "user"
 	  				} ,
@@ -166,24 +181,25 @@
 						deptID : tempDeptID
 					},
 					success : function(result) {
-						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
-						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
-			        		} else {
-			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
-// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
-			        		}
-			            	
-			            	SelectDeptNM.setAttribute("countinfo","1")
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang1 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+							
+			            	SelectDeptNM.setAttribute("countinfo","1");
 			        	}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert(error);
 					}
-				});
+		        });
 	    	}
 	    	
 	     	function event_displayUserList(xml) {
@@ -231,7 +247,7 @@
 	    	
 	    	function event_listDBclick(obj) {
 		        var id = obj.getAttribute("_DATA2");
-		        var dept = obj.getAttribute("_DATA11");
+		        var dept = obj.getAttribute("_DATA10");
 
 	    	    var width = 420, height = 450;
 	        	var leftPosition, topPosition;
@@ -885,6 +901,24 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+	        //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+			function deptNameLong(containLow, strIsLeaf) {
+				var deptNameWidth = "";
+				var sum = $("#spn_deptName").width() + $("#countInfo").width();
+				
+				if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+					if (sum > 339) {
+						deptNameWidth = 340 - $("#countInfo").width();
+					}
+				} else {
+					if (sum > 337) {
+						deptNameWidth = 338 - $("#countInfo").width();
+					}
+				}
+				
+				$("#spn_deptName").css("width", deptNameWidth);
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -945,7 +979,7 @@
           			<table style="width:425px;margin-top:-1px;"  class="popup_mainlist" > 
               			<tr>
                   			<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-                      			<span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;padding-top: 3px;padding-left: 3px;"></span>
+                      			<span id="SelectDeptNM" style="font-weight: normal; width: 359px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;padding-top: 3px;padding-left: 3px;"></span>
 					  			<span style="float:right;margin-top: 2px;margin-right: 3px;">
                           			<span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
                           			<span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>

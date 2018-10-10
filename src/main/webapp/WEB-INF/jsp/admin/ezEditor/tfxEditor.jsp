@@ -4,9 +4,9 @@
 <html>
 	<head>
 		<title></title>
-		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezEditor/tfxEditor/js/xfe_main.js"></script>
-		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/tfxEditor/js/xfe_main.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>.xfeToolbar {border-top-left-radius : 0px !important; border-top-right-radius : 0px !important;}</style>
 		<script  type="text/javascript">
 			function SetEditorContent(Data) {
@@ -237,18 +237,21 @@
 		                selCell.removeAttribute("id");
 	            	}
 	
-	                if (selCell.classList != null) {
-	                    if (selCell.classList.contains("FIELD"))
-	                        selCell.classList.remove("FIELD");
-	                }
-	                else {
-	                    if (selCell.className.indexOf("FIELD") > -1) {
-	                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
-	                    }
-	                }
-	
-	                parent.Attribute_Write("");
-	                ChangeCell_display(selCell);
+	            	//2018-10-01 김보미 - 값이 비어있는 부분 클릭 후 취소시 포커스(배경색이 파란색으로)되지 않도록 변경 
+	            	if (selCell.className == "FIELD") {
+		                if (selCell.classList != null) {
+		                    if (selCell.classList.contains("FIELD"))
+		                        selCell.classList.remove("FIELD");
+		                }
+		                else {
+		                    if (selCell.className.indexOf("FIELD") > -1) {
+		                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
+		                    }
+		                }
+		
+		                parent.Attribute_Write("");
+		                ChangeCell_display(selCell);
+	            	}
 	            }
 	            else if (type == "LOCK") {
 	                // 블록지정일 경우 모든 블록 처리.
@@ -333,14 +336,14 @@
 	            try {
 	                switch (type) {
 	                    case "null":
-	                        if (xfe.getBodyValue() == "")
+	                        if (xfe.getBody() == "")
 	                            return true;
 	                        else
 	                            return false;
 	                        break;
 	                    case "body":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = xfe.getBody().getElementsByTagName("*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                CheckCount++;
@@ -349,7 +352,7 @@
 	                        break;
 	                    case "doctitle":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = xfe.getBody().getElementsByTagName("*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
 	                                CheckCount++;
@@ -358,7 +361,7 @@
 	                        break;
 	                    case "doctitlefield":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = xfe.getBody().getElementsByTagName("*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                return GetAttribute(HtmlTag[i], "doctitlefield");

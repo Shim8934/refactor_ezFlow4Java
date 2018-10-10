@@ -4,19 +4,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><spring:message code="ezWebFolder.t268"/></title>
-    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='main.lhm02'/>" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezEmail.c1'/>" type="text/css">
-	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1'/>"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-    <link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css" />
-    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="/js/ezWebFolder/jsTree/dist/jstree.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <title><spring:message code="ezWebFolder.t268"/></title>
+    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
+    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script>
 		var lang = "${userinfo.lang}";
 		var PostTreeView = null;
@@ -40,6 +37,7 @@
 		var folderName1 = "";
 		var folderName2 = "";
 		var drawVolume = "";
+		var treeData;
 		
 		var inputNameDlg_cross_dialogArguments = new Array();
 		var moveCopyFolderDlg_cross_dialogArguments = [];
@@ -84,19 +82,20 @@
 					//						upperId = data.data[0]["parent"];
 					parentControll = data.data;
 					var firstNode = "#" + folderId;
-					
+					treeData = parentControll;
+					addTitle();
 					$('#folderTree').jstree({
-						'plugins': [ "core", "types", "json_data", "themes", "ui","sort" ],
+						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
 							"animation": 0,
 							'data': data.data,
 							"multiple": false,
 							'themes': {
-								"theme": "default",
-								"dots": false,
+								"theme"		: "default",
+								"dots"		: false,
 								'responsive': false,
-								'variant': 'small',
-								'stripes': false
+								'variant'	: 'small',
+								'stripes'	: false
 							}
 						},
 						"types": {
@@ -105,8 +104,8 @@
 							}
 						},
 						"grid": {
-							"width": "20",
-							"margin-left": "10"
+							"width"			: "20",
+							"margin-left"	: "10"
 						}
 					}).on('changed.jstree', function(e, data) {
 						folderId = data.selected[0];
@@ -116,7 +115,6 @@
 						parent = data.node.original.parent;
 					});
 					
-					console.log(folderType);
 				},
 				error: function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -124,6 +122,18 @@
 			});
 		}
 
+		 function addTitle() {
+	    	var data = this.treeData;
+	    	for ( var i = 0; i < data.length ; i++  ) {
+	    		var dataId = data[i]["id"] + "_anchor";
+	    		var folderName = data[i]["folderName1"];
+	    		var childE = document.getElementById(dataId);
+	    		if (childE != null){
+					childE.setAttribute("title", folderName);
+	    		}
+	    	}
+	    }
+		 
 		function radioOnclick(obj) {
 			folderId = "";
 			folderList(obj);
@@ -297,7 +307,6 @@
 			
 			if (parent == '#' && folderType != "S") {
 				alert("<spring:message code='ezWebFolder.t336'/>");
-				alert("<spring:message code='ezWebFolder.t336'/>");
 				return;
 			}
 			
@@ -347,6 +356,7 @@
 		}
 
 		function returnFunction(type) {
+			window.opener.drawVolume();
 			folderType = type;
 			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
         	add_onclick_Complete('');

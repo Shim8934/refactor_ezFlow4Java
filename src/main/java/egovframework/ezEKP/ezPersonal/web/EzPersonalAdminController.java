@@ -3,9 +3,13 @@ package egovframework.ezEKP.ezPersonal.web;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -435,6 +439,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("managePoll started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = userInfo.getCompanyID();
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -448,6 +453,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
 
 		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";
@@ -666,7 +672,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
-		
+		String companyId = userInfo.getCompanyID();
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
@@ -678,6 +684,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		model.addAttribute("companyId", companyId);
 		model.addAttribute("list", resultList);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useEditor", useEditor);
@@ -705,10 +712,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<LISTVIEWDATA>");
 		result.append("<ROWS>");
 		
+		//2018-08-08  김보미 - rownumber추가
+		int i = list.size();
 		for (PersonalPopupVO vo : list) {
 			result.append("<ROW>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			//2018-08-08  김보미 - rownumber추가
+//			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<VALUE>" + i + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
 			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
@@ -741,6 +752,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("</ROW>");
+			i--;
 		}
 		
 		result.append("</ROWS>");
@@ -1182,30 +1194,65 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
    			dir.mkdirs();
    		}
    		
-         File file = new File(realPath + pAttachPath);
+   		/* 2018-08-30 홍승비 - 퀵링크 이미지 등록 시 원래 인코딩(content-type)으로 수정 */
+		String contentType = null;
+		String extension = null;
+        BufferedInputStream bis = null;
+   		
+        File file = new File(realPath + pAttachPath);
     
-        String pSaveName = qID + ".jpg";
+        try {
+	        bis = new BufferedInputStream(new FileInputStream(file));
+	        contentType = URLConnection.guessContentTypeFromStream(bis);
+        } catch(Exception e) {
+        } finally {
+        	if (bis != null) {
+        		bis.close();
+        	}
+        }
+        
+        if (contentType == null) {
+        	contentType = "application/octet-stream";
+        	extension = ".jpg"; // 기존 확장자가 .jpg로 고정되어 있었으므로, 디폴트로 사용함
+        } else {
+        	contentType = contentType.replace("image", "Image");
+        	extension = "." + contentType.split("/")[1];
+        }
+        
+        String pSaveName = qID + extension;
         BufferedImage inputImage = ImageIO.read(file);
 		BufferedImage outputImage = null;
 		Graphics2D saveImage = null;
 		
-		outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
-         
+		// png파일의 배경을 검게 만들지 않도록 수정
+		if (inputImage.getType() == 0) {
+			outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
+		} else {
+			outputImage= new BufferedImage(40, 39, inputImage.getType());
+		}
+		
 		saveImage = outputImage.createGraphics();
-		saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
-		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		saveImage.drawImage(inputImage, 0, 0, 40, 39, null);
+		
+		HashMap<RenderingHints.Key,Object> hm = new HashMap<RenderingHints.Key,Object>();
+		
+		hm.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		hm.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		hm.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		
+		saveImage.setRenderingHints(hm);
 		
 		File newFile = new File(realPath + serverPath + pSaveName);
 		
-		ImageIO.write(outputImage, "png" , newFile);
+		ImageIO.write(outputImage, extension.replace(".", "") , newFile);
 		//deleteFile(dirPath + serverPath + fileName);
 		
 		String fileLocation = serverPath  + pSaveName;
 	
 		strXML.append("<ROOT><NODES>");
-		strXML.append("<NODE><PUPLOADSN><![CDATA[" + qID + ".jpg" + "]]></PUPLOADSN>");
+		strXML.append("<NODE><PUPLOADSN><![CDATA[" + qID + extension + "]]></PUPLOADSN>");
 		strXML.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
-		strXML.append( "<PFILENAME><![CDATA[" + qID + ".jpg" + "]]></PFILENAME>");
+		strXML.append( "<PFILENAME><![CDATA[" + qID + extension + "]]></PFILENAME>");
 		strXML.append( "<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
 		strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
 		strXML.append( "</NODE>");

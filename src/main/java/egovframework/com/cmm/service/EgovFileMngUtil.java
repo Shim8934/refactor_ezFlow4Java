@@ -3,16 +3,18 @@ package egovframework.com.cmm.service;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,6 +28,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.tools.ant.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +39,10 @@ import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
 
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
@@ -72,6 +78,9 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     
     @Autowired
 	private CommonUtil commonUtil;
+    
+    @Autowired
+    private KlibUtil klibUtil;
     
     /**
      * 첨부파일에 대한 목록 정보를 취득한다.
@@ -397,6 +406,14 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	    //	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
 	    //	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
 	    String downFileName = EgovStringUtil.isNullToString(streFileNm);
+
+	    // klib 확장자로 끝난다면 downFileForKlib 메소드로 리턴
+	    // 사이드이펙트 방지를 위해서 복호화 두번 실패시 원본 파일로 처리
+	    if (downFileName.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+	    	downFileForKlib(request, response, streFileNm, orignFileNm);
+	    	return;
+	    }
+	    
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
     	
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
@@ -504,6 +521,121 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	    	fin.close();
 		//*/
     }
+    
+    /**
+     * 서버 파일에 대하여 다운로드를 처리한다. (klib로 암호화 된 경우에 복호화하여 다운로드한다)<br>
+     * 혹시 모를 사이드이펙트를 우려해서 기존의 downFile 메소드와 중복되는 코드 제거 안 함
+     *
+     * @param response
+     * @param streFileNm
+     *            : 파일저장 경로가 포함된 형태
+     * @param orignFileNm
+     * @throws Exception
+     */
+    private void downFileForKlib(HttpServletRequest request, HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
+    	LOGGER.debug("downFileForKlib started.");
+	    String downFileName = EgovStringUtil.isNullToString(streFileNm);
+		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
+		
+		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+		
+		File file = new File(downFileName);
+	
+		if (!file.exists() || !file.isFile()) {
+		    throw new FileNotFoundException(downFileName);
+		}
+		
+		int fSize = (int) file.length();
+		
+		if (fSize > 0) {
+		    byte[] encryptedBytes = Files.readAllBytes(file.toPath());
+		    byte[] decryptedBytes = klibUtil.decrypt(encryptedBytes);
+		    
+		    try (ByteArrayInputStream in = new ByteArrayInputStream(decryptedBytes)) {
+	    	    String mimetype = "application/octet-stream";
+	    	    
+	    	    String nfcFilename = commonUtil.normalizeFileName(orgFileName);
+	    	    
+	    	    response.setBufferSize(BUFF_SIZE);	    	    
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
+				response.setContentLength(fSize);
+				FileCopyUtils.copy(in, response.getOutputStream());
+		    } catch (Exception ex) {
+		    	ex.printStackTrace();
+		    }
+		    
+		    response.getOutputStream().flush();
+		    response.getOutputStream().close();
+		}
+		
+		LOGGER.debug("downFileForKlib ended.");
+    }
+    
+    /**
+     * 서버에 있는 이미지 요청을 처리한다. (화면에 보여주는 이미지)
+     */
+    public void downImage(String filePath, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String realPath = commonUtil.getRealPath(request);
+        
+        filePath = realPath + filePath;
+        File file = new File(filePath);
+        
+	    // klib 확장자로 끝난다면 downFileForKlib 메소드로 리턴
+        // ezCommon/downloadAttach.do 에서 이 메소드를 호출하기 때문에 전자결재에서 결재완료된 한글 문서를 로드할 때도 사용됨
+	    if (filePath.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+	    	String fileName = file.getName();
+	    	// .ezd 확장자가 제거된 이름으로 다운로드
+	    	fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+	    	
+	    	downFileForKlib(request, response, filePath, fileName);
+	    	return;
+	    }
+        
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        String contentType = null;
+        int fileSize = 0;
+        
+        try {
+	        fileSize = (int) file.length();
+	        bis = new BufferedInputStream(new FileInputStream(file));
+	        contentType = URLConnection.guessContentTypeFromStream(bis);
+	        
+	        if (contentType == null) {
+	        	contentType = "application/octet-stream";
+	        }
+	        
+	        response.setContentType(contentType);
+	        response.setContentLength(fileSize);
+	        
+	        LOGGER.debug("contentType=" + contentType + ",fileSize=" + fileSize);
+	        
+	        os = response.getOutputStream();
+	        
+	        IOUtils.copy(bis, os);
+	        
+	        os.flush();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	if (os != null) {
+        		try {
+        			os.close();
+        		} catch(Exception e) {
+        		}
+        	}
+        	
+        	if (bis != null) {
+        		try {
+        			bis.close();
+        		} catch(Exception e) {
+        		}
+        	}
+        }
+        
+
+	}
     
     /**
      * 서버 파일/폴더를 재귀적으로 삭제한다.

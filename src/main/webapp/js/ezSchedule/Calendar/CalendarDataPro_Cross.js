@@ -33,14 +33,17 @@ function chk_scheduleCSS() {
 	if(typeCal == 0){		
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
-			$('.td_list td[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).addClass('chk_noneDisplay');
 			});
 		});
 		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
 			var test = $(this).val();
+			var chk_type=$(this).data("schedule-type");
 			
-			$('.td_list td[ownerid = "'+test+'"]').each(function(index, value){
+			$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).removeClass('chk_noneDisplay');
 			});
 		});					
@@ -48,13 +51,17 @@ function chk_scheduleCSS() {
 		console.log('주보기진입');
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
-			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).addClass('chk_noneDisplay');
 			});			
 		});
 		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
 			var test = $(this).val();
-			$('div[ownerid = "'+test+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).removeClass('chk_noneDisplay');
 			});			
 		});	
@@ -62,14 +69,17 @@ function chk_scheduleCSS() {
 		console.log('일보기진입');
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
-			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+			var chk_type=$(this).data("schedule-type");
+			
+			$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).addClass('chk_noneDisplay');
 			});			
 		});
 		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
 			var test = $(this).val();
+			var chk_type=$(this).data("schedule-type");
 			
-			$('div[ownerid = "'+test+'"]').each(function(index, value){
+			$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
 				$(value).removeClass('chk_noneDisplay');
 			});			
 		});	
@@ -1336,25 +1346,25 @@ function getMouseXLocation(e) {
 
     var tTip = document.getElementById("tooltip");
     if (navigator.userAgent.indexOf('Firefox') != -1) {
-        if (E.clientX > 1000) {
-            var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+        if (E.pageX > 1000) {
+            var locationX = E.pageX + document.documentElement.scrollLeft - tTip.clientWidth;
         } else {
-            if (E.clientX > 300) {
-                var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+            if (E.pageX > 300) {
+                var locationX = E.pageX + document.documentElement.scrollLeft - tTip.clientWidth;
             }
             else
-                var locationX = E.clientX + document.documentElement.scrollLeft;
+                var locationX = E.pageX + document.documentElement.scrollLeft;
         }
     }
     else {
-        if (E.clientX > 1000) {
-            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+        if (E.pageX > 1000) {
+            var locationX = E.pageX + document.body.scrollLeft - tTip.clientWidth;
         } else {
-            if (E.clientX > 300) {
-                var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+            if (E.pageX > 300) {
+                var locationX = E.pageX + document.body.scrollLeft - tTip.clientWidth;
             }
             else
-                var locationX = E.clientX + document.body.scrollLeft;
+                var locationX = E.pageX + document.body.scrollLeft;
         }
     }
 
@@ -1369,8 +1379,8 @@ function getMouseYLocation(e) {
 
     var tTip = document.getElementById("tooltip");
     if (navigator.userAgent.indexOf('Firefox') != -1) {
-        if (E.clientY > 500) {
-            var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+        if (E.pageY > 500) {
+            var locationY = E.pageY + document.documentElement.scrollTop - tTip.clientHeight;
             locationY -= 12;
         }
         else {
@@ -1378,35 +1388,35 @@ function getMouseYLocation(e) {
                 
                 var locationY
                 
-                if (tTip.clientHeight > E.clientY) {
-                    locationY = E.clientY + document.documentElement.scrollTop;
+                if (tTip.clientHeight > E.pageY) {
+                    locationY = E.pageY + document.documentElement.scrollTop;
                 } else {
-                    locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+                    locationY = E.pageY + document.documentElement.scrollTop - tTip.clientHeight;
                 }
             }
             else {
-                var locationY = E.clientY + document.documentElement.scrollTop;
+                var locationY = E.pageY + document.documentElement.scrollTop;
             }
             locationY += 12;
         }
     }
     else {
-        if (E.clientY > 500) {
-            var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+        if (E.pageY > 500) {
+            var locationY = E.pageY + document.body.scrollTop - tTip.clientHeight;
             locationY -= 12;
         }
         else {
             if (document.body.scrollTop > 0) {
                 var locationY
                 
-                if (tTip.clientHeight > E.clientY) {
-                    locationY = E.clientY + document.body.scrollTop;
+                if (tTip.clientHeight > E.pageY) {
+                    locationY = E.pageY + document.body.scrollTop;
                 } else {
-                    locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+                    locationY = E.pageY + document.body.scrollTop - tTip.clientHeight;
                 }
             }
             else {
-                var locationY = E.clientY + document.body.scrollTop;
+                var locationY = E.pageY + document.body.scrollTop;
             }
             locationY += 12;
         }
@@ -1539,6 +1549,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("cellspacing", "0");
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
+    tTable.setAttribute("style", "word-break : break-all");
     tTh.setAttribute("scope", "col");
     tTh.style.background = "#edf4fd";
     tTh.style.border = "1px solid #d1ddec";

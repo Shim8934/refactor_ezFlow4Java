@@ -3,11 +3,11 @@
 <html>
 	<head>
 		<title></title>
-	    <link rel="stylesheet" href="/js/ezEditor/kukudocsEditor/stylesheets/style.css" />
-		<script type="text/javascript" src="/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style> html, body {height: 100%; margin: 0; padding: 0;} </style>
 		<script type="text/javascript">
 			var type = "${type}";
@@ -144,18 +144,21 @@
 		                selCell.removeAttribute("id");
 	            	}
 	
-	                if (selCell.classList != null) {
-	                    if (selCell.classList.contains("FIELD")) {
-	                        selCell.classList.remove("FIELD");
-	                    }
-	                } else {
-	                    if (selCell.className.indexOf("FIELD") > -1) {
-	                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
-	                    }
-	                }
-	
-	                parent.Attribute_Write("");
-	                ChangeCell_display(selCell);
+	            	//2018-10-01 김보미 - 값이 비어있는 부분 클릭 후 취소시 포커스(배경색이 파란색으로)되지 않도록 변경 
+	            	if (selCell.className == "FIELD") {
+		                if (selCell.classList != null) {
+		                    if (selCell.classList.contains("FIELD")) {
+		                        selCell.classList.remove("FIELD");
+		                    }
+		                } else {
+		                    if (selCell.className.indexOf("FIELD") > -1) {
+		                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
+		                    }
+		                }
+		
+		                parent.Attribute_Write("");
+		                ChangeCell_display(selCell);
+	            	}
 	            } else if (type == "LOCK") {
                     if (selCell.getAttribute("free") != null) {
                         selCell.removeAttribute("free");
@@ -329,7 +332,7 @@
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
-								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','paragraph_remove_format','color','background_color',
+								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor',
 								   'cellLock', 'cellFree', 'tableLock', 'tableFree'];
 			
 			// 이미지 업로드 URL 설정

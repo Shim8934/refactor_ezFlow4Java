@@ -58,7 +58,7 @@ public interface EzPortalAdminService {
 	
 	public String searchPortlet (String pDisplayName, String pGubunFlag, String pPageGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
-	public String createNewPortlet (String pCompanyID, int tenantID) throws Exception;
+	public String createNewPortlet (String pCompanyID, int tenantID, String primaryLang) throws Exception;
 	
 	public String savePortletProperties (String pXML, int tenantID, String companyID) throws Exception;
 	
@@ -70,11 +70,11 @@ public interface EzPortalAdminService {
 	
 	public String loadLogoItems (String pPageID, int tenantID) throws Exception;
 	
-	public String createNewLogoItem (String pParentUID, String pPageID, int tenantID) throws Exception;
+	public String createNewLogoItem (String pParentUID, String pPageID, String primaryLang, int tenantID) throws Exception;
 	
 	public String savePositionSettings (String pXML, String pPageID, int tenantID) throws Exception;
 	
-	public String createNewMenuItem (String pParentUID, String pPageID, int tenantID) throws Exception;
+	public String createNewMenuItem (String pParentUID, String pPageID, String primaryLang, int tenantID) throws Exception;
 	
 	public String loadMenuItemConfig (String pUID, String pPageID, String pSkinNum, int tenantID) throws Exception;
 	
@@ -82,7 +82,7 @@ public interface EzPortalAdminService {
 	
 	public String loadSubMenuItemConfig (String pUID, String pPageID, int tenantID) throws Exception;
 	
-	public String createNewSubMenuItem (String pParentUID, String pPageID, int tenantID) throws Exception;
+	public String createNewSubMenuItem (String pParentUID, String pPageID, String primaryLang, int tenantID) throws Exception;
 	
 	public String saveSubMenuItemConfig (String pXML, String pPageID, int tenantID) throws Exception;
 	

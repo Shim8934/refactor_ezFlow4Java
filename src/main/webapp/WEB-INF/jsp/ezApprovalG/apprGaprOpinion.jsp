@@ -5,14 +5,14 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t55'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Opinion_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/draft_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Opinion_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script id="clientEventHandlersJS" type="text/javascript">
 		    var OrderCell = "";
 		    var pDocID;
@@ -54,18 +54,12 @@
 		    var ReturnFunction;
 		    var junGyulFlag = "${junGyulFlag}";
 		    var agreeReturnType = "${agreeReturnType}";
+		    var orgCompanyID = parent.orgCompanyID;
 		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
-		    var height = window.parent.document.documentElement.clientHeight;
-		    if (height== 0)
-		    	height = window.parent.document.body.clientHeight;
-
-		    var width = window.parent.document.documentElement.clientWidth;
-		    if (width == 0)
-		        width = window.parent.document.body.clientWidth;
-		    
+		    var ext;
 		    window.onload = function () {
 		        try {
 		            var ua = navigator.userAgent;
@@ -83,20 +77,28 @@
 		                    RetValue = window.dialogArguments;
 		                }
 		            }
-		            if (RetValue == undefined && opener.apropinion_cross_dialogArguments[0] != undefined) {
-		                try {
-		                    RetValue = opener.apropinion_cross_dialogArguments[0];
-		                    ReturnFunction = opener.apropinion_cross_dialogArguments[1];
-		                } catch (e) {
-		                    RetValue = window.dialogArguments;
-		                }
+		            
+		            try {
+			            if (RetValue == undefined && opener.apropinion_cross_dialogArguments[0] != undefined) {
+			                try {
+			                    RetValue = opener.apropinion_cross_dialogArguments[0];
+			                    ReturnFunction = opener.apropinion_cross_dialogArguments[1];
+			                } catch (e) {
+			                    RetValue = window.dialogArguments;
+			                }
+			            } 
+		            } catch (e) {
+		                RetValue = window.dialogArguments;
 		            }
+
 		            pDocID = RetValue[0];
 		            pDisplay = RetValue[1];
 		            pKuyjeType = RetValue[2];
 		            pOrgDocID = RetValue[3];
 		            pWindow = RetValue[5];
 		            pHeSongFlag = RetValue[4];
+		            ext = RetValue[99];
+		            
 		            if (pHeSongFlag == "Y")
 		                TDHeSongMsg.style.display = "";
 		            CheckOpinionType();
@@ -132,6 +134,15 @@
 		        }
 		    }
 		    function btn_OpinionCancel_onclick() {
+	            if (ReturnFunction != null) {
+	                ReturnFunction("cancel");
+	                window.close();
+	            } else {
+	                window.returnValue = "cancel";
+	                window.close();
+	            }
+		    }
+		    function btn_OpinionOK_onclick() {
 		        if (ChkFlag) {
 		            btn_OpinionSave_onclick();
 		        } else {
@@ -226,8 +237,6 @@
 		    	layerStartX = event.clientX;
 		    	layerStartY = event.clientY;
 		    	move_on = true;
-// 		    	alert(iFramePanel.offsetWidth);
-// 		    	alert(iFramePanel.offsetHeight);
 		    }
 
 		    function layerMove() {
@@ -275,7 +284,7 @@
 	    <div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="bbtn_OpinionAdd"><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 		    <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
-		    <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
+		    <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionOK_onclick()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

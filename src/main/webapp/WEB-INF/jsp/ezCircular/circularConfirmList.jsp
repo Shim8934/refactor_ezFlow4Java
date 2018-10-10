@@ -9,16 +9,16 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code='ezCircular.kmsc01'/></title>
-	<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
 </head>
-	<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
-	<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
-	<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
-	<script type="text/javascript" src="/js/ezCircular/PreviewItem.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezCircular/circular.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezCircular/PreviewItem.js')}"></script>
 	
 	<script>
 	
@@ -36,12 +36,12 @@
 	        }
 	    };
 	
-	 	function show_info(userid) {
+	 	function show_info(userid, deptid) {
 	        var heigth = window.screen.availHeight;
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 400) / 2;
-	        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept=" + deptid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    }
 	 	
 	 	// 닫기 버튼 클릭 시
@@ -140,8 +140,9 @@
 		            }		            
 		          
 			        $("#lvBoardList tr").on("click", function () {
-			        	userID = $(this).closest("tr").attr("userid");
-			        	show_info(userID);
+			        	var userID = $(this).closest("tr").attr("userid");
+			        	var deptID = $(this).closest("tr").attr("deptid");
+			        	show_info(userID, deptID);
 			        });
 		            
 		            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");

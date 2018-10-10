@@ -1,4 +1,4 @@
-﻿﻿/**
+﻿﻿﻿/**
  * 첨부파일 리스트 추출
  * */
 function InitAttach(pDocID) {
@@ -10,7 +10,8 @@ function InitAttach(pDocID) {
 		async : false,
 		url : "/ezApprovalG/attachRequest.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -50,7 +51,7 @@ function APRAttachXMLParsing(ATTACH, pDocID) {
     var pCurCellLen = pCurCell.length;
     var i, j, GetXml;
 
-    GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER><HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER><HEADER><NAME>" + strLang216 + "</NAME><WIDTH>80</WIDTH></HEADER></HEADERS>";
+    GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER><HEADER><NAME>" + strLang216 + "</NAME><WIDTH>80</WIDTH></HEADER></HEADERS>";
     GetXml = GetXml + "<ROWS>";
 
     for (i = pCurListLen - 1 ; i > -1 ; i--) {
@@ -106,16 +107,21 @@ function DelAttachFileAtList(pAttachCurSel) {
 }
 function SaveAttachListInfo(Attachxml) {
     var ReturnVal;
-    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do", false);
+    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do?orgCompanyID="+orgCompanyID, false);
     xmlhttp.send(Attachxml);
     
     if (xmlhttp.responseText == "TRUE") {
     	if (CrossYN()) {
-            CheckHistory(1);
-            parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
-            parent.DivPopUpHidden();
-        }
-        else {
+    		if (isIE() && window.dialogArguments) {
+    			CheckHistory(1);
+    			window.returnValue = Attachxml;
+    			window.close();
+    		} else {
+    			CheckHistory(1);
+    			parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+    			parent.DivPopUpHidden();
+    		}
+        } else {
             CheckHistory(1);
             window.returnValue = Attachxml;
             window.close();
@@ -153,10 +159,10 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     DivPopUpHidden();
     if (approvalFlag == "G") {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    	//pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>0</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
@@ -184,24 +190,26 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	var strSize;
     	if (temppFileSize > 1024 * 1024) {
     		temppFileSize = temppFileSize / 1024 / 1024;
-    		strSize = parseInt(temppFileSize) + "MB";
+    		//strSize = parseInt(temppFileSize) + "MB";
+    		strSize = temppFileSize.toFixed(1) + " MB";
     	}
     	else if (temppFileSize > 1024) {
     		temppFileSize = temppFileSize / 1024;
-    		strSize = parseInt(temppFileSize) + "KB";
+    		//strSize = parseInt(temppFileSize) + "KB";
+    		strSize = temppFileSize.toFixed(1) + " KB";
     	}
     	else
     		strSize = parseInt(temppFileSize) + "B";
     	
     	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
     	pAttachxml = pAttachxml + "</CELL><CELL>";
-    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>"; //2018-08-24 쪽수 부분이 disaply:none처리 되어있어서 스크립트 에러 발생-> 주석 제거
     	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     } else {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
@@ -286,9 +294,9 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     }
     
     pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
+    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
     //pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
@@ -386,7 +394,8 @@ function AttachRemoveAll() {
 		async : false,
 		url : "/ezApprovalG/attachRemove.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -465,7 +474,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -534,7 +543,8 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 			modifyFlag : pModifyFlag,
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16]
+			userDeptName2 : arr_userinfo[16],
+			orgCompanyID : orgCompanyID
 		},
 		success: function(result){
 			if (result == "TRUE") {

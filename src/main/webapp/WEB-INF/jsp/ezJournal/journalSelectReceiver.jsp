@@ -7,20 +7,20 @@
 	<head>
 		<title><spring:message code='ezJournal.t88'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
-		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jstree/style.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezJournal/journal_css.css')}" type="text/css" />
 		<style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
 	    </style>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jstree/jstree.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezJournal/journal_script.js')}"></script>
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
@@ -597,6 +597,17 @@
 	   			opener.showReceiver();
 	   			window.close();
 	   		}
+	   		
+	   	  /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != Tab1_SelectID) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 		</script>
 		<style>
 			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
@@ -626,8 +637,8 @@
 					 	<tr>
 			                <div class="portlet_tabpart01" style="width:680px;">
 			                	<div class="portlet_tabpart01_top" id="tab1" style="margin-top:25px;margin-bottom: 2px;">
-					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
-									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t90' /></span></p>
+					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezJournal.t89' /></span></p>
+									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezJournal.t90' /></span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">

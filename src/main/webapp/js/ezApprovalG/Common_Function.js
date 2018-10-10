@@ -1,5 +1,5 @@
 var ezapralert_cross_dialogArguments = new Array();
-function OpenAlertUI(pAlertContent, CompleteFunction) {
+function OpenAlertUI(pAlertContent, CompleteFunction, type) {
     var parameter = pAlertContent;
     var url = "";
     if(CompleteFunction == "OPEN") 
@@ -14,6 +14,9 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
         if (CompleteFunction != undefined) {
             if (CompleteFunction == "OPEN")
             {
+            	if (type != undefined) { //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
+            		ezapralert_cross_dialogArguments[2] = true;
+            	}
             	ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
                 var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
             }
@@ -40,7 +43,7 @@ function OpenAlertUI_SUB(pAlertContent) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || pNoneActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArgument[0] = parameter;
         ezapralert_cross_dialogArgument[1] = OpenAlertUI_SUB_Complete;
         ezapralert_cross_dialogArgument[2] = "";
@@ -64,7 +67,9 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
         apropinion_cross_dialogArgument[0] = parameter;
         apropinion_cross_dialogArgument[1] = openOpinionUI_Complete;
@@ -109,7 +114,9 @@ function OpenInformationUI(pInformationContent, FunctionName, Type) {
             DivPopUpShow(330, 205, url);
         }
         else {
-            GetOpenWindow(url + "?type=open", "ezAPROPINION_Cross", 325, 200, "NO");
+        	//2018-08-21 배현상, type에 대한 처리를 controller에서 하지않고 opener의 변수를 가지고 사용하기에 로직 수정
+        	ezapropinion_cross_dialogArguments[2] = true;
+            GetOpenWindow(url, "ezAPROPINION_Cross", 325, 200, "NO");
         }
     }
     else {

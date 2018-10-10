@@ -6,8 +6,8 @@
 	<head>
 		<title>boardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<style type="text/css">
 	        .photo_tit {
 	            font-size: 9pt;
@@ -30,11 +30,11 @@
 	            color: #639933;
 	        }
 	    </style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-    	<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
-    	<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+    	<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ErrorHandler.js')}"></script>
+    	<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
     	<script type="text/javascript">
 	    	var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
 	        var pBoardName = "<c:out value = '${boardInfo.boardName}' />";

@@ -6,11 +6,11 @@
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var totalCount = "";
@@ -26,6 +26,7 @@
 	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
 	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
+	        var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -36,13 +37,15 @@
 			};
 			
 			$(document).ready(function() {
-	            if (document.getElementById("ListCompany").length == 0)
-	                alert("<spring:message code = 'ezPersonal.t106' />");
-	            else {
-	                document.getElementById("ListCompany").selectedIndex = 0;
+	            if (document.getElementById("ListCompany").length == 0) {
+					alert("<spring:message code = 'ezPersonal.t106' />");
 	            }
-	
+	            else {
+// 	                document.getElementById("ListCompany").selectedIndex = 0;
+	            }
 	            makelist();
+	            //2018-08-06 김보미 - 페이지 위치 고정
+	            windowResize();
 	        });
 			
 	        function makelist() {
@@ -94,6 +97,12 @@
 		            } else {
 		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
 		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+		            }
+		            
+		            //2018-08-02 김보미 - 데이터가 없을 때
+		            if (TotalCount == null || TotalCount == 0) { 
+		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
 		            }
 		            
 		            totalPage = Math.ceil(new Number(TotalCount / PageSize));
@@ -158,9 +167,14 @@
 	        }
 	
 	        function del_poll(poll_number) {
-	            if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
+		    	//2018-09-06  김보미 - rownumber추가
+	            /*if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
 	                return;
-	            }
+	            }*/
+		        var row_number = $("tr[data1=" + poll_number + "] td:eq(0)").text();
+		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		            return;
+		        }
 	            
 	            $.ajax({
 	            	type : "POST",
@@ -235,6 +249,12 @@
 		                PagingHTML += strtext;
 		            }
 		        }
+		        
+		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
 		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
@@ -314,6 +334,20 @@
 		    function td_Create(strtext) {
 		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -347,12 +381,13 @@
 	    <form method="post">
 	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
 	        <div id="mainmenu">
-				<span><b><spring:message code='ezEmail.t59' /> : </b></span>
-				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-	        	</SELECT>
+	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+				    <select id="ListCompany" onChange="company_change()">
+			        	<c:forEach var="item" items="${list}">
+							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+				    </select><br /><br />
+			    </span>
 				<ul style="margin-top:15px">	            	
 	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>
@@ -361,12 +396,12 @@
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        </script>
-	        
-	        <table class="mainlist" style="width: 100%;">
-	            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
-	        </table>
-	        
-	        <div id="tblPageRayer" style="margin-bottom: 10px;"></div>
+	        <div id="contentlist" style="width:100%; overflow: auto;">
+		        <table class="mainlist" style="width: 100%;">
+		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
+		        </table>
+		    </div>
+	        <div id="tblPageRayer"></div>
 	    </form>
 	</body>
 </html>

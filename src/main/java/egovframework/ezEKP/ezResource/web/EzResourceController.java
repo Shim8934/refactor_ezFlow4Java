@@ -927,16 +927,35 @@ public class EzResourceController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
-		String propList = "displayName1;displayName2;title1;title2;description1;description2";
+		String deptID = xmlDom.getElementsByTagName("DATA").item(1).getTextContent().trim();		// 부서ID
+		
+		String propList = "displayName1;displayName2;title1;title2;description1;description2;department";
 		String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
+		String deptName = "";
+		String deptName2 = "";
+		String displayName = "";
+		String displayName2 = "";
+		String title = "";
+		String title2 = "";
+		
+		// 2018-07-09 김민성 자원 등록시 사간 겸직 구분
 		Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
-		String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
-		String deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
-		String displayName = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
-		String displayName2 = xmlDom2.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
-		String title = xmlDom2.getElementsByTagName("TITLE1").item(0).getTextContent();
-		String title2 = xmlDom2.getElementsByTagName("TITLE2").item(0).getTextContent();
+		displayName = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
+		displayName2 = xmlDom2.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+		
+		if(deptID.equals(xmlDom2.getElementsByTagName("DEPARTMENT").item(0).getTextContent())) {
+			deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+			deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+			title = xmlDom2.getElementsByTagName("TITLE1").item(0).getTextContent();
+			title2 = xmlDom2.getElementsByTagName("TITLE2").item(0).getTextContent();
+		}
+		else {
+			String infoXML2 = ezOrganService.getUserAddjobInfo(strOwnerID, deptID, userInfo.getPrimary(), userInfo.getTenantId());
+			Document xmlDom3 = commonUtil.convertStringToDocument(infoXML2);
+			deptName = xmlDom3.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+			title = xmlDom3.getElementsByTagName("TITLE").item(0).getTextContent();
+		}
 		
 		xmlDom.getElementsByTagName("DATA").item(2).setTextContent(deptName);
 		xmlDom.getElementsByTagName("DATA").item(4).setTextContent(displayName);
@@ -1145,6 +1164,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String entryList = "";
 		String startDateTimeRepeat = "";
 		String endDateTimeRepeat = "";
+		String deptID = "";
 		
 		if (req.getParameter("ownerID") != null) {
 			resID = req.getParameter("ownerID");
@@ -1192,7 +1212,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			ownerID = getSchedule.getOwnerID();
 			writerID = getSchedule.getWriterID();
 			
-			String propList = "displayName;description";
+			// 2018-07-09 김민성 - 겸직 정보 처리
+			deptNm = getSchedule.getDeptNm();
+			ownerNm = getSchedule.getOwnerNm();
+			deptID = ezResourceService.getDeptID(writerID, deptNm, userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			/*String propList = "displayName;description";
 			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
@@ -1203,7 +1228,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			} else {
 				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getPrimary()).item(0).getTextContent();
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
-			}
+			}*/
 			
 			title = getSchedule.getTitle();
 			loc = getSchedule.getLocation();
@@ -1303,6 +1328,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
+		model.addAttribute("deptID", deptID);
 		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");
@@ -1495,7 +1521,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					cDate = cDate.substring(0, 10);
 					startDateTime = selSd + " " + cTime + ":00:00";
 					endDateTime = selEd + " " + cTime + ":30:00";
-
+					allDay = "1";				// 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
 				} else {
 					startDateTime = selSd;
 					endDateTime = selEd;
@@ -1950,7 +1976,7 @@ public class EzResourceController extends EgovFileMngUtil {
         String propList = doc.getElementsByTagName("prop").item(0).getTextContent();
         String listType = doc.getElementsByTagName("type").item(0).getTextContent();
         
-        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getPrimary(), userInfo.getTenantId());
+        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getPrimary(), userInfo.getTenantId(), null);
         
 		return returnXML;
 	}

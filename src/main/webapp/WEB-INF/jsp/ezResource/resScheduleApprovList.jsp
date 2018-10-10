@@ -6,17 +6,17 @@
 	<head>
 		<title><spring:message code="ezResource.t241" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" />
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" />
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/control/ListView_Approv.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView_Approv.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
 			var userPrimary = "${userInfo.primary}";
@@ -371,14 +371,14 @@
 	                	schedule_repetition_del_cross_dialogArguments[0] = rgParams;
 	                	schedule_repetition_del_cross_dialogArguments[1] = btn_Delete_Complete;
 
-		                DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
+		                DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
 		            } else {
 	                	var rgParams = new Array();
 	                	rgParams["CancelOpen"] = false;
 	                	rgParams["InstanceType"] = "";
 
-	                	var feature = "dialogHeight:260px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
-	                	feature = feature + GetShowModalPosition(390, 260);
+	                	var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
+	                	feature = feature + GetShowModalPosition(390, 175);
 	                	var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
 
 	                	if (false != rgParams["CancelOpen"]) return (false);

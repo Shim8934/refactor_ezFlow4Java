@@ -173,7 +173,20 @@ function InitClassInfo() {
         InsValueIntoTD(tdClassNo, SelectSingleNodeValue(clsInfo, "CABCLASSID"));
         InsValueIntoTD(tdCabName, SelectSingleNodeValue(clsInfo, "CABTITLE"));
         InsValueIntoTD(tdSpecialRec, SelectSingleNodeValue(clsInfo, "SPECIALRECCODE"));
-        InsValueIntoTD(tdPublic, SelectSingleNodeValue(clsInfo, "PUBLICCODE"));
+//        InsValueIntoTD(tdPublic, SelectSingleNodeValue(clsInfo, "PUBLICCODE"));
+        if (SelectSingleNodeValue(clsInfo, "PUBLICCODE") == "ALL") {
+        	InsValueIntoTD(tdPublic, strLang82 );
+        } else if (SelectSingleNodeValue(clsInfo, "PUBLICCODE") == "LINE") {
+        	InsValueIntoTD(tdPublic, strLang84 );
+        } else {
+        	InsValueIntoTD(tdPublic, strLang83);
+        }
+        
+        if (SelectSingleNodeValue(clsInfo, "PUBLICCODE2") == "N") {
+        	InsValueIntoTD(tdPublicYn, strLang84 );
+        } else {
+        	InsValueIntoTD(tdPublicYn, strLang82 );
+        }
         InsValueIntoTD(tdLimit, SelectSingleNodeValue(clsInfo, "LIMITRANGE"));
 
         InsYNIntoTD(tdConfirm, SelectSingleNodeValue(clsInfo, "CONFIRMFLAG"));
@@ -217,8 +230,11 @@ function InitSCInfo() {
 
     if (ret == "FALSE") {
         alert("" + strLang708 + "");
-    }
-    else {
+    } else if (ret == "NORECORD") {
+    	tdSCInfo.innerHTML = strLang711;
+        tdSCInfo.style.textAlign  = "center";
+        tdSCInfo.style.height  = "215px";
+    } else {
         //SCList.dataSource=rtnXml;
         var listview = new ListView();                          
         listview.SetID("lvtSCList");                            

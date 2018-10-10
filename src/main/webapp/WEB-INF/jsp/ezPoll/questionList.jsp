@@ -7,14 +7,14 @@
 	<head>
 		<title><spring:message code="ezPoll.t229" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
+		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/sort.css')}" type="text/css">	
 		
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>				
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>				
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 				
 		<script type="text/javascript">	
 			var strLang39		  = "<spring:message code = 'ezPoll.t167'/>";
@@ -92,9 +92,9 @@
 		    	$(':checkbox:checked').removeAttr('checked');
 			}
 		    
-		    function menuQst_DetailUserInfo(pUserID) {
+		    function menuQst_DetailUserInfo(pUserID, pDeptID) {
 		    	 var feature = GetOpenPosition(420, 438);
-		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
 		    
 		    function menu_Search() {
@@ -518,7 +518,7 @@
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
 					</th> 
-					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+<!-- 					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th> -->
 					<th><spring:message code="ezPoll.t106"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t104"/></th> 					
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
@@ -531,11 +531,11 @@
 			        <tr id="${list.qstId}" class="white">
 			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td>
 			        	
-			        	<td>			        	
-							<c:if test="${list.isHidden == 1}">
-								<img src="/images/ImgIcon/icon-highimportance.gif" border="0">
-							</c:if>						
-			        	</td>
+<!-- 			        	<td>			        	 -->
+<%-- 							<c:if test="${list.isHidden == 1}"> --%>
+<!-- 								<img src="/images/ImgIcon/icon-highimportance.gif" border="0"> -->
+<%-- 							</c:if>						 --%>
+<!-- 			        	</td> -->
 			        	 
 			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" >
 				          	<c:out value ="${list.title}"/>
@@ -558,10 +558,10 @@
 			          	<%-- Creator --%>
 		          		<c:choose>
 							<c:when test="${primary == '1'}">
-								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td>
+								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}','${list.creatorDept}')"> ${list.creatorName1} </a> </td>
 							</c:when>
 							<c:otherwise>
-								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td>
+								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}','${list.creatorDept}')"> ${list.creatorName2} </a> </td>
 							</c:otherwise>
 						</c:choose>	
 			          	
@@ -597,7 +597,7 @@
 		        
 			    <c:if test="${list.size() == 0}"> 
 			        <tr> 
-						<td colspan="9" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td>
+						<td colspan="8" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td>
 		       		</tr> 
 		        </c:if> 
 			</table> 

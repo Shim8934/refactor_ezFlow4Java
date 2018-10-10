@@ -63,7 +63,6 @@ public class EzEmailAsync {
 			
 			String password = jspw;
 			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
-			List<String[]> receiveDetailList = new ArrayList<>();
 			Locale locale = Locale.getDefault();
 						
 			String isReadDeleteStr = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
@@ -115,7 +114,7 @@ public class EzEmailAsync {
 					
 					ia.close();
 					ia = null;
-				} catch (MessagingException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 					jobCode = 3;
 				} finally {					
@@ -124,12 +123,10 @@ public class EzEmailAsync {
 					}
 				}
 				
+				ezEmailService.updateMailReceiveDetailInfo(num, new String[] {address, String.valueOf(jobCode)});
 				logger.debug("address=" + address + ",jobCode=" + jobCode);
-				
-				receiveDetailList.add(new String[] {address, String.valueOf(jobCode)});
 			}
 			
-			ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

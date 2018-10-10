@@ -7,12 +7,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t999900011' /></title>
-		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		 	window.onload = function () {
-			 	if ("${portalEnv}" == "1") {
+		 		if ("${portalEnv}" == "1") {
 		            //document.getElementById("Portal_sub1").parentNode.onclick()
 		            document.getElementById("Portal_sub1").onclick();
 		        } else if ("${portalEnv}" == "2") {
@@ -22,9 +22,9 @@
 		        	document.getElementById("Portal_sub1").onclick();
 		        }
 			 
-			 
 		        if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
-		            //document.getElementById("UserInfo").parentNode.onclick()
+		        	//2018-08-08 김보미 - 주석제거
+		            document.getElementById("UserInfo").parentNode.onclick();
 		            document.getElementById("UserInfo").onclick();
 		        }
 		        

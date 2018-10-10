@@ -148,7 +148,7 @@
 		<![CDATA[
 			SELECT 
 				containerid,
-				usedepid,
+				usedepid as usedeptid,
 				(SELECT displayname FROM TBL_DEPTMASTER T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
 				(SELECT displayname2 FROM TBL_DEPTMASTER T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
 			FROM
@@ -998,6 +998,7 @@
 		<![CDATA[
 			SELECT
 				deptid,
+				deptname,
 				userid
 			FROM
 				TBL_FORMRECV
@@ -1014,7 +1015,8 @@
 		<isEqual property="approvalFlag" compareValue="G">
 			<![CDATA[
 				SELECT
-					deptid
+					deptid,
+					deptname
 				FROM
 					TBL_FORMRECV
 				WHERE
@@ -1521,7 +1523,7 @@
 					APRMEMBERDEPTNAME$v_STRLANG$ AS APRMEMBERDEPTNAME,
 	   				APRMEMBERJOBTITLE$v_STRLANG$ AS APRMEMBERJOBTITLE,
 	   				APRTYPE, 
-	   				C.NAME$v_STRLANG$ AS APRTYPENAME,
+	   				C.NAME$v_LANG$ AS APRTYPENAME,
 	   				COUNT(APRMEMBERID) AS APRCOUNT
 	   			FROM 
 	   				TBL_ENDAPRLINEINFO E
@@ -1550,7 +1552,7 @@
 	   				APRMEMBERDEPTNAME$v_STRLANG$,
 	   				APRMEMBERJOBTITLE$v_STRLANG$,
 	   				APRTYPE,
-	   				C.NAME$v_STRLANG$
+	   				C.NAME$v_LANG$
 			]]>
 			<isEqual property="userFlag" compareValue="0">
 				ORDER BY
@@ -1756,6 +1758,7 @@
 					(formid,
 					deptid,
 					deptsn,
+					deptname,
 					userid,
 					companyid,
 					tenant_id)
@@ -1763,6 +1766,7 @@
 					(#v_PFORMID#,
 					#deptID#,
 					#deptSN#,
+					#deptName#,
 					#userID#,
 					#companyID#,
 					#tenantID#)
@@ -1774,12 +1778,14 @@
 					(formid,
 					deptid,
 					deptsn,
+					deptname,
 					companyid,
 					tenant_id)
 				VALUES
 					(#v_PFORMID#,
 					#deptID#,
 					#deptSN#,
+					#deptName#,
 					#companyID#,
 					#tenantID#)
 			]]>
@@ -2270,21 +2276,44 @@
 	</select>
 
 	<select id="EzApprovalGAdminDAO.getCodeType" parameterClass="Map" resultClass="ApprGLeftVO">
-		SELECT
-			code2,
-			CASE #primary# WHEN '1' THEN name WHEN '2' THEN name2 END AS NAME 
-		FROM 
-			TBL_CODELIST 
-		WHERE 
-			tenant_id = #tenantID#
-		AND
-			companyid = #companyID#
-		AND
-			code1 = #code1# 
-		AND 
-			isuse = '1' 
-		ORDER BY 
-			code2
+		<isEqual property="lang" compareValue="1">
+		<![CDATA[
+			SELECT
+				code2,
+				CASE #primary# WHEN '1' THEN name WHEN '2' THEN name2 END AS NAME 
+			FROM 
+				TBL_CODELIST 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				code1 = #code1# 
+			AND 
+				isuse = '1' 
+			ORDER BY 
+				code2
+		]]>
+		</isEqual>
+		<isNotEqual property="lang" compareValue="1">
+		<![CDATA[
+			SELECT
+				code2,
+				NAME$lang$ AS NAME 
+			FROM 
+				TBL_CODELIST 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				code1 = #code1# 
+			AND 
+				isuse = '1' 
+			ORDER BY 
+				code2
+		]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="EzApprovalGAdminDAO.getFormAprRule" parameterClass="Map" resultClass="ApprGAutoRuleVO">
@@ -2661,6 +2690,24 @@
 				#tenantID#)
 		]]>
 	</insert>
+	
+	<update id="EzApprovalGAdmin.updateReceiveGroupItemInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADMINRECEIPTGROUP_SUB
+			SET
+				deptname = #deptName#,
+				deptname2 = #deptName2#
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyID = #companyID#
+			AND
+				mainid = #mainID#
+			AND
+				deptid = #deptID#
+		]]>
+	</update>
 
 	<!-- <procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" -->
 	<!-- parameterClass="Map"> -->
@@ -2715,20 +2762,11 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ADMINRECEIPTGROUP_MAIN
-				(mainid,
-				mainname,
+				(mainname,
 				companyid,
 				tenant_id)
 			VALUES
-				((SELECT
-					NVL(MAX(mainid),0) + 1
-				FROM
-					TBL_ADMINRECEIPTGROUP_MAIN
-				WHERE
-					tenant_ID = #tenantID#
-				AND
-					companyid = #companyID#),
-				#v_MAINNAME#,
+				(#v_MAINNAME#,
 				#companyID#,
 				#tenantID#)
 		]]>
@@ -3370,7 +3408,8 @@
         		tenant_id = #tenantID#
         	AND
         		companyid = #companyID#
-        		
+        	ORDER BY
+        		TO_NUMBER(containertypeid)	
 	    ]]>
 	</select>
 
@@ -3552,8 +3591,8 @@
 				'0',
 				NULL,
 				NULL,
-				#companyID#,
-				#tenantID#
+				companyid,
+				tenant_id
 			FROM
 				TBL_TASKCODE
 			WHERE
@@ -3940,7 +3979,7 @@
 		]]>
 	</update>
 	
-	<select id ="EzApprovalG.getAdminListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
+	<select id ="EzApprovalGAdmin.getAdminListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
 		<![CDATA[
 			SELECT 
 				name,

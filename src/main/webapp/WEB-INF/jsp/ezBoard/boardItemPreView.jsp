@@ -7,8 +7,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="/css/previewBoard.css" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/previewBoard.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		
 		var curFontSize = 1;
@@ -184,12 +184,12 @@
 								<td id="User_DeptNM" style="white-space:nowrap; width:40%"></td>
 							</c:if>
 						</tr>
-						<!-- 직위&전화번호 -->
+						<!-- 직위&사내전화 -->
 						<c:if test="${guBun != '2'}">
 						<tr>
 							<th style="width:10%;"><spring:message code='ezBoard.t290'/></th>
 							<td id="User_JobTitle" style="white-space:nowrap; width:40%"></td>
-							<th style="width:10%;"><spring:message code='ezBoard.t38'/></th>
+							<th style="width:10%;"><spring:message code='ezPersonal.t177'/></th>
 						    <td id="Telephone" style="width:40%"></td>
 						</tr>
 						</c:if>

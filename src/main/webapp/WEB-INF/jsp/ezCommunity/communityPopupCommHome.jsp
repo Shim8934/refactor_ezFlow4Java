@@ -7,9 +7,9 @@
 	<head>
 		<title>popupCommHome</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.btype_list ul li .date {
 				-webkit-margin-start:20px;
@@ -26,12 +26,16 @@
 	    		text-overflow:ellipsis;
 	    		display:inline-block;
 	    		width:135px;
-	    	}	    			
+	    	}
+	    	#treediv div.tree {
+	    		overflow-x:hidden;
+	    		overflow-y:auto;
+	    	}
 		</style>
-		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<script type="text/javascript">
 			var primary = "<c:out value='${primary}'/>";
 			var xmlDomTreeView = createXmlDom();
@@ -93,7 +97,6 @@
 		                div.className = "tree";
 		                div.id = "TreeCtrl" + i + "obj";
 		                div.style.display = "none";
-		                div.style.overflow = "auto";
 		                document.getElementById("treediv").appendChild(h2);
 		                document.getElementById("treediv").appendChild(div);
 		            }
@@ -860,6 +863,9 @@
 	        		
 	        		if (nodelevel > 0) {
 	        			var customWidth = 135 - (18 * nodelevel);
+	        			if (customWidth < 0) {
+	        				customWidth = 0;
+	        			}
 	        			$("#spn_"+nodeId).css("width", customWidth+"px");
 	        		}
 	        	});

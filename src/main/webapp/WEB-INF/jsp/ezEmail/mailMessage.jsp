@@ -5,10 +5,15 @@
 <html>
 	<head>
 		<title><spring:message code="ezEmail.t601" /></title>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script>
 			function window_onload() {
+				var width = window.screen.availWidth;
+				var pleftpos = (parseInt(width) - 380) / 2;
+				
 				window.resizeTo(380, 111 + (window.outerHeight - window.innerHeight));	
+				window.moveTo(pleftpos, "");
 			}
 		</script>
 	</head>

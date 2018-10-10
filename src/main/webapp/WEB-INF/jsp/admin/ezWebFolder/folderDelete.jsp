@@ -5,12 +5,12 @@
 <html>
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script src="/js/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	<script type="text/javascript">
 		var folderId = "<c:out value="${folderId}"/>";
 		
@@ -36,13 +36,22 @@
 				dataType: "JSON",
 				async: false,
 				success: function(data) {
-					var reason = data.reason;
-					if (reason) {
-						alert(reason);
-						return;
-					}
+					var code = data.code;
 					
-					afterDeleteSuccess();
+					switch(code) {
+						case 0: 
+							afterDeleteSuccess();
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+					}
 				},
 				error: function (xhr, status, e){
 					alert("<spring:message code='ezWebFolder.t134'/>");

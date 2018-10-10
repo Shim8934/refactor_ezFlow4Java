@@ -6,9 +6,9 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	    
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">	    
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
 	    .mainlist_free tr td:first-child {
 	    		padding-left:10px;
@@ -18,12 +18,12 @@
 	    		padding-left:10px;
 	    }
 	    </style>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
 	    	var totalCnt = 0;
@@ -54,6 +54,9 @@
 		            type = 'k=1';
 		            Permissions_List();			        
 			    }
+			    
+			    //2018-08-06 김보미 - 페이지 위치 고정
+			    windowResize();
 			});
 			
 			function searchList() {
@@ -429,6 +432,20 @@
 		    function clearSearchVal () {
 		    	$("#searchValue").val("");
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 170 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -517,7 +534,7 @@
 	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
 	                <p id="Permission_sub3"><span divname="g" id="1tab3"><spring:message code='ezOrgan.t295' /></span></p>
 	                <p id="Permission_sub4"><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
-	                <p id="Permission_sub5"><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
+	                <p id="Permission_sub5" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
 	                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
 	                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
 	                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
@@ -525,14 +542,21 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
-	                	<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
-	                <p id="Permission_sub12"><span divname="wa" id="1tab12">근태관리자</span></p>
+	                <c:if test="${useWebfolder == 'YES'}">
+	                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                </c:if>
+	                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
 		        </div>
 		    </div>
-		
-		    <div class="listview" style="Width:100%;">
-		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
-		    </div>
+		    <!-- 2018-08-06 김보미 - 페이지 위치 고정 -->
+<!-- 		    <div class="listview" style="Width:100%;"> -->
+<!-- 		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div> -->
+<!-- 		    </div> -->
+			<div id="contentlist" style="width:100%; overflow: auto;">
+			    <div class="listview" style="border-left:0px;border-right:0px;border-bottom:1px">
+			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
+			    </div>
+			</div>
 		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
 		</form>         
 	</body>

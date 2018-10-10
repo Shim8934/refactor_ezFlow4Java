@@ -167,4 +167,159 @@
 		]]>
 	</delete>
 	
+	<select id="EzCommonDAO.checkTblCompanyConfig" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				TBL_COMPANY_CONFIG
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblCompanyConfig"> 
+	    CREATE TABLE "TBL_COMPANY_CONFIG" (
+	        "TENANT_ID" NUMBER(5,0), 
+		    "COMPANY_ID" NVARCHAR2(80) NOT NULL ENABLE, 
+		    "PROPERTY_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
+		    "PROPERTY_VALUE" NVARCHAR2(2000) NOT NULL ENABLE, 
+		    CONSTRAINT "PK2_TBL_COMPANY_CONFIG" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "PROPERTY_NAME")
+	    )	
+	</statement>
+		
+	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				TBL_COMPANY_CONFIG
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				UPPER(property_name) = #property#
+		]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertCompanyConfig" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_COMPANY_CONFIG (
+				TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE
+			)
+			VALUES (
+				#tenantID#, #companyID#, #propertyName#, #propertyValue#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzCommonDAO.updateCompanyConfig" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_COMPANY_CONFIG
+			SET
+				PROPERTY_VALUE = #propertyValue#
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				PROPERTY_NAME = #propertyName#	
+		]]>
+	</update>
+	
+	<update id="EzCommonDAO.deleteCompanyConfig" parameterClass="map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_COMPANY_CONFIG
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				PROPERTY_NAME = #propertyName#	
+		]]>
+	</update>
+	
+	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MAIL
+			FROM 
+				JMOCHA_DISTRIBUTION
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addMailToJMochaDistribution"> 
+		ALTER TABLE 
+			JMOCHA_DISTRIBUTION
+		ADD 
+			MAIL VARCHAR2(100 CHAR) DEFAULT NULL
+	</statement>
+		
+	<select id="EzCommonDAO.checkAddJobMasterOrderBy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ORDERBY
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterOrderBy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			ORDERBY NVARCHAR2(200) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ipno
+			FROM 
+				TBL_ACCESS_IP
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessIP"> 
+		CREATE TABLE "TBL_ACCESS_IP" 
+	 	  (	"IPNO" NUMBER(*,0) NOT NULL ENABLE, 
+			"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+			"IPADDRESS" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
+			"ACCESS" VARCHAR2(10 BYTE) NOT NULL ENABLE, 
+			"EXPLANATION" VARCHAR2(200 BYTE), 
+			 CONSTRAINT "TBL_ACCESS_IP_PK" PRIMARY KEY ("IPNO")
+	 	 )
+	</statement>
+
+	<select id="EzCommonDAO.checkTblIPAccessID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				accessno
+			FROM 
+				TBL_ACCESS_ID
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessID"> 
+	 	CREATE TABLE "TBL_ACCESS_ID" 
+	   	(	"ACCESSNO" NUMBER(5,0) NOT NULL ENABLE, 
+			"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+			"CN" VARCHAR2(80 BYTE) NOT NULL ENABLE, 
+			 CONSTRAINT "TBL_ACCESS_ID_PK" PRIMARY KEY ("ACCESSNO")
+	   	)
+		
+	</statement>
+	
 </sqlMap>

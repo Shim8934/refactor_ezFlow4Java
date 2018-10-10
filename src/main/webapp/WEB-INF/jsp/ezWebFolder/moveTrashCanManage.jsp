@@ -5,20 +5,15 @@
 <html>
 <head>
     <title><spring:message code="ezWebFolder.t282"/></title>
-<!--     <meta name="CODE_LANGUAGE" content="C#"> -->
-    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-    <link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css" />
-    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="/js/ezWebFolder/jsTree/dist/jstree.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-   	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
+    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
+    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+   	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
     <script>
         var PostTreeView = null;
         var treeconfig = "";
@@ -28,6 +23,7 @@
 		var folderType = "${folderType}";
 		var checkedfileList = "${fileList}";
 		var checkedfolderList = "${folderList}";
+		var treeData;
 
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
@@ -73,6 +69,8 @@
 							"margin-left" : "10"
 						}
 					}).on('loaded.jstree', function() {
+						treeData = data;
+						addTitle();
 						firFolderId = data.data[0]["id"];
 						var test = "#" + folderId;
 						var elmentTest = document.getElementById(firFolderId);
@@ -136,6 +134,18 @@
             window.close();
             opener.refreshView();
         }
+        
+		function addTitle() {
+		   	var data = this.treeData;
+		   	for ( var i = 0; i < data.length ; i++  ) {
+		   		var dataId = data[i]["id"] + "_anchor";
+		   		var folderName = data[i]["folderName1"];
+		   		var childE = document.getElementById(dataId);
+		   		if (childE != null){
+					childE.setAttribute("title", folderName);
+	    		}
+	    	}
+	    }
     </script>
 </head>
 

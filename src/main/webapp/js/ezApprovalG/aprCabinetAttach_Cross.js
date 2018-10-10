@@ -38,7 +38,7 @@ function DocMove() {
                 for (i = 0; i < SelDocList.GetRowCount() ; i++) {
                     countsel = SelDocList.GetDataRows();
 
-                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[4].innerHTML) {
+                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[5].innerHTML) {
                         DuplicateFlag = true;
                     }
                 }
@@ -384,7 +384,7 @@ function InsertToRecListView_lv(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
-
+        DocList.SetSecurityFlag(true);
         DocList.DataSource(ListViewData);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;

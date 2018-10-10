@@ -6,20 +6,20 @@
 	<HEAD>
 		<title><spring:message code='ezTask.t206' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/task_write_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/task_write_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachItem_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachMain_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script>
 			var userid = "${userInfo.id }";
 			var username = "${userInfo.displayName1 }";
@@ -266,23 +266,23 @@
 				
 				if (useTodoMemo == 'YES') {													
 					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (tasktype == "2") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (tasktype == "3") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					}
 				} else {
 					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else if (tasktype == "2") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else if (tasktype == "3") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					}
 				}
 			}
@@ -380,7 +380,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2011' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (obj.id == "I") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -396,7 +396,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 440 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -412,7 +412,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 440 + "PX";
 					}
 				} else {				
 					if (obj.id == "P") {
@@ -431,7 +431,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2011' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else if (obj.id == "I") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -447,7 +447,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -463,7 +463,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					}
 				}
 				
@@ -841,7 +841,7 @@
 								<c:if test="${useTodoMemo == 'YES' && mode == ''}">	
 									<tr id="menuTaskMemo">
 										<th><spring:message code='ezTask.t170' /></th>
-										<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+										<td colspan="3" id ="memoTd" style="width:100%;">
 											<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 										</td>
 									</tr>
@@ -877,7 +877,7 @@
 								<c:if test="${useTodoMemo == 'YES' && mode == '1' }">
 									<tr>
 										<th><spring:message code='ezTask.t1701' /></th>
-										<td colspan="3" style="height: 40px;">
+										<td colspan="3">
 											<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 										</td>
 									</tr>
@@ -1000,7 +1000,7 @@
 									<c:if test="${mode == '1' }">
 										<tr>
 											<th><spring:message code='ezTask.t1701' /></th>
-											<td colspan="3" style="height: 40px;">
+											<td colspan="3">
 												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 											</td>
 										</tr>
@@ -1008,7 +1008,7 @@
 									<c:if test="${mode == '2' }">
 										<tr>
 											<th><spring:message code='ezTask.t1701' /></th>
-											<td colspan="3" style="height: 40px;">
+											<td colspan="3">
 												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 											</td>
 										</tr>
@@ -1051,8 +1051,7 @@
 					<c:when test="${mode == ''}">
 						<tr>
 							<td>
-								<br/> 
-								<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
+								<iframe id="dadiframe" name="dadiframe" style="width: 100%;margin-top:3px; height: 100%; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
 							</td>
 						</tr>
 					</c:when>
@@ -1061,15 +1060,13 @@
 							<c:when test="${ mode == '2'}">
 								<tr>
 									<td>
-										<br/> 
-										<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
+										<iframe id="dadiframe" name="dadiframe" style="width: 100%;margin-top:3px; height: 160px; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
 									</td>
 								</tr>
 							</c:when>
 							<c:otherwise>
 								<tr>
 									<td>
-										<br/> 
 										<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px; display: none;" src="/ezTask/dragAndDrop.do"></iframe>
 									</td>
 								</tr>
@@ -1126,23 +1123,23 @@
 				if (mode == "") {					
 					if (useTodoMemo == 'YES') { 
 						if (tasktype == "1") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} else if (tasktype == "2") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} else if (tasktype == "3") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} else { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} 
 					} else { 
 						if (tasktype == "1") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} else if (tasktype == "2") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} else if (tasktype == "3") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} else { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} 
 					}
 				}

@@ -6,13 +6,13 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Insert title here</title>
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<style>
 			.pagetd{
@@ -40,10 +40,12 @@
 			    makePageSelPage();
 			}
 			
-			function openinfo1(a,b,c) {
+		    /* 2018-06-29 홍승비 - 커뮤니티 회원을 해당 회사에 겸직하고 있는 정보로 표출하기 */
+		    // deptid = d
+			function openinfo1(a,b,c, d) {
 			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=440";
 			    feature = feature + GetOpenPosition(420, 440);
-				rts60 = window.open("/ezCommon/showPersonInfo.do?id=" + b, "", feature);
+				rts60 = window.open("/ezCommon/showPersonInfo.do?id=" + b + "&dept=" + d, "", feature);
 	            
 			}
 			

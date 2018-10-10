@@ -1,4 +1,4 @@
-﻿function getOpinionList() {
+﻿﻿﻿﻿﻿function getOpinionList() {
     try {
     	var result = "";
         
@@ -8,7 +8,8 @@
     		async : false,
     		url : "/ezApprovalG/opinionRequest.do",
     		data : {
-    			docID : pDocID
+    			docID : pDocID,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -244,10 +245,19 @@ function CheckOpinionExist() {
             btn_OpinionAdd.textContent = strLang389;
         }
         else {
+        	document.getElementById("bbtn_OpinionCancel").style.display = "";
             for (var i = 0 ; i < pTotalRowsLen ; i++) {
                 if (pUserID == trim_Cross(GetAttribute(pTotalRows[i], "DATA2"))) {
-                    document.getElementById("btn_OpinionAdd").textContent = strLang390;
-                    OpinionAddFlag = 1;
+                	document.getElementById("btn_OpinionAdd").textContent = strLang390;
+                	
+                	if (pDisplay != "BanSong") {  
+                		document.getElementById("bbtn_OpinionAdd").style.display = "none";
+                	} else {
+                		document.getElementById("btn_OpinionAdd").textContent = strLang389;
+//                		document.getElementById("txt_OpinionContent").value = "";
+                	}
+                    
+                	OpinionAddFlag = 1;
                     break;
                 }
 
@@ -276,6 +286,7 @@ function AddOpinionContent(Opstate, OpContent) {
             document.getElementById("txt_OpinionContent").focus();
         }
         else if (Opstate == strLang389 && OpContent != "") {
+        	document.getElementById("bbtn_OpinionCancel").style.display = "";
 
             var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -323,8 +334,9 @@ function AddOpinionContent(Opstate, OpContent) {
             OpinionAddFlag = 1;
 
             setNodeText(document.getElementById("btn_OpinionAdd") , strLang390);
-            setNodeText(document.getElementById("btn_OpinionCancel") , strLang397);
+            setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
             document.getElementById("bbtn_OpinionAdd").style.display = "none";
+            OpenAlertUI(strLang490);
         }
         else if (Opstate == strLang390 && OpContent != "") {
             var OpinionList = new ListView();
@@ -357,7 +369,8 @@ function AddOpinionContent(Opstate, OpContent) {
                     			userID : pUserID,
                     			formID  : "",
                     			isUsed  : "",
-                    			mode     : ""
+                    			mode     : "",
+                    			orgCompanyID : orgCompanyID
                     		},
                     		success: function(text){
                     			result = text;
@@ -389,14 +402,14 @@ function AddOpinionContent(Opstate, OpContent) {
 
                     var tr = GetChildNodes(pSelectedRow[0]);
 
-                    setNodeText(tr[3], UserLang == "1" ? tmpKyljeaDeptName : tmpKyljeaDeptName2);
-                    setNodeText(tr[2], UserLang == "1" ? tmpKyljeaJobtitle : tmpKyljeaJobtitle2);
+                    setNodeText(tr[3], tmpKyljeaDeptName);
+                    setNodeText(tr[2], tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA4", tmpKyljeaDeptID);
                     SetAttribute(pSelectedRow[0], "DATA9", tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA10", tmpKyljeaJobtitle2);
                     SetAttribute(pSelectedRow[0], "DATA11", tmpKyljeaDeptName);
                     SetAttribute(pSelectedRow[0], "DATA12", tmpKyljeaDeptName2);
-                    setNodeText(document.getElementById("btn_OpinionCancel") , "" + strLang397 + "");
+                    setNodeText(document.getElementById("btn_OpinionCancel") , "" + strLang10 + "");
 
                     var pAlertContent = strLang1027;
                     OpenAlertUI(pAlertContent);
@@ -468,7 +481,8 @@ function InitOpinionInfo() {
 
         for (var x = 0; x < opCountLen; x++) {
             if (GetAttribute(opCount[x], "DATA2") == arr_userinfo[1] && pDisplay == "BanSong") {
-            	document.getElementById("txt_OpinionContent").value = GetAttribute(opCount[x], "DATA3") != null ? GetAttribute(opCount[x], "DATA3") : "";
+//            	document.getElementById("txt_OpinionContent").value = GetAttribute(opCount[x], "DATA3") != null ? GetAttribute(opCount[x], "DATA3") : "";
+            	document.getElementById("txt_OpinionContent").value = "";
             }
         }
 
@@ -499,13 +513,13 @@ function deleteOpinionInfo() {
             if (pOrgDocID == "REDRAFT") {
                 var pInformationContent = strLang406;
                 var Rtnval = OpenInformationUI(pInformationContent, deleteOpinionInfo_Complete);
-                if (!CrossYN() && Rtnval) {
+                if (Rtnval) {
                     var selIdx = GetAttribute(pSelectedRow[0], "id");
 
                     OpinionList.DeleteRow(selIdx);
                     document.getElementById("txt_OpinionContent").value = "";
                     setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
-                    setNodeText(document.getElementById("btn_OpinionCancel") , strLang397);
+                    setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
                     OpinionAddFlag = 0;
                 }
             }
@@ -527,9 +541,23 @@ function deleteOpinionInfo_Complete(Rtnval) {
 
         var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
+        
+        if (OpinionList.GetRowCount() == 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "OpinionList_TR_noItems");
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	objTd.setAttribute("colSpan", 4);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+        }
+        
         document.getElementById("txt_OpinionContent").value = "";
         setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
-        setNodeText(document.getElementById("btn_OpinionCancel") , strLang397);
+        setNodeText(document.getElementById("btn_OpinionCancel") , strLang10);
+        document.getElementById("bbtn_OpinionDel").style.display = "none";
         OpinionAddFlag = 0;
     }
 }
@@ -549,13 +577,13 @@ function deleteOpinion(pSelectedRow) {
             }
             else {
                 var pInformationContent = "" + strLang406 + "";
-                var Rtnval = OpenInformationUI(pInformationContent, deleteOpinion_Complete);
-                if (!CrossYN() && Rtnval) {
+                var Rtnval = OpenInformationUI2(pInformationContent, deleteOpinion_Complete);
+                if (Rtnval) {
                     var selIdx = GetAttribute(tr, "id");
                     OpinionList.DeleteRow(selIdx);
                     document.getElementById("txt_OpinionContent").value = "";
                     document.getElementById("btn_OpinionAdd").textContent = strLang389;
-                    document.getElementById("btn_OpinionCancel").textContent = strLang397;
+                    document.getElementById("btn_OpinionCancel").textContent = strLang10;
                     OpinionAddFlag = 0;
                 }
             }
@@ -571,13 +599,24 @@ function deleteOpinion_Complete(Rtnval) {
         var OpinionList = new ListView();
         OpinionList.LoadFromID("OpinionList");
         var pSelectedRow = OpinionList.GetSelectedRows();
-        var tr = pSelectedRow[0];
-
-        var selIdx = GetAttribute(tr, "id");
+        var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
+        
+        if (OpinionList.GetRowCount() == 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "OpinionList_TR_noItems");
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	objTd.setAttribute("colSpan", 4);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+        }
         document.getElementById("txt_OpinionContent").value = "";
         document.getElementById("btn_OpinionAdd").textContent = strLang389;
-        document.getElementById("btn_OpinionCancel").textContent = strLang397;
+        document.getElementById("btn_OpinionCancel").textContent = strLang10;
+        document.getElementById("bbtn_OpinionDel").style.display = "none";
         OpinionAddFlag = 0;
     }
 }
@@ -587,9 +626,12 @@ function saveOpinionInfo() {
         var OpinionList = new ListView();
         OpinionList.LoadFromID("OpinionList");
 
-        var selRow = OpinionList.GetDataRows();
-
-        if (selRow.length == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
+        var pOpinionLen = OpinionList.GetRowCount();
+        
+        if (pOpinionLen == 1 && OpinionList.GetDataRows()[0].id.indexOf("noItems") > -1) {
+        	pOpinionLen = 0;
+        }
+        if (pOpinionLen == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
         {
         	if ((pDisplay == "BanSong" || pDisplay == "HeSong" || pDisplay == "BoRyu") && getNodeText(document.getElementById("btn_OpinionCancel")) != strLang407) {
                 var pAlertContent = GetOpinionTypeName(pOpinionType) + strLang410;
@@ -756,7 +798,7 @@ function autosaveOpinionXMLInfo() {
         }
 
         objXML = getOpinionListInfo();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
@@ -832,7 +874,7 @@ function saveHesoungOpinionXMLInfo() {
                 }
             }
             objXML = getOpinionListInfo();
-            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+            xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
             xmlhttp.send(objXML);
 
             var RtnVal = xmlhttp.responseText;
@@ -897,7 +939,7 @@ function saveOpinionXMLInfo() {
         }
         objXML = getOpinionListInfo();
         var xmlhttp = new createXMLHttpRequest();
-        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
+        xmlhttp.open("Post", "/ezApprovalG/opinionSave.do?orgCompanyID="+orgCompanyID, false);
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
@@ -940,16 +982,14 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1032,4 +1072,23 @@ function GetOpinionTypeName(strOType) {
             return strLangOpinionType1;
             break;
     }
+}
+// 2018-08-02 강민수92 다른곳에서  OpenInformationUI 를 쓸 수 있을 수도 있기때문에 OpenInformationUI2를 새로추가
+function OpenInformationUI2(pInformationContent, CompleteFunction) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/ezAprOpinion.do";
+
+    if (CrossYN() && ext != 'hwp') {
+        ezapropinion_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        DivPopUpShow(330, 205, url);
+    } else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+    return RtnVal;
 }

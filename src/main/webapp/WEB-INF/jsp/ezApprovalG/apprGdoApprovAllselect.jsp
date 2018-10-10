@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title><spring:message code='ezApprovalG.t9997'/></title>
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 		    var cnt = "${cnt}";
 		    var arr_userinfo = new Array();
@@ -61,10 +62,12 @@
 		        createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
 		        createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "${userInfo.lang}");
 		        var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
+		        var orgCompanyID = "";
 		        if (parseInt(cnt) > 1) {
 		            for (var i = 0; i < parseInt(cnt) ; i++) {
 		            	// 체크된 값의 정보만 xmlpara에 생성
 		                if (eval(document.frm.chk[i]).checked) {
+					        orgCompanyID = $(document.frm.chk[i]).attr("orgCompanyID");
 		                    doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                    $.ajax({
 		    	      			type : "POST",
@@ -72,7 +75,8 @@
 		    	      			async : false,
 		    	      			url : "/ezApprovalG/getLineMode.do",
 		    	      			data : {
-		    	      					docID : document.frm.chk[i].value.split("|")[0]
+		    	      					docID : document.frm.chk[i].value.split("|")[0],
+		    	      					orgCompanyID : orgCompanyID
 		    	      					},
 		    	      			success: function(xml){
 		    	      				pMode = xml;
@@ -83,6 +87,7 @@
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk[i].value.split("|")[2]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk[i].value.split("|")[3]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk[i].value.split("|")[4]);
+			                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
 		        			createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		                }
 		            }
@@ -90,13 +95,15 @@
 		        else {
 		        	// 리스트의 값이 하나인 경우
 		            if (eval(document.frm.chk).checked) {
+		            	orgCompanyID = $(document.frm.chk).attr("orgCompanyID");
 		            	$.ajax({
 	    	      			type : "POST",
 	    	      			dataType : "text",
 	    	      			async : false,
 	    	      			url : "/ezApprovalG/getLineMode.do",
 	    	      			data : {
-	    	      					docID : document.frm.chk.value.split("|")[0]
+	    	      					docID : document.frm.chk.value.split("|")[0],
+	    	      					orgCompanyID : orgCompanyID
 	    	      					},
 	    	      			success: function(xml){
 	    	      				pMode = xml;
@@ -108,6 +115,7 @@
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk.value.split("|")[2]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk.value.split("|")[3]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk.value.split("|")[4]);
+		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
 		        		createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		            }
 		        }
@@ -266,18 +274,34 @@
 		            </td>
 		        </tr>
 		        <tr>
-		            <td style="height:20px;vertical-align:middle;"><spring:message code='ezApprovalG.t9998'/></td>
+		        <c:if test="${approvalFlag == 'G'}"> 
+		            <td style="height:20px;vertical-align:middle;">▒ <b><spring:message code='ezApprovalG.t26'/></b>,<spring:message code='ezApprovalG.t9998'/></td>
+		        </c:if>
+		        <c:if test="${approvalFlag == 'S'}">
+		        	<td style="height:20px;vertical-align:middle;">▒ <spring:message code='ezApprovalG.t9998'/></td>
+		        </c:if>
 		        </tr>
 		        <tr>
 		            <td  style="text-align:center;">
-		                <div style="overflow-y:auto;width:600px;HEIGHT:350px;">
+		                <div style="overflow-y:auto;width:680px;HEIGHT:350px;">
 		                    <table class="mainlist" >
 		                        <tr >
 		                            <th style="padding:0;text-align:center;width:20px;"><input type="checkbox" id="mainChk" onclick="checkAll(this.id)" /></th>
-		                            <th style="width:280px;"><spring:message code='ezApprovalG.t106'/></th>
-		                            <th style="width:100px;"><spring:message code='ezApprovalG.t1331'/></th>
-		                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>
-		                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th>
+		                            <c:choose>
+		                            	<c:when test="${viewCompany eq '1'}">
+				                            <th style="width:280px;"><spring:message code='ezApprovalG.t106'/></th>  <%-- 제목 --%>
+				                            <th style="width:100px;"><spring:message code='ezApprovalG.t1145'/></th> <%-- 회사 --%>
+				                            <th style="width:100px;"><spring:message code='ezApprovalG.t1331'/></th> <%-- 기안부서 --%>
+				                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>   <%-- 기안자 --%>
+				                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th> <%-- 기안일시 --%>
+		                            	</c:when>
+		                            	<c:otherwise>
+				                            <th style="width:290px;"><spring:message code='ezApprovalG.t106'/></th>  <%-- 제목 --%>
+				                            <th style="width:110px;"><spring:message code='ezApprovalG.t1331'/></th> <%-- 기안부서 --%>
+				                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>   <%-- 기안자 --%>
+				                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th> <%-- 기안일시 --%>
+		                            	</c:otherwise>
+		                            </c:choose>
 		                        </tr>
 		                        ${sbStr}
 		                    </table>

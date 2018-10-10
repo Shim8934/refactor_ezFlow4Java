@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t52" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">	   	
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">	   	
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <style>
 	    	.tree {
 	    		min-height : 100px;
@@ -18,10 +18,10 @@
 				text-overflow:ellipsis;
 			}
 	    </style>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "<c:out value='${user.id}'/>";
 	        var SSUserName = "<c:out value='${user.displayName}'/>";
@@ -161,12 +161,17 @@
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		        if(nodeLevel > 9)
-		        	nodeLevel = 9;
+		        
 		        for(var i=0; i<title2.length; i++) {
+		        	var spanW = 152 - (18 * nodeLevel);	
 		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+		        	
+		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+		        	if (spanW < 0) {
+						 spanW = 0;
+					 }
+		        	title3[0].style.width = spanW + 'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -332,7 +337,7 @@
 							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
-	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px;'>";
+	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow-x: hidden; overflow-y: auto; padding-left: 10px; padding-bottom: 20px;'>";
 	                        strHTML += "</div></ul>";
 						});
 						cnt = item.length;

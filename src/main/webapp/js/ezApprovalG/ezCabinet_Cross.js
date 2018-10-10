@@ -1,4 +1,4 @@
-﻿﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -21,6 +21,13 @@ var g_OtherDeptDocViewRight = false;
 var g_CabListXmlhttp = null;
 var totalPage = "";
 var pTotalCnt = "";
+
+var g_isSearching = false;
+var g_searchDate = {
+	startDate: null,
+	endDate: null
+}
+
 function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
@@ -89,8 +96,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (selRow.getAttribute("DATA6") == "0") {
                 if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                	console.log(g_bDeptCharger)
-					if (GetCabChargerRight() == "true" || g_bDeptCharger) {                    	
+					if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
                         document.getElementById("tdbtnEndProduce").style.display = "";
                         //SwapImage(btnEndProduce, "");
                     }
@@ -112,7 +118,7 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
 
                 if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-					if (GetCabChargerRight() == "true") {                    	
+					if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
                         document.getElementById("tdbtnCancelEndProd").style.display = "";
                         //SwapImage(btnCancelEndProd, "");
                     }
@@ -542,6 +548,27 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+    } else if (g_isSearching) {
+    	var searchParamXml = loadXMLString(g_RecSearchParamXml);
+        var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
+        var endDate = SelectSingleNodeValue(searchParamXml.firstChild, "EREGDATE");
+        
+    	if (startDate == "") {
+    		var date = new Date();
+    		date.setFullYear(date.getFullYear() - 1);
+    		
+    		g_searchDate.startDate = date;
+    	} else {
+    		g_searchDate.startDate = new Date(startDate.replace(/-/g,'/'));
+    	}
+    	
+        if (endDate == "") {
+        	g_searchDate.endDate = new Date();
+        } else {
+        	g_searchDate.endDate = new Date(endDate.replace(/-/g,'/'));
+        }
+        
+        
     }
 
     switch (ListTypeFlag) {
@@ -813,9 +840,13 @@ function InsertToRecListView(Resultxml) {
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
-
-        makePageSelPage(NodeListLen);
-
+        
+        if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
+        	orgmakePageSelPage(NodeListLen);
+        } else {
+        	makePageSelPage(NodeListLen);
+        }
+        
         DisplayLineCnt_ezCab(NodeListLen);
         selFirstRow(Resultxml);
     } catch (e) { }
@@ -1029,7 +1060,7 @@ function btnViewCabInfo_onclick() {
         var url = "/ezApprovalG/viewCabInfo.do";
         viewcabinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 630));
+        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 550));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1168,8 +1199,11 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (trim_Cross(pURL) == "") {
             if (trim_Cross(DocID) == "") {
                 OpenAlertUI(strLang260);
-            }
-            else {
+            } else if (g_uFlag == "m03") {
+            	var pAlertContent = "배부문서는 최초접수시 생성되므로 배부받은 부서에서 접수를 하여야 열람할 수 있습니다.";
+                OpenAlertUI(pAlertContent);
+                return "";
+            } else {
                 var para2 = new Array();
                 para2[0] = selRow.getAttribute("DATA6");
                 para2[1] = selRow.getAttribute("DATA8");
@@ -1195,25 +1229,45 @@ function ViewDoc_onclick_Complete(Rtn) {
             var para = new Array();
             DocID = selRow.getAttribute("DATA1");
             pURL = selRow.getAttribute("DATA2");
+            
+            var tempUrl = pURL;
 
             var openLocation = "";
             
-            if (g_uFlag == "m03") {
-                openLocation = "/ezApprovalG/contDocView.do";
-                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
+            if (tempUrl.substr(tempUrl.length - 4, tempUrl.length).toLowerCase() == ".ezd") {
+            	tempUrl = tempUrl.substr(0, tempUrl.length - 4);
             }
-            else {
-                openLocation = "/ezApprovalG/contDocView.do";
-                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
-            }
-            openwindow(openLocation, "", 880, 570);
-        }
-    }
+            
+            if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
+            	if (isIE()) {
+                	if (g_uFlag == "m03") {
+                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+                	} else {
+                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                	}
+                } else {
+                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                	alert(pAlertContent);
+                    
+                    return;
+                }
+            } else {
+	            if (g_uFlag == "m03") {
+	                openLocation = "/ezApprovalG/contDocView.do";
+	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
+	            } else {
+	                openLocation = "/ezApprovalG/contDocView.do";
+	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
+	            }
+             }
+	            openwindow(openLocation, "", 880, 570);
+         }
+     }
 }
 //END
 function GetTodayDate() {
     var objDate = new Date();
-    var y = String(objDate.getYear());
+    var y = String(objDate.getFullYear());
     var m = String(objDate.getMonth() + 1);
     var d = String(objDate.getDate());
     m = "00".substring(0, 2 - m.length) + m;
@@ -1226,13 +1280,17 @@ var ezchkpasswd_cross_dialogArguments = new Array();
 function chk_Passwd(pUserID, CompleteFunction) {
     var parameter = pUserID;
     ezchkpasswd_cross_dialogArguments[0] = parameter;
-    if (CompleteFunction != undefined)
-        ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
-    else
-        ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    
+    if (CompleteFunction != undefined) {
+    	ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
+    } else {
+    	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    }
 
+    ezchkpasswd_cross_dialogArguments[2] = true;
+    
     var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
@@ -1377,11 +1435,13 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
-            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 380));
+        	searchrec_cross_dialogArguments[2] = true;
+            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(800, 460));
             try { OpenWin.focus(); } catch (e) { }
         }
         else
-            DivPopUpShow(470, 350, url);
+            //DivPopUpShow(470, 350, url);
+        	DivPopUpShow(800, 460, url);
     }
     else {
         var feature;
@@ -1413,6 +1473,7 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
 
+        g_isSearching = true;
         g_RecSearchParamXml = rtnVal[1];
         GetRecordList();
     }
@@ -1461,7 +1522,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(909, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -1519,7 +1580,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 455));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(880, 500));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1561,12 +1622,19 @@ function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
 }
 function makePageSelPage(pTotalCnt) {
-
     var strtext;
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
-        if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
+    	if (g_isSearching) {
+    	    g_isSearching = false;
+    	    
+    		var startDate = g_searchDate.startDate;
+    		var endDate = g_searchDate.endDate;
+    		
+    		period = startDate.getFullYear() + strLang1028 + " " + (startDate.getMonth() + 1) + strLang1029 + " " + startDate.getDate() + strLang1030 + " ~ ";
+    		period += endDate.getFullYear() + strLang1028 + " " + (endDate.getMonth() + 1) + strLang1029 + " " + endDate.getDate() + strLang1030;
+    	} else if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
             var nowyear = new Date().getFullYear();
             var nowmonth = new Date().getMonth() + 1;
             var nowday = new Date().getDate();
@@ -1582,9 +1650,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
         else
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
     }
 
     strtext = "<div class='pagenavi'>";
@@ -1676,7 +1744,7 @@ function makePageSelPage(pTotalCnt) {
 function goToPageByNum(Value) {
     curpage = Value;
     pageNum = curpage;
-    makePageSelPage();
+    makePageSelPage(NodeListLen);
     openergetDocInfo();
 }
 function selbeforeBlock() {
@@ -1780,7 +1848,8 @@ function btnSearchDelivery_onclick(opnOption) {
 function btnSearchDelivery_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
-
+        
+        g_isSearching = true;
         g_DeliverySearchParamXml = rtnVal[1];
         GetDocDeliveryList(g_DeliverySearchParamXml);
     }

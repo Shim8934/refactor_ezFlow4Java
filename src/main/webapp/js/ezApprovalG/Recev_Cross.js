@@ -1431,7 +1431,7 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        parameter[99] = "mht";
         var url = "/ezApprovalG/aprOpinion.do";
 
         apropinion_cross_dialogArguments[0] = parameter;
@@ -2270,7 +2270,7 @@ function SaveDraftDocInfo()
         ezchkpasswd_cross_dialogArguments[0] = parameter;
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-        DivPopUpShow(330, 200, url);
+        DivPopUpShow(350, 225, url);
     }
 
     function getLastOpinon()
@@ -2467,7 +2467,8 @@ function SaveDraftDocInfo()
     		url : "/ezApprovalG/saveFile.do",
     		data : {
     			docID : pDocID,
-    			html  : mhtBody
+    			html  : mhtBody,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(text){
     			result = text;
@@ -2524,7 +2525,8 @@ function SaveDraftDocInfo()
     		url : "/ezApprovalG/saveFile.do",
     		data : {
     			docID : pDocID,
-    			html  : mhtBody
+    			html  : mhtBody,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(text){
     			result = text;

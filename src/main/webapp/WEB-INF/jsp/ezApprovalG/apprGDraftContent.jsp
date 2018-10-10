@@ -4,8 +4,8 @@
 <html>
 	<head>
 	    <title></title>
-	    <script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script  type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			P { margin-top: 0px;margin-bottom: 0px; } 
 			.viewbox {
@@ -318,6 +318,7 @@
 	                            }
 	                            else {
 	                                try {
+	                                	isEditor = false;
 	                                    Conent_contentEditable(document.getElementById('body'));
 	                                } catch (e) { }
 	                            }
@@ -386,6 +387,7 @@
 	                        }
 	                        else {
 	                            try {
+	                            	isEditor = false;
 	                                Conent_contentEditable(document.getElementById('body'));
 	                            } catch (e) { }
 	                        }

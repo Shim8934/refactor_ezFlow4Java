@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,9 +6,9 @@
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
-		<link rel="stylesheet" href="/css/jquery.ui.all.css" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
@@ -41,7 +40,7 @@
 				padding-right: 5px;
 			}
 			.viewtxt > span > span {
-				font-size: 14px;
+				font-size: 12px;
 			}	
 			
 			#menu > ul:nth-child(2) > li {
@@ -51,19 +50,19 @@
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.9.1.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
         <c:if test="${isCrossBrowser != true}">
-        	<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+        	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
@@ -148,6 +147,7 @@
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
 	    var pDocID = "${docID}";
+	    var orgCompanyID = "${orgCompanyID}";
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFontAndSize = "${defaultFontAndSize}";
@@ -159,7 +159,6 @@
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    var folderPath = "${drafts}";
-	    var multipartFirstIdx = "${multipartFirstIdx}";
 
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
@@ -510,15 +509,15 @@
 	    		var indexSignValue = document.getElementById("bodyValue").innerHTML.indexOf("id=\"MailSign\"");
 	            if (indexSignValue == -1) {
 		    		switch (mailsel) {
-		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>");
+		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>");
 		                    break;
-		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
 		                    tempvalue = "1";
 		                    break;
-		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
+		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
 		                    tempvalue = "1";
 		                    break;
-		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
 		                    tempvalue = "1";
 		                    break;
 		            }
@@ -544,15 +543,15 @@
 	    	    var bodyInnerHTML = document.getElementById("bodyValue").innerHTML.replace(/�/gi, "");
 	    	
 	            switch (mailsel) {
-	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>" + bodyInnerHTML);
+	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + bodyInnerHTML);
 	                    break;
-	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + bodyInnerHTML);
 	                    tempvalue = "1";
 	                    break;
-	                case "2": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "2": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + bodyInnerHTML);
 	                    tempvalue = "1";
 	                    break;
-	                case "3": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "3": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + bodyInnerHTML);
 	                    tempvalue = "1";
 	                    break;
 	            }
@@ -561,15 +560,15 @@
 				var indexSignValue = document.getElementById("tempbody").innerHTML.indexOf("id=\"MailSign\"");
 	            if (indexSignValue == -1) {
 	            	switch (mailsel) {
-			            case "0": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>");
+			            case "0": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>");
 			                break;
-			            case "1": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+			            case "1": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
 			                tempvalue = "1";
 			                break;
-			            case "2": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
+			            case "2": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
 			                tempvalue = "1";
 			                break;
-			            case "3": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+			            case "3": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
 			                tempvalue = "1";
 			                break;
 		            }
@@ -592,15 +591,15 @@
 	        }
 	        else { //새메일쓰기
 	            switch (mailsel) {
-	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'></DIV>");
+	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>");
 	                    break;
-	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
 	                	tempvalue = "1";
 		                break;
-		            case "2": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+		            case "2": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
 		                tempvalue = "1";
 		                break;
-		            case "3": message.SetEditorContent("<P " + defaultFontAndSize + ">&nbsp;</P><P " + defaultFontAndSize + ">&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+		            case "3": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
 		                tempvalue = "1";
 		                break;
 	            }
@@ -896,7 +895,7 @@
 		                					+ "&tid=" + tid;
 		                } else {
 		                	// 일반파일 첨부시
-			                aitem = "/ezEmail/downloadAttach.do?" 
+			                aitem = "/ezEmail/downloadAttachInWriter.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
 			                				+ "&filename=" + encodeURIComponent(filename);
@@ -963,7 +962,7 @@
 	        }
 	        Rebody();
 	        
-	        document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+	        document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
@@ -973,7 +972,7 @@
 
 		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
 	    function mailSignInnerHtml() {
-			if (mailsel == 0) {
+			if (mailsel == 0 && gg_cmd != "RESEND") {
 				if (pUse_Editor == "KUKUDOCS") {
 					setTimeout(function() {
 							message.EditorElementSetHtml("MailSign", "");
@@ -1092,18 +1091,8 @@
 		
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
-	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
-	  	        	message.SetEditorContent(message.GetEditorContent().replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, ""));
-	  	        	
-                    if (pUse_Editor == "NAMO") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
-                    } else if (pUse_Editor == "CK") {
-                    	document.getElementById("plainTextArea").value = " \n \n" + message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    } else {
-                    	document.getElementById("plainTextArea").value =  message.GetEditorTextContent().replace(/\r\n\r\n|\n\r\n\r/gi, "\r\n");	
-                    }	
-                    
+	        	if (confirm("<spring:message code='ezEmail.lhm28' />")) {
+	  	        	document.getElementById("plainTextArea").value =  message.GetEditorTextContent();
 	        		document.getElementById("tbContentElement").style.display = "none";
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
@@ -1113,19 +1102,7 @@
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
 	    	} else {
-	    		var texts = document.getElementById("plainTextArea").value.split("\n");
-	            var textData = "";
-	            for (var i=0; i<texts.length; i++) {
-	            	if (i == 0 && $.trim(texts[i]) == ""  && (pUse_Editor == "NAMO" || pUse_Editor == "CK")) {
-	            		textData = "<br/>";
-	            	}
-	            	if (texts[i] != "" && texts[i] != " ") {
-	            		texts[i] = texts[i].replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/gi, "\n");
-	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + " " + "</p>";
-	            	} 
-	            }
-	            
-	    		message.SetEditorContent(textData);
+	    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);
 	    		
 	    		document.getElementById("tbContentElement").style.display = "";
 				document.getElementById("plainTextArea").style.display = "none";
@@ -1574,9 +1551,8 @@
 						
 						xmpTo.innerHTML = resultHtml;
 					} else {
-						var resultHtml = "<p>해당 메일을 받은 사원은 " + searchStartDate + "&nbsp;~&nbsp;" + searchEndDate + " 중 근태를 미입력한 사원입니다.</p><p>확인 후 근태를 등록해주시기 바랍니다.</p>";
-						resultHtml += "<p>근태 수정 권한은  각 본부장님 또는 근태관리자, 경영지원실에 있사오니, 근태관리자 및 본부장님의 부재로 인해 근태 수정이 어려우신 경우 경영지원실로 메일 바랍니다.</p>";
-						resultHtml += "<p>근태는 매년 인사평가에 반영되는 사항이기에 차일까지 반드시 수정 부탁 드리겠습니다.</p><p></p><hr>";
+						//2018-10-04 배현상, 근태관리 미입력자 메일 안내문구 삭제
+						var resultHtml = "<br/><br/><br/><hr>";
 						
 						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
 						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
@@ -1665,7 +1641,7 @@
 	    	var appPtag = "";
 	    	
 	    	for (var i = 0; i < editorBodyChild.length; i++) {
-            	if ( editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
+            	if (editorBodyChild[i].nodeName.indexOf("text") == 1 || editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
             		break;
             	}
             	
@@ -1693,7 +1669,6 @@
 	    	ul.outerWidth(this.element.outerWidth());
 	    }
 	    
-	    var IsInsert_MsgTo = false;
 		$(function() {
 			var widgetInst = $("#MsgTo").autocomplete({}).data('ui-autocomplete');
 			widgetInst._renderMenu = function(ul, items) {
@@ -1734,6 +1709,7 @@
 					self._renderItem( ul, item );
 				});
 			};
+			var IsInsert_MsgTo = false;
 			$("#MsgTo").autocomplete(
 					{
 						source : function(request, response) {
@@ -1755,24 +1731,26 @@
 											email : ul.mail,
 											dept : ul.description,
 											title : ul.title,
-											type : ul.type
+											type : ul.type,
+											href : ul.href
 										};
 									}));
-
 								}
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
-						autoFocus : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
 							var addressType = "email";
+							var href = ""
 							if(ui.item.type == "G") {
 								addressType = "mailgroup";
+								href = ui.item.href;
 							}
 							
 							newElem = PrepareMailTag("0", addressType, ui.item.value,
-									ui.item.email, "");
+									ui.item.email, href);
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
 								MsgToGot.appendChild(newElem);
@@ -1824,7 +1802,9 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type,
+											href : ul.href
 										};
 									}));
 
@@ -1832,10 +1812,18 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("1", "email", ui.item.value,
-									ui.item.email, "");
+							var addressType = "email";
+							var href = ""
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+								href = ui.item.href;
+							}
+							
+							newElem = PrepareMailTag("1", addressType, ui.item.value,
+									ui.item.email, href);
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
 								MsgCCGot.appendChild(newElem);
@@ -1887,7 +1875,9 @@
 											value : ul.name,
 											email : ul.mail,
 											dept : ul.description,
-											title : ul.title
+											title : ul.title,
+											type : ul.type,
+											href : ul.href
 										};
 									}));
 
@@ -1895,10 +1885,18 @@
 							});
 						},
 						minLength : 2,
-						selectFirst : false,
+						selectFirst : true,
+						autoFocus : true,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("2", "email", ui.item.value,
-									ui.item.email, "");
+							var addressType = "email";
+							var href = ""
+							if(ui.item.type == "G") {
+								addressType = "mailgroup";
+								href = ui.item.href;
+							}
+							
+							newElem = PrepareMailTag("2", addressType, ui.item.value,
+									ui.item.email, href);
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
 								MsgBCCGot.appendChild(newElem);
@@ -2242,7 +2240,7 @@
 	        <input type="hidden" name="endDay" id="endDay" />
 	    </form>
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
-	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="messageInSending"><spring:message code='ezEmail.t679' /></span><spring:message code='ezEmail.t680' /></span></span>
+	    <span class="loading_layer" style="z-index:6000;position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="messageInSending"><spring:message code='ezEmail.t679' /></span><spring:message code='ezEmail.t680' /></span></span>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>

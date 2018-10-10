@@ -5,17 +5,22 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t00008'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	    <script type="text/javascript">	
 	        var pDocID = "${docID}";
 	        var pType = "${type}";
+	        var orgCompanyID = "${orgCompanyID}";
 	        var ReturnFunction;
 	        window.onload = function ()
 	        {
+	        	if ("${pass}" != "<RESULT>TRUE</RESULT>") {
+		    		QuitWindow();
+			    }
+	        	
 	            try {
 	                ReturnFunction = parent.totalsavefileinfo_dialogArguments[1];
 	            } catch (e) {
@@ -34,7 +39,8 @@
 	        		url : "/ezApprovalG/getTotalDoc.do",
 	        		data : {
 	        			docID : pDocID,
-	        			mode : pType
+	        			mode : pType,
+	        			orgCompanyID : orgCompanyID
 	        		},
 	        		success: function(text){
 	        			result = text;
@@ -111,11 +117,11 @@
 	            var pSourcePath = obj.getAttribute("FILEPATH").split('.')[1];
 	            var pDocID_mht = obj.getAttribute("FILEPATH").substring(obj.getAttribute("FILEPATH").lastIndexOf("/") + 1, obj.getAttribute("FILEPATH").length).split('.')[0];
 	            if (obj.getAttribute("DATA1") == "ATT")
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3");
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3") + "&orgCompanyID=" + orgCompanyID;
 	            else if (obj.getAttribute("DATA1") == "ATTDOC") {
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END";
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END&orgCompanyID=" + orgCompanyID;
 	            } else {
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType;
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType + "&orgCompanyID=" + orgCompanyID;
 	            }
 	        }
 	
@@ -207,6 +213,12 @@
 	                ReturnFunction();
 	            window.close();
 	        }
+	        
+	        function QuitWindow() {
+// 		        OpenAlertUI(strLang929);
+				alert(strLang1139);
+				window_close();
+		    }
 	    </script>
 	</head>
 	<body class="popup">
@@ -223,8 +235,8 @@
 	            <th><spring:message code='ezApprovalG.t00010'/></th>
 	        </tr>                
 	    </table>
-	    <div style="overflow-y:auto; overflow-x:auto; height:250px;">
-	        <table class="mainlist" id="table_filelist" style="width: 550px; margin-left: 5px;">
+	    <div style="overflow-y:auto; overflow-x:auto; height:250px; width: 555px;">
+	        <table class="mainlist" id="table_filelist" style="width: 99%; margin-left: 5px;">
 	        </table>
 	    </div>
 	    <br />

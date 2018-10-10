@@ -178,92 +178,104 @@ function getRecvDocNumber(pDeptID) {
         var fields = message.GetFieldsList();
         var name, docnumber;
         var rtnval;
+        var result = "";
 
         if (approvalFlag =='G') {
-        name = "receiptnumber";
-        var field = message.GetListItem(fields, name);
-        if (!field) {
-            var DeptSymbol = arr_userinfo[5];
-        	var result = "";
+	        name = "receiptnumber";
+	        var field = message.GetListItem(fields, name);
+	        
+	        if (LastSignSN == 1 || useReceiveDocNo != 'NO') {
+	        	//전결,편철 or config값에 따라 접수시 채번
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/getCabinetSN.do",
+	        		data : {
+	        			docID : pDocID,
+	        			deptID : pDeptID,
+        				orgCompanyID : orgCompanyID
+	        		},
+	        		success: function(xml){
+	        			result = loadXMLString(xml);
+	        		}
+	        	});
+		        
+		        if (!field) {
+		            var DeptSymbol = arr_userinfo[5];
+		            var SN = getNodeText(GetChildNodes(result)[0]);
+		            
+		            pDocNo = DeptSymbol + "-" + SN;
+		            
+		            var tempNumString = SN;
+		            var templen = tempNumString.length;
+		            
+		            for (var i = 0; i < 6 - templen; i++) {
+		            	tempNumString = "0" + tempNumString;
+		            }
+		            
+		            pDocNumCode = pDeptID + tempNumString;
+		            SaveFile();
+		            
+		            return true;
+		        } else {
+		        	var rtnVal = setDocNumFormat();
+		            
+		            if (!rtnVal) {
+		            	return true;
+		            }
+		            
+		            fractionsymbol = field.textContent;
+		            
+		        	var SN = getNodeText(GetChildNodes(result)[0]);
+		        	
+			        if (SN == "") {
+			            pDocNumCode = "";
+			            pDocNo = "";
+			            field.textContent = "";
+			            
+			            return false;
+			        } else {
+			            field.textContent = fractionsymbol + SN;
+			            pDocNo = fractionsymbol + SN;
+			            
+			            var tempNumString = SN;
+			            var templen = tempNumString.length;
+			            
+			            for (var i = 0; i < 6 - templen; i++) {
+			            	tempNumString = "0" + tempNumString;
+			            }
+			            
+			            pDocNumCode = pDeptID + tempNumString;
+			            SaveFile();
+			            
+			            return true;
+			        }
+		        }
+	        } else {
+	        	//결재선포함한 접수 or config값에 따라 최종결재시 채번
+	        	var rtnVal = setDocNumFormat();
+	        	fractionsymbol = field.textContent;
+	        	pDocNo = fractionsymbol;
+        		return true;
+	        }
+        } else {
+        	var rtnVal = setDocNumFormat();
         	
-        	$.ajax({
-        		type : "POST",
-        		dataType : "text",
-        		async : false,
-        		url : "/ezApprovalG/getCabinetSN.do",
-        		data : {
-        			docID : pDocID,
-        			deptID : pDeptID
-        		},
-        		success: function(xml){
-        			result = loadXMLString(xml);
-        		}
-        	});
-
-            var SN = getNodeText(GetChildNodes(result)[0]);
-            pDocNo = DeptSymbol + "-" + SN;
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            pDocNumCode = pDeptID + tempNumString;
-            SaveFile();
-            return true;
+        	if (!rtnVal) {
+        		return true;
+        	}
+        	
+        	fractionsymbol = field.textContent;
         }
-        }
-        var rtnVal = setDocNumFormat();
-        if (!rtnVal)
-            return true;
-
-        fractionsymbol = field.textContent;
-
-    	var result = "";
-    	
-    	 if (approvalFlag =='G') {
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getCabinetSN.do",
-    		data : {
-    			docID : pDocID,
-    			deptID : pDeptID
-    		},
-    		success: function(xml){
-    			result = loadXMLString(xml);
-    		}
-    	});
-    	
-        var SN = getNodeText(GetChildNodes(result)[0]);
-        if (SN == "") {
-            pDocNumCode = "";
-            pDocNo = "";
-            field.textContent = "";
-            return false;
-        }
-        else {
-            field.textContent = fractionsymbol + SN;
-            pDocNo = fractionsymbol + SN;
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            pDocNumCode = pDeptID + tempNumString;
-            SaveFile();
-            return true;
-        }
-    	 } else {
-    		 
-    	 }
+        
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
             rollbackDocNumber(pDeptID, pDocID);
+            
             return false;
-        }
-        else {
+        } else {
             field.value = "";
             pDocNo = "";
         }
@@ -330,7 +342,8 @@ function SaveFile() {
     		url : "/ezApprovalG/saveFile.do",
     		data : {
     			docID : pDocID,
-    			html  : mhtBody
+    			html  : mhtBody,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(text){
     			result = text;
@@ -383,7 +396,8 @@ function getCurDocNumber() {
 		url : "/ezApprovalG/getCabinetSN.do",
 		data : {
 			docID : pDocID,
-			deptID : draftDeptID
+			deptID : draftDeptID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

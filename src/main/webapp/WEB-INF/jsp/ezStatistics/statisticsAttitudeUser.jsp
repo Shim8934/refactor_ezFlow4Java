@@ -6,20 +6,20 @@
     <head>
     <title><spring:message code='ezStatistics.t1018' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
-    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">    
-    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-    <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/excanvas.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.jqplot.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.barRenderer.min.js"></script>    
+    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">    
+    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/excanvas.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.barRenderer.min.js')}"></script>    
     <script type="text/javascript">
     var Tab1_flag = true;
     var xmlHttp = createXMLHttpRequest();
@@ -613,26 +613,26 @@
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px">
-                <spring:message code='ezStatistics.t1002' /> : 
-                <select id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
+                &nbsp;<spring:message code='ezStatistics.t1002' /> : 
+                <select style="height:24px" id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
                     <spring:message code='ezStatistics.t55' />
 		            &nbsp;&nbsp;
-					<select id="searchopt">
+					<select id="searchopt" style="height:24px">
 		            	<option value="1"><spring:message code='ezStatistics.t1017' /></option>
 		            	<option value="2"><spring:message code='ezStatistics.t113' /></option>
 					</select>
-                    <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
+                    <input id="keyword" type="text" style="width: 100px;height:24px" onkeypress="search_press(event)" />
+                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	<spring:message code='ezStatistics.kbm3' /> : 
-	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; margin-top:4px; padding-right:40px;">
+	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; height:24px; padding-right:40px;">
 		      		</select>
                 </span>
             </td>
             <td>
                 <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-                        <li><span style="width: 110px;text-align:center;" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
             </td>

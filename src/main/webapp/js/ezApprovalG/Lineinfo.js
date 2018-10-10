@@ -1,4 +1,4 @@
-﻿﻿
+﻿﻿﻿
 //#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
@@ -859,7 +859,7 @@ function APRLINESNDownFunction() {
     		if (pSelectedRow.length != 0) {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
     			
-    			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
+    			if(p_NextSelRow == undefined || p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
     				OpenAlertUI(strLangS576);
     				return;
     			} 
@@ -888,13 +888,13 @@ function APRLINESNDownFunction() {
     			if (p_NextSelRow != null) {
     				var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
     				if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
-    					var pAlertContent = strLang237;
+    					var pAlertContent = strLang306;
     					OpenAlertUI(pAlertContent);
     					return;
     				}
     				else if (pReDraftFlag == "REDRAFT") {
     					if (pSelAprLineState == "002" || pSelAprLineState == "003" || pSelAprLineState == "004") {
-    						Ans = ture;
+    						Ans = true;
     						if (Ans) {
     							AprLineChangeType();
     							DoAprLineDown(pSelectedRow);
@@ -908,7 +908,7 @@ function APRLINESNDownFunction() {
     				else {
     					if (pReDraftAprLineFlag) {
     						if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
-    							var pAlertContent = strLang239;
+    							var pAlertContent = strLang310;
     							OpenAlertUI(pAlertContent);
     							return;
     						}
@@ -1552,8 +1552,9 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 				var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
 				var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
 				
-				if(!CrossYN() && ans)
+				if(ans) {
 					AprLineAddUser_Complete(true);
+				}
 			}
 			else {
 				AprLineAddUser_Complete(true);
@@ -2732,7 +2733,7 @@ function checkdisabled()
 	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "002") // aprType이 진행인 경우
 	                        curaprsn = true;
 
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) // aprType이 승인인 경우
+	                    if ((GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) && pReDraftFlag != 'REDRAFT') // aprType이 승인인 경우
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = true;
 	                    else
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = false;

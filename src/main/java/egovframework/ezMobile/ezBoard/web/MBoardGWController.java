@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
@@ -46,6 +47,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -88,7 +90,7 @@ public class MBoardGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/new-list/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getBoardMainList(@PathVariable String userId, HttpServletRequest request, Model model) {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/new-list/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -103,16 +105,19 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId(), info.getOffSet(),pSearchText);
+			/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 deptID, companyID 조건 추가 */
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText);
 			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), pSearchText);
+			/* 2018-07-03 홍승비 - 새게시물 카운트 표시 시 companyID 조건 추가 */
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), pSearchText);
 			LOGGER.debug("listCount ="+listCount);
 			
 			JSONObject data = new JSONObject();
@@ -129,7 +134,7 @@ public class MBoardGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/new-list/{userId}] ended.");
 		
 		return result;
 	}
@@ -159,7 +164,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -219,7 +224,8 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
-			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId(), primary);
+			/* 2018-07-03 홍승비 - 게시판 즐겨찾기 리스트에 companyID 조건 추가 */
+			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getCompanyId(), info.getTenantId(), primary);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -234,6 +240,8 @@ public class MBoardGWController {
 		return result;
 	}
 	
+	
+	/* 게시물 리스트보기/접근/읽기권한 없을 시 여기에서 예외처리해야 한다. */
 	/**
 	 * 모바일 G/W 게시판 [GET] 게시물 상세정보
 	 */
@@ -258,7 +266,9 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			// 현재 사용자의 부서 경로(자기ID+부서ID+회사ID 전부 ,로 나누어 붙인 문자열) 받아온다.
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -266,6 +276,18 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			//상세보기일때 type boardItem으로 지정
 			boardInfo.setType("boardItem");
+			
+			// 해당 게시물 읽기권한 없다면 리턴
+			if (!accessCheck(contentId, deptPathCode, info)) {
+				result.put("status", "no");
+				return result;
+			}
+		
+			if (!boardInfo.getRead_FG().equals("true")) {
+				result.put("status", "no");
+				return result;
+			}
+			
 			
 			//mht 파일 가져오기
 			String realPath = commonUtil.getRealPath(request);
@@ -280,6 +302,10 @@ public class MBoardGWController {
 			
 			//새게시물 눌렀을때, read테이블에 들어가게함.
 			mBoardService.setAsRead(info, boardId, contentId);
+			
+			// 20180824 조진호 - 모바일 viewerflag 값 추가
+        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+        	data.put("useMobileViewer", useMobileViewer);
 			
 			data.put("boardItem", boardItem);
 			data.put("content", mhtContent);
@@ -324,7 +350,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -333,7 +359,20 @@ public class MBoardGWController {
 			
 			//썸네일게시판일때 게시물
 			boardInfo.setType("photoBoardItem");
-			List<MBoardAttachVO>	photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+			
+			// 해당 게시물 읽기권한 없다면 리턴
+			if (!accessCheck(contentId, deptPathCode, info)) {
+				result.put("status", "no");
+				return result;
+			}
+		
+			// getBoardInfo 메서드에서 rollInfo 포함하여 권한 체크+플래그 설정한다.
+			if (!boardInfo.getRead_FG().equals("true")) {
+				result.put("status", "no");
+				return result;
+			}
+			
+			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
 			for (MBoardAttachVO photo : photoList) {
 				photo.setFilePath(photo.getFilePath());
@@ -367,7 +406,7 @@ public class MBoardGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object insertBoardSelect(@PathVariable String boardId, HttpServletRequest request,Locale locale) throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -383,7 +422,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -401,7 +440,7 @@ public class MBoardGWController {
 			result.put("data", "");
 		}		
 		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/boards/{boardId}/contents] ended.");
 		
 		return result;
 	}
@@ -541,11 +580,13 @@ public class MBoardGWController {
 			String excludeBoardID = request.getParameter("excludeBoardId");
 			String subFlag = request.getParameter("subFlag");
 			
+			// 여기에 테넌트나 companyID 등의 정보가 담긴다.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
+			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
-			
-			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId(), "");
+			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 			
 			data.put("list", list);
 			data.put("listCount", listCount);
@@ -579,7 +620,8 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 			
-			mBoardService.insertFavorite(info.getUserId(), boardId, info.getTenantId());
+			/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
+			mBoardService.insertFavorite(info.getUserId(), boardId, info.getCompanyId(), info.getTenantId());
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -873,6 +915,60 @@ public class MBoardGWController {
 					LOGGER.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
+		}
+    }
+    
+    /**
+	 * 게시판 게시판권한체크 표출 Method(EzBoardController 참고)
+	 */
+	public boolean accessCheck(String contentID, String deptPath, MCommonVO info) throws Exception {
+		LOGGER.debug("accessCheck started");
+		
+		String rootBoardID = "top";
+		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
+		String rollInfo = info.getRollInfo();
+		
+		// 전체/회사/게시관리자 권한이 있다면 바로 true 리턴한다.
+		if (rollInfo != null && (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+			LOGGER.debug("accessCheck ended1");
+			return true;
+		} else {
+			int result = 0;
+			boolean rtv = false;
+			
+			String deptPathOrgan = "";
+			
+			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+				if (ch == 0) {
+					deptPathOrgan += deptPath.split(",")[ch].trim();
+				} else {
+					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+				}
+			}
+			
+			String userDeptPath = deptPathOrgan + ",everyone";
+			
+			for (int i = 0; i < userDeptPath.split(",").length; i++) {
+				result = ezBoardService.getCheckItemID(contentID, "GENERAL", userDeptPath.split(",")[i].trim(), info.getTenantId());
+				
+				/* 2018-10-04 홍승비 - 변경된 게시판권한 스펙 모바일에도 적용(개인>부서>회사) */
+				//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
+				if (result != 999) {
+					//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
+					if (result > 0) {
+						rtv = false;
+						break;
+					} else {
+						rtv = true;
+						break;
+					}
+				} else {
+					rtv = false;
+				}
+			}
+			
+			LOGGER.debug("accessCheck ended2");
+			return rtv;
 		}
     }
 }

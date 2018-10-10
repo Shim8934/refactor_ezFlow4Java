@@ -18,6 +18,7 @@
 package egovframework.let.utl.fcc.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -33,13 +34,16 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,9 +71,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -98,6 +104,8 @@ public class CommonUtil {
 	public static final String PT_MAIL = "mail";
 	public static final String PT_BASIC = "basic";
 	public static final String PT_STANDARD = "standard";
+	public static final int MARIADB = 1;
+	public static final int ORACLE = 2;
 	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
@@ -117,6 +125,9 @@ public class CommonUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+    @Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;    
+	
 	@Resource(name = "jspw")
     private String jspw;
 	
@@ -126,6 +137,16 @@ public class CommonUtil {
 	public final String CRLF = "\r\n";
 	
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+	private static CommonUtil commonUtilInstance;
+	
+    @PostConstruct
+	public void init() throws Exception {
+    	logger.debug("init started.");
+
+    	commonUtilInstance = this;
+    	
+    	logger.debug("init ended.");
+    }
 	
 	public LoginVO userInfo(String loginCookie){
 		try{
@@ -141,14 +162,20 @@ public class CommonUtil {
 			
             String tenantIdStr = "0";
             
+            String deptID = "";
+            
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
+            }
+            if(decDataArray.length >= 10) {
+            	deptID = decDataArray[9];
             }
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
+			login.setDeptID(deptID);
 			
 			LoginVO user = loginService.selectUser(login);
 	
@@ -198,6 +225,8 @@ public class CommonUtil {
 			String locale = decDataArray[5];
 			String lang = decDataArray[6];
 			String timeZone = decDataArray[7];
+			String deptID = decDataArray[9];
+			String companyID = decDataArray[10];
 			
             String tenantIdStr = "0";
             
@@ -212,6 +241,8 @@ public class CommonUtil {
             user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);			
 			user.setServerName(serverName);
+			user.setDeptID(deptID);
+			user.setCompanyID(companyID);
 			
 			return user;
 		}catch(Exception e){
@@ -565,6 +596,18 @@ public class CommonUtil {
 			return lang;
 		}
 	}	
+	
+	/**
+	 * @param path 파일의 풀경로
+	 * 파일의 최종 업데이트 날짜 가져오기
+	 */
+	public String getLastModifiedDate(String path) {
+		Date lastDate = new Date(new File(path).lastModified());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		
+		return sdf.format(lastDate);
+	}
 	
 	public String cleanValue(String pOrgString) {
 		String value = ""; 
@@ -1251,5 +1294,43 @@ public class CommonUtil {
 		}
 		logger.debug("getJsonFromWebFolderRestApi ended");
 		return resultBody;
+	}
+	
+	public String getWildcardEscapedString(String s, int dbName) {
+		if (dbName == ORACLE) {
+			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {
+				return s;
+			}
+		} else {
+			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1)) {
+				return s;
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		if (dbName == ORACLE) {
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+
+				if (c == '%' || c == '_' || c == '\\') {
+					sb.append('\\');
+				}
+
+				sb.append(c);
+			}
+		} else {
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+
+				if (c == '%' || c == '_') {
+					sb.append('\\');
+				}
+
+				sb.append(c);
+			}
+		}
+
+		return sb.toString();
 	}
 }

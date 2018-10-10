@@ -5,17 +5,17 @@
 	<head>
 	    <title><spring:message code='ezApproval.t157'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ezDraftCK_Common.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraftCK_Common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var pDocID = '${docID}';
 	        var pDocHref = '${docHref}';
@@ -48,6 +48,8 @@
 	        var g_szUserID = arr_userinfo[8];
 	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        var pUse_Editor = "${useEditor}";
+	        var orgCompanyID = "";
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -140,7 +142,7 @@
 	                modeflag = false;
 	                beforeHtml = message.Get_EditorBodyHTML();
 	                message.SetEditable(true);
-	                setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='ezApproval.t44'/>");
+	                setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='main.sp09'/>");
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t45'/>";
@@ -378,7 +380,8 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : newDocID,
-		    			html  : mhtBody
+		    			html  : mhtBody,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(text){
 		    			result = text;
@@ -433,7 +436,7 @@
 	            var url = "/ezApprovalG/ezchkPasswd.do";
 	            ezchkpasswd_cross_dialogArguments[0] = pUserID;
 	            ezchkpasswd_cross_dialogArguments[1] = FunctionName;
-	            DivPopUpShow(330, 200, url);
+	            DivPopUpShow(350, 225, url);
 	        }
 	        var ezapprovalinfo_dialogArguments = new Array();
 	        function btnApprovalInfo(pGubun) {
@@ -446,7 +449,7 @@
 	            ezapprovalinfo_dialogArguments[0] = parameter;
 	            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
-	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun
+	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun + "&ext=" + "mht";
 	            var result = GetOpenWindow(url, "ezApprovalInfo", 1130, 750, "NO");
 	        }
 	        function btnApprovalInfo_Complete(RtnVal)

@@ -5,11 +5,11 @@
 	<head>
 	<title><spring:message code='ezApprovalG.t111'/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/ezApprovalG/CabCategoryInfo_Cross.js"></script>
+	<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabCategoryInfo_Cross.js')}"></script>
 	<script ID="clientEventHandlersJS" type="text/javascript">
 	    var rtnVal = new Array();
 	    window.onbeforeunload = window_onunload;
@@ -41,13 +41,13 @@
 	        document.getElementById("txtCode").value = "";
 	    }
 	    function btnOK_onclick() {
-	        if (document.getElementById("txtTitle").value == "" && document.getElementById("txtCode").value == "") {
+	        if ($("#txtTitle").val().trim() == "" && $("#txtCode").val().trim() == "") {
 	            alert("<spring:message code='ezApprovalG.t1023'/>");
 	        }
 	        else {
 	            rtnVal[0] = "TRUE";
-	            rtnVal[1] = document.getElementById("txtTitle").value;
-	            rtnVal[2] = document.getElementById("txtCode").value;
+	            rtnVal[1] = document.getElementById("txtTitle").value.trim();
+	            rtnVal[2] = document.getElementById("txtCode").value.trim();
 	            
 	            if (ReturnFunction != null) {
 	                ReturnFunction(rtnVal);

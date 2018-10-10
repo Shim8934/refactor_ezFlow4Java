@@ -243,6 +243,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			
 			IMAPAccess ia = null;
 			FileInputStream fis = null;
+			File f = null;
+			File encryptedFile = null; // 보안메일 관련 파일 변수
 			try {
 				
 				String userAccount = vo.getConnUrl();
@@ -262,10 +264,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
 	
-				File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-				
-				File encryptedFile = null; // 보안메일 관련 파일 변수
 				
 				if (f.exists()) {
 					fis = new FileInputStream(f);
@@ -531,6 +531,24 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				
 			} catch (Exception e) {
 				e.printStackTrace();
+				String errorMessage = e.getMessage();
+				
+				//유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
+				if (errorMessage.contains("Invalid Addresses")
+						|| errorMessage.contains("No recipient addresses")) {					
+					//파일시스템의 eml파일 삭제
+					if (f != null && f.delete()) {
+						logger.debug("Succeed in deleting EML file.");
+					}
+					
+					// 보안메일 관련 임시파일 삭제
+					if (encryptedFile != null && encryptedFile.delete()) {
+		        		logger.debug("encryptedFile is deleted. fileName=" + encryptedFile.getName());
+					}
+					
+					//DB에서 메일 예약발송 정보 삭제.
+					ezEmailService.deleteMailReserved(vo.getMessageId());
+				}
 			} finally {
 				if (ia != null) {
 					ia.close();

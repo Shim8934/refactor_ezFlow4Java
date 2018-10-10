@@ -148,6 +148,9 @@ public class EzEmailMailSearchController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("searchCheck", request.getParameter("searchCheck"));
+		model.addAttribute("keywordFromList", request.getParameter("keywordFromList"));
+		model.addAttribute("searchFromList", request.getParameter("searchFromList"));
 		
 		logger.debug("mailSearchView ended.");
 		
@@ -379,6 +382,7 @@ public class EzEmailMailSearchController {
 		String returnData = "OK";
 		
 		IMAPAccess ia = null;
+        
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -392,9 +396,27 @@ public class EzEmailMailSearchController {
 				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 				sourceFolder.open(Folder.READ_WRITE);		
 				
-				Message deleteMsg = sourceFolder.getMessageByUID(uid);
-				
-				if (deleteMsg != null) {
+				Message deleteMsg = sourceFolder.getMessageByUID(uid);	
+				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale)); //
+		        
+				if (deleteMsg != null && !folderId.equals(deletedFolder.toString())) {
+					Message[] deleteMsgs = {deleteMsg};
+
+					String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+					if (useImapMoveCommand.equals("YES")) {
+						if (cmd.equalsIgnoreCase("BMOVE")) {
+							sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+						} else {			
+							sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+						}
+					} else {
+						if (cmd.equalsIgnoreCase("BMOVE")) {
+							sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+						}
+						
+						sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);				
+					}
+				} else if (deleteMsg != null) {
 					deleteMsg.setFlag(Flags.Flag.DELETED, true);
 				}
 				

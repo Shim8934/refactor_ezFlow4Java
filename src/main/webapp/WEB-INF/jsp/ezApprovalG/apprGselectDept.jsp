@@ -6,26 +6,26 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1124'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>"  type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}"  type="text/css">
 		<style type="text/css">
 			.mainlist tr th {
 				border-top :0px;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></SCRIPT>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OrganTree_Cross.js')}"></SCRIPT>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var UserAgentState = navigator.userAgent.toLowerCase();
@@ -40,17 +40,19 @@
 		    var CompanyID = "${userInfo.companyID}";
 		    var CurMthd = "OrganTree";
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectdept_cross_dialogArguments[1];
+		            winFlag = parent.selectdept_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                ReturnFunction = opener.selectdept_cross_dialogArguments[1];
+		                winFlag = opener.selectdept_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		
 		
 		        var ua = navigator.userAgent;
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -94,17 +96,22 @@
 		        arrDeptInfo[0] = GetAttribute(tr, "DATA2");
 		        arrDeptInfo[1] = tr.cells[0].innerText;
 		        if(CrossYN())
-		            tdSelDept.textContent = ReplaceText(arrDeptInfo[1], "&", "&amp;");
+		            tdSelDept.textContent = arrDeptInfo[1];
 		        else
-		            tdSelDept.innerText = ReplaceText(arrDeptInfo[1], "&", "&amp;");
+		            tdSelDept.innerText = arrDeptInfo[1];
 		    }
 		    function cmdCancel_onclick() {
 		        rtnVal[0] = "FALSE";
-		        if (ReturnFunction != null)
+		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		        else
+		            
+		            if (winFlag) {
+				        window.close();
+		            }
+		        } else {
 		            window.returnValue = rtnVal;
-		        window.close();
+			        window.close();
+		        }
 		    }
 		    function cmdConfirm_onclick() {
 		        if (typeof (arrDeptInfo[0]) == "undefined") {
@@ -117,11 +124,16 @@
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = arrDeptInfo[0];
 		            rtnVal[2] = arrDeptInfo[1];
-		            if (ReturnFunction != null)
+		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		            else
-		                window.returnValue = rtnVal;
-		            window.close();
+		            	
+		                if (winFlag) {
+					        window.close();
+			            }
+		            } else {
+		            	window.returnValue = rtnVal;
+			            window.close();
+		            }
 		        }
 		    }
 		    function FindDeptRdo_onclick(strValue) {

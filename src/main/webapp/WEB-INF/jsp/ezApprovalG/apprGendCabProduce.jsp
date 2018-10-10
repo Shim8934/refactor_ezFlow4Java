@@ -6,14 +6,14 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t931'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-    	<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-    	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/OpenAlert_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+    	<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+    	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OpenAlert_Cross.js')}"></script>
 		<SCRIPT ID="clientEventHandlersJS" type="text/javascript">
 		    var arrCabInfo = new Array();
 		    var g_PYear, g_DispFlag, g_DispEndDate;
@@ -105,7 +105,7 @@
                 <li><span name="btnCancel" onClick="return cmdCancel_onclick()"></span></li>
             </ul>
         </div>
-		<h2><spring:message code='ezApprovalG.t1018'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 		<table class="content">
 		  <tr>                 
 		    <th  ><spring:message code='ezApprovalG.t998'/></th>
@@ -125,8 +125,8 @@
 		  </tr>
 		</table>
 		<br>
-		<div style="font-family:'arial', 'verdana', 'dotum'; FONT-SIZE: 9pt"><spring:message code='ezApprovalG.t1020'/><br>
-				(<spring:message code='ezApprovalG.t1021'/></div>
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1020'/><br>
+				&nbsp;&nbsp;(<spring:message code='ezApprovalG.t1021'/></h2>
 		<!---------------------------------------- 확인, 취소버튼 ----------------------------------------------->
 		<div class="btnposition btnpositionNew" >
 		    <a class="imgbtn"><span name="btnOK" onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>

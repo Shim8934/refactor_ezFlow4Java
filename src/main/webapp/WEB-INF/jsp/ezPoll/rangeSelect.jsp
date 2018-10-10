@@ -5,14 +5,14 @@
 <html>
 	<head>
 		<title><spring:message code='ezPoll.t222' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">   
-		<link href="/css/ezPoll/rangeSelect.css" rel="stylesheet" type="text/css">     
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/TreeView.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">   
+		<link href="${util.addVer('/css/ezPoll/rangeSelect.css')}" rel="stylesheet" type="text/css">     
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
@@ -201,12 +201,17 @@
                     		return;
                 		}
             		}
+                		
+               		var selDept = document.querySelector(".node_selected").parentElement;
+       	            var selDeptId = selDept.getAttribute("cn");
+       	            
             		pparsingXML2 = "";
             		pparsingXML = "";
             		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
             		pparsingXML = pparsingXML + "<ROW><CELL><DATA2>" + selRow.getAttribute("DATA2") + "</DATA2>";
             		pparsingXML = pparsingXML + "<DATA4>" + selRow.getAttribute("DATA4") + "</DATA4>";
             		pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(selRow.getAttribute("DATA5")) + "</DATA5>";
+            		pparsingXML = pparsingXML + "<DATA6>" + selDeptId + "</DATA6>";
             		pparsingXML = pparsingXML + "<VALUE>" + selRow.cells[0].innerText + "</VALUE></CELL></ROW>";
             		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
             		Resultxml = loadXMLString(pparsingXML2);
@@ -475,6 +480,7 @@
     	    	
     	    	for (var j = 0; j < arrRows2.length; j++) {
     	    		var userName = "";
+    	    		var deptId = "";
     	    		
     	    		if (primary == "1") {
     	    			userName = arrRows2[j].getAttribute("DATA4");
@@ -482,6 +488,7 @@
     	    		else {
     	    			userName = arrRows2[j].getAttribute("DATA5");
     	    		}
+    	    		deptId = arrRows2[j].getAttribute("DATA6");
     	    		listOfTarget += userName + ", ";
     	    	}
     	    	
@@ -573,10 +580,12 @@
             	var CurrID = arrRows2[j].getAttribute("DATA2");
             	var CurrNM = arrRows2[j].getAttribute("DATA4");
             	var CurrNM2 = arrRows2[j].getAttribute("DATA5");
+            	var CurrDeptID = arrRows2[j].getAttribute("DATA6");
             	var UserNode_sub = createNodeAndAppandNodeText(xmlDoc, UserNode, objNode, "DATA", CurrID);
             	SetAttribute(UserNode_sub, "id", CurrID);
             	SetAttribute(UserNode_sub, "nm", CurrNM);
             	SetAttribute(UserNode_sub, "nm2", CurrNM2);
+            	SetAttribute(UserNode_sub, "deptid", CurrDeptID);
         	}
         	return getXmlString(xmlDoc);
     	}
@@ -646,6 +655,7 @@
     	            var CurrID = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "id"));
         	        var CurrNM = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm"));
             	    var CurrNM2 = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm2"));
+            	    var CurrDeptID = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "deptid"));
 	                //lastindex = memberlist.length;
     	            var pVaule = "";
     	             
@@ -663,6 +673,7 @@
             	    pparsingXML = pparsingXML + "<ROW><CELL><DATA2><![CDATA[" + CurrID + "]]></DATA2>";
                 	pparsingXML = pparsingXML + "<DATA4><![CDATA[" + CurrNM + "]]></DATA4>";
                 	pparsingXML = pparsingXML + "<DATA5><![CDATA[" + CurrNM2 + "]]></DATA5>";
+                	pparsingXML = pparsingXML + "<DATA6><![CDATA[" + CurrDeptID + "]]></DATA6>";
                 	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + pVaule + "]]></VALUE></CELL></ROW>";
                 	pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
                 	Resultxml = loadXMLString(pparsingXML2);
@@ -764,18 +775,18 @@
         </div>
 		<table> 
     		<tr> 
-        		<td width="195" valign="top">
+        		<td valign="top">
             		<h2><spring:message code='ezPoll.t223' /></h2>
-            		<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:280px;HEIGHT:270px;BACKGROUND-COLOR:#ffffff;" id="TreeView" class="box"></div>
+            		<div id="TreeView" class="listview"></div>
         		</td>
-        		<td width="30" align="center" valign="middle"> 
-            		<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept()" style="cursor:pointer"></div>
-            		<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_admin()" style="cursor:pointer"></div>
+        		<td class="middleTd">
+            		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_dept()"></div>
+            		<div><img class="midArrowImg" src="/images/arr_left.gif" onclick="delete_admin()"></div>
         		</td>
         		<td valign="top">
             		<h2><spring:message code='ezPoll.t224' /></h2>
-             		<div class="listview" style="margin-bottom:5px">
-		                    <div id="DeptListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:270px;border:0"></div>
+             		<div class="listview">
+		                    <div id="DeptListView"></div>
                 	</div>
             		<%--<div>
                 		<select id="deptlist" style="WIDTH:220px; HEIGHT:270px" ondblclick='delete_admin()' NAME="select" multiple>
@@ -786,25 +797,25 @@
 			</tr>
 			<tr>
         		<td valign="top">
-        			<h2 style="float:left;margin-top:4px"><spring:message code='ezPoll.t225' /></h2>
-        			<div style="float:right;margin-top:1px">
+        			<h2 class="botTrTdH2" style="float:left;"><spring:message code='ezPoll.t225' /></h2>
+					<div style="float:right;margin-top:6px">
 	        			<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="height:22px"/>
 	            		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
 	            		<a class="imgbtn imgbck" onclick="cnsearch_click()" style="margin-top:1px"><span><spring:message code='ezPoll.t227' /></span></a>
 	            	</div>
 	            	<div style="clear:both"></div>
-            		<div class="listview" style="margin-top:5px;margin-bottom:5px">
-                		<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0"></div>
+            		<div class="listview">
+                		<div id="OrganListView"></div>
             		</div>
         		</td> 
-        		<td width="30" align="center" valign="middle"> 
-            		<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_member()" style="cursor:pointer"></div>
-            		<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_member()" style="cursor:pointer"></div>
+        		<td class="middleTd">
+            		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_member()"></div>
+            		<div><img class="midArrowImg" src="/images/arr_left.gif" onclick="delete_member()"></div>
         		</td> 
         		<td valign="top">
-            		<h2><spring:message code='ezPoll.t226' /></h2>
-            		<div class="listview" style="margin-top:5px;margin-bottom:5px">
-                    	<div id="MemberListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:240px;border:0"></div>
+            		<h2 class="botTrTdH2"><spring:message code='ezPoll.t226' /></h2>
+            		<div class="listview">
+                    	<div id="MemberListView"></div>
                 	</div>
             		<%--<div>
                 		<select id="memberlist" name="memberlist" id="select2" style="WIDTH:220px; HEIGHT:240px" ondblclick='delete_member()' multiple>

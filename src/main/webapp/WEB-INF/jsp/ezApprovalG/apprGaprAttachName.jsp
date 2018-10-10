@@ -7,10 +7,10 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t25004'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pUserID;
 		    var pFormID;
@@ -18,9 +18,11 @@
 		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    var Resultxml = createXmlDom();
 		    var ret = new Array();
+		    //2018-08-24 배현상, 확장자 변경 문제
+		    var storeExp;
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = txtPageNum.value;
-		        var p_DisplayName = txtDisplayName.value;
+		        var p_DisplayName = txtDisplayName.value + storeExp;
 		        if (p_AprDeptTempletName.length > 0) {
 		            var strMatch = p_AprDeptTempletName.match(/^[0-9]+$/);
 		            if (!strMatch) {
@@ -99,9 +101,11 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		
+				
+		        var displayNameExpPoint = ReplaceText(RetValue[1], "&amp;", "&").lastIndexOf(".");
 		        txtPageNum.value = RetValue[0];
-		        txtDisplayName.value = ReplaceText(RetValue[1], "&amp;", "&");
+		        txtDisplayName.value = ReplaceText(RetValue[1], "&amp;", "&").substring(0,displayNameExpPoint);
+		        storeExp = ReplaceText(RetValue[1], "&amp;", "&").substring(displayNameExpPoint);
 		        ret[0] = "cancel";
 		        ret[1] = txtPageNum.value;
 		        ret[2] = txtDisplayName.value;

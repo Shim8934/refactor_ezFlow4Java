@@ -6,16 +6,16 @@
 <html>
 <head>
 <title><spring:message code='ezApprovalG.t1168'/></title>
-<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script type="text/javascript" src="/js/ezApprovalG/CabUser_Cross.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabUser_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OrganTree_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
     var g_InitFlag = "0";
     var OrderCell = "";
@@ -412,19 +412,24 @@
     </ul>
 </div>
 <table>
-        <tr> 
-          <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1174'/></h2>
-        <div class="listview"  style="HEIGHT: 235px; WIDTH: 370px; overflow:AUTO" id="divList">
-        <div ID="OrgListView"></div></div>
-        </td>
-          <td style="width:25px;text-align:center"><img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
-						onClick="return AddUser_onclick()" style="cursor:pointer"><img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" 
-						onClick="return DelUser_onclick()" style="cursor:pointer"></td>
-
-          <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1175'/></h2>
-          <div class="listview"  style="HEIGHT: 235px; WIDTH: 180px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
-          <div ID="UserListView"></div></div></td>
-        </tr>
+	<tr> 
+		<td style="vertical-align:top">
+			<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1174'/></h2>
+			<div class="listview"  style="HEIGHT: 350px; WIDTH: 500px; overflow:AUTO" id="divList">
+				<div ID="OrgListView"></div>
+			</div>
+		</td>
+  		<td style="width:25px;text-align:center">
+  			<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddUser_onclick()" style="cursor:pointer">
+  			<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()" style="cursor:pointer">
+  		</td>
+		<td style="vertical-align:top">
+			<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1175'/></h2>
+			<div class="listview"  style="HEIGHT: 350px; WIDTH: 240px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
+				<div ID="UserListView"></div>
+			</div>
+		</td>
+	</tr>
 </table>
 
 <div class="btnposition btnpositionNew">

@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
@@ -20,7 +21,7 @@ public interface EzOrganService {
 
 	public List<OrganDeptVO> getDeptMemberList(String pClass, String deptID, String lang, int tenantID) throws Exception;
 	
-	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID) throws Exception;
+	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID, String noAddJob) throws Exception;
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
 	
@@ -34,11 +35,11 @@ public interface EzOrganService {
 
 	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;	
 	
-	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception;
+	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
 	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
-	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID) throws Exception;
+	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID, String companyId) throws Exception;
 	
 	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception;
 	
@@ -50,6 +51,8 @@ public interface EzOrganService {
 	
 	public String getLastLogin(String userID, int tenantID) throws Exception;
 	
+	public String getLoginIP(String userID, int tenantID) throws Exception;
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;
@@ -58,7 +61,7 @@ public interface EzOrganService {
 
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
-	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
+	public OrganProxyVO getProxyInfo(String userID, int tenantID, String offset) throws Exception;
 	
 	public List<String> getAllSubDeptId(String deptID, int tenantID) throws Exception;
 	
@@ -66,15 +69,15 @@ public interface EzOrganService {
 
 	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception;
 
-	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception;
+	public String getOrgInfo(String strFilter, int intScope) throws Exception;
 
-	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
+	public String searchOuterOrgan(String strFilter, int intScope) throws Exception;
 
 	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID) throws Exception;
 	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception;
 
-	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID) throws Exception;
+	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob) throws Exception;
 
 	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
 	
@@ -84,9 +87,11 @@ public interface EzOrganService {
 
 	public String getListType(String userID, int tenantID, String companyID) throws Exception;
 
-	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
+	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String companyId) throws Exception;
 
 	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
 	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
+	
+	public String getPhysicalDeliveryOfficeName(String userID,  String property, int tenantID) throws Exception;
 }

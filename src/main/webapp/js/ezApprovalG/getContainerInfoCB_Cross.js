@@ -1,4 +1,5 @@
 var g_CurrentFormCd = "_DEF_1";
+var publicityYN = "";
 
 
 function DisplayLineCnt(Resultxml, viewtype) {
@@ -33,7 +34,8 @@ function getDataInfo() {
 		url : pUrl,
 		data : {
 				docID : DocID,
-				mode  : "END"
+				mode  : "END",
+				publicityYN : publicityYN
 				},
 		success: function(xml){
 			getdoclistSub_after(xml);
@@ -109,87 +111,11 @@ function check_presence() {
     } catch (e) { }
 }
 
-function processRowClick(tr) {
-	if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
-        ChkCabRoleInfo(tr);
-
-    if (DocList_Flag != "CABINET") {
-        DocID = tr.getAttribute("DATA1");
-        pURL = tr.getAttribute("DATA2");
-        WriterID = tr.getAttribute("DATA19");
-
-        if (typeof (SendOfferCheckBtn) != "undefined")
-            SendOfferCheckBtn(DocID, UserID);
-
-        if (DocList_Flag == "RECORD") {
-            if (document.getElementById("tdGongRam")) {
-                /* 2015-07-06 표준모듈:수정 - KSK */
-                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1].trim() == WriterID.trim())) {
-                	document.getElementById("tdGongRam").style.display = "";
-                } else {
-                	document.getElementById("tdGongRam").style.display = "none";
-                }
-            }
-        }
-
-        if (WriterID == arr_userinfo[1]) {
-            try {
-                if (typeof (tr.cells[12].innerHTML) == "string") {
-                    // START
-                    if (tr.cells[12].innerHTML == strLang597 && tr.cells[11].innerHTML == "") {
-                    //END
-                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                            document.getElementById("tdReSend").style.display = "";
-                            //SwapImage(ReSend, "");
-                        }
-                    }
-                    else {
-                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                            document.getElementById("tdReSend").style.display = "none";
-                            //SwapImage(ReSend, "dis");
-                        }
-                    }
-                }
-                else {
-                    if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                        document.getElementById("tdReSend").style.display = "none";
-                        //SwapImage(ReSend, "dis");
-                    }
-                }
-            }
-            catch (e) {}
-        }
-        else {
-            if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                document.getElementById("tdReSend").style.display = "none";
-                //SwapImage(ReSend, "dis");
-            }
-        }
-
-        switch (jobState) {
-            case "ATTACH":
-                Attach_onclick();
-                break;
-
-            case "OPINION":
-                Opinion_onclick();
-                break;
-
-            case "APPROVAL":
-            	Approval_onclick();
-                break;
-
-            case "RECIPENT":
-                Recipent_onclick()
-                break;
-        }
-    }
-}
-
 function lvtDoclist_SelChange() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var tr = DocList.GetSelectedRows();
+    ext = tr[0].getAttribute("DATA2").substr(tr[0].getAttribute("DATA2").lastIndexOf(".")+1);
     if (tr.length > 0) {
         processRowClick(tr[0]);
     }
@@ -217,7 +143,7 @@ function OpenReceiptHistory() {
 
         var Url, OpenWin;
         if (isExtYN.toUpperCase() == "Y") {
-            Url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo.aspx?pDocID=" + pDocID + "&pDeptID=" + pDeptID;
+            Url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + pDocID + "&deptID=" + pDeptID;
         }
         else {
             Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
@@ -256,6 +182,27 @@ function openUserInfo() {
 }
 
 function GetDocDeliveryList(g_DeliverySearchParamXml) {
+	if (g_isSearching) {
+    	var searchParamXml = loadXMLString(g_DeliverySearchParamXml);
+        var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
+        var endDate = SelectSingleNodeValue(searchParamXml.firstChild, "EREGDATE");
+        
+    	if (startDate == "") {
+    		var date = new Date();
+    		date.setFullYear(date.getFullYear() - 1);
+    		
+    		g_searchDate.startDate = date;
+    	} else {
+    		g_searchDate.startDate = new Date(startDate.replace(/-/g,'/'));
+    	}
+    	
+        if (endDate == "") {
+        	g_searchDate.endDate = new Date();
+        } else {
+        	g_searchDate.endDate = new Date(endDate.replace(/-/g,'/'));
+        }
+    }
+	
     DocListType = "DeliveryList";
     if (pChackYN == "FALSE") {
         curpage = 1;
@@ -275,8 +222,8 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     createNodeAndInsertText(xmlpara, objNode, "ISDOCPRINT", "FALSE");
     if (g_DeliverySearchParamXml != "" && g_DeliverySearchParamXml != undefined) {
         createNodeAndInsertText(xmlpara, objNode, "search", "1");
-            var oSParam = loadXMLString(g_DeliverySearchParamXml);
-            xmlpara.documentElement.appendChild(oSParam.documentElement);
+        var oSParam = loadXMLString(g_DeliverySearchParamXml);
+        xmlpara.documentElement.appendChild(oSParam.documentElement);
     }
     else {
         createNodeAndInsertText(xmlpara, objNode, "search", "0");
@@ -407,9 +354,12 @@ function lvtDoclist_SelChange() {
 function processRowClick(tr) {
     if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
         ChkCabRoleInfo(tr);
+    
+    if (DocList_Flag == "RECORD") {
+    	publicityYN = GetAttribute(tr,"DATA16");
+    }
 
     if (DocList_Flag != "CABINET") {
-
         DocID = GetAttribute(tr,"DATA1");
         pURL = GetAttribute(tr,"DATA2");
         WriterID = GetAttribute(tr,"DATA19");
@@ -418,14 +368,13 @@ function processRowClick(tr) {
         if (WriterID == "") {
         	WriterID = GetAttribute(tr, "DATA3");
         }
-        
 
         if (typeof (SendOfferCheckBtn) != "undefined")
             SendOfferCheckBtn(DocID, UserID);
 
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
-                if (GetAttribute(tr, "DATA15") == "011" && (arr_userinfo[1] == WriterID))
+                if ((GetAttribute(tr, "DATA15") == "011" || GetAttribute(tr, "DATA15") == "001") && (arr_userinfo[1] == WriterID))
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
@@ -434,26 +383,22 @@ function processRowClick(tr) {
 
         if (WriterID == arr_userinfo[1]) {
             try {
-            	//기록물등록대장의 tr.cells[12].innerHTML 은 존재하지않아서 재발송버튼 나오기 위해 tr.cells[11]로 바꿔줌 2018-07-27 강민수92
-                if (typeof (tr.cells[11].innerHTML) == "string") {
-                    if (tr.cells[11].innerHTML == strLang597 && tr.cells[10].innerHTML == "") {
+                if (typeof (tr.cells[12].innerHTML) == "string") {
+                    if (tr.cells[12].innerHTML == strLang597 && tr.cells[11].innerHTML == "") {
                     
                         if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                             document.getElementById("tdReSend").style.display = "";
-                            
                         }
                     }
                     else {
                         if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                             document.getElementById("tdReSend").style.display = "none";
-                            
                         }
                     }
                 }
                 else {
                     if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                         document.getElementById("tdReSend").style.display = "none";
-                        
                     }
                 }
             }
@@ -462,7 +407,6 @@ function processRowClick(tr) {
         else {
             if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                 document.getElementById("tdReSend").style.display = "none";
-                
             }
         }
 

@@ -337,9 +337,7 @@ function MakeFormConnXML() {
                   
                     if (pCheck) {
                         pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i],"processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i],"processtime");
-                    }
-                    else {
-                        
+                    } else {
                         pDataCheck = false;
                         pErrorMsg = strLang1017;
                         break;
@@ -360,7 +358,6 @@ function MakeFormConnXML() {
                     var str = ""; 
                     for (var j in results) {
                         if (results[j] > 1) {
-                            
                             pDataCheck = false;
                             pErrorMsg = strLang1018;
                             break;
@@ -368,8 +365,7 @@ function MakeFormConnXML() {
                     }
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             pDataCheck = false;
             pErrorMsg = e.message;
         }
@@ -473,6 +469,7 @@ function MakeFormRecevGroupXML_Detail() {
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTID", GetAttribute(selRow[i], "data1"));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
+//            createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTNAME", selRow[i].cells[0].innerText);
         }
     }
     return getXmlString(xmlpara.childNodes[0]);

@@ -137,15 +137,21 @@ public class EzAttitudeGWController {
 			String adminId = request.getParameter("adminId");
 			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String offSet = info.getOffSet();
+			
+			if (adminId != null && !adminId.equals("")) { //관리자가 등록시 등록하는 사람의 offset이 필요함
+				MCommonVO adminInfo = mOptionService.commonInfoWeb(serverName, adminId);
+				offSet = adminInfo.getOffSet();
+			}
 			
 			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
-				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, offSet, info.getCompanyId(), info.getTenantId());
 			}
 			
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0")) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode, adminId);
+				ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId);
 			}
 			
 			result.put("status", "ok");
@@ -974,7 +980,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
@@ -1051,7 +1057,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
@@ -1092,11 +1098,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			String userId = request.getParameter("userId");
+			//isRest = all(휴일모두), rest(휴무일만)
+			String isRest = request.getParameter("isRest");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("rest", companyId, tenantId);
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList(isRest, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1327,7 +1335,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
@@ -1396,7 +1404,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
@@ -1429,6 +1437,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태관리 미입력자 메일발송
 	 */
+	/* 현재는 메일 작성창을 띄우므로 사용하지 않고 있음.
 	@RequestMapping(value = "/rest/ezattitude/attitudes/mail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject absentedListSendMail(HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] started.");
@@ -1455,7 +1464,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {
@@ -1492,6 +1501,8 @@ public class EzAttitudeGWController {
 		
 		return result;
 	}
+	*/
+	
 	/**
 	 * G/W 근태관리 [GET] 근태내역리스트
 	 * @param attModId
@@ -1827,7 +1838,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("wa=1") == -1) {
+				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
 					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
 					
 					for (AttitudeAuthorVO vo : authDeptlist) {

@@ -190,12 +190,22 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-        	compAdmin = "Y";
-        	deptAdmin = "Y";
-        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-        	deptAdmin = "Y";
-        }
+		boolean gyumJikChk = true;
+		
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) > -1 || userInfo.getGyumJik().indexOf(userInfo.getDeptID()) > -1) { 
+				gyumJikChk = false;
+			}
+		}
+
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	compAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
 		
@@ -289,6 +299,9 @@ public class EzAddressController{
 			sb.append("<DISPLAYNAME>" + pFolderName + "</DISPLAYNAME>");
 			
 			for (AddressVO vo : addressList) {
+				String sType = vo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(vo.getsEmail());
+				
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + vo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + vo.getCreatorId() + "</CREATORID>");
@@ -299,9 +312,9 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(vo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(vo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(vo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(vo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + vo.getsType() + "</STYPE>");
-				sb.append("</ROW>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
+				sb.append("</ROW>");				
 			}
 			
 			sb.append("</DATA>");
@@ -577,11 +590,20 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			compAdmin = "Y";
-			deptAdmin = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-			deptAdmin = "Y";
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
+		}
+		
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				compAdmin = "Y";
+				deptAdmin = "Y";
+			} else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
@@ -1187,12 +1209,21 @@ public class EzAddressController{
 		String show = "N";
 		String title = egovMessageSource.getMessage("ezAddress.t144", locale);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			companyAdmin = "Y";
-			deptAdmin = "Y";
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
 		}
-		else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
-			deptAdmin = "Y";
+		
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				companyAdmin = "Y";
+				deptAdmin = "Y";
+			}
+			else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+				deptAdmin = "Y";
+			}
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
@@ -1446,11 +1477,20 @@ public class EzAddressController{
 			filter = request.getParameter("filter");
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
-			bAdmin = "Y";
+		boolean gyumJikChk = true;
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
+				gyumJikChk = false;
+			}
 		}
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			cAdmin = "Y";
+		
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
+				bAdmin = "Y";
+			}
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+				cAdmin = "Y";
+			}
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
@@ -1693,14 +1733,14 @@ public class EzAddressController{
 			
 			List<AddressVO> addressList = null;
 			int totalCount = 0;
+
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			if (searchGubun.equals("Y")) {
 				//TODO: Y로 올 경우가 없는 것 같음.
 				// 여기로 넘어오는지 테스트해보고 안넘어오면 지우기. 넘어오면 코딩하기.
 				logger.error("searchGubun=Y. Need more code. Location:EzAddressController 1367");
 			} else {
-				LoginVO userInfo = commonUtil.userInfo(loginCookie);
-				
 				totalCount = ezAddressService.getAddressCount(userInfo.getTenantId(), folderId, ownerId, "");
 				addressList = ezAddressService.getAddressList(userInfo.getTenantId(), folderId, ownerId, orderBy, "", pageSize, (currentPage - 1) * pageSize);
 			}
@@ -1715,6 +1755,9 @@ public class EzAddressController{
 			sb.append("<DATA>");
 			
 			for (AddressVO addressInfo : addressList) {
+				String sType = addressInfo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
+				
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
@@ -1725,8 +1768,8 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(addressInfo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
 				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
 				sb.append("</ROW>");
 			}
@@ -1825,6 +1868,9 @@ public class EzAddressController{
 			sb.append("<DATA>");
 			
 			for (AddressVO addressInfo : addressList) {
+				String sType = addressInfo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
+				
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
@@ -1835,8 +1881,8 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(addressInfo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
 				sb.append("<FOLDERTYPE>" + pFolderType + "</FOLDERTYPE>");
 				sb.append("</ROW>");
 			}
@@ -1916,6 +1962,7 @@ public class EzAddressController{
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
+	        int headerLength = headerArray.length;
 	        
 	        csvWriter.writeNext(headerArray);
 	        csvWriter.flush();
@@ -1923,7 +1970,7 @@ public class EzAddressController{
 	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", null);
 	        
 	        for (AddressVO address : addressList) {
-	        	String[] valueArray = new String[87];
+	        	String[] valueArray = new String[headerLength];
 	        	Arrays.fill(valueArray, "");
 	        	
 	        	if (format.equals("outlookCSV")) {

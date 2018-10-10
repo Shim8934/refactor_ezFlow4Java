@@ -377,54 +377,29 @@ function GetSelCabInfoXml(totalRows) {
     var rtnXml = createXmlDom();
     var Root, objItem, objData;
     Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
-    for (i = 0; i < totalRows.length; i++) {
-        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", totalRows[i].getAttribute("DATA1"));
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", totalRows[i].cells[0].innerText);
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", totalRows[i].getAttribute("DATA3"));
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", totalRows[i].cells[1].innerText);
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", totalRows[i].cells[2].innerText);
-        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", totalRows[i].getAttribute("DATA2"));
+    
+    // 비전자문서 기안시 임시 기록물 정보 입력
+    if (nonElecRec == "Y" && pIniGubun == "1") {
+    	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+    	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", g_CabID);
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "ZZ3782312017000002");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "임시SN(a8989891)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "임시VOLNO(ZZ378231)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");
+    } else {
+	    for (i = 0; i < totalRows.length; i++) {
+	        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", totalRows[i].getAttribute("DATA1"));
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", totalRows[i].cells[0].innerText);
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", totalRows[i].getAttribute("DATA3"));
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", totalRows[i].cells[1].innerText);
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", totalRows[i].cells[2].innerText);
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", totalRows[i].getAttribute("DATA2"));
+	    }
     }
     return getXmlString(rtnXml);
 }
-////////////////////////////////////////////////////////////////////////////////////////기록물철 저장 XML2
-function GetSelCabInfoXml2() {
-	//참고용 이거 기준으로 하면됨
-//	<tr id="DivTaskSCateList_TR_0" selected="true" class="" data1="test1ZZ4569062017000003001" data2="ZZ456906" data3="test1ZZ4569062017000003" data4="test001" data5="방산철" data6="방산철_ENG" data7="ZZ456906" data8="10" data9="0" data10="2" data11="0" data12="" data13="" data14="" data15="1" data16="1" data17="방산단위업무" data18="방산단위업무_ENG" style="cursor: pointer; background-color: rgb(219, 225, 231);">
-//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">방산철</td>
-//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">테스트용(12345112)</td>
-//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">방산단위업무(ZZ456906)</td>
-//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">일반문서</td>
-//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">000003</td>
-//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">001</td>
-//	</tr>
-	//kt에 넣을것
-	var i;
-	var rtnXml = createXmlDom();
-	var Root, objItem, objData;
-	Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
-	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-	
-	if (hideCabinet == "1") {
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "devteamZZ3782312017000002001");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "devteamZZ3782312017000002");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "경비(a8989891)");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "경비신청(ZZ378231)");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");
-	} else {
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "test1ZZ4569062017000003001");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "방산철");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "test1ZZ4569062017000003");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "테스트용(12345112)");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "방산단위업무(ZZ456906)");
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ456906");
-	}
-	
-	return getXmlString(rtnXml);
-}
-
 
 // 결재참가자 flag 별 Save 함수
 function ReDraftSaveAprLine()
@@ -1733,7 +1708,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

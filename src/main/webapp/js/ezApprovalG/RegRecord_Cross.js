@@ -1,4 +1,4 @@
-﻿﻿var g_CabListXml;
+﻿﻿﻿var g_CabListXml;
 var bSpecialFlag = "0";
 var g_szSCListXml = "";
 var g_arrSCName = new Array();
@@ -181,6 +181,7 @@ function RegisterRecord() {
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "CABINETID", trim_Cross(g_CabID));
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "SPECIALREC", GetSpecialRecInfo());
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "PUBLICCODE", GetPublicCode());
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "PUBLICCODE2", GetPublicCode2());
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "LIMITRANGE", txtLimitRange.value);
     if (ListTypeFlag == "1") {
         if (pRegType == "2" || pRegType == "4")
@@ -296,7 +297,7 @@ function InitAVTypeTD(nodeXml, objTD1, objTD2) {
     var szHtm1 = "";
     var szHtm2 = "";
     var i;
-    szHtm1 = "<div style=\"width:99%;height:130px;padding: 3px 0px 0px 2px;\">";
+    szHtm1 = "<div style=\"width:99%;height:87px;padding: 2px 0px 0px 2px;\">";
 
     for (i = 0; i < nodeXml.length; i++) {
         if (i % 2 == 0) {

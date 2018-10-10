@@ -6,13 +6,13 @@
 	<head>
 		<title><spring:message code='ezBoard.t320'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<!-- 페이징 -->
-		<script type="text/javascript" src="/js/ezBoard/lang/ezBoardSTD.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/lang/ezBoardSTD.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		    var ReturnFunction;
 		    //2018-02-06 김보미 - 페이징
@@ -29,12 +29,13 @@
 		        	
 		        }
 		    };
-		    function show_info(userid) {
+		    /* 2018-07-02 홍승비 - 조회자정보 클릭 시 겸직부서(겸직인 경우)로 사원정보 표출 */
+		    function show_info(userID, deptID) {
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 400) / 2;
-		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
 		    function close_onclick() {
 		        if (ReturnFunction != null)
@@ -135,8 +136,10 @@
 			            }		            
 			          
 				        $("#lvBoardList tr").on("click", function () {
+				        	// 이부분에서 userID 가져오고 있음.
 				        	userID = $(this).closest("tr").attr("userid");
-				        	show_info(userID);
+				        	deptID = $(this).closest("tr").attr("deptid");
+				        	show_info(userID, deptID);
 				        });
 			            
 			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");

@@ -5,16 +5,19 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t560'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/OpenSelWin_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OpenSelWin_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OrganTree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var OrderCell = "";
 	        var xmlhttp = createXMLHttpRequest();
@@ -50,6 +53,16 @@
 	        };
 	
 	        function bt_OK_onclick() {
+	        	/*
+	        		기록물철 인계할 때 인계부서 단위업무 체크 로직 추가
+	        	*/
+	        	var isEmptyCode = $("#tdSTaskCode").text().trim();
+	        	
+	        	if(isEmptyCode === "" || isEmptyCode === null) {
+	        		alert("<spring:message code='ezApprovalG.pjg05'/>");
+	        		return;
+	        	}
+	        	
 	            var SelCabinetList = new ListView();
 	            SelCabinetList.LoadFromID("DivSelCabinetList");
 	            var length = SelCabinetList.GetRowCount();
@@ -433,7 +446,7 @@
 	                                <tr>
 	                                    <td id="tdSTaskCode">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeSTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeSTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -445,16 +458,16 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2><spring:message code='ezApprovalG.t578'/>&nbsp;<select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></h2>
+	                <h2 class="h2_dot" style="font-weight: normal;width:440px"><spring:message code='ezApprovalG.t578'/><span style="float:right"><select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></span></h2>
 	                
 	                <div style="WIDTH: 450px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="CabinetList"></div>
 	                </div>
 	            </td>
 	            <td style="text-align: center; width: 25px">
-	                <img src="/images/arr_right.gif" name="Image191" width="16px" height="16px" onclick="return AddCabList_onclick()" style="cursor: pointer">
-	                <img src="/images/arr_left.gif" name="Image201" width="16px" height="16px" onclick="return DelCabList_onclick()" style="padding-top: 5px; cursor: pointer;">
-	                <img name="Image1911" src="/images/arr01a.gif" width="16px" height="16px" onclick="return btnAddAll_onclick()" style="padding-top: 20px;  cursor: pointer">
+	                <img src="/images/arr_right.gif" name="Image191" onclick="return AddCabList_onclick()" style="cursor: pointer;margin-top:100px">
+	                <img src="/images/arr_left.gif" name="Image201" onclick="return DelCabList_onclick()" style="padding-top: 5px; cursor: pointer;">
+	                <img name="Image1911" src="/images/arr01a.gif" onclick="return btnAddAll_onclick()" style="padding-top: 20px;  cursor: pointer">
 	            </td>
 	            <td style="vertical-align: top">
 	                <table class="content" style="width: 100%">
@@ -465,7 +478,7 @@
 	                                <tr>
 	                                    <td id="tdDDeptName">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeDDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeDDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -478,7 +491,7 @@
 	                                <tr>
 	                                    <td id="tdDTaskCode">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeDTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeDTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -490,7 +503,7 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2><spring:message code='ezApprovalG.t580'/></h2>
+	                <h2 class="h2_dot" style="font-weight: normal"><spring:message code='ezApprovalG.t580'/></h2>
 	                <div style="WIDTH: 375px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="SelCabinetList"></div>
 	                </div>

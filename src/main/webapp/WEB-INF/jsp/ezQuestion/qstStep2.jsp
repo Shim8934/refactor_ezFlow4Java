@@ -7,11 +7,11 @@
 	<head>
 		<title>Step2</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezQuestion.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezQuestion/common.js')}"></script>
 		<script type="text/javascript">
 			var index = -1; 
 			var flgClose= true;
@@ -48,17 +48,34 @@
             		}			
         		}
         		var v_ques =  vdata;
+        		
+        		//2018-07-27 배현상, 전자설문 질문 추가 시 어떤 유형의 질문인지 표시하는 기능 추가
+        		var xmlQst = SelectSingleNode(loadXMLString(QstXML), "ROW");
+        		
+        		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
+        		
+        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+        		if (typeName == 1) {
+        			typeName = "<spring:message code='ezQuestion.t487' />";
+        		} else if (typeName == 2) {
+        			typeName = "<spring:message code='ezQuestion.t372' />";
+        		} else if (typeName == 4) {
+        			typeName = "<spring:message code='ezQuestion.t373' />";
+        		} else if (typeName == 5) {
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
+        		}
+        		
         		if (selCnt > 0 ) {
             		if (frmCreate.selQues[0].text == "") {
             			i = 0;
             		} else {
             			i = frmCreate.selQues.length;
             		}
-            		var TmpOption= new Option((i+1) + "." + v_ques, QstXML,true);
+            		var TmpOption= new Option("[" + typeName + "]" + (i+1) + ". " + v_ques, QstXML,true);
             		frmCreate.selQues.options[i] = TmpOption;
             		frmCreate.selQues.options[i].AttachYN = vAttachYN;
         		} else {
-            		var TmpOption= new Option((1) + "." + v_ques, QstXML,true);
+            		var TmpOption= new Option("[" + typeName + "]" + (1) + ". " + v_ques, QstXML,true);
             		frmCreate.selQues.options[0] = TmpOption;
             		frmCreate.selQues.options[0].AttachYN = vAttachYN;
         		}
@@ -161,10 +178,14 @@
             		var tmpText=frmCreate.selQues[index-1].text.substring(vsublen1);
             		var vsubdata=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen=vsubdata[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index-1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index-1].text = index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
+            		frmCreate.selQues[index-1].text = answerType + index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType1 + (index + 1) + "." + tmpText;
+            		frmCreate.selQues.selectedIndex = index-1;
             		frmCreate.selQues.selectedIndex = index-1;
             		index--;
         		}	
@@ -177,10 +198,13 @@
             		var tmpText = trim_Cross(frmCreate.selQues[index+1].text).substring(vsublen);
             		var vsubdata1=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen1=vsubdata1[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index+1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index+1].text = index+2 + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
+            		frmCreate.selQues[index+1].text = answerType1 + (index + 2) + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType + (index + 1) + "." + tmpText;
             		frmCreate.selQues.selectedIndex = index+1;
             		index ++;
         		}
@@ -221,7 +245,23 @@
         		}
     		}
     		function EditQues(data, index, vAttachYN, QstXML) {
-        		frmCreate.selQues[index].text=String(parseInt(index)+1) +"." + data;
+    			//2018-07-27 배현상, 전자설문 질문 추가 시 어떤 유형의 질문인지 표시하는 기능 추가
+        		var xmlQst = SelectSingleNode(loadXMLString(QstXML), "ROW");
+        		
+        		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
+        		
+        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+        		if (typeName == 1) {
+        			typeName = "<spring:message code='ezQuestion.t487' />";
+        		} else if (typeName == 2) {
+        			typeName = "<spring:message code='ezQuestion.t372' />";
+        		} else if (typeName == 4) {
+        			typeName = "<spring:message code='ezQuestion.t373' />";
+        		} else if (typeName == 5) {
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
+        		}
+        		
+        		frmCreate.selQues[index].text= "[" + typeName + "]"+ String(parseInt(index)+1) +". " + data;
         		frmCreate.selQues[index].value = QstXML;
         		frmCreate.selQues[index].AttachYN = vAttachYN;
     		}
@@ -246,7 +286,9 @@
         		for(jk = index;jk < curidxno - 1 ; jk++){
             		var tmpValue = frmCreate.selQues[jk+1].text.split(".");
             		frmCreate.selQues[jk].value = frmCreate.selQues[jk+1].value;
-            		frmCreate.selQues[jk].text = jk+1 + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
+            		//2018-08-08 김보미 - 유형 질문 표시
+             		//frmCreate.selQues[jk].text = jk+1 + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
+            		frmCreate.selQues[jk].text = tmpValue[0].split("]")[0] + "]" + (jk + 1) + "." + frmCreate.selQues[jk+1].text.substring(tmpValue[0].length+1);
         		}
         		frmCreate.selQues.remove(curidxno-1);
     		}
@@ -404,7 +446,23 @@
 		    		xmlDom = loadXMLString(DataXML);
 		    		removeQue();
 		    		for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
-		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+		    			//2018-08-09 김보미 - 불러오기 시에 질문 유형명 표시되게끔 변경
+// 		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+// 		        		frmCreate.selQues.options[i] = TmpOption;
+
+		        		var typeName = SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "ANSWERTYPE");
+		        		
+		        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+		        		if (typeName == 1) {
+		        			typeName = "<spring:message code='ezQuestion.t487' />";
+		        		} else if (typeName == 2) {
+		        			typeName = "<spring:message code='ezQuestion.t372' />";
+		        		} else if (typeName == 4) {
+		        			typeName = "<spring:message code='ezQuestion.t373' />";
+		        		} else if (typeName == 5) {
+		        			typeName = "<spring:message code='ezQuestion.t50003' />"
+		        		}
+		        		var TmpOption = new Option("[" + typeName + "]" + (i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
 		        		frmCreate.selQues.options[i] = TmpOption;
 		    		}
 		    		AttachFile.innerHTML = AttachFile.innerHTML;

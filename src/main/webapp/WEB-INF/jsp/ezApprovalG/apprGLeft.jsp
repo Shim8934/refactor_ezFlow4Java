@@ -9,10 +9,10 @@
 	<head>
 		<title></title>
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
-		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
-		<link href="<spring:message code='ezOrgan.e3'/>" type="text/css" rel="stylesheet" />
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
+		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
+		<link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
 	        .instance.sbHolder{
 	            width: 100%;
@@ -26,15 +26,27 @@
 				font-weight:normal !important;
 				color:#9b9b9b !important;
 			}
+			#ITEMCONT {
+				width:170px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+			<%-- 2018-08-22 홍승비 - 개인문서함 폴더명 ellipsis 처리 --%>
+			.node_div span {
+				overflow: hidden;
+			    text-overflow: ellipsis;
+			    display: inline-block;
+			}			
+			
 	    </style>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.selectbox-0.2.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pUserID = "${userInfo.id}";
 		    var pListTypeValue = "${listType}";
@@ -56,7 +68,6 @@
 		    var g_bDeptCharger=false;
 		    var AdminYN;
 		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-		    var hideCabinet = "${hideCabinet}";
 		    var ViewLeftCount = "${viewLeftCount}";
 		    var primaryStr = "${userInfo.primary}";
 		    var SubContCount = "${subContCount}";
@@ -68,10 +79,8 @@
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
-		      		if(hideCabinet == "0") {
-		        		$(".approvalG").css("display","");
-		        		$(".approval").css("display","none");
-		      		}
+	        		$(".approvalG").css("display","");
+	        		$(".approval").css("display","none");
 	        	} else{
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
@@ -100,26 +109,24 @@
 		        initUserRoleinfo();
 		        
 		        if(approvalFlag == "G") {
-		        	if(hideCabinet == "0") {
-				        if (g_bRecAdmin || AdminYN == "TRUE") {
-				            document.getElementById("tag07").style.display = "";
-				            document.getElementById("tag08").style.display = "";
-				            document.getElementById("tag09").style.display = "";
-				            document.getElementById("tag10").style.display = "";
-				        }
-				        else if (g_bDeptCharger) {
-				            document.getElementById("tag07").style.display = "";
-				            document.getElementById("tag08").style.display = "";
-				            document.getElementById("tag09").style.display = "none";
-				            document.getElementById("tag10").style.display = "none";
-				        }
-				        else {
-				            document.getElementById("tag07").style.display = "none";
-				            document.getElementById("tag08").style.display = "none";
-				            document.getElementById("tag09").style.display = "none";
-				            document.getElementById("tag10").style.display = "none";
-				        }
-		        	}
+			        if (g_bRecAdmin || AdminYN == "TRUE") {
+			            /* document.getElementById("tag07").style.display = "";
+			            document.getElementById("tag08").style.display = ""; */
+			            document.getElementById("tag09").style.display = "";
+			            document.getElementById("tag10").style.display = "";
+			        }
+			        else if (g_bDeptCharger) {
+			            /* document.getElementById("tag07").style.display = "";
+			            document.getElementById("tag08").style.display = ""; */
+			            document.getElementById("tag09").style.display = "";
+			            document.getElementById("tag10").style.display = "none";
+			        }
+			        else {
+			            /* document.getElementById("tag07").style.display = "none";
+			            document.getElementById("tag08").style.display = "none"; */
+			            document.getElementById("tag09").style.display = "none";
+			            document.getElementById("tag10").style.display = "none";
+			        }
 		        }
 		        
 		        
@@ -190,7 +197,10 @@
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
 			                document.getElementById('APPROVAL99').click();
 			            }
-			            
+			            if (pListTypeValue == '21') {
+			            	setPresentValue("<spring:message code='ezApprovalG.t3000'/>");
+			                document.getElementById('APPROVAL21').click();
+			            }
 		        }
 			        getAprCount();
 		    };
@@ -378,8 +388,13 @@
 			                parent.frames["right"].document.getElementById("presentcell").textContent = tempValue;
 			            else
 			                parent.frames["right"].document.getElementById("presentcell").innerText = tempValue;
+			        
+			            parent.frames["right"].initselyear();
+
 			        }
 			        catch (e) { }
+			        
+			        
 		    	} else {
 /* 		    	    if (tempValue == "")
 		    	        tempValue = localValue;
@@ -593,7 +608,7 @@
 		            ResultXML = xmlhttp_total.responseXML;
 		            
 		            // 결재할 문서
-		            if (pListTypeValue == "1") {
+		            if (pListTypeValue != "1") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
 		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
 		                else
@@ -644,48 +659,31 @@
 		            }
 		            try {
 		                // 공람할문서
-		                if(approvalFlag =="G") {
-			                if (pListTypeValue != "99") {
-			                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-			                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-			                    else
-			                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-			                }
-		                } else {
-		                	 if (pListTypeValue != "99") {
-				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-				                    else
-				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-				                }
+		                if (pListTypeValue != "99") {
+		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
+		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+		                    else
+		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 		                }
 		                // 공람한문서
-		                if(approvalFlag =="G") {
-			                if (pListTypeValue != "10") {
-			                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-			                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-			                    else
-			                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-			                }
-		                } else {
-		                	 if (pListTypeValue != "10") {
-				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-				                    else
-				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-				                }
+		                if (pListTypeValue != "10") {
+		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
+		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+		                    else
+		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 		                }
 		            } catch (e) { }
 		            try {
 		                // 직인의뢰함
 		                if (pListTypeValue != "7") {
-		                	if("${userSendOut}" == "YES") {
+		                	//겸직 시 겸직된 부서로 이동할 경우 직인의뢰함의 count가 표시되지 않는 현상 제거
+		                	//if("${userSendOut}" == "YES") {
 		                    	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) > 0)
 		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
 		                    	else
 		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
-		                		}
-		                	}
+		                	//}
+	                	}
 		            } catch (e) { }
 		            
 		        } catch (e) { }
@@ -1001,52 +999,44 @@
 		            ${subTitleString}
 				</select>
 			</c:if>
-			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
+			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='main.t00018'/></span></h2>
 			<ul id="iconul">
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
+				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><span style="width:100%;display:inline-block;" id="APPROVAL1"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
 
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
+				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><span style="width:100%;display:inline-block;" id="APPROVAL2"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL3" onClick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
+				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><span style="width:100%;display:inline-block;" id="APPROVAL3"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
 				<c:if test="${approvalFlag == 'S'}">
-				<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
+				<li onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><span style="width:100%; display:inline-block;" id="APPROVAL99"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
 				</c:if>
 				<c:if test="${hideSusin != 'N'}">
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
+				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><span style="width:100%;display:inline-block;" id="APPROVAL4"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 				</c:if>
+				<c:if test="${approvalFlag == 'G'}">
+					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><span style="width:100%; display:inline-block;" id="APPROVAL99"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+				</c:if>		
 				<c:if test="${whoKyulYN == '1'}">
-					<li><span id="MYCONTWHO" style="width: 100%; display: inline-block;" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)">
+					<li id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)"><span style="width: 100%; display: inline-block;">
 	                <img src="../../images/ImgIcon/icon_afterapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.pjj34'/><span id="countWHO"></span></span></li>
                 </c:if>
 	            <c:if test="${userInfoEnforce == '2'}">
-	            	<li>
-	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">
+	            	<li onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">
+	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5">
 	                	<img src="../../images/ImgIcon/icon_inspection.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t839'/><span id="count6"></span></span>
 	               	</li>
 	            </c:if>
-				<c:if test="${hideCabinet == '0'}">
-				<li class = "approvalG"><span style="width:100%;display:inline-block;" id="APPROVAL5" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6','')"><img src="/images/ImgIcon/icon_senddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
-				</c:if>
+				<li class = "approvalG" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6','')"><span style="width:100%;display:inline-block;" id="APPROVAL5"><img src="/images/ImgIcon/icon_senddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
 				<c:if test="${approvalFlag == 'G'}">
 				<c:if test="${infoXML != '' && infoXML != null }">
-					<li><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL9" onClick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')" ><img src="/images/ImgIcon/icon_listsenddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1751'/></span></li>
+					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')"><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL9"><img src="/images/ImgIcon/icon_listsenddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1751'/></span></li>
 				</c:if>
 				</c:if>
 				<c:if test="${userSendOut == 'YES'}">
-					<li><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL7" onClick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><img src="/images/ImgIcon/icon_stamp.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1752'/><span id=count7></span></span></li>
-					<li><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL8" onClick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><img src="/images/ImgIcon/icon_liststamp.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1275'/></span></li>
+					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL7"><img src="/images/ImgIcon/icon_stamp.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1752'/><span id=count7></span></span></li>
+					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL8"><img src="/images/ImgIcon/icon_liststamp.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1275'/></span></li>
 				</c:if>
-	            <li><span id="APPROVAL21" onClick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')" ><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
+	            <li onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><span id="APPROVAL21"><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
 			</ul>
-			<c:if test="${approvalFlag == 'G'}">
-				<c:if test="${hideCabinet == '0'}">
-			        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10010'/></span></span></h2>
-			         <ul id="iconul">
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><img src="/images/ImgIcon/icon_enddisplaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
-					</ul>
-				</c:if>
-			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
 				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
 		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
@@ -1054,7 +1044,14 @@
 				</ul>
 			</c:if>
 			<c:if test="${approvalFlag == 'G'}">
-			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1554'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1554'/></span><ul></ul></h2>
+			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${approvalFlag == 'G'}">
+		        <h2><span style="width:100%; display:inline-block" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span><ul></ul></h2>
+		         <%-- <ul id="iconul">
+				    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+				    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
+				</ul> --%>
 			</c:if>
 			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1755'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
@@ -1063,10 +1060,10 @@
 						<c:forEach var="apprGLeftVOList" items="${apprGLeftVOList}" varStatus="status">
 							<c:choose>
 								<c:when test="${strLang == ''}">
-									<li><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}" onClick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}', '')" >${apprGLeftVOList.containerTypeName}</span></li>
+									<li onclick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}', '')"><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}">${apprGLeftVOList.containerTypeName}</span></li>
 								</c:when>
 								<c:otherwise>
-									<li><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}" onClick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}', '')" >${apprGLeftVOList.containerTypeName2}</span></li>
+									<li onclick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}', '')"><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}">${apprGLeftVOList.containerTypeName2}</span></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
@@ -1076,48 +1073,49 @@
 					</c:when>
 				</c:choose>
 				<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1}">
-					<li><span style="width:100%;display:inline-block;" onClick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')" ><spring:message code='ezApprovalG.t1517'/></span></li>
+					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1517'/></span></li>
 				</c:if>
 			</ul>
 			<c:if test="${approvalFlag == 'S'}">
-			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
+			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
-          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
+          	    <li onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')"><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
           	</c:forEach>
         	</ul>
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>
 			<c:if test="${approvalFlag eq 'G'}">
-			<c:if test="${hideCabinet == '0'}">
 			<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
-			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
+			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m05" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span><ul></ul></h2>
-			<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>
-			<h2 id="tag07"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t524'/></span><ul></ul></h2>
-			<h2 id="tag08"><span style="width:100%;display:inline-block;" id="m08" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span><ul></ul></h2>
-			<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t909'/></span><ul></ul></h2>
-			<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m10" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+			<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>			
+			<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t999'/></span></h2>
 			<ul>
-				<li><span style="width:100%;display:inline-block;" id="admin_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t717'/></span></li>
-				<li><span style="width:100%;display:inline-block;" id="admin_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t1754'/></span></li>
-				<li><span style="width:100%;display:inline-block;" id="admin_sub03" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t524'/></span></li>
-				<li><span style="width:100%;display:inline-block;" id="admin_sub04" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t520'/></span></li>
+				<li id="m07" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t524'/></span></li>
+				<li id="m08" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t908'/></span></li>
+			</ul>	
+			<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+			<ul>
+				<li id="m09" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t909'/></span></li>
+				<li id="admin_sub01" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t717'/></span></li>
+				<li id="admin_sub02" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1754'/></span></li>
+				<li id="admin_sub03" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t524'/></span></li>
+				<li id="admin_sub04" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t520'/></span></li>
 			</ul>
 			</c:if>
-			</c:if>
 			<c:if test="${approvalForDoc == 'Y'}">
-			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'f=1')}">
+			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
 				<h2><span  style="width:100%;display:inline-block;" id="approvalForDoc" onClick="Open_Func(this)"><spring:message code='ezApprovalG.lhj13'/></span></h2>
 				<ul>
-					<li id="approvalForDoc_sub01" onClick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj14'/></span></li>
-					<li id="approvalForDoc_sub02" onClick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj15'/></span></li>
+					<li id="approvalForDoc_sub01" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj14'/></span></li>
+					<li id="approvalForDoc_sub02" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj15'/></span></li>
 				</ul>
 			</c:if>
 			</c:if>

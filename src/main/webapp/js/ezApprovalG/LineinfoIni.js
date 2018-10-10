@@ -4,8 +4,8 @@ function Lineinfo_ini() {
     	if (approvalFlag == "S") {
             Tree_setconfig();
             Lineinfoini = true;
-            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
             InitListView();
+            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
             displayUserList(DeptID);
             ChangeLineTab("Organ");
             initJunGyul();
@@ -373,7 +373,8 @@ function InitListView() {
     				deptID 	 : arr_userinfo[4],
     				reDraft  : pReDraftFlag,
     				isUsed   : "",
-    				mode     : ""
+    				mode     : "",
+    				orgCompanyID : companyID
     				},
     		success: function(xml){
     			result = xml;
@@ -438,6 +439,9 @@ function InitListView() {
         	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
         	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
         	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4]) {
+            	    	arr_userinfo[4] = IniListData6;
+            	    }
         	        var curaprline = "";
         	        for (var i = 0; i < NodeList.length; i++) {
         	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
@@ -482,7 +486,8 @@ function InitListView() {
         	
         	var curaprline = 1;
         	for (var i = 0; i < NodeList.length; i++) {
-        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2 
+        				|| SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState5) { //2018-08-25 강민수92 보류일때 결재선나오게하기위해 추가
         			curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
         			break;
         		}
@@ -542,6 +547,15 @@ function InitListView() {
         			pAPRLINE.DataBind("APRLINE");
         		}
         	}
+        	// 비전자문서 기안 시, 마지막 결재선이 그대로 나오는 에러 수정
+        	if (nonElecRec == "Y" && pIniGubun == "1") {
+        		var DraftXml;
+        		document.getElementById("APRLINE").innerHTML = "";
+        		DraftXml = AddDraftUserFirst();
+        		Resultxml = loadXMLString(DraftXml);
+        		pAPRLINE.DataSource(Resultxml);
+        		pAPRLINE.DataBind("APRLINE");
+        	}
         	
         	LineAprTyepSetAll();
         	
@@ -573,7 +587,8 @@ function InitListViewCC() {
     		data : {
     			docID : pGongRamDocID,
     			mode  : "APR",
-    			docState : "015"
+    			docState : "015",
+    			orgCompanyID : companyID
     		},
     		success: function(text){
     			result = text;
@@ -1085,7 +1100,11 @@ function AddDraftUserFirst() {
     if (approvalFlag == "S") {
     	pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
     } else {
-    	pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    	if (approvalFlag == "G" && nonElecRec == "Y") {
+    		pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
+    	} else {
+    		pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    	}
     }
     pparsingXML += "<DATA12>" + strAprState1 + "</DATA12>";
     pparsingXML += "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
@@ -1105,7 +1124,11 @@ function AddDraftUserFirst() {
     if (approvalFlag == "S") {
     	pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
     } else {
-    	pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    	if (approvalFlag == "G" && nonElecRec == "Y") {
+    		pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
+    	} else {
+    		pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    	}
     }
     pparsingXML += "</CELL><CELL>";
     pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";

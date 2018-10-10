@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -28,7 +29,9 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -328,37 +331,59 @@ public class EzCommonController extends EgovFileMngUtil{
 		logger.debug("dotNetIntegration=" + dotNetIntegration);
 		
 		if (dotNetIntegration.equals("YES")) {
-			String personId = "";		
+			String parameter = "";
+			String personId = "";
 			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
+			String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginVO.getTenantId());
+			String[] mailInnerDomains = mailInnerDomain.split(";");
+			boolean isInnerUser = false;
 			
 			if (!email.isEmpty()) {
 				int atSignPos = email.indexOf("@");
 				
-				if (atSignPos != -1) {									
+				if (atSignPos != -1) {
 					personId = email.substring(0, atSignPos);
+					String domain = email.substring(atSignPos + 1);
+					
+					for (String innerDomain : mailInnerDomains) {
+						if (domain.equals(innerDomain)) {
+							isInnerUser = true;
+						}
+					}
 				}
 			} else if (!id.isEmpty()) {
 				personId = id;
+				isInnerUser = true;
 			}
 			
-			if (useEmpNumberLogin.equals("YES")) {
-				logger.debug("personId=" + personId);
-				
+			logger.debug("personId=" + personId + ",isInnerUser=" + isInnerUser);
+			
+			LoginVO user = null;
+			
+			if (isInnerUser) {
 				LoginVO login = new LoginVO();
 				login.setId(personId);
 				login.setDn("NOPASSWORD");
 				login.setTenantId(loginVO.getTenantId());
 				
-				LoginVO user = loginService.selectUser(login);
-				
+				user = loginService.selectUser(login);
+			}
+			
+			if (useEmpNumberLogin.equals("YES")) {
 				if (user != null && user.getSabun() != null) {
 					personId = user.getSabun();
 				}
-				
-				logger.debug("final personId=" + personId);
 			}
 			
-			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?id=" + URLEncoder.encode(personId, "utf-8"); 
+			if (user == null) {
+				parameter = "email=" + URLEncoder.encode(email, "utf-8");
+			} else {
+				parameter = "id=" + URLEncoder.encode(personId, "utf-8") + "&alias=" + URLEncoder.encode(user.getEmail(), "utf-8"); 
+			}
+			
+			logger.debug("parameter=" + parameter);
+			
+			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?" + parameter; 
 		}
 		
 		if (id.equals("")) {
@@ -383,19 +408,22 @@ public class EzCommonController extends EgovFileMngUtil{
 //        		}
 				
 				if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getLang(), loginVO.getTenantId());
+					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
 					
 					if (infoXML2!=null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
 						Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
 						
 						literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 						literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
+						literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
 					} else {
 						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+						literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 					}
 					
 				} else {
+					literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 					literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 					literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 				}
@@ -406,6 +434,7 @@ public class EzCommonController extends EgovFileMngUtil{
 					literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 				}
 				
+				/* 2018-09-13 홍승비 - 사원 정보 보기 시 담당업무 자기소개 특수문자 처리 */
 				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 				literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 				literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
@@ -415,11 +444,55 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
 				literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
 				literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
-				literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
+				literalInfo = commonUtil.cleanValue(xmldom.getElementsByTagName("INFO").item(0).getTextContent());
 			}
 		} else {
-			literalEmail = email;
-			literalDisplayName = email;
+			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
+			
+			int atSignIndex = email.indexOf("@");
+			
+			if (atSignIndex != -1) {
+				String searchId = email.substring(0, atSignIndex);
+				String searchDomain = email.substring(atSignIndex + 1);
+				
+				// 이메일 주소의 도메인이 시스템의 도메인과 동일하면 부서 혹은 공용배포그룹에
+				// 해당하는 이메일 주소인 지를 검사한다.
+				if (searchDomain.equalsIgnoreCase(domainName)) {
+					OrganDeptVO deptVO = ezOrganService.getDeptInfo(searchId, loginVO.getPrimary(), loginVO.getTenantId());
+					
+					// 이메일 아이디에 match되는 부서가 있는 경우
+					if (deptVO != null) {
+						if (loginVO.getPrimary().equals("1")) {
+							literalCompany = deptVO.getExtensionAttribute3();
+						} else {
+							literalCompany = deptVO.getCompNm2();
+						}
+						
+						literalEmail = deptVO.getMail();
+						literalDisplayName = deptVO.getDisplayName();
+					// 이메일 아이디에 match되는 부서가 없는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
+					} else {
+						List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
+						
+						if (distributionList != null && distributionList.size() > 0) {				
+							for (MailDistributionVO distribution : distributionList) {
+								if (distribution.getId().equalsIgnoreCase(searchId)) {
+									literalEmail = distribution.getMail();
+									literalDisplayName = distribution.getName();
+									break;
+								}
+							}				
+						}				
+					}
+				}
+			}
+			
+			// 부서 혹은 공용배포그룹에 match되는 항목이 없는 경우엔 지정된 이메일 주소를 그대로 사용한다.
+			if (literalEmail.isEmpty()) {
+				literalEmail = email;
+				literalDisplayName = email;
+			}
+			
 			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 		}
 		
@@ -447,7 +520,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
 		String filePath = request.getParameter("filePath");
 		String fileName = "";
-		String realPath = commonUtil.getRealPath(request);
+//		String realPath = commonUtil.getRealPath(request);
 		
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
@@ -459,7 +532,10 @@ public class EzCommonController extends EgovFileMngUtil{
 			filePath = "/images/ezCommunity/logo/default_logo_empty.png";			
 		}
 		
-		downFile(request, response, realPath + filePath, fileName);
+		downImage(filePath, request, response);
+		
+//		2018-08-14 천성준 - IE, https에서 이미지 깨짐현상 때문에 주석 후, downImage로 대체
+//		downFile(request, response, realPath + filePath, fileName);
 //		ezCommonService.responseAttach(filePath, fileName, true, request, response);
 		
 		logger.debug("downloadAttach ended");

@@ -6,22 +6,22 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1325'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
 		<!-- data picker-->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<!-- time picker-->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();
@@ -74,8 +74,10 @@
 		        if (Type == "APR") {
 		            document.getElementById("displayTR1").style.display = "none";
 		            document.getElementById("displayTR2").style.display = "none";
+		            //2018-09-10 이효진 진행중페이지에서 검색 시 문서번호 숨김
+		            document.getElementById("displayTR3").style.display = "none";
 		            //window.resizeBy(0, -60);
-		            window.resizeTo(510, 375);
+		            window.resizeTo(510, 355);
 		        }
 				if (openPageInfo == "usercontlist") {
 					$("#displayTR2").css("display", "none");
@@ -694,7 +696,7 @@
 			        if (Type == "APR") {
 			            RtnVal[3] = sYear;
 			            RtnVal[4] = sMonth;
-			            RtnVal[5] = "01";
+			            RtnVal[5] = sDay;
 			            RtnVal[6] = sYear2;
 			            RtnVal[7] = sMonth2;
 			            RtnVal[8] = sDay2;
@@ -714,7 +716,7 @@
 			            RtnVal[8] = "";
 			            RtnVal[9] = sYear;
 			            RtnVal[10] = sMonth;
-			            RtnVal[11] = "01";
+			            RtnVal[11] = sDay;
 			            RtnVal[12] = sYear2;
 			            RtnVal[13] = sMonth2;
 			            RtnVal[14] = sDay2;
@@ -884,7 +886,7 @@
 		    	</c:otherwise>
 		    </c:choose>
 		  </tr>
-		  <tr>
+		  <tr id="displayTR3">
 		    <th ><spring:message code='ezApprovalG.t440'/></th>
 		    <td ><input type="text" id="DocNumber" name="DocNumber" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>

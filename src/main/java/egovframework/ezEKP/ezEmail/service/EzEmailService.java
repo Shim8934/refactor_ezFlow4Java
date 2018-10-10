@@ -39,9 +39,9 @@ public interface EzEmailService {
 	public String getMailReservedTime(String pMessageId) throws Exception;
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception;
 	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception;
-	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception;
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception;
 	public String getMailReceiveMessageId(String pNum) throws Exception;
-	public void updateMailReceiveDetailInfo(String pNum, List<String[]> receiveDetailList) throws Exception;
+	public void updateMailReceiveDetailInfo(String pNum, String[] receiveDetail) throws Exception;
 	public List<String> getMailReceiveAddress(String pNum) throws Exception;
 	public List<MailPOP3VO> getMailPOP3(int tenantId, String pUserId) throws Exception;
 	public void savePop3(int tenantId, String pUserId, String pRet) throws Exception;
@@ -75,4 +75,5 @@ public interface EzEmailService {
 	public List<MailSecureReaderVO> getSecureMailReaderInfo(String secureId) throws Exception;
 	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception;
 	List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception;
+	public List<String> aliasMailCheck(String address) throws Exception;
 }

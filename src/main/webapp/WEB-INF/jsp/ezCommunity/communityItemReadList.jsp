@@ -6,13 +6,13 @@
 	<head>
 		<title><spring:message code='ezCommunity.t952' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<!-- 페이징 -->
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/lang/ezCommunity.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ListView_list.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/lang/ezCommunity.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		
 // 		<script type="text/javascript">
@@ -32,8 +32,9 @@
 		        }		    	
 		    };
 		
-			function show_info(userid) {
-	            window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", GetOpenWindowfeature(438, 440));
+		    /* 2018-07-02 홍승비 - 커뮤니티 게시물 조회자 정보 > 겸직부서의 정보로 표출 */
+			function show_info(userID, deptID) {
+	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", GetOpenWindowfeature(438, 440));
 	        }
 			
 		    function close_onclick() {
@@ -136,7 +137,8 @@
 			          
 				        $("#lvBoardList tr").on("click", function () {
 				        	userID = $(this).closest("tr").attr("userid");
-				        	show_info(userID);
+				        	deptID = $(this).closest("tr").attr("deptid");
+				        	show_info(userID, deptID);
 				        });
 			            
 			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");

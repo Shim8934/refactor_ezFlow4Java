@@ -7,14 +7,14 @@
 	<head>
 		<title><spring:message code='ezPortal.t134'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<script type="text/javascript">
 			var portlet_type = "${prop.portlet_Type}";
 			var view_type = "${prop.showTitleBar}";
@@ -34,6 +34,7 @@
 			var g_PortletCategoryXML = "${portletCategoryXML}";
 			var g_PortalPageCategoryXML = "${portalPageCategoryXML}";
 			var portal_type = "${prop.gubunFlag}";   // 포탈페이지 구분
+			var selSpan = "";
 			
 			function window_onload()
 			{
@@ -129,6 +130,7 @@
 				methodForTabAction(pIndex);
 				switch(pIndex.toString()) {
 					case "1":
+						selSpan = "menuSpan1";
 						menu_1.src = "/images/tap_portal01o.gif";
 						menu_2.src = "/images/tap_portal02.gif";
 						menu_3.src = "/images/tap_portal03.gif";
@@ -143,6 +145,7 @@
 						selectTypeChange(portlet_type.toString());
 						break;
 					case "2":
+						selSpan = "menuSpan2";
 						menu_1.src = "/images/tap_portal01.gif";
 						menu_2.src = "/images/tap_portal02o.gif";
 						menu_3.src = "/images/tap_portal03.gif";
@@ -159,6 +162,7 @@
 						selectType_4.style.display = "none";
 						break;
 					case "3":
+						selSpan = "menuSpan3";
 						menu_1.src = "/images/tap_portal01.gif";
 						menu_2.src = "/images/tap_portal02.gif";
 						menu_3.src = "/images/tap_portal03o.gif";
@@ -899,7 +903,7 @@
 
 // 		        boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[0] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(360, 656));
+		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(355, 600));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}	   
@@ -928,6 +932,17 @@
 					tab3.className = "tabon";
 				}
 			}
+			
+			/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
     </script>
 	
 	<script language="javascript" type="text/javascript" FOR="objFormEditor" EVENT="DocumentComplete">
@@ -953,9 +968,9 @@
 		</div> --%>
 		<div class="portlet_tabpart01" style="margin-top: 0px;">
 			<div class="portlet_tabpart01_top" id="tab1" style="border-bottom: 0px;">
-				<p id="menu_1"><span onClick="toggle_menu(1)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t86'/></span></p>
-				<p id="menu_2"><span onClick="toggle_menu(2)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t150'/></span></p>
-				<p id="menu_3"><span onClick="toggle_menu(3)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t87'/></span></p>
+				<p id="menu_1"><span id="menuSpan1" onClick="toggle_menu(1)" style="min-width: 45px; cursor:pointer;" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezPortal.t86'/></span></p>
+				<p id="menu_2"><span id="menuSpan2" onClick="toggle_menu(2)" style="min-width: 45px; cursor:pointer;" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezPortal.t150'/></span></p>
+				<p id="menu_3"><span id="menuSpan3" onClick="toggle_menu(3)" style="min-width: 45px; cursor:pointer;" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezPortal.t87'/></span></p>
 			</div>
 		</div>
 		<script type="text/javascript">
@@ -1062,7 +1077,7 @@
           					<td style="width:340;HEIGHT:50"><div style="OVERFLOW:auto;width:340;HEIGHT:50"> <img id="txtImage" src="">&nbsp; </div>
               					<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 	              				<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Portlet" target="ifrm" >
-              						<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
+              						<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none;" multiple="true" />
               						<input type="hidden" name="boardid" id="boardid" />
               						<input type="hidden" name="maxsize" id="maxsize" />
               						<input type="hidden" name="mode" id="mode" />

@@ -8,16 +8,16 @@
 		<title>PortalPage</title>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
 			</c:when>
 			<c:otherwise>
-				<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript">
 			var xmlhttp;
 			var QuickcurNum = 0;
@@ -1639,7 +1639,7 @@
                         	${pThemeSelectObject}
                         </select>
                      </td>
-                     <td bgcolor="#F5f5f5" >페이지 보기옵션</td>
+                     <td bgcolor="#F5f5f5" ><spring:message code='ezPortal.t2000'/></td>
                      <td bgcolor="#F5f5f5">
                      	<select id="Optioninfo">
                         	<option value="D" selected>
@@ -1652,14 +1652,14 @@
 					</td>
 				</tr>
                 <tr height="20">
-                	<td bgcolor="#F5f5f5" colspan="5">&nbsp;넓이를 * 입력 시 100%로 저장됩니다.</td>
+                	<td bgcolor="#F5f5f5" colspan="5">&nbsp;<spring:message code='ezPortal.t2003'/></td>
             	</tr>
 			</table>
 			
         	<table class="box" style="height:600px;">
             	<tr>
                 	<td id="td_mainframe" style="width:820px;HEIGHT:600px" valign="top">			
-                    	<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:100%">
+                    	<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:600px">
                     		${strHTML}
                     	</div>			
                 	</td>

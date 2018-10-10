@@ -7,21 +7,21 @@
 	<head>
 		<title><spring:message code='ezSchedule.t59' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
-        <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/dlg_schedule.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+        <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/dlg_schedule.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
 		<!-- data picker-->		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- time picker-->		
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>		
 	    <script type="text/javascript">
    	    	$(document).ready(function() {
    		    		// 반복이 100회 초과일때 알러트  
@@ -423,6 +423,8 @@
 		    	    window.returnValue = rtn;
 		    	    window.close();
 		    	}
+		    	
+		    	
 		    }
 	
 		    function getPickerDate()
@@ -908,6 +910,52 @@
 		    	
 		    	
 		    }
+		    //2018-07-31 구해안 두 날짜 사이 날짜들 구하는 함수
+		   /*  function getDateRange(startDate, endDate, listDate) {
+		        var dateMove = new Date(startDate);
+		        var strDate = startDate;
+
+			        if (startDate == endDate) {
+			            var strDate = dateMove.toISOString().slice(0,10);
+			            listDate.push(strDate);
+			       	}else{
+
+		            while (strDate < endDate) {
+		                var strDate = dateMove.toISOString().slice(0, 10);
+		                listDate.push(strDate);
+		                dateMove.setDate(dateMove.getDate() + 1);
+		            }
+		        }
+		        return listDate;
+		    };
+		    
+		    function checkRangeRepe(){
+		    	var listDate = [];
+		    	
+		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    	var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+		        getDateRange(startDate, endDate, listDate);
+		        
+
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					traditional : true,
+					async : false,
+					url : "/ezSchedule/scheduleCheckRange.do",
+					data : { 
+						startDate  : startDate,
+						endDate    : endDate,
+						listDate   : listDate
+					},
+					success: function(result){
+						
+					}
+				});
+	            
+		    } */
+
 		</script>
 	</head>
 	<body class="popup">

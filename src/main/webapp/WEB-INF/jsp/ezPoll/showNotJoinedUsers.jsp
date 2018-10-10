@@ -6,11 +6,11 @@
 	<head>
 		<title><spring:message code='ezPoll.t123' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
+		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/sort.css')}" type="text/css">			
 		<script type="text/javascript">
 			window.onresize = function () {
 				var height = document.documentElement.clientHeight;				
@@ -24,9 +24,9 @@
 				}					
 			}
 			
-		    function menuQst_DetailUserInfo(pUserID) {
+		    function menuQst_DetailUserInfo(pUserID, pDeptID) {
 		    	 var feature = GetOpenPosition(420, 438);
-		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
 		    
 		    function sendMail(pUserID) {	
@@ -73,8 +73,8 @@
 					<c:forEach var="list" items="${listOfUnvotedUsers}"> 
 						<tr id="${list.id}" class="white" style="border: 1px solid #ddd;">
 							<td style="border-right:none; max-width: 200px; width: 190px;">
-								<img src="${list.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.id}')">
-								<a style="cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.id}')">	
+								<img src="${list.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.id}','${list.deptID}')">
+								<a style="cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.id}','${list.deptID}')">	
 									<c:choose>
 										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list.displayName1}"/>

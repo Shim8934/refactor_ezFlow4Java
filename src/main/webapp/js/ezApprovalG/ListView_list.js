@@ -155,7 +155,7 @@ function ListView() {
     var _AlignLeft = null;
     var _UrgentFlag = false;
     var _SecurityFlag = false;
-    var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0);
+    var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
     var _ListType = 0;
     var _SetHeightFree = false;
     var _HeaderNode = "NAME";
@@ -503,7 +503,7 @@ function ListView() {
                 }
                 
                 if (strColName == "REJECTFLAG")
-                    objTd.style.textAlign = "center";
+                    objTd.style.textAlign = "left";
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
@@ -522,7 +522,7 @@ function ListView() {
                 }
                 
                 if (strColName == "RejectFlag") {
-                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "left";
                 }
                 
                 if (strColName == "TransferFlag") {

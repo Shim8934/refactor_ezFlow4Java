@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -263,7 +262,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        //참석자 정보
 	        if (vo.getHasAttendant().equals("Y")) {
 	        	String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
-	        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId);
+	        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId, info.getCompanyId());
 	        	
 	        	dataObject.put("attendantList", aList);	        	
 	        }
@@ -284,8 +283,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        		avo.setFileTranSize(fileSize);
 	        	}
 	        	
-	        	dataObject.put("attachList", aList);	
-	        } 
+	        	dataObject.put("attachList", aList);
+	        	
+	        	// 20180824 조진호 - 모바일 viewerflag 값 추가
+	        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+		        dataObject.put("useMobileViewer", useMobileViewer);
+	        }
+	        
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -400,7 +404,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				}
 			}
 			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId(), info.getCompanyId());
 			
 			for (ScheduleGroupListVO vo : gList) {
         		//그룹 일정
@@ -436,7 +440,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			
-			List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, info.getTenantId());
+			List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, info.getTenantId(), info.getCompanyId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

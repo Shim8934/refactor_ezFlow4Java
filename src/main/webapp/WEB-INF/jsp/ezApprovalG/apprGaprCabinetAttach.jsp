@@ -7,18 +7,18 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t359'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/aprCabinetAttach_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprCabinetAttach_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var OrderCell = "";
 	        var xmlhttp = createXMLHttpRequest();
@@ -51,7 +51,9 @@
 	        var ReturnFunction;
 	        var pDraftFlag = "${draftFlag}";
 	        var approvalFlag = "${approvalFlag}";
-
+			//페이징이 달라 구분값 추가
+			var diffPaging = "attachDoc";
+	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -136,6 +138,21 @@
 	            return;
 	        }
 	        function btnIns_onclick() {
+	            //2018-08-23 강민수92 전자결재G일 경우 문서첨부시 PUBLICITYYN이 N이면 문서첨부 할 수 없도록 변경
+	            if (approvalFlag == "G") {
+		        	var DocList = new ListView();
+		            DocList.LoadFromID("DocList");
+		            var pCurSel = DocList.GetSelectedRows();
+		            var curArray = new Array;
+		            
+		            for (var count1 = 0; count1 < pCurSel.length; count1++) {
+			            if (GetAttribute(pCurSel[count1], "DATA16") == "N") {
+			            	OpenAlertUI("<spring:message code='ezApprovalG.garm04'/>");
+			            	return;
+			            }
+		            }
+	            }
+	           
 	            DocMove();
 	        }
 	        function btndel_onclick() {
@@ -254,7 +271,7 @@
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
-	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" width="16" height="16" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" width="16" height="16" style="cursor: pointer"></td>
+	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
 	            <td>
 	                <div class="listview">
 	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto; "></div>

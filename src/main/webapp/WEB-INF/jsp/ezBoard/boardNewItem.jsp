@@ -17,40 +17,40 @@
 			</c:otherwise>
 		</c:choose>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/datepicker.htc.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/composeappt.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/datepicker.htc.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/composeappt.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ConvertSaveImage.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 	    <c:if test="${!isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
-		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    </c:if>
-	    <script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 	    <!-- data picker-->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<!-- time picker-->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
 		    var pBoardID = "${boardID}";
@@ -249,23 +249,26 @@
 		            case "MailEnv_div1":
 		                if ("${boardInfo.guBun}" == "2")
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "")
+		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		            case "MailEnv_div3":
 		                {
 		                    if (pUseBackGround == "TRUE") {
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
-		                        if ("${docID}" != "")
+		                        if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                    }
-		                    else
+		                    else {
+		                    	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    }
 		                    break;
 		                }
 		            default:
+		            	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
@@ -1251,9 +1254,48 @@
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
 		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
+		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+		                    	filepath = filepath + ".ezd";
+		                    }
+		                    
 		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
 		                attachxml = strRet;
+		            } else {
+		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+			                    var temppath = pUrl;
+			                    temppath = temppath.substring(34, temppath.length);
+			                    var orgfile = temppath.split("/");
+			                    orgfile = orgfile[orgfile.length - 1];
+			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+			                    else
+			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+			               
+			                xmlstring += "</ROWS></DATA>";
+			                xmldom2 = loadXMLString(xmlstring);
+			                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
+			                xmlHTTP.send(xmldom2);
+			                returnvalue(xmlHTTP.responseText);
+			
+			                var xml = loadXMLString(xmlHTTP.responseText);
+			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+			                var strRet = "";
+			                for (i = 0; i < nodes.length; i++) {
+			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
+			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+			                    	filepath = filepath + ".ezd";
+			                    }
+			                    
+			                    strRet += "tempUploadFile/" + filepath + "|";
+			                }
+			                attachxml = strRet;
 		            }
 		        }
 		    }
@@ -1490,9 +1532,9 @@
 		                document.getElementById("tab02").style.display = "none";
 		                if ("${boardInfo.guBun}" == "2")
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "")
+		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else
+		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		            case "MailEnv_div3":
@@ -1500,7 +1542,7 @@
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-		                    if ("${docID}" != "")
+		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
 		                else{
@@ -1524,12 +1566,12 @@
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var wWeight = "345";
-		            var wHeight = "660";
+		            var wWeight = "355";
+		            var wHeight = "600";
 		
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
@@ -1537,7 +1579,7 @@
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
 		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		                "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		
 		            if (typeof (ret) != "undefined") {

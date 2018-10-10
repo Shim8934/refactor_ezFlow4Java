@@ -411,7 +411,16 @@
 				TBL_PORTLET_GENERAL
         		( UID_, DISPLAYNAME, PORTLET_TYPE, SHOWTITLEBAR, COMPANYID, HEIGHT, GUBUNFLAG, WIDTH, TENANT_ID )
         	VALUES
-        		( #v_pNEWID#, '새 포틀릿', 1, 1, #v_pCOMPANYID#, 0, 0, 0, #tenantID#)
+        		( #v_pNEWID#,
+        ]]>
+        <isEqual property="primaryLang" compareValue="1" >
+        		 '새 포틀릿'
+        </isEqual>
+        <isEqual property="primaryLang" compareValue="3" >
+        		 '新しいポートレット'
+        </isEqual>
+        <![CDATA[
+		, 1, 1, #v_pCOMPANYID#, 0, 0, 0, #tenantID#)
 		]]>
 	</insert>
 	

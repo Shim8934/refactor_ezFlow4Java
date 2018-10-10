@@ -401,6 +401,10 @@ function btn_AprDeptTempletAdd_onclick()
     else {
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
         pAprDeptTempletUseFlag = false;
+        //시행문
+        if (pDocType != null && pDocType != undefined && pDocType == "001") {
+        	checkOuterReceiver();
+        }
     }
 }
 function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
@@ -456,7 +460,7 @@ function btn_AprDeptTempletDel_onclick() {
     temp_CheckAprDeptTempletSN = p_CheckAprDeptTempletSN;
     var pInformationContent = linealt16;
     var Ans = OpenInformationUI(pInformationContent, btn_AprDeptTempletDel_onclick_Complete);
-    if (!CrossYN() && Ans) {
+    if (Ans) {
         DelAprDeptTempletList(pUserID, pFormID, p_CheckAprDeptTempletSN);
     }
 }
@@ -644,3 +648,43 @@ function AprDeptTempletXmlParsing(p_AprDeptTempletName) {
     return xmlpara;
 }
 //############################################################################################################################################# 수신처 즐겨찾기 저장 및 수정
+
+function checkOuterReceiver() {
+	var listview = new ListView();
+	listview.LoadFromID("lvRECEPTLIST");
+	
+	var cnt = listview.GetRowCount();
+	var row = listview.GetDataRows();
+
+	if (cnt > 0) {
+		var checkOuter = row[0].getAttribute("DATA3");
+		var checkAddress = row[0].getAttribute("DATA1");
+		
+		if (cnt > 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	        document.getElementById("btnaddress").style.display = "none";
+	        document.getElementById("btnaddressChange").style.display = "none";
+		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	        document.getElementById("btnaddress").style.display = "";
+	        if (useReceiveInfoName == '1') {
+//            	document.getElementById("btnaddressChange").style.display = "";
+            } else {
+            	document.getElementById("btnaddressChange").style.display = "";
+            }
+		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
+			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	        document.getElementById("btnaddress").style.display = "";
+	        if (useReceiveInfoName == '1') {
+//            	document.getElementById("btnaddressChange").style.display = "";
+            } else {
+            	document.getElementById("btnaddressChange").style.display = "";
+            }
+		} else {
+			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	        document.getElementById("btnaddress").style.display = "";
+	        document.getElementById("btnaddressChange").style.display = "none";
+		}
+	}
+}

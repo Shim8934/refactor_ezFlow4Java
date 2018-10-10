@@ -213,4 +213,69 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
+	public void createTblCompanyConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblCompanyConfig");
+		} catch (Exception e) {
+			logger.debug("tbl_company_config doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCompanyConfig");
+		}
+	}
+	
+	public String getCompanyConfig(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommonDAO.getCompanyConfig", map);
+	}
+	
+	public void insertCompanyConfig(Map<String, Object> map) throws Exception {
+		insert("EzCommonDAO.insertCompanyConfig", map);
+	}
+	
+	public int updateCompanyConfig(Map<String, Object> map) throws Exception {
+		return update("EzCommonDAO.updateCompanyConfig", map);
+	}
+	
+	public int deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		return delete("EzCommonDAO.deleteCompanyConfig", map);
+	}
+
+	public void addMailToJMochaDistribution() throws Exception {
+		try {
+			select("EzCommonDAO.checkJMochaDistributionMail");
+		} catch (Exception e) {
+			logger.debug("jmocha_distribution mail column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMailToJMochaDistribution");
+		}
+	}
+	
+	public void addAddJobMasterOrderBy() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterOrderBy");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster orderby column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterOrderBy");
+		}
+	}
+	
+	public void createTblIPAccessID() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblIPAccessID");
+		} catch (Exception e) {
+			logger.debug("tbl_access_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblIPAccessID");
+		}
+	}
+	
+	public void createTblIPAccessIP() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblIPAccessIP");
+		} catch (Exception e) {
+			logger.debug("tbl_access_ip doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblIPAccessIP");
+		}
+	}
 }

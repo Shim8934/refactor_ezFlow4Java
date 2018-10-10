@@ -6,9 +6,9 @@
 	<head>
 	    <title><spring:message code='ezAddress.t344' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
@@ -16,16 +16,30 @@
 	    	.mainlist thead tr th:first-child{
 	    		padding-left:15px;
 	    	}
+	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+			#spn_deptName {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: inline-block;
+			}
+			#countInfo {
+				overflow: hidden;
+				display: inline-block;
+			}
+			.countColor {
+				color:#017BEC;
+			}		    	
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview_namespace.htc.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <style>.txtClass{box-sizing : border-box; -moz-box-sizing:border-box;}</style>
 	    <script type="text/javascript">
 	        var addressid = "${addressId}";
@@ -54,6 +68,8 @@
 	        var ua = navigator.userAgent;
 	        var strLang_1 = "<spring:message code='ezAddress.t315' />";
 	        var strLang_2 = "<spring:message code='ezAddress.jsh04' />";
+	        var selSpan = "";
+	        
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
                 //window.resizeTo(970, 680 + (window.outerHeight - window.innerHeight));
@@ -361,7 +377,6 @@
 	        }
 	
 	        function add() {
-	        	
 	        	var pTextName = document.getElementById("TextName").value.trim();
 	            
 	        	if ( pTextName == "") {
@@ -375,6 +390,12 @@
 		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
 		        	return;
 		        }
+	        	
+	        	/* 2018-09-03 홍승비 - 그룹주소 등록 시 구성원 최소 1명 이상 확인 */
+	        	if (document.getElementById("ListViewMsgTo").children.item(0).children.item(1).childNodes.length == 0) {
+	        		alert("<spring:message code='ezSchedule.t197' />");
+	        		return;
+	        	}
 	
                 var xmlHTTP = createXMLHttpRequest();
                 var xmlDom = createXmlDom();
@@ -517,6 +538,8 @@
                     	pSeach = true;
                     	DisplayUserImageList();
                     	makePageSelPage();
+                    	/* 2018-09-03 홍승비 - 검색 완료 후에 pSeach 플래그 false로 되돌림(pSeach가 true를 유지해서 '검색결과'가 고정되므로) */
+                    	pSeach = false;
                 	}
 	    	    }
 	    	}
@@ -643,7 +666,9 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            	+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
+	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -718,17 +743,19 @@
 						deptID : tempDeptID
 					},
 					success : function(result) {
-						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
-						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang91001 + "</span>]";
-			        		} else {
-			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
-// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang91001 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang91001 + "</span>]";
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang91001 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang91001 + "</span>]";
-			        		}
-			            	
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							/* 2018-09-03 홍승비 - strLang 터지는 부분 수정 */
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang_2 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang_2 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang_2 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+										            	
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}
 					},
@@ -1330,6 +1357,7 @@
 	
 	            m_selectedTree = TreeView;
 	            gubunpage = "basic";
+	            selSpan = "orgSpan";
 	
 	            if (g_bTreeLoad == false) {
 	                var xmlHTTP = createXMLHttpRequest();
@@ -1409,6 +1437,7 @@
 	        	methodForTabAction(2);
 	            m_selectedTree = AddressListView;
 	            gubunpage = "basic";
+	            selSpan = "contactSpan";
 	            document.getElementById("IDListView").style.display = "";
 	            document.getElementById("TreeViewPane").style.display = "none";
 	            document.getElementById("ManualView").style.display = "none";
@@ -1421,6 +1450,7 @@
 	        function dlTabButton_onClick() {
 	        	methodForTabAction(3);
 	            gubunpage = "direct";
+	            selSpan = "dlSpan";
 	            document.getElementById("IDListView").style.display = "none";
 	            document.getElementById("ManualView").style.display = "";
 	            document.getElementById("TreeViewPane").style.display = "none";
@@ -1837,6 +1867,35 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+		    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+	        function deptNameLong(containLow, strIsLeaf) {
+	        	var deptNameWidth = "";
+	        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+	        	
+	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+	          		if (sum > 359) {
+	          			deptNameWidth = 360 - $("#countInfo").width();
+	          		}
+	          	} else {
+	          		if (sum > 357) {
+	          			deptNameWidth = 358 - $("#countInfo").width();
+	          		}
+	          	}
+	        	
+	        	$("#spn_deptName").css("width", deptNameWidth);
+	        }
+		    
+	        /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
+	        function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
@@ -1943,13 +2002,13 @@
 	                                <div class="portlet_tabpart01" style="margin:0px;">
 					            		<div class="portlet_tabpart01_top" id="tab1">
 					            			<p id="orgTabButton">
-					            				<span onclick="orgTabButton_onClick()"><spring:message code='ezAddress.t351' /></span>
+					            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t351' /></span>
 					            			</p>
 					            			<p id="contactTabButton">
-					            				<span onclick="contactTabButton_onClick()"><spring:message code='ezAddress.t231' /></span>
+					            				<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t231' /></span>
 					            			</p>
 					            			<p id="dlTabButton">
-					            				<span onclick="dlTabButton_onClick()"><spring:message code='ezAddress.t361' /></span>
+					            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t361' /></span>
 					            			</p>
 					            		</div>
 					            	</div>
@@ -2033,7 +2092,7 @@
 	                                    <table style="width: 100%; margin-top: -1px; back" class="popup_mainlist">
 	                                        <tr>
 	                                            <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-	                                                <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+													<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                <span style="float: right; position: relative;">
 	                                                    <span onclick="ChangeListView_onClick('TXT');">
 	                                                        <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>

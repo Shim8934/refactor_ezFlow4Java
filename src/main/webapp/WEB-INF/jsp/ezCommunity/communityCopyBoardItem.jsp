@@ -6,13 +6,26 @@
 	<head>
 		<title><spring:message code='ezCommunity.t1047' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezOrgan.e3'/>">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezOrgan.e3', 'msg')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<style>
+			.groupBoard {
+				width:266px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+				display: inline-block;
+			}
+			.node_div span {
+				width:266px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
       		var selectedBoard = "";
@@ -23,18 +36,22 @@
     		var treeCtrl = "<c:out value='${treeCtrl}' />";
 			var xmlDom_treeview = createXmlDom();
 			
-			function Select() {
-				
+			/* 2018-08-06 홍승비 - 커뮤니티 게시물 복사 팝업창 게시판과 같도록 UI 통일 */
+			var board_alertArguments = new Array();
+			function Select()
+			{
+				board_alertArguments[1] = DivPopUpHidden;
     			if (selectedBoard == "") {
-        			alert("<spring:message code='ezCommunity.t994' />");
+    				var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t356' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t356'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
     				return;
 				}
-    			
    				if (selectedBoard == BoardID) {
-	       			alert("<spring:message code='ezCommunity.t1048' />");
+   					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1048' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1048'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
 		    		return;
 				}
-   				
+   			
     			CopyItem(selectedBoard);
 			}
 
@@ -45,12 +62,14 @@
 			function CopyItem(pDestBoardID) {
 							
 			    if (CheckIfCanWrite(pDestBoardID) == false) {
-			        alert("<spring:message code='ezCommunity.t1049' />");
+			    	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1049' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1049'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
 			    	return;
 				}
 			    
 				if (CheckIfAnonyBoard(pDestBoardID) == "1") {
-					alert("<spring:message code='ezCommunity.t1050' />");
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1050' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1050'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
 					return;
 				}
 	
@@ -72,18 +91,19 @@
 			   			destBoardID : pDestBoardID
 			   		},
 			   		success : function(result) {
-			   			if (result["ret"].indexOf("OK") > -1) {
-		 					alert("<spring:message code='ezCommunity.t1051' />");
-		 				} else {
-		 					alert("<spring:message code='ezCommunity.t1052' />" + result["ret"]);
-		 				}
+			   			board_alertArguments[1] = window.close;
 			   			
+			   			if (result["ret"].indexOf("OK") > -1) {
+			   				var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1051' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1051'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+							DivPopUpShow(330, 205, pUrl);
+		 				} else {
+		 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1052' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1052'/>") + result["ret"] + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+							DivPopUpShow(330, 205, pUrl);
+		 				}
 			   			try {
 		 			        window.opener.refresh_onclick();
 		 			    } catch (e) {
 		 			    }
-		 			    
-		 			    window.close();
 			   		}
 			   	});
 			}
@@ -148,21 +168,24 @@
 			
 			    DisplayTopBoard();
 			    
-			    //2018-07-13 김보미 - 복사하려는 게시글의 게시판이 선택되도록(트리뷰 펼치기)
-			    $("h2[treeCtrl=" + treeCtrl.split("TreeView")[1].split("_")[0] + "]").trigger("click");//그룹선택
-			    
-			    var treeCtrlarr = treeCtrl.split("_"); 
-			    var spanId = "#spn_" + treeCtrlarr[0]; //spn_TreeViewTreeCtrl0
-			    var imgId = "#imgNode_" + treeCtrlarr[0]; //imgNode_TreeViewTreeCtrl0
-			    for (var i = 1; i < treeCtrlarr.length; i++) {
-			    	if(i != 1) { //하위게시판일 경우 펼쳐지게끔.
-			    		$(imgId).trigger("click");
-			    	}
-			    	//게시판 클릭
-			    	spanId += "_" + treeCtrlarr[i];
-			    	$(spanId).trigger("click");
-			    	
-			    	imgId += "_" + treeCtrlarr[i];
+			    /* 2018-08-06 홍승비 - treeCtrl을 파라미터로 받지 않을 경우 분기 처리 */
+			    if ((treeCtrl != null) && (treeCtrl.trim() != "")) {
+				    //2018-07-13 김보미 - 복사하려는 게시글의 게시판이 선택되도록(트리뷰 펼치기)
+				    $("h2[treeCtrl=" + treeCtrl.split("TreeView")[1].split("_")[0] + "]").trigger("click");//그룹선택
+				    
+				    var treeCtrlarr = treeCtrl.split("_"); 
+				    var spanId = "#spn_" + treeCtrlarr[0]; //spn_TreeViewTreeCtrl0
+				    var imgId = "#imgNode_" + treeCtrlarr[0]; //imgNode_TreeViewTreeCtrl0
+				    for (var i = 1; i < treeCtrlarr.length; i++) {
+				    	if(i != 1) { //하위게시판일 경우 펼쳐지게끔.
+				    		$(imgId).trigger("click");
+				    	}
+				    	//게시판 클릭
+				    	spanId += "_" + treeCtrlarr[i];
+				    	$(spanId).trigger("click");
+				    	
+				    	imgId += "_" + treeCtrlarr[i];
+				    }
 			    }
 			}
 
@@ -287,11 +310,16 @@
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
 			        //2018-07-13 김보미 - h2태그에 속성값 추가
-// 			        strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-			        strHTML += "<tr><td><h2 style='border-top:0px' TreeCtrl='TreeCtrl" + i.toString() + "' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-			        strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:420px;padding-top:5px;padding-bottom:3px;overflow: auto;'></DIV></td></tr>";
+					//strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+			       
+					 if (i == 0) {
+						//strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";    	
+				   		strHTML += "<tr><td><h2 style='border-top:0px' TreeCtrl='TreeCtrl" + i.toString() + "' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+				    } else {
+						strHTML += "<tr><td><h2 TreeCtrl='TreeCtrl" + i.toString() + "' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+				    }
+ 					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;padding-top:10px;padding-bottom:10px;'></DIV></td></tr>";
 			    }
-			    
 			    strHTML += "</table>";
 			
 			    xmldomNodes = null;
@@ -299,24 +327,22 @@
 			
 			    document.getElementById("TopBoardsList").innerHTML = strHTML;
 			}
-
-		
 		</script>
-	
 	</head>
-	<body class = "popup" style = "overflow : hidden">
+	<body class = "popup">
 		<h1><spring:message code='ezCommunity.t359' /></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-	    <div class="box" style="width: 420px; height: 540px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
+	    <div class="box" style="height: 485px; overflow-y:auto;overflow-x:hidden; word-break: break-all" id="TopBoardsList"></div>
 	    <div class="btnposition btnpositionNew">
-	        <a class="imgbtn" name="Submit" onclick="return Select()"><span><spring:message code='ezCommunity.t278' /></span></a>
+	        <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code='ezCommunity.t278' /></span></a>
 	    </div>
-	    <div id="dialog_alert" style="display:none;">
-	    	<button id="close_pop">확인</button>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

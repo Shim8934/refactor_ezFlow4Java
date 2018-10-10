@@ -6,23 +6,23 @@
 	<head>
 		<title>mail_search</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/js_cross/search_mail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/date_component.js"></script>
-		<script  type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
-		<script  type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/date_component.js')}"></script>
+		<script  type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/datepicker.htc.js')}"></script>
+		<script  type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/composeappt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
 			var g_servername = "${serverName}";	
@@ -38,6 +38,10 @@
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
+		    var keywordFromList = "${keywordFromList}";
+			var searchCheck = "${searchCheck}";
+			var searchFromList = "${searchFromList}";
+		    
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -113,6 +117,30 @@
 		        }
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
+		        
+		        var inputkeyword = document.getElementsByName('prekeyword').item(0);
+		        
+		        if (searchFromList) {
+		       		if (searchCheck == 'SUBJECT') {
+		        		var subject = document.getElementById("select").children[0];
+		        		subject.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+		        	} else if (searchCheck == 'FROM') {
+				   	 	var sender = document.getElementById("select").children[2];
+				   	 	sender.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+			   	 	} else if (searchCheck == 'RECEIVE') {
+		        		var receiver = document.getElementById("select").children[3];
+		        		receiver.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+			   	 	} else if (searchCheck == 'ALL') {
+		        		var all = document.getElementById("select").children[4];
+		        		all.setAttribute("selected", "selected");
+		    		    inputkeyword.value = keywordFromList;
+		        	}  
+
+		       		setTimeout(set_searchKey, 1000);
+		    	}
 		        
 		        document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
 		    }
@@ -493,6 +521,68 @@
 			    }
 			}
 		
+			function deleteWork(bDel) {
+			    if (GetChildNodes(resultTD).length == 0) {
+			        alert(strLang57);
+			        return;
+			    }
+
+				var selcheck = new Array();
+				var count = 0;
+				    
+				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
+				for (var i = 0; i < Rows.length; i++) {
+				    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+				        selcheck[count] = Rows.item(i);
+				        count++;
+				    }
+				}		
+
+				var includeSecureMail = false;
+				for (var i = 0; i < selcheck.length; i++) {
+					if (selcheck[i].getAttribute("securemail") == "1") {
+						includeSecureMail = true;
+				    	break;
+				    }
+				}
+				
+				var strItemID = "";
+				for(i=0; i < count; i++)
+		        {
+					var itemId = selcheck[i].getAttribute("itemid");
+		            strItemID += itemId + ",";
+			    }
+				
+			    if (includeSecureMail) {
+		        	if (!confirm(strLangLHM19)) {
+		        		return;
+		        	}
+		        }
+	        	if (!confirm(strLang59)) {
+	            	return;
+	            }
+				
+				var xmlpara = createXmlDom();
+			    var objNode;
+			    xmlhttp_mailMoveDelete = createXMLHttpRequest();
+			    createNodeInsert(xmlpara, objNode, "DATA");
+			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", strItemID);
+			    createNodeAndInsertText(xmlpara, objNode, "FOLDERID", "");
+			    xmlhttp_mailMoveDelete.open("POST", "/ezEmail/mailDeleteS.do?cmd=BMOVE", true);
+			    xmlhttp_mailMoveDelete.send(xmlpara);
+			    xmlhttp_mailMoveDelete.onreadystatechange = function () {
+			    	if (xmlhttp_mailMoveDelete.readyState == 4) {
+				    	if (xmlhttp_mailMoveDelete.status < 200 || xmlhttp_mailMoveDelete.status > 300)
+						    alert('<spring:message code="ezEmail.t638" />');
+						else {
+						    alert('<spring:message code="ezEmail.t604" />');
+						    listContentArry = new Array();
+						    start_search();
+						}
+			    	}
+			    } // onreadystatechange End
+			}
+			
 			function delete_mail()
 			{
 			    var selcheck = new Array();
@@ -714,6 +804,7 @@
 			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
+			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
 			</ul>
 		</div>  

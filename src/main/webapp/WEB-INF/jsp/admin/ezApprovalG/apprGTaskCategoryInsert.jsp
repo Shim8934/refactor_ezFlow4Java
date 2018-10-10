@@ -6,10 +6,10 @@
 	<head>
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var labelcolor = "gray"
@@ -134,7 +134,6 @@
 		    var ezapralert_cross_dialogArguments = new Array();
 		    function OpenAlertUI(pAlertContent) {
 		        ezapralert_cross_dialogArguments[0] = pAlertContent;
-		        ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 		        var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		        try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		    }
@@ -349,14 +348,14 @@
 					</c:otherwise>
 				</c:choose>
 				
-					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red">*</span></th>
+					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red"> *</span></th>
 					<td>
 						<input type="text" id="tbCateCode" name="tbCateCode" style="wigth:206px" maxlength="8">
 						<a class="imgbtn imgbck"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
 					</td>
 				</tr>
 				<tr>
-					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red">*</span></th>
+					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red"> *</span></th>
 					<td><input type="text" id="tbCateName" name="tbCateName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
 				</tr>
 				<tr>

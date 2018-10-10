@@ -6,12 +6,12 @@
 	<head>
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 
 		<script type="text/javascript">
 			var labelcolor = "gray";
@@ -280,7 +280,6 @@
 			var ezapralert_cross_dialogArguments = new Array();
 			function OpenAlertUI(pAlertContent) {
 			    ezapralert_cross_dialogArguments[0] = pAlertContent;
-			    ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 			    var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 			    try { ezAPRALERT_Cross.focus(); } catch (e) { }
 			}
@@ -628,7 +627,7 @@
 	        	</c:choose>
 	        </tr>
 	        <tr class = 'approvalS'>
-	        	<th><spring:message code = 'ezApprovalG.t109' /> *</th>
+	        	<th><spring:message code = 'ezApprovalG.t109' /> <span style="color:red">*</span></th>
 	        	<td>
 		        	<select id="isPublic" style="width: 100%">
 	                    <option value="Y" id="Y"><spring:message code='ezApprovalG.t47'/></option>

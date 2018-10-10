@@ -6,21 +6,28 @@
 	<head>
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrlS_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezForm_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/ListView_list.js')}" ></script>
+	    <c:choose>
+	    	<c:when test="${approvalFlag eq 'G'}">
+		    	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}" ></script>
+	    	</c:when>	    	<c:otherwise>
+			    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/TreeView.js')}" ></script>
+			    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrlS_Cross.js')}"></script>
+	    	</c:otherwise>
+	    </c:choose>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/FormMain_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js')}"></script>
 				
 		<script type="text/javascript">
 			var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
@@ -51,6 +58,9 @@
 		    var useEditor = "${useEditor}";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
+		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
+		    var ext = "${ext}";
+		    var locale = "<c:out value = '${locale}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -94,7 +104,12 @@
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
 		        MakeListXML(pDocType);
-		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        
+		        if (approvalFlag == "G") {
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG");
+		        } else {
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
@@ -145,20 +160,19 @@
 		                    }
 		                }
 		            } else {
-		                Editor_Complete();
+						setTimeout(function() {
+							Editor_Complete();
+						}, 200);
 		            }
 		        }
 		        
-// 		        onloadflag = true;
 		    });
-// 			}
 		
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
-// 		                    document.getElementById("btn_OpinionSave").style.display = "";
-	                    message.HWP_LoadFile(realPath + formURL);
-		                    
+	                    message.HWP_LoadFile(formURL);
+	                    
 	                    if (message.HWP_GetDocumentElement() != "") {
 	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 	                        
@@ -195,6 +209,11 @@
 	            }
 		        
 		        add_doc_maker();
+		        
+		        if (locale != "ko") {
+		        	document.getElementById("ApvForm_sub3").style.display = "none";
+		        	document.getElementById("ApvForm_sub4").style.display = "none";
+		        }
 		    }
 		
 		    function Attribute_Write(value) {
@@ -331,6 +350,26 @@
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
 		    }
+		    
+		    function RequestDataG(pNodeID, pTreeID) {
+		        TreeIdx = pNodeID;
+		        treeNode = new TreeNode();
+		        treeNode.LoadFromID(TreeIdx);
+		
+		        var xmlHTTP = createXMLHttpRequest();
+		        var xmlpara = createXmlDom();
+		        var objNode;
+		        createNodeInsert(xmlpara, objNode, "DATA");
+		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", treeNode.GetNodeData("CN"));
+		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
+		
+		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+		        xmlHTTP.send(xmlpara);
+		
+		        var treeView = new TreeView();
+		        treeView.LoadFromID(pTreeID);
+		        treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+		    }
 		
 		    function TreeView2NodeClick(pNodeID, pNodeNM) {
 		        TreeIdx = pNodeID;
@@ -377,6 +416,13 @@
 		
 		    function insertCont_onclick() {
 		        var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
+		        
+		        if (GetEntryInfo(treeNode.GetNodeData("CN")) == "N") {
+                    var pAlertContent = strLang1105;
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+		        
 		        if (DuplicateFlag) {
 		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"), "D");
 		        } else {
@@ -386,9 +432,16 @@
 		    }
 		
 		    function insertAllCont_onclick() {
+		    	var deptid = $("#"+TreeIdx).attr("cn");
+		    	if (GetEntryInfo(deptid) == "N") {
+		    		var pAlertContent = strLang1105;
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+		    	}		    	
+		    	
 		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><br><spring:message code='ezApprovalG.t1362'/>";
 		        var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
-		
+		        
 		        if (!Ans) {
 		            return;
 		        }
@@ -572,7 +625,7 @@
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 440, 470, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 480, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -775,7 +828,11 @@
 		    
 		    function btn_FormConnSave_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t1455'/>";
-		        OpenInformationUI(pInformationContent, FormConnSave_Complete);
+		        var Ans = OpenInformationUI(pInformationContent, FormConnSave_Complete);
+		        
+		        if (Ans) {
+		        	FormConnSave_Complete(Ans);
+		        }
 		    }
 		    
 		    function FormConnSave_Complete(Ans) {
@@ -798,6 +855,87 @@
 		        }
 		        
 		        OpenInformationUI_Complete();
+		    }
+		    
+		    function GetEntryInfo(_DEPTID) {
+		        var ReceiveDocument = "";
+
+		        try {
+		        	var result = "";
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/admin/ezOrgan/getEntryInfo.do",
+		        		data : {
+		        			cn 	  : _DEPTID,
+		        			prop  : "extensionAttribute11"
+		        		},
+		        		success: function(xml){
+		        			result = xml;
+		        		}        			
+		        	});
+		        	
+		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/EXTENSIONATTRIBUTE11");
+		        } catch (e) {
+		        } 
+		        
+		        return ReceiveDocument;
+		    }
+		    
+		    //2018-09-04 수신자명변경
+		    var aprdeptname_cross_dialogArguments = new Array();
+		    function btnaddressChange() {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtForm");
+		        var CurSelRow = listview.GetSelectedRows();
+		        var windowName = "/admin/ezApprovalG/aprDeptName.do";
+		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
+		
+		        if (CurSelRow[0] == undefined) {
+		            alert("<spring:message code='ezApprovalG.t10501'/>");
+		            return;
+		        }
+		        
+		        var dialogValue = CurSelRow[0].cells[0].innerText;
+		        if (CrossYN()) {
+		            aprdeptname_cross_dialogArguments[0] = dialogValue;
+		            aprdeptname_cross_dialogArguments[1] = btnaddressChange_Complete;
+		            
+		            var feature = "width=360, height=220, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
+		            feature = feature + GetOpenPosition(360, 220);
+		            window.open(windowName, "", feature);
+		            
+// 		            DivPopUpShow(360, 220, windowName);
+		        } else {
+		            parameter = parameter + GetShowModalPosition(330, 205);
+		            var AddressName = window.showModalDialog(windowName, dialogValue, parameter);
+		            if (AddressName == "cancel" || AddressName == undefined)
+		                return;
+		            if (CrossYN()) {
+		                CurSelRow[0].cells[0].textContext = AddressName;
+		                CurSelRow[0].cells[0].innerText = AddressName;
+		            }
+		            else {
+		                CurSelRow[0].cells[0].innerText = AddressName;
+		            }
+		        }
+		    }
+		
+		    function btnaddressChange_Complete(AddressName) {
+		        if (AddressName == "cancel" || AddressName == undefined)
+		            return;
+		
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtForm");
+		        var CurSelRow = listview.GetSelectedRows();
+		
+		        if (CrossYN()) {
+		            CurSelRow[0].cells[0].textContext = AddressName;
+		            CurSelRow[0].cells[0].innerText = AddressName;
+		        } else {
+		            CurSelRow[0].cells[0].innerText = AddressName;
+		        }
 		    }
 		</script>
 		<style>
@@ -921,7 +1059,7 @@
                         </td>
                         <td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
                     </tr>
-                </table>  
+                </table>
 			</div>
 		</div>
         <div id="ApvForm_content3" style="width:100%;height:90%;display:none; padding-top:10px;">
@@ -941,9 +1079,9 @@
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>
                         
-<%--                         <c:if test="${useEditor == 'HWP' }"> --%>
-<%--                         	<a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br> --%>
-<%--                         </c:if> --%>
+                        <c:if test="${useEditor == 'HWP' }">
+                       		<a class="imgbtn" id="btn_OpinionSave"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
+                        </c:if>
                         
                     </th>
                 </tr>
@@ -1000,7 +1138,7 @@
                         <img style="cursor:pointer;margin-bottom:50px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
-                        <h2><spring:message code='ezApproval.t61'/></h2>
+                        <h2><spring:message code='ezApproval.t61'/><c:if test="${useReceiveInfoName == '1' }"><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></c:if></h2>
                         <div class="div_scroll" style="border:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>

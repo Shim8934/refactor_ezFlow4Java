@@ -1414,8 +1414,7 @@
 		                 	extensionAttribute1 = '0'
 		                 AND 
 		                 	extensionAttribute2 = '1' 
-		                 ORDER BY 
-                 			A.ParentWriteDate, 
+		                 ORDER BY
                  			A.WriteDate DESC ) T1
 		              WHERE ROWNUM_ <= #v_END# ) T2 
 	            WHERE
@@ -1478,8 +1477,7 @@
                 	extensionAttribute1 = '0'
                 AND 
                 	extensionAttribute2 = '1'
-              	ORDER BY 
-              		A.ParentWriteDate,
+              	ORDER BY
               		A.WriteDate DESC
 			]]>
 		</isNotEqual>
@@ -3082,13 +3080,18 @@
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
 				SELECT 
-					COUNT(ACCESSID)  CNT  
+					CASE
+				    WHEN
+				        COUNT(ACCESSID) = 0
+				    THEN
+				        999
+				    ELSE
+				        SUM(decode(READ_FG, 'false', 1, 0))
+				    END 
 	            FROM 
 	            	TBL_Board_BoardManage 
 	            WHERE
 	            	TENANT_ID = #v_TENANTID#
-	            AND  
-	            	READ_FG = 'FALSE'
 	            AND 
 	            	ACCESSID = #v_ACCESSID#
 	            AND 
@@ -4759,6 +4762,18 @@
 		]]>
   </delete>
   
+  <select id="EzBoardDAO.isDeptChk" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM TBL_DEPTMASTER
+			WHERE
+				CN = #id#
+			AND
+				TENANT_ID = #tenantID#
+		]]>  	
+  </select>  
+  
   <!-- baonk added -->
   <select id="EzBoardDAO.getPollConfig" resultMap="pollConfig">
 		<![CDATA[
@@ -4878,240 +4893,192 @@
   </update>
   
   <select id="EzBoardDAO.getSearchAllBoardItemList" parameterClass="Map" resultClass="HashMap">
-  		<![CDATA[
-			SELECT 
-				* 
+		<![CDATA[
+			SELECT
+				*
 			FROM
-				( SELECT 
-					* 
-				  FROM 
+				( SELECT
+					*
+				  FROM
 					( SELECT 
 						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
-	   					A.BOARDID,
-	   					A.ITEMID,
-	   					A.WRITERID,
-	   					A.WRITERNAME,
-	   					A.WRITERDEPTNAME,
-	   					A.WRITERCOMPANYNAME,
-	   					A.STARTDATE,
-	   					A.WRITEDATE,
-	   					A.PARENTWRITEDATE,
-	   					A.IMPORTANCE,
-	   					A.TITLE,
-	   					A.READCOUNT,
-	   					A.ATTACHMENTS,
-	   					A.ITEMLEVEL,
-	   					A.ABSTRACT,
-	   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-	   					A.EXTENSIONATTRIBUTE5,
-	   					A.WRITERNAME2,
-	   					A.WRITERDEPTNAME2,
-	   					A.WRITERCOMPANYNAME2,
-	   					(SELECT 
-		                	COUNT(*)  
-		    			FROM 
-		    				TBL_Board_OneLineReply 
-		   				WHERE  
-		   					TENANT_ID = A.TENANT_ID
-		   				AND
-		   					ITEMID = A.ItemID) ONELINECNT,
-	   					A.UPPERITEMIDTREE,
-	   					A.DOCNO,
-	   			    	'' AS NOTICE,
-	   			    	A.EXTENSIONATTRIBUTE6, 
-       					A.EXTENSIONATTRIBUTE7, 
-       					A.EXTENSIONATTRIBUTE8, 
-       					A.EXTENSIONATTRIBUTE9, 
-       					A.EXTENSIONATTRIBUTE10,
-	   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
-	   				  	I.GUBUN
-	   				  FROM 
-	   				  	TBL_BOARD_ITEM A 
-	   				  LEFT OUTER JOIN 
-	   				  	( SELECT 
-	   				  		COUNT(USERID) AS TOTALCOUNT, 
-	   				  		ITEMID,
-	   				  		TENANT_ID 
-	   				  	  FROM 
-	   				  	  	TBL_BOARD_ITEM_READ  
-	   					  WHERE 
-	   					  	TENANT_ID = #v_TENANTID#
-	   					  AND
-	   					  	USERID = #v_PUSERID# 
-	   					  GROUP BY 
-	   					  	ITEMID,
-	   					  	TENANT_ID ) D 
-	   				  ON 
-	   				  	A.TENANT_ID = D.TENANT_ID
-	   				  AND
-	   				  	A.ITEMID = D.ITEMID
-	   				  INNER JOIN 
-	   				  	TBL_BOARD_BOARDINFO I  
-	   				  ON 
-	   				  	A.TENANT_ID = I.TENANT_ID
-	   				  AND
-	   				  	A.BOARDID = I.BOARDID 					
-	   				  WHERE 
-	   				  	$v_PWHEREBOARD$
-	   				  AND
-	   				  	A.TENANT_ID = #v_TENANTID#
-					  ]]>
-					  <isEqual property="v_MODE" compareValue="1">
-						  <![CDATA[
-							  AND
-							  	I.BOARDID IN
-						  ]]>
-					  	  <iterate property="v_boardList" open="(" close=")" conjunction=","> #v_boardList[]# </iterate>
-							<![CDATA[	
-							  	AND
-							  		(I.BOARDGROUPID IN ( SELECT 
-							  								 BOARDID 
-							  							 FROM 
-							  								 TBL_BOARD_BOARDMANAGE
-							  							 WHERE 
-							  								 TENANT_ID = #v_TENANTID#
-							  							 AND
-							  								(ACCESSID = #v_pCompanyID#
-							 									OR ACCESSID = #v_pDeptID#
-							 									OR ACCESSID = #v_PUSERID#
-							 									OR AccessID = 'everyone') 
-							  							 AND 
-							  								BOARDADMIN_FG = 'true')
-							  		OR
-							  		(I.GUBUN <> '5' AND I.BOARDID IN ( SELECT
-							  										  	   BOARDID
-							  					   					   FROM
-							  					   						   TBL_BOARD_BOARDMANAGE
-												  					   WHERE 
-												  					   	   TENANT_ID = #v_TENANTID#
-												  					   AND
-												  					   	  (ACCESSID = #v_pCompanyID#
-												 							 OR ACCESSID = #v_pDeptID#
-												 							 OR ACCESSID = #v_PUSERID#
-												 							 OR AccessID = 'everyone') 
-												  					   AND
-												  					  	  LISTVIEW_FG = 'true'))
-							  		OR
-							  		(I.GUBUN = '5' AND I.BOARDID IN ( SELECT
-							  											  BOARDID
-												  					  FROM
-												  					 	  TBL_BOARD_BOARDMANAGE
-												  					  WHERE 
-												  					   	  TENANT_ID = #v_TENANTID#
-												  					  AND
-												  					     (ACCESSID = #v_pCompanyID#
-												 							OR ACCESSID = #v_pDeptID#
-												 							OR ACCESSID = #v_PUSERID#
-												 							OR AccessID = 'everyone') 
-												  					  AND
-												  					   	 LISTVIEW_FG = 'true')
-												  					  AND
-												  					 	 A.TOPWRITERID = #v_PUSERID# ))
-						]]>
-						</isEqual>
-					  	<![CDATA[
-					  	AND 
-	   				  		STARTDATE <= #nowDate# 
-	   				  	AND 
-	   				  		ENDDATE > #nowDate# 
-	   				  	AND (
-							(A.APPRFLAG <> 'C'  
-								AND 
-							A.APPRFLAG <> 'N')
-								OR 
-							A.APPRFLAG IS NULL
-						  )
-	   				  $v_PSUBQUERY$ ) T1 
-	   			  WHERE
-	   				  ROWNUM_ <= #v_PENDROW# ) T2 
-   			WHERE 
-   				ROWNUM_ >= #v_PSTARTROW#
-					  	]]>
-  </select>
-  
-  <select id="EzBoardDAO.getSearchAllBoardItemCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				COUNT(A.ITEMID)
-   			FROM 
-   				TBL_BOARD_ITEM A
-   			INNER JOIN 
-				  	TBL_BOARD_BOARDINFO I  
-				  ON 
-				  	A.TENANT_ID = I.TENANT_ID
-				  AND
-				  	A.BOARDID = I.BOARDID 
-   			WHERE    				
-   				$v_PWHEREBOARD$ 
-   			AND
-   				A.TENANT_ID = #v_TENANTID#
-   		]]>
-   		<isEqual property="v_MODE" compareValue="1">
-   			<![CDATA[	
-				AND 
-					I.BOARDID IN
-			]]>
-			<iterate property="v_boardList" open="(" close=")" conjunction=","> #v_boardList[]# </iterate>
-				<![CDATA[	
+						A.BOARDID,
+						A.ITEMID,
+						A.WRITERID,
+						A.WRITERNAME,
+						A.WRITERDEPTNAME,
+						A.WRITERCOMPANYNAME,
+						A.STARTDATE,
+						A.WRITEDATE,
+						A.PARENTWRITEDATE,
+						A.IMPORTANCE,
+						A.TITLE,
+						A.READCOUNT,
+						A.ATTACHMENTS,
+						A.ITEMLEVEL,
+						A.ABSTRACT,
+						CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+						A.EXTENSIONATTRIBUTE5,
+						A.WRITERNAME2,
+						A.WRITERDEPTNAME2,
+						A.WRITERCOMPANYNAME2,
+						(SELECT
+							COUNT(*)
+						FROM
+							TBL_Board_OneLineReply
+						WHERE
+							TENANT_ID = A.TENANT_ID
+						AND
+							ITEMID = A.ItemID) ONELINECNT,
+						A.UPPERITEMIDTREE,
+						A.DOCNO,
+						'' AS NOTICE,
+						A.EXTENSIONATTRIBUTE6,
+						A.EXTENSIONATTRIBUTE7,
+						A.EXTENSIONATTRIBUTE8,
+						A.EXTENSIONATTRIBUTE9,
+						A.EXTENSIONATTRIBUTE10,
+						CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+						I.GUBUN
+					FROM
+						TBL_BOARD_ITEM A
+					LEFT OUTER JOIN
+						( SELECT
+							COUNT(USERID) AS TOTALCOUNT,
+							ITEMID,
+							TENANT_ID
+						FROM 
+							TBL_BOARD_ITEM_READ
+						WHERE
+							TENANT_ID = #v_TENANTID#
+						AND
+							USERID = #v_PUSERID#
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) D 
+					ON 
+						A.TENANT_ID = D.TENANT_ID
 					AND
-				  		(I.BOARDGROUPID IN ( SELECT 
-				  								 BOARDID 
-				  							 FROM 
-				  								 TBL_BOARD_BOARDMANAGE
-				  							 WHERE 
-				  								 TENANT_ID = #v_TENANTID#
-				  							 AND
-				  								(ACCESSID = #v_pCompanyID#
-				 									OR ACCESSID = #v_pDeptID#
-				 									OR ACCESSID = #v_PUSERID#
-				 									OR AccessID = 'everyone') 
-				  							 AND 
-				  								BOARDADMIN_FG = 'true' )
-				  		OR
-				  		(I.GUBUN <> '5' AND I.BOARDID IN ( SELECT
-				  										  	   BOARDID
-				  					   					   FROM
-				  					   						   TBL_BOARD_BOARDMANAGE
-									  					   WHERE 
-									  					   	   TENANT_ID = #v_TENANTID#
-									  					   AND
-									  					   	  (ACCESSID = #v_pCompanyID#
-									 							 OR ACCESSID = #v_pDeptID#
-									 							 OR ACCESSID = #v_PUSERID#
-									 							 OR AccessID = 'everyone') 
-									  					   AND
-									  					  	  LISTVIEW_FG = 'true' ))
-				  		OR
-				  		(I.GUBUN = '5' AND I.BOARDID IN ( SELECT
-				  											  BOARDID
-									  					  FROM
-									  					 	  TBL_BOARD_BOARDMANAGE
-									  					  WHERE 
-									  					   	  TENANT_ID = #v_TENANTID#
-									  					  AND
-									  					     (ACCESSID = #v_pCompanyID#
-									 							OR ACCESSID = #v_pDeptID#
-									 							OR ACCESSID = #v_PUSERID#
-									 							OR AccessID = 'everyone') 
-									  					  AND
-									  					   	 LISTVIEW_FG = 'true')
-									  					  AND
-									  					 	 A.TOPWRITERID = #v_PUSERID# ))
+						A.ITEMID = D.ITEMID
+					INNER JOIN 
+						TBL_BOARD_BOARDINFO I
+					ON 
+						A.TENANT_ID = I.TENANT_ID
+					AND
+						A.BOARDID = I.BOARDID
+					WHERE 
+						$v_PWHEREBOARD$
+					AND
+						A.TENANT_ID = #v_TENANTID#
+		]]>
+		<isEqual property="v_MODE" compareValue="1">
+			<![CDATA[ 
+			AND ( 
+			]]>
+			<isNotEmpty property="v_listviewList">
+			<![CDATA[ I.BOARDID IN ]]>
+					<iterate property="v_listviewList" open="(" close=")" conjunction=","> #v_listviewList[]# </iterate>
+			</isNotEmpty>
+			<isNotEmpty property="v_qnaItemList">
+				<isNotEmpty property="v_listviewList">
+				<![CDATA[
+				OR (
 				]]>
-   		</isEqual>
+				</isNotEmpty>
+					<![CDATA[
+					A.TOPWRITERID = #v_PUSERID# 
+					AND
+					I.BOARDID IN ]]>
+					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
+				<isNotEmpty property="v_listviewList">
+				<![CDATA[
+				)
+				]]>	
+				</isNotEmpty>
+			</isNotEmpty>
+			<![CDATA[ 
+				)
+			]]>
+		</isEqual>
 			<![CDATA[
-	   			AND 
-	   				STARTDATE < #nowDate# 
-	   			AND 
-	   				ENDDATE > #nowDate#
-	   			AND (
-					   (A.APPRFLAG <> 'C'  
+				AND
+					STARTDATE <= #nowDate#
+				AND
+					ENDDATE > #nowDate#
+				AND (
+						(A.APPRFLAG <> 'C'
 							AND 
 						A.APPRFLAG <> 'N')
 							OR 
 						A.APPRFLAG IS NULL
-						)
-	   			$v_PSUBQUERY$
+					)
+					$v_PSUBQUERY$ ) T1 
+				WHERE
+					ROWNUM_ <= #v_PENDROW# ) T2
+			WHERE 
+				ROWNUM_ >= #v_PSTARTROW#
+			]]>
+	</select>
+
+	<select id="EzBoardDAO.getSearchAllBoardItemCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(A.ITEMID)
+			FROM
+				TBL_BOARD_ITEM A
+			INNER JOIN
+				TBL_BOARD_BOARDINFO I
+			ON
+				A.TENANT_ID = I.TENANT_ID
+			AND
+				A.BOARDID = I.BOARDID
+			WHERE
+				$v_PWHEREBOARD$ 
+			AND
+				A.TENANT_ID = #v_TENANTID#
+		]]>
+		<isEqual property="v_MODE" compareValue="1">
+			<![CDATA[ 
+			AND ( 
+			]]>
+			<isNotEmpty property="v_listviewList">
+			<![CDATA[ I.BOARDID IN ]]>
+					<iterate property="v_listviewList" open="(" close=")" conjunction=","> #v_listviewList[]# </iterate>
+			</isNotEmpty>
+			<isNotEmpty property="v_qnaItemList">
+				<isNotEmpty property="v_listviewList">
+				<![CDATA[
+				OR (
+				]]>
+				</isNotEmpty>
+					<![CDATA[
+					A.TOPWRITERID = #v_PUSERID# 
+					AND
+					I.BOARDID IN ]]>
+					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
+				<isNotEmpty property="v_listviewList">
+				<![CDATA[
+				)
+				]]>	
+				</isNotEmpty>
+			</isNotEmpty>
+			<![CDATA[ 
+				)
+			]]>
+		</isEqual>
+			<![CDATA[
+				AND
+					STARTDATE < #nowDate#
+				AND 
+					ENDDATE > #nowDate#
+				AND (
+						(A.APPRFLAG <> 'C'
+							AND
+						A.APPRFLAG <> 'N')
+							OR
+						A.APPRFLAG IS NULL
+					)
+				$v_PSUBQUERY$
 			]]>
 	</select>
   

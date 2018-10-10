@@ -6,12 +6,12 @@
 	<head>
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script src="/js/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
@@ -48,10 +48,24 @@
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var result     = data.folderTree;
-					currentFolders = data.currentFolders;
-					
-					renderData(result, (type == "dept" || type == "share") ? "0" : "1");
+					var code = data.code;
+					switch(code) {
+						case 0: 
+							var result     = data.folderTree;
+							currentFolders = data.currentFolders;
+							
+							renderData(result, (type == "dept" || type == "share") ? "0" : "1");
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+					}
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -79,8 +93,10 @@
 		}
 		
 		function displaySubFolder(divTree, divElmt, list, level) {
-			if (level > 0) {
-				for (var j = 0; j < level; j++) {
+			var nodelevel = list["folderLevel"];
+
+			if (nodelevel > 0) {
+				for (var j = 0; j < nodelevel; j++) {
 					var imgTag = document.createElement("img");
 					imgTag.setAttribute("class", "webfolderImg");
 					imgTag.src="/images/OrganTree_cross/dot_continue.gif";
@@ -191,9 +207,24 @@
 					dataType: "JSON",
 					async: true,
 					success: function(data) {
-						var result = data.subTree;
-						displaySubTree(result, obj.parentElement, Number(level) + 1);
-						arrSubFolder.push(uniqueId);
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result = data.subTree;
+								displaySubTree(result, obj.parentElement);
+								arrSubFolder.push(uniqueId);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -257,14 +288,25 @@
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var reason = data.reason;
+					var code = data.code;
 					
-					if (reason) {
-						alert(reason);
-					}
-					else {
-						alert("<spring:message code='ezWebFolder.t248'/>");
-						afterSuccess();
+					switch(code) {
+						case 0: 
+							alert("<spring:message code='ezWebFolder.t248'/>");
+							afterSuccess();
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+						case 4:
+							alert("<spring:message code='ezWebFolder.t250' />");
+							break;
 					}
 				},
 				error : function(error) {
@@ -303,14 +345,25 @@
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var reason = data.reason;
+					var code = data.code;
 					
-					if (reason) {
-						alert(reason);
-					}
-					else {
-						alert("<spring:message code='ezWebFolder.t247'/>");
-						afterSuccess();
+					switch(code) {
+						case 0: 
+							alert("<spring:message code='ezWebFolder.t247'/>");
+							afterSuccess();
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+						case 4:
+							alert("<spring:message code='ezWebFolder.t243' />");
+							break;
 					}
 				},
 				error : function(error) {
@@ -327,7 +380,7 @@
 	</h1>
 	<div id="close">
         <ul>
-            <li><span id="btnClose" class="webfolderBttn" onClick="wClose();"></span></li>
+            <li><span id="btnClose" onClick="wClose();"></span></li>
         </ul>
     </div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">

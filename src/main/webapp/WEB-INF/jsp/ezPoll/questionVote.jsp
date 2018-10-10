@@ -7,21 +7,20 @@
 	<head>
 		<title><spring:message code='ezPoll.t232' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-		<script src="/js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>	
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		
 		<script type="text/javascript">	
 			var filesize 				= 0;
@@ -464,6 +463,7 @@
 			        	var _cmtTime = JSON.parse(updatedInfo.body).cmtTime;
 			        	var _userPhoto = JSON.parse(updatedInfo.body).userPhoto;
 			        	var _sessionID = JSON.parse(updatedInfo.body).sessionid;
+			        	var _deptId = JSON.parse(updatedInfo.body).deptId;
 			        	var _userName = "";			        				        	
 			        	
 			        	if (_primary == 1) {
@@ -491,7 +491,7 @@
 		            		}
 		            	}
 		            	
-		            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto);
+		            	updateNewCmt(_userId, _userName, _attachFilePath, _fileType, _fileName, _filePath, _txtContent, _cmtTime, _userPhoto, _deptId);
 				    });
 			        
 			        stompClient.subscribe('/reply/editCmtForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
@@ -957,9 +957,9 @@
 		    	}
 		    }
 		    
-		    function menuQst_DetailUserInfo(pUserID) {
+		    function menuQst_DetailUserInfo(pUserID, pDeptID) {
 		    	 var feature = GetOpenPosition(420, 438);
-		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
 		    
 		    function showEditPanel(obj) {					    	
@@ -2188,7 +2188,7 @@
 		    	}
 		    }
 		    
-		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto) {		    	
+		    function updateNewCmt(userId, userName, attach, type, name, path, txtContent, cmtTime, userPhoto, deptId) {		    	
 		    	var oTable = document.getElementById("commentListView");
 		    	
 		    	//Create the tr element
@@ -2200,7 +2200,7 @@
                 var image_tag = document.createElement("img");                
                 image_tag.src = userPhoto;
                 image_tag.setAttribute("class", "userPhotoImg");
-                image_tag.onclick = function () { menuQst_DetailUserInfo(userId); };
+                image_tag.onclick = function () { menuQst_DetailUserInfo(userId, deptId); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
                 
@@ -2642,6 +2642,7 @@
 		    	}
 		    }
 		    
+		    /* 2018-08-29 홍승비 - 이미지 확대 레이어팝업 IE 오류 수정 */
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
 		    var tempTimer;
 		    function addThumbnailEvent(){
@@ -2674,17 +2675,17 @@
 						clearInterval(tempTimer);
 					}
 				}).on("click", "#imgPopup", function(e){
-					var popupOption = "resizable=yes, scrollbars=yes, location=no, status=no";
-					var title = e.target.getAttribute("_filename");
-					var imgPopupWindow = window.open("", title, popupOption);
-					imgPopupWindow.document.write(
-							"<table style='width:100%; height:100%;'>"
-						   		+"<td style='vertical-align:middle;'>"
-						   			+"<img src='" + e.target.src + "' title='" + title + "' style='display:block; margin:auto;'/>"
-						   		+"</td>"
-				   		  +"</table>"
-					);					
-					imgPopupWindow.document.title = title;
+					var pwidth = window.screen.availWidth;
+					var pheight = window.screen.availHeight;
+		            var htmlString = "";
+		            var imgPopupWindow = window.open("" , "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ pheight + ",width="+ pwidth + ",top=0,left=0", "");
+		            
+		            htmlString = "<html><head><title><spring:message code='ezPortal.t49'/></title></head>";
+					htmlString += "<body style='margin:0px;text-align:center;' onClick='window.close()'>";
+					htmlString += "<div style='height:" + pheight + "px;width:" + pwidth + "px;vertical-align:middle;display:table-cell;'><img style='cursor:pointer;' src=" + e.target.src + "></div>";
+					htmlString += "</body></html>";
+					
+					imgPopupWindow.document.write(htmlString);
 					imgPopupWindow.document.close();
 				});
 		    }
@@ -2704,15 +2705,33 @@
 	    		imgPopup.attr("_filename", e.target.getAttribute("_filename"));
 	    		imgPopup.attr("title", e.target.getAttribute("_filename"));
 	    		
-	    		var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
-	    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
-	    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
-	    		
-	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
-	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
-	    		
-	    		//imgPopup.css({"left": 0, "zoom": ""});
+	    		// src에 부여된 height값 읽어오지 못한 경우
+	    		if (imgPopup.height() == 0){
+		    		imgPopup.load (function() {
+		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+		    			
+		    			var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
+			    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
+			    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
+			    		
+			    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+			    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+			    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+			    		imgPopup.attr("zoom","1");
+		    		});
+	    		} else {
+	    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+	    			
+	    			var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
+		    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
+		    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
+		    		
+		    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+		    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+		    		imgPopup.css({"left": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+		    		imgPopup.attr("zoom","1");
+	    		}
+
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
 		  	}
@@ -2728,11 +2747,14 @@
 	    		
 		  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		  		else{
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
-		  			$imgPopup.css("zoom","");
+		  			$imgPopup.css("width", "");
+		  			$imgPopupDiv.css("overflow", "");
 		  		}
+		  		$imgPopup.attr("zoom","1");
 	    		
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
 				$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
@@ -2806,40 +2828,35 @@
 		  		var $imgPopupBox = $("#imgPopupBox");
 		  		var $imgPopupDiv = $("#imgPopupDiv");
 		  		var $imgPopup = $("#imgPopup");
+		  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($imgPopup.css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
+		  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) + zoomOffset;
 		  		}
-		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 		  			zoom = 1 + zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
+			  		zoom = parseFloat($imgPopup.attr("zoom")) + zoomOffset;
 		  		}
-		  		$imgPopup.css("zoom", zoom);
+		  		zoom = zoom.toFixed(1);
+		  		$imgPopup.attr("zoom", zoom);
 		  		
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		  		$imgPopup.width(imgPopupOrignW * zoom);
+		  		$imgPopupDiv.width(imgPopupOrignW * zoom);
 		  		
 		  		//imgPopup 세로 위치 조정.
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
-		  			var agent = navigator.userAgent.toLowerCase();
 		  			var topOffset = "";
-		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-	  					//alert("인터넷 익스플로러 브라우저 입니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-	  				}
-	  				else {
-	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-	  				}
+			  		topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+			  		
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);
@@ -2855,32 +2872,36 @@
 		  		var $imgPopupBox = $("#imgPopupBox");
 		  		var $imgPopupDiv = $("#imgPopupDiv");
 		  		var $imgPopup = $("#imgPopup");
+		  		var imgPopupOrignW =  $imgPopup.prop("naturalWidth");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($imgPopup.css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
+		  		if($imgPopup.attr("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.attr("zoom").replace("%", "") / 100) - zoomOffset;
 		  		}
-		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.attr("zoom").indexOf("normal") != -1){
 		  			zoom = 1 - zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
+			  		zoom = parseFloat($imgPopup.attr("zoom")) - zoomOffset;
 		  		}
+		  		zoom = zoom.toFixed(1);
 		  		
-		  		if( zoom > 0 ){
-			  		$imgPopup.css("zoom", zoom);
-		  		}else{
+		  		// 0.1보다 작은 비율로는 축소 불가능
+		  		if ( zoom >= 0.1 ) {
+			  		$imgPopup.attr("zoom", zoom);
+		  		} else {
 		  			return;
 		  		}
 		  		
-		  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+		  		var thumbImgW = imgPopupOrignW * zoom;
 		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCW = imgPopupDiv.clientWidth;
-	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-	    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
+	    		$imgPopup.width(thumbImgW);
+	    		$imgPopupDiv.width(thumbImgW);
 	    		
 		  		if(thumbImgW > (imgPopupDivCW - 100)){
 		  			$imgPopup.css("left","");
@@ -2888,24 +2909,15 @@
 		  		
 		  		//imgPopup 세로 위치 조정
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
-		  			var agent = navigator.userAgent.toLowerCase();
 		  			var topOffset = "";
-		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
-	  					//alert("인터넷 익스플로러 브라우저 입니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
-	  				}
-	  				else {
-	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
-			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
-	  				}
+					topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+					
 		  			$imgPopup.css("top", topOffset);
-		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
 		  			$imgPopup.css("top", 0);
 		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
-		  		
 		  	}
 		  	
 		  	//종료일 변경 기능
@@ -2989,6 +3001,32 @@
 	    			defaultOpt.selected = true;
 	    			defaultIdx = defaultOpt.index;
     			}
+    			
+    			/* 2018-08-13 홍승비 - 투표모듈 DatePicker 다국어 설정 추가 */
+    			var monthMsg = "<spring:message code='ezSchedule.t110' />";
+			    var monthStr = monthMsg.split(";");		    
+			    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+			    var dayStr = dayMsg.split(";");
+			    
+    			 $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
     			
     			$("#endDate").click(function() {
     				if($("#_dateTimePicker").css("display") == "none"){
@@ -3155,7 +3193,7 @@
 				<div id="mainmenu3" style="overflow: hidden;">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		
-					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
+					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}','${deptId}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
 								<c:choose>
 									<c:when test="${primary == '1'}">
@@ -3177,13 +3215,13 @@
 							</ul>
 							<ul class="voteIcon_ul">
 								<li class="voteIconImg_li icon">
-									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
+									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/><spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
 							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
 								<ul class="voteIcon_ul">
 									<li class="voteIconImg_li icon">
-										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
+										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/><spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
 									</li>
 								</ul>
 							</c:if>
@@ -3543,7 +3581,7 @@
 						<c:forEach var="_comt" items="${listComments}">
 							<tr>
 								<td class="userPhotoTd">
-									<img class="userPhotoImg" src="${_comt.userImage}" onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+									<img class="userPhotoImg" src="${_comt.userImage}" onclick="menuQst_DetailUserInfo('${_comt.userId}','${_comt.deptId}');">
 								</td>
 								<td>
 									<c:choose>

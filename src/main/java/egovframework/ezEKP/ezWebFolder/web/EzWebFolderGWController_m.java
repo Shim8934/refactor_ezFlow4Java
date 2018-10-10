@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +57,9 @@ public class EzWebFolderGWController_m {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private Properties globals;
+	
 	/**
 	 * 공유한 리스트 조회
 	 */
@@ -68,16 +72,25 @@ public class EzWebFolderGWController_m {
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
-		SearchVO searchInfo = new SearchVO();
-		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
-		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
-		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		String searchExt = orElse(request.getParameter("searchExt"), "");
+		String searchFileName = orElse(request.getParameter("searchFileName"), "");
+		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
+		
+   		SearchVO searchInfo = new SearchVO();
+		searchInfo.setSearchExt(searchExt);
+		searchInfo.setSearchFileName(searchFileName);
+		searchInfo.setSearchCreateName(searchCreatorName);
 		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
-		logger.debug("searchInfo: " + searchInfo);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || pageNum : " + pageNum + " || pageSize : " + pageSize);
+		logger.debug("searchInfo : " + searchInfo);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -142,7 +155,7 @@ public class EzWebFolderGWController_m {
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || folderFileId : " + folderFileId + " || folderFileType : " + folderFileType);
 		
 		JSONObject result = new JSONObject();
 		
@@ -174,7 +187,7 @@ public class EzWebFolderGWController_m {
 				return result;
 			}
 			
-			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo("", folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
+			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo("", folderFileId, folderFileType, userInfo.getCompanyID(), userInfo.getPrimary(), offset, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -199,7 +212,7 @@ public class EzWebFolderGWController_m {
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || folderFileId : " + folderFileId + " || folderFileType : " + folderFileType);
 		
 		JSONObject result = new JSONObject();
 		
@@ -231,7 +244,7 @@ public class EzWebFolderGWController_m {
 				return result;
 			}
 			
-			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo(userId, folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
+			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo(userId, folderFileId, folderFileType,  userInfo.getCompanyID(), userInfo.getPrimary(),offset, tenantId);
 			
 			SimpleShareVO shareInfo = null;
 			
@@ -265,16 +278,26 @@ public class EzWebFolderGWController_m {
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
+		String searchExt = orElse(request.getParameter("searchExt"), "");
+		String searchFileName = orElse(request.getParameter("searchFileName"), "");
+		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
+		
 		SearchVO searchInfo = new SearchVO();
-		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
-		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
-		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchExt(searchExt);
+		searchInfo.setSearchFileName(searchFileName);
+		searchInfo.setSearchCreateName(searchCreatorName);
 		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize + " || subSearchFlag: " + subSearchFlag);
-		logger.debug("searchInfo: " + searchInfo);
+		logger.debug("serverName : " + serverName + " || userId: " + userId);
+        logger.debug("pageNum : " + pageNum + " || pageSize: " + pageSize);
+        logger.debug("subSearchFlag : " + subSearchFlag + " || searchInfo : " + searchInfo);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -341,9 +364,9 @@ public class EzWebFolderGWController_m {
 		String deptList = orElse(request.getParameter("deptList"), "");
 		String userList = orElse(request.getParameter("userList"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
-		logger.debug("deptList:" + deptList);
-		logger.debug("userList:" + userList);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || folderFileId : " + folderFileId + " || folderFileType : " + folderFileType);
+		logger.debug("deptList :" + deptList);
+		logger.debug("userList :" + userList);
 		
 		JSONObject result = new JSONObject();
 		
@@ -401,9 +424,9 @@ public class EzWebFolderGWController_m {
 		String deptList = orElse(request.getParameter("deptList"), "");
 		String userList = orElse(request.getParameter("userList"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
-		logger.debug("deptList:" + deptList);
-		logger.debug("userList:" + userList);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || folderFileId : " + folderFileId + " || folderFileType : " + folderFileType);
+		logger.debug("deptList :" + deptList);
+		logger.debug("userList :" + userList);
 		
 		JSONObject result = new JSONObject();
 		
@@ -461,7 +484,7 @@ public class EzWebFolderGWController_m {
 		String fileListStr = orElse(request.getParameter("fileList"), "");
 		String folderListStr = orElse(request.getParameter("folderList"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || fileListStr: " + fileListStr + " || folderListStr: " + folderListStr);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || fileListStr : " + fileListStr + " || folderListStr : " + folderListStr);
 		
 		JSONObject result = new JSONObject();
 		
@@ -528,7 +551,7 @@ public class EzWebFolderGWController_m {
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
 		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || pageNum : " + pageNum + " || pageSize : " + pageSize);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -595,7 +618,7 @@ public class EzWebFolderGWController_m {
 		String fileListStr = orElse(request.getParameter("fileList"), "");
 		String folderListStr = orElse(request.getParameter("folderList"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || fileListStr: " + fileListStr + " || folderListStr: " + folderListStr);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || fileListStr : " + fileListStr + " || folderListStr : " + folderListStr);
 		
 		JSONObject result = new JSONObject();
 		
@@ -666,7 +689,7 @@ public class EzWebFolderGWController_m {
 		String fileListStr = orElse(request.getParameter("fileList"), "");
 		String folderListStr = orElse(request.getParameter("folderList"), "");
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || fileListStr: " + fileListStr + " || folderListStr: " + folderListStr);
+		logger.debug("serverName : " + serverName + " || userId : " + userId + " || fileListStr : " + fileListStr + " || folderListStr : " + folderListStr);
 		
 		JSONObject result = new JSONObject();
 		
@@ -749,10 +772,19 @@ public class EzWebFolderGWController_m {
 		int startIndex = Integer.parseInt(orElse(request.getParameter("startIndex"), "0"));
 		int listCount = Integer.parseInt(orElse(request.getParameter("listCount"), "0"));
 		
+		String searchExt = orElse(request.getParameter("searchExt"), "");
+		String searchFileName = orElse(request.getParameter("searchFileName"), "");
+		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreatorName = commonUtil.getWildcardEscapedString(searchCreatorName, dbName);
+		
 		SearchVO searchInfo = new SearchVO();
-		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
-		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
-		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchExt(searchExt);
+		searchInfo.setSearchFileName(searchFileName);
+		searchInfo.setSearchCreateName(searchCreatorName);
 		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
@@ -983,6 +1015,11 @@ public class EzWebFolderGWController_m {
 		String mode 		    = orElse(request.getParameter("mode"), "");
 		String realColumn        = "";
 		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);
+		
 		// TODO primary 수정
 		String primary;
 		
@@ -993,11 +1030,10 @@ public class EzWebFolderGWController_m {
 		}
 
 		logger.debug("getTrashCanList Started.");
-		logger.debug("userId=" + userId +  ",serverName=" + serverName);
-		logger.debug("currPage=" + currPage);
-		logger.debug("listCount=" + listCount);
-		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
-		logger.debug("enrollStartDate=" + enrollStartDate + ",enrollEndDate=" + enrollEndDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
+		logger.debug("userId : " + userId +  " || serverName : " + serverName);
+		logger.debug("currPage : " + currPage + " || listCount : " + listCount);
+		logger.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName + " || searchCreateName : " + searchCreateName + " || searchFileType : " + searchFileType);
+		logger.debug("enrollStartDate : " + enrollStartDate + " || enrollEndDate : " + enrollEndDate + " || delStartDate : " + delStartDate + " || delEndDate : " + delEndDate);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1097,9 +1133,9 @@ public class EzWebFolderGWController_m {
 		String serverName   = orElse(request.getHeader("x-user-host"), "");
 		
 		logger.debug("filePermanetDelete Started.");
-		logger.debug("userId=" + userId  + ",serverName=" + serverName);
-		logger.debug("fileList=" + fileList);
-		logger.debug("folderList=" + folderList);
+		logger.debug("userId : " + userId  + " || serverName : " + serverName);
+		logger.debug("fileList : " + fileList);
+		logger.debug("folderList : " + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
@@ -1148,9 +1184,9 @@ public class EzWebFolderGWController_m {
 		String folderList = orElse(request.getParameter("folderList"), "");
 
 		logger.debug("restoreTrashCan Started.");
-		logger.debug("userId=" + userId + ",serverName=" + serverName + ",companyId=" + companyId);
-		logger.debug("fileList=" + fileList);
-		logger.debug("folderList=" + folderList);
+		logger.debug("userId : " + userId + " || serverName : " + serverName + " || companyId : " + companyId);
+		logger.debug("fileList : " + fileList);
+		logger.debug("folderList : " + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
@@ -1215,9 +1251,9 @@ public class EzWebFolderGWController_m {
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
 		logger.debug("moveTrashCan Started.");
-		logger.debug("userId=" + userId + ",folderId=" + folderId + ",serverName=" + serverName);
-		logger.debug("fileList=" + fileList);
-		logger.debug("folderList=" + folderList);
+		logger.debug("userId : " + userId + " || folderId : " + folderId + " || serverName : " + serverName);
+		logger.debug("fileList : " + fileList);
+		logger.debug("folderList : " + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
@@ -1271,7 +1307,7 @@ public class EzWebFolderGWController_m {
 		String userId = orElse(request.getParameter("userId"), "");
 		
 		logger.debug("getUserListCount Started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
+		logger.debug("tenantId : " + tenantId + " || userId : " + userId);
 
 		JSONObject result = new JSONObject();
 		

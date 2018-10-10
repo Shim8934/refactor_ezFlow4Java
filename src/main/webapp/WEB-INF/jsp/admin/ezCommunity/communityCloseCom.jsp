@@ -6,7 +6,7 @@
 	<head>
 		<title>close_com</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<style>
 		.mainlist tr th:first-child{
 			padding-left: 10px;
@@ -15,9 +15,10 @@
 			padding-left: 10px;
 		}
 		</style>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var sCurPage = "<c:out value = '${curPage}' />";
@@ -41,9 +42,10 @@
 				return true;
 			}
 
+		    /* 2018-06-22 홍승비 - 마스터이름 검색 시 sysopID가 아니라 USERNAME 넘기도록 수정*/
 			function search() {
 				if (document.comm_search.s_radio.value == "1" ) {
-					var strSearch = "sRadio=C_SysopID&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
+					var strSearch = "sRadio=USERNAME&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
 				} else if (document.comm_search.s_radio.value == "2" ) {
 					var strSearch = "sRadio=C_ClubName" + lang + "&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
 				}
@@ -203,6 +205,23 @@
 				}
 			}
             //########################################페이지네이션 변경 ##############################################
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 172;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });
 		</script>
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
@@ -227,19 +246,27 @@
 		</table>
 		
 	    <br/>
-	    <div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-		<table class="mainlist" style="width:100%">
-			<tr> 
-				<th style="width:70px"><spring:message code = 'ezCommunity.t32' /></th>
-				<th><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio }' />&keyword=<c:out value = '${keyword }' />&goToPage=<c:out value = '${curPage }' />&block=<c:out value = '${nowBlock}' />&s=1<c:out value = '${sc1 }' />"><spring:message code = 'ezCommunity.t9991' /></a></th>
-				<th style="width:200px;"><spring:message code = 'ezCommunity.t33' /></th>
-				<th style="width:150px"><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio}' />&keyword=<c:out value = '${keyword}' />&goToPage=<c:out value = '${curPage}' />&block=<c:out value = '${nowBlock}' />&s=3<c:out value = '${sc3}' />"><spring:message code = 'ezCommunity.t24' /></a></th>
-				<th style="width:150px"><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio}' />&keyword=<c:out value = '${keyword}' />&goToPage=<c:out value = '${curPage}' />&block=<c:out value = '${nowBlock}' />&s=4<c:out value = '${sc4}' />"><spring:message code = 'ezCommunity.t42' /></a></th>
-			</tr>
-			<span id="idSpan">${idSpanValue }</span>
-		</table>
-	    </div>
-		
+	    <div id="contentlist" style="width:100%; overflow: auto;">
+		    <div>
+				<table class="mainlist" style="width:100%">
+					<tr> 
+						<th style="width:70px"><spring:message code = 'ezCommunity.t32' /></th>
+						<th><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio }' />&keyword=<c:out value = '${keyword }' />&goToPage=<c:out value = '${curPage }' />&block=<c:out value = '${nowBlock}' />&s=1<c:out value = '${sc1 }' />"><spring:message code = 'ezCommunity.t9991' /></a></th>
+						<th style="width:200px;"><spring:message code = 'ezCommunity.t33' /></th>
+						<th style="width:150px"><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio}' />&keyword=<c:out value = '${keyword}' />&goToPage=<c:out value = '${curPage}' />&block=<c:out value = '${nowBlock}' />&s=3<c:out value = '${sc3}' />"><spring:message code = 'ezCommunity.t24' /></a></th>
+						<th style="width:150px"><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio}' />&keyword=<c:out value = '${keyword}' />&goToPage=<c:out value = '${curPage}' />&block=<c:out value = '${nowBlock}' />&s=4<c:out value = '${sc4}' />"><spring:message code = 'ezCommunity.t42' /></a></th>
+					</tr>
+					<c:if test="${idSpanValue ne null && idSpanValue ne ''}">
+						<span id="idSpan">${idSpanValue }</span>
+					</c:if>
+					<c:if test="${idSpanValue eq null || idSpanValue eq ''}">
+					<tr>
+						<td colspan="5" style='text-align: center;'><spring:message code = 'main.t00026' /></td>
+					</tr>
+					</c:if>
+				</table>
+		    </div>
+		</div>
 		<br/>
 		
 		<div id="tblPageRayer"></div>

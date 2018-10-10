@@ -281,6 +281,23 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId()));
 		
+       	String operatorMailAddress = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "operatorMailId");
+       	
+		String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+		
+		// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 사용한다.								
+		if (!companyDomainName.isEmpty()) {
+			operatorMailAddress += "@" + companyDomainName;
+		} else {
+			operatorMailAddress += "@" + domainName;
+		}
+       	
+        List<String> aliasMailList = ezEmailService.aliasMailCheck(operatorMailAddress);
+       	
+        if (aliasMailList.size() > 0) {
+        	model.addAttribute("operatorMailAddress", operatorMailAddress);
+        }
+        
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginInfo.getTenantId());
 		boolean isDotNetAdmin = false;
 		
@@ -534,7 +551,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * PC에서 메일 가져오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailImportUpload.do")
+	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
 	public String mailImportUpload(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, MultipartHttpServletRequest request) throws Exception{
 		logger.debug("mailImportUpload started.");
 		
@@ -608,11 +626,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("strResult", strResult);
-		
-		logger.debug("mailImportUpload ended.");
-		
-		return "ezEmail/mailImportUpload";
+		logger.debug("mailImportUpload ended. strResult=" + strResult);
+		return strResult;
 	}
 	
 	/**

@@ -168,4 +168,153 @@
 		]]>
 	</delete>
 	
+	<select id="EzCommonDAO.checkTblCompanyConfig" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				TBL_COMPANY_CONFIG
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblCompanyConfig"> 
+		CREATE TABLE `tbl_company_config` (
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `PROPERTY_NAME` varchar(100) NOT NULL,
+		  `PROPERTY_VALUE` varchar(2000) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`PROPERTY_NAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
+	</statement>
+		
+	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				TBL_COMPANY_CONFIG
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				UPPER(property_name) = #property#
+		]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertCompanyConfig" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_COMPANY_CONFIG (
+				TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE
+			)
+			VALUES (
+				#tenantID#, #companyID#, #propertyName#, #propertyValue#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzCommonDAO.updateCompanyConfig" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_COMPANY_CONFIG
+			SET
+				PROPERTY_VALUE = #propertyValue#
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				PROPERTY_NAME = #propertyName#	
+		]]>
+	</update>
+	
+	<update id="EzCommonDAO.deleteCompanyConfig" parameterClass="map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_COMPANY_CONFIG
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				PROPERTY_NAME = #propertyName#	
+		]]>
+	</update>
+	
+	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MAIL
+			FROM 
+				JMOCHA_DISTRIBUTION
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addMailToJMochaDistribution"> 
+		ALTER TABLE 
+			JMOCHA_DISTRIBUTION
+		ADD 
+			MAIL VARCHAR(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddJobMasterOrderBy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ORDERBY
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterOrderBy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			ORDERBY VARCHAR(200) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
+	<![CDATA[
+		SELECT 
+			ipno
+		FROM 
+			TBL_ACCESS_IP
+		LIMIT 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessIP"> 
+		CREATE TABLE `tbl_access_ip` (
+		  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  `IPADDRESS` varchar(100) NOT NULL,
+		  `ACCESS` varchar(10) DEFAULT 'YES',
+		  `EXPLANATION` varchar(200) DEFAULT NULL,
+		  PRIMARY KEY (`IPNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblIPAccessID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				accessno
+			FROM 
+				TBL_ACCESS_ID
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblIPAccessID"> 
+		CREATE TABLE `tbl_access_id` (
+		  `ACCESSNO` int(11) NOT NULL AUTO_INCREMENT,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  `CN` varchar(80) NOT NULL,
+		  PRIMARY KEY (`ACCESSNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 </sqlMap>

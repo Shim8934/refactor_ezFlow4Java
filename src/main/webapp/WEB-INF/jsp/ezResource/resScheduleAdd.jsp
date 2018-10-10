@@ -6,20 +6,20 @@
 	<head>
 		<title><spring:message code="ezResource.t171"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
-		<script type="text/javascript" src="<spring:message code="ezResource.e1"/>"></script>
-		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript">
 			<%-- var g_DD = "<%=Request.QueryString["dd"]%>";
 	    	var g_MM = "<%=Request.QueryString["mm"]%>";
@@ -32,6 +32,7 @@
 	    	var ss_deptNM		= "";
 	    	var ss_ownerNM		= "";
 	    	var lang = "${userInfo.primary}";
+	    	var deptID = "${userInfo.deptID}";
 	    	
 	    	if(lang == '2') {
 	        	ss_deptNM		= "${userInfo.deptName2}"; 
@@ -74,6 +75,8 @@
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
 	    	var title = "${title}";
+	    	var allDay = "${allDay}";//"1":하루종일
+	    	var timeSelect = false;
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -95,9 +98,9 @@
 		            }        
 	    	    } 
 	        	if (cmd == "mod") {
-	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
+	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
-	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
+	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	}
 	            
 	        	if (cmd == "mod") {
@@ -307,10 +310,10 @@
 	    	function FieldsAvailable() {
 	    	}
 
-	    	function MemberInfo_onClick(pSelUserID) {
+	    	function MemberInfo_onClick(pSelUserID, deptID) {
 	        	if (pSelUserID != "") {
 		            var feature = GetOpenPosition(420, 438);
-		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID +"&dept=" + deptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    	    }
 	    	}	
 
@@ -330,6 +333,10 @@
 		                document.getElementById("Stimepicker").style.display = "";
 		                document.getElementById("Etimepicker").style.display = "";
 	    	            onck = "1";
+	    	            //2018-08-29 김보미 - 수정시 하루종일 체크 해제시 현재시간으로 나오게 변경
+	    	            if (allDay == "1" && !timeSelect) {
+		    	            setNowTime();
+	    	            }
 	        	        return;
 	            	}
 	        	}
@@ -373,8 +380,19 @@
 	        	}
 	        	DivPopUpHidden();
 	    	}
-
+	    	
+	    	var doubleSubmitFlag = false;
+	    	function doubleSubmitCheck(){
+	    	    if(doubleSubmitFlag){
+	    	        return doubleSubmitFlag;
+	    	    }else{
+	    	        doubleSubmitFlag = true;
+	    	        return false;
+	    	    }
+	    	}
+	    	
 	    	function btn_Save() {
+
 	        	var check = true;
 	        	if (ItemArray[0].length == 0) {
 	            	alert(strLang252);
@@ -425,8 +443,11 @@
 	        		}
 	        	} else {
 	        		if (!AllDayCheckStartEndDateTime()) {
-	        			alert("" + strLang139 + "");			
-	        			return;
+	        			// 2018-10-02 김민성 - 자원 반복예약 시 회수 설정 시 끝날짜 무시하도록 수정
+	        			if($("#EndTimeSet").checked == true) {		
+		        			alert("" + strLang139 + "");			
+		        			return;
+	        			}
 	        		}
 	        	}
 	        	
@@ -463,10 +484,45 @@
 	        	}
 	    	}
 
+            //2018-08-28 김보미 - 현재시간으로 설정
+	    	function setNowTime() {
+	        	var now = new Date();
+	        	
+	        	//시작시간
+	        	var startTime;
+	        	var hour = now.getHours();
+	        	var time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		startTime = hour + ":00:00";
+	        	} else {
+	        		startTime = hour + ":30:00";
+	        	}
+	        	
+	        	//종료시간
+	        	var endTime;
+	        	now.setMinutes(now.getMinutes() + 30);
+	        	
+	        	hour = now.getHours();
+	        	time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		endTime = hour + ":00:00";
+	        	} else {
+	        		endTime = hour + ":30:00";
+	        	}
+	        	
+	        	$('#Stimepicker').timepicker('setTime', startTime);
+	        	$('#Etimepicker').timepicker('setTime', endTime);
+	    	}
+            
+	        $(document).on('click', ".ui-timepicker-list li", function() {
+	        	timeSelect = true;
+	        })
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
-	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
+	<body id="mainbodytag" class="popup" style="height: 97%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>

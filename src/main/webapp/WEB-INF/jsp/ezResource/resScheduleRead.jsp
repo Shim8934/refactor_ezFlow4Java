@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<style type="text/css">
 		
 		.content tr{
@@ -17,13 +17,13 @@
 		}
 
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		  <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		  <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/datepicker.htc_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/composeappt_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 		<script type="text/javascript" >
 		 	var g_data = new Array();
 		 	//writerID trim
@@ -57,9 +57,10 @@
 	        var brdName = "${brdName}";
 	        var resID = "${resID}";
 	        var iframeH = "";
+	        var deptID = "${deptID}";
 	        
 	        window.onload = function () {
-	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
+	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal +"','" + deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 
 	            if (brdName != "" && resID != "") {
 	                ItemArray[0] = Array(resID);
@@ -372,7 +373,7 @@
 	            }
 	        }
 
-	        function MemberInfo_onClick(pSelUserID) {
+	        function MemberInfo_onClick(pSelUserID, deptID) {
 	            var c_Width = 420;
 	            var c_Height = 438;
 
@@ -385,7 +386,7 @@
 	            var py = (s_Height - c_Height) / 2;
 
 	            if (pSelUserID != "") {
-	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID + "&dept=" + deptID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
 	        }  
 		</script>

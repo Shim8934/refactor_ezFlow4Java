@@ -6,10 +6,10 @@
 	<head>
 		<title><spring:message code='ezBoard.t335'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<style>
 	        .viewbox {
 				line-height:20px;
@@ -133,10 +133,12 @@
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
-		    function OpenUserInfo(pUserID) {
+		    
+		    /* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
+		    function OpenUserInfo(pUserID, pDeptID) {
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function getOneLineReply() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -175,11 +177,11 @@
 						<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
 						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
 		        	</tr>
-		        	<!-- 직위&전화번호 -->
+		        	<!-- 직위&사내전화 -->
 		        	<tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
-						<th><spring:message code='ezBoard.t38'/></th>
+						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
 		        	</tr>
 		        	<!-- 게시일&게시종료일 -->

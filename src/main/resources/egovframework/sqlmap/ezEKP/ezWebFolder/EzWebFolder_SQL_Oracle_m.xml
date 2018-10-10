@@ -121,17 +121,17 @@
 		</isNotEqual>
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					LOWER(DF.FILE_EXT) LIKE ('%' || LOWER(#searchExt#) || '%')
+					LOWER(DF.FILE_EXT) LIKE ('%' || LOWER(#searchExt#) || '%') ESCAPE '\'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					(LOWER(DF.FILE_NAME1) LIKE ('%' || LOWER(#searchFileName#) || '%') OR LOWER(DF.FILE_NAME2) LIKE ('%' || LOWER(#searchFileName#) || '%'))
+					(LOWER(DF.FILE_NAME1) LIKE ('%' || LOWER(#searchFileName#) || '%') ESCAPE '\' OR LOWER(DF.FILE_NAME2) LIKE ('%' || LOWER(#searchFileName#) || '%') ESCAPE '\')
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
 				<![CDATA[
-					(LOWER(DF.CREATE_NAME1) LIKE ('%' || LOWER(#searchCreatorName#) || '%') OR LOWER(DF.CREATE_NAME2) LIKE ('%' || LOWER(#searchCreatorName#) || '%'))
+					(LOWER(DF.CREATE_NAME1) LIKE ('%' || LOWER(#searchCreatorName#) || '%') ESCAPE '\' OR LOWER(DF.CREATE_NAME2) LIKE ('%' || LOWER(#searchCreatorName#) || '%') ESCAPE '\')
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="">
@@ -146,22 +146,22 @@
 	<sql id ="searchTrashCanFile">
 	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					LOWER(FILES.FILE_EXT) LIKE '%' || LOWER(#searchExt#) || '%'
+					LOWER(FILES.FILE_EXT) LIKE '%' || LOWER(#searchExt#) || '%' ESCAPE '\'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					LOWER(FILES.FILE_NAME) LIKE '%' || LOWER(#searchFileName#) || '%'
+					LOWER(FILES.FILE_NAME) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
-					LOWER(FILES.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%'
+					LOWER(FILES.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%' ESCAPE '\'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
-					LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%'
+					LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%' ESCAPE '\'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
@@ -185,22 +185,22 @@
 	<sql id ="searchTrashCanFolder">
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
-				'folder' LIKE '%' || LOWER(#searchExt#) || '%'
+				'folder' LIKE '%' || LOWER(#searchExt#) || '%' ESCAPE '\'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
-				LOWER(FOLDER.FOLDER_NAME1) LIKE '%' || LOWER(#searchFileName#) || '%'
+				LOWER(FOLDER.FOLDER_NAME1) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 			<![CDATA[
-				LOWER(FOLDER.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%'
+				LOWER(FOLDER.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%' ESCAPE '\'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%'
+				LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%' ESCAPE '\'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
@@ -229,17 +229,17 @@
 		</isNotEqual>
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
-				LOWER(RESULT.TARGET_EXT) LIKE '%' || LOWER(#searchExt#) || '%'
+				LOWER(RESULT.TARGET_EXT) LIKE '%' || LOWER(#searchExt#) || '%' ESCAPE '\'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
-				(LOWER(RESULT.TARGET_NAME_1) LIKE '%' || LOWER(#searchFileName#) || '%' OR LOWER(RESULT.TARGET_NAME_2) LIKE '%' || LOWER(#searchFileName#) || '%')
+				(LOWER(RESULT.TARGET_NAME_1) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\'  OR LOWER(RESULT.TARGET_NAME_2) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
 			<![CDATA[
-				(LOWER(RESULT.CREATE_NAME1) LIKE '%' || LOWER(#searchCreatorName#) || '%' OR LOWER(RESULT.CREATE_NAME2) LIKE '%' || LOWER(#searchCreatorName#) || '%')
+				(LOWER(RESULT.CREATE_NAME1) LIKE '%' || LOWER(#searchCreatorName#) || '%' ESCAPE '\' OR LOWER(RESULT.CREATE_NAME2) LIKE '%' || LOWER(#searchCreatorName#) || '%' ESCAPE '\')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="">
@@ -796,7 +796,10 @@
 				THEN USER_NAME1
 				ELSE USER_NAME2
 			END AS USER_NAME,
-			USER_TYPE
+			CASE WHEN USER_ID = #compId#
+                then 'C'
+            ELSE USER_TYPE
+            END AS USER_TYPE
 		FROM TBL_WEBFOLDER_SHARE_SUB
 		WHERE SHARE_ID = #shareId#
 		AND TENANT_ID = #tenantId#

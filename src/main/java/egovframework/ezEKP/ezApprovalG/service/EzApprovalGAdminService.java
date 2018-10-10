@@ -16,11 +16,11 @@ public interface EzApprovalGAdminService {
 
 	public String getContainerInfoManage(String deptID, String type, String companyID, String lang, int tenantID) throws Exception;
 
-	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
+	public String getContTypeInfo(String type, String companyID, String primary, int tenantID, String lang) throws Exception;
 	
 	public String deleteContainerType(String docTypeID, String companyID, int tenantID) throws Exception;
 	
-	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag) throws Exception;
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag, String lang) throws Exception;
 	
 	public String updateContainerToDocStateInfo(Document xmlData, String companyID, int tenantID) throws Exception;
 	
@@ -35,6 +35,8 @@ public interface EzApprovalGAdminService {
 	public String getReceiveGroupInfo(String pid, String mode,	String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
 	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
+	
+	public String updateReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
 	
 	public String deleteReceiveGroupItemInfo(String groupID, String companyID, int tenantID) throws Exception;
 	
@@ -118,7 +120,7 @@ public interface EzApprovalGAdminService {
 	
 	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
 	
-	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception;
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag, String useReceiveInfoName) throws Exception;
 
 	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
 
@@ -140,7 +142,7 @@ public interface EzApprovalGAdminService {
 
 	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 	
-	public String getEtcName(String code1, String selected, String langType, String companyID, int tenantID) throws Exception;
+	public String getEtcName(String code1, String selected, String primary, String langType, String companyID, int tenantID) throws Exception;
 
 	public String getFormAprRule(String formID, String companyID, int tenantID) throws Exception;
 
@@ -179,5 +181,6 @@ public interface EzApprovalGAdminService {
 	public String deleteDocListjson(String[] DocDelIDArr, String[] DocDelNoArr, String[] DocDelTitleArr, String[] DocDelWriterNameArr, String[] DocDelDeptNameArr,String deleteDay, String DeluserId, String offset, String companyID, int tenantID) throws Exception;
 
 	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
-
+	
+	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
 }
