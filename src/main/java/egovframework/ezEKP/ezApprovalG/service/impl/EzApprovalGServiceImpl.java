@@ -5190,14 +5190,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String curSN = ezApprovalGDAO.transferCabinetSn(map);
 		
-		if(curSN == null) {
+		if (curSN == null) {
 			curSN = "1";
+			map.put("v_RtnSN", curSN);
+			ezApprovalGDAO.insertTbSerialNumGen(map);
+		} else {
+			map.put("v_RtnSN", curSN);
 		}
-		map.put("v_RtnSN", curSN);
-		// 2018-06-15 황윤호 
-		// 기록물철 인수인계시, 인수받은 부서에 중복된 REGSERIALNO 값 때문에 
-		// 새로운 기록물철 생성이 안됨(주석처리)
-//		ezApprovalGDAO.insertTbSerialNumGen(map);
+		
 		ezApprovalGDAO.updateTbSerialNumGen(map);
 		
 		StringBuffer rowID = new StringBuffer();
@@ -5207,8 +5207,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String cabList[] =cabIDList.split(",");
 			map.put("v_cabList",cabList[j]);
 			map.put("v_SN", j);
-			map.put("v_CNT", String.format("%06d",Integer.parseInt(curSN+Integer.toString(j))));
-			map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d",Integer.parseInt(curSN+Integer.toString(j))));
+			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN) + j));
+			map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d", Integer.parseInt(curSN) + j));
 			ezApprovalGDAO.insertTbCabinetClass(map);
 			ezApprovalGDAO.trigerTbCabinet(map);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map);
@@ -20811,6 +20811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<DOCSTATE>" + docList.get(j).getDocState() + "</DOCSTATE>");
 				resultXML.append("<FUNCTIONTYPE>" + docList.get(j).getFunctionType() + "</FUNCTIONTYPE>");
 				resultXML.append("<URGENTAPPROVAL>" + docList.get(j).getUrgentApproval() + "</URGENTAPPROVAL>");
+				resultXML.append("<orgCompanyID>" + docList.get(j).getCompanyID() + "</orgCompanyID>");
 				resultXML.append("</CELL>");
 			}
 			

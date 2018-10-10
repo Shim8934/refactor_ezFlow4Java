@@ -1406,12 +1406,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			uploadMailRootFolder.mkdirs();
 		}
 		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = pDirPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
+		
 		for (int i=0; i<cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
 			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
                 String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
-                pDirTempPath = pDirPath + commonUtil.separator + pDate;
+                pDirTempPath = largeFilePath + commonUtil.separator + pDate;
                 File file = new File(pDirTempPath);
                 
                 if (!file.exists()) {
@@ -1586,6 +1594,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
 		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = uploadMailRootPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
+		
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
 		int fileCnt = doc.getElementsByTagName("ROW").getLength();
@@ -1710,7 +1726,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
-			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
             File file = new File(bigAttachFolderPath);
             
             if (!file.exists()) {
@@ -2407,9 +2423,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (totalFileSize > changeSize) { // 대용량첨부의 경우
 			logger.debug("In case of big attachment.");
 			
+			// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+			String largeFilePath = uploadMailRootPath;
+			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+			if (useSeparatedLargeFileFolder.equals("YES")) {
+				largeFilePath += commonUtil.separator + "largeFile";
+			}
+			
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
-			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
 			File file = new File(bigAttachFolderPath);
 			
 			if (!file.exists()) {
@@ -2640,13 +2664,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             }
             
             String realPath = commonUtil.getRealPath(request);
-            String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-            pDirPath = realPath + pDirPath;
+            String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
             
             if (pBigFileUpload.equals("Y")) {
+            	// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+            	String largeFilePath = pDirPath;
+    			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+    			if (useSeparatedLargeFileFolder.equals("YES")) {
+    				largeFilePath += commonUtil.separator + "largeFile";
+    			}
+            	
                 // 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
                 pDate = EgovDateUtil.getToday("");
-                pDirTempPath = pDirPath + commonUtil.separator + pDate;
+                pDirTempPath = largeFilePath + commonUtil.separator + pDate;
             } else {
                 // 일반 첨부파일인 경우에는 tempFileUpload 폴더를 사용한다.
                 pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
@@ -4862,10 +4893,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
-		pDirPath = realPath + pDirPath;
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
+		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = pDirPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
 		
 		File templistFile = new File(xmlPath);
 		if (templistFile.exists()) {
@@ -4891,7 +4929,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					if (nodeList.item(i).getFirstChild().getTextContent().equals(realFileNM)) {
 						String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
-						String pRealFilePath = pDirPath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
+						String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
 						File bigAttachFile = new File(pRealFilePath);
 						
 						if (bigAttachFile.exists()) {

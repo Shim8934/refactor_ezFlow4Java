@@ -2,24 +2,24 @@ package egovframework.ezEKP.ezWebFolder.vo;
 
 public class FolderFileVO {
 
-	String seqId;
-	String userId;
-	String userType;
-	String folderFileId;
-	String folderFileType;
-	String createId;
-	String createDate;
-	String tenantId;
+	private String seqId;
+	private String userId;
+	private String userType;
+	private String folderFileId;
+	private String folderFileType;
+	private String createId;
+	private String createDate;
+	private String tenantId;
 	
-	String folderfileName;
-	String filePath;
-	String fileSize;
-	String typeId;
-	String folderType;
-	String folderPath;
-	String useStatus;
-	String ownerId;
-	String companyId;
+	private String folderfileName;
+	private String filePath;
+	private long fileSize;
+	private String typeId;
+	private String folderType;
+	private String folderPath;
+	private String useStatus;
+	private String ownerId;
+	private String companyId;
 	
 	public String getFolderfileName() {
 		return folderfileName;
@@ -37,11 +37,11 @@ public class FolderFileVO {
 		this.filePath = filePath;
 	}
 
-	public String getFileSize() {
+	public long getFileSize() {
 		return fileSize;
 	}
 
-	public void setFileSize(String fileSize) {
+	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
 
