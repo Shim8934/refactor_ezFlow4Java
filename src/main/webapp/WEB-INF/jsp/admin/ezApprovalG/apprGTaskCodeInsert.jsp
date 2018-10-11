@@ -533,7 +533,9 @@
 
 		    //2016-07-18 이효진 추가.
 		    function btnSelPCode_onclick_Complete(retValue){
-		    	document.getElementById("tbSubCode").value = retValue;
+		    	if (retValue != "CANCEL") {
+			    	document.getElementById("tbSubCode").value = retValue;
+		    	}
 		    }
 	
 		    window.oncontextmenu = function () {

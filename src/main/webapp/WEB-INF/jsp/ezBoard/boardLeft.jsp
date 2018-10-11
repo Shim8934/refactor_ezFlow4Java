@@ -226,6 +226,7 @@
 		
 		    function GetBoardTreeByPath(pBoardID, pBoardGroupID) {
 		    }
+		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {		// 일반 게시판 하위 게시판 확장
 		        var xmlRtn = createXmlDom();
 		        var TreeIdx = pNodeID;
@@ -246,22 +247,26 @@
 		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
-		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		             
-		        for(var i=0; i<title2.length; i++) {
-		        	var spanW = 152 - (18 * nodeLevel);	
-		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
-		        	
-		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
-		        	if (spanW < 0) {
-						 spanW = 0;
-					 }
-		        	title3[0].style.width = spanW + 'px';
-		        	title3[0].style.textOverflow = 'ellipsis';
-		        	title3[0].style.overflow = 'hidden';
+		        
+		        /* 2018-10-11 홍승비 - 접근권한 등의 문제로 트리노드를 확장할 수 없는 경우에는 건너뛰도록 수정 */
+		        if (typeof(title2[0]) != "undefined") {
+			        var nodeLevel = title2[0].getAttribute("nodelevel");
+			        for(var i=0; i<title2.length; i++) {
+			        	var spanW = 152 - (18 * nodeLevel);
+			        	title3 = title2[i].getElementsByClassName("node_normal");
+			        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+			        	
+			        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+			        	if (spanW < 0) {
+							 spanW = 0;
+						 }
+			        	title3[0].style.width = spanW + 'px';
+			        	title3[0].style.textOverflow = 'ellipsis';
+			        	title3[0].style.overflow = 'hidden';
+			        }
 		        }
 		    }
+		    
 		    function TreeCtrl_onNodeClickNew(pNodeID, pTreeID) {
 		        try {
 		            var treeNode = new TreeNode();

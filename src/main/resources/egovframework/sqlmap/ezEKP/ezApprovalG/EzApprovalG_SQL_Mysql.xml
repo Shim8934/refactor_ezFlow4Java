@@ -5693,6 +5693,8 @@
 			AND 
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
 			AND 
+				TBL_CABINETCLASS.TERMINATEFLAG = '0'
+			AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 			AND
 				TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
@@ -18703,7 +18705,7 @@
 		  		  </isNotEmpty>
 		  		  <isNotEmpty property="taskCode">
 		  		  	  AND 
-		  		  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+		  		  	  		TBL_CABINETCLASS.TaskCode IN ( $taskCode$ )
 		  		  </isNotEmpty>
 		  		  <isNotEmpty property="sProduceYear">
 		  		  	  AND 
@@ -19005,7 +19007,7 @@
 	  </isNotEmpty>
 	  <isNotEmpty property="taskCode">
 	  	  AND 
-	  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+	  	  		TBL_CABINETCLASS.TaskCode IN ( $taskCode$ )
 	  </isNotEmpty>
 	  <isNotEmpty property="sProduceYear">
 	  	  AND 
