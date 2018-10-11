@@ -18770,7 +18770,7 @@
 		  		  </isNotEmpty>
 		  		  <isNotEmpty property="taskCode">
 		  		  	  AND 
-		  		  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+		  		  	  		TBL_CABINETCLASS.TaskCode IN ( $taskCode$ )
 		  		  </isNotEmpty>
 		  		  <isNotEmpty property="sProduceYear">
 		  		  	  AND 
@@ -19087,7 +19087,7 @@
 	  </isNotEmpty>
 	  <isNotEmpty property="taskCode">
 	  	  AND 
-	  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+	  	  		TBL_CABINETCLASS.TaskCode IN ( $taskCode$ )
 	  </isNotEmpty>
 	  <isNotEmpty property="sProduceYear">
 	  	  AND 

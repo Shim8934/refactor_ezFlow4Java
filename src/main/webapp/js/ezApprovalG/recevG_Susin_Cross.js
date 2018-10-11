@@ -3033,6 +3033,7 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
