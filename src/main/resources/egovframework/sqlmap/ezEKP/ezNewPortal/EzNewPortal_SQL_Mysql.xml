@@ -61,6 +61,7 @@
 <result property="answer8"              column="ANSWER8" />
 <result property="answer9"              column="ANSWER9" />
 <result property="answer10"             column="ANSWER10" />
+</resultMap>
 <resultMap class="ThemeInfoVO" id="ThemeInfoVO">
 <result property="themeId" 					column="THEME_ID" />
 <result property="themeName" 				column="THEME_NAME" />
