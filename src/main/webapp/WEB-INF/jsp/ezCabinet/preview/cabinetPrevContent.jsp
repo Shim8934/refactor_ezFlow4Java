@@ -82,15 +82,16 @@
 							
 							if ((moduleName == "apprv" || moduleName == "mapprv") && attachList[i]["filePath"].indexOf("openAttachView") != -1) {
 								liElmt.setAttribute("onclick", attachList[i]["filePath"]);
+								spanChild.textContent  = attachList[i]["fileName"];
 							}
 							else {
 								liElmt.onclick = (function(name, path) {return function() {downloadFileAttach(name, path);}; })(attachList[i]["fileName"], attachList[i]["filePath"]);
+								spanChild.textContent  = attachList[i]["fileName"] + " (" + getFileSize(attachList[i]["fileSize"]) + ")";
 							}
 							
 							liSpanChild1.className = "cabSpanAttach";
 							liSpanChild2.className = "cabSpanAttach";
 							liSpanChild1.innerHTML = "<img src='/images/icon_adddownload.gif'>";
-							spanChild.textContent  = attachList[i]["fileName"] + " (" + getFileSize(attachList[i]["fileSize"]) + ")";
 							liSpanChild2.appendChild(spanChild);
 							liElmt.appendChild(liSpanChild1);
 							liElmt.appendChild(liSpanChild2);
