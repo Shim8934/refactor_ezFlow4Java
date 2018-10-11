@@ -306,12 +306,10 @@
     	<div id="mainmenu">
         	<ul id="tb_Parent">
             	<li>
-                	<span onclick="favorite_Delete();">
-                    	<img src="/images/ImgIcon/delete.gif" style="margin-top: -2px;" /><spring:message code="ezBoard.t89" /></span>
+                	<span onclick="favorite_Delete();"><spring:message code="ezBoard.t89" /></span>
             	</li>
             	<li>
-                	<span onclick="favorite_reload()">
-                    	<img src="/images/ImgIcon/recur.gif" style="margin-top: -2px;" /><spring:message code="ezBoard.t205" /></span>
+                	<span onclick="favorite_reload()"><spring:message code="ezBoard.t205" /></span>
             	</li>
             	<li>
                 	<span onclick="Priority_UP()">

@@ -26,6 +26,7 @@
 	                window.focus();
 	            };
 	        }
+	        var orgCompanyID;
 	        var ReturnFunction;
 	        window.onload = function () {
 	            try {
@@ -40,6 +41,7 @@
 	            }                            
 	            pDocID = dialogArguments[0];
 	            pDisplay = dialogArguments[1];
+	            orgCompanyID = dialogArguments[2];
 	
 	            getEndOpinionInfo();
 	            DisplayFirstOpinionInfo();
@@ -76,7 +78,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getEndOpinionInfo.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);

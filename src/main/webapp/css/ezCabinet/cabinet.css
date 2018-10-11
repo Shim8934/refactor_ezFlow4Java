@@ -440,5 +440,7 @@
 .blankDiv img {width:205px; height:205px;}
 .blankDiv .blankMsg {font-size: 15px; font-weight: bold; margin: 15px 0px; padding: 0px; color: #656565; height: 25px; line-height: 25px;}
 .cabBlankMain {height: 83%; display: flex; align-items: center; justify-content: center;}
+.cabStore {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 2px; background-color: white; border: 1px solid #c3c3c3; height: 24px;}
+.cabStore span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: middle; height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .wide {width: 40% !important;} .wide2 {width: 84% !important;} .overfl {white-space: normal !important;} .tblFileInf tr td, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {line-height: 21px !important;} }
