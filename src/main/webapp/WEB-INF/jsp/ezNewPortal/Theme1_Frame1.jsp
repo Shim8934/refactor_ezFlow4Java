@@ -48,25 +48,29 @@
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
+			var portletName = portletOrder[i].portletName;
 			
-			(function (portletId, portletUrl) {
+			(function (portletId, portletUrl, portletName) {
 				$.ajax({
 					type : "POST",
 					dataType : "html",
-					data : {"portletId" : portletId},
+					data : {"portletId" : portletId, "portletName" : portletName},
 					url : portletUrl,
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);
 						eventSetting(portletId);
 					}
 				});
-			}(portletId, portletUrl));
+			}(portletId, portletUrl, portletName));
 		}
 		
 		//ajax로 count 불러오기
 		getCountSetting();
 		
 		$("#personalEnv").on("click", viewPersonalEnv);
+		
+		$(".portlet_area").sortable();
+		$(".portlet_area").disableSelection();
 	});
 	
 	function eventSetting(portletId) {

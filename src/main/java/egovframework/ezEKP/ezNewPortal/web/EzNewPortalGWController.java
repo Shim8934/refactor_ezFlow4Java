@@ -1367,11 +1367,6 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
-			int portletId = Integer.parseInt(request.getParameter("portletId"));
-			String portletLang = info.getLang();
-			
-			//포틀릿 정보 가져오기
-			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
 			
 			//deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -1381,7 +1376,6 @@ public class EzNewPortalGWController {
 
 			JSONObject data = new JSONObject();
 			data.put("voteCount", voteCount);
-			data.put("portletName", portlet.getPortletName());
 			
 			if (voteCount != 0) {
 				//투표 정보 가져오기

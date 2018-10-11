@@ -144,8 +144,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("qstId", data.get("qstId"));
 			model.addAttribute("pollAnswer", data.get("pollAnswer"));
 			model.addAttribute("pollAnswerCount", data.get("pollAnswerCount"));
-			model.addAttribute("portletName", data.get("portletName"));
 		}
+		
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		logger.debug("portalVotePortlet End");
 		return "/ezNewPortal/portlets/votePortlet";
