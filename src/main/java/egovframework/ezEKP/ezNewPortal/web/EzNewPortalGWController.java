@@ -1435,7 +1435,7 @@ public class EzNewPortalGWController {
 			int portletId = Integer.parseInt(request.getParameter("portletId")); //포토게시판의 포틀릿 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
-			String portletLang = info.getLang(); //변경필요
+			String portletLang = info.getLang();
 			String deptPath = info.getDeptPathCode();
 			deptPath += "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
@@ -1464,6 +1464,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

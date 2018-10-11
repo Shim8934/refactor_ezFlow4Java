@@ -340,6 +340,7 @@ ORDER BY
 
 <!-- 회사 포틀릿 순서 불러오기 -->
 <select id="ezNewPortal.getPortletOrderComp" parameterClass="Map" resultMap="PortletOrderVO">
+<isNull property="order">
 <![CDATA[
 SELECT
 	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL
@@ -366,6 +367,27 @@ AND
 ORDER BY
 	A.PORTLET_ORDER
 ]]>
+</isNull>
+<isNotNull property="order">
+<![CDATA[
+SELECT DISTINCT
+	A.PORTLET_ID, A.DEFAULT_ORDER AS PORTLET_ORDER, B.PORTLET_NAME, A.PORTLET_URL
+FROM	
+	tbl_portal_portlet A
+JOIN
+	TBL_PORTAL_PORTLET_NAME B
+ON
+	A.PORTLET_ID = B.PORTLET_ID
+WHERE
+	B.PORTLET_LANG = #portletLang#
+AND
+	B.TENANT_ID = 99
+AND
+	B.COMPANY_ID = ''
+ORDER BY
+	A.DEFAULT_ORDER;
+]]>
+</isNotNull>
 </select>
 
 <!-- 포틀릿 정보 불러오기 -->
@@ -395,6 +417,10 @@ ON
 	B.PORTLET_ID = C.PORTLET_ID
 AND
 	B.MENU_ID = C.MENU_ID
+AND
+	B.COMPANY_ID = C.COMPANY_ID
+AND
+	B.TENANT_ID = C.TENANT_ID
 AND
 	C.PORTLET_LANG = #portletLang#
 WHERE

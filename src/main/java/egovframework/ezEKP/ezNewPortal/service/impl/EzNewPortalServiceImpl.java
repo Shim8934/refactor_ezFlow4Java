@@ -128,7 +128,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		return ezNewPortalDAO.getPortletOrderComp(map);
+		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
+		
+		if (portletOrderComp == null || portletOrderComp.size() == 0) {
+			map.put("order", "default");
+			portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
+		}
+		
+		return portletOrderComp;
 	}
 	
 
