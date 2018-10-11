@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -130,6 +131,28 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getPortletOrderComp(map);
 	}
 	
+
+	@SuppressWarnings("null")
+	@Override
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		UserPortalSettingVO userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+		
+		if (userPortalSetting == null) {
+			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+			
+			if (userPortalSetting == null) {
+				userPortalSetting.setUsedFrame(1);
+				userPortalSetting.setUsedTheme(1);
+			}
+		}
+		
+		return userPortalSetting;
+	}
 	
 	/**
 	 * 이효진

@@ -109,7 +109,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/settingInfo/users/" + userId;
-		
+		String returnUrl = "/ezNewPortal/";
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
@@ -128,9 +128,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("scheduleCount", data.get("scheduleCount"));
 			model.addAttribute("approvalCount", data.get("approvalCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
+			String usedTheme = data.get("usedTheme").toString();
+			String usedFrame = data.get("usedFrame").toString();
+			returnUrl += "Theme" + usedTheme + "_Frame" + usedFrame;
 		}
 		
 		logger.debug("portalMainPage End");
-		return "/ezNewPortal/newPortalPortalPage";
+		return returnUrl;
 	}
 }
