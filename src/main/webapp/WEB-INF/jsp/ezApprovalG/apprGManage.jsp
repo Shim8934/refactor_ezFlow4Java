@@ -1095,6 +1095,8 @@
 		    function passValLeftMenu(strVal) {
 		        pageNum = 1;
 		        SQLPARADATA = "";
+		        //2018-10-11 배현상, 검색조건인 SearchCont 초기화 작업이 미처리되있어 상단에 다른탭에서 검색한 날짜가 적용되있는 오류 수정
+		        SearchCond = new Array();
 		        pListTypeValue = strVal;
 		        window.parent.frames["left"].pListTypeValue = strVal;
 		        if (pListTypeValue == "7")

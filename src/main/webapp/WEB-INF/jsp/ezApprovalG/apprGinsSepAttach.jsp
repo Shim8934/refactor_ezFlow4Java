@@ -489,6 +489,11 @@
 			            totalRows[i].cells[0].innerHTML = i + 1;
 			        }
 			    } 
+			    
+			    /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+				if(totalRows.length == 0) {
+					setDeleteRow("pLvList");
+			    }
 		    }
 		    
 		    function btnOK_onclick() {
