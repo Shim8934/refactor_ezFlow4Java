@@ -912,7 +912,7 @@ function InitlvAprLine() {
     }
 }
 
-function RemoveDoc(pDocID) {
+function RemoveDoc(pDocID, orgCompanyID) {
 	var result = "";
 	
     $.ajax({
@@ -922,7 +922,8 @@ function RemoveDoc(pDocID) {
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
 				docID : pDocID,
-				field  : "MUST"
+				field  : "MUST",
+				orgCompanyID : orgCompanyID 
 				},
 		success: function(xml){
 			result = xml;

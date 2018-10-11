@@ -278,4 +278,24 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.createTblIPAccessIP");
 		}
 	}
+	
+	public void addUserMasterManualFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMasterManualFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster MANUAL_FLAG column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterManualFlag");
+		}
+	}
+	
+	public void addDeptMasterManualFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkDeptMasterManualFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_deptmaster MANUAL_FLAG column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addDeptMasterManualFlag");
+		}
+	}
 }

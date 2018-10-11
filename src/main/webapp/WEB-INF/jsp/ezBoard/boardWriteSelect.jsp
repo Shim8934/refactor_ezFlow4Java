@@ -80,8 +80,9 @@
 		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
 		                break;
 		            case "6":
-		            	alert("<spring:message code='ezBoard.garm02' />");
-		            	return;
+		            	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, pUrl);
+			            return;
 		            	break;
 		            default:
 		                var feature = GetOpenWindowfeature(765, 820);
