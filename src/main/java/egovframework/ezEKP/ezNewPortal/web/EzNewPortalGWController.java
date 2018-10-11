@@ -184,6 +184,8 @@ public class EzNewPortalGWController {
 			int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset);
 			
 			//오늘 일정 개수 불러오기
+			String startDate = nowDate + " 00:00:00";
+			String endDate = nowDate + " 23:59:59";
 			String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
 			String endTime = commonUtil.getDateStringInUTC(nowDate + " 23:59:59", offset, true);
 			String indiList = "";
@@ -262,7 +264,7 @@ public class EzNewPortalGWController {
 			}
 			
 			pidList += pidListSub;
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, nowDate, nowDate, "", offsetMin, "",tenantId, companyId, userId);
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "",tenantId, companyId, userId);
 			int scheduleCount = sList.size();
 			
 			
@@ -308,6 +310,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
