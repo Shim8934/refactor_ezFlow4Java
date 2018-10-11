@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -63,6 +64,16 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	//포틀릿 정보 가져오기
 	public PortletInfoVO getCompanyPortletInfo(Map<String, Object> map) {
 		return (PortletInfoVO) select("ezNewPortal.getCompanyPortletInfo", map);
+	}
+	
+	//사용자 포탈 설정 가져오기 (테마, 프레임)
+	public UserPortalSettingVO getUserPortalSetting(Map<String, Object> map) {
+		return (UserPortalSettingVO) select("ezNewPortal.getUserPortalSetting", map);
+	}
+
+	//사용자 포탈 설정 없을 때 회사 포탈 설정을 사용자 포탈설정으로 가져오기
+	public UserPortalSettingVO getCompPortalSetting(Map<String, Object> map) {
+		return (UserPortalSettingVO) select("ezNewPortal.getCompPortalSetting", map);
 	}
 	
 	/**

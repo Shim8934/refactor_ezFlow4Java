@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -141,6 +142,9 @@ public class EzNewPortalGWController {
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
+			
+			//사용자 설정 테마/프레임 가져오기
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			
 			//사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
@@ -284,6 +288,8 @@ public class EzNewPortalGWController {
 			}
 			
 			JSONObject data = new JSONObject();
+			data.put("usedTheme", userThemeSetting.getUsedTheme());
+			data.put("usedFrame", userThemeSetting.getUsedFrame());
 			data.put("portletOrder", portletOrder);
 			data.put("sliderList", sliderList);
 			data.put("userName", userName);

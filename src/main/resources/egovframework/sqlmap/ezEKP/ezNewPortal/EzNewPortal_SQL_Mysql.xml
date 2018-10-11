@@ -6,21 +6,23 @@
 <typeAlias alias="PollAnswerVO" type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
 <typeAlias alias="BoardItemVO" type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
 <typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
+<typeAlias alias="ThemeInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO"/>
+<typeAlias alias="UserPortalSettingVO" type="egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
-<result property="qstId" 			column="ID" />
-<result property="title" 			column="TITLE" />
+<result property="qstId" 					column="ID" />
+<result property="title" 					column="TITLE" />
 </resultMap>
 <resultMap class="PollAnswerVO" id="PollAnswerVO">
-<result property="qstId" 				column="QST_ID" />
-<result property="votesNumber" 			column="VOTES_NUM" />
-<result property="content"				column="CONTENT"/>
+<result property="qstId" 					column="QST_ID" />
+<result property="votesNumber" 				column="VOTES_NUM" />
+<result property="content"					column="CONTENT"/>
 </resultMap>
 <resultMap class="BoardItemVO" id="BoardItemVO">
-<result property="itemID" 				column="ITEMID" />
-<result property="title" 				column="TITLE" />
-<result property="boardID" 				column="BOARDID" />
-<result property="filePath" 			column="FILEPATH" />
+<result property="itemID" 					column="ITEMID" />
+<result property="title" 					column="TITLE" />
+<result property="boardID" 					column="BOARDID" />
+<result property="filePath" 				column="FILEPATH" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletOrderVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -44,6 +46,18 @@
 <result property="boardID" 				column="BOARDID" />
 <result property="title" 				column="TITLE" />
 <result property="guBun" 				column="GUBUN" />
+</resultMap>
+<resultMap class="ThemeInfoVO" id="ThemeInfoVO">
+<result property="themeId" 					column="THEME_ID" />
+<result property="themeName" 				column="THEME_NAME" />
+<result property="themeContent" 			column="THEME_CONTENT" />
+<result property="themeUsed" 				column="THEME_USED" />
+<result property="themeDefault" 			column="THEME_DEFAULT" />
+</resultMap>
+<resultMap class="UserPortalSettingVO" id="UserPortalSettingVO">
+<result property="userId" 					column="USER_ID" />
+<result property="usedTheme" 				column="USED_THEME" />
+<result property="usedFrame" 				column="USED_FRAME" />
 </resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
@@ -377,4 +391,45 @@ AND
 				0, 5
 		]]>
 	</select>
+
+<!-- 사용자 포탈 설정 가져오기(테마, 프레임) -->
+<select id="ezNewPortal.getUserPortalSetting" parameterClass="Map" resultMap="UserPortalSettingVO">
+<![CDATA[
+	SELECT	
+		USER_ID, USED_THEME, USED_FRAME
+	FROM
+		TBL_PORTAL_THEME_USER
+	WHERE
+		USER_ID = #userId#
+	AND
+		COMPANY_ID = #companyId#
+	AND
+		TENANT_ID = #tenantId#
+]]>
+</select>
+
+<!-- 사용자 포탈 설정 없을 때 회사 포탈 설정 가져오기 -->
+<select id="ezNewPortal.getCompPortalSetting" parameterClass="Map" resultMap="UserPortalSettingVO">
+<![CDATA[
+	SELECT
+		#userId# AS USER_ID,
+		THEME_ID AS USED_THEME,
+		(SELECT FRAME_ID 
+			FROM TBL_PORTAL_FRAME_COMP
+			WHERE COMPANY_ID = #companyId#
+			AND TENANT_ID = #tenantId#
+			AND FRAME_DEFAULT = 'Y'
+			AND THEME_ID = (SELECT THEME_ID FROM TBL_PORTAL_THEME_COMP WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId# AND THEME_DEFAULT = 'Y')) AS USED_FRAME
+	FROM
+		TBL_PORTAL_THEME_COMP
+	WHERE
+		COMPANY_ID = #companyId#
+	AND
+		TENANT_ID = #tenantId#
+	AND
+		THEME_DEFAULT = 'Y'
+	LIMIT
+		1;
+]]>
+</select>
 </sqlMap>
