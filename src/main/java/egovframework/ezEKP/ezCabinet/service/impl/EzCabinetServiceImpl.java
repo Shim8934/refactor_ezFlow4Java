@@ -2041,7 +2041,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			String photoPath = boardPhoto.getFilePath();
 			int position     = photoPath.lastIndexOf("/");
 			String realName  = photoPath.substring(position + 1);
-			realName         = realName.substring(2);
+			
+			if (realName.startsWith("s_")) {
+				realName = realName.substring(2);
+			}
+			
 			String firstPath = photoPath.substring(0, position + 1);
 			
 			photo.put("fileName", boardPhoto.getImageName());

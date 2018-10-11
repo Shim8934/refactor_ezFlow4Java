@@ -1962,7 +1962,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.savePhotoBoard(dstCabinetId, realPath,  title, summary, boardTitle, mode, createUser, createDate, descript, boardId, itemId, locale, userInfo);
+			result           = cabinetService.savePhotoBoard(dstCabinetId, realPath, title, summary, boardTitle, mode, createUser, createDate, descript, boardId, itemId, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
