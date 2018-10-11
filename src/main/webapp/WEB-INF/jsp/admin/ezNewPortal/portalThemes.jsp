@@ -27,32 +27,46 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript">
-		getCompanies();
-		
-		document.getElementById("ListCompany").addEventListener('change', function() {
-			selectCompanyID();
-		});
-		
-		function getCompanies() {
-			$.ajax({
-   				type : "post",
-   				dataType : "json",
-   				url : "/admin/ezNewPortal/getCompanys.do",
-   				success: function(result){
-   					element = document.getElementById("ListCompany");
-   					
-   					result.list.forEach(function(vo, index) {
-//    							element.innerHTML = "<option value=" + "\"Replace2HTML('${item.cn}')" +"/>" + ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-//     						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-   					});
-//    					document.getElementById("ListCompany")
-   					//userCompany 자기회사
-   					//list 회사목록
-   					
-   				}
-   			});
-		}
+		var getCompanies = function() {
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getCompanies.do', true);
 	
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var result = JSON.parse(request.responseText);
+					
+					var userCompany = result.userCompany;
+					var companyList = result.list;
+					var companiesHTML = "";
+					
+					companyList.forEach(function (item, index) {
+						companiesHTML += "<option value=" + item.cn + ((item.cn == userCompany) ? ' selected>' : '>') + item.displayName + "</option>";
+					});
+					
+					document.getElementById("ListCompany").innerHTML = companiesHTML;
+					
+					document.getElementById("ListCompany").addEventListener('change', function() {
+						selectCompanyID();
+					});
+				} else {
+					// We reached our target server, but it returned an error
+				}
+			};
+	
+			request.onerror = function() {
+			  // There was a connection error of some sort
+			};
+			
+			request.send();
+		}
 		
+		var selectCompanyID = function () {
+// 			회사변경 시 테마 가져오기
+		}
+		
+		
+		
+		//load
+		getCompanies();
 	</script>
 </html>
