@@ -59,13 +59,13 @@ public class OrganDeptVO {
 	private String updateDT;
 	/** dept*/
 	private String type;
-	
 	/** 현재 시간*/
 	private String nowDate;
-	
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;
-	
+    /** 수동으로 추가한 부서 구분(Y/N) */
+	private String manualFlag;
+    
 	public String getCn() {
 		return cn;
 	}
@@ -251,6 +251,12 @@ public class OrganDeptVO {
 	}
 	public void setDept_Cd_Path(String dept_Cd_Path) {
 		this.dept_Cd_Path = dept_Cd_Path;
+	}
+	public String getManualFlag() {
+		return manualFlag;
+	}
+	public void setManualFlag(String manualFlag) {
+		this.manualFlag = manualFlag;
 	}
 	
 }

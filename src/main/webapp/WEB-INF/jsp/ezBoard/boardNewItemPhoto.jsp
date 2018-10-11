@@ -422,12 +422,27 @@
 		        xmlhttp = null;
 		        xmldom = null;
 		    }
-		
+	        
+	        /* 2018-10-11 홍승비 - 이미지파일 확장자체크 추가 */
 		    function imgtemp_onclick() {
 		        if (document.form.file1.value != "") {
 		            var fd = new FormData();
+		            
 		            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
-		                fd.append("file1", document.getElementById("form").file1.files[i]);
+		            	var file1val = document.getElementById("file1").files[i].name;
+				        var exIndex = file1val.lastIndexOf('.');
+						var extension = file1val.substring(exIndex+1, file1val.lenght);
+				        var check = false;
+				        check = compareExtension(check, extension);
+				        
+				        if (!check) {
+				        	document.getElementById("file1").files[i] = "";
+				        	alert("<spring:message code ='ezCommunity.lhj03' />");
+				        	return;
+				        }
+				        else {
+		                	fd.append("file1", document.getElementById("form").file1.files[i]);
+				        }
 		            }
 		            fd.append("mode", document.getElementById("mode").value);
 		            isfileup = true;
@@ -751,6 +766,18 @@
 		        }
 		        xmlhttp_boardinfo = null;
 		    }
+		    
+		    /* 2018-10-11 홍승비 - 이미지파일 확장자체크 추가 */
+		    function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">
