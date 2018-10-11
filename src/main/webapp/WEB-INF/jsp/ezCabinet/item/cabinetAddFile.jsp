@@ -66,8 +66,8 @@
 					storeBttn.onclick       = function(e) {saveItem();};
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
-					var listBttns           = cabdivBttnElmt.children;
-					/* listBttns[0].onclick    = function(e) {saveItem();};
+					/*var listBttns           = cabdivBttnElmt.children;
+					listBttns[0].onclick    = function(e) {saveItem();};
 					listBttns[0].onclick    = function(e) {closeWindow();}; */
 					
 					var fileUploadBttn      = document.getElementById("fileBttn");
