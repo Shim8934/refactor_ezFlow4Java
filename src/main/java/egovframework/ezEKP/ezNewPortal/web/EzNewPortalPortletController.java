@@ -203,10 +203,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
 		
 		String buJaeInfo = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		
 		model.addAttribute("portletId", portletId);
+		model.addAttribute("portletName", portletName);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("buJaeInfo", buJaeInfo);
@@ -264,6 +266,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			
 			model.addAttribute("hour", data.get("hour"));
 			model.addAttribute("day", data.get("day"));
+			model.addAttribute("week", data.get("week"));
 			model.addAttribute("month", data.get("month"));
 			model.addAttribute("other", data.get("other"));
 		}

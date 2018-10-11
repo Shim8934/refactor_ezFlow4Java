@@ -15,7 +15,7 @@
 		<div class="layDIV">
 			<dl class="portlet_title">
 				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
-				<dt class="portletText"></dt>
+				<dt class="portletText"><c:out value = "${portletName}" /></dt>
 				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 			</dl>
 			
