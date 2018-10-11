@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -1507,6 +1508,13 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			List<PersonalLightPollVO> list = new ArrayList<PersonalLightPollVO>();
+			list = ezNewPortalService.getPollPortletList(companyId, tenantId);
+			
+			LOGGER.debug("list:" + list.toString());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -47,6 +47,21 @@
 <result property="title" 				column="TITLE" />
 <result property="guBun" 				column="GUBUN" />
 </resultMap>
+<resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
+<result property="itemSeq"              column="ITEMSEQ" />
+<result property="pollTitle"            column="POLLTITLE" />
+<result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" />
+<result property="answer1"              column="ANSWER1" />
+<result property="answer2"              column="ANSWER2" />
+<result property="answer3"              column="ANSWER3" />
+<result property="answer4"              column="ANSWER4" />
+<result property="answer5"              column="ANSWER5" />
+<result property="answer6"              column="ANSWER6" />
+<result property="answer7"              column="ANSWER7" />
+<result property="answer8"              column="ANSWER8" />
+<result property="answer9"              column="ANSWER9" />
+<result property="answer10"             column="ANSWER10" />
+</resultMap>
 <resultMap class="ThemeInfoVO" id="ThemeInfoVO">
 <result property="themeId" 					column="THEME_ID" />
 <result property="themeName" 				column="THEME_NAME" />
@@ -97,6 +112,32 @@ ORDER BY
 	A.PARENTWRITEDATE DESC, 
 	A.UPPERITEMIDTREE ASC
 LIMIT #limit#
+]]>
+</select>
+
+<!-- 설문조사 리스트 출력 -->
+<select id="ezNewPortal.getPollPortletList" parameterClass="Map" resultClass="PersonalLightPollVO">
+<![CDATA[
+SELECT 
+	ITEMSEQ,
+	POLLTITLE,
+    ANSWER1,
+    ANSWER2,
+    ANSWER3,
+    ANSWER4,
+    ANSWER5,
+    ANSWER6,
+    ANSWER7,
+    ANSWER8,
+    ANSWER9,
+    ANSWER10
+FROM 
+	TBL_PS_LIGHTPOLL
+WHERE 
+	TENANT_ID = #tenantId#
+ORDER BY 
+	ITEMSEQ DESC
+LIMIT 1
 ]]>
 </select>
 

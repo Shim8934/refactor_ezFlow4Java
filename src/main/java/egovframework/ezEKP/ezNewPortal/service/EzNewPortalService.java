@@ -6,13 +6,18 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
 public interface EzNewPortalService {
 
+	/**
+	 * 박종균
+	 * */
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception;
+	public List<PersonalLightPollVO> getPollPortletList(String companyId, int tenantId) throws Exception;
 	/**
 	 * 유은정
 	 */

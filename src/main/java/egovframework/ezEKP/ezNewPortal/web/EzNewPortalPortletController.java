@@ -152,11 +152,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 설문조사
 	 */
 	@RequestMapping(value = "/ezNewPortal/pollPortlet.do")
 	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/poll";
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+		} 
 		
 		return "/ezNewPortal/portlets/pollPortlet";
 	}
