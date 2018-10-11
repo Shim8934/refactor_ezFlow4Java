@@ -8,8 +8,6 @@
 		<title>favoriteFormsPortlet</title>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
-		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
-		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
 	</head>
 	<body>
 		<div class="layDIV">
