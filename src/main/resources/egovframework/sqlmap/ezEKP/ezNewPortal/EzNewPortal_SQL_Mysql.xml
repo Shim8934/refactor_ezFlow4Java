@@ -406,6 +406,7 @@ AND
 ]]>
 </select>
 
+<!-- 이효진-->
 	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
@@ -430,6 +431,35 @@ AND
 				FORMORDER
 			LIMIT
 				0, 5
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalStatistics" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -6 HOUR))=1 THEN 1 END) AS hour,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -1 DAY) AND DATE_ADD(now(), INTERVAL -6 HOUR) > DOCINFO.STARTDATE)=1 THEN 1 END) AS day,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -1 WEEK) AND DATE_ADD(now(), INTERVAL -1 DAY) > DOCINFO.STARTDATE)=1 THEN 1 END) AS week,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -1 MONTH) AND DATE_ADD(now(), INTERVAL -1 WEEK) > DOCINFO.STARTDATE)=1 THEN 1 END) AS month,
+	            COUNT(CASE WHEN (DATE_ADD(now(), INTERVAL -1 MONTH) > DOCINFO.startdate)=1 THEN 1 END) AS other
+			FROM 
+				TBL_APRDOCINFO AS DOCINFO
+			JOIN 
+				TBL_APRLINEINFO AS LINEINFO
+			ON 
+				DOCINFO.docid = LINEINFO.docid
+			WHERE 
+				DOCINFO.tenant_id = #tenantId#
+			AND 
+				DOCINFO.companyid = #companyId#
+			AND 
+				LINEINFO.aprmemberid = #userId#  
+			AND 
+				DOCINFO.functiontype = '002'      
+			AND 
+				LINEINFO.aprstate = '002'         
+			AND 
+				DOCINFO.docstate not in ('015');
 		]]>
 	</select>
 

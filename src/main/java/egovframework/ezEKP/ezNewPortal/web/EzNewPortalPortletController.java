@@ -219,7 +219,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/**
 	 * 포틀릿 - 양식즐겨찾기 리스트 조회
 	 */
-	@RequestMapping(value = "/ezNewPortal/getfavoriteForms.do")
+	@RequestMapping(value = "/ezNewPortal/getFavoriteForms.do")
 	public String getFavoriteForms(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getFavoriteForms started.");
 		
@@ -260,9 +260,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			JSONArray resultList = (JSONArray) data.get("resultList");
 			
-			model.addAttribute("resultList", resultList);
+			model.addAttribute("hour", data.get("hour"));
+			model.addAttribute("day", data.get("day"));
+			model.addAttribute("month", data.get("month"));
+			model.addAttribute("other", data.get("other"));
 		}
 		
 		logger.debug("getFavoriteForms ended.");

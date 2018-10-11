@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -35,6 +36,7 @@ public interface EzNewPortalService {
 	 */
 	
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception;
+	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	/** -------------------- */
 	
 }

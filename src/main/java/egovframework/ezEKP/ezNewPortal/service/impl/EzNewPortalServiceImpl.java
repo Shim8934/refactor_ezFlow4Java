@@ -173,6 +173,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return list;
 	}
+	
+	@Override
+	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getApprovalStatistics started.");
+		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		Map<String, Object> result = ezNewPortalDAO.getApprovalStatistics(map);
+		
+		LOGGER.debug("getApprovalStatistics ended.");
+		
+		return result;
+	}
 	/** -------------------- */
 
 }

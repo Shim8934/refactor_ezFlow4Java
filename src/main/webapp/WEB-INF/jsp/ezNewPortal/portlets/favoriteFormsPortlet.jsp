@@ -56,6 +56,8 @@
 		
 		<script type="text/javascript">
 		//개똥이라 수정해야함 긁고 붙이고해서 돌아가게만 해놓음
+		
+			//즐겨찾기양식목록 조회
 			var getFavoriteForms = function() {
 				var request = new XMLHttpRequest();
 				request.open('POST', '/ezNewPortal/getFavoriteForms.do', true);
@@ -90,13 +92,47 @@
 				request.onerror = function() {
 				  // There was a connection error of some sort
 				};
-
-				var data = JSON.stringify({
-					"userId" : "${userInfo.id}"
-				});
 				
 				request.send();
 			}
+			
+			//결제통계 조회
+			var getApprovalStatistics = function() {
+				var request = new XMLHttpRequest();
+				request.open('POST', '/ezNewPortal/getApprovalStatistics.do', true);
+
+				request.onload = function() {
+					if (request.status >= 200 && request.status < 400) {
+						var result = JSON.parse(request.responseText);
+						
+						alert(result.hour);
+						alert(result.day);
+						
+						var statisticsHTML = "";
+						
+						/* for (var i = 0; i < 5; i++) {
+							statisticsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span>" + forms[i].formName + "</span></li>";
+						}
+						
+						document.getElementsByClassName('bookmark')[0].innerHTML = formsHTML
+						
+						Array.from(document.getElementsByClassName('bookmarkLi')).forEach(function(element) {
+							element.addEventListener('click', function() {
+								checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
+							});
+						}); */
+					} else {
+						// We reached our target server, but it returned an error
+					}
+				};
+
+				request.onerror = function() {
+				  // There was a connection error of some sort
+				};
+				
+				request.send();
+			}
+		
 		
 			var fraviteFormsPlus = function () {
 		    	if (!checkBujaeInfo('form')) {
@@ -241,6 +277,7 @@
 		    //로드되고나서
 		    document.getElementById('fraviteFormsPlus').addEventListener('click', fraviteFormsPlus);
 			getFavoriteForms();
+			getApprovalStatistics();
 		</script>
 	</body>
 </html>

@@ -92,6 +92,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<ApprGFormVO> getFavoriteForms(Map<String, Object> map) {
 		return (List<ApprGFormVO>) list("ezNewPortal.getFavoriteForms", map);
 	}
+	
+	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) {
+		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
+	}
 	/** -------------------- */
 	
 }
