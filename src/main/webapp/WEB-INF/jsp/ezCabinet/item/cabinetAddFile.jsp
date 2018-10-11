@@ -11,8 +11,8 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
 	<body class="popup cabAddMain">
-		<h1><spring:message code="ezCabinet.t67"/></h1>
-		
+		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
+		<div id="cabAddStore" class="cabStore"><span><spring:message code='ezCabinet.t14'/></span></div>
 		<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="divInfo">
@@ -39,7 +39,6 @@
 		</div>
 		
 		<div class="cabBttnDiv" id="cabAddBttn">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
@@ -62,12 +61,14 @@
 					cabinetId               = cabId;
 					document.onselectstart  = function () { return false;};
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
+					var storeBttn           = document.getElementById("cabAddStore");
 					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
+					storeBttn.onclick       = function(e) {saveItem();};
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
 					var listBttns           = cabdivBttnElmt.children;
-					listBttns[0].onclick    = function(e) {saveItem();};
-					listBttns[1].onclick    = function(e) {closeWindow();};
+					/* listBttns[0].onclick    = function(e) {saveItem();}; */
+					listBttns[0].onclick    = function(e) {closeWindow();};
 					
 					var fileUploadBttn      = document.getElementById("fileBttn");
 					fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
