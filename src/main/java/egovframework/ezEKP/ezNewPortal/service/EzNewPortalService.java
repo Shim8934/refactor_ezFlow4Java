@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -28,4 +29,6 @@ public interface EzNewPortalService {
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception;
 	/** -------------------- */
 	
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate);
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit);
 }

@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -143,4 +144,25 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	/** -------------------- */
 
+	@Override
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("nowDate", nowDate);
+		
+		return ezNewPortalDAO.getFavNewItemList(map);
+	}
+	
+	@Override
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("limit", limit);
+		
+		return ezNewPortalDAO.getFavItemList(map);
+	}
 }

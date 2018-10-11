@@ -341,41 +341,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 * 포들릿 - 즐겨찾기 리스트 불러오기
 	 */
 	@RequestMapping(value="/ezNewPortal/getFavoriteBoardList.do")
-	public String getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale, @ModelAttribute BoardVO boardVO) throws Exception {
+	public String getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		logger.debug("boardID : " + boardVO.getBoardId());
-    	logger.debug("boardType : " + boardVO.getBoardType());
-    	logger.debug("pageNum : " + boardVO.getPageNum());
-    	logger.debug("orderCell : " + boardVO.getOrderCell());
-    	logger.debug("orderOption : " + boardVO.getOrderOption());
     	
     	String userId = userInfo.getId();
-    	String type = "1";
-    	String boardId = boardVO.getBoardId();
-    	String boardType = boardVO.getBoardType();
-    	String mode = boardVO.getMode();
-    	String pageNum = String.valueOf(boardVO.getPageNum());
-    	String orderCell = boardVO.getOrderCell();
-    	String orderOption = boardVO.getOrderOption();
-    	
-    	if (boardVO.getType() != null && !boardVO.getType().equals("")) {
-    		type = boardVO.getType();
-    	}
+    	String boardId = request.getParameter("boardId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
-		param.put("type", type);
 		param.put("boardId", boardId);
-		param.put("boardType", boardType);
-		param.put("mode", mode);
-		param.put("pageNum", pageNum);
-		param.put("orderCell", orderCell);
-		param.put("orderOption", orderOption);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites" + userInfo.getId(), param, request, "get", null);		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
 		

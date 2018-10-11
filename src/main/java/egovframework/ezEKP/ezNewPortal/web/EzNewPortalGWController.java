@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -28,6 +29,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -35,6 +37,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -1189,7 +1192,7 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
-	/////포틀릿///////
+	/////포틀릿///////구해안
 	/**
 	 * 포탈개인화  G/W [GET] 포틀릿 - 게시판 즐겨찾기 포틀릿 조회
 	 */
@@ -1199,59 +1202,31 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet started.");
 		JSONObject result = new JSONObject();
 		
-		String userId = request.getParameter("userId");
-		String type = request.getParameter("type");
     	String boardId = request.getParameter("boardID");
-    	String boardType = request.getParameter("boardType");
-    	String mode = request.getParameter("mode");
-    	int pageNum = Integer.parseInt(request.getParameter("pageNum"));
-    	String orderCell = request.getParameter("orderCell");
-    	String orderOption = request.getParameter("orderOption");
-		
+		int limit = 5;
+    	
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			BoardVO boardVO = new BoardVO();
-			boardVO.setBoardId(boardId);
-			boardVO.setBoardType(boardType);
-			boardVO.setMode(mode);
-			boardVO.setPageNum(pageNum);
-			boardVO.setOrderCell(orderCell);
-			boardVO.setOrderOption(orderOption);
-			boardVO.setType(type);
-			boardVO.setLang(info.getLang());
-			boardVO.setTenantID(info.getTenantId());
+			
+			JSONObject data = new JSONObject();
+			
+			data.put("boardId", boardId);
 			
 			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
-    			boardVO.setBoardType("N");
-    			BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
-    			int boardCount = ezBoardService.getNewItemListCount(userInfo);
-    			int startRow = 1;
-    			int endRow = 0;
-    			int personalCount_ = boardConfigVO.getListCount();
     			
-    			startRow = (personalCount_ * (boardVO.getPageNum() - 1)) + 1;
-    			endRow = (personalCount_ * boardVO.getPageNum());
+    			List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""));
+				
+    			data.put("favNewList", favNewList);
+    			    			
+    		} else { // 일반게시판		
     			
-    			BoardListVO boardListVO = new BoardListVO();
-    			
-    			boardListVO.setUserID(userInfo.getId());
-    			boardListVO.setWriterCompanyID(userInfo.getCompanyID());
-    			boardListVO.setTenantID(userInfo.getTenantId());
-    			boardListVO.setStartRow(startRow);
-    			boardListVO.setEndRow(endRow);
-    			boardListVO.setTotalCount(boardCount);
-//    			boardListVO.setOrderBySub(orderOption1);
-//    			boardListVO.setOrderByMain(orderOption2);
-    			
-//    			result = getNewItemList(boardVO, userInfo);
-    		} else { // 일반게시판
-//    			result = getBoardListItem(boardVO, userInfo, type);
+    			List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit);
     		}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1280,10 +1255,12 @@ public class EzNewPortalGWController {
 			
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 			
+			JSONObject data = new JSONObject();
+			data.put("resultList", resultList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
-			result.put("resultList", resultList);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

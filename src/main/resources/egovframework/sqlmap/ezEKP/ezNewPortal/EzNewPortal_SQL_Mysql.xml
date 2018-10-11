@@ -351,30 +351,95 @@ AND
 ]]>
 </select>
 
-	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
-		<![CDATA[
-			SELECT
-				TBL_FORMINFO.*
-			FROM
-				TBL_FORMINFO
-			INNER JOIN
-				TBL_FORMUSERINFO
-			ON
-				TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
-			AND
-				TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
-			AND
-				TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
-			WHERE
-				TBL_FORMUSERINFO.tenant_id = #tenantId#
-			AND
-				TBL_FORMUSERINFO.companyid = #companyId#
-			AND
-				TBL_FORMUSERINFO.userid = #userId#
-			ORDER BY
-				FORMORDER
-			LIMIT
-				0, 5
-		]]>
-	</select>
+<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
+	<![CDATA[
+		SELECT
+			TBL_FORMINFO.*
+		FROM
+			TBL_FORMINFO
+		INNER JOIN
+			TBL_FORMUSERINFO
+		ON
+			TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
+		AND
+			TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
+		AND
+			TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
+		WHERE
+			TBL_FORMUSERINFO.tenant_id = #tenantId#
+		AND
+			TBL_FORMUSERINFO.companyid = #companyId#
+		AND
+			TBL_FORMUSERINFO.userid = #userId#
+		ORDER BY
+			FORMORDER
+		LIMIT
+			0, 5
+	]]>
+</select>
+<!-- 즐겨찾기 포틀릿  새게시물 가져오기 -->
+<select id="ezNewPortal.getNewItemList" parameterClass="Map" resultClass="HashMap">
+<![CDATA[
+SELECT A.BOARDID
+	   A.ITEMID,
+	   A.WRITERNAME,
+	   A.STARTDATE,
+	   A.TITLE				
+  FROM TBL_BOARD_ITEM A 
+  JOIN 
+	   ( 
+	   SELECT BOARDID, 
+	   		  BOARDNAME, 
+	   		  BOARDNAME2,
+	   		  TENANT_ID,
+	  		  COMPANYID 
+ 	     FROM TBL_BOARD_MYBOARDS 
+  		WHERE TENANT_ID = #tenantId#
+  		  AND COMPANYID = #companyId#
+ 		  AND USERID = #userId#
+ 		) B 
+	 ON A.TENANT_ID = B.TENANT_ID
+	AND	A.BOARDID = B.BOARDID                
+	AND A.TENANT_ID = #tenantId#
+	AND A.WRITERCOMPANYID = #companyId#
+	AND A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+	AND A.STARTDATE <= #nowDate#
+	AND A.ENDDATE > #nowDate#					
+	AND (
+		NOT EXISTS (
+		 		   SELECT USERID 
+					 FROM TBL_BOARD_ITEM_READ S 
+					WHERE S.TENANT_ID = A.TENANT_ID
+					  AND S.BOARDID = A.BOARDID 
+					  AND S.ITEMID = A.ITEMID 
+					  AND S.TENANT_ID = #tenantId#
+					  AND S.USERID = #userId# 
+					  AND S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				   )
+	    )
+  ORDER BY STARTDATE
+  LIMIT #limit#
+]]>
+</select>
+
+<select id="ezNewPortal.getItemList" parameterClass="Map" resultClass="HashMap">
+<![CDATA[
+SELECT A.TITLE,
+	   A.WRITERNAME,
+	   A.STARTDATE,
+	   A.ITEMID,
+	   A.BOARDID,
+	   B.GUBUN
+  FROM TBL_BOARD_ITEM A
+  JOIN TBL_BOARD_BOARDINFO B
+    ON A.BOARDID = B.BOARDID
+   AND A.TENANT_ID = B.TENANT_ID
+   AND A.COMPANYID = B.COMPANYID
+ WHERE A.BOARDID = #boardId#
+   AND A.COMPANYID = #companyId#
+   AND A.TENANT_ID = #tenantId#
+ ORDER BY STARTDATE DESC
+ LIMIT #limit#
+]]>
+</select>
 </sqlMap>

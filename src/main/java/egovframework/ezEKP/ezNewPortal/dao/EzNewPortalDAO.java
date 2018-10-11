@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -75,4 +76,15 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	/** -------------------- */
 	
+	//즐겨찾기 게시판 포틀릿 리스트(새게시물)
+	@SuppressWarnings("unchecked")
+	public List<FavoriteBoardVO> getFavNewItemList(Map<String, Object> map) {
+		return (List<FavoriteBoardVO>) select("ezNewPortal.getNewItemList", map);
+	}
+	
+	//즐겨찾기 게시판 포틀릿 리스트(일반)
+	@SuppressWarnings("unchecked")
+	public List<FavoriteBoardVO> getFavItemList(Map<String, Object> map) {
+		return (List<FavoriteBoardVO>) select("ezNewPortal.getItemList", map);
+	}
 }
