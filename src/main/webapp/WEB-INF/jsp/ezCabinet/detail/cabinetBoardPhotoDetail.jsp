@@ -125,13 +125,20 @@
 						inputElmt.setAttribute("type", "checkbox");
 						inputElmt.setAttribute("filePath", attachList[i]["filePath"]);
 						inputElmt.setAttribute("fileName", attachList[i]["fileName"]);
-						imgElmt.src   = attachList[i]["filePath"];
+						imgElmt.onclick  = function(e) {selectThisPhoto(this);};
+						imgElmt.src      = attachList[i]["filePath"];
 						liElmt.className = "ptdownloadwrap";
 						divElmt.appendChild(inputElmt);
 						divElmt.appendChild(imgElmt);
 						liElmt.appendChild(divElmt);
 						cabPhotoUl.appendChild(liElmt);
 					}
+				}
+				
+				function selectThisPhoto(imgElmt) {
+					var parentDiv     = imgElmt.parentElement;
+					var inputElmt     = parentDiv.querySelector("input[type='checkbox']");
+					inputElmt.checked = inputElmt.checked == true ? false : true;
 				}
 				
 				function closeDownloadPopup() {
