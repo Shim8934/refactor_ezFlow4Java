@@ -11381,7 +11381,7 @@
 								CN = #v_USERID#
 							AND
 								TENANT_ID = #v_TENANTID# 
-							))
+							)
 		
 		</isEqual>
 		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
@@ -11608,6 +11608,9 @@
 		<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0">
 			AND $v_SPSUBQUERY$
 		</isGreaterThan>
+		<isEqual property="v_LISTTYPE" compareValue="3">
+			)
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCountChildFormCont" parameterClass="Map" resultClass="int"> -->
@@ -11723,379 +11726,382 @@
 <!-- 		{CALL SELECTCOUNTSQL(#sqlString#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getRecordListCount" parameterClass="ApprGRecordListVO" resultClass="int">
-		SELECT 
-			COUNT(DISTINCT TBL_RECORD.RecordID,
-				  TBL_SEPERATEATTACH.SeperateAttachNo)
-		FROM 
-	   		TBL_RECORD 
-	   Left Join 
-	   		TBL_ENDAPRDOCINFO 
-	   On 
-	   		TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
-	   AND 
-	   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID
-	   AND
-	   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-	   Inner Join 
-	   		TBL_SEPERATEATTACH 
-	   On 
-	   		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID 
-	   AND 
-	   		TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID 
-	   AND 
-	   		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID 
-  <isEqual property="usePublicFlag" compareValue="true">
-	   Left Join 
-	   		TBL_EXPENDAPRDOCINFO  
-	   On 
-	   		TBL_RECORD.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID 
-	   AND
-	   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID 
-	   AND 
-	   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
-  </isEqual> 
-  		LEFT JOIN 
-     		TBL_ENDAPRLINEINFO 
-    	 ON 
-     		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
-     	 AND 
-     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
-    	 AND 
-     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
-	   Inner Join 
-	   		( Select 
-	   				ProcessDeptCode, 
-	   				ProcessDeptName, 
-	   				ProcessDeptName2, 
-	   				TaskCode,
-	   				TaskName, 
-	   				TaskName2, 
-	   				VolumeNo, 
-	   				CabinetID, 
-	   				TCabinetID, 
-	   				TBL_CABINET.CabinetClassNo,
-	   				DisplayEndDate, 
-	   				DisplayReason, 
-	   				ConfirmFlag, 
-	   				ProductionYear, 
-	   				RegSerialNo, 
-	   				DisplayRecFlag, 
-	   				ExTransYear, 
-	   				TransDelayReason, 
-	   				TransDelayFlag, 
-	   				OwnerDeptID,
-	   				OwnerTask, 
-	   				TerminateFlag, 
-	   				ExpirationYear, 
-	   				KeepingPeriod ,
-	   				TBL_CABINETCLASS.TENANT_ID,
-	   				TBL_CABINETCLASS.COMPANYID
-	   		  FROM 
-	   		  		TBL_CABINETCLASS  
-	   		  INNER JOIN 
-	   		  		TBL_CABINET  
-	   		  On 
-	   		  		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
-	   		  AND
-	   		  		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
-	   		  AND 
-	   		  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo 
-			<isEmpty property="cabinetIDs">
-			  WHERE 
-			   		TBL_CABINET.DelFlag = '0' 
-			  AND 
-			   		TBL_CABINETCLASS.DelFlag = '0' 
-			  AND 
-			   		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
-			   				And 
-			   			ConfirmFlag = '0')
-			  AND 
-			  		OwnerDeptID = #tempDeptCode#
-			</isEmpty> 
-	  		<isNotEmpty property="cabinetIDs">
-			  <isEqual property="listFlag" compareValue="0">
-			  WHERE 
-			  		CabinetID IN ($cabinetIDs$)
+		SELECT
+			COUNT(RecordID)
+		FROM (
+			SELECT 
+				DISTINCT TBL_RECORD.RecordID,
+				TBL_SEPERATEATTACH.SeperateAttachNo
+			FROM 
+		   		TBL_RECORD 
+		   Left Join 
+		   		TBL_ENDAPRDOCINFO 
+		   On 
+		   		TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
+		   AND 
+		   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID
+		   AND
+		   		TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+		   Inner Join 
+		   		TBL_SEPERATEATTACH 
+		   On 
+		   		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID 
+		   AND 
+		   		TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID 
+		   AND 
+		   		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID 
+	  <isEqual property="usePublicFlag" compareValue="true">
+		   Left Join 
+		   		TBL_EXPENDAPRDOCINFO  
+		   On 
+		   		TBL_RECORD.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID 
+		   AND
+		   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID 
+		   AND 
+		   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
+	  </isEqual> 
+	  		LEFT JOIN 
+	     		TBL_ENDAPRLINEINFO 
+	    	 ON 
+	     		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
+	     	 AND 
+	     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
+	    	 AND 
+	     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
+		   Inner Join 
+		   		( Select 
+		   				ProcessDeptCode, 
+		   				ProcessDeptName, 
+		   				ProcessDeptName2, 
+		   				TaskCode,
+		   				TaskName, 
+		   				TaskName2, 
+		   				VolumeNo, 
+		   				CabinetID, 
+		   				TCabinetID, 
+		   				TBL_CABINET.CabinetClassNo,
+		   				DisplayEndDate, 
+		   				DisplayReason, 
+		   				ConfirmFlag, 
+		   				ProductionYear, 
+		   				RegSerialNo, 
+		   				DisplayRecFlag, 
+		   				ExTransYear, 
+		   				TransDelayReason, 
+		   				TransDelayFlag, 
+		   				OwnerDeptID,
+		   				OwnerTask, 
+		   				TerminateFlag, 
+		   				ExpirationYear, 
+		   				KeepingPeriod ,
+		   				TBL_CABINETCLASS.TENANT_ID,
+		   				TBL_CABINETCLASS.COMPANYID
+		   		  FROM 
+		   		  		TBL_CABINETCLASS  
+		   		  INNER JOIN 
+		   		  		TBL_CABINET  
+		   		  On 
+		   		  		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+		   		  AND
+		   		  		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+		   		  AND 
+		   		  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo 
+				<isEmpty property="cabinetIDs">
+				  WHERE 
+				   		TBL_CABINET.DelFlag = '0' 
+				  AND 
+				   		TBL_CABINETCLASS.DelFlag = '0' 
+				  AND 
+				   		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
+				   				And 
+				   			ConfirmFlag = '0')
+				  AND 
+				  		OwnerDeptID = #tempDeptCode#
+				</isEmpty> 
+		  		<isNotEmpty property="cabinetIDs">
+				  <isEqual property="listFlag" compareValue="0">
+				  WHERE 
+				  		CabinetID IN ($cabinetIDs$)
+				  </isEqual>
+		  		</isNotEmpty>
+			  <isEqual property="listFlag" compareValue="1">
+			  	  AND 
+			  	  		TBL_CABINETCLASS.TerminateFlag = '1' 
+			  	  AND 
+			  	  		TBL_CABINETCLASS.ConfirmFlag = '0'
 			  </isEqual>
-	  		</isNotEmpty>
-		  <isEqual property="listFlag" compareValue="1">
-		  	  AND 
-		  	  		TBL_CABINETCLASS.TerminateFlag = '1' 
-		  	  AND 
-		  	  		TBL_CABINETCLASS.ConfirmFlag = '0'
-		  </isEqual>
-		  <isEqual property="listFlag" compareValue="2">
-		  	  AND 
-		  	  		TBL_CABINETCLASS.ConfirmYear = SUBSTR(#nowDate#, 0, 4)
-		  </isEqual>
-		  <isEqual property="listFlag" compareValue="3">
-		  	<![CDATA[
-		  	  AND 
-		  	  		TBL_CABINETCLASS.ConfirmFlag = '1' 
-			  AND 
-			  		( 
-			  		   ( 
-			  			TBL_CABINETCLASS.DisplayRecFlag = '2' 
-			  				AND 
-			  			TBL_CABINETCLASS.TransDelayFlag = '0' 
-			  				AND 
-			  			TBL_CABINETCLASS.ConfirmYear Between (SUBSTR(#nowDate#, 0, 4) - '1') AND SUBSTR(#nowDate#, 0, 4)
-			  		   ) 
-			  		  OR
-			  			( 
-			  			  ( TBL_CABINETCLASS.DisplayRecFlag = '1' AND TBL_CABINETCLASS.DisplayEndDate < CAST(SUBSTR(#nowDate#, 0, 4) AS char(4)) )
-			  					OR 
-			  			  ( TBL_CABINETCLASS.TransDelayFlag = '1' AND TBL_CABINETCLASS.ExTransYear = SUBSTR(#nowDate#, 0, 4) ) 
-			  			) 
-			  		 ) 
-			  AND 
-			  		CatalogTransferFlag = '0'
-			]]>
-		  </isEqual>
-		  <isEqual property="listFlag" compareValue="6">
-		  	  AND 
-		  	  		OwnerDeptID = #tempDeptCode# 
-		  	  AND 
-		  	  		TBL_CABINETCLASS.KeepingPlace = '1' 
-		  	  AND 	
-		  	  		( 
-		  	  			(
-		  	  				TBL_CABINETCLASS.DisplayRecFlag = '1' 
-		  	  					AND 
-		  	  				TBL_CABINETCLASS.DisplayEndDate >= CAST(SUBSTR(#nowDate#, 0, 4) AS char(4)) 
-		  	  			 )
-		  	  			 OR 
-		  	  			 (
-		  	  			 	TBL_CABINETCLASS.TransDelayFlag = '1' 
-		  	  			 		AND 
-		  	  			 	TBL_CABINETCLASS.ExTransYear > SUBSTR(#nowDate#, 0, 4) 
-		  	  			 ) 
-		  	  		) 
-		  	  AND 
-		  	  		( 
-		  	  			( 
-		  	  				TBL_CABINETCLASS.ConfirmYear = SUBSTR(#nowDate#, 0, 4) 
-		  	  			) 
-		  	  			OR 
-		  	  			( 
-		  	  				TBL_CABINETCLASS.ConfirmYear > (SELECT Max(DocTransferYear) FROM TBL_CABINET WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID#) 
-		  	  			) 
-		  	  		)
-		  </isEqual>
-		  <isNotEmpty property="charger">
-		  	  AND 
-		  	  		TBL_CABINETCLASS.CabinetClassNo IN ( Select 
-		  	  												CabinetClassNo 
-		  	  											 From 
-		  	  											 	TBL_CABROLEINFO 
-		  	  											 Where 
-		  	  											 	TENANT_ID = #tenantID#
-		  	  											 AND
-		  	  											 	User_ID IN (#charger#)
-		  	  											 AND
-		  	  											 	COMPANYID = #companyID# )
-		  </isNotEmpty>
-		  <isNotEmpty property="transExpire">
-		  	<![CDATA[
-		  	  AND 
-		  	  		( 
-		  	  			TBL_CABINETCLASS.ConfirmFlag = '1' 
-		  	  				AND 
-		  	  			( 
-		  	  				TBL_CABINETCLASS.DisplayRecFlag = '2' 
-		  	  					AND 
-		  	  				TBL_CABINETCLASS.TransDelayFlag = '0'
-		  	  					AND 
-		  	  				TBL_CABINETCLASS.ConfirmYear < #transExpire# - 1 
-		  	  			) 
-		  	  			OR 
-		  	  			( 
-		  	  				( 
-		  	  					TBL_CABINETCLASS.DisplayRecFlag = '1' 
-		  	  						AND 
-		  	  					RTRIM(DISPLAYENDDATE) <> '' 
-		  	  						AND 
-		  	  					TBL_CABINETCLASS.DisplayEndDate < #transExpire# 
-		  	  				)
-		  	  				OR 
-		  	  				( 
-		  	  					TBL_CABINETCLASS.TransDelayFlag = '1' 
-		  	  						AND 
-		  	  					TBL_CABINETCLASS.ExTransYear < #transExpire# - 1
-		  	  				)
+			  <isEqual property="listFlag" compareValue="2">
+			  	  AND 
+			  	  		TBL_CABINETCLASS.ConfirmYear = SUBSTR(#nowDate#, 0, 4)
+			  </isEqual>
+			  <isEqual property="listFlag" compareValue="3">
+			  	<![CDATA[
+			  	  AND 
+			  	  		TBL_CABINETCLASS.ConfirmFlag = '1' 
+				  AND 
+				  		( 
+				  		   ( 
+				  			TBL_CABINETCLASS.DisplayRecFlag = '2' 
+				  				AND 
+				  			TBL_CABINETCLASS.TransDelayFlag = '0' 
+				  				AND 
+				  			TBL_CABINETCLASS.ConfirmYear Between (SUBSTR(#nowDate#, 0, 4) - '1') AND SUBSTR(#nowDate#, 0, 4)
+				  		   ) 
+				  		  OR
+				  			( 
+				  			  ( TBL_CABINETCLASS.DisplayRecFlag = '1' AND TBL_CABINETCLASS.DisplayEndDate < CAST(SUBSTR(#nowDate#, 0, 4) AS char(4)) )
+				  					OR 
+				  			  ( TBL_CABINETCLASS.TransDelayFlag = '1' AND TBL_CABINETCLASS.ExTransYear = SUBSTR(#nowDate#, 0, 4) ) 
+				  			) 
+				  		 ) 
+				  AND 
+				  		CatalogTransferFlag = '0'
+				]]>
+			  </isEqual>
+			  <isEqual property="listFlag" compareValue="6">
+			  	  AND 
+			  	  		OwnerDeptID = #tempDeptCode# 
+			  	  AND 
+			  	  		TBL_CABINETCLASS.KeepingPlace = '1' 
+			  	  AND 	
+			  	  		( 
+			  	  			(
+			  	  				TBL_CABINETCLASS.DisplayRecFlag = '1' 
+			  	  					AND 
+			  	  				TBL_CABINETCLASS.DisplayEndDate >= CAST(SUBSTR(#nowDate#, 0, 4) AS char(4)) 
+			  	  			 )
+			  	  			 OR 
+			  	  			 (
+			  	  			 	TBL_CABINETCLASS.TransDelayFlag = '1' 
+			  	  			 		AND 
+			  	  			 	TBL_CABINETCLASS.ExTransYear > SUBSTR(#nowDate#, 0, 4) 
+			  	  			 ) 
 			  	  		) 
-				  	) 
-			  AND 
-					TBL_CABINETCLASS.KeepingPlace = '1' 
-			  AND 
-					DocTransferFlag='0'
-			]]>
-		  </isNotEmpty>
-		  <isNotEmpty property="cabTitle" prepend="AND">
-		  	  		TBL_CABINETCLASS.Title Like CONCAT(CONCAT('%', #cabTitle#), '%')
-		  </isNotEmpty>
-		  	) TBL_CABINET 
-		On 
-			TBL_SEPERATEATTACH.TENANT_ID = TBL_CABINET.TENANT_ID
-		AND
-			TBL_SEPERATEATTACH.COMPANYID = TBL_CABINET.COMPANYID 
-		AND  
-			TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.CabinetID
-	<isEqual property="transFlag" compareValue="1" prepend="OR">
-			TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.TCabinetID  
-	</isEqual>
-		WHERE 
-			TBL_RECORD.TENANT_ID = #tenantID#
-		AND
-			TBL_RECORD.COMPANYID = #companyID#
-		AND 
-			TBL_RECORD.DelFlag = '0' 
-		AND 
-			TBL_SEPERATEATTACH.DelFlag = '0'
-	<isEqual property="listFlag" compareValue="4" prepend="AND">
-			CatalogTransferFlag = '1' 
-		AND 
-			( DocTransferFlag = '0' 
-				OR 
-			  DocTransferFlag IS NULL ) 
-		AND 
-			TBL_RECORD.DocID IS NOT NULL 
-		AND 
-			SeperateAttachNo = '00'
-	</isEqual>
-	<isEqual property="listFlag" compareValue="5" prepend="AND">
-			DocTransferFlag = '1' 
-		AND 
-			DocTransferYear = ( SELECT 
-									MAX(DocTransferYear) 
-								FROM 
-									TBL_SEPERATEATTACH
-								WHERE
-									TENANT_ID = #tenantID# 
-								AND
-									COMPANYID = #companyID#)
-	</isEqual>
-	<isEqual property="listFlag" compareValue="7">
-		<isEqual property="dFlag" compareValue="Y" prepend="AND">
-				TBL_CABINET.TerminateFlag = '1' 
+			  	  AND 
+			  	  		( 
+			  	  			( 
+			  	  				TBL_CABINETCLASS.ConfirmYear = SUBSTR(#nowDate#, 0, 4) 
+			  	  			) 
+			  	  			OR 
+			  	  			( 
+			  	  				TBL_CABINETCLASS.ConfirmYear > (SELECT Max(DocTransferYear) FROM TBL_CABINET WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID#) 
+			  	  			) 
+			  	  		)
+			  </isEqual>
+			  <isNotEmpty property="charger">
+			  	  AND 
+			  	  		TBL_CABINETCLASS.CabinetClassNo IN ( Select 
+			  	  												CabinetClassNo 
+			  	  											 From 
+			  	  											 	TBL_CABROLEINFO 
+			  	  											 Where 
+			  	  											 	TENANT_ID = #tenantID#
+			  	  											 AND
+			  	  											 	User_ID IN (#charger#)
+			  	  											 AND
+			  	  											 	COMPANYID = #companyID# )
+			  </isNotEmpty>
+			  <isNotEmpty property="transExpire">
+			  	<![CDATA[
+			  	  AND 
+			  	  		( 
+			  	  			TBL_CABINETCLASS.ConfirmFlag = '1' 
+			  	  				AND 
+			  	  			( 
+			  	  				TBL_CABINETCLASS.DisplayRecFlag = '2' 
+			  	  					AND 
+			  	  				TBL_CABINETCLASS.TransDelayFlag = '0'
+			  	  					AND 
+			  	  				TBL_CABINETCLASS.ConfirmYear < #transExpire# - 1 
+			  	  			) 
+			  	  			OR 
+			  	  			( 
+			  	  				( 
+			  	  					TBL_CABINETCLASS.DisplayRecFlag = '1' 
+			  	  						AND 
+			  	  					RTRIM(DISPLAYENDDATE) <> '' 
+			  	  						AND 
+			  	  					TBL_CABINETCLASS.DisplayEndDate < #transExpire# 
+			  	  				)
+			  	  				OR 
+			  	  				( 
+			  	  					TBL_CABINETCLASS.TransDelayFlag = '1' 
+			  	  						AND 
+			  	  					TBL_CABINETCLASS.ExTransYear < #transExpire# - 1
+			  	  				)
+				  	  		) 
+					  	) 
+				  AND 
+						TBL_CABINETCLASS.KeepingPlace = '1' 
+				  AND 
+						DocTransferFlag='0'
+				]]>
+			  </isNotEmpty>
+			  <isNotEmpty property="cabTitle" prepend="AND">
+			  	  		TBL_CABINETCLASS.Title Like CONCAT(CONCAT('%', #cabTitle#), '%')
+			  </isNotEmpty>
+			  	) TBL_CABINET 
+			On 
+				TBL_SEPERATEATTACH.TENANT_ID = TBL_CABINET.TENANT_ID
+			AND
+				TBL_SEPERATEATTACH.COMPANYID = TBL_CABINET.COMPANYID 
+			AND  
+				TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.CabinetID
+		<isEqual property="transFlag" compareValue="1" prepend="OR">
+				TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.TCabinetID  
+		</isEqual>
+			WHERE 
+				TBL_RECORD.TENANT_ID = #tenantID#
+			AND
+				TBL_RECORD.COMPANYID = #companyID#
 			AND 
-				( SUBSTR(#nowDate#, 0, 4) - TBL_CABINET.ExpirationYear ) > TBL_CABINET.KeepingPeriod
+				TBL_RECORD.DelFlag = '0' 
+			AND 
+				TBL_SEPERATEATTACH.DelFlag = '0'
+		<isEqual property="listFlag" compareValue="4" prepend="AND">
+				CatalogTransferFlag = '1' 
+			AND 
+				( DocTransferFlag = '0' 
+					OR 
+				  DocTransferFlag IS NULL ) 
+			AND 
+				TBL_RECORD.DocID IS NOT NULL 
+			AND 
+				SeperateAttachNo = '00'
 		</isEqual>
-		<isNotEqual property="dFlag" compareValue="Y" prepend="AND">
-				DocTransferFlag = '1'
-		</isNotEqual>
-	</isEqual>
-	<isEqual property="listFlag" compareValue="9" prepend="AND">
-			( TBL_RECORD.DocID IS NOT NULL 
-				AND 
-			  TBL_CABINET.OwnerDeptID = #deptCode# 
-				AND 
-			  SeperateAttachNo = '00')
-	</isEqual>
-	<isEqual property="listFlag" compareValue="10" prepend="AND">
-			( TBL_ENDAPRDOCINFO.DocState = '011' 
-				OR 
-			  TBL_RECORD.DocType = '2')
-	</isEqual>
-	<isEqual property="listFlag" compareValue="11" prepend="AND">
-			( TBL_ENDAPRDOCINFO.DocState = '014' 
-				OR 
-			  TBL_RECORD.DocType = '1')
-	</isEqual>
-	<isNotEmpty property="recDeptCode" prepend="AND">
-			TBL_RECORD.ProcessDeptCode = #recDeptCode#
-	</isNotEmpty>						
-	<isNotEmpty property="title" prepend="AND">
-			TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', #title#), '%')
-	</isNotEmpty>
-	<isNotEmpty property="regType" prepend="AND">
-			TBL_SEPERATEATTACH.RegisterType = #regType#
-	</isNotEmpty>
-	<isNotEmpty property="regStartDate" prepend="AND">
-			TBL_RECORD.RegisterDate >= TO_DATE(#regStartDate#, 'YYYY.MM.DD HH24:MI:SS')
-	</isNotEmpty>
-	<isNotEmpty property="regEndDate" prepend="AND">
-		<![CDATA[
-			TBL_RECORD.RegisterDate <= TO_DATE(#regEndDate#, 'YYYY.MM.DD HH24:MI:SS')
-		]]>
-	</isNotEmpty>
-	<![CDATA[
-		 AND   
-		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-	     OR      
-	     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-     ]]>
-	<isNotEmpty property="sc" prepend="AND">
-			TBL_RECORD.RecordID IN (SELECT 
-										RecordID 
+		<isEqual property="listFlag" compareValue="5" prepend="AND">
+				DocTransferFlag = '1' 
+			AND 
+				DocTransferYear = ( SELECT 
+										MAX(DocTransferYear) 
 									FROM 
-										TBL_SPECIALCATALOGINFO_REC 
-									Where
-										TENANT_ID = #tenantID#
+										TBL_SEPERATEATTACH
+									WHERE
+										TENANT_ID = #tenantID# 
 									AND
-										COMPANYID = #companyID#
-									AND
-										(
-											SC1 Like CONCAT(CONCAT('%', #sc#), '%') 
-												OR 
-											SC2 Like CONCAT(CONCAT('%', #sc#), '%') 
-												OR 
-											SC3 Like CONCAT(CONCAT('%', #sc#), '%')
-										)
-									) 
-	</isNotEmpty>
-	<isNotEmpty property="drafter" prepend="AND">
-			( TBL_RECORD.DrafterName Like CONCAT(CONCAT('%', #drafter#), '%')
-				OR 
-			  TBL_RECORD.DrafterName2 Like CONCAT(CONCAT('%', #drafter#), '%') )
-	</isNotEmpty>
-	<isEqual property="usePublicFlag" compareValue="true">
-		<isEqual property="isUse" compareValue="1" prepend="AND">
-			<![CDATA[
-			( TBL_EXPENDAPRDOCINFO.SecurityCode >= #userSecurityCode# 
-				OR 
-			  TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL 
-			  	OR 
-			   ( 
-			  	SELECT 
-			  		'Y' 
-			  	FROM 
-			  		DUAL 
-			  	WHERE 
-			  		0 < (   SELECT 
-			  					COUNT(DocID) 
-			  				FROM 
-			  					TBL_ENDAPRLINEINFO 
-			  				WHERE  
-			  					TENANT_ID = #tenantID# 
-							AND
-			  					COMPANYID = #companyID#
-			  				AND 
-			  					DocID = TBL_RECORD.DocID  
-			  				AND 
-			  					AprMemberID = #userID# ) 
-			  	OR 
-			  		TBL_RECORD.DocID = NULL 
-			  	) = 'Y'
-			 ) 
-		AND 
-			TBL_RECORD.TENANT_ID = #tenantID#
-		AND
-			TBL_RECORD.COMPANYID = #companyID#
-			
-			]]>
+										COMPANYID = #companyID#)
 		</isEqual>
-		<isNotEqual property="isUse" compareValue="1" prepend="AND">
+		<isEqual property="listFlag" compareValue="7">
+			<isEqual property="dFlag" compareValue="Y" prepend="AND">
+					TBL_CABINET.TerminateFlag = '1' 
+				AND 
+					( SUBSTR(#nowDate#, 0, 4) - TBL_CABINET.ExpirationYear ) > TBL_CABINET.KeepingPeriod
+			</isEqual>
+			<isNotEqual property="dFlag" compareValue="Y" prepend="AND">
+					DocTransferFlag = '1'
+			</isNotEqual>
+		</isEqual>
+		<isEqual property="listFlag" compareValue="9" prepend="AND">
+				( TBL_RECORD.DocID IS NOT NULL 
+					AND 
+				  TBL_CABINET.OwnerDeptID = #deptCode# 
+					AND 
+				  SeperateAttachNo = '00')
+		</isEqual>
+		<isEqual property="listFlag" compareValue="10" prepend="AND">
+				( TBL_ENDAPRDOCINFO.DocState = '011' 
+					OR 
+				  TBL_RECORD.DocType = '2')
+		</isEqual>
+		<isEqual property="listFlag" compareValue="11" prepend="AND">
+				( TBL_ENDAPRDOCINFO.DocState = '014' 
+					OR 
+				  TBL_RECORD.DocType = '1')
+		</isEqual>
+		<isNotEmpty property="recDeptCode" prepend="AND">
+				TBL_RECORD.ProcessDeptCode = #recDeptCode#
+		</isNotEmpty>						
+		<isNotEmpty property="title" prepend="AND">
+				TBL_SEPERATEATTACH.Title Like CONCAT(CONCAT('%', #title#), '%')
+		</isNotEmpty>
+		<isNotEmpty property="regType" prepend="AND">
+				TBL_SEPERATEATTACH.RegisterType = #regType#
+		</isNotEmpty>
+		<isNotEmpty property="regStartDate" prepend="AND">
+				TBL_RECORD.RegisterDate >= TO_DATE(#regStartDate#, 'YYYY.MM.DD HH24:MI:SS')
+		</isNotEmpty>
+		<isNotEmpty property="regEndDate" prepend="AND">
+			<![CDATA[
+				TBL_RECORD.RegisterDate <= TO_DATE(#regEndDate#, 'YYYY.MM.DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+			 AND   
+			 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
+		     OR      
+		     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
+	     ]]>
+		<isNotEmpty property="sc" prepend="AND">
+				TBL_RECORD.RecordID IN (SELECT 
+											RecordID 
+										FROM 
+											TBL_SPECIALCATALOGINFO_REC 
+										Where
+											TENANT_ID = #tenantID#
+										AND
+											COMPANYID = #companyID#
+										AND
+											(
+												SC1 Like CONCAT(CONCAT('%', #sc#), '%') 
+													OR 
+												SC2 Like CONCAT(CONCAT('%', #sc#), '%') 
+													OR 
+												SC3 Like CONCAT(CONCAT('%', #sc#), '%')
+											)
+										) 
+		</isNotEmpty>
+		<isNotEmpty property="drafter" prepend="AND">
+				( TBL_RECORD.DrafterName Like CONCAT(CONCAT('%', #drafter#), '%')
+					OR 
+				  TBL_RECORD.DrafterName2 Like CONCAT(CONCAT('%', #drafter#), '%') )
+		</isNotEmpty>
+		<isEqual property="usePublicFlag" compareValue="true">
+			<isEqual property="isUse" compareValue="1" prepend="AND">
+				<![CDATA[
 				( TBL_EXPENDAPRDOCINFO.SecurityCode >= #userSecurityCode# 
 					OR 
-				  TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL ) 
+				  TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL 
+				  	OR 
+				   ( 
+				  	SELECT 
+				  		'Y' 
+				  	FROM 
+				  		DUAL 
+				  	WHERE 
+				  		0 < (   SELECT 
+				  					COUNT(DocID) 
+				  				FROM 
+				  					TBL_ENDAPRLINEINFO 
+				  				WHERE  
+				  					TENANT_ID = #tenantID# 
+								AND
+				  					COMPANYID = #companyID#
+				  				AND 
+				  					DocID = TBL_RECORD.DocID  
+				  				AND 
+				  					AprMemberID = #userID# ) 
+				  	OR 
+				  		TBL_RECORD.DocID = NULL 
+				  	) = 'Y'
+				 ) 
 			AND 
-				TBL_RECORD.TENANT_ID= #tenantID#
+				TBL_RECORD.TENANT_ID = #tenantID#
 			AND
-				TBL_RECORD.COMPANYID= #companyID#
-		</isNotEqual>
-	</isEqual> 
-	
+				TBL_RECORD.COMPANYID = #companyID#
+				
+				]]>
+			</isEqual>
+			<isNotEqual property="isUse" compareValue="1" prepend="AND">
+					( TBL_EXPENDAPRDOCINFO.SecurityCode >= #userSecurityCode# 
+						OR 
+					  TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL ) 
+				AND 
+					TBL_RECORD.TENANT_ID= #tenantID#
+				AND
+					TBL_RECORD.COMPANYID= #companyID#
+			</isNotEqual>
+		</isEqual> 
+		)
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.isCabCharger" parameterClass="Map" resultClass="int"> -->
@@ -18607,11 +18613,10 @@
 				   		AND
 	        				COMPANYID = #companyID#
 				   		$v_SUBQUERY$
-<!-- 				   		2018-08-08 강민수 기록물배부대장 목록출력 모든 리스트 안나와서 주석처리 강민수92 -->
-<!-- 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE"> -->
-<!-- 				   			AND  -->
-<!-- 				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE# -->
-<!-- 				   		</isEqual> -->
+				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
+				   			AND 
+				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
+				   		</isEqual>
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
 				   		 		MANAGEDEPTID = #v_MANAGEDEPTID#
@@ -20069,7 +20074,7 @@
        													COMPANYID = #companyID#)  ELSE  1 END AS FLAGCOUNT 
        				FROM (
    							SELECT 
-   								CASE WHEN DocState='017' THEN 'Y' 
+   								CASE WHEN DocState='017' THEN 'Y'
            							 WHEN FunctionType = ' ' OR FunctionType ='000' OR FunctionType IS NULL THEN 'Y' 
            							 WHEN COUNT(DOCSTATE) = 0 THEN 'N'
            							 ELSE 'N' END AS FLAG
@@ -20084,7 +20089,10 @@
        								AND
        									TENANT_ID = #v_TENANTID#
        								AND
-       									COMPANYID = #companyID#)))
+       									COMPANYID = #companyID#)
+       								GROUP BY 
+                                        DocState,FunctionType	
+       									))
        		]]>
    </select>
 
@@ -21258,66 +21266,38 @@
 	   <isEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
 	   			TBL_RECORD_TEMP
-		   			(RecordID, DocID, ProcessDeptName, ProcessDeptName2, ProcessDeptCode, 
-					RegisterYear, RegisterDate, RegisterNo, AprMemberTitle, AprMemberTitle2,        
-					DrafterName, DrafterName2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, 
-		  		 	SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, 
-		  		 	SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate,
-		  		 	DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag,    
-		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID) 
-	   			VALUES 
-	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
-					#v_REGYEAR#, #v_REGISTERDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
-					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, IF(#v_EXECUTEDATE# = '', NULL, #v_EXECUTEDATE#), #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
-	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
-	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
-	   				#v_DELFLAG#, #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, 
-	   				#v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
-	   </isEqual>
-	   <isNotEqual property="v_NONELECRECYN" compareValue="Y">
-	   		INSERT INTO 
-	   			TBL_RECORD 
-		   			(RecordID, DocID, ProcessDeptName, ProcessDeptName2, ProcessDeptCode, 
-					RegisterYear, RegisterDate, RegisterNo, AprMemberTitle, AprMemberTitle2,        
-					DrafterName, DrafterName2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, 
-		  		 	SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, 
-		  		 	SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate,
-		  		 	DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag,    
-		  		 	ManualRegFlag, DocType, TENANT_ID, COMPANYID, PUBLICITYYN) 
-	   			VALUES 
-	   				(#v_RECORDID#, #v_DOCID#, #v_DEPTNAME#,	#v_DEPTNAME2#, #v_DEPTCODE#,
-					#v_REGYEAR#, #v_SYSDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  
-					#v_DRAFTERNAME#, #v_DRAFTERNAME2#, STR_TO_DATE(#v_EXECUTEDATE#,'%Y-%m-%d %H:%i:%s'), #v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      
-	   				NULL, NULL, #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, 
-	   				#v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#, NULL,
-	   				#v_DELFLAG#, #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, 
-	   				#v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
-	   </isNotEqual>
+	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID) 
+	   		VALUES 
+	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_REGISTERDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
+   			INSERT INTO 
+	   			TBL_RECORD
+	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, PUBLICITYYN) 
+	   		VALUES 
+	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
+   		</isNotEqual>
    </insert>
    
    <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
 	   <isEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
-	   			TBL_SEPERATEATTACH_TEMP 
-	   				(DocID, RecordID, SeperateAttachNo, CabinetID, RegisterType, Title,
-	   				 NumOfPage, DelFlag, CreateDate, ModifyFlag, CatalogTransferFlag, 
-	   				 DocTransferFlag, TENANT_ID, COMPANYID)
-	   			Values 
-	   				(#v_DOCID#, #v_RecordID#, #v_SepAttachNo#, #v_CABID#, #v_REGTYPE#, #v_TITLE#, 
-	   				#v_NUMOFPAGE#, '0', #v_SYSDATE#, '0', '0',
-	   				'0', #v_TENANTID#, #companyID#)
-	   </isEqual>
-	   <isNotEqual property="v_NONELECRECYN" compareValue="Y">
+	   			TBL_SEPERATEATTACH_TEMP
+	   		(DocID, RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
+	   		Values 
+	   		(#v_DOCID#, #v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
 	   		INSERT INTO 
 	   			TBL_SEPERATEATTACH 
-	   				(RecordID, SeperateAttachNo, CabinetID, RegisterType, Title,
-	   				 NumOfPage, DelFlag, CreateDate, ModifyFlag, CatalogTransferFlag, 
-	   				 DocTransferFlag, TENANT_ID, COMPANYID)
-	   			Values 
-	   				(#v_RecordID#, #v_SepAttachNo#, #v_CABID#, #v_REGTYPE#, #v_TITLE#, 
-	   				#v_NUMOFPAGE#, '0', #v_SYSDATE#, '0', '0',
-	   				'0', #v_TENANTID#, #companyID#)
-	   </isNotEqual>
+	   		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
+	   		Values 
+	   		(#v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		</isNotEqual>
    </insert>
      
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">

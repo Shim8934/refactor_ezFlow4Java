@@ -4748,6 +4748,7 @@ CREATE TABLE `tbl_deptmaster` (
   `ADFLAG` varchar(4) DEFAULT NULL,
   `ADSPATH` varchar(400) DEFAULT NULL,
   `UPDATEDT` datetime DEFAULT NULL,
+  `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -9966,6 +9967,7 @@ CREATE TABLE `tbl_usermaster` (
   `IPADDRESS` varchar(15) DEFAULT NULL,
   `LASTLOGIN` datetime DEFAULT NULL,
   `LOGINCNT` bigint(10) DEFAULT '0',
+  `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `LISTTYPE` varchar(3) DEFAULT 'TXT',
   PRIMARY KEY (`TENANT_ID`,`CN`),

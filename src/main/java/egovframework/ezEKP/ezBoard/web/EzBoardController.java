@@ -3481,6 +3481,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardType = "";
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String browser = ClientUtil.getClientInfo(request, "browser");
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
@@ -3511,6 +3512,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (request.getParameter("reservedItem") != null) {
 			reservedItem = request.getParameter("reservedItem");
+		}
+		
+		if (orgCompanyID == null) {
+			orgCompanyID = "";
 		}
 		
 		String newGuid = UUID.randomUUID().toString();
@@ -3679,6 +3684,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;

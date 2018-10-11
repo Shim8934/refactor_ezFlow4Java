@@ -403,7 +403,7 @@
 						    mailNickName : mailNickName, title : JobTitle.value, title2 : JobTitle2.value, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
 						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : JobPosition.value, extensionAttribute102 : JobPosition2.value, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
-						    birthType : birthtype, birth : document.getElementById("txtBirth").value
+						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y"
 					},
 					success : function(result) {
 					    if (useBizmekaSpambox == "YES") {
