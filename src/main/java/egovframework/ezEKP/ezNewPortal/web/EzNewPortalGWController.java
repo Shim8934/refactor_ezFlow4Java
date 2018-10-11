@@ -654,7 +654,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화  G/W [GET] 회사 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/admin/ezPortal/companies", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value= "/rest/admin/ezportal/companies", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyList started.");
 		JSONObject result = new JSONObject();
@@ -1513,9 +1513,9 @@ public class EzNewPortalGWController {
 	 * 포탈개인화  G/W [GET] 포틀릿 - 즐겨찾기 양식
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/ezPortal/portlets/getFavoriteForms", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value= "/rest/ezportal/portlets/favoriteforms", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFavoriteForms(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getApprovalFormFavoritesPortlet started.");
+		LOGGER.debug("ezNewPortal G/W getFavoriteForms started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1536,7 +1536,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getApprovalFormFavoritesPortlet ended.");
+		LOGGER.debug("ezNewPortal G/W getFavoriteForms ended.");
 		return result;
 	}
 	
@@ -1544,7 +1544,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화  G/W [GET] 포틀릿 - 즐겨찾기양식 (결재할문서 통계)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/ezPortal/portlets/approvalStatistics", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value= "/rest/ezportal/portlets/approvalstatistics", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getApprovalStatisticsPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getApprovalStatisticsPortlet started.");
 		JSONObject result = new JSONObject();

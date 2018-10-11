@@ -56,5 +56,43 @@
 				window.open(url,"right");
 			});
 		});
+		
+		var getFavoriteForms = function() {
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getCompanies.do', true);
+
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var result = JSON.parse(request.responseText);
+					
+					var userCompany = result.userCompany;
+					var companyList = result.companyList;
+					
+					companyList.forEach(function (item, index) {
+						
+					});
+										
+					document.getElementsByClassName('bookmark')[0].innerHTML = formsHTML
+					
+					Array.from(document.getElementsByClassName('bookmarkLi')).forEach(function(element) {
+						element.addEventListener('click', function() {
+							checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
+						});
+					});
+				} else {
+					// We reached our target server, but it returned an error
+				}
+			};
+
+			request.onerror = function() {
+			  // There was a connection error of some sort
+			};
+
+			var data = JSON.stringify({
+				"userId" : "${userInfo.id}"
+			});
+			
+			request.send();
+		}
 	</script>
 </html>
