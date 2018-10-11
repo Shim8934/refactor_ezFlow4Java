@@ -1,8 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -23,13 +22,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -148,6 +147,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("portletName", data.get("portletName"));
 		}
 		
+		logger.debug("portalVotePortlet End");
 		return "/ezNewPortal/portlets/votePortlet";
 	}
 	
@@ -194,13 +194,80 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 양식즐겨찾기 포틀릿
 	 */
-	@RequestMapping(value = "/ezNewPortal/approvalFavoritePortlet.do")
-	public String portalApprovalFavoritePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("portalApprovalFavoritePortlet Start");
+	@RequestMapping(value = "/ezNewPortal/favoriteFormsPortlet.do")
+	public String portalFavoriteFormsPortlet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("favoriteFormsPortlet started.");
 		
-		return "/ezNewPortal/portlets/approvalFavoritePortlet";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		
+		String buJaeInfo = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
+		
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
+		model.addAttribute("buJaeInfo", buJaeInfo);
+		model.addAttribute("now", commonUtil.getTodayUTCTime(""));
+		
+		logger.debug("favoriteFormsPortlet ended.");
+		
+		return "/ezNewPortal/portlets/favoriteFormsPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 양식즐겨찾기 리스트 조회
+	 */
+	@RequestMapping(value = "/ezNewPortal/getFavoriteForms.do")
+	public String getFavoriteForms(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getFavoriteForms started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/getFavoriteForms";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			JSONArray resultList = (JSONArray) data.get("resultList");
+			
+			model.addAttribute("resultList", resultList);
+		}
+		
+		logger.debug("getFavoriteForms ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 포틀릿 - 양식즐겨찾기 통계 조회
+	 */
+	@RequestMapping(value = "/ezNewPortal/getApprovalStatistics.do")
+	public String getApprovalStatistics(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getFavoriteForms started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/getFavoriteForms";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			JSONArray resultList = (JSONArray) data.get("resultList");
+			
+			model.addAttribute("resultList", resultList);
+		}
+		
+		logger.debug("getFavoriteForms ended.");
+		
+		return "json";
 	}
 	
 	/**
@@ -234,6 +301,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		
 		model.addAttribute("portletId", portletId);
+		logger.debug("phoroBoardPortlet End");
 		return "/ezNewPortal/portlets/photoBoardPortlet";
 	}
 	

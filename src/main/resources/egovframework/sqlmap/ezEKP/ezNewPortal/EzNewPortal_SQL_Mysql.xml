@@ -391,4 +391,31 @@ AND
 	A.PORTLET_ID = #portletId#;
 ]]>
 </select>
+
+	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				TBL_FORMINFO.*
+			FROM
+				TBL_FORMINFO
+			INNER JOIN
+				TBL_FORMUSERINFO
+			ON
+				TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
+			AND
+				TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
+			AND
+				TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
+			WHERE
+				TBL_FORMUSERINFO.tenant_id = #tenantId#
+			AND
+				TBL_FORMUSERINFO.companyid = #companyId#
+			AND
+				TBL_FORMUSERINFO.userid = #userId#
+			ORDER BY
+				FORMORDER
+			LIMIT
+				0, 5
+		]]>
+	</select>
 </sqlMap>

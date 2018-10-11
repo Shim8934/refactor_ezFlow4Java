@@ -86,7 +86,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
-		
+		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
 	}
 	
@@ -96,7 +96,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do")
 	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalTopMenu Start");
-		
+		logger.debug("portalTopMenu End");
 		return "/ezNewPortal/newPortalTopMenu";
 	}
 	
@@ -123,7 +123,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("userName", data.get("userName"));
 			model.addAttribute("userTitle", data.get("userTitle"));
 			model.addAttribute("deptName", data.get("deptName"));
-			model.addAttribute("unReadMailCount", data.get("unReadMailCount"));
+			model.addAttribute("pollCount", data.get("pollCount"));
+			model.addAttribute("circularCount", data.get("circularCount"));
+			model.addAttribute("scheduleCount", data.get("scheduleCount"));
+			model.addAttribute("approvalCount", data.get("approvalCount"));
+			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 		}
 		
 		logger.debug("portalMainPage End");

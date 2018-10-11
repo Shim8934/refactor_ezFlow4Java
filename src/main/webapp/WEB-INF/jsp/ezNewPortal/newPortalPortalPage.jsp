@@ -23,6 +23,13 @@
 
 	var portletOrder = JSON.parse('${portletOrder}');
 	var xmlHttp_getnewmailcount_total = null;
+	var pollCount = "<c:out value='${pollCount}'/>";
+	var circularCount = "<c:out value='${circularCount}'/>";
+	var scheduleCount = "<c:out value='${scheduleCount}' />";
+	var approvalCount = "<c:out value='${approvalCount}'/>";
+	var unreadMailCount = "<c:out value='${unreadMailCount}'/>";
+	var photoBoardPage = 1;
+	var photoCount = 4;
 	
 	$(function() {
 		$('#featured').orbit();
@@ -40,118 +47,211 @@
 		
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
+			var portletUrl = portletOrder[i].portletUrl;
 			
-			$.ajax({
-				type : "POST",
-				async : false,
-				dataType : "html",
-				data : {"portletId" : portletId},
-				url : portletOrder[i].portletUrl,
-				success : function(result) {
-					$("#" + portletId + "Portlet").html(result);
-				}
-			})
+			(function (portletId, portletUrl) {
+				$.ajax({
+					type : "POST",
+					dataType : "html",
+					data : {"portletId" : portletId},
+					url : portletUrl,
+					success : function(result) {
+						$("#" + portletId + "Portlet").append(result);
+						eventSetting(portletId);
+					}
+				});
+			}(portletId, portletUrl));
 		}
 		
 		//ajax로 count 불러오기
-		getNewMailCount(); //읽지 않은 메일 개수
-		getNewCircularCount(); //회람판 신규 개수 불러오기
-		getPollCount(); //전자설문 개수 불러오기
-		getTodayScheduleCount(); //오늘 일정 개수 불러오기
-		getApprCount(); //결재할 문서 개수 불러오기
+		getCountSetting();
+		
+		$("#personalEnv").on("click", viewPersonalEnv);
 	});
 	
-	function getNewMailCount() {
-		var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "DATA");
-        createNodeAndInsertText(xmlpara, objNode, "URL", "INBOX");
+	function eventSetting(portletId) {
+
+		if (portletId == 4) {
+			$("#votePlus").on("click", viewQstList);
+			$(".voteBtn").on("click", votePoll);
+		} else if (portletId == 9) {
+			$(".nextBtn").on("click", photoBoardMoveNextPage);
+			$(".preBtn").on("click", photoBoardMovePrevPage);
+			$("#photoBoardPlus").on("click", viewPhotoBoardList);
+		}
+	}
+	
+	function viewPersonalEnv() {
+	    window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
+	}
+	
+	function photoBoardMoveNextPage() {
+		photoBoardPage = photoBoardPage + 1;
+		var boardId = $(".photo_board").find(".portletText").attr("data1");
+		var portletId = $(".photo_board").parent().parent().attr("id");
+		portletId = portletId.substring(0, portletId.indexOf("P"));
 		
-	    xmlHttp_getnewmailcount_total = createXMLHttpRequest();
-	    xmlHttp_getnewmailcount_total.open("POST", "/ezEmail/getFolderUnreadCount.do", true);
-	    xmlHttp_getnewmailcount_total.onreadystatechange = event_newmailCount;
-	    xmlHttp_getnewmailcount_total.send(xmlpara);
-	}
-	
-	function event_newmailCount() {
-	    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
-	        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
-	        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
-	        	
-	        	if (unreadcount.length > 2) {
-	        		unreadcount = "99+";
-	        	}			        	
-	        	
-                if(CrossYN()) {
-                    document.getElementById("mailnum").textContent = unreadcount;
-                }
-                else {
-                    document.getElementById("mailnum").innerText = unreadcount;
-                }
-
-                if (unreadcount == "0") {
-                	$("#mailnum").attr("class", "iconCount_none");
-                } else {
-                	$("#mailnum").attr("class", "iconCount");
-                }
-	        }
-	        xmlHttp_getnewmailcount_total = null;
-	    }
-	}
-	
-	function getNewCircularCount() {
-    	$.ajax({
+		$.ajax({
 			type : "POST",
-			dataType : "json",
-			async : true,
-			url : "/ezCircular/getListCount.do",
-			data : {
-				listType : 'newCircular'
-			},
-			success: function(result){
-				var cirCnt = result.count;
-				
-				if (cirCnt > 99) {
-					cirCnt = "99+";		
-				}						
-				$("#circularCount").html(cirCnt);
-
-				if (cirCnt == "0") {
-                	$("#circularCount").attr("class", "iconCount_none");
-                } else {
-                	$("#circularCount").attr("class", "iconCount");
-                }
-			}
-		});
-    }
-	
-	function getPollCount() {
-		/* $.ajax({
-			type : "POST",
-			url : "",
+			url : "/ezNewPortal/getPhotoItemList.do",
+			data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},
 			success : function(result) {
-				if (result > 99) {
-					result = "99+";
+				if (result.length > 0) {
+					var resultCount = result.length;
+					var strHTML = "";
+					
+					for (var i = 0; i < resultCount; i++) {
+						strHTML += "<li>";
+						strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
+						strHTML += "</li>";
+						
+					}
+					
+					$("#photoul").html(strHTML);
+				} else {
+					photoBoardPage = photoBoardPage - 1;
 				}
-				
-				if (result == 0) {
-                	$("#pollCount").attr("class", "iconCount_none");
-                } else {
-                	$("#pollCount").attr("class", "iconCount");
-                }
-				
-				$("#pollCount").text(result);
 			}
-		}) */
+		})
+	}
+
+	function photoBoardMovePrevPage() {
+		if (photoBoardPage !== 1) {
+			photoBoardPage = photoBoardPage - 1;
+			var boardId = $(".photo_board").find(".portletText").attr("data1");
+			var portletId = $(".photo_board").parent().parent().attr("id");
+			portletId = portletId.substring(0, portletId.indexOf("P"));
+			
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				url : "/ezNewPortal/getPhotoItemList.do",
+				data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},
+				success : function(result) {
+					var resultCount = result.length;
+					var strHTML = "";
+					
+					for (var i = 0; i < resultCount; i++) {
+						strHTML += "<li>";
+						strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
+						strHTML += "</li>";
+						
+					}
+					
+					$("#photoul").html(strHTML);
+				}
+			})
+		}
+	}
+
+	function viewPhotoBoardList() {
+		var boardId = $(".photo_board").find(".portletText").attr("data1");
+	    window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+	}
+
+	function photoItemRead(elem) {
+		var ShowAdjacent = "";
+		var pheight = window.screen.availHeight;
+		var pwidth = window.screen.availWidth;
+		var pTop = (pheight - 789) / 2;
+		var pLeft = (pwidth - 765) / 2;
+		
+		if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+			var height = 789;
+		} else {
+			var height = 785;
+		}
+		
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + elem.getAttribute("data2") + "&boardID=" + elem.getAttribute("data1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 	}
 	
-	function getTodayScheduleCount() {
+	function viewQstList() {
+		window.open("/ezBoard/boardMain.do?func=3","main");		    	
+	}
+
+	function votePoll() {
+		var qstId = $(".voteBtn").attr("id");
+		qstId = qstId.substring(1);
 		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezPoll/checkPoll.do",
+			data : {
+				qstId : qstId
+			},
+			success: function(data) {		    			
+				var result = JSON.parse(data).result;					
+				
+				if (result == "Normal") {
+					window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
+				}
+				else {
+					alert("투표를 수정하고 있습니다.기다려주세요.");
+					window.location.reload();
+				}
+	        },
+	        error: function(error) {
+	        	alert(error);
+	        }
+		});
+	    
 	}
 	
-	function getApprCount() {
+	function getCountSetting() {
+		if (pollCount > 99) {
+			pollCount = "99+";
+			$("#pollCount").addClass("iconCount");
+		} else if (pollCount == 0) {
+			$("#pollCount").addClass("iconCount_none");
+		} else {
+			$("#pollCount").addClass("iconCount");
+		}
 		
+		if (circularCount > 99) {
+			circularCount = "99+";
+			$("#circularCount").addClass("iconCount");
+		} else if (circularCount == 0) {
+			$("#circularCount").addClass("iconCount_none");
+		} else {
+			$("#circularCount").addClass("iconCount");
+		}
+		
+		if (scheduleCount > 99) {
+			scheduleCount = "99+";
+			$("#scheduleCount").addClass("iconCount");
+		} else if (scheduleCount == 0) {
+			$("#scheduleCount").addClass("iconCount_none");
+		} else {
+			$("#scheduleCount").addClass("iconCount");
+		}
+		
+		if (approvalCount > 99) {
+			approvalCount = "99+";
+			$("#approvalCount").addClass("iconCount");
+		} else if (approvalCount == 0) {
+			$("#approvalCount").addClass("iconCount_none");
+		} else {
+			$("#approvalCount").addClass("iconCount");
+		}
+		
+		if (unreadMailCount > 99) {
+			unreadMailCount = "99+";
+			$("#unreadMailCount").addClass("iconCount");
+		} else if (unreadMailCount == 0) {
+			$("#unreadMailCount").addClass("iconCount_none");
+		} else {
+			$("#unreadMailCount").addClass("iconCount");
+		}
+		
+		$("#pollCount").text(pollCount);
+		$("#circularCount").text(circularCount);
+		$("#scheduleCount").text(scheduleCount);
+		$("#approvalCount").text(approvalCount);
+		$("#unreadMailCount").text(unreadMailCount);
 	}
+	
 	</script>
 	<style type="text/css">
 		.notEmptySlider {
@@ -196,7 +296,8 @@
                			<dd class="infoName">${userName} ${userTitle}</dd>
                 		<dd class="infoTeam">${deptName}</dd>
                 		<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
-                		<dd class="infoSet" onclick='goEnv();'><img src="/images/kr/main/info_set.png"></dd>
+                		<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
+                		<dd class="infoSet" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
            			</dl>
 				</article>
 				<article class="time_check">
@@ -219,31 +320,31 @@
 						<dl id="NewMail" onclick="btnSumming_click(this)">
                 			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
                     		<dd class="iconText">새메일</dd>
-                    		<dd class="iconCount" id="mailnum">0</dd>
+                    		<dd id="unreadMailCount">0</dd>
                 		</dl>
                 		<dl id="AprSign" onclick="btnSumming_click(this)">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
                     
                     		<dd class="iconText">결재문서</dd>
-                    		<dd class="iconCount" id="aprnum">0</dd>
+                    		<dd id="approvalCount">0</dd>
                 		</dl>
                 		<dl id="Schedule" onclick="btnSumming_click(this)">
                   		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
                     		<dd class="iconText">오늘일정</dd>
-                		    <dd class="iconCount_none" id="schedulenum">0</dd>
+                		    <dd id="scheduleCount">0</dd>
                			</dl>
 					</div>
 					<div class="countingIcon02">
             			<dl id="Poll" onclick="btnSumming_click(this)">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
                     		<dd class="iconText">전자설문</dd>                        
-                    		<dd class="iconCount" id="pollCount">0</dd>
+                    		<dd id="pollCount">0</dd>
                 		</dl>
             	
                 		<dl id="Circular" onclick="btnSumming_click(this)"> 
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
                     		<dd class="iconText">회람판</dd>
-                    		<dd class="iconCount_none" id="circularCount">0</dd>
+                    		<dd id="circularCount">0</dd>
                 		</dl>
                 	</div>
 				</article>
