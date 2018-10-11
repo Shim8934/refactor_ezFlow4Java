@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1490,6 +1491,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String dateColumn      = userInfo.getEmail().equals(sender) ? "ezEmail.t704" : "ezEmail.t657";
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
+		
+		//Process email image content
+		content = content.replaceAll("/ezEmail/downloadInline.do\\?", "/ezEmail/downloadInlineDotNet.do?userId=" + URLEncoder.encode(userId, "UTF-8") + "&amp;");
 		
 		//Get itemId
 		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
