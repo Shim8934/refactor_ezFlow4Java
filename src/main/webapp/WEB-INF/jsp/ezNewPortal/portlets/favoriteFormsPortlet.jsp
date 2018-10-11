@@ -12,6 +12,47 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
 		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
+	</head>
+	<body>
+		<div class="layDIV">
+			<dl class="portlet_title">
+				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
+				<dt class="portletText"></dt>
+				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
+			</dl>
+			
+			<ul class="bookmark">
+				<li class='bookmarkLi_none'></li>
+				<li class='bookmarkLi_none'></li>
+				<li class='bookmarkLi_none'></li>
+				<li class='bookmarkLi_none'></li>
+				<li class='bookmarkLi_none'></li>
+			</ul>
+			<div class="apprgraph">
+				<div class="apprgraph_area">
+					<dl class="bookmarkG01">
+						<dt><spring:message code='main.t00006' /></dt>
+						<dd>(<span id="SIXHGAP">0</span>)</dd>
+					</dl>
+					<dl class="bookmarkG02">
+						<dt><spring:message code='main.t00007' /></dt>
+						<dd>(<span id="ONEDGAP">0</span>)</dd>
+					</dl>
+					<dl class="bookmarkG03">
+						<dt><spring:message code='main.t00008' /></dt>
+						<dd>(<span id="SEVENDGAP">0</span>)</dd>
+					</dl>
+					<dl class="bookmarkG04">
+						<dt><spring:message code='main.t00009' /></dt>
+						<dd>(<span id="ONEMGAP">0</span>)</dd>
+					</dl>
+					<dl class="bookmarkG05">
+						<dt><spring:message code='main.t00010' /></dt>
+						<dd>(<span id="OTHER">0</span>)</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
 		
 		<script type="text/javascript">
 		//개똥이라 수정해야함 긁고 붙이고해서 돌아가게만 해놓음
@@ -70,28 +111,22 @@
 		    }
 		    
 		    function openDraftUI(formURL, formDocType) {
-		        var pArgument = new Array();
-// 		        pArgument[0] = arr_userinfo[1]; 안쓰는건가
-		        pArgument[1] = formURL;
-		        pArgument[2] = 'DRAFT';
-		        pArgument[3] = formDocType;
-
 		        var openLocation = "";
 		      
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-		        	openLocation = "/ezApprovalG/draftui.do?formURL=";
-		            openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-		            openLocation = openLocation + "&susinSN=0&docState=&listType=1&aprState=";
-		            openLocation = openLocation + "&isTmpDoc=";
+		        	openLocation += "/ezApprovalG/draftui.do?formURL=";
+		            openLocation += encodeURIComponent(formURL) + "&draftFlag=" + encodeURIComponent('DRAFT') + "&formDocType=" + encodeURIComponent(formDocType);
+		            openLocation += "&susinSN=0&docState=&listType=1&aprState=";
+		            openLocation += "&isTmpDoc=";
 		        } else {
 		        	if (!isIE()) {
 		                alert(strLang1103);
 		                return;
 		            } else {
-		            	openLocation = "/ezApprovalG/draftuiHWP.do";
-		            	openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-		                openLocation = openLocation + "&susinSN=0&docState=&listType=1&aprState=";
-		                openLocation = openLocation + "&isTmpDoc=";
+		            	openLocation += "/ezApprovalG/draftuiHWP.do";
+		            	openLocation += encodeURIComponent(formURL) + "&draftFlag=" + encodeURIComponent('DRAFT') + "&formDocType=" + encodeURIComponent(formDocType);
+		                openLocation += "&susinSN=0&docState=&listType=1&aprState=";
+		                openLocation += "&isTmpDoc=";
 		            }
 		        }
 
@@ -202,46 +237,10 @@
 		    		}
 		    	});
 		    }
-			
-		    //onload
-			document.getElementById('fraviteFormsPlus').addEventListener('click', fraviteFormsPlus);
+		    
+		    //로드되고나서
+		    document.getElementById('fraviteFormsPlus').addEventListener('click', fraviteFormsPlus);
 			getFavoriteForms();
 		</script>
-	</head>
-	<body>
-		<div class="layDIV">
-			<dl class="portlet_title">
-				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
-				<dt class="portletText"></dt>
-				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
-			</dl>
-			
-			<ul class="bookmark">
-			</ul>
-			<div class="apprgraph">
-				<div class="apprgraph_area">
-					<dl class="bookmarkG01">
-						<dt><spring:message code='main.t00006' /></dt>
-						<dd>(<span id="SIXHGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG02">
-						<dt><spring:message code='main.t00007' /></dt>
-						<dd>(<span id="ONEDGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG03">
-						<dt><spring:message code='main.t00008' /></dt>
-						<dd>(<span id="SEVENDGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG04">
-						<dt><spring:message code='main.t00009' /></dt>
-						<dd>(<span id="ONEMGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG05">
-						<dt><spring:message code='main.t00010' /></dt>
-						<dd>(<span id="OTHER">0</span>)</dd>
-					</dl>
-				</div>
-			</div>
-		</div>
 	</body>
 </html>

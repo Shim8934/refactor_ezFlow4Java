@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -137,27 +138,19 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 회사목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/getCompanys.do")
+	@RequestMapping(value = "/admin/ezNewPortal/getCompanies.do")
 	public String getCompanys(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getCompanys started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String gwServerUrl = config.getProperty("config.portalGwServerURL");
-		String url = gwServerUrl + "/rest/admin/ezportal/companies";
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
 		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		String url = "/rest/admin/ezportal/companies";
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
-		RestTemplate rest = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
