@@ -207,14 +207,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/**
 	 * 포틀릿 - 양식즐겨찾기 리스트 조회
 	 */
-	@RequestMapping(value = "/ezNewPortal/getFavoriteForms.do")
+	@RequestMapping(value = "/ezNewPortal/getfavoriteForms.do")
 	public String getFavoriteForms(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getFavoriteForms started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		String url = "/rest/ezPortal/portlets/getFavoriteForms";
+		String url = "/rest/ezportal/portlets/favoriteforms";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -241,7 +241,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		String url = "/rest/ezPortal/portlets/getFavoriteForms";
+		String url = "/rest/ezportal/portlets/approvalstatistics";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
