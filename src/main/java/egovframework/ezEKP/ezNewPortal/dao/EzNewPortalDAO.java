@@ -8,15 +8,23 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
+	// 공지사항 리스트
 	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
 		return (List<BoardListVO>) list("ezNewPortal.getNoticePortletList", map);
+	}
+	
+	// 설문조사 리스트
+	@SuppressWarnings("unchecked")
+	public List<PersonalLightPollVO> getPollPortletList (Map<String, Object> map) throws Exception {
+		return (List<PersonalLightPollVO>) list("ezNewPortal.getPollPortletList", map);
 	}
 
 	//투표할 수 있는 리스트 개수 불러오기

@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -29,6 +30,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
 		
 		return ezNewPortalDAO.getNoticePortletList(map);
+	}
+	
+	public List<PersonalLightPollVO> getPollPortletList(String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		return ezNewPortalDAO.getPollPortletList(map);
 	}
 	
 	@Override
