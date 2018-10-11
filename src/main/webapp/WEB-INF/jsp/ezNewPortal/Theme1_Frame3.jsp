@@ -253,7 +253,7 @@
 	}
 	
 	</script>
-	<style type="text/css">
+	<style>
 		.notEmptySlider {
 			width : 280px;
 			height : 515px;
@@ -264,6 +264,19 @@
 			width : 36px;
 			height : 36px;
 		}
+		
+		@media only screen and (min-width :1921px) {
+	.box_shadow{ width:483px; float:left;}
+}
+
+@media only screen and (max-width :1920px) and (min-width :1686px) { 
+	.box_shadow{ width:48%; float:left;}
+}
+
+@media only screen and (max-width :1685px) and (min-width :1280px) {
+	.box_shadow{width:48%; float:left;}
+	
+}
 	</style>
 </head>
 

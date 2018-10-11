@@ -10,16 +10,25 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
+	// 공지사항 리스트
 	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
 		return (List<BoardListVO>) list("ezNewPortal.getNoticePortletList", map);
+	}
+	
+	// 설문조사 리스트
+	@SuppressWarnings("unchecked")
+	public List<PersonalLightPollVO> getPollPortletList (Map<String, Object> map) throws Exception {
+		return (List<PersonalLightPollVO>) list("ezNewPortal.getPollPortletList", map);
 	}
 
 	//투표할 수 있는 리스트 개수 불러오기
@@ -66,6 +75,16 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (PortletInfoVO) select("ezNewPortal.getCompanyPortletInfo", map);
 	}
 	
+	//사용자 포탈 설정 가져오기 (테마, 프레임)
+	public UserPortalSettingVO getUserPortalSetting(Map<String, Object> map) {
+		return (UserPortalSettingVO) select("ezNewPortal.getUserPortalSetting", map);
+	}
+
+	//사용자 포탈 설정 없을 때 회사 포탈 설정을 사용자 포탈설정으로 가져오기
+	public UserPortalSettingVO getCompPortalSetting(Map<String, Object> map) {
+		return (UserPortalSettingVO) select("ezNewPortal.getCompPortalSetting", map);
+	}
+	
 	/**
 	 * 이효진
 	 */
@@ -73,6 +92,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ApprGFormVO> getFavoriteForms(Map<String, Object> map) {
 		return (List<ApprGFormVO>) list("ezNewPortal.getFavoriteForms", map);
+	}
+	
+	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) {
+		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
 	}
 	/** -------------------- */
 	

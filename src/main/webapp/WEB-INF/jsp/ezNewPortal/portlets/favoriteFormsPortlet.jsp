@@ -6,8 +6,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>favoriteFormsPortlet</title>
-		
-		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
@@ -17,7 +15,7 @@
 		<div class="layDIV">
 			<dl class="portlet_title">
 				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
-				<dt class="portletText"></dt>
+				<dt class="portletText"><c:out value = "${portletName}" /></dt>
 				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 			</dl>
 			
@@ -56,6 +54,8 @@
 		
 		<script type="text/javascript">
 		//개똥이라 수정해야함 긁고 붙이고해서 돌아가게만 해놓음
+		
+			//즐겨찾기양식목록 조회
 			var getFavoriteForms = function() {
 				var request = new XMLHttpRequest();
 				request.open('POST', '/ezNewPortal/getFavoriteForms.do', true);
@@ -90,13 +90,36 @@
 				request.onerror = function() {
 				  // There was a connection error of some sort
 				};
-
-				var data = JSON.stringify({
-					"userId" : "${userInfo.id}"
-				});
 				
 				request.send();
 			}
+			
+			//결제통계 조회
+			var getApprovalStatistics = function() {
+				var request = new XMLHttpRequest();
+				request.open('POST', '/ezNewPortal/getApprovalStatistics.do', true);
+
+				request.onload = function() {
+					if (request.status >= 200 && request.status < 400) {
+						var result = JSON.parse(request.responseText);
+						
+						document.getElementById("SIXHGAP").innerHTML = result.hour;
+						document.getElementById("ONEDGAP").innerHTML = result.day;
+						document.getElementById("SEVENDGAP").innerHTML = result.week;
+						document.getElementById("ONEMGAP").innerHTML = result.month;
+						document.getElementById("OTHER").innerHTML = result.other;
+					} else {
+						// We reached our target server, but it returned an error
+					}
+				};
+
+				request.onerror = function() {
+				  // There was a connection error of some sort
+				};
+				
+				request.send();
+			}
+		
 		
 			var fraviteFormsPlus = function () {
 		    	if (!checkBujaeInfo('form')) {
@@ -241,6 +264,7 @@
 		    //로드되고나서
 		    document.getElementById('fraviteFormsPlus').addEventListener('click', fraviteFormsPlus);
 			getFavoriteForms();
+			getApprovalStatistics();
 		</script>
 	</body>
 </html>

@@ -17,6 +17,8 @@ import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -35,6 +37,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
 		
 		return ezNewPortalDAO.getNoticePortletList(map);
+	}
+	
+	public List<PersonalLightPollVO> getPollPortletList(String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		return ezNewPortalDAO.getPollPortletList(map);
 	}
 	
 	@Override
@@ -119,9 +129,38 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		return ezNewPortalDAO.getPortletOrderComp(map);
+		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
+		
+		if (portletOrderComp == null || portletOrderComp.size() == 0) {
+			map.put("order", "default");
+			portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
+		}
+		
+		return portletOrderComp;
 	}
 	
+
+	@SuppressWarnings("null")
+	@Override
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		UserPortalSettingVO userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+		
+		if (userPortalSetting == null) {
+			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+			
+			if (userPortalSetting == null) {
+				userPortalSetting.setUsedFrame(1);
+				userPortalSetting.setUsedTheme(1);
+			}
+		}
+		
+		return userPortalSetting;
+	}
 	
 	/**
 	 * 이효진
@@ -141,6 +180,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getFavoriteForms ended.");
 		
 		return list;
+	}
+	
+	@Override
+	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getApprovalStatistics started.");
+		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		Map<String, Object> result = ezNewPortalDAO.getApprovalStatistics(map);
+		
+		LOGGER.debug("getApprovalStatistics ended.");
+		
+		return result;
 	}
 	/** -------------------- */
 

@@ -144,19 +144,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("qstId", data.get("qstId"));
 			model.addAttribute("pollAnswer", data.get("pollAnswer"));
 			model.addAttribute("pollAnswerCount", data.get("pollAnswerCount"));
-			model.addAttribute("portletName", data.get("portletName"));
 		}
+		
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		logger.debug("portalVotePortlet End");
 		return "/ezNewPortal/portlets/votePortlet";
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 설문조사
 	 */
 	@RequestMapping(value = "/ezNewPortal/pollPortlet.do")
 	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/poll";
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+		} 
 		
 		return "/ezNewPortal/portlets/pollPortlet";
 	}
@@ -190,10 +203,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
 		
 		String buJaeInfo = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		
 		model.addAttribute("portletId", portletId);
+		model.addAttribute("portletName", portletName);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("buJaeInfo", buJaeInfo);
@@ -207,7 +222,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/**
 	 * 포틀릿 - 양식즐겨찾기 리스트 조회
 	 */
-	@RequestMapping(value = "/ezNewPortal/getfavoriteForms.do")
+	@RequestMapping(value = "/ezNewPortal/getFavoriteForms.do")
 	public String getFavoriteForms(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getFavoriteForms started.");
 		
@@ -248,9 +263,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			JSONArray resultList = (JSONArray) data.get("resultList");
 			
-			model.addAttribute("resultList", resultList);
+			model.addAttribute("hour", data.get("hour"));
+			model.addAttribute("day", data.get("day"));
+			model.addAttribute("week", data.get("week"));
+			model.addAttribute("month", data.get("month"));
+			model.addAttribute("other", data.get("other"));
 		}
 		
 		logger.debug("getFavoriteForms ended.");
