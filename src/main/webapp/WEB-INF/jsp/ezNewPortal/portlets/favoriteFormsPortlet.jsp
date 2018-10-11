@@ -103,22 +103,11 @@
 					if (request.status >= 200 && request.status < 400) {
 						var result = JSON.parse(request.responseText);
 						
-						alert(result.hour);
-						alert(result.day);
-						
-						var statisticsHTML = "";
-						
-						/* for (var i = 0; i < 5; i++) {
-							statisticsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span>" + forms[i].formName + "</span></li>";
-						}
-						
-						document.getElementsByClassName('bookmark')[0].innerHTML = formsHTML
-						
-						Array.from(document.getElementsByClassName('bookmarkLi')).forEach(function(element) {
-							element.addEventListener('click', function() {
-								checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
-							});
-						}); */
+						document.getElementById("SIXHGAP").innerHTML = result.hour;
+						document.getElementById("ONEDGAP").innerHTML = result.day;
+						document.getElementById("SEVENDGAP").innerHTML = result.week;
+						document.getElementById("ONEMGAP").innerHTML = result.month;
+						document.getElementById("OTHER").innerHTML = result.other;
 					} else {
 						// We reached our target server, but it returned an error
 					}

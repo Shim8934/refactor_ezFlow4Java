@@ -1601,6 +1601,7 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			data.put("hour", resultMap.get("hour"));
 			data.put("day", resultMap.get("day"));
+			data.put("week", resultMap.get("week"));
 			data.put("month", resultMap.get("month"));
 			data.put("other", resultMap.get("other"));
 			
