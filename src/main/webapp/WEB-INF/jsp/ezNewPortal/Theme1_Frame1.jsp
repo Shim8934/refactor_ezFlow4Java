@@ -15,10 +15,12 @@
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/showModalDialog.js')}" ></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 <script type="text/javascript">
 
 	var portletOrder = JSON.parse('${portletOrder}');
@@ -30,9 +32,11 @@
 	var unreadMailCount = "<c:out value='${unreadMailCount}'/>";
 	var photoBoardPage = 1;
 	var photoCount = 4;
+ 	var nowAttiTime = "";
+ 	var serverTime = "<c:out value='${serverTime}'/>";
 	
 	$(function() {
-		$('#featured').orbit();
+		$("#featured").orbit();
 		
 		var portletCount = portletOrder.length;
 		
@@ -66,12 +70,90 @@
 		
 		//ajax로 count 불러오기
 		getCountSetting();
+		//
+		parseDate();
+		attiClock();
 		
+		//개인환경설정으로 이동 동작 연결
 		$("#personalEnv").on("click", viewPersonalEnv);
 		
-		$(".portlet_area").sortable();
+		//포틀릿 드래그 앤 드롭
+		$(".portlet_area").sortable({
+			update : function(event, ui) {
+				updatePortletOrderUser();
+			}
+		});
+		
 		$(".portlet_area").disableSelection();
 	});
+	
+	function updatePortletOrderUser() {
+		var portlets = $(".box_shadow");
+		var updateOrder = [];
+		var portletsCount = portlets.length;
+		
+		for (var i = 0; i < portletsCount; i++) {
+			var portletId = portlets.eq(i).attr("id");
+			portletId = portletId.substring(0, portletId.indexOf("P"));
+			
+			updateOrder.push({"portletOrder" : i + 1, "portletId" : portletId});
+		}
+		
+		//ajax로 순서 변경
+		$.ajax({
+			type : "PATCH",
+			url : "/ezNewPortal/updatePortletOrderUser.do",
+			dataType : "text",
+			data : {"updateOrder" : updateOrder},
+			success : function(result) {
+				if (result === "fail") {
+					alert("오류가 발생하였습니다.");
+				}
+			},
+			error : function() {
+				alert("오류가 발생하였습니다.");
+			}
+		});
+	}
+	
+	function parseDate() {
+		var _strDate = "";
+		nowAttiTime = new Date(serverTime);
+		
+		if (nowAttiTime.toString() == 'Invalid Date') {
+		    var _parts = serverTime.split(' ');
+		
+		    var _dateParts = _parts[0];
+		    nowAttiTime = new Date(_dateParts);
+		
+		    if (_parts.length > 1) {
+		        var _timeParts = _parts[1].split(':');
+		        nowAttiTime.setHours(_timeParts[0]);
+		        nowAttiTime.setMinutes(_timeParts[1]);
+		        if (_timeParts.length > 2) {
+		        	nowAttiTime.setSeconds(_timeParts[2]);
+		        }
+		    }
+		}
+		
+		//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
+		
+	}
+	
+	function attiClock() {
+        var h, m;
+        var s;
+        var time = " ";
+        
+        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+        document.getElementById("timeFlow").innerHTML = time;
+        if (time == "00:00:00") {
+        	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+        }
+        gizmo = setTimeout("attiClock()", 1000);
+        
+    }
 	
 	function eventSetting(portletId) {
 
@@ -307,7 +389,7 @@
 				<article class="time_check">
 					<div id="timeinput" class="presentTime">
 	               		<p class="timeTit" id="todayTime">현재시간</p>
-						<div id="timeFlow" class="timeText">12:38:37</div>
+						<div id="timeFlow" class="timeText"></div>
 			    	</div>
 			    	<div id="atti_area" class="main_time">
 	            	<dl class="timeCheckIn">
