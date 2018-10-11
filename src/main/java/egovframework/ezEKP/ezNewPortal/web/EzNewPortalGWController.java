@@ -235,15 +235,17 @@ public class EzNewPortalGWController {
 				}				
 			}
 			
-			for (int i = 0; i < gList.size(); i++) {
-				if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
-					if (i == 0) {
-						pidListSub += ",";
+			if(gList != null && gList.size() > 0) {
+				for (int i = 0; i < gList.size(); i++) {
+					if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+						if (i == 0) {
+							pidListSub += ",";
+						}
 					}
-				}
-					ScheduleGroupListVO data = gList.get(i);			
-					pidListSub += "\'" + data.getGroupId() + "\',";
-				}
+						ScheduleGroupListVO data = gList.get(i);			
+						pidListSub += "\'" + data.getGroupId() + "\',";
+					}
+			}
 			
 			if(indiListSub.equals("") || indiListSub == null){
 				indiListSub = ",\'\'";
