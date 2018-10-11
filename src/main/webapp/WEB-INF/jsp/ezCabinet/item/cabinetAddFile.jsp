@@ -38,9 +38,9 @@
 			</div>
 		</div>
 		
-		<div class="cabBttnDiv" id="cabAddBttn">
+		<%-- <div class="cabBttnDiv" id="cabAddBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
-		</div>
+		</div> --%>
 		
 		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
@@ -67,8 +67,8 @@
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
 					var listBttns           = cabdivBttnElmt.children;
-					/* listBttns[0].onclick    = function(e) {saveItem();}; */
-					listBttns[0].onclick    = function(e) {closeWindow();};
+					/* listBttns[0].onclick    = function(e) {saveItem();};
+					listBttns[0].onclick    = function(e) {closeWindow();}; */
 					
 					var fileUploadBttn      = document.getElementById("fileBttn");
 					fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
