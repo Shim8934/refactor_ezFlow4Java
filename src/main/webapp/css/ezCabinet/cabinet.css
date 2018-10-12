@@ -444,7 +444,7 @@
 .blankDiv .blankMsg {font-size: 15px; font-weight: bold; margin: 15px 0px; padding: 0px; color: #656565; height: 25px; line-height: 25px;}
 .cabBlankMain {height: 83%; display: flex; align-items: center; justify-content: center;}
 .cabStore {display: block; padding-left: 0px; height: 28px; margin-bottom: 15px; margin-top: 3px; vertical-align: middle;}
-.cabStore span {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding: 0px 8px 0px 8px; vertical-align: top; cursor: pointer; margin-bottom: 15px; border-radius: 3px; background-color: white; border: 1px solid #829dc7; height: 24px; line-height: 25px; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);}
+.cabStore span {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding: 0px 8px 0px 8px; vertical-align: top; cursor: pointer; border-radius: 3px; background-color: white; border: 1px solid #829dc7; height: 27px; line-height: 26px; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);}
 .cabUploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .cabwrapperDiv, .cabwrapperDiv2 {margin: 10px 0px; display: flex; flex-flow: column;}
 .cabwrapperDiv {height: 464px;}
