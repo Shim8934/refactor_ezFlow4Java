@@ -1208,4 +1208,32 @@ public class EzEmailAdminController {
 		return returnJsonArr;
 	}
 	
+	/**
+	 * 서명 템플릿 목록 검색
+	 * 
+	 * @param companyId
+	 * @return : JSONArray
+	 */
+	@RequestMapping("/admin/ezEmail/searchSignList.do")
+	@ResponseBody
+	public JSONArray searchSignList(@CookieValue("loginCookie") String loginCookie, String companyId, String search, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("searchSignList started.");
+		logger.debug("companyId=" + companyId);
+		logger.debug("search=" + search);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONArray returnJsonArr = new JSONArray();
+
+		try {
+			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search);
+			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		logger.debug("searchSignList ended.");
+		return returnJsonArr;
+	}
+	
 }

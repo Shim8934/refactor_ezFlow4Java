@@ -18,6 +18,7 @@
 	        	signatureTemplateView();
 	        };
 	        
+	        // 초기화면
 	        function signatureTemplateView() {
 	        	
 	        	$.ajax({
@@ -34,6 +35,7 @@
 	        	});
 	        }
 	        
+	        // 목록 보여주기
 	        function makeSignatureList(json) { 
 	        	var _TBODY = document.getElementById("signList");
 				
@@ -43,6 +45,9 @@
 					
 					var _NODATA = document.createElement("TD");
 	                _NODATA.style.textAlign = "center";
+	                _NODATA.style.border = "none";
+	                _NODATA.style.borderBottom = "1px solid #f2f2f2";
+	                _NODATA.style.padding = "0";
 	                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
 	                
 					_TR.appendChild(_NODATA);
@@ -95,6 +100,43 @@
 				}
 	        }
 	        
+	        // 검색 리스트 가져오기
+	        function searchSignList() {
+	        	var search = document.getElementById("signSearchInput").value;
+	        	
+	        	if (search == '' || search.length == 0) {
+	        		alert("검색어를 입력해주세요.");
+	        		return;
+	        	}
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		url : "/admin/ezEmail/searchSignList.do?companyId=" + companyID + "&search=" + encodeURIComponent(search),
+	        		datatype : 'json',
+	        		error : function(data) {
+	        			alert("error");
+	        			console.log(data);
+	        		},
+	        		complete : function(data) {
+	        			$("#signList tr").empty();
+	        			makeSignatureList(data.responseJSON);
+	        	    }
+	        	});
+	        	
+	        }
+	        
+	        // 검색 엔터 기능 
+	        function signSearchEnter() {
+	        	if (event.keyCode == 13) {
+	        		searchSignList();
+	        	}
+	        }
+	        
+	        // 검색어 초기화
+	        function inputReset(){
+	        	document.getElementById("signSearchInput").value = "";
+	        }
+	        
 	    </script>
 	    
 	    <style>
@@ -145,11 +187,11 @@
 								<div style="border-top: 0px">
 									서명 템플릿
 								</div>
-									<input type="text" id="lmSearchInput" onkeydown="" style="height:22px;">
-									<button class="lmTop">
+									<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="height:22px;">
+									<button class="lmTop" onclick="searchSignList()">
 										검색
 									</button>
-									<button class="lmTop">
+									<button class="lmTop" onclick="inputReset()">
 										초기화
 									</button>
 							</div>
