@@ -73,7 +73,7 @@
 		    }
 		    function btSearchDept_onclick() {
 		        if (textDeptName.value == "") {
-		            alert("<spring:message code='ezApprovalG.t1125'/>");
+		        	OpenAlertUI("<spring:message code='ezApprovalG.t1125'/>");
 		        }
 		        else {
 		            var pSearchList = "displayname::" + textDeptName.value + ";;EXACT_extensionAttribute2::" + CompanyID;
