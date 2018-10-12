@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -100,7 +99,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezPortal/portlets/notice";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -134,7 +133,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("portletId", req.getParameter("portletId"));
 		String url = "/rest/ezPortal/portlets/vote";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -164,7 +163,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezPortal/portlets/poll";
 
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
@@ -208,7 +207,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("getApprovalList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String tabName = request.getParameter("tabName");
+		String type = request.getParameter("type");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("type", type);
+		String url = "/rest/ezportal/portlets/approvalList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			JSONArray resultList = (JSONArray) data.get("resultList");
+			
+			model.addAttribute("resultList", resultList);
+		}
+		
 		
 		
 		
@@ -254,7 +269,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezportal/portlets/favoriteforms";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -281,7 +296,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezportal/portlets/approvalstatistics";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -314,7 +329,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("portletId", portletId);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		
 		if (result.equals("ok")) {
@@ -346,14 +361,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("portalFavoriteBoardPortlet ended");
-		return "/ezNewPortal/favoriteBoardPortlet";
+		return "/ezNewPortal/portlets/favoriteBoardPortlet";
 	}
 	
 	/**
 	 * 포들릿 - 즐겨찾기 탭 리스트 불러오기
 	 */
 	@RequestMapping(value="/ezNewPortal/favoriteBoardPortletList.do")
-	public String favoriteBoardPortletList(String mode, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+	@ResponseBody
+	public JSONArray favoriteBoardPortletList(String mode, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -364,70 +380,60 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("mode", mode);
 		param.put("userId", userId);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists" + userInfo.getId(), param, request, "get", null);		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
 		
-		if (status.equals("ok")) {		
-			JSONArray resultList = (JSONArray) resultBody.get("resultList");
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
 			
-			model.addAttribute("resultList", resultList);
+			if (data.get("resultList") != null) {
+				json = (JSONArray) data.get("resultList");
+			} else {
+				json = null;
+			}
+			
 		}
 
 		logger.debug("get_favoriteList ended");
-		return "json";
+		return json;
 	}
 	
 	/**
 	 * 포들릿 - 즐겨찾기 리스트 불러오기
 	 */
 	@RequestMapping(value="/ezNewPortal/getFavoriteBoardList.do")
-	public String getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale, @ModelAttribute BoardVO boardVO) throws Exception {
+	@ResponseBody
+	public JSONArray getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		logger.debug("boardID : " + boardVO.getBoardId());
-    	logger.debug("boardType : " + boardVO.getBoardType());
-    	logger.debug("pageNum : " + boardVO.getPageNum());
-    	logger.debug("orderCell : " + boardVO.getOrderCell());
-    	logger.debug("orderOption : " + boardVO.getOrderOption());
     	
     	String userId = userInfo.getId();
-    	String type = "1";
-    	String boardId = boardVO.getBoardId();
-    	String boardType = boardVO.getBoardType();
-    	String mode = boardVO.getMode();
-    	String pageNum = String.valueOf(boardVO.getPageNum());
-    	String orderCell = boardVO.getOrderCell();
-    	String orderOption = boardVO.getOrderOption();
-    	
-    	if (boardVO.getType() != null && !boardVO.getType().equals("")) {
-    		type = boardVO.getType();
-    	}
+    	String boardId = request.getParameter("boardId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
-		param.put("type", type);
 		param.put("boardId", boardId);
-		param.put("boardType", boardType);
-		param.put("mode", mode);
-		param.put("pageNum", pageNum);
-		param.put("orderCell", orderCell);
-		param.put("orderOption", orderOption);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites" + userInfo.getId(), param, request, "get", null);		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
 		
-		if (status.equals("ok")) {		
-			JSONArray resultList = (JSONArray) resultBody.get("resultList");
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
 			
-			model.addAttribute("resultList", resultList);
+			if (data.get("favList") != null) {
+					json = (JSONArray) data.get("favList");
+			} else {
+				json = null;
+			}
 		}
 
 		logger.debug("get_favoriteList ended");
-		return "json";
+		return json;
 	}	
 	
 	/**
@@ -501,7 +507,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("startRow", startRow);
 		param.put("portletId", portletId);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		JSONArray json = new JSONArray();
 		

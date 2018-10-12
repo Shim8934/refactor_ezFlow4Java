@@ -80,8 +80,10 @@ public class EzScheduleAdminController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String lang = userInfo.getLang();
+		String primary = userInfo.getPrimary();
 		
 		logger.debug("lang : " + lang);
+		logger.debug("primary : " + primary);
 		
 		model.addAttribute("lang", lang);
 		
