@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+
+
 
 
 
@@ -70,6 +74,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezMemo.service.EzMemoService;
+import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -128,6 +134,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "EzMemoService")
+	private EzMemoService ezMemoService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
@@ -229,6 +238,14 @@ public class EzBoardController extends EgovFileMngUtil{
         else {
         	ladderFlag = "NO";
         }
+        
+        // 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", tenantID).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
@@ -321,6 +338,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("useQuestion", useQuestion);
         modelMap.addAttribute("pollFlag", pollFlag);
         modelMap.addAttribute("ladderFlag", ladderFlag);
+        modelMap.addAttribute("memoFlag", memoFlag);
         
 		logger.debug("boardLeft ended");
 
@@ -391,7 +409,17 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         //end
         
+        // 2018-08-06 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        }
+        else {	// 개발 끝나면 NO로 변경
+        	memoFlag = "NO";
+        }
+        
         modelMap.addAttribute("pollFlag", pollFlag);
+        modelMap.addAttribute("memoFlag", memoFlag);
 
 		return "ezBoard/boardConfig";
 	}
@@ -597,6 +625,72 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	//end
 	
+	
+	
+	/**
+	 * 게시판 메모 환경설정 호출
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoSetting.do", method = RequestMethod.GET)
+	public String boardMemoSetting(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardMemoSetting started");	
+		userInfo = commonUtil.userInfo(loginCookie); 
+		
+		MemoConfigVO memoConfigVO = new MemoConfigVO();
+		memoConfigVO.setUser_id(userInfo.getId());
+		memoConfigVO.setTenant_id(userInfo.getTenantId());
+		memoConfigVO.setCompany_id(userInfo.getCompanyID());
+		
+		memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
+		
+		model.addAttribute("memoConfigVO", memoConfigVO);
+		
+		logger.debug("boardMemoSetting ended");
+		return "ezBoard/boardMemo";	
+	}
+	
+	
+	/**
+	 * 게시판 메모 환경설정 저장
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param request
+	 * @param response
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoConfigSave.do", method = RequestMethod.POST)
+	public String boardMemoConfigSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, MemoConfigVO memoConfigVO) throws Exception {
+		logger.debug("boardMemoConfigSave started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		memoConfigVO.setUser_id(userInfo.getId());
+		memoConfigVO.setTenant_id(userInfo.getTenantId());
+		memoConfigVO.setCompany_id(userInfo.getCompanyID());
+		
+		ezMemoService.setMemoConfig(memoConfigVO);
+		logger.debug("boardMemoConfigSave ended");
+		return "json";
+	}
+	
+	/**
+	 * 게시판 환경설정 메모 분류 호출
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoDivision.do", method = RequestMethod.GET)
+	public String boardMemoDivision(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardMemoDivision started");	
+		logger.debug("boardMemoDivision ended");
+		return "ezBoard/boardMemoDivision";	
+	}
 	/**
 	 * 게시판 부모게시판명 표출 Method
 	 */

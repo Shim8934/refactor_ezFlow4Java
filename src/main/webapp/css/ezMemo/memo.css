@@ -1,0 +1,167 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.memoIcon{display:inline-block; background:url(../../images/ezMemo/memo_icon.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
+.memoIcon30{display:inline-block; background:url(../../images/ezMemo/memo_icon_30.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
+
+/* .memo_wrap{ margin:0px; padding:10px 25px 10px 20px; box-sizing:border-box; overflow:hidden; background:rgba(0, 0, 0, 0.30);}
+.memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
+.memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; z-index: 1001; overflow:hidden; height: 50%;}
+.memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
+.memoHeaderUL{ margin: 10px 4px 9px 9px; padding:0px; list-style:none; overflow:hidden;}
+.memoHeaderUL li{ margin:0px; padding:0px;}
+.memoHeaderUL li.memoSelect{  float:left; padding:0px;}
+.memoHeaderUL li.memoSelect select{ background:#fff url(../../images/ezMemo/next.gif) no-repeat right 1px center; border:1px solid #cbcbcb; height:29px; -webkit-appearance:none; padding:0px 24px 1px 7px;}
+select::-ms-expand {
+    display: none;
+}
+.memoHeaderUL li.memoPlus{margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-180px 0px; width:30px; height:30px; cursor:pointer;}
+.memoHeaderUL li.memoClose{margin:5px 5px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:30px; height:30px; cursor:pointer;}
+.memoHeaderUL li.memoExpand{ margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-120px 0px; width:30px; height:30px; cursor:pointer;}
+.memoHeaderUL li.memoExpand_s{ margin:5px 5px 0px 0px; padding:0px; float:right; background-position:-60px 0px; width:30px; height:30px; cursor:pointer;}
+.memo_main{clear:both; padding:0px 0px 0px 5px;}
+.memo_main .memoLay{ width:260px; height:310px; float:left; margin:0px 0px 10px 5px; position:relative;}
+#boardMemoList { margin: 10px; pointer-events : auto;}
+#boardMemoList .memoLay{ width:260px; height:310px; float:left; margin:0px 10px 10px 0px; position:relative;}
+.mamo01{ background:url(../../images/ezMemo/memo01.png) no-repeat left center; overflow:hidden;}
+.mamo02{ background:url(../../images/ezMemo/memo02.png) no-repeat left center; overflow:hidden;}
+.mamo03{ background:url(../../images/ezMemo/memo03.png) no-repeat left center; overflow:hidden;}
+.mamo04{ background:url(../../images/ezMemo/memo04.png) no-repeat left center; overflow:hidden;}
+.mamo05{ background:url(../../images/ezMemo/memo05.png) no-repeat left center; overflow:hidden;}
+.mamo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; overflow:hidden;}
+.memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
+.memoTit input{ width: 13px; height: 13px; vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
+.memoTit .mtitText{ margin:0px; padding:0px; font-family:Gulim; color:#696969; font-size:11px; float:left;}
+.mamo01 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo01 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo01 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo02 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo02 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo02 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo03 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo03 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo03 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo04 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo04 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo04 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo05 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo05 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo05 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo06 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo06 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo06 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -64px; width:16px; height:16px; cursor:pointer;}
+.memoTit .memoPlus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
+.memoTit .memoMinus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-80px 0px; width:16px; height:16px; cursor:pointer;}
+.memoText{border: none; background: none; margin: 10px 0px 0px 17px; padding: 0px 30px 0px 0px; line-height: 24px; color: #000; font-size: 12px; width: 90%; height: 213px; outline:none; resize:none; -ms-overflow-style: none; }
+.memoText::-webkit-scrollbar { display: none !important; }
+
+.memo01Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo01Big .bigTop{ background:#fff9c5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px;}
+.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20);}
+.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point01.png) no-repeat;}
+.memo01Big .bigTop #detailMemoContents{background:#fff9c5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+
+.memo02Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo02Big .bigTop{ background:#c5ffdf; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px;}
+.memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
+.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point02.png) no-repeat;}
+.memo02Big .bigTop #detailMemoContents{background:#c5ffdf; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+
+.memo03Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo03Big .bigTop{ background:#e8ffc5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px;}
+.memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
+.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point03.png) no-repeat;}
+.memo03Big .bigTop #detailMemoContents{background:#e8ffc5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+
+.memo04Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo04Big .bigTop{ background:#c5f3ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px;}
+.memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
+.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point04.png) no-repeat;}
+.memo04Big .bigTop #detailMemoContents{background:#c5f3ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+
+.memo05Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo05Big .bigTop{ background:#d7d6ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px;}
+.memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
+.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point05.png) no-repeat;}
+.memo05Big .bigTop #detailMemoContents{background:#d7d6ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+
+.memo06Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo06Big .bigTop{ background:#ffd6f2; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px;}
+.memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
+.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point06.png) no-repeat;}
+.memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+
+.color_popup{ margin:0px; padding:6px; list-style:none; width:90px; height:65px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:32px; top:30px; background:#fff;}
+.color_popup li{ margin:3px 2px 2px 3px; padding:0px; width:18px; height:18px; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; float:left; cursor:pointer;}
+.color_popup li.color01{background:#f0e468; border:1px solid #e2d657;}
+.color_popup li.color02{background:#5feab0; border:1px solid #54e2a7;}
+.color_popup li.color03{background:#aaef4c; border:1px solid #9ee43f;}
+.color_popup li.color04{background:#519ef0; border:1px solid #4592e4;}
+.color_popup li.color05{background:#8e74f6; border:1px solid #8167ec;}
+.color_popup li.color06{background:#f261d0; border:1px solid #e752c4;}
+.memobgBar{ float:right; clear:both; padding:0px 25px 10px 20px; margin-top: 8px;}
+
+/* memoBtn */
+.memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
+.memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
+.memo_add{ background:url(../../images/ezMemo/memo_add.png) no-repeat center; margin:0 auto; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
+.memo_add span{ font-size:13px; color:#fff; display:inline-block; margin:0px; padding:200px 0px 0px 0px;}
+
+/* 09-05 추가  */
+#detailMemo{width:400px; height:400px; position:absolute;}
+/* 09-06 추가  */
+#memoFolderList {width:149px; height:27px; border-radius:25px;}
+/* .memo_header_wrapper{ overflow:hidden; padding:0px; opacity:1; background:#000000;} */
+#mCSB_1_scrollbar_vertical {margin-right: 4px;}
+/* 09-07 추가 */
+.mCSB_inside > .mCSB_container{margin-right: 25px;}
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {background-color: rgba(89,89,89,0.75);}
+.memoTit .pallete2{ margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
+/* 09-10 추가 */
+h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; padding:0px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;  }
+.alertPopup{width: 172px;position:absolute;top: 99px;left: 37px;}
+.memoPopHeader{height: 60px;line-height: 60px;font-size:18px;font-weight:bold;border-radius: 3px 3px 0 0;background: #e7e7e7;/* border-bottom:1px solid #cccfd3; */text-align: center;}
+.memoPopHeader span {font-size: 12px;line-height: normal;text-align: center;font-weight: normal;display: inline-block;margin: 0px;padding: 0px;/* height: auto; */}
+.popContainer{background:#fff;border-radius: 0 0 3px 3px;/* margin-top: -5px; */height: 46px;}
+.txtDialog{padding: 0px 0 0px 0;font-size: 12px;color:#333;/* line-height: 9px; */font-weight:bold;}
+.footBtn{font-size:18px;line-height:33px;text-align:center;margin: 0px;padding: 0px;height: 46px;}
+.memoModal {z-index: 10000;padding-top:top: 0px;width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 5px;margin-top: 3px;}
+.modRm-wrap{display:inline-block; margin:6px 3px 0px 3px; padding:0px; cursor:pointer;}
+.modRm-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'gulim','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
+.close-wrap{display:inline-block; margin:6px 0px 0px 0px; padding:0px; cursor:pointer;}
+.close-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'gulim','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
+
+
+/* portalMain 메모분류함  */
+.select_wrapper {text-align: left; padding-left: 10px;color:#fff; background: #494949 url(/images/ezMemo/arrow.png) no-repeat top 10px right 9px;line-height: 28px;cursor: pointer;position: relative; width:165px; margin: 5px 0px 0px 5px; border-radius:40px;}
+.select_wrapper:hover { background: #566c3a url("/images/ezMemo/arrow.png") no-repeat top 10px right 9px; }
+.select_wrapper .select_inner {font-family: arial;font-size: 13px; background: #fff;border-radius: 5px;  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);color: #687278; display: none;position: absolute;left: 0;top: 0%;width: 100%;z-index: 15000;list-style: none; text-align:left; padding:0px;}
+.select_wrapper .select_inner li {padding-left: 10px; border-bottom: 1px solid #eee;}
+.select_wrapper .select_inner li:hover { background: #eee; }
+.select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
+.select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
+.select_wrapper span {display: block; width:200px; font-size:13px;}
+
+
+.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
+.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
+#slider-range{background: #7e7e7e; width:70px;float:left; margin-left:15px; height:5px; border-radius:0px; border:none;}
+.ui-widget-header {background: #d5d5d5; border:none;}
+#slider-range .ui-slider-handle {border:none; background: #0470e4; height: 15px; width: 15px; margin-top:-1px;}		
+.ui-resizable-se {background-image: url("");}
+.memoSelect{position:absolute; height:500px;}
+#memoFolderList{display:none;}
+.memoPlus{margin-left:250px;}
+.ui-widget-content {border:none; background: #727272; border-radius:0px;}
+.ui-slider-handle:active, .ui-slider-handle:hover, .ui-slider-handle:focus, .ui-slider-handle:default{background: #0470e4; height: 13px; width: 13px; margin-top:-1px; outline: none; border:none;}
+.ui-slider-horizontal, .ui-slider-range {border-radius:0px;}	
+.emptyDiv { height: 140px; padding-top: 100px; color: #d0d0d0; font-size: 12px; font-weight: bold; }
+
+.toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;}
