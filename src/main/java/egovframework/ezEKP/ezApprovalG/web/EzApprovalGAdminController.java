@@ -266,6 +266,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String title = "", topID = "";
 		String parentID = request.getParameter("parentID");
 		String contID = request.getParameter("contID");
+		String companyID = request.getParameter("companyID");
 		String parentName = "";
 		
 		if (tCheck.equals("fContIns")) {
@@ -274,10 +275,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			title = egovMessageSource.getMessage("ezApprovalG.t1627", userInfo.getLocale()); 
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-			topID = userInfo.getCompanyID();
+//		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+//			topID = userInfo.getCompanyID();
+//		} else {
+//			topID = "Top";
+//		}
+		if (companyID != null && !companyID.equals("")) {
+			topID = companyID;
 		} else {
-			topID = "Top";
+			topID = userInfo.getCompanyID();
 		}
 
 		if (tCheck.equals("fContIns")) {

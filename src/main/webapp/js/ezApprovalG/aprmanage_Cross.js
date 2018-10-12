@@ -97,6 +97,11 @@ function getDocList_after(xml) {
     
     totalPage = Math.ceil(new Number(lstCnt / pageSize));
     pTotalCnt = lstCnt;
+    
+    //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+    if (totalPage <= 0)
+    	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
+    
     if (pageNum > totalPage) {
         pageNum--;
         getDocList();
@@ -289,6 +294,10 @@ function getReceivedDocList_after(xml) {
         var lstCnt = getNodeText(cntNode);
         totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
+        
+        //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을 때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+        if (totalPage <= 0)
+        	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
 
         if (pageNum > totalPage) {
             pageNum--;
@@ -905,7 +914,7 @@ function InitlvAprLine() {
     }
 }
 
-function RemoveDoc(pDocID) {
+function RemoveDoc(pDocID, orgCompanyID) {
 	var result = "";
 	
     $.ajax({
@@ -915,7 +924,8 @@ function RemoveDoc(pDocID) {
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
 				docID : pDocID,
-				field  : "MUST"
+				field  : "MUST",
+				orgCompanyID : orgCompanyID 
 				},
 		success: function(xml){
 			result = xml;

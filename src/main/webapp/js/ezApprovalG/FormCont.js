@@ -1,6 +1,21 @@
 function GetFormInfo(ID, KIND, searchType, searchName) {
 	var xmlRtn = createXmlDom();
 	
+	//2018-10-11 배현상, 전자결재 관리자에서 양식함 조회 시 관리자가 즐겨찾기 한 목록이 양식함 리스트에 조회되는 현상 제거(양식함에는 양식등록이 불가능하여 ajax를 태우지 않고 '데이터가 없습니다' tr셋팅)
+	if (ID == "ROOT") {//양식함 = ROOT
+		var objTr = document.createElement("TR");
+    	objTr.setAttribute("id", "lvtForm_TR_noItems");
+    	var oText = document.createTextNode(strLang944);
+    	var objTd = document.createElement("TD");
+    	objTd.align = "center";
+    	objTd.setAttribute("colSpan", 1);
+    	objTd.appendChild(oText);
+    	objTr.appendChild(objTd);
+    	document.getElementById("lvtForm").getElementsByTagName("tbody")[0].innerHTML = "";
+    	document.getElementById("lvtForm").getElementsByTagName("tbody")[0].appendChild(objTr);
+		return;
+	}
+	
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezApprovalG/getFormList.do",

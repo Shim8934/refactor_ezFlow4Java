@@ -829,7 +829,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("HWE")) {
-				rtnVal = ezApprovalGService.doCallBack(docId, approvalGDocInfoVO.getAprMemberID(), userInfo.getCompanyId(), userInfo.getTenantId());
+				rtnVal = ezApprovalGService.doCallBack(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 				
 				if (rtnVal != null && !rtnVal.equals("<RESULT>FALSE</RESULT>")) {
 					result.put("status", "ok");

@@ -326,6 +326,7 @@
 	                            }
 	                            else {
 	                                try {
+	                                	isEditor = false;
 	                                    Conent_contentEditable(document.getElementById('body'));
 	                                } catch (e) { }
 	                            }
@@ -398,6 +399,7 @@
 	                        }
 	                        else {
 	                            try {
+	                            	isEditor = false;
 	                                Conent_contentEditable(document.getElementById('body'));
 	                            } catch (e) { }
 	                        }

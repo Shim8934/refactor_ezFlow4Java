@@ -32,6 +32,7 @@
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
 		    var receve = "${receve}";
 		    var adminYN = "${adminYN}";
+		    var titleSearch = "${titleSearch}";
 		    
 			window.onload = function() {
 				makePageSelPage();
@@ -654,12 +655,24 @@
 
 			        </tr>
 		        </c:forEach>
-			    <c:if test="${qstListVO.totalCnt == 0}"> 
-			        <tr> 
-						<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
-		       		</tr> 
-		        </c:if> 
-			</table> 
+		      
+		      <%-- 2018-10-10 홍승비 - 전자설문 검색결과가 없는 경우 메세지 변경 --%>  
+		        <c:if test="${qstListVO.totalCnt == 0}">
+			        <c:choose>
+				         <c:when test="${titleSearch != ''}">
+					        <tr>
+								<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezCommunity.t1379" /></td>
+				       		</tr>
+				        </c:when>
+				        <c:otherwise>
+				        	<tr>
+								<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td>
+				       		</tr>
+				        </c:otherwise>
+			        </c:choose>
+		        </c:if>
+		        
+			</table>
 			</div>
 		</form>
 		 

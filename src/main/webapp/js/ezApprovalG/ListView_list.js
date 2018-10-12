@@ -503,7 +503,7 @@ function ListView() {
                 }
                 
                 if (strColName == "REJECTFLAG")
-                    objTd.style.textAlign = "center";
+                    objTd.style.textAlign = "left";
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
@@ -522,7 +522,7 @@ function ListView() {
                 }
                 
                 if (strColName == "RejectFlag") {
-                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "left";
                 }
                 
                 if (strColName == "TransferFlag") {
@@ -1578,4 +1578,20 @@ function GetTodayDate()
 
 function SetUnSelected(pTableID) {
     tr_unselectedAll(pTableID);
+}
+
+function setDeleteRow(nodeId) {
+	var colCount = document.getElementById(nodeId+"_TH").childElementCount;
+	var oTable = document.getElementById(nodeId);
+	var oTbody = oTable.lastChild;
+	
+	var objTr = document.createElement("TR");
+    objTr.setAttribute("id", nodeId + "_TR_" + "noItems");
+    oTbody.appendChild(objTr);
+    var oText = document.createTextNode(strLang944);
+    var objTd = document.createElement("TD");
+    objTd.align = "center";
+	objTd.setAttribute("colSpan", colCount);
+    objTd.appendChild(oText);
+    objTr.appendChild(objTd);
 }

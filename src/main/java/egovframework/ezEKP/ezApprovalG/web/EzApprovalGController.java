@@ -5392,6 +5392,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("field");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals("undefined") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.deleteDocInfo(docID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("delDocInfo ended.");
@@ -6276,6 +6282,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
 		String result = ezApprovalGService.getOpinionInfo(docID, "CEND", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getEndOpinionInfo ended");
@@ -6314,12 +6326,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
-		String docID = xmlDom.getDocumentElement().getTextContent();
+		//String docID = xmlDom.getDocumentElement().getTextContent();
+		String docID = xmlDom.getElementsByTagName("DocID").item(0).getTextContent();
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
+		} else if (xmlDom.getElementsByTagName("ORGCOMPANYID").getLength() > 0) {
+			orgCompanyID = xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent();
+			if (!orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+				userInfo.setCompanyID(orgCompanyID);
+			}
 		}
 		
 		String ingFlag = ezApprovalGService.aprAttachMail(docID, "1", userInfo.getCompanyID(), userInfo.getTenantId());

@@ -1271,7 +1271,7 @@
 		
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
-			SELECT
+			(SELECT
 				CN ,
              	BIRTHTYPE ,
              	BIRTH ,
@@ -1293,7 +1293,49 @@
       		AND
       			IFNULL(BIRTH, ' ') <> ' '
 			ORDER BY
-				substr(birth, 8, 10)
+				substr(birth, 8, 10))
+				
+			UNION ALL
+			
+			(SELECT
+				DISTINCT A.CN ,
+             	BIRTHTYPE ,
+             	BIRTH ,
+             	A.DISPLAYNAME ,
+             	A.DISPLAYNAME2 ,
+             	A.TITLE ,
+             	A.TITLE2 ,
+             	A.DESCRIPTION ,
+             	A.DESCRIPTION2 ,
+             	A.EXTENSIONATTRIBUTE2 
+      		FROM
+      			TBL_USERMASTER A
+			INNER JOIN
+				TBL_DEPTMASTER B
+			ON
+      			A.TENANT_ID = B.TENANT_ID
+			AND
+				A.TENANT_ID = #v_TENANT_ID#
+			INNER JOIN
+				TBL_ADDJOBMASTER C
+			ON
+				B.CN = C.DEPTID
+			AND
+				A.CN = C.CN
+			AND
+				B.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+			AND
+      			A.TENANT_ID = C.TENANT_ID
+      		WHERE
+                A.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
+			AND
+				A.PHYSICALDELIVERYOFFICENAME <> #v_COMPANYID#
+      		AND
+      			A.TENANT_ID = #v_TENANT_ID#
+      		AND
+      			IFNULL(BIRTH, ' ') <> ' '
+			ORDER BY
+				substr(birth, 8, 10));
 		]]>
 	</select>
 	

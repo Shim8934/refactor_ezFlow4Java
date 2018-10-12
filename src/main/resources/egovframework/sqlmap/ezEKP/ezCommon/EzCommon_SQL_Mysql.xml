@@ -334,4 +334,38 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 	
+	<select id="EzCommonDAO.checkUserMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_USERMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterManualFlag"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkDeptMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_DEPTMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
+		ALTER TABLE 
+			TBL_DEPTMASTER
+		ADD 
+			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
+	</statement>
+	
 </sqlMap>

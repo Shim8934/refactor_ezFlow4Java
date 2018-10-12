@@ -22,7 +22,7 @@
     					<c:choose>
 	   						<c:when test="${fn:length(companyList) gt 1 }">
 	    						<dt>
-									<select id="selectCompany" style="width: 190px; font-size: 9pt;" onchange="changeCompany();">
+									<select id="selectCompany" style="margin-left:-3px;margin-bottom:2px; width: 195px; font-size: 9pt;" onchange="changeCompany();">
 										<c:forEach items="${companyList }" var="company">
 											<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
 												${company.companyName } (${company.deptName }) (${company.apprCount })
@@ -730,7 +730,7 @@
 		                break;
 
 		            case "boardwrite":
-		                var wWeight = "460";
+		                var wWeight = "355";
 		                var wHeight = "600";
 
 		                var heigth = window.screen.availHeight;
