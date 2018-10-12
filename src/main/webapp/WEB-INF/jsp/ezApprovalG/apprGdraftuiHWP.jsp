@@ -160,6 +160,7 @@
 	        var nonElecRec = "${nonElecRec}";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
 	        var useReceiveDocNo = "${useReceiveDocNo}";
+	        var orgCompanyID = "<c:out value='${userInfo.companyID}'/>";
 	        
 	        window.onload = function () {
 	            try {

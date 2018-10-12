@@ -36,7 +36,9 @@
 					return;
 				}
 			    if(ReturnFunction != null){
-			        ReturnFunction(NewPassword.value);
+			    	if (confirm(opener.changePassLength + "<spring:message code='ezOrgan.t40' />")){
+				        ReturnFunction(NewPassword.value);
+		            }
 			    }else{
 			        window.returnValue = NewPassword.value;
 			    }

@@ -122,8 +122,15 @@
 	        	if (CrossYN()) {
 	        		ShowMailProgress();
 	        		
-	        		var form = $('#form')[0];
-	        		var data = new FormData(form);
+	        		var input = document.getElementById("form").file1;
+	        		var data = new FormData();
+	        		
+	        		for (var i = 0; i < input.files.length; i++) {
+	        			data.append("file1", input.files[i]);
+	        		}
+	        		
+	        		data.append("folderid", document.getElementById("folderid").value);
+	        		data.append("cnt", document.getElementById("cnt").value);
 	        		
 	        		$.ajax({
 	        			type: 'POST',
@@ -214,6 +221,8 @@
         		
         		if (cnt > 100) {
         			alert(maxAllowMailMsg);
+        			
+        			document.getElementById("form").file1.value = "";
         			return;
         		}
         		

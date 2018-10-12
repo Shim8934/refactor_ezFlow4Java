@@ -68,6 +68,7 @@
 			var pOpinionType = "Show";
 			var pUse_Editor = "${useEditor}";
 			var approvalFlag = "${approvalFlag}";
+			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 			
 			function btnOpinion_onclick() {
 			    openOpinionViewUI();

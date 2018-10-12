@@ -57,7 +57,8 @@ function getAprOpinionXML(pOpContent) {
     			userID : pUserID,
     			formID : "",
     			isUsed   : "",
-    			mode     : ""
+    			mode     : "",
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(text){
     			result = text;
@@ -79,9 +80,11 @@ function getAprOpinionXML(pOpContent) {
                 var KyljeaName = getNodeText(cell[1]);
                 var KyljeaDeptID = getNodeText(cellzero[6]);
                 var KyljeaDeptName = getNodeText(cell[3]);
+                var KyljeaDeptName2 = getNodeText(cellzero[16]);
                 var KyljeaType = getNodeText(cell[4]);
                 var KyljeaStat = getNodeText(cell[5]);
                 var KyljeaJobtitle = getNodeText(cell[2]);
+                var KyljeaJobtitle2 = getNodeText(cellzero[18]);
                 break;
             }
         }
@@ -155,10 +158,14 @@ function getAprOpinionXML(pOpContent) {
 
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA7", arr_userinfo[11]);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA8", arr_userinfo[12]);
-        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA9", arr_userinfo[13]);
-        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA10", arr_userinfo[14]);
-        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA11", arr_userinfo[15]);
-        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", arr_userinfo[16]);
+        //createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA9", arr_userinfo[13]);
+        //createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA10", arr_userinfo[14]);
+        //createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA11", arr_userinfo[15]);
+        //createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", arr_userinfo[16]);
+        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA9", KyljeaJobtitle);
+        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA10", KyljeaJobtitle2);
+        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA11", KyljeaDeptName);
+        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", KyljeaDeptName2);
 
         CELL = createNodeAndAppandNode(objXML, ROW, CELL, "CELL");
         createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", arr_userinfo[2]);

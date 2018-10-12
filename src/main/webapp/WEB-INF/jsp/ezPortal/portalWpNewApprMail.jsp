@@ -526,13 +526,16 @@
 		                        var APRMEMBERDEPTID = getNodeText(xmldom.getElementsByTagName("APRMEMBERDEPTID").item(i));
 		                        var DOCSTATE = getNodeText(xmldom.getElementsByTagName("DOCSTATE").item(i));
 		                        var FUNCTIONTYPE = getNodeText(xmldom.getElementsByTagName("FUNCTIONTYPE").item(i));
+		                        
+		                        //2018-10-08 천성준 - 포틀릿 결재문서 companyID 처리
+		                        var orgCompanyID = getNodeText(xmldom.getElementsByTagName("orgCompanyID").item(i));
+		                        
 		                        //2018-08-09 배현상, 긴급결재 시 color=red표시
 		                        var URGENTAPPROVAL = getNodeText(xmldom.getElementsByTagName("URGENTAPPROVAL").item(i));
-		                        
 		                        if (URGENTAPPROVAL == 'Y') {
-		                        	listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+		                        	listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "','" + orgCompanyID + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        } else {
-			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "','" + orgCompanyID + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3).replace(/-/gi,'.') + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        }
 		                     }
 		                    //listHTML += "</ul>";
@@ -553,7 +556,7 @@
 		        }
 		    }
 	
-		    function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		    function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID) {
 		        var openLocation = "";
 	
 		        if ("${userApprovalG}" == "YES") {
@@ -561,14 +564,18 @@
 		                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
 		                    if (pDocState == "012" || pDocState == "014" || pDocState == "018") {
 		                        OpenReceiveDraftUI(pDocID, pHref, "REDRAFT");
+		                    } else if (pFunctionType == "004" && companyID != orgCompanyID) {
+	                    		var pAlertContent = "<spring:message code='ezApprovalG.csj01' />";
+		                        alert(pAlertContent);
+		                        return;
 		                    } else {
-		                        openApprDraftUI("REDRAFT", pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
+		                        openApprDraftUI("REDRAFT", pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID);
 		                    }
 		                } else {
-		                    openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
+		                    openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID);
 		                }
 		            } else {
-		                openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
+		                openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID);
 		            }
 		        } else {
 		            if (pListTypeValue != "2") {
@@ -632,7 +639,7 @@
 		        }
 		    }
 	
-		    function openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		    function openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID) {
 		        var pArgument = new Array();
 		        var formURL = pHref;
 		        var DocID = pDocID;
@@ -644,6 +651,7 @@
 		        pArgument[5] = "";
 		        pArgument[6] = "OPINION_SHOW";
 		        pArgument[7] = "2";
+		        pArgument[8] = orgCompanyID;
 		        
 		        var openLocation;
 		        
@@ -671,12 +679,13 @@
     	            openLocation += "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
     	            openLocation += "&isOpinion=" + escape(pArgument[6]);
     	            openLocation += "&listType=" + escape(pArgument[7]);
+    	            openLocation += "&orgCompanyID=" + escape(pArgument[8]);
                 }
 
                 openwindow(openLocation, "", 880, 570);
 		    }
 	
-		    function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		    function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID) {
 		        var pArgument = new Array();
 		        var formURL = pHref;
 		        
@@ -703,6 +712,7 @@
 		        pArgument[5] = tempDocState;
 		        pArgument[6] = AprState;
 		        pArgument[7] = "";
+		        pArgument[8] = orgCompanyID;
 	
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
 		        	if (pDocState == "011" && pFunctionType == "004" && pDraftFlag == "REDRAFT") {
@@ -713,6 +723,7 @@
 			            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 			            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
 			            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+			            openLocation += "&orgCompanyID=" + escape(pArgument[8]);
 		        	}
 		        } else {
 	                openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
@@ -745,13 +756,14 @@
 		        openwindow(openLocation, "receive", 880, 550);
 		    }
 	
-		    function openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		    function openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID) {
 	            var pArgument = new Array();
 	            
 	            pArgument[0] = pDocID;
 	            pArgument[1] = pAprMemberID;
 	            pArgument[2] = pAprMemberName;
 	            pArgument[3] = pAprMemberDeptID;
+	            pArgument[4] = orgCompanyID;
 
 	            var formURL = pHref;
 	            
@@ -775,6 +787,7 @@
 	                openLocation = openLocation + escape(pArgument[0]);
 	                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
+	                openLocation += "&orgCompanyID=" + escape(orgCompanyID);
 	            }
 	            openwindow(openLocation, "", 880, 550);       
 		    }

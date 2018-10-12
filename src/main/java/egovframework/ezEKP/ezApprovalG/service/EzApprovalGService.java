@@ -422,7 +422,7 @@ public interface EzApprovalGService {
 
 	public String getContUseDeptInfo(String pDeptID, String companyID,	String lang, int tenantId) throws Exception;
 
-	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantId) throws Exception;
+	public String registerUserContDoc(String docID, String contID, String description, String orgCompanyID, String companyID, String lang, int tenantId) throws Exception;
 
 	public String docAttachLineInfo(String docID, String id, String companyID, int tenantId) throws Exception;
 
@@ -434,7 +434,7 @@ public interface EzApprovalGService {
 
 	public String findTaskS(String deptCode, String title, String code, String companyID, int tenantId, String approvalFlag) throws Exception;
 
-	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
+	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID) throws Exception;
 
 	public String getUserContListAll(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
 	

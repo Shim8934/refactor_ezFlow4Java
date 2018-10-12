@@ -14,7 +14,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
         if (CompleteFunction != undefined) {
             if (CompleteFunction == "OPEN")
             {
-            	if (type != undefined) { //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
+            	if (type != undefined) { //2018-09-20 김보미 - 윈도우 팝업창 확인 안닫히는 문제
             		ezapralert_cross_dialogArguments[2] = true;
             	}
             	ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
