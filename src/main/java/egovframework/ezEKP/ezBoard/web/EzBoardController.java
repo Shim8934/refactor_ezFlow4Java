@@ -51,6 +51,7 @@ import org.w3c.dom.NodeList;
 
 
 
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -5963,11 +5964,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (photoViewList.get(k).getImageName().split("/").length > 1) {
 				fileName += photoViewList.get(k).getImageName().split("/")[3] + "|";
 				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +
-						"&attID=" + photoViewList.get(k).getImageName().split("/")[3] + "|";
+						"&attID=" + URLEncoder.encode(photoViewList.get(k).getImageName().split("/")[3], "UTF-8") + "|";
 			} else {
 				fileName += photoViewList.get(k).getImageName() + "|";
 				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +
-						"&attID=" + photoViewList.get(k).getImageName() + "|";
+						"&attID=" + URLEncoder.encode(photoViewList.get(k).getImageName(), "UTF-8") + "|";
 			}
 		}
 		
