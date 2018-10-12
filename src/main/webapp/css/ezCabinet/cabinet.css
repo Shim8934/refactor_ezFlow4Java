@@ -92,12 +92,14 @@
 .cabPrevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 70px; line-height: 18px; word-break: break-all;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
+
 .txtSpan {cursor: pointer;}
-.txtSpan:hover {color: #164aad;}
+.txtSpan:hover {color: #164aad !important;}
 .icDown, .icUp {margin: 0px 0px 0px 3px; cursor: pointer; width: 11px; height: 11px; display: inline-block; vertical-align: middle;}
 .icDown {background: url(/images/icon_graydown.gif) no-repeat center bottom;}
 .icUp {background: url(/images/icon_grayup.gif) no-repeat center bottom;}
 .relateList {padding: 0px; margin: 3px 0px 0px 0px; line-height: 18px;}
+.relateList .txtSpan {color: #3472e5;}
 .relateList.hide {display: none;}
 .relateList em {font-style: normal;}
 .cabWrapFile {padding: 8px;}
