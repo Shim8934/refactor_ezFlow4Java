@@ -5,7 +5,7 @@
 </head>
 <body>
 <div class="layDIV">
-    <dl class="portlet_title">
+    <dl class="portlet_title sortablePortlet">
 	    <dt class="portletText">공지사항</dt>
    		<dd class="portletPlus" id="noticePlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
     </dl>

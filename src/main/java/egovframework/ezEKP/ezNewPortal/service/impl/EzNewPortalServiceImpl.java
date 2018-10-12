@@ -49,81 +49,96 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
+		LOGGER.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
 		
+		LOGGER.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
 	}
 
 	@Override
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) {
+		LOGGER.debug("[Serivce] getVotePortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
 		
+		LOGGER.debug("[Serivce] getVotePortletInfo Ended");
 		return ezNewPortalDAO.getVotePortletInfo(map);
 	}
 
 	@Override
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId) {
+		LOGGER.debug("[Serivce] getVotePortletAnswer Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("qstId", qstId);
 		map.put("tenantId", tenantId);
-		
+
+		LOGGER.debug("[Serivce] getVotePortletAnswer Ended");
 		return ezNewPortalDAO.getVotePortletAnswer(map);
 	}
 
 	@Override
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount) {
+		LOGGER.debug("[Serivce] getPhotoBoardPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("startRow", startRow);
 		map.put("photoCount", photoCount);
-		
+
+		LOGGER.debug("[Serivce] getPhotoBoardPortletInfo Ended");
 		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
 	}
 
 	@Override
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) {
+		LOGGER.debug("[Serivce] getCompanyPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
 		map.put("portletLang", portletLang);
-		
+
+		LOGGER.debug("[Serivce] getCompanyPortletInfo Ended");
 		return ezNewPortalDAO.getCompanyPortletInfo(map);
 	}
 
 	@Override
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) {
+		LOGGER.debug("[Serivce] getBoardAuthCheck Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("accessId", accessId);
-		
+
+		LOGGER.debug("[Serivce] getBoardAuthCheck Ended");
 		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}
 
 	@Override
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId) {
+		LOGGER.debug("[Serivce] getPortletOrderUser Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletLang", portletLang);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		
+
+		LOGGER.debug("[Serivce] getPortletOrderUser Ended");
 		return ezNewPortalDAO.getPortletOrderUser(map);
 	}
 
 	@Override
 	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId) {
+		LOGGER.debug("[Serivce] getPortletOrderComp Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletLang", portletLang);
 		map.put("tenantId", tenantId);
@@ -135,7 +150,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("order", "default");
 			portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
 		}
-		
+
+		LOGGER.debug("[Serivce] getPortletOrderComp Ended");
 		return portletOrderComp;
 	}
 	
@@ -143,6 +159,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("null")
 	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
+		LOGGER.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
@@ -158,8 +175,42 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				userPortalSetting.setUsedTheme(1);
 			}
 		}
-		
+
+		LOGGER.debug("[Serivce] getUserPortalSetting Ended");
 		return userPortalSetting;
+	}
+	
+	@Override
+	public void updatePortletOrderUser(String userId, String companyId, int tenantId,
+			List<Map<String, Integer>> portletOrder, String portletLang) {
+		LOGGER.debug("updatePortletOrderUser started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("portletLang", portletLang);
+
+		int portletOrderCount = portletOrder.size();
+		
+		//portletOrder를 사용자가 설정한 정보가 있는지 확인
+		List<PortletInfoVO> userPortletOrder = ezNewPortalDAO.getPortletOrderUser(map);
+
+		if (userPortletOrder == null || userPortletOrder.isEmpty()) {//없으면 insert
+			for (int i = 0; i < portletOrderCount; i++) {
+				map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
+				map.put("portletId", portletOrder.get(i).get("portletId"));
+				ezNewPortalDAO.insertPortletOrderUser(map);
+			}
+			
+		} else {//있으면 update
+			for (int i = 0; i < portletOrderCount; i++) {
+				map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
+				map.put("portletId", portletOrder.get(i).get("portletId"));
+				ezNewPortalDAO.updatePortletOrderUser(map);
+			}
+		}
+		
+		LOGGER.debug("updatePortletOrderUser ended.");
 	}
 	
 	/**
@@ -222,4 +273,5 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return ezNewPortalDAO.getFavItemList(map);
 	}
+
 }

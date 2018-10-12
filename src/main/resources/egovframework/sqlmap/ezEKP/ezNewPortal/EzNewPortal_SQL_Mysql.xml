@@ -441,6 +441,34 @@ AND
 ]]>
 </select>
 
+<update id="ezNewPortal.updatePortletOrderUser" parameterClass="map">
+<![CDATA[
+UPDATE 
+	TBL_PORTAL_PORTLET_USER
+SET
+	PORTLET_ORDER = #portletOrder#
+WHERE
+	PORTLET_ID = #portletId#
+AND
+	USER_ID = #userId#
+AND
+	COMPANY_ID = #companyId#
+AND
+	TENANT_ID = #tenantId#
+]]>
+</update>
+
+<insert id="ezNewPortal.insertPortletOrderUser" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_PORTLET_USER (
+	USER_ID,	TENANT_ID,		COMPANY_ID,		PORTLET_ID,		PORTLET_ORDER,		
+	MENU_ID
+) VALUES (
+	#userId#,	#tenantId#,		#companyId#,	#portletId#,	#portletOrder#,		
+	(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#)
+)
+]]>
+</insert>
 <!-- 이효진-->
 	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
