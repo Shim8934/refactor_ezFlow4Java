@@ -185,13 +185,36 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 전자결재 목록 포틀릿
 	 */
 	@RequestMapping(value = "/ezNewPortal/approvalListPortlet.do")
-	public String portalApprovalListPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("portalApprovalListPortlet Start");
+	public String portalApprovalListPortlet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("portalApprovalListPortlet started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
+		
+		logger.debug("portalApprovalListPortlet ended.");
 		
 		return "/ezNewPortal/portlets/approvalListPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 전자결재 목록 조회
+	 */
+	@RequestMapping(value = "/ezNewPortal/getApprovalList.do")
+	public String getApprovalList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getApprovalList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String tabName = request.getParameter("tabName");
+		
+		
+		
+		logger.debug("getApprovalList ended.");
+		
+		return "json";
 	}
 	
 	/**
