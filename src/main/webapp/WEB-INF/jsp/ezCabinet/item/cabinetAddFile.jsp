@@ -13,8 +13,8 @@
 	<body class="popup cabAddMain">
 		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
 		<div id="cabAddStore" class="cabStore">
-			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
+			<a class="cabStoreBttn"                 ><span><spring:message code='ezCabinet.t14' /></span></a>
+			<a class="cabStoreBttn" id="addFileBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
 		</div>
 		<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
@@ -31,13 +31,16 @@
 			</table>
 		</div>
 		
-		<div class="fileUploadDiv" id="fileDiv">
-			<div class="fileList off">
-				<ul class="ulFiles"></ul>
-			</div>
-			<div class="divInform">
-				<span><spring:message code='ezCabinet.t68'/></span>
-				<span><spring:message code='ezCabinet.t69'/></span>
+		<div class="cabwrapperDiv">
+			<div id="helpTxt" class="cabUploadHelp off"><spring:message code='ezCabinet.t168'/></div>
+			<div class="fileUploadDiv" id="fileDiv">
+				<div class="fileList off">
+					<ul class="ulFiles"></ul>
+				</div>
+				<div class="divInform">
+					<span><spring:message code='ezCabinet.t68'/></span>
+					<span><spring:message code='ezCabinet.t69'/></span>
+				</div>
 			</div>
 		</div>
 		
@@ -82,12 +85,14 @@
 					fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
 					
 					var fileDivElmt         = document.getElementById("fileDiv");
-					fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
+					fileDivElmt.onclick     = function(e) {startUpload();};
+					//fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
 					fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
 					fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
 					
 					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
+					document.getElementById("addFileBttn").onclick  = function(e) {startUpload();}
 					
 					var relatedBttn     = document.getElementById("rlBttn");
 					relatedBttn.onclick = function(e) {getRelatedFile();};

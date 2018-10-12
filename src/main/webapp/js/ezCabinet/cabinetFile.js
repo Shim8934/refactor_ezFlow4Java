@@ -48,7 +48,7 @@ var CabinetFile = function() {
 		
 		if (!evt) {document.getElementById("fileBttn").value = null;}
 	}
-
+	
 	function fileupload(fileItem) {
 		var fd              = new FormData();
 		var filePath        = null;
@@ -61,7 +61,9 @@ var CabinetFile = function() {
 		if (!isStart) {
 			divfileListElmt.className = "fileList";
 			var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
+			var helpDivElmt           = document.getElementById("helpTxt");
 			if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
+			if (helpDivElmt)   {helpDivElmt.className = "cabUploadHelp";}
 		}
 		
 		var liElmt        = document.createElement("li");
@@ -153,6 +155,11 @@ var CabinetFile = function() {
 	}
 	
 	function afterUploadSuccessfully(liElmt, filename, filePath, fileSize) {
+		if (!isStart) {
+			var fileDivElmt = document.getElementById("fileDiv");
+			if (fileDivElmt) {fileDivElmt.onclick = function(e) {return null;};}
+		}
+		
 		isStart            = true;
 		var checkImageFile = isImage(filename);
 		var delImg         = document.createElement("img");
