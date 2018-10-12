@@ -12,6 +12,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var companyID = "${userInfo.companyID}";
+			var m_strColorSelect = "#edf4fd";
+			var m_strColorOver = "#f4f5f5";
+			var m_strColorDefault = "#ffffff";
+			var m_strColorOpened = "#fafafa";
 	    	
 	        window.onload = function () {
 	        	companyID = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
@@ -59,9 +63,9 @@
 					var _TR = document.createElement("TR");
 					_TR.setAttribute("id", "signTemplate_" + Cnt);
 					_TR.setAttribute("signNo", json[Cnt].signNo);
-					/* _TR.onclick = function() { event_listclick(this); };
+					_TR.onclick = function() { event_listclick(this); };
 					_TR.onmouseover = function () { event_listMover(this); };
-					_TR.onmouseout = function () { event_listMout(this); }; */
+					_TR.onmouseout = function () { event_listMout(this); };
 					_TR.style.cursor = "pointer";
 					var _TD = document.createElement("TD");
 	                var _SPAN = document.createElement("span");
@@ -155,6 +159,34 @@
 	        function inputReset(){
 	        	document.getElementById("signSearchInput").value = "";
 	        }
+	        
+	        // 서명 개별조회 (클릭 시)
+	        function event_listclick(obj) {
+	        	var prevSelected = $("#signList tr[selected=true]")[0];
+	        	if (prevSelected != undefined) {
+	        		prevSelected.childNodes[0].style.backgroundColor = m_strColorDefault;
+		        	prevSelected.setAttribute("selected", "false");
+	        	}
+	        	
+	        	obj.childNodes[0].style.backgroundColor = m_strColorSelect;
+	        	obj.setAttribute("selected", "true");
+	        	
+	        }
+	        
+	        function event_listMover(obj) {
+	        	if (obj.getAttribute("selected") != "true") {
+	        		obj.childNodes[0].style.backgroundColor = m_strColorOver;
+	        	}
+	        	
+	        }
+	        
+	        function event_listMout(obj) {
+	        	if (obj.getAttribute("selected") != "true") {
+	        		obj.childNodes[0].style.backgroundColor = m_strColorDefault;
+	        	}
+	        	
+	        }
+	        
 	        
 	    </script>
 	    
