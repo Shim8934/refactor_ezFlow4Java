@@ -12,7 +12,10 @@
 	</head>
 	<body class="popup cabAddMain">
 		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
-		<div id="cabAddStore" class="cabStore"><span><spring:message code='ezCabinet.t14'/></span></div>
+		<div id="cabAddStore" class="cabStore">
+			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
+		</div>
 		<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="divInfo">
@@ -61,9 +64,12 @@
 					cabinetId               = cabId;
 					document.onselectstart  = function () { return false;};
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
-					var storeBttn           = document.getElementById("cabAddStore");
+					var storeBttnElmt       = document.getElementById("cabAddStore");
+					var storeBttn           = storeBttnElmt.children;
 					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
-					storeBttn.onclick       = function(e) {saveItem();};
+					storeBttn[0].onclick    = function(e) {saveItem();};
+					storeBttn[1].onclick    = function(e) {};
+					
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
 					/*var listBttns           = cabdivBttnElmt.children;
