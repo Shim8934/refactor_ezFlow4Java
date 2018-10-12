@@ -21,6 +21,10 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+<!-- 종균 시작-->
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
+<!-- 종균 끝 -->
 <script type="text/javascript">
 
 	var portletOrder = JSON.parse('${portletOrder}');
@@ -166,6 +170,10 @@
 			$("#photoBoardPlus").on("click", viewPhotoBoardList);
 		} else if (portletId == 10) {
 			getTabList();
+		} else if (portletId === 12) { // 도움말
+			helpPortletLoadFunc();
+		} else if (portletId === 2) { // 공지사항
+			noticePortletLoadFunc();
 		}
 	}
 	
