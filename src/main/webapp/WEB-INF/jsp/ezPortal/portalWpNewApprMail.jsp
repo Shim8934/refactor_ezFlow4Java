@@ -284,6 +284,10 @@
 		                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
 		                    if (pDocState == "012" || pDocState == "014" || pDocState == "018") {
 		                        OpenReceiveDraftUI(pDocID, pHref, "REDRAFT");
+		                    } else if (pFunctionType == "004" && companyID != orgCompanyID) {
+	                    		var pAlertContent = "<spring:message code='ezApprovalG.csj01' />";
+		                        alert(pAlertContent);
+		                        return;
 		                    } else {
 		                        openApprDraftUI("REDRAFT", pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID);
 		                    }
