@@ -455,11 +455,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}	
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 커뮤니티
 	 */
 	@RequestMapping(value = "/ezNewPortal/communityPortlet.do")
 	public String portalCommunityPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalCommunityPortlet Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/community";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("CommunityList", data.get("CommunityList"));
+		}
+		
+		logger.debug("phoroBoardPortlet End");
 		
 		return "/ezNewPortal/portlets/communityPortlet";
 	}
