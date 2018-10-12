@@ -876,7 +876,7 @@
 		
 		    function Appr_onclick(pFlag) {
 		        if (strListInfo == "") {
-		            alert("<spring:message code='ezBoard.t57'/>");
+		            alert("<spring:message code='ezBoard.t198'/>");
 		            return;
 		        }
 		        
