@@ -25,6 +25,8 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
@@ -324,21 +326,28 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value= "/rest/ezPortal/portlets/order/users/{userId}", method= RequestMethod.PATCH, produces="application/json;charset=utf-8")
 	public JSONObject updatePortletOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees started.");
+		LOGGER.debug("ezNewPortal G/W updatePortletOrder started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			List<Map<String, Integer>> portletOrder = (List<Map<String, Integer>>) jsonParam.get("updateOrder");
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String portletLang = info.getLang();
+			
+			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees ended.");
+		LOGGER.debug("ezNewPortal G/W updatePortletOrder ended.");
 		return result;
 	}
 	
@@ -1468,9 +1477,20 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			int limit = 3; // 공지사항 갯수
+			
+			// 여기에 데이터를 put해서 넘기면 됨.
+			JSONObject data = new JSONObject();
+			
+			List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
+			noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
+			data.put("noticeList", noticeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1495,13 +1515,14 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			
-			List<PersonalLightPollVO> list = new ArrayList<PersonalLightPollVO>();
-			list = ezNewPortalService.getPollPortletList(companyId, tenantId);
-			
-			LOGGER.debug("list:" + list.toString());
+			PersonalLightPollVO poll = new PersonalLightPollVO();
+			poll = ezNewPortalService.getPollPortlet(companyId, tenantId);
+			JSONObject data = new JSONObject();
+			data.put("poll", poll);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

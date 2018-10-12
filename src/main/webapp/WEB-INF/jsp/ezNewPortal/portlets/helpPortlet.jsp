@@ -7,7 +7,7 @@
 <body class="body_bg1">
 <div class="layDIV" id="helpDiv">
     <span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
-    <dl class="bannerText">
+    <dl class="bannerText sortablePortlet">
 	    <dt class="bText">그룹웨어 쉽게 활용하기</dt>
 	    <dt class="sText">그룹웨어 알아보기 등 활용도를<br>높일 수 있는 메뉴얼입니다.</dt>
 	    <dd class="bannerBtn" id="helpDetail">자세히보기</dd>

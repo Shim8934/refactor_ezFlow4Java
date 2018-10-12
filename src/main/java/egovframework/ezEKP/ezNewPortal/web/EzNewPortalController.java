@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -81,6 +83,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
 	/**
+	 * 유은정
+	 */
+	/**
 	 * 포탈 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
@@ -112,6 +117,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String returnUrl = "/ezNewPortal/";
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -128,12 +134,49 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("scheduleCount", data.get("scheduleCount"));
 			model.addAttribute("approvalCount", data.get("approvalCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
+			model.addAttribute("serverTime", serverTime);
+			
 			String usedTheme = data.get("usedTheme").toString();
 			String usedFrame = data.get("usedFrame").toString();
 			returnUrl += "Theme" + usedTheme + "_Frame" + usedFrame;
+			logger.debug("returnUrl : " + returnUrl);
 		}
 		
 		logger.debug("portalMainPage End");
 		return returnUrl;
 	}
+	
+	/**
+	 * 사용자 포틀릿 순서 변경 실행
+	 * @param req
+	 * @param model
+	 * @param loginCookie
+	 * @param resp
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/updatePortletOrderUser.do")
+	@ResponseBody
+	public String updatePortletOrderUser(@RequestBody JSONObject jsonParam, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updatePortletOrderUser Start");
+		String result = "success";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/portlets/order/users/" + userId;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "patch", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("fail")) {
+			result = "failed";
+		}
+		
+		logger.debug("updatePortletOrderUser End");
+		return result;
+	}
+	
+	/**
+	 * ----
+	 */
 }

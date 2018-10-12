@@ -1,11 +1,10 @@
-var noticePortletLoadFunc = function() {
+/* 공지사항 데이터 조합 */
+var assembleNoticeList = function(noticeList) {
 	/* HTMLColllection에도 forEach 추가*/
-	HTMLCollection.prototype.forEach = Array.prototype.forEach;	
-	var noticeList = JSON.parse('${noticeList}');
+	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
 	var viewCnt = 3; // 보여주는 공지사항 갯수
 	var boardId = '';
-
 	var noticeDetail = function() {
 		var height = window.screen.availHeight;
 		var width = window.screen.availWidth;
@@ -29,7 +28,6 @@ var noticePortletLoadFunc = function() {
 		boardId = data.boardID;
 		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">'+data.title+'</dd></dl></li>';
 	};	
-	
 	noticeList.forEach(function(item, index){
 		str += dataAssembler(item, index);
 	});
@@ -54,4 +52,21 @@ var noticePortletLoadFunc = function() {
 	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 }
 
-// noticePortletLoadFunc();
+/* [포틀릿] 공지사항 리스트 */ 
+var getNoticePortletList = function () {
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function () {
+		if(xhr.status >= 200 && xhr.status < 300) {
+			var noticeList = JSON.parse(xhr.responseText).noticeList;
+			assembleNoticeList(noticeList);
+		} else {
+			console.error(xhr.responseText);
+		}
+	};
+	xhr.open('GET', '/ezNewPortal/getNoticePortlet.do');
+	xhr.send();
+};
+
+var noticePortletLoadFunc = function () {
+	getNoticePortletList();	
+}

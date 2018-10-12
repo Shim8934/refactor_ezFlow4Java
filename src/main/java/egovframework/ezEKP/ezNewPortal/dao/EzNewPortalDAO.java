@@ -26,11 +26,13 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	// 설문조사 리스트
-	@SuppressWarnings("unchecked")
-	public List<PersonalLightPollVO> getPollPortletList (Map<String, Object> map) throws Exception {
-		return (List<PersonalLightPollVO>) list("ezNewPortal.getPollPortletList", map);
+	public PersonalLightPollVO getPollPortlet (Map<String, Object> map) throws Exception {
+		return (PersonalLightPollVO) select("ezNewPortal.getPollPortlet", map);
 	}
-
+	
+	/**
+	 * 유은정
+	 */
 	//투표할 수 있는 리스트 개수 불러오기
 	public int getVotePortletCount (Map<String, Object> map) {
 		return (int) select("ezNewPortal.getVotePortletCount", map);
@@ -85,6 +87,13 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (UserPortalSettingVO) select("ezNewPortal.getCompPortalSetting", map);
 	}
 	
+	public void updatePortletOrderUser(Map<String, Object> map) {
+		update("ezNewPortal.updatePortletOrderUser", map);
+	}
+
+	public void insertPortletOrderUser(Map<String, Object> map) {
+		insert("ezNewPortal.insertPortletOrderUser", map);
+	}
 	/**
 	 * 이효진
 	 */

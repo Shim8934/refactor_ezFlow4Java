@@ -24,6 +24,7 @@
 <!-- 종균 시작-->
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/pollPortlet.js')}"></script>
 <!-- 종균 끝 -->
 <script type="text/javascript">
 
@@ -83,6 +84,7 @@
 		
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
+			handle : ".sortablePortlet",
 			update : function(event, ui) {
 				updatePortletOrderUser();
 			}
@@ -103,14 +105,19 @@
 			updateOrder.push({"portletOrder" : i + 1, "portletId" : portletId});
 		}
 		
+		var data = {
+			updateOrder : updateOrder
+		};
+		
 		//ajax로 순서 변경
 		$.ajax({
-			type : "PATCH",
+			type : "POST",
 			url : "/ezNewPortal/updatePortletOrderUser.do",
+			contentType : "application/json",
 			dataType : "text",
-			data : {"updateOrder" : updateOrder},
+			data : JSON.stringify(data),
 			success : function(result) {
-				if (result === "fail") {
+				if (result === "failed") {
 					alert("오류가 발생하였습니다.");
 				}
 			},
@@ -172,8 +179,10 @@
 			getTabList();
 		} else if (portletId === 12) { // 도움말
 			helpPortletLoadFunc();
-		} else if (portletId === 2) { // 공지사항
+		} else if (portletId === 2) {  // 공지사항
 			noticePortletLoadFunc();
+		} else if (portletId === 5) {  // 설문조사
+			pollPortletLoadFunc();
 		}
 	}
 	
@@ -189,6 +198,7 @@
 		
 		$.ajax({
 			type : "POST",
+			dataType : "json",
 			url : "/ezNewPortal/getPhotoItemList.do",
 			data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},
 			success : function(result) {
