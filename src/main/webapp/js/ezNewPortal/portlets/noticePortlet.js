@@ -1,7 +1,7 @@
+/* 공지사항 데이터 조합 */
 var assembleNoticeList = function(noticeList) {
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-	console.log('noticeList : ', noticeList);
 	var str = '';
 	var viewCnt = 3; // 보여주는 공지사항 갯수
 	var boardId = '';
@@ -52,10 +52,11 @@ var assembleNoticeList = function(noticeList) {
 	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 }
 
+/* [포틀릿] 공지사항 리스트 */ 
 var getNoticePortletList = function () {
 	var xhr = new XMLHttpRequest();
 	xhr.onload = function () {
-		if(xhr.status >= 200 && xhr.status <= 300) {
+		if(xhr.status >= 200 && xhr.status < 300) {
 			var noticeList = JSON.parse(xhr.responseText).noticeList;
 			assembleNoticeList(noticeList);
 		} else {
@@ -69,5 +70,3 @@ var getNoticePortletList = function () {
 var noticePortletLoadFunc = function () {
 	getNoticePortletList();	
 }
-
-// noticePortletLoadFunc();

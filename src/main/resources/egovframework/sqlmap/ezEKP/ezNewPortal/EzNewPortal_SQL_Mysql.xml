@@ -125,7 +125,7 @@ LIMIT #limit#
 </select>
 
 <!-- 설문조사 리스트 출력 -->
-<select id="ezNewPortal.getPollPortletList" parameterClass="Map" resultClass="PersonalLightPollVO">
+<select id="ezNewPortal.getPollPortlet" parameterClass="Map" resultClass="PersonalLightPollVO">
 <![CDATA[
 SELECT 
 	ITEMSEQ,

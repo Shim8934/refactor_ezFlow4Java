@@ -1508,13 +1508,14 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			
-			List<PersonalLightPollVO> list = new ArrayList<PersonalLightPollVO>();
-			list = ezNewPortalService.getPollPortletList(companyId, tenantId);
-			
-			LOGGER.debug("list:" + list.toString());
+			PersonalLightPollVO poll = new PersonalLightPollVO();
+			poll = ezNewPortalService.getPollPortlet(companyId, tenantId);
+			JSONObject data = new JSONObject();
+			data.put("poll", poll);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

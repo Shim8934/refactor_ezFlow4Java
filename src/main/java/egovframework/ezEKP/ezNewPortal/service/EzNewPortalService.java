@@ -19,7 +19,7 @@ public interface EzNewPortalService {
 	 * 박종균
 	 * */
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception;
-	public List<PersonalLightPollVO> getPollPortletList(String companyId, int tenantId) throws Exception;
+	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId) throws Exception;
 	/**
 	 * 유은정
 	 */

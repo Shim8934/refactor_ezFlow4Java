@@ -22,8 +22,9 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 <!-- 종균 시작-->
-<script defer type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
-<script defer type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/pollPortlet.js')}"></script>
 <!-- 종균 끝 -->
 <script type="text/javascript">
 
@@ -172,8 +173,10 @@
 			getTabList();
 		} else if (portletId === 12) { // 도움말
 			helpPortletLoadFunc();
-		} else if (portletId === 2) { // 공지사항
+		} else if (portletId === 2) {  // 공지사항
 			noticePortletLoadFunc();
+		} else if (portletId === 5) {  // 설문조사
+			pollPortletLoadFunc();
 		}
 	}
 	

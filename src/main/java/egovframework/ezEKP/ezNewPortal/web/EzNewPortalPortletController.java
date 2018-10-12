@@ -115,7 +115,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			JSONArray noticeList = (JSONArray) data.get("noticeList");
-			logger.debug("noticeList : " + noticeList.toJSONString() );
 			model.addAttribute("noticeList", noticeList);
 		}
 		logger.debug("getPortalNoticePortlet End");		
@@ -169,6 +168,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/pollPortlet.do")
 	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
+		
+		return "/ezNewPortal/portlets/pollPortlet";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/getPollPortlet.do")
+	public String getPortalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getPortalPollPortlet Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -180,11 +186,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if(status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-		} 
-		
-		return "/ezNewPortal/portlets/pollPortlet";
+			logger.debug("pollllllllllll: " +  data.get("poll"));
+			model.addAttribute("poll", data.get("poll"));
+		} 		
+		return "json";
 	}
-	
 	/**
 	 * 포틀릿 - 공지사항
 	 */

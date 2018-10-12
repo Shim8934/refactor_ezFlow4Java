@@ -26,9 +26,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	// 설문조사 리스트
-	@SuppressWarnings("unchecked")
-	public List<PersonalLightPollVO> getPollPortletList (Map<String, Object> map) throws Exception {
-		return (List<PersonalLightPollVO>) list("ezNewPortal.getPollPortletList", map);
+	public PersonalLightPollVO getPollPortlet (Map<String, Object> map) throws Exception {
+		return (PersonalLightPollVO) select("ezNewPortal.getPollPortlet", map);
 	}
 
 	//투표할 수 있는 리스트 개수 불러오기
