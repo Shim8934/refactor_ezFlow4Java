@@ -22,8 +22,8 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 <!-- 종균 시작-->
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
+<script defer type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
+<script defer type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
 <!-- 종균 끝 -->
 <script type="text/javascript">
 

@@ -93,7 +93,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/noticePortlet.do")
 	public String portalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalNoticePortlet Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		
+		return "/ezNewPortal/portlets/noticePortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 공지사항 리스트 가져오기
+	 */
+	@RequestMapping(value = "/ezNewPortal/getNoticePortlet.do")
+	public String getPortalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("getPortalNoticePortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
@@ -104,12 +114,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("noticeList", data.get("noticeList"));
+			JSONArray noticeList = (JSONArray) data.get("noticeList");
+			logger.debug("noticeList : " + noticeList.toJSONString() );
+			model.addAttribute("noticeList", noticeList);
 		}
-		
-		return "/ezNewPortal/portlets/noticePortlet";
+		logger.debug("getPortalNoticePortlet End");		
+		return "json";
 	}
-	
+
 	/**
 	 * 포틀릿 - 공지사항
 	 */
