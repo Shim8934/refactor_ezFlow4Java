@@ -262,7 +262,7 @@ var CabinetFileHelper = function() {
 		
 		function fileModify() {
 			//Set title
-			document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod;
+			//document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod;
 			document.title = CabinetMessages.strFileMod;
 			
 			//Set button
@@ -491,7 +491,7 @@ var CabinetFileHelper = function() {
 		}
 		
 		function cancelChanges() {
-			document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
+			//document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
 			document.title = CabinetMessages.strFileDet;
 			
 			document.getElementById("fileDivBttn").style.display       = "";
