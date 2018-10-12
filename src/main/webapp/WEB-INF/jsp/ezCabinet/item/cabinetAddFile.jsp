@@ -85,6 +85,16 @@
 					
 					var relatedBttn     = document.getElementById("rlBttn");
 					relatedBttn.onclick = function(e) {getRelatedFile();};
+					
+					var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
+					var spanElmt            = fileCapacityDivElmt.querySelector("span");
+					
+					if(!spanElmt) {
+						spanElmt = document.createElement("span");
+						fileCapacityDivElmt.appendChild(spanElmt);
+					}
+					
+					spanElmt.textContent     = CabinetMessages.strStorage + getFileSize(0);
 				}
 				
 				function getRelatedFile() {
