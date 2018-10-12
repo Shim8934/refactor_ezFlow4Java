@@ -2291,4 +2291,29 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return json;
 	}
 	
+	@Override
+	public void deleteSignatureTemplate(String companyId, String tenantId, String signNo) throws Exception {	
+		logger.debug("deleteSignatureTemplate started. signNo=" + signNo + ", companyId=" + companyId + ", tenantId=" + tenantId);
+		
+		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String signNoStr = "signNo=" + URLEncoder.encode(signNo, "UTF-8");
+		
+		String inputParams = companyIdStr + "&" + tenantStr + "&" + signNoStr;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK")) {
+        	throw new Exception("JGwServer ERROR");
+        }
+        
+        logger.debug("deleteSignatureTemplate ended.");
+        
+	}
+	
 }

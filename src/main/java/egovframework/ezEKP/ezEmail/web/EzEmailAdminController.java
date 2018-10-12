@@ -1211,7 +1211,7 @@ public class EzEmailAdminController {
 	/**
 	 * 서명 템플릿 목록 검색
 	 * 
-	 * @param companyId
+	 * @param companyId, search
 	 * @return : JSONArray
 	 */
 	@RequestMapping("/admin/ezEmail/searchSignList.do")
@@ -1234,6 +1234,30 @@ public class EzEmailAdminController {
 		
 		logger.debug("searchSignList ended.");
 		return returnJsonArr;
+	}
+	
+	/**
+	 * 서명 템플릿 삭제
+	 * 
+	 * @param companyId, signNo
+	 * @return : void
+	 */
+	@RequestMapping("/admin/ezEmail/deleteSignTemplate.do")
+	@ResponseBody
+	public void deleteSignTemplate(@CookieValue("loginCookie") String loginCookie, String companyId, String signNo, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("deleteSignTemplate started.");
+		logger.debug("companyId=" + companyId);
+		logger.debug("signNo=" + signNo);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		try {
+			ezEmailService.deleteSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), signNo);
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+		
+		logger.debug("deleteSignTemplate ended.");
 	}
 	
 }

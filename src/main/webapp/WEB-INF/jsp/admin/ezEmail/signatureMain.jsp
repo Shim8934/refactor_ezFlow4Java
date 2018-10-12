@@ -91,6 +91,7 @@
 	                _EDIT.style.marginRight = "3px";
 	                _DEL.innerHTML = "삭제";
 	                _DEL.setAttribute("class", "lmLetterDeleteBtn");
+	                _DEL.onclick = function() { deleteSignTemplate(_TR.getAttribute("signno")); };
 	                _EDIT.setAttribute("class", "lmLetterModifyBtn");
 	                _DIV.appendChild(_EDIT);
 	                _DIV.appendChild(_DEL);
@@ -98,6 +99,24 @@
 	                _TD.appendChild(_DIV);
 	                _TBODY.appendChild(_TR);
 				}
+	        }
+	        
+	        // 서명 템플릿 삭제
+	        function deleteSignTemplate(signNo) {
+	        	$.ajax({
+	        		type : "POST",
+	        		url : "/admin/ezEmail/deleteSignTemplate.do?companyId=" + companyID + "&signNo=" + signNo,
+	        		datatype : 'json',
+	        		error : function(data) {
+	        			alert("error");
+	        			console.log(data);
+	        		},
+	        		complete : function(data) {
+	        			alert("삭제 하였습니다.");
+	        			$("#signList tr").empty();
+	        			signatureTemplateView();
+	        	    }
+	        	});
 	        }
 	        
 	        // 검색 리스트 가져오기
