@@ -159,7 +159,7 @@ function closePopup2() {
 //강민수92
 function deleteBoardComment(obj) {
 	var boardCommentID = $(obj).closest("tr").attr("replyID");
-    delpReplyID = encodeURIComponent(boardCommentID);
+    delpReplyID = boardCommentID;
     var xmlhttp = createXMLHttpRequest();
     
     if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
