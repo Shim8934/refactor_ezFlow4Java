@@ -8,12 +8,15 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
@@ -22,6 +25,7 @@ import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzNewPortalService")
 public class EzNewPortalServiceImpl implements EzNewPortalService {
@@ -29,6 +33,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -294,6 +301,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 	@Override
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit) {
+		LOGGER.debug("getFavNewItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -306,6 +314,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit) {
+		LOGGER.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardId", boardId);
 		map.put("tenantId", tenantId);
@@ -314,5 +323,38 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return ezNewPortalDAO.getFavItemList(map);
 	}
+	
+	@Override
+	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getCommunityList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LANG", commonUtil.getMultiData(lang, tenantId));
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		return ezNewPortalDAO.getCommunityList(map);
+	}
+	
+	@Override
+	public String getMemberChk(String cNo, String userId, int tenantId) {
+		LOGGER.debug("memberChk started");
 
+		String ret = "1";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("clubNo", cNo);
+		map.put("tenantID", tenantId);
+		
+		CommunityCClubUserVO result = ezNewPortalDAO.getCommunityPermit(map);
+		
+		if (result != null) {
+			ret = "1";
+		} else {
+			ret = "0";
+		}
+
+		LOGGER.debug("memberChk ended");
+		return ret;
+	}
 }

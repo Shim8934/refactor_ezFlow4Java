@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -32,6 +33,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
@@ -1314,10 +1317,55 @@ public class EzNewPortalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
+			String companyId = info.getCompanyID();
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			String lang = info.getLang();
+			
+			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, companyId, tenantId);
+			
+			int CommuSize = CommunityList.size();
+			
+			if (CommuSize == 0) {
+				data.put("CommunityList", CommunityList);
+			} else if (CommuSize == 1) {				
+				data.put("CommunityList", CommunityList);
+				if (CommunityList.get(0).getC_ClubGubun() != null && CommunityList.get(0).getC_ClubGubun().equals("3")) {
+					
+					String memberChk = ezNewPortalService.getMemberChk(CommunityList.get(0).getC_ClubNo(), userId, tenantId);
+					
+					data.put("memberChk", memberChk);
+				}
+			} else {
+				data.put("CommunityList", CommunityList);
+				for (int i = 0; i < 2; i++) {
+					
+					if (CommunityList.get(i).getC_ClubGubun() != null && CommunityList.get(i).getC_ClubGubun().equals("3")) {
+						String memberChk0 = ezNewPortalService.getMemberChk(CommunityList.get(i).getC_ClubNo(), userId, tenantId);
+						String memberChk1 = ezNewPortalService.getMemberChk(CommunityList.get(i).getC_ClubNo(), userId, tenantId);
+						
+						data.put("memberChk0", memberChk0);
+						data.put("memberChk1", memberChk1);
+					}
+					
+					String bannerSrc = "";
+					
+					if (CommunityList.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+						bannerSrc = "/images/ezCommunity/logo/" + CommunityList.get(i).getC_Logo_Thumbnail().trim();
+					} else {
+						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", tenantId)+commonUtil.separator+CommunityList.get(i).getC_Logo_Thumbnail();
+					}
+				}
+			}
+			
+			
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

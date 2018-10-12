@@ -6,10 +6,12 @@ import java.util.Map;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -44,4 +46,6 @@ public interface EzNewPortalService {
 	
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit);
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit);
+	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception;
+	public String getMemberChk(String cNo, String userId, int tenantId);
 }

@@ -9,6 +9,8 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
@@ -132,5 +134,16 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<FavoriteBoardVO> getFavItemList(Map<String, Object> map) {
 		return (List<FavoriteBoardVO>) list("ezNewPortal.getItemList", map);
+	}
+	
+	//커뮤니티 포틀릿 리스트
+	@SuppressWarnings("unchecked")
+	public List<CommunityMyCommunityVO> getCommunityList(Map<String, Object> map) {
+		return (List<CommunityMyCommunityVO>) list("ezNewPortal.getCommunityList", map);
+	}
+	
+	//ezNewPortal.getCommunityPermit
+	public CommunityCClubUserVO getCommunityPermit(Map<String, Object> map) {
+		return (CommunityCClubUserVO) select("ezNewPortal.getCommunityPermit", map);
 	}
 }

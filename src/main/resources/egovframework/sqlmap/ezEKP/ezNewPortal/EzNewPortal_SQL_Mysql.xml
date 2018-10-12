@@ -9,6 +9,8 @@
 <typeAlias alias="ThemeInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO"/>
 <typeAlias alias="UserPortalSettingVO" type="egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO"/>
 <typeAlias alias="FavoriteBoardVO" type="egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO"/>
+<typeAlias alias="CommunityMyCommunityVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
+<typeAlias alias="CommunityCClubUserVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -751,5 +753,38 @@ SELECT A.TITLE,
  ORDER BY STARTDATE DESC
  LIMIT #limit#
  ]]>
+</select>
+
+<!-- 커뮤니티 포틀릿 -->
+<select id="ezNewPortal.getCommunityList" parameterClass="Map" resultClass="CommunityMyCommunityVO"  remapResults="true">
+<![CDATA[
+SELECT (SUBSTR(C_CLUBNAME$v_LANG$, 1, 18)) AS C_CLUBNAME,
+	   C_CLUBNO,
+	   C_CLUBGUBUN,
+	   C_CLUBDESC,
+	   C_LOGO_THUMBNAIL,
+	   C_MEMBERCNT,
+	   C_CLUBCONFIRMTYPE
+  FROM TBL_C_CLUB A
+  JOIN TBL_USERMASTER B
+    ON RTRIM(A.C_SYSOPID) = RTRIM(B.CN)
+   AND A.TENANT_ID = B.TENANT_ID
+ WHERE C_ADMINCONFIRM = 'Y'
+   AND A.COMPANYID = #companyId#
+   AND A.TENANT_ID = #tenantId#
+ ORDER BY C_MEMBERCNT DESC
+ LIMIT 3
+]]>
+</select>
+
+<select id="ezNewPortal.getCommunityPermit"	parameterClass="Map" resultClass="CommunityCClubUserVO">
+<![CDATA[
+SELECT c_id,
+	   permit
+  FROM TBL_C_CLUBUSER
+ WHERE RTRIM(c_clubno) = #clubNo#
+   AND RTRIM(c_id) = #userId#
+   AND tenant_id = #tenantId#
+]]>
 </select>
 </sqlMap>
