@@ -349,10 +349,10 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .appr_mail .tab ul{ margin:0px; padding:0px; list-style:none;}
 .appr_mail .tab ul li {cursor:pointer; height:115px;}
 .appr_mail .apprgraph { float:left ;width:156px; height:228px; border-bottom:1px solid #d2d2d2;border-top:1px solid #d2d2d2; overflow:hidden;}
-.apprgraph_area { padding:26px 0px 0px 0px; overflow:hidden; background:url(../images/kr/main/appr_graphbar.gif) no-repeat; height:200px; }
+/* .apprgraph_area { padding:26px 0px 0px 0px; overflow:hidden; background:url(../images/kr/main/appr_graphbar.gif) no-repeat; height:200px; }
 .apprgraph_area dl { margin:0px 0px 14px 50px; padding:0px; clear:both; overflow:hidden;}
 .apprgraph_area  dl dt { float:left; width:45px; margin:0px; padding:0px; font-size:12px; font-weight:bold; height:25px; line-height:200%;}
-.apprgraph_area  dl dt dd {width:50px; margin:0px; padding:0px;height:25px;}
+.apprgraph_area  dl dt dd {width:50px; margin:0px; padding:0px;height:25px;} */
 
 
 .nomal_count{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px;  font-size:11px; background:url(../images/kr/main/count_nal.gif) no-repeat left;}
