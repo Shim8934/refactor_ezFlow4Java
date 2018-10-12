@@ -5201,7 +5201,7 @@
 					  	  											 Where 
 					  	  											 	A.TENANT_ID = #tenantID#
 					  	  											 AND
-					  	  											 	A.User_ID IN (#charger#) 
+					  	  											 	A.User_ID IN ($charger$) 
 					  	  											 AND
 					  	  											 	A.COMPANYID = #companyID#)
 					  </isNotEmpty>
@@ -11891,7 +11891,7 @@
 		  	  											 Where 
 		  	  											 	TENANT_ID = #tenantID#
 		  	  											 AND
-		  	  											 	User_ID IN (#charger#)
+		  	  											 	User_ID IN ($charger$)
 		  	  											 AND
 		  	  											 	COMPANYID = #companyID# )
 		  </isNotEmpty>
