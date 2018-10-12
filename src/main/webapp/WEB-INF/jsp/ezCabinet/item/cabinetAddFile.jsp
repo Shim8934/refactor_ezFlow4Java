@@ -41,6 +41,8 @@
 			</div>
 		</div>
 		
+		<div class="storageDiv" id="fileCapacityDiv"></div>
+		
 		<%-- <div class="cabBttnDiv" id="cabAddBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div> --%>
@@ -237,6 +239,18 @@
 					top          = heigth / 2;
 					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 					return feature;
+				}
+				
+				function getFileSize(fileSize) {
+					var result = fileSize + "B";
+					
+					switch(true) {
+						case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2)    + "MB"; break;
+						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2)       + "KB"; break;
+					}
+					
+					return result;
 				}
 				
 				return {

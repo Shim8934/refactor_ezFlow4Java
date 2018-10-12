@@ -104,6 +104,7 @@
 					document.getElementById("cabRlClose").onclick   = function(e) {closeWindow();};
 					
 					getFileDetail();
+					getInitTotalSize();
 				}
 				
 				function getFileDetail() {
@@ -182,6 +183,7 @@
 							spanChild1.textContent  = fileName;
 							spanChild1.setAttribute("title", fileName);
 							spanChild2.textContent  = getFileSize(fileSize);
+							spanChild2.setAttribute("size", fileSize);
 							divChildElmt2.className = "cabFileInf";
 							divChildElmt2.appendChild(spanChild1);
 							divChildElmt2.appendChild(spanChild2);
@@ -381,10 +383,20 @@
 				
 				function deleteAttach(event) {
 					event.stopPropagation();
-					var imgObj   = event.currentTarget;
-					var liElmt   = imgObj.parentElement;
-					var ulElmt   = liElmt.parentElement;
+					var totalCap            = CabinetFile.getTotal();
+					var imgObj              = event.currentTarget;
+					var liElmt              = imgObj.parentElement;
+					var ulElmt              = liElmt.parentElement;
+					var divInfElmt          = liElmt.querySelector("div[class='cabFileInf']");
+					var spanElmt            = divInfElmt.lastElementChild;
+					var crrSize             = parseInt(spanElmt.getAttribute("size"));
+					totalCap               -= crrSize;
+					var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
+					var spanElmt            = fileCapacityDivElmt.querySelector("span");
+					spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(totalCap);
 					ulElmt.removeChild(liElmt);
+					
+					CabinetFile.setTotal(totalCap);
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
@@ -547,6 +559,7 @@
 					fileDivElmt.parentElement.replaceChild(cloneNode, fileDivElmt);
 					
 					getFileDetail();
+					getInitTotalSize();
 				}
 				
 				function fileDelete() {
@@ -606,6 +619,22 @@
 					
 					divElmt.removeAttribute("style");
 					if (tdElmt) {tdElmt.removeAttribute("style");}
+				}
+				
+				function getInitTotalSize() {
+					var totalCrrSize = 0;
+					var ulElmt = document.getElementsByClassName("ulFiles")[0];
+					if (ulElmt) {
+						var liElmts = ulElmt.querySelectorAll("li");
+						for (var i = 0, len = liElmts.length; i < len; i++) {
+							var divInfElmt = liElmts[i].querySelector("div[class='cabFileInf']");
+							var spanElmt   = divInfElmt.lastElementChild;
+							var crrSize    = parseInt(spanElmt.getAttribute("size"));
+							totalCrrSize  += crrSize;
+						}
+					}
+					
+					CabinetFile.setTotal(totalCrrSize);
 				}
 				
 				function closeWindow() {window.close();}

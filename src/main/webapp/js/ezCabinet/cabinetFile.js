@@ -3,19 +3,23 @@ var CabinetFile = function() {
 	var start     = 4.72;
 	var isStart   = false;
 	var fillColor = "#09F";
+	var totalCap  = 0;
+	
+	function getTotalFileSize()      {return totalCap;}
+	function setTotalFileSize(value) {totalCap = value;}
 	
 	function onDragEnter(evt) {
 		evt.dataTransfer.dropEffect = "copy";
 		evt.stopPropagation();
 		evt.preventDefault();
 	}
-
+	
 	function onDragOver(evt) {
 		evt.dataTransfer.dropEffect = "copy";
 		evt.stopPropagation();
 		evt.preventDefault();
 	}
-
+	
 	function onStartUpload(evt) {
 		if (evt != undefined) {
 			evt.stopPropagation();
@@ -136,10 +140,10 @@ var CabinetFile = function() {
 				var code = data.code;
 				
 				switch(code) {
-					case 0 : afterUploadSuccessfully(liElmt, fileName, data.path) ; break;
-					case 1 : alert(CabinetMessages.strParamErr)                   ; break;
-					case 2 : alert(CabinetMessages.strError)                      ; break;
-					default: alert(CabinetMessages.strError)                      ; return;
+					case 0 : afterUploadSuccessfully(liElmt, fileName, data.path, fileSize); break;
+					case 1 : alert(CabinetMessages.strParamErr)                            ; break;
+					case 2 : alert(CabinetMessages.strError)                               ; break;
+					default: alert(CabinetMessages.strError)                               ; return;
 				}
 			},
 			error : function(error) {
@@ -148,12 +152,12 @@ var CabinetFile = function() {
 		});
 	}
 	
-	function afterUploadSuccessfully(liElmt, filename, filePath) {
+	function afterUploadSuccessfully(liElmt, filename, filePath, fileSize) {
 		isStart            = true;
 		var checkImageFile = isImage(filename);
 		var delImg         = document.createElement("img");
 		delImg.src         = "/images/cabinet/file_del.gif";
-		delImg.addEventListener("click", function(e) {deleteFile(e);}, false);
+		delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
 		liElmt.appendChild(delImg);
 		liElmt.setAttribute("path", filePath);
 		
@@ -164,9 +168,20 @@ var CabinetFile = function() {
 		
 		divChildElmt1.removeChild(canvasElmt);
 		divChildElmt1.appendChild(imgElmt);
+		
+		totalCap                = totalCap + fileSize;
+		var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
+		var spanElmt            = fileCapacityDivElmt.querySelector("span");
+		
+		if(!spanElmt) {
+			spanElmt = document.createElement("span");
+			fileCapacityDivElmt.appendChild(spanElmt);
+		}
+		
+		spanElmt.textContent     = CabinetMessages.strStorage + getFileSize(totalCap);
 	}
 	
-	function deleteFile(event) {
+	function deleteFile(event, fileSize) {
 		event.stopPropagation();
 		var imgObj   = event.currentTarget;
 		var liElmt   = imgObj.parentElement;
@@ -182,10 +197,10 @@ var CabinetFile = function() {
 				var code = data.code;
 				
 				switch(code) {
-					case 0 : afterDeleteSuccessfully(liElmt)   ; break;
-					case 1 : alert(CabinetMessages.strParamErr); break;
-					case 2 : alert(CabinetMessages.strError)   ; break;
-					default: alert(CabinetMessages.strError)   ; return;
+					case 0 : afterDeleteSuccessfully(liElmt, fileSize); break;
+					case 1 : alert(CabinetMessages.strParamErr)       ; break;
+					case 2 : alert(CabinetMessages.strError)          ; break;
+					default: alert(CabinetMessages.strError)          ; return;
 				}
 			},
 			error : function(error) {
@@ -194,9 +209,14 @@ var CabinetFile = function() {
 		});
 	}
 	
-	function afterDeleteSuccessfully(liElmt) {
+	function afterDeleteSuccessfully(liElmt, fileSize) {
 		var ulElmt = liElmt.parentElement;
 		ulElmt.removeChild(liElmt);
+		
+		totalCap                = totalCap - fileSize;
+		var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
+		var spanElmt            = fileCapacityDivElmt.querySelector("span");
+		spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(totalCap);
 	}
 	
 	function getFileSize(fileSize) {
@@ -259,6 +279,8 @@ var CabinetFile = function() {
 		dragEnter  : onDragEnter,
 		dragOver   : onDragOver,
 		deleteFile : deleteFile,
+		getTotal   : getTotalFileSize,
+		setTotal   : setTotalFileSize,
 		check      : checkUploadStatus
 	};
 }();
