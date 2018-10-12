@@ -109,6 +109,9 @@
 				    case 30:
 					 	url = "/admin/ezEmail/letterMain.do";
 					 	break;
+				    case 31:
+				    	url = "/admin/ezEmail/signatureMain.do";
+				    	break;
 				}
 				window.open(url,"right");
 			}
@@ -175,6 +178,10 @@
   				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
     			<ul></ul>
   			</h2>
+  			<h2>
+				<span onClick="goPage(31)" style="display:inline-block;width:100%;">서명 템플릿 관리</span>
+			    <ul></ul>
+			</h2>
   			<c:if test="${cChk == '1'}">
 			<h2>
 				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>

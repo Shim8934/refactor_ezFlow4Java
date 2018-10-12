@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
+import org.json.simple.JSONArray;
+
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -17,6 +19,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -76,4 +79,6 @@ public interface EzEmailService {
 	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception;
 	List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception;
 	public List<String> aliasMailCheck(String address) throws Exception;
+	
+	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
 }

@@ -57,6 +57,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -2222,6 +2223,39 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("aliasMailCheck ended.");
 		
 		return resultList;
+	}
+	
+	@Override
+	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception {
+		logger.debug("selectAllSignatureTemplate started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId);
+		
+		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String inputParams = companyIdStr + "&" + tenantStr;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONArray json = new JSONArray();
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			json = (JSONArray) object.get("result");
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
+				//throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("selectAllSignatureTemplate ended.");
+		
+		return json;
+		
 	}
 	
 }

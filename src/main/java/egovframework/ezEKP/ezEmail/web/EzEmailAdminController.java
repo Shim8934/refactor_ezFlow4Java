@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -1147,4 +1148,64 @@ public class EzEmailAdminController {
 	
 		logger.debug("MailQuotaExcelExport controller ended.");
 	}
+	
+	/**
+	 * 서명 템플릿 메인화면 호출 함수
+	 * 
+	 * @param String loginCookie, Model model
+	 * @return String
+	 */
+	@RequestMapping(value = "/admin/ezEmail/signatureMain.do")
+	public String signatureMainView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("signatureMainView started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("list", resultList);
+
+		logger.debug("signatureMainView ended.");
+
+		return "admin/ezEmail/signatureMain";
+
+	}
+	
+	/**
+	 * 서명 템플릿 목록 조회
+	 * 
+	 * @param companyId
+	 * @return : JSONArray
+	 */
+	@RequestMapping("/admin/ezEmail/readSignList.do")
+	@ResponseBody
+	public JSONArray readSignList(@CookieValue("loginCookie") String loginCookie, String companyId, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("readSignList started.");
+		logger.debug("companyId=" + companyId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONArray returnJsonArr = new JSONArray();
+
+		try {
+			returnJsonArr = ezEmailService.selectAllSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()));
+			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		logger.debug("readSignList ended.");
+		return returnJsonArr;
+	}
+	
 }
