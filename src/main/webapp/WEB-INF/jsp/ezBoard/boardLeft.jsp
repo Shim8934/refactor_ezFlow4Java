@@ -75,6 +75,9 @@
 				} else if (Func == "4") {
 					WebPartToggle(level1El.item(level1El.length - 1));
 					ladder_Func(1);
+				} else if (Func == "5") {
+					WebPartToggle(level1El.item(level1El.length - 1));
+					memo_Func(1);
 				}
 		        /* 2018-09-20 홍승비 - 윈도우 온로드 시 마이게시판 우선적으로 열리는 부분 주석처리 */
 		       /*  else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
@@ -82,7 +85,7 @@
 		        } */
 		
 		        /* 2018-09-20 홍승비 - 게시판 서브메뉴로 나의게시물, 예약게시물 진입 시 좌측메뉴 하이라이트 수정 */
-		        if (Func != "1" && Func != "3" && Func != "4") {
+		        if (Func != "1" && Func != "3" && Func != "4" && Func != "5") {
 		            if (subFunc == "1") {
 		            	ShowMyBoardItem();
 		                MyBoard();
@@ -123,7 +126,6 @@
 		                favoriteList();
 		            }
 		        }
-
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
@@ -661,6 +663,19 @@
 		            SetTreeviewUnSelect("");
 				}
 			}
+			
+			function memo_Func(idx) {
+				$(".on").attr("class", "off");
+				$(".memo h2").attr("class", "on");
+				$(".memo").next().attr("class", "on");
+				
+				if (CrossYN()) {
+					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
+		        } else {
+		        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
+		        }
+	            SetTreeviewUnSelect("");
+			}
 
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
@@ -775,6 +790,13 @@
 		    		window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
 				}
 		    }
+		    
+		    function folder_Manage() {
+	        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+		    
+	 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -877,7 +899,26 @@
 			</div>
 			</c:if>
 			<ul></ul>
-
+			
+			<c:if test="${memoFlag == 'YES'}">
+			<div class="memo" onclick="memo_Func(1)">
+				<h2><span><spring:message code="ezMemo.t001" /></span></h2>
+			</div>
+			</c:if>
+			
+			<ul>
+				<!-- <div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
+					<div>
+						<src class="memoFoldImage"></src>
+						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)" id="memoTot">전체메모<span id="countTotal"></span></span>
+						<div class="memoFolders"></div>
+					</div>
+				</div>
+				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="folder_Manage()" style="width: 100%; display: inline-block;">메모함관리</span></h3> -->
+			</ul>
+			
+		    
 			<h3>
 				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
 			</h3>
