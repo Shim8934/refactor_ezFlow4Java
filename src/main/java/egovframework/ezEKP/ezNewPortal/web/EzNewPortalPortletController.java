@@ -346,14 +346,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("portalFavoriteBoardPortlet ended");
-		return "/ezNewPortal/favoriteBoardPortlet";
+		return "/ezNewPortal/portlets/favoriteBoardPortlet";
 	}
 	
 	/**
 	 * 포들릿 - 즐겨찾기 탭 리스트 불러오기
 	 */
 	@RequestMapping(value="/ezNewPortal/favoriteBoardPortletList.do")
-	public String favoriteBoardPortletList(String mode, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+	@ResponseBody
+	public JSONArray favoriteBoardPortletList(String mode, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -364,25 +365,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("mode", mode);
 		param.put("userId", userId);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists" + userInfo.getId(), param, request, "get", null);		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
 		
-		if (status.equals("ok")) {		
-			JSONArray resultList = (JSONArray) resultBody.get("resultList");
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
 			
-			model.addAttribute("resultList", resultList);
+			if (data.get("resultList") != null) {
+				json = (JSONArray) data.get("resultList");
+			} else {
+				json = null;
+			}
+			
 		}
 
 		logger.debug("get_favoriteList ended");
-		return "json";
+		return json;
 	}
 	
 	/**
 	 * 포들릿 - 즐겨찾기 리스트 불러오기
 	 */
 	@RequestMapping(value="/ezNewPortal/getFavoriteBoardList.do")
-	public String getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+	@ResponseBody
+	public JSONArray getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -397,15 +405,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
 		
-		if (status.equals("ok")) {		
-			JSONArray resultList = (JSONArray) resultBody.get("resultList");
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
 			
-			model.addAttribute("resultList", resultList);
+			if (data.get("favList") != null) {
+					json = (JSONArray) data.get("favList");
+			} else {
+				json = null;
+			}
 		}
 
 		logger.debug("get_favoriteList ended");
-		return "json";
+		return json;
 	}	
 	
 	/**

@@ -164,6 +164,8 @@
 			$(".nextBtn").on("click", photoBoardMoveNextPage);
 			$(".preBtn").on("click", photoBoardMovePrevPage);
 			$("#photoBoardPlus").on("click", viewPhotoBoardList);
+		} else if (portletId == 10) {
+			getTabList();
 		}
 	}
 	

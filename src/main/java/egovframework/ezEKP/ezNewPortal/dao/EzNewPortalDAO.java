@@ -102,12 +102,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	//즐겨찾기 게시판 포틀릿 리스트(새게시물)
 	@SuppressWarnings("unchecked")
 	public List<FavoriteBoardVO> getFavNewItemList(Map<String, Object> map) {
-		return (List<FavoriteBoardVO>) select("ezNewPortal.getNewItemList", map);
+		return (List<FavoriteBoardVO>) list("ezNewPortal.getNewItemList", map);
 	}
 	
 	//즐겨찾기 게시판 포틀릿 리스트(일반)
 	@SuppressWarnings("unchecked")
 	public List<FavoriteBoardVO> getFavItemList(Map<String, Object> map) {
-		return (List<FavoriteBoardVO>) select("ezNewPortal.getItemList", map);
+		return (List<FavoriteBoardVO>) list("ezNewPortal.getItemList", map);
 	}
 }

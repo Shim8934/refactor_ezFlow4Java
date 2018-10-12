@@ -78,6 +78,8 @@
 			$(".nextBtn").on("click", photoBoardMoveNextPage);
 			$(".preBtn").on("click", photoBoardMovePrevPage);
 			$("#photoBoardPlus").on("click", viewPhotoBoardList);
+		} else if (portletId == 10) {
+			getTabList();
 		}
 	}
 	
@@ -292,7 +294,7 @@
 	            	</c:choose>
            	 		</div>
            	 		<dl class="info">
-            			<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
+            			<dt class="infoImg"><c:if test='${empty userPhoto}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${!empty userPhoto}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
                			<dd class="infoName">${userName} ${userTitle}</dd>
                 		<dd class="infoTeam">${deptName}</dd>
                 		<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>

@@ -8,6 +8,7 @@
 <typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
 <typeAlias alias="ThemeInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO"/>
 <typeAlias alias="UserPortalSettingVO" type="egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO"/>
+<typeAlias alias="FavoriteBoardVO" type="egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -73,6 +74,14 @@
 <result property="userId" 					column="USER_ID" />
 <result property="usedTheme" 				column="USED_THEME" />
 <result property="usedFrame" 				column="USED_FRAME" />
+</resultMap>
+<resultMap class="FavoriteBoardVO" id="FavoriteBoardVO">
+<result property="title" 				column="TITLE" />
+<result property="writerName" 			column="WRITERNAME" />
+<result property="startDate" 			column="STARTDATE" />
+<result property="itemId" 				column="ITEMID" />
+<result property="boardId" 				column="BOARDID" />
+<result property="gubun" 				column="GUBUN" nullValue=""/>
 </resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
@@ -432,97 +441,6 @@ AND
 ]]>
 </select>
 
-<<<<<<< HEAD
-<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
-	<![CDATA[
-		SELECT
-			TBL_FORMINFO.*
-		FROM
-			TBL_FORMINFO
-		INNER JOIN
-			TBL_FORMUSERINFO
-		ON
-			TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
-		AND
-			TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
-		AND
-			TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
-		WHERE
-			TBL_FORMUSERINFO.tenant_id = #tenantId#
-		AND
-			TBL_FORMUSERINFO.companyid = #companyId#
-		AND
-			TBL_FORMUSERINFO.userid = #userId#
-		ORDER BY
-			FORMORDER
-		LIMIT
-			0, 5
-	]]>
-</select>
-<!-- 즐겨찾기 포틀릿  새게시물 가져오기 -->
-<select id="ezNewPortal.getNewItemList" parameterClass="Map" resultClass="HashMap">
-<![CDATA[
-SELECT A.BOARDID
-	   A.ITEMID,
-	   A.WRITERNAME,
-	   A.STARTDATE,
-	   A.TITLE				
-  FROM TBL_BOARD_ITEM A 
-  JOIN 
-	   ( 
-	   SELECT BOARDID, 
-	   		  BOARDNAME, 
-	   		  BOARDNAME2,
-	   		  TENANT_ID,
-	  		  COMPANYID 
- 	     FROM TBL_BOARD_MYBOARDS 
-  		WHERE TENANT_ID = #tenantId#
-  		  AND COMPANYID = #companyId#
- 		  AND USERID = #userId#
- 		) B 
-	 ON A.TENANT_ID = B.TENANT_ID
-	AND	A.BOARDID = B.BOARDID                
-	AND A.TENANT_ID = #tenantId#
-	AND A.WRITERCOMPANYID = #companyId#
-	AND A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
-	AND A.STARTDATE <= #nowDate#
-	AND A.ENDDATE > #nowDate#					
-	AND (
-		NOT EXISTS (
-		 		   SELECT USERID 
-					 FROM TBL_BOARD_ITEM_READ S 
-					WHERE S.TENANT_ID = A.TENANT_ID
-					  AND S.BOARDID = A.BOARDID 
-					  AND S.ITEMID = A.ITEMID 
-					  AND S.TENANT_ID = #tenantId#
-					  AND S.USERID = #userId# 
-					  AND S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-				   )
-	    )
-  ORDER BY STARTDATE
-  LIMIT #limit#
-]]>
-</select>
-
-<select id="ezNewPortal.getItemList" parameterClass="Map" resultClass="HashMap">
-<![CDATA[
-SELECT A.TITLE,
-	   A.WRITERNAME,
-	   A.STARTDATE,
-	   A.ITEMID,
-	   A.BOARDID,
-	   B.GUBUN
-  FROM TBL_BOARD_ITEM A
-  JOIN TBL_BOARD_BOARDINFO B
-    ON A.BOARDID = B.BOARDID
-   AND A.TENANT_ID = B.TENANT_ID
-   AND A.COMPANYID = B.COMPANYID
- WHERE A.BOARDID = #boardId#
-   AND A.COMPANYID = #companyId#
-   AND A.TENANT_ID = #tenantId#
- ORDER BY STARTDATE DESC
- LIMIT #limit#
-=======
 <!-- 이효진-->
 	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
@@ -618,7 +536,77 @@ SELECT A.TITLE,
 		THEME_DEFAULT = 'Y'
 	LIMIT
 		1;
->>>>>>> c70edf08c0a2ba53938b58daad52e62ad24e953e
 ]]>
+</select>
+
+<!-- 즐겨찾기 포틀릿  새게시물 가져오기 -->
+<select id="ezNewPortal.getNewItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
+<![CDATA[
+SELECT A.BOARDID,
+	   A.ITEMID,
+	   A.WRITERNAME,
+	   A.STARTDATE,
+	   A.TITLE,
+	   C.GUBUN
+  FROM TBL_BOARD_ITEM A 
+  JOIN 
+	   ( 
+	   SELECT BOARDID, 
+	   		  BOARDNAME, 
+	   		  BOARDNAME2,
+	   		  TENANT_ID,
+	  		  COMPANYID 
+ 	     FROM TBL_BOARD_MYBOARDS 
+  		WHERE TENANT_ID = #tenantId#
+  		  AND COMPANYID = #companyId#
+ 		  AND USERID = #userId#
+ 		) B 
+	 ON A.TENANT_ID = B.TENANT_ID
+	AND	A.BOARDID = B.BOARDID                
+	AND A.TENANT_ID = #tenantId#
+	AND A.WRITERCOMPANYID = #companyId#
+	AND A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+	AND A.STARTDATE <= #nowDate#
+	AND A.ENDDATE > #nowDate#					
+	AND (
+		NOT EXISTS (
+		 		   SELECT USERID 
+					 FROM TBL_BOARD_ITEM_READ S 
+					WHERE S.TENANT_ID = A.TENANT_ID
+					  AND S.BOARDID = A.BOARDID 
+					  AND S.ITEMID = A.ITEMID 
+					  AND S.TENANT_ID = #tenantId#
+					  AND S.USERID = #userId# 
+					  AND S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				   )
+	    )
+  JOIN TBL_BOARD_BOARDINFO C
+    ON A.BOARDID = C.BOARDID
+   AND A.TENANT_ID = C.TENANT_ID
+   AND A.WRITERCOMPANYID = C.COMPANYID
+  ORDER BY STARTDATE
+  LIMIT #limit#
+]]>
+</select>
+
+<select id="ezNewPortal.getItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
+<![CDATA[
+SELECT A.TITLE,
+	   A.WRITERNAME,
+	   A.STARTDATE,
+	   A.ITEMID,
+	   A.BOARDID,
+	   B.GUBUN
+  FROM TBL_BOARD_ITEM A
+  JOIN TBL_BOARD_BOARDINFO B
+    ON A.BOARDID = B.BOARDID
+   AND A.TENANT_ID = B.TENANT_ID
+   AND A.WRITERCOMPANYID = B.COMPANYID
+ WHERE A.BOARDID = #boardId#
+   AND A.WRITERCOMPANYID = #companyId#
+   AND A.TENANT_ID = #tenantId#
+ ORDER BY STARTDATE DESC
+ LIMIT #limit#
+ ]]>
 </select>
 </sqlMap>

@@ -7,7 +7,14 @@ public class FavoriteBoardVO {
 	private String writerName;
 	private String startDate;
 	private String title;
+	private String gubun;
 	
+	public String getGubun() {
+		return gubun;
+	}
+	public void setGubun(String gubun) {
+		this.gubun = gubun;
+	}
 	public String getBoardId() {
 		return boardId;
 	}

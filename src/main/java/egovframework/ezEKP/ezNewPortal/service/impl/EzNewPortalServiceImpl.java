@@ -201,12 +201,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	/** -------------------- */
 
 	@Override
-	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate) {
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
+		map.put("limit", limit);
 		
 		return ezNewPortalDAO.getFavNewItemList(map);
 	}

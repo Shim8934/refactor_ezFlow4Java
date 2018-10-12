@@ -1209,7 +1209,7 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet started.");
 		JSONObject result = new JSONObject();
 		
-    	String boardId = request.getParameter("boardID");
+    	String boardId = request.getParameter("boardId");
 		int limit = 5;
     	
 		try {
@@ -1222,19 +1222,30 @@ public class EzNewPortalGWController {
 			
 			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
     			
-    			List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""));
+    			List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit);
 				
-    			data.put("favNewList", favNewList);
+    			for (FavoriteBoardVO fvo : favNewList) {
+    				LOGGER.debug("resultList : " + fvo.getItemId());
+				}
+    			
+    			data.put("favList", favNewList);
     			    			
     		} else { // 일반게시판		
     			
     			List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit);
+    			
+    			for (FavoriteBoardVO fvo : favList) {
+    				LOGGER.debug("resultList : " + fvo.getItemId());
+				}
+    			
+    			data.put("favList", favList);
     		}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1262,6 +1273,11 @@ public class EzNewPortalGWController {
 			
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 			
+			for (BoardMyFavoriteVO fvo : resultList) {
+				
+				LOGGER.debug("resultList : " + fvo.getBoardId());
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("resultList", resultList);
 			
@@ -1269,6 +1285,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

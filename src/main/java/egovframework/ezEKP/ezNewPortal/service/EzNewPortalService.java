@@ -40,6 +40,6 @@ public interface EzNewPortalService {
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	/** -------------------- */
 	
-	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate);
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit);
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit);
 }
