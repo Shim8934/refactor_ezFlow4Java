@@ -179,7 +179,7 @@
 			    SelectedBoardType = treeNode.GetNodeData("DATA5");
        			
 			    //2018-08-13 강민수92 url 게시판일 경우 게시물등록을 못하게 하기 위해 체크
-       			if (treeNode.GetNodeData("DATA6").trim != "null" && treeNode.GetNodeData("DATA6").trim() != "" && SelectedBoardType == "0") {
+       			if (treeNode.GetNodeData("DATA6").trim() != "null" && treeNode.GetNodeData("DATA6").trim() != "" && SelectedBoardType == "0") {
        				SelectedBoardType = "6";
        			}
 			}

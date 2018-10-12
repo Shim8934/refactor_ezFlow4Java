@@ -1301,6 +1301,67 @@ public class CommonUtil {
 		return pass;
 	}
 	
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromMemoRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromMemoRestApi started");
+		String gwServerUrl = config.getProperty("config.memoGwServerURL");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = new RestTemplate();
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		logger.debug("getJsonFromMemoRestApi ended");
+		return resultBody;
+	}
+	
 	public String getWildcardEscapedString(String s, int dbName) {
 		if (dbName == ORACLE) {
 			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {

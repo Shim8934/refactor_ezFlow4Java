@@ -20,6 +20,7 @@ function window_onload() {
             RetValue = window.dialogArguments;
         }
     }
+    
     g_CabID = RetValue[0];
     g_CabClassNo = RetValue[1];
 
@@ -112,20 +113,26 @@ function InitClassInfo() {
     InsValueIntoTD(tdFileTransYear, SelectSingleNodeValue(g_CInfoXml, "DOCTRANSYEAR"));
 }
 
-//START
-var View_OriginCabInfo_dialogArguments = new Array();
+//2018-10-12 배현상, 원본 기록물철 정보보기 시 새로운 창 띄우는 것에서 데이터를 교체하는 것으로 변경
 function View_OriginCabInfo() {
-    var para = new Array();
-    para[0] = g_TCabID;
-    para[1] = "";
+	g_arrayTabXMLInitialized = { "0": false, "1": false, "2": false, "3": false };
+	
+	//탭 이동 초기화
+	$("#tab_ViewCab" + g_strSelectedTab).find("span").removeClass("tabon");
+	
+    g_CabID = g_TCabID;
+    g_CabClassNo = "";
 
-    View_OriginCabInfo_dialogArguments[0] = para;
+    GetCabInfo();
 
-    var url = "/ezApprovalG/viewCabInfo.do";
-    var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(672, 550));
-    try { OpenWin.focus(); } catch (e) { }
+    InitBasicInfo();
+
+    if (g_EInfoXml) {
+    	tab_onclick("0");
+    	$("#tab_ViewCab" + g_strSelectedTab).find("span").addClass("tabon");
+    }	
 }
-//END
+
 
 function InitTransInfo() {
 

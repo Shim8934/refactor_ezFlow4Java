@@ -53,6 +53,9 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Mysql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Mysql_h.xml"/>
 	
+    <!-- 메모 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezMemo/EzMemo_SQL_Mysql.xml"/>
+    
     <!-- 2.관리자 모듈관리 SQL쿼리 XML -->
     
     <!-- 게시판 관리자 -->
