@@ -95,7 +95,7 @@
 	                _EDIT.style.marginRight = "3px";
 	                _DEL.innerHTML = "삭제";
 	                _DEL.setAttribute("class", "lmLetterDeleteBtn");
-	                _DEL.onclick = function() { deleteSignTemplate(_TR.getAttribute("signno")); };
+	                _DEL.onclick = function() { deleteSignTemplate(this); };
 	                _EDIT.setAttribute("class", "lmLetterModifyBtn");
 	                _DIV.appendChild(_EDIT);
 	                _DIV.appendChild(_DEL);
@@ -106,21 +106,29 @@
 	        }
 	        
 	        // 서명 템플릿 삭제
-	        function deleteSignTemplate(signNo) {
-	        	$.ajax({
-	        		type : "POST",
-	        		url : "/admin/ezEmail/deleteSignTemplate.do?companyId=" + companyID + "&signNo=" + signNo,
-	        		datatype : 'json',
-	        		error : function(data) {
-	        			alert("error");
-	        			console.log(data);
-	        		},
-	        		complete : function(data) {
-	        			alert("삭제 하였습니다.");
-	        			$("#signList tr").empty();
-	        			signatureTemplateView();
-	        	    }
-	        	});
+	        function deleteSignTemplate(obj) {
+	        	var signNo = obj.parentElement.parentElement.parentElement.getAttribute("signno");
+	        	
+	        	var deleteConfirm = confirm("정말로 삭제하시겠습니까?");
+	        	
+	        	if (deleteConfirm) {
+	        		$.ajax({
+		        		type : "POST",
+		        		url : "/admin/ezEmail/deleteSignTemplate.do?companyId=" + companyID + "&signNo=" + signNo,
+		        		datatype : 'json',
+		        		error : function(data) {
+		        			alert("error");
+		        			console.log(data);
+		        		},
+		        		complete : function(data) {
+		        			alert("삭제 하였습니다.");
+		        			$("#signList tr").empty();
+		        			signatureTemplateView();
+		        	    }
+		        	});
+	        	} else {
+	        		return;
+	        	}
 	        }
 	        
 	        // 검색 리스트 가져오기
