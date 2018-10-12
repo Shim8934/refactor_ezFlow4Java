@@ -419,10 +419,10 @@
 
 /* photo css */
 .cabphotoul {list-style: none; margin: 0px; padding: 0px; overflow: hidden; display: flex; flex: 1; flex-wrap: wrap; height: 60px;}
-.cabphotoul li {width: 20%; min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;}
+.cabphotoul li {min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; float: left; margin: 0px 4px;}
 .cabphotoul li img {height: 40px; width: 60px; cursor: pointer; opacity: 0.35;}
 .cabphotoul .selectedImg, .cabphotoul li img:hover {opacity: 1 !important;}
-.cabphotobttn {width: 45px; min-width: 45px; display: flex; justify-content: center; align-items: center;}
+.cabphotobttn {width: 35px; min-width: 35px; display: flex; justify-content: center; align-items: center;}
 .cabphotobttn img {width: 30px; height: 30px; cursor: pointer;}
 .cabphotobttn2 {width: 60px; min-width: 60px; display: flex; justify-content: center; align-items: center;}
 .cabphotobttn2 img {width: 50px; height: 50px; cursor: pointer;}
@@ -433,7 +433,7 @@
 .cabphotslide {flex: 1; justify-content: center; align-items: center; position: relative;}
 .cabphotodes {height: 40px; min-height: 40px; text-align: center; word-break: break-all; font-size: 14px;}
 .cabphotoprev {height: 80px; min-height: 80px; display: flex; background:#f8f8fa; border-top:1px solid #ddd;}
-.cabphotoprevmain {display: flex; flex: 1; align-items: center; justify-content: center;}
+.cabphotoprevmain {flex: 1;}
 .cabphotooff, .cabUploadHelp.off {display: none;}
 .scrollPrint {padding: 7px 0px;}
 .popup_noti_btnarea.cabdelpp {border-radius: 0px 0px 4px 4px !important;}
@@ -449,5 +449,7 @@
 .cabwrapperDiv, .cabwrapperDiv2 {margin: 10px 0px; display: flex; flex-flow: column;}
 .cabwrapperDiv {height: 464px;}
 .cabwrapperDiv2 {height: 484px;}
+.cabphotowrp {display: flex; align-items: center; justify-content: center; height: 80px;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .cabwrapperDiv2, .fileDetailDiv2, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .wide {width: 40% !important;} .wide2 {width: 84% !important;} .overfl {white-space: normal !important;} .tblFileInf tr td, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {line-height: 21px !important;} }
+

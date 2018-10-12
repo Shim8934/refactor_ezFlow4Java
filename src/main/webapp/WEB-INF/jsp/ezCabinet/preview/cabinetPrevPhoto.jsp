@@ -20,13 +20,20 @@
 			<div class="cabphotoprev">
 				<div class="cabphotobttn"><img id="prevprevious" class="cabphotooff" src="/images/previous.png"></div>
 				<div class="cabphotoprevmain">
-					<ul class="cabphotoul">
-						<li><img></li>
-						<li><img></li>
-						<li><img></li>
-						<li><img></li>
-						<li><img></li>
-					</ul>
+					<div class="cabphotowrp">
+						<ul class="cabphotoul">
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+							<li><img></li>
+						</ul>
+					</div>
 				</div>
 				<div class="cabphotobttn"><img id="prevnext" class="cabphotooff" src="/images/next.png"></div>
 			</div>
@@ -38,7 +45,7 @@
 			(function() {
 				var imageList   = null;
 				var crrPhotoIdx = 0;
-				var blockImg    = 5;
+				var blockImg    = 10;
 				var totalImg    = -1;
 				
 				initEvents();
@@ -66,7 +73,7 @@
 					liList[0].firstElementChild.className = "selectedImg";
 					
 					for (var i = 0, len = liList.length; i < len; i++) {
-						var imgElmt     = liList[i].firstElementChild;
+						var imgElmt = liList[i].firstElementChild;
 						if (i < totalImg) {
 							imgElmt.src     = imageList[i]["filePath"];
 							imgElmt.onclick = function(e) {selectPhoto(this);};
@@ -156,9 +163,9 @@
 				function windowResize() {
 					var ulElmt   = document.querySelector("ul[class='cabphotoul']");
 					var ulWidth  = ulElmt.offsetWidth;
-					var newBlock = Math.floor(ulWidth/60);
+					var newBlock = Math.floor(ulWidth/68);
 					
-					if (newBlock > 5) {newBlock = 5;}
+					if (newBlock > 10) {newBlock = 10;}
 					
 					if (newBlock != blockImg) {
 						blockImg        = newBlock;
@@ -167,7 +174,7 @@
 						var newStartIdx = (currentPage - 1) * newBlock;
 						var newSltIdx   = crrPhotoIdx - newStartIdx;
 						
-						if ((currentPage + 1) >= totalPage) {
+						if ((currentPage + 1) > totalPage) {
 							document.getElementById("prevnext").className = "cabphotooff";
 						}
 						else {
@@ -218,7 +225,7 @@
 					var imgCnt = totalImg - index;
 					var len    = liList.length;
 					
-					if (imgCnt <= 5) {
+					if (imgCnt <= 10) {
 						for (var i = 0; i < imgCnt; i++) {
 							var imgElmt = liList[i].firstElementChild;
 							imgElmt.removeAttribute("style");
