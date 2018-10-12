@@ -13,8 +13,8 @@
 	<body class="popup cabAddMain">
 		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
 		<div id="cabAddStore" class="cabStore">
-			<a class="cabStoreBttn"                 ><span><spring:message code='ezCabinet.t14' /></span></a>
-			<a class="cabStoreBttn" id="addFileBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
+			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t14' /></span></a>
+			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
 		</div>
 		<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
@@ -46,10 +46,6 @@
 		
 		<div class="storageDiv" id="fileCapacityDiv"></div>
 		
-		<%-- <div class="cabBttnDiv" id="cabAddBttn">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
-		</div> --%>
-		
 		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
@@ -73,13 +69,10 @@
 					var storeBttn           = storeBttnElmt.children;
 					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
 					storeBttn[0].onclick    = function(e) {saveItem();};
-					storeBttn[1].onclick    = function(e) {};
+					storeBttn[1].onclick    = function(e) {startUpload();};
 					
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
-					/*var listBttns           = cabdivBttnElmt.children;
-					listBttns[0].onclick    = function(e) {saveItem();};
-					listBttns[0].onclick    = function(e) {closeWindow();}; */
 					
 					var fileUploadBttn      = document.getElementById("fileBttn");
 					fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
@@ -92,7 +85,6 @@
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
 					
 					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
-					document.getElementById("addFileBttn").onclick  = function(e) {startUpload();}
 					
 					var relatedBttn     = document.getElementById("rlBttn");
 					relatedBttn.onclick = function(e) {getRelatedFile();};
