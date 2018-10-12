@@ -99,12 +99,17 @@
 			updateOrder.push({"portletOrder" : i + 1, "portletId" : portletId});
 		}
 		
+		var data = {
+			updateOrder : updateOrder
+		};
+		
 		//ajax로 순서 변경
 		$.ajax({
-			type : "PATCH",
+			type : "POST",
 			url : "/ezNewPortal/updatePortletOrderUser.do",
+			contentType : "application/json",
 			dataType : "text",
-			data : {"updateOrder" : updateOrder},
+			data : JSON.stringify(data),
 			success : function(result) {
 				if (result === "fail") {
 					alert("오류가 발생하였습니다.");
@@ -179,6 +184,7 @@
 		
 		$.ajax({
 			type : "POST",
+			dataType : "json",
 			url : "/ezNewPortal/getPhotoItemList.do",
 			data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},
 			success : function(result) {

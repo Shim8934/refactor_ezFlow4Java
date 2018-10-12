@@ -325,12 +325,13 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value= "/rest/ezPortal/portlets/order/users/{userId}", method= RequestMethod.PATCH, produces="application/json;charset=utf-8")
 	public JSONObject updatePortletOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees started.");
+		LOGGER.debug("ezNewPortal G/W updatePortletOrder started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			System.out.println(jsonParam.get("updateOrder"));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -339,7 +340,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees ended.");
+		LOGGER.debug("ezNewPortal G/W updatePortletOrder ended.");
 		return result;
 	}
 	
