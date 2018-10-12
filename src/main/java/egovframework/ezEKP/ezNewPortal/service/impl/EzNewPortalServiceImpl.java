@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -17,8 +18,8 @@ import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -165,6 +166,46 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	/**
 	 * 이효진
 	 */
+	@Override
+	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String type) throws Exception {
+		LOGGER.debug("getApprovalList started.");
+		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<ApprGDocListVO> list = null;
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		switch (type) {
+		case "doing":
+			list = ezNewPortalDAO.getApprovalDoingList(map);
+			result.put("list", list);
+			//첫문서 결재라인 조회
+			
+			break;
+		case "reject":
+			list = ezNewPortalDAO.getApprovalRejectList(map);
+			result.put("list", list);
+			
+			break;
+		case "draft":
+			list = ezNewPortalDAO.getApprovalDraftList(map);
+			result.put("list", list);
+			
+			break;
+
+		default:
+			break;
+		}
+		
+		LOGGER.debug("getApprovalList ended.");
+		
+		return result;
+	}
+	
 	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getFavoriteForms started.");

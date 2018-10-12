@@ -1,17 +1,17 @@
 package egovframework.ezEKP.ezNewPortal.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -88,13 +88,27 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	/**
 	 * 이효진
 	 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getApprovalDoingList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalDoingList", map);
+	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGFormVO> getFavoriteForms(Map<String, Object> map) {
+	public List<ApprGDocListVO> getApprovalRejectList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalRejectList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getApprovalDraftList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalDraftList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFavoriteForms(Map<String, Object> map) throws Exception {
 		return (List<ApprGFormVO>) list("ezNewPortal.getFavoriteForms", map);
 	}
 	
-	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) {
+	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) throws Exception {
 		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
 	}
 	/** -------------------- */

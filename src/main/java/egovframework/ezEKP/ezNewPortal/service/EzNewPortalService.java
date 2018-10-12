@@ -38,6 +38,7 @@ public interface EzNewPortalService {
 	
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
+	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String type) throws Exception;
 	/** -------------------- */
 	
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit);

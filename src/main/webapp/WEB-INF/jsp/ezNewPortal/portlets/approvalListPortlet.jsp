@@ -32,6 +32,7 @@
 			var getApprovalList = function(type) {
 				var request = new XMLHttpRequest();
 				request.open('POST', '/ezNewPortal/getApprovalList.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
 	
 				request.onload = function() {
 					if (request.status >= 200 && request.status < 400) {
@@ -40,21 +41,37 @@
 						var docList = result.resultList;
 						var docsHTML = "";
 						
-						/* for (var i = 0; i < 5; i++) {
-							if (forms[i]) {
-								docsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span>" + forms[i].formName + "</span></li>";
-							} else {
-								docsHTML += "<li class='bookmarkLi_none'></li>";
+						if (docList) {
+							switch (type) {
+							case "doing":
+								docList.forEach(function(item, index) {
+	// 								index === 0 ? $('#ApprList').append(dataAssemblerApprLine(item, res.listDtl, res.imgPath)) : $('#ApprList').append(dataAssembler(item));
+								});
+									
+				                break;
+	
+				            case "reject":
+								docList.forEach(function(item, index) {
+									docsHTML += dataAssembler(item);
+								});
+								
+				                break;
+	
+				            case "draft":
+								docList.forEach(function(item, index) {
+									docsHTML += dataAssembler(item);
+								});
+				            	
+				                break;
 							}
+						} else {
+							docsHTML += "<dl class='nodata'>";
+							docsHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+							docsHTML += "<dd><spring:message code='main.t00026' /></dd>";
+							docsHTML += "</dl>";
 						}
 						
-						document.getElementsByClassName('bookmark')[0].innerHTML = formsHTML
-						
-						Array.from(document.getElementsByClassName('bookmarkLi')).forEach(function(element) {
-							element.addEventListener('click', function() {
-								checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
-							});
-						}); */
+						document.getElementById('ApprList').innerHTML = docsHTML;
 					} else {
 						// We reached our target server, but it returned an error
 					}
@@ -65,77 +82,51 @@
 				};
 				
 				var data = JSON.stringify({
-					"type" : type
+					type : type
 				});
 				
 				request.send(data);
 			}
-			/* var getApprGraph = function(tabId) {
-				
-				
-				$.ajax({
-		 	    	type : "POST",
-		 	        dataType : "JSON",
-		 	        contentType: "application/json",
-		 	        async: "false",
-		 	        url : "/ezApprovalG/getPortletAprList.do",
-		 	        data : JSON.stringify({
-		 	        	pListTypeName: type, // 1. 결재할문서, 4. 반송문서, 2. 기안문서  
-		 	        	pUserID: pUserID,
-		 	        	companyID: companyID
-					}),
-					success : function(res){
-						$('#ApprList').empty();
-						if(pListTypeValue === "1") {
-							$(res.list).each(function(index, element) {
-								index === 0 ? $('#ApprList').append(dataAssemblerApprLine(element, res.listDtl, res.imgPath)) : $('#ApprList').append(dataAssembler(element)); 
-							});													
-						} else {
-							$(res.list).each(function(index, element) {
-								$('#ApprList').append(dataAssembler(element));
-							});								
-						}
-						
-						// 데이터가 없는 경우
-						if(res.list.length < 1) {
-							$('#ApprList').append(noData());
-						}
-						
-						$('#ApprList li').css("cursor", "pointer");
-		 	        },
-		 	        error : function(error){
-		 	        	console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
-		 	        }
-				});
-			} */
 			
 			var apprChangeTab = function(obj) {
 				var type = "";
 		        switch (obj.id) {
-		            case "doingTab":
-		            	type = "doing";
-		                document.getElementById("doingTab").className = "on";
-		                document.getElementById("rejectTab").className = "";
-		                document.getElementById("draftTab").className = "";
-		                break;
-	
-		            case "rejectTab":
-		            	type = "reject";
-		                document.getElementById("doingTab").className = "";
-		                document.getElementById("rejectTab").className = "on";
-		                document.getElementById("draftTab").className = "";
-		                break;
-	
-		            case "draftTab":
-		            	type = "draft";
-		                document.getElementById("doingTab").className = "";
-		                document.getElementById("rejectTab").className = "";
-		                document.getElementById("draftTab").className = "on";
-		                break;
+	            case "doingTab":
+	            	type = "doing";
+	                document.getElementById("doingTab").className = "on";
+	                document.getElementById("rejectTab").className = "";
+	                document.getElementById("draftTab").className = "";
+	                break;
+
+	            case "rejectTab":
+	            	type = "reject";
+	                document.getElementById("doingTab").className = "";
+	                document.getElementById("rejectTab").className = "on";
+	                document.getElementById("draftTab").className = "";
+	                break;
+
+	            case "draftTab":
+	            	type = "draft";
+	                document.getElementById("doingTab").className = "";
+	                document.getElementById("rejectTab").className = "";
+	                document.getElementById("draftTab").className = "on";
+	                break;
 		        }
 		        
 		        getApprovalList(type);
 		    }
+			
+			var dataAssembler = function(object) {
+				var str = "";
+				
+				str += '<li onclick=\'opendocview("'+ object.docID +'", "'+ object.href +'", "'+ object.aprMemberID +'", "'+ object.aprMemberName +'", "'+ object.aprMemberDeptID +'", "'+ object.docState +'", "'+ object.functionType +'")\'>';
+				str += '	<span class="txt">'+ object.docTitle +'</span>';
+				str += '	<span class="date">'+ object.startDate.substr(5, 11).replace(/-/gi,'.')+'</span>';				
+				str += '	<span class="name">'+ object.writerName +'</span>';
+				str += '</li>';
+				
+				return str;
+			}
 		</script>
 	</body>
 </html>
