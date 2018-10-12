@@ -472,6 +472,121 @@ INSERT INTO TBL_PORTAL_PORTLET_USER (
 ]]>
 </insert>
 <!-- 이효진-->
+	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				DOCINFO.docid,
+			    DOCINFO.docstate,
+			    DOCINFO.functiontype,
+			    DOCINFO.doctitle,
+			    DOCINFO.startdate,
+			    DOCINFO.writerid,
+			    DOCINFO.writername,
+			    DOCINFO.writername2,
+			    DOCINFO.href,
+	            LINEINFO.aprmemberdeptid,
+	            LINEINFO.aprmemberdeptname,
+	            LINEINFO.aprmemberid,
+	            LINEINFO.aprmembername
+			FROM
+				TBL_APRDOCINFO AS DOCINFO
+			JOIN
+				TBL_APRLINEINFO AS LINEINFO
+			ON
+				DOCINFO.tenant_id = LINEINFO.tenant_id
+			AND
+				DOCINFO.companyid = LINEINFO.companid
+			AND
+				DOCINFO.docid = LINEINFO.docid
+			WHERE
+				DOCINFO.tenant_id = #tenantId#
+			AND
+				DOCINFO.companyid = #companyId#
+			AND
+				LINEINFO.aprmemberid = #userId#
+			AND
+				DOCINFO.functiontype = '002'
+			AND
+				LINEINFO.aprstate = '002'
+			AND
+				DOCINFO.docstate not in ('015')   
+			ORDER BY
+				DOCINFO.startdate DESC
+			LIMIT
+				3
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalRejectList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				docid,
+			    docstate,
+			    functiontype,
+			    doctitle,
+			    startdate,
+			    writerid,
+			    writername,
+			    writername2,
+			    href
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyId#
+			AND
+				writerid = #userId#
+			AND
+				functiontype = '004'
+			ORDER BY
+				startdate DESC
+			LIMIT
+				5
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalDraftList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT  
+				DOCINFO.docid,
+			    DOCINFO.docstate,
+			    DOCINFO.functiontype,
+			    DOCINFO.doctitle,
+			    DOCINFO.startdate,
+			    DOCINFO.writerid,
+			    DOCINFO.writername,
+			    DOCINFO.writername2,
+			    DOCINFO.href
+			FROM
+				TBL_APRDOCINFO AS DOCINFO
+			JOIN
+				TBL_APRLINEINFO AS LINEINFO
+			ON
+				DOCINFO.tenant_id = LINEINFO.tenant_id
+			AND
+				DOCINFO.companyid = LINEINFO.companid
+			AND
+				DOCINFO.docid = LINEINFO.docid
+			WHERE
+				DOCINFO.tenant_id = #tenantId#
+			AND
+				DOCINFO.companyid = #companyId#
+			AND
+				LINEINFO.aprmemberid = #userId#
+			AND
+				LINEINFO.aprmembersn = 1
+			AND
+				DOCINFO.aprtype <>'015'
+			AND
+				DEOCINFO.docstate <> '017'
+			ORDER BY
+				STARTDATE DESC
+			LIMIT
+				5
+		]]>
+	</select>
+
 	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
@@ -524,7 +639,7 @@ INSERT INTO TBL_PORTAL_PORTLET_USER (
 			AND 
 				LINEINFO.aprstate = '002'         
 			AND 
-				DOCINFO.docstate not in ('015');
+				DOCINFO.docstate not in ('015')
 		]]>
 	</select>
 

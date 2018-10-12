@@ -1584,7 +1584,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화  G/W [GET] 포틀릿 - 전자결재(결재할 문서, 반송 문서, 기안 문서)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/ezPortal/portlets/approvalList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value= "/rest/ezportal/portlets/approvallist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getApprovalListPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getApprovalListPortlet started.");
 		JSONObject result = new JSONObject();
@@ -1594,9 +1594,16 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			
+			String type = request.getParameter("type");
+			
+			Map<String, Object> resultMap = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), info.getTenantId(), type);
+			
+			JSONObject data = new JSONObject();
+			data.put("resultMap", resultMap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
