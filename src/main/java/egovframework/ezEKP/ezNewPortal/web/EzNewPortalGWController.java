@@ -1532,7 +1532,9 @@ public class EzNewPortalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
 			
 			result.put("status", "ok");
 			result.put("code", 0);

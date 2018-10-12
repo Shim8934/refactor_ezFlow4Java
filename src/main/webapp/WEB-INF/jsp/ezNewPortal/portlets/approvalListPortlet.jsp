@@ -29,7 +29,7 @@
         </div>
 		
 		<script type="text/javascript">
-			var getApprGraph = function() {
+			var getApprovalList = function(type) {
 				var request = new XMLHttpRequest();
 				request.open('POST', '/ezNewPortal/getApprovalList.do', true);
 	
@@ -40,7 +40,7 @@
 						var docList = result.resultList;
 						var docsHTML = "";
 						
-						for (var i = 0; i < 5; i++) {
+						/* for (var i = 0; i < 5; i++) {
 							if (forms[i]) {
 								docsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span>" + forms[i].formName + "</span></li>";
 							} else {
@@ -54,7 +54,7 @@
 							element.addEventListener('click', function() {
 								checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
 							});
-						});
+						}); */
 					} else {
 						// We reached our target server, but it returned an error
 					}
@@ -64,7 +64,11 @@
 				  // There was a connection error of some sort
 				};
 				
-				request.send();
+				var data = JSON.stringify({
+					"type" : type
+				});
+				
+				request.send(data);
 			}
 			/* var getApprGraph = function(tabId) {
 				
@@ -109,25 +113,28 @@
 				var type = "";
 		        switch (obj.id) {
 		            case "doingTab":
+		            	type = "doing";
 		                document.getElementById("doingTab").className = "on";
 		                document.getElementById("rejectTab").className = "";
 		                document.getElementById("draftTab").className = "";
 		                break;
 	
 		            case "rejectTab":
+		            	type = "reject";
 		                document.getElementById("doingTab").className = "";
 		                document.getElementById("rejectTab").className = "on";
 		                document.getElementById("draftTab").className = "";
 		                break;
 	
 		            case "draftTab":
+		            	type = "draft";
 		                document.getElementById("doingTab").className = "";
 		                document.getElementById("rejectTab").className = "";
 		                document.getElementById("draftTab").className = "on";
 		                break;
 		        }
 		        
-		        getApprGraph(obj.id);
+		        getApprovalList(type);
 		    }
 		</script>
 	</body>
