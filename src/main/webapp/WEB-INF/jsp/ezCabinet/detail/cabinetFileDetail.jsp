@@ -38,10 +38,12 @@
 				</tr>
 			</table>
 		</div>
-		
-		<div class="fileDetailDiv" id="fileDiv">
-			<div class="fileList"><ul class="ulFiles"></ul></div>
-			<div class="divInform"></div>
+		<div class="cabwrapperDiv2">
+			<div id="helpTxt" class="cabUploadHelp off"><spring:message code='ezCabinet.t168'/></div>
+			<div class="fileDetailDiv2" id="fileDiv">
+				<div class="fileList"><ul class="ulFiles"></ul></div>
+				<div class="divInform"></div>
+			</div>
 		</div>
 		
 		<div class="storageDiv" id="fileCapacityDiv"></div>
@@ -57,8 +59,9 @@
 		
 		<c:if test="${permission != 0}">
 			<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t14' /></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
+				<a class="cabBttn"><span><spring:message code='ezCabinet.t15' /></span></a>
 			</div>
 			<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		</c:if>
@@ -92,7 +95,8 @@
 						listBttns[2].onclick       = function(e) {filePrint();}
 						listBttns[3].onclick       = function(e) {closeWindow();};
 						listModifyBttns[0].onclick = function(e) {saveItem();};
-						listModifyBttns[1].onclick = function(e) {cancelChanges()};
+						listModifyBttns[1].onclick = function(e) {startUpload();};
+						listModifyBttns[2].onclick = function(e) {cancelChanges()};
 						document.getElementById("fileBttn").onchange = function(e) {CabinetFile.upload();};
 					}
 					else {
@@ -175,7 +179,7 @@
 							var fileSize = attachFile[i]["fileSize"];
 							var checkImageFile = isImage(fileName);
 							imgElmt.src        = checkImageFile.isImage == true ? filePath : checkImageFile.urlImage;
-							imgElmt.addEventListener("click", function(e) {downloadFile(e);}, false);
+							liElmt.addEventListener("click", function(e) {downloadFile(e);}, false);
 							
 							divChildElmt1.className = "cabImgAva";
 							divChildElmt1.appendChild(imgElmt);
@@ -252,8 +256,7 @@
 				
 				function downloadFile(event) {
 					event.stopPropagation();
-					var imgElmt     = event.currentTarget;
-					var liElmt      = imgElmt.parentElement.parentElement.parentElement;
+					var liElmt      = event.currentTarget;
 					var fileName    = liElmt.getAttribute("fname");
 					var filePath    = liElmt.getAttribute("path");
 					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + encodeURIComponent(filePath) + "&fileName=" + encodeURIComponent(fileName);
@@ -339,11 +342,12 @@
 					summaryTdElmt.appendChild(inputElmt2);
 					
 					//Set attachButton
-					var fileDivElmt = document.getElementById("fileDiv");
-					var ulElmt      = fileDivElmt.querySelector("ul[class='ulFiles']");
-					var liElmt      = ulElmt.querySelectorAll("li");
+					var fileDivElmt     = document.getElementById("fileDiv");
+					var ulElmt          = fileDivElmt.querySelector("ul[class='ulFiles']");
+					var liElmt          = ulElmt.querySelectorAll("li");
 					
-					fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
+					document.getElementById("helpTxt").className = "cabUploadHelp";
+					//fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
 					fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
 					fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
@@ -351,15 +355,15 @@
 					if(liElmt.length == 0) {
 						var fileDivElmt         = document.getElementById("fileDiv");
 						var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
-						divInformElmt.removeChild(divInformElmt.firstElementChild);
+						if (divInformElmt.firstElementChild) {divInformElmt.removeChild(divInformElmt.firstElementChild);}
 						
-						var spanElmt1           = document.createElement("span");
+						/*var spanElmt1         = document.createElement("span");
 						var spanElmt2           = document.createElement("span");
 						spanElmt1.textContent   = CabinetMessages.strAttach1;
 						spanElmt2.textContent   = CabinetMessages.strAttach2;
 						
 						divInformElmt.appendChild(spanElmt1);
-						divInformElmt.appendChild(spanElmt2);
+						divInformElmt.appendChild(spanElmt2);*/
 					}
 					else {
 						for (var i = 0; i < liElmt.length; i++) {
@@ -536,6 +540,7 @@
 				}
 				
 				function cancelChanges() {
+					document.getElementById("helpTxt").className      = "cabUploadHelp off";
 					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
 					document.title = CabinetMessages.strFileDet;
 					

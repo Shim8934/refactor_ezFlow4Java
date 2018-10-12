@@ -296,9 +296,10 @@
 .cabemailDiv span {cursor: pointer; line-height: 20px;}
 .cabemailDiv span:hover {color: #164aad;}
 
-.fileUploadDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 430px; height: 430px; overflow: auto; cursor: pointer;}
+.fileUploadDiv  {padding: 2.5px; border: 1px solid #ddd; min-height: 430px; overflow: auto; cursor: pointer; flex: 1;}
+.fileDetailDiv2 {padding: 2.5px; border: 1px solid #ddd; min-height: 450px; overflow: auto; cursor: pointer; flex: 1;}
 .htmlDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 300px; height: 300px; overflow: auto; cursor: pointer;}
-.fileDetailDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 450px; height: 450px; overflow: auto; cursor: pointer;}
+.fileDetailDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 450px; height: 450px; overflow: auto; cursor: pointer;}
 .divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center;}
 .divInform .nofile {line-height: 60px;}
 .divInform span + span {margin-top: 5px;}
@@ -433,7 +434,7 @@
 .cabphotodes {height: 40px; min-height: 40px; text-align: center; word-break: break-all; font-size: 14px;}
 .cabphotoprev {height: 80px; min-height: 80px; display: flex; background:#f8f8fa; border-top:1px solid #ddd;}
 .cabphotoprevmain {display: flex; flex: 1; align-items: center; justify-content: center;}
-.cabphotooff {display: none;}
+.cabphotooff, .cabUploadHelp.off {display: none;}
 .scrollPrint {padding: 7px 0px;}
 .popup_noti_btnarea.cabdelpp {border-radius: 0px 0px 4px 4px !important;}
 .cabcolor th {background-color: #eff6ff !important; color:#333;}
@@ -444,5 +445,9 @@
 .cabBlankMain {height: 83%; display: flex; align-items: center; justify-content: center;}
 .cabStore {display: block; padding-left: 0px; height: 28px; margin-bottom: 15px; margin-top: 3px; vertical-align: middle;}
 .cabStore span {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding: 0px 8px 0px 8px; vertical-align: top; cursor: pointer; margin-bottom: 15px; border-radius: 3px; background-color: white; border: 1px solid #829dc7; height: 24px; line-height: 25px; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);}
+.cabUploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
+.cabwrapperDiv, .cabwrapperDiv2 {margin: 10px 0px; display: flex; flex-flow: column;}
+.cabwrapperDiv {height: 464px;}
+.cabwrapperDiv2 {height: 484px;}
 
-@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .wide {width: 40% !important;} .wide2 {width: 84% !important;} .overfl {white-space: normal !important;} .tblFileInf tr td, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {line-height: 21px !important;} }
+@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .cabwrapperDiv2, .fileDetailDiv2, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .wide {width: 40% !important;} .wide2 {width: 84% !important;} .overfl {white-space: normal !important;} .tblFileInf tr td, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {line-height: 21px !important;} }
