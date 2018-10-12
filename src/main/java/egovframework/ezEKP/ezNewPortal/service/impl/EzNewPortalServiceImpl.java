@@ -336,7 +336,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public String getMemberChk(String cNo, String userId, int tenantId) {
+	public String getCommunityPermit(String cNo, String userId, int tenantId) {
 		LOGGER.debug("memberChk started");
 
 		String ret = "1";
