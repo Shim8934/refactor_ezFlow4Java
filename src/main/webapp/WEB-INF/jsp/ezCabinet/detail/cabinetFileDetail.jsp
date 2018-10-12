@@ -10,7 +10,25 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabDetail">
-		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
+		<%-- <h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1> --%>
+		<div class="cabBttnDiv2" id="fileDivBttn">
+			<c:if test="${permission != 0}">
+				<a class="cabBtt"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBtt"><span><spring:message code='ezCabinet.t46'/></span></a>
+			</c:if>
+			<a class="cabBtt"><span><spring:message code='ezCabinet.t111'/></span></a>
+			<%-- <a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
+		</div>
+		
+		<c:if test="${permission != 0}">
+			<div class="cabBttnDiv2" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBtt"><span><spring:message code='ezCabinet.t14' /></span></a>
+				<a class="cabBtt"><span><spring:message code='ezCabinet.t167'/></span></a>
+				<a class="cabBtt"><span><spring:message code='ezCabinet.t15' /></span></a>
+			</div>
+			<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
+		</c:if>
+		
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
 			<table class="tblFileInf cabcolor">
@@ -48,7 +66,7 @@
 		
 		<div class="storageDiv" id="fileCapacityDiv"></div>
 		
-		<div class="cabBttnDiv" id="fileDivBttn">
+		<%-- <div class="cabBttnDiv" id="fileDivBttn">
 			<c:if test="${permission != 0}">
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
@@ -64,7 +82,7 @@
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t15' /></span></a>
 			</div>
 			<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
-		</c:if>
+		</c:if> --%>
 		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
@@ -93,7 +111,7 @@
 						listBttns[0].onclick       = function(e) {fileModify();};
 						listBttns[1].onclick       = function(e) {fileDelete();};
 						listBttns[2].onclick       = function(e) {filePrint();}
-						listBttns[3].onclick       = function(e) {closeWindow();};
+						//listBttns[3].onclick       = function(e) {closeWindow();};
 						listModifyBttns[0].onclick = function(e) {saveItem();};
 						listModifyBttns[1].onclick = function(e) {startUpload();};
 						listModifyBttns[2].onclick = function(e) {cancelChanges()};
@@ -309,8 +327,8 @@
 				
 				function fileModify() {
 					//Set title
-					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod;
-					document.title = CabinetMessages.strFileMod;
+					/* document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod; */
+					document.title = CabinetMessages.strFileMod; 
 					
 					//Set button
 					var fileDivBttn = document.getElementById("fileDivBttn");
@@ -541,7 +559,7 @@
 				
 				function cancelChanges() {
 					document.getElementById("helpTxt").className      = "cabUploadHelp off";
-					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
+					/* document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet; */
 					document.title = CabinetMessages.strFileDet;
 					
 					document.getElementById("fileDivBttn").style.display       = "";
