@@ -431,7 +431,7 @@
 		            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
 		            	var file1val = document.getElementById("file1").files[i].name;
 				        var exIndex = file1val.lastIndexOf('.');
-						var extension = file1val.substring(exIndex+1, file1val.lenght);
+						var extension = file1val.substring(exIndex+1, file1val.length);
 				        var check = false;
 				        check = compareExtension(check, extension);
 				        
@@ -494,8 +494,6 @@
 		
 		    //사진추가
 		    function btn_PhotoAttachAdd() {
-		    	pAttachListXml = "";
-		    	
 		        if (CrossYN()) {
 		        	document.getElementById('mode').value = "PICTURE";
 		            document.form.file1.click();
@@ -511,8 +509,8 @@
 		                if (!file)
 		                    return;
 	
+		                pAttachListXml = "";
 		                g_fileList = file.split("|");
-	
 		                var fileSize = 0;
 		                for (var i = 0; i < g_fileList.length - 1; i++) {
 		                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {

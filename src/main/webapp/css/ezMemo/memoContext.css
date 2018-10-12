@@ -1,0 +1,3 @@
+@charset "utf-8";
+.context-menus { position: absolute; display: none; text-align: center; cursor:pointer; z-index:6000;}
+.context-menus.active { display: block; background-color: white;}

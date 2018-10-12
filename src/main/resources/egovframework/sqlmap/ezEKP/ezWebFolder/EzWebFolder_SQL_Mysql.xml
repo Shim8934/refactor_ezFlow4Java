@@ -786,7 +786,7 @@
 			SET
 				f.USE_STATUS = 'N',
 				f.DELETER_ID = #userId#,
-				UPDATE_DATE = #timeUTC#
+				f.UPDATE_DATE = #timeUTC#
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
