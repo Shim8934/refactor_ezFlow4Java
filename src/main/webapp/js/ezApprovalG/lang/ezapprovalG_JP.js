@@ -581,8 +581,8 @@ var strLang830 = "수신자 "
 // ReceivUI\RecevIng.js
 // ReceivUI\recev_end.js
 // AprDocView.js
-var strLang837 = "意見情報があります。";
-var strLang838 = "意見情報を見ますか。";
+var strLang837 = "コメント情報があります。";
+var strLang838 = "確認しますか？";
 // aprmanage.js
 var strLang840 = "決裁する文書 : "
 var strLang841 = "起案した文書 : "
