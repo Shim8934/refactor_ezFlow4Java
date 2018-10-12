@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -100,7 +99,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezPortal/portlets/notice";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -134,7 +133,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("portletId", req.getParameter("portletId"));
 		String url = "/rest/ezPortal/portlets/vote";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -164,7 +163,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezPortal/portlets/poll";
 
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
@@ -208,7 +207,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("getApprovalList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String tabName = request.getParameter("tabName");
+		String type = request.getParameter("type");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("type", type);
+		String url = "/rest/ezportal/portlets/approvalList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			JSONArray resultList = (JSONArray) data.get("resultList");
+			
+			model.addAttribute("resultList", resultList);
+		}
+		
 		
 		
 		
@@ -254,7 +269,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezportal/portlets/favoriteforms";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -281,7 +296,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		String url = "/rest/ezportal/portlets/approvalstatistics";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -314,7 +329,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("portletId", portletId);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		
 		if (result.equals("ok")) {
@@ -492,7 +507,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("startRow", startRow);
 		param.put("portletId", portletId);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		JSONArray json = new JSONArray();
 		
