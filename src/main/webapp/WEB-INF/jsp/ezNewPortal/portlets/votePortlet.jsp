@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="layDiv">
-	<dl class="portlet_title">
+	<dl class="portlet_title sortablePortlet">
 		<dt class="portletText"><c:out value="${portletName }"/> (<c:out value='${voteCount }'/>)</dt>
 		<dd class="portletPlus" id="votePlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 	</dl>

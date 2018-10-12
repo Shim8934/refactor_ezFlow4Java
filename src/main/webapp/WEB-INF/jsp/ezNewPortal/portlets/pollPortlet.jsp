@@ -17,7 +17,7 @@ pollPortletLoadFunc();
 </head>
 <body>
 <div class="layDiv">
-	<dl class="portlet_title">
+	<dl class="portlet_title sortablePortlet">
 		<dt class="portletText">투표 (1)</dt>
 		<dd class="portletPlus" id="votePlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 	</dl>

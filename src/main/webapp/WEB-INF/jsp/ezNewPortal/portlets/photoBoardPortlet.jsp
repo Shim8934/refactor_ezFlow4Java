@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="layDIV">
-	<dl class="portlet_title photo_board">
+	<dl class="portlet_title photo_board sortablePortlet">
 		<dt class="portletText" data1="${boardId }"><c:out value="${portletName }"/></dt>
 		<dd class="portletPlus" id="photoBoardPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 	<c:if test="${access eq 'true' }">

@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div class="layDIV">
-			<dl class="portlet_title">
+			<dl class="portlet_title sortablePortlet">
 				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
 				<dt class="portletText"><c:out value = "${portletName}" /></dt>
 				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>

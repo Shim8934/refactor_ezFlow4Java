@@ -83,6 +83,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
 	/**
+	 * 유은정
+	 */
+	/**
 	 * 포탈 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
@@ -161,12 +164,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/portlets/order/users/" + userId;
-		System.out.println(req.getParameter("test"));
-		System.out.println(jsonParam.get("updateOrder"));
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "patch", jsonParam);
 		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "patch", jsonParam);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("fail")) {
+			result = "failed";
+		}
 		
 		logger.debug("updatePortletOrderUser End");
 		return result;
 	}
+	
+	/**
+	 * ----
+	 */
 }

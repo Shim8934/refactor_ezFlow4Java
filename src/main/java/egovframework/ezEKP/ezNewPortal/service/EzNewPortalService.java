@@ -32,6 +32,7 @@ public interface EzNewPortalService {
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId);
 	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId);
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
+	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
 	/**
 	 * 이효진
 	 */

@@ -83,6 +83,7 @@
 		
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
+			handle : ".sortablePortlet",
 			update : function(event, ui) {
 				updatePortletOrderUser();
 			}
@@ -115,7 +116,7 @@
 			dataType : "text",
 			data : JSON.stringify(data),
 			success : function(result) {
-				if (result === "fail") {
+				if (result === "failed") {
 					alert("오류가 발생하였습니다.");
 				}
 			},

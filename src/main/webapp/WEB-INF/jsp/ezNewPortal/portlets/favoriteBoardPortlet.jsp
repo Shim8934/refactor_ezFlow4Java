@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript">
 var strLang1_NewBoardSTD = "<spring:message code='main.t00026' />";
@@ -211,7 +210,7 @@ function refresh_onclick() {
 </head>
 <body>
 	<div class="layDIV">
-           <dl class="portlet_tab" id="BoardTab"></dl>
+           <dl class="portlet_tab sortablePortlet" id="BoardTab"></dl>
            <ul class="portlet_list" id="BoardList"></ul>
     </div>		
 </body>

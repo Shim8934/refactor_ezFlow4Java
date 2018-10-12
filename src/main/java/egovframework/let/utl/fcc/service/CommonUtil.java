@@ -1125,8 +1125,14 @@ public class CommonUtil {
 				}
 			}
 			
-			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-			RestTemplate rest = new RestTemplate(httpRequestFactory);
+			RestTemplate rest = null;
+			
+			if (methodType.equals("patch")) {
+				ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+				rest = new RestTemplate(httpRequestFactory);
+			} else {
+				rest = new RestTemplate();
+			}
 			
 			HttpMethod method = null;
 			switch (methodType) {
