@@ -106,7 +106,7 @@
 	            var objNode;
 	            createNodeInsert(xmlpara, objNode, "PARAMETER");
 	            createNodeAndInsertText(xmlpara, objNode, "PSELTREEID", pSelID);
-	            createNodeAndInsertText(xmlpara, objNode, "PMOVETREEID", encodeURIComponent(SelectedBoardID));
+	            createNodeAndInsertText(xmlpara, objNode, "PMOVETREEID", SelectedBoardID);
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", pMode);
 	
 	            xmlhttp.open("POST", "/ezBoard/setMyBoardMoveCopy.do", false);
