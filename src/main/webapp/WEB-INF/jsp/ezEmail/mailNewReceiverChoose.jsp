@@ -1183,14 +1183,12 @@
 	                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
 	                            listid = "MsgBCCList";
 	                        }
+	                        
 	                        var getlistview = new ListView();
-	                        getlistview.LoadFromID(listid);
-	                        var bFlag = getlistview.ExistRow("DATA2", strEmail);
+                            getlistview.LoadFromID(listid);
+                            var IsInsert = CheckMailReceiver(strEmail, "3");
 	
-	                        if (bFlag) {
-	                            pAddFlag = true;
-	                        }
-	                        else {
+	                        if (!IsInsert) {
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";

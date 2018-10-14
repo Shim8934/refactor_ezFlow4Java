@@ -533,7 +533,7 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
                 
-                if (strName == "비치" || strName == "특수목록" || strName == "연기신청") {
+                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -1578,4 +1578,22 @@ function GetTodayDate()
 
 function SetUnSelected(pTableID) {
     tr_unselectedAll(pTableID);
+}
+
+function setDeleteRow(nodeId) {
+	var colCount = document.getElementById(nodeId+"_TH").childElementCount;
+	var oTable = document.getElementById(nodeId);
+	var oTbody = oTable.lastChild;
+	
+	var objTr = document.createElement("TR");
+    objTr.setAttribute("id", nodeId + "_TR_" + "noItems");
+    oTbody.appendChild(objTr);
+    var oText = document.createTextNode(strLang944);
+    var objTd = document.createElement("TD");
+    objTd.align = "center";
+	objTd.setAttribute("colSpan", colCount);
+    objTd.appendChild(oText);
+    objTr.appendChild(objTd);
+    
+    oTable.setAttribute("lastSelectedRowID", "");
 }

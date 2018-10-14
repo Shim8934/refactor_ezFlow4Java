@@ -170,7 +170,7 @@
 					async : false,
 					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value.trim(), displayName2: DeptName2.value.trim(), extensionAttribute10: SusinSymbol.value, 
 						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
-						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11},
+						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y"},
 					success : function(result){						
 						if (result == "PRE"){
 							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");

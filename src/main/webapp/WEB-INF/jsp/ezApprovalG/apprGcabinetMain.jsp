@@ -598,11 +598,6 @@
 		        SwapSubMenuDisplay("1");
 		
 		        InitGlobals("CABINET", "10", "0");
-		        if (g_bRecAdmin || AdminYN == "TRUE") {
-		        }
-		        else {
-		            g_CabSearchParamXml = "<SEARCHPARAM><CHARGER>'" + UserID + "'</CHARGER></SEARCHPARAM>";
-		        }
 		
 		        GetCaninetList();
 		    }

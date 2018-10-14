@@ -595,11 +595,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr,
 					String parentCn, String ldapPath, String extensionAttribute15, String skipInitData,
-					int tenantID, LoginVO userInfo) throws Exception {
+					String manualFlag, int tenantID, LoginVO userInfo) throws Exception {
 	    logger.debug("insertDBData_company started");
 	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2
 	    		+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData
-	    		+ ",parentCn=" + parentCn + ",tenantID=" + tenantID);
+	    		+ ",manualFlag=" + manualFlag + ",parentCn=" + parentCn + ",tenantID=" + tenantID);
 	    
         if (displayName2 == null || displayName2.equals("")) {
             displayName2 = displayName;
@@ -615,6 +615,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PARENTCN", parentCn);
 		map.put("v_LDAPPATH", ldapPath);		
 		map.put("v_EXTENSIONATTRIBUTE15", extensionAttribute15);
+		map.put("v_MANUAL_FLAG", manualFlag);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -807,12 +808,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");	
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
+		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
 		map.put("v_LDAPPATH", "");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
+		
 		
 		ezOrganAdminDao.insertDBData_dept(map);
 		
@@ -877,11 +880,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
 		map.put("v_PASS", vo.getPassword());
 		map.put("v_INSERTADPASS", oriPass);
-				
+		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
+		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
+		
 		
 		ezOrganAdminDao.insertDBData_user(map);
 				

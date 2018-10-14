@@ -343,5 +343,41 @@
 	   	 CONSTRAINT "JMOCHA_DISTRIBUTION_SUB_PK" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "SUB_MAIL", "SUB_NAME")
 	   	)
 	</statement>
+
+	<select id="EzCommonDAO.checkUserMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_USERMASTER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterManualFlag"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkDeptMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_DEPTMASTER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
+		ALTER TABLE 
+			TBL_DEPTMASTER
+		ADD 
+			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
+	</statement>
 	
 </sqlMap>

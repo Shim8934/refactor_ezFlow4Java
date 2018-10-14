@@ -758,7 +758,7 @@
 					        return;
 					    }
 					    else {
-					        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+					        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2)|| pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 					            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			
 					                var rtnVal = ExcuteInfo("LAST_END_AFTER", "")

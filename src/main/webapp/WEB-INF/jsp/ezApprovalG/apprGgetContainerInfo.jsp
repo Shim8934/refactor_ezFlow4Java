@@ -600,7 +600,7 @@
 		                }
 		            }
 		            else {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN");
+		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN","");
 		                return "";
 		            }
 		        }
