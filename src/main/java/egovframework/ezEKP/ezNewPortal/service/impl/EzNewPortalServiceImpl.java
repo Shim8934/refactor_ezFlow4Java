@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,12 +58,58 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getNoticePortletList(map);
 	}
 	@Override
-	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId) throws Exception {
+	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("userId", userId);
 		
 		return ezNewPortalDAO.getPollPortlet(map);
+	}
+	
+	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("itemSeq", itemSeq);
+		
+		return ezNewPortalDAO.getPollPortletResult(map);
+	}
+	
+	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
+		
+		Field[] fields = poll.getClass().getDeclaredFields();
+		for(int i=0; i<fields.length; i++) {
+			fields[i].setAccessible(true);
+			try {
+				if (fields[i].getName().contains("answer")) {;
+					map.put(fields[i].getName(), fields[i].get(poll));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		for(int i=1; i<map.size(); i++) {
+			Map<String, Object> answerMap = new HashMap<String, Object>();
+			answerMap.put("result", i);
+			answerMap.put("answer", map.get("answer"+(i)));
+			
+			Iterator<PersonalLightPollVO> it = pollResult.iterator();
+			while (it.hasNext()) {
+				PersonalLightPollVO vo = it.next();
+				int result = vo.getResult();
+				if(result == i) {
+					answerMap.put("count", vo.getCount());
+				}
+			}
+			
+			answerList.add(answerMap);								
+		}
+		
+		return answerList;
 	}
 	
 	@Override

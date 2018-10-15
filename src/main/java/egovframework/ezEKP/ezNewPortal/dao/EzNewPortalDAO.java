@@ -33,6 +33,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (PersonalLightPollVO) select("ezNewPortal.getPollPortlet", map);
 	}
 	
+	// 설문조사 결과 조회
+	@SuppressWarnings("unchecked")
+	public List<PersonalLightPollVO> getPollPortletResult (Map<String, Object> map) throws Exception {
+		return (List<PersonalLightPollVO>) list("ezNewPortal.getPollPortletResult", map);
+	}
+	
 	/**
 	 * 유은정
 	 */

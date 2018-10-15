@@ -1,23 +1,66 @@
+var joinPoll = function (e) {
+	var condition = true;
+	var height = window.screen.availHeight;
+	var width = window.screen.availWidth;		
+	var itemseq = '50';
+	
+	if (condition) {
+		var top = (height - 370) / 2;
+		var left = (width - 300) / 2;
+		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=' + top + ',left=' + left;
+		var url = '/ezPersonal/wpLightPoll.do';			
+	} else {
+		var top = (height - 455) / 2;
+		var left = (width - 400) / 2;
+		var option = 'height=400px,width=455, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=' + top + ',left = ' + left; 
+		var url = '/ezPersonal/pollResult.do?itemSeq=' + itemseq;
+	}
+	
+	window.open(url, '', option, '');
+}
+
+
+var pollPlus = function () {
+	var height = window.screen.availHeight;
+	var width = window.screen.availWidth;
+	var top = (height - 500) / 2;
+	var left = (width - 765) / 2;
+	   
+	window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + top + ",left=" + left, "");
+}
+
 var assemblePollList = function (poll) {
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-
-	document.getElementById('pollTitle').textContent = '"'+ poll.pollTitle +'"';
+	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
+	document.getElementById('pollList').innerHTML = '';
 	
-	var cnt = 4; // 포틀릿에 뿌려지는 갯수
+	var answerList = poll.answerList;
 	var str = '';
-	for(var i=0; i<4; i++) {
-		str += '<li class="voteList_0"' + (i+1) + '>';
-		str += '	<div class="voteT">';
-		str += '		<span class="Vnum">'+ (i+1) +'</span>';
-		str += '		<span class="Vtext" id="pollName">'+ poll.answer1 +'</span>';
-		str += '	</div>';
-		str += '	<div class="percent" id="pollPercent'+ (i+1) +'">100%</div>';
-		str += '	<div class="voteGraph" id="pollDivGraph'+ (i+1) +'">'; 
-		str += '		<span id="graph'+ (i+1) +'" style="width :100%"></span>';
-		str += '	</div>';
-		str += '</li>';
+	
+	for (var i=0; i<answerList.length; i++) {
+		if(answerList[i].answer.trim() !== '') {
+			var percentage = 0;
+			//console.log('result: ', answerList[i].result);
+			//console.log('answer: ', answerList[i].answer);
+			//if(answerList[i].count) console.log('count: ', answerList[i].count);
+			if (answerList[i].count) {
+				percentage = (answerList[i].count / poll.pollInfo.count * 1) * 100;	
+			}
+			console.log('percentage : ', percentage);
+			
+			str += '<li class="voteList_0'+ answerList[i].result +'">';
+			str += '<div class="voteT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
+			str += '<div class="percent" id="percent1">' + percentage + '%</div>';
+			str += '<div class="voteGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';
+			str += '	<span id="pollGraph' + answerList[i].result + '" style="width:'+ percentage +'%"></span>';
+			str += '</div>';
+			str += '</li>';
+		}
 	}
-	// document.getElementById('pollList').innerHTML = str;
+	document.getElementById('pollList').innerHTML = str;
+	
+	document.getElementById('pollBtn').addEventListener('click', joinPoll);
+	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 };
 
 /* 설문조사 리스트 */
