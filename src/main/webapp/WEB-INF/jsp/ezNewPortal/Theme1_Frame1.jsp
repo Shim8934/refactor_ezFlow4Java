@@ -26,10 +26,12 @@
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/pollPortlet.js')}"></script>
 <!-- 종균 끝 -->
+<!-- 해안 시작 -->
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/communityPortlet.js')}"></script>
+<!-- 해안 끝 -->
 <script type="text/javascript">
 
 	var portletOrder = JSON.parse('${portletOrder}');
-	var xmlHttp_getnewmailcount_total = null;
 	var pollCount = "<c:out value='${pollCount}'/>";
 	var circularCount = "<c:out value='${circularCount}'/>";
 	var scheduleCount = "<c:out value='${scheduleCount}' />";
@@ -39,6 +41,10 @@
 	var photoCount = 4;
  	var nowAttiTime = "";
  	var serverTime = "<c:out value='${serverTime}'/>";
+ 	var birthdayMonth = Number("<c:out value='${nowMonth}'/>");
+ 	var birthdayCurPage = 0;
+ 	var birthdayTotalCount = 0;
+ 	var timer;
 	
 	$(function() {
 		$("#featured").orbit();
@@ -52,6 +58,19 @@
 			strHTML += "</div>";
 			
 			$(".portlet_area").append(strHTML);
+			
+			//해당 포틀릿 관련 js 추가
+			var head = document.getElementsByTagName("head")[0];
+			var js = document.createElement("script");
+			js.type = "text/javascript";
+			
+			if (portletOrder[i].portletId == 4) {
+				js.src = "/js/ezNewPortal/portlets/votePortlet.js";
+			} else if (portletOrder[i].portletId == 9) {
+				js.src = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
+			}
+			
+			head.appendChild(js);
 		}
 		
 		for (var i = 0; i < portletCount; i++) {
@@ -75,9 +94,16 @@
 		
 		//ajax로 count 불러오기
 		getCountSetting();
-		//
+		//근태관리 연동
 		parseDate();
 		attiClock();
+		
+		//생일자 조회 기능 연동
+		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);
+		$("#birthdayPrev").on("click", {isNext : false}, getMonthlyBirthdayEmployees);
+		
+		//이번달 생일자 목록 불러오기
+		getMonthlyBirthdayEmployees();
 		
 		//개인환경설정으로 이동 동작 연결
 		$("#personalEnv").on("click", viewPersonalEnv);
@@ -167,15 +193,14 @@
     }
 	
 	function eventSetting(portletId) {
-
-		if (portletId == 4) {
+		if (portletId == 4) { //투표
 			$("#votePlus").on("click", viewQstList);
 			$(".voteBtn").on("click", votePoll);
-		} else if (portletId == 9) {
-			$(".nextBtn").on("click", photoBoardMoveNextPage);
-			$(".preBtn").on("click", photoBoardMovePrevPage);
+		} else if (portletId == 9) { //포토게시판
+			$(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
+			$(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
 			$("#photoBoardPlus").on("click", viewPhotoBoardList);
-		} else if (portletId == 10) {
+		} else if (portletId === 10) {
 			getTabList();
 		} else if (portletId === 12) { // 도움말
 			helpPortletLoadFunc();
@@ -183,126 +208,14 @@
 			noticePortletLoadFunc();
 		} else if (portletId === 5) {  // 설문조사
 			pollPortletLoadFunc();
+		} else if (portletId === 11) {  // 커뮤니티
+			$("#communityPlus").on("click", viewCommuList);
 		}
 	}
 	
+	//개인 환경설정으로 이동
 	function viewPersonalEnv() {
 	    window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
-	}
-	
-	function photoBoardMoveNextPage() {
-		photoBoardPage = photoBoardPage + 1;
-		var boardId = $(".photo_board").find(".portletText").attr("data1");
-		var portletId = $(".photo_board").parent().parent().attr("id");
-		portletId = portletId.substring(0, portletId.indexOf("P"));
-		
-		$.ajax({
-			type : "POST",
-			dataType : "json",
-			url : "/ezNewPortal/getPhotoItemList.do",
-			data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},
-			success : function(result) {
-				if (result.length > 0) {
-					var resultCount = result.length;
-					var strHTML = "";
-					
-					for (var i = 0; i < resultCount; i++) {
-						strHTML += "<li>";
-						strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
-						strHTML += "</li>";
-						
-					}
-					
-					$("#photoul").html(strHTML);
-				} else {
-					photoBoardPage = photoBoardPage - 1;
-				}
-			}
-		})
-	}
-
-	function photoBoardMovePrevPage() {
-		if (photoBoardPage !== 1) {
-			photoBoardPage = photoBoardPage - 1;
-			var boardId = $(".photo_board").find(".portletText").attr("data1");
-			var portletId = $(".photo_board").parent().parent().attr("id");
-			portletId = portletId.substring(0, portletId.indexOf("P"));
-			
-			$.ajax({
-				type : "POST",
-				dataType : "json",
-				url : "/ezNewPortal/getPhotoItemList.do",
-				data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},
-				success : function(result) {
-					var resultCount = result.length;
-					var strHTML = "";
-					
-					for (var i = 0; i < resultCount; i++) {
-						strHTML += "<li>";
-						strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
-						strHTML += "</li>";
-						
-					}
-					
-					$("#photoul").html(strHTML);
-				}
-			})
-		}
-	}
-
-	function viewPhotoBoardList() {
-		var boardId = $(".photo_board").find(".portletText").attr("data1");
-	    window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
-	}
-
-	function photoItemRead(elem) {
-		var ShowAdjacent = "";
-		var pheight = window.screen.availHeight;
-		var pwidth = window.screen.availWidth;
-		var pTop = (pheight - 789) / 2;
-		var pLeft = (pwidth - 765) / 2;
-		
-		if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
-			var height = 789;
-		} else {
-			var height = 785;
-		}
-		
-		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + elem.getAttribute("data2") + "&boardID=" + elem.getAttribute("data1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
-	}
-	
-	function viewQstList() {
-		window.open("/ezBoard/boardMain.do?func=3","main");		    	
-	}
-
-	function votePoll() {
-		var qstId = $(".voteBtn").attr("id");
-		qstId = qstId.substring(1);
-		
-		$.ajax({
-			type : "POST",
-			dataType : "text",
-			async : true,
-			url : "/ezPoll/checkPoll.do",
-			data : {
-				qstId : qstId
-			},
-			success: function(data) {		    			
-				var result = JSON.parse(data).result;					
-				
-				if (result == "Normal") {
-					window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
-				}
-				else {
-					alert("투표를 수정하고 있습니다.기다려주세요.");
-					window.location.reload();
-				}
-	        },
-	        error: function(error) {
-	        	alert(error);
-	        }
-		});
-	    
 	}
 	
 	function getCountSetting() {
@@ -356,6 +269,95 @@
 		$("#scheduleCount").text(scheduleCount);
 		$("#approvalCount").text(approvalCount);
 		$("#unreadMailCount").text(unreadMailCount);
+	}
+	
+	//생일자 불러오기
+	function getMonthlyBirthdayEmployees(event) {
+		if (event  != undefined) {
+			var isNext = event.data.isNext;
+			
+			if (isNext) {
+				if (birthdayMonth === 12) {
+					birthdayMonth = 1;
+				} else {
+					birthdayMonth += 1;
+				}
+			} else {
+				if (birthdayMonth === 1) {
+					birthdayMonth = 12;
+				} else {
+					birthdayMonth -= 1;
+				}
+			}
+		}
+		
+		birthdayCurPage = 0;
+		getBirthdayEmployeesList();
+	}
+	
+	function getBirthdayEmployeesList() {
+		window.clearTimeout(timer);
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
+			dataType : "json",
+			data : {"birthdayMonth" : birthdayMonth, "birthdayCurPage" : birthdayCurPage, "birthdayCount" : 6},
+			success : function(result) {
+				birthdayTotalCount = result.birthdayTotalCount;
+				
+				if (birthdayCurPage != 0) {
+					birthdayCurPage = result.birthdayCurPage;
+				}
+				
+				var birthdayList = result.birthdayList;
+				
+				var birth = birthdayMonth;
+				
+				if (birth < 10) {
+					birth = "0" + birth;
+				}
+				
+				$("#curMon").text(birth);
+				
+				if (birthdayList.length > 0 && birthdayList != null) {
+					$("#nodata_NewBirth").css("display", "none");
+					$("#birthcont").css("display", "");
+					
+					var strHTML = "";
+					var resultCount = birthdayList.length;
+					
+					for (var i = 0; i < resultCount; i++) {
+						var userBirthday = birthdayList[i].userBirthday.substring(5);
+						
+						strHTML += "<li>";
+						strHTML += "<dl class='birthListDL'>";
+						strHTML += "<dt class='birthPic'>";
+						strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
+						strHTML += "</dt>";
+						strHTML += "<dd class='birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
+						strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
+						strHTML += "</dl>";
+						strHTML += "</li>";
+					}
+					
+					$("#userList").html(strHTML);
+				} else {
+					$("#nodata_NewBirth").css("display", "");
+					$("#birthcont").css("display", "none");
+				}
+				
+				timer = window.setInterval(function() {
+					if (birthdayTotalCount > 6) {
+						birthdayCurPage++;
+						getBirthdayEmployeesList();
+					}
+				}, 5000);
+			},
+			error : function() {
+				alert("오류가 발생하였습니다.");
+			}
+		});
 	}
 	
 	</script>
@@ -459,12 +461,12 @@
 				</article>
 				<article class="birthday">
 					<div class="birthTit">
-               			<p class="birthText"><span id="curMon">10</span>월 생일자</p>
-           	    		<span class="birthRighttbtn" onclick="moveBirth('NEXT')"><img src="/images/ezNewPortal/birthday_next.png"></span>
-                		<span class="birthLeftbtn" onclick="moveBirth('PREV')"><img src="/images/ezNewPortal/birthday_pre.png"></span>
+               			<p class="birthText"><span id="curMon"></span>월 생일자</p>
+           	    		<span class="birthRighttbtn" id="birthdayNext"><img src="/images/ezNewPortal/birthday_next.png"></span>
+                		<span class="birthLeftbtn" id="birthdayPrev"><img src="/images/ezNewPortal/birthday_pre.png"></span>
             		</div>
             		<div id="birthcont" style="display: none;">
-            			<ul class="birthList" id="userlist"></ul>
+            			<ul class="birthList" id="userList"></ul>
             		</div>
             		<div id="nodata_NewBirth" style="">
             			<dl class="nodata">

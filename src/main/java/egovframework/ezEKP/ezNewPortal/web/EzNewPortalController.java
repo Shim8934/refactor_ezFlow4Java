@@ -1,13 +1,16 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+
+import com.opencsv.ResultSetColumnNameHelperService;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -118,7 +123,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
-		
+		Calendar cal = Calendar.getInstance();
+		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+	
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			model.addAttribute("portletOrder", data.get("portletOrder"));
@@ -135,6 +142,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("approvalCount", data.get("approvalCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("serverTime", serverTime);
+			model.addAttribute("nowMonth", nowMonth);
 			
 			String usedTheme = data.get("usedTheme").toString();
 			String usedFrame = data.get("usedFrame").toString();
@@ -174,6 +182,43 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		logger.debug("updatePortletOrderUser End");
 		return result;
+	}
+	
+	/**
+	 * 월별 생일자 목록 불러오기
+	 * @param req
+	 * @param model
+	 * @param loginCookie
+	 * @param resp
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/getMonthlyBirthdayEmployees.do")
+	@ResponseBody
+	public JSONObject getMonthlyBirthdayEmployees(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getMonthlyBirthdayEmployees Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/birthday/months/" + req.getParameter("birthdayMonth");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("birthdayCurPage", req.getParameter("birthdayCurPage"));
+		param.put("birthdayCount", req.getParameter("birthdayCount"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject birthdayInfo = new JSONObject();
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			birthdayInfo.put("birthdayList", data.get("birthdayList"));
+			birthdayInfo.put("birthdayTotalCount", data.get("birthdayListCount"));
+			birthdayInfo.put("birthdayCurPage", data.get("birthdayCurPage"));
+		}
+		
+		logger.debug("getMonthlyBirthdayEmployees End");
+		return birthdayInfo;
 	}
 	
 	/**

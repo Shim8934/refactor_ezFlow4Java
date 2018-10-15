@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -101,6 +102,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void insertPortletOrderUser(Map<String, Object> map) {
 		insert("ezNewPortal.insertPortletOrderUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(Map<String, Object> map) {
+		return (List<PortalUserInfoVO>) list("ezNewPortal.getMonthlyBirthdayEmployees", map);
 	}
 	/**
 	 * 이효진
