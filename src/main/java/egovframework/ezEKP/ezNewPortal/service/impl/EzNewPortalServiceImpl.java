@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.ChineseCalendar;
+
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -20,8 +27,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -221,6 +230,164 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updatePortletOrderUser ended.");
 	}
 	
+	@Override
+	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month) {
+		LOGGER.debug("getMonthlyBirthdayEmployeesCount started.");
+		String monthStr = "";
+		
+		if (month < 10) {
+			monthStr = "0" + month;
+		} else {
+			monthStr = String.valueOf(month);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("month", monthStr);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
+		int birthdayListCount = tempList.size();
+		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
+		
+		for (int i = 0; i < birthdayListCount; i++) {
+			PortalUserInfoVO portalUserInfo = tempList.get(i);
+			String imgPath = "";
+			
+			if (portalUserInfo.isSolar()) {
+				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+				} else {
+					imgPath = "/images/default_pic.gif";
+				}
+				
+				portalUserInfo.setUserImg(imgPath);
+				birthdayList.add(portalUserInfo);
+			} else {
+				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
+				
+				if (!toSolarDate.equals("")) {
+					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+					} else {
+						imgPath = "/images/default_pic.gif";
+					}
+					
+					portalUserInfo.setUserBirthday(toSolarDate);
+					portalUserInfo.setUserImg(imgPath);
+					birthdayList.add(portalUserInfo);
+				}
+			}
+		}
+		
+		int birthCount = 0;
+		
+		if (birthdayList.isEmpty() || birthdayList == null) {
+			birthCount = 0;
+		} else {
+			birthCount = birthdayList.size();
+		}
+
+		LOGGER.debug("getMonthlyBirthdayEmployeesCount ended.");
+		return birthCount;
+	}
+	
+	@Override
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow) {
+		LOGGER.debug("getMonthlyBirthdayEmployees started.");
+		String monthStr = "";
+		
+		if (month < 10) {
+			monthStr = "0" + month;
+		} else {
+			monthStr = String.valueOf(month);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("month", monthStr);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
+		int birthdayListCount = tempList.size();
+		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
+		
+		for (int i = 0; i < birthdayListCount; i++) {
+			PortalUserInfoVO portalUserInfo = tempList.get(i);
+			String imgPath = "";
+			
+			if (portalUserInfo.isSolar()) {
+				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+				} else {
+					imgPath = "/images/default_pic.gif";
+				}
+				
+				portalUserInfo.setUserImg(imgPath);
+				birthdayList.add(portalUserInfo);
+			} else {
+				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
+				
+				if (!toSolarDate.equals("")) {
+					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+					} else {
+						imgPath = "/images/default_pic.gif";
+					}
+					
+					portalUserInfo.setUserBirthday(toSolarDate);
+					portalUserInfo.setUserImg(imgPath);
+					birthdayList.add(portalUserInfo);
+				}
+			}
+		}
+		
+		int birthCount = birthdayList.size();
+		
+		//오름차순 정렬
+		Collections.sort(birthdayList, new Comparator<PortalUserInfoVO>() {
+			@Override
+			public int compare(PortalUserInfoVO o1, PortalUserInfoVO o2) {
+				return o1.getUserBirthday().split("-")[2].compareTo(o2.getUserBirthday().split("-")[2]);
+			}
+		});
+		
+		if (startRow > birthCount) {
+			startRow = 0;
+		}
+		
+		List<PortalUserInfoVO> birthdayListLmit = new ArrayList<PortalUserInfoVO>();
+		
+		for (int i = startRow; i < startRow + count; i++) {
+			if (i < birthCount) {
+				birthdayListLmit.add(birthdayList.get(i));
+			}
+		}
+		
+		LOGGER.debug("getMonthlyBirthdayEmployees ended.");
+		return birthdayListLmit;
+	}
+	
+	public String convertLunarToSolar (String birthday, int compMonth) {
+		String result = "";
+		ChineseCalendar cc = new ChineseCalendar();
+		Calendar cal = Calendar.getInstance();
+		
+		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
+		cc.set(ChineseCalendar.MONTH, Integer.parseInt(birthday.substring(4, 6)) - 1);
+		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(6)));
+
+		cal.setTimeInMillis(cc.getTimeInMillis());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		result = sdf.format(cal.getTime());
+		
+		if (result.contains("-" + compMonth + "-")) {
+			result = "";
+		}
+		
+		return result;
+	}
 	/**
 	 * 이효진
 	 */

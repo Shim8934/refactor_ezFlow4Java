@@ -13,11 +13,10 @@ var CommuSize = "${CommuSize}";
 for (var i=1; i < CommuSize; i ++) {	
 	clubNo = $('.comListDL0'+i).attr('data1');
 	
-	$('.comListDL0'+i).on("click",{ clubNo : clubNo }, view_bestCommunity);
+	$('.comListDL0'+i).on("click",{ iClubNo : clubNo }, view_bestCommunity);
 }
 
-function view_bestCommunity(clubNo) {
-	
+function view_bestCommunity(event) {
 	var clubType = "";
 	
 	$.ajax({
@@ -26,7 +25,7 @@ function view_bestCommunity(clubNo) {
 		async : true,
 		url : "/ezNewPortal/getCommunityPermit.do",
 		data : {
-				clubNo	:	clubNo,
+				clubNo	:	event.data.iClubNo,
 			   },
 		success: function(result){
 			clubType = result;
@@ -39,7 +38,7 @@ function view_bestCommunity(clubNo) {
 		async : true,
 		url : "/ezCommunity/remote/getACL.do",
 		data : { cID	:	clubNo,
-				 uID	:	"${userId}"
+				 uID	:	"${userinfo.userId}"
 		},
 		success: function(result){
 			
@@ -64,7 +63,7 @@ function view_bestCommunity(clubNo) {
 </head>
 <body>
 <div class="layDIV">
-    <dl class="portlet_title">
+    <dl class="portlet_title sortablePortlet">
         <dt class="portletText"><c:out value="${portletName }"/></dt>
         <dd class="portletPlus" id="communityPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>
     </dl>
