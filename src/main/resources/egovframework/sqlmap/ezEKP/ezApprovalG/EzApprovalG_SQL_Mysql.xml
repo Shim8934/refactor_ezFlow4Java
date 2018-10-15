@@ -18286,7 +18286,7 @@
              PUBLICITYYN ,
              LIMITRANGE ,
              MANUALREGFLAG ,
-             REGISTERDATE ,
+             DATE_ADD(DATE_FORMAT(REGISTERDATE ,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) as REGISTERDATE,
              EXECUTEDATE ,
              SEPERATEATTACHNO ,
              SPECIALCATALOGFLAG 

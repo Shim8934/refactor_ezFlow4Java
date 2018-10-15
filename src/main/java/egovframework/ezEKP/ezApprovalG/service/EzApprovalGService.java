@@ -347,7 +347,7 @@ public interface EzApprovalGService {
 
 	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception;
 
-	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID) throws Exception;
+	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID, String offset) throws Exception;
 
 	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception;
 
