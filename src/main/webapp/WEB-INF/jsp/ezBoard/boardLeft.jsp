@@ -75,6 +75,9 @@
 				} else if (Func == "4") {
 					WebPartToggle(level1El.item(level1El.length - 1));
 					ladder_Func(1);
+				} else if (Func == "5") {
+					WebPartToggle(level1El.item(level1El.length - 1));
+					memo_Func(1);
 				}
 		        /* 2018-09-20 홍승비 - 윈도우 온로드 시 마이게시판 우선적으로 열리는 부분 주석처리 */
 		       /*  else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
@@ -82,7 +85,7 @@
 		        } */
 		
 		        /* 2018-09-20 홍승비 - 게시판 서브메뉴로 나의게시물, 예약게시물 진입 시 좌측메뉴 하이라이트 수정 */
-		        if (Func != "1" && Func != "3" && Func != "4") {
+		        if (Func != "1" && Func != "3" && Func != "4" && Func != "5") {
 		            if (subFunc == "1") {
 		            	ShowMyBoardItem();
 		                MyBoard();
@@ -123,7 +126,6 @@
 		                favoriteList();
 		            }
 		        }
-
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
@@ -224,6 +226,7 @@
 		
 		    function GetBoardTreeByPath(pBoardID, pBoardGroupID) {
 		    }
+		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {		// 일반 게시판 하위 게시판 확장
 		        var xmlRtn = createXmlDom();
 		        var TreeIdx = pNodeID;
@@ -244,22 +247,26 @@
 		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
-		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		             
-		        for(var i=0; i<title2.length; i++) {
-		        	var spanW = 152 - (18 * nodeLevel);	
-		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
-		        	
-		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
-		        	if (spanW < 0) {
-						 spanW = 0;
-					 }
-		        	title3[0].style.width = spanW + 'px';
-		        	title3[0].style.textOverflow = 'ellipsis';
-		        	title3[0].style.overflow = 'hidden';
+		        
+		        /* 2018-10-11 홍승비 - 접근권한 등의 문제로 트리노드를 확장할 수 없는 경우에는 건너뛰도록 수정 */
+		        if (typeof(title2[0]) != "undefined") {
+			        var nodeLevel = title2[0].getAttribute("nodelevel");
+			        for(var i=0; i<title2.length; i++) {
+			        	var spanW = 152 - (18 * nodeLevel);
+			        	title3 = title2[i].getElementsByClassName("node_normal");
+			        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+			        	
+			        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+			        	if (spanW < 0) {
+							 spanW = 0;
+						 }
+			        	title3[0].style.width = spanW + 'px';
+			        	title3[0].style.textOverflow = 'ellipsis';
+			        	title3[0].style.overflow = 'hidden';
+			        }
 		        }
 		    }
+		    
 		    function TreeCtrl_onNodeClickNew(pNodeID, pTreeID) {
 		        try {
 		            var treeNode = new TreeNode();
@@ -655,6 +662,19 @@
 		            SetTreeviewUnSelect("");
 				}
 			}
+			
+			function memo_Func(idx) {
+				$(".on").attr("class", "off");
+				$(".memo h2").attr("class", "on");
+				$(".memo").next().attr("class", "on");
+				
+				if (CrossYN()) {
+					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
+		        } else {
+		        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
+		        }
+	            SetTreeviewUnSelect("");
+			}
 
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
@@ -769,6 +789,13 @@
 		    		window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
 				}
 		    }
+		    
+		    function folder_Manage() {
+	        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+		    
+	 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -871,7 +898,26 @@
 			</div>
 			</c:if>
 			<ul></ul>
-
+			
+			<c:if test="${memoFlag == 'YES'}">
+			<div class="memo" onclick="memo_Func(1)">
+				<h2><span><spring:message code="ezMemo.t001" /></span></h2>
+			</div>
+			</c:if>
+			
+			<ul>
+				<!-- <div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
+					<div>
+						<src class="memoFoldImage"></src>
+						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)" id="memoTot">전체메모<span id="countTotal"></span></span>
+						<div class="memoFolders"></div>
+					</div>
+				</div>
+				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="folder_Manage()" style="width: 100%; display: inline-block;">메모함관리</span></h3> -->
+			</ul>
+			
+		    
 			<h3>
 				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
 			</h3>

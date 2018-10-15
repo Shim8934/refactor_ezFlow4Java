@@ -110,7 +110,7 @@
         var endcnt = parseInt(EndNum.value);
         if (StartNum.value == "" || EndNum.value == "") {
             alert("<spring:message code='ezApprovalG.t1004'/>");
-        } else if (startcnt < 1) {
+        } else if (startcnt < 1 && endcnt != 0) {
         	alert("<spring:message code='ezApprovalG.garm03'/>")
         	$('#StartNum').val(1);
         } else if (startcnt > endcnt) {

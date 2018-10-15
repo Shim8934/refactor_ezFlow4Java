@@ -752,20 +752,33 @@
 		            
 		            var i = 1;
 		            for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
-		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
-		                var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
-		                var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
-		                var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
-		                var preWriterName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
-		                var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
-		                var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
-		                var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
-		                var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
-		                var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
+		            	//2018-10-11 김보미 - 공람자 순번 오름차순에서 내림차순으로 변경.(즐겨찾기 적용 후 공람자 추가시 순번이 이상하게 되기 때문)
+ 		            	//var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+ 		                //var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+ 		                //var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+ 		                //var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+ 		                //var preWriterName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
+ 		                //var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
+ 		                //var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+ 		                //var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+ 		                //var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
+ 		                //var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
+		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
+		                var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
+		                var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
+		                var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
+		                var preWriterName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[2])[0], "VALUE");
+		                var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[2])[0], "VALUE");
+		                var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
+		                var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
+		                var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[8], "DATA8");
+		                var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[5], "DATA5");
 		                
 		                strRows += "<ROW>";
 		                strRows += "<CELL>";
-		                strRows += "<VALUE>" + i + "</VALUE>";
+		                //2018-10-11 김보미
+ 		                //strRows += "<VALUE>" + i + "</VALUE>";
+		                strRows += "<VALUE>" + (cnt + 1) + "</VALUE>";
 		                strRows += "<DATA1>" + "" + "</DATA1>";
 		                strRows += "<DATA2>" + "" + "</DATA2>";
 		                strRows += "<DATA3>" + pDocID + "</DATA3>";

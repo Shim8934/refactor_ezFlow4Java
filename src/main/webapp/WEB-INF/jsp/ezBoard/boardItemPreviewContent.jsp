@@ -148,6 +148,7 @@
 	            var pos = 0;
 	            var filename = "";
 	            var filepath = "";
+	            var filepathTemp = "";
 	            var strAttach = "";
 	            var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 	            var regData = GetbrowserLanguage();
@@ -167,13 +168,15 @@
 				/* 2018-07-16 홍승비 - 게시물 미리보기 시 첨부파일 특수문자 처리 */
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+	            	filepathHTMLEscape = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath")));
 	            	filename = MakeXMLString(filepath.substr(120, filepath.length - 119));
+	            	filenameAttr = MakeXMLString(filepath.substr(filepath.lastIndexOf("/"), filepath.length));
 // 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
 // 	                filename = ReplaceText(filename, "%2b", "+");
 // 	                filename = ReplaceText(filename, "%3b", ";");
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
-	                filepath = "/upload_board/" + filepath;
+	               // filepath = "/upload_board/" + filepath;
 	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize2")));
 	
 	                var strTarget = "target=''";
@@ -189,8 +192,10 @@
 	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
-	                strAttach += "</span>";
+         
+	                /* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
+	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "'>" + filename + " (" + File_Size(filesize) + ")</a>";	                
+	              	strAttach += "</span>";
 	                strAttach += "</li>";
 	            }
 	            strAttach += "</ul></div>";
@@ -234,9 +239,36 @@
 	            }
 	        }
 	
+	        /* 2018-10-11 홍승비 - 모두저장 시 zip 파일로 다운받도록 수정 */
 	        function AttachAllDownload(attachObj) {
 	            var allobj = document.getElementsByName("filename");
-	            downloadAll(allobj);
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				filePath = GetAttribute(allobj[0], "filepath");
+				filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+				
+				for (var i = 0; i < allobj.length; i++) {
+					filePathTemp = GetAttribute(allobj[i], "filepath");
+					fileNames += MakeXMLString(filePathTemp.substr(120, filePathTemp.length - 119)) + ":";
+					fileNamesUID += MakeXMLString(GetAttribute(allobj[i], "fileNameAttr")) + ":";
+				}
+				
+				var $frm = $("<form></form>");
+		    	$frm.attr('action', "/ezBoard/downloadAttachAll.do");
+		    	$frm.attr('method', 'post');
+		    	$frm.appendTo('body');
+		
+		    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+		    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+		    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+		    	
+		    	$frm.append(param1).append(param2).append(param3);
+		    	$frm.submit();
+	            	            
+	       //     downloadAll(allobj);
 	        }
 	
 	        var suffix = 0;
@@ -255,5 +287,7 @@
 		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
+		<%-- 2018-10-11 - 홍승비 - 모두저장 기능 추가 --%>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
 	</body>
 </html>
