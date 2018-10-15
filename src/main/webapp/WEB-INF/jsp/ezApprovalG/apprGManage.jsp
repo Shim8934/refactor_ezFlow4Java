@@ -101,8 +101,8 @@
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
-		   
 		    var currentpage = 1;
+		    var selRowChangeFlag = false;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
