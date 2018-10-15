@@ -11,6 +11,7 @@
 <typeAlias alias="FavoriteBoardVO" type="egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO"/>
 <typeAlias alias="CommunityMyCommunityVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 <typeAlias alias="CommunityCClubUserVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
+<typeAlias alias="PortalUserInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -84,6 +85,14 @@
 <result property="itemId" 				column="ITEMID" />
 <result property="boardId" 				column="BOARDID" />
 <result property="gubun" 				column="GUBUN" nullValue=""/>
+</resultMap>
+<resultMap class="PortalUserInfoVO" id="PortalUserInfoVO">
+<result property="userName"				column="USER_NAME"/>
+<result property="userId"				column="CN"/>
+<result property="userDeptName"			column="DEPT_NAME"/>
+<result property="userBirthday"			column="BIRTH"/>
+<result property="isSolar"				column="IS_SOLAR"/>
+<result property="userImg"				column="USER_IMG"/>
 </resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
@@ -471,6 +480,32 @@ INSERT INTO TBL_PORTAL_PORTLET_USER (
 )
 ]]>
 </insert>
+
+<select id="ezNewPortal.getMonthlyBirthdayEmployees" parameterClass="Map" resultMap="PortalUserInfoVO">
+<![CDATA[
+SELECT
+	DISPLAYNAME AS USER_NAME,
+	CN,
+	DESCRIPTION AS DEPT_NAME,
+	BIRTH,
+	IF(BIRTHTYPE = 'Y', 1, 0) AS IS_SOLAR,
+	EXTENSIONATTRIBUTE2 AS USER_IMG
+FROM
+	TBL_USERMASTER
+WHERE
+	(
+		(BIRTH LIKE CONCAT('%-', #month#, '-%') 
+	 	AND BIRTHTYPE = 'Y')
+	OR
+		(BIRTH <> ''
+	 	AND BIRTHTYPE = 'N')
+	 )
+	 AND
+	 	TENANT_ID = #tenantId#
+	 AND
+	 	PHYSICALDELIVERYOFFICENAME = #companyId#
+]]>
+</select>
 <!-- 이효진-->
 	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[

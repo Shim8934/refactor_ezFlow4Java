@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -35,6 +36,8 @@ public interface EzNewPortalService {
 	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId);
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
+	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	/**
 	 * 이효진
 	 */

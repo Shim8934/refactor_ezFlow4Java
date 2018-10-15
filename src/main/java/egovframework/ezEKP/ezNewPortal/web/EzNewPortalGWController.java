@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -367,10 +368,35 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage"));
+			int count = Integer.parseInt(request.getParameter("birthdayCount"));
+			int startRow  = curPage * count;
+			
+			int birthdayListCount = ezNewPortalService.getMonthlyBirthdayEmployeesCount(companyId, tenantId, month);
+			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow);
+			
+			int birthdayCurPage = 0;
+			
+			if (birthdayListCount != 0) {
+				if (startRow > birthdayListCount) {
+					birthdayCurPage = 0;
+				} else {
+					birthdayCurPage += 1;
+				}
+			}
+			
+			JSONObject data = new JSONObject();
+			data.put("birthdayList", birthdayList);
+			data.put("birthdayListCount", birthdayListCount);
+			data.put("birthdayCurPage", birthdayCurPage);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

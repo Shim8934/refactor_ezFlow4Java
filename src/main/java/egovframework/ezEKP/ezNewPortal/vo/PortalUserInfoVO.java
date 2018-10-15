@@ -7,6 +7,7 @@ public class PortalUserInfoVO {
 	private String userId; //사용자 아이디
 	private String userDeptName; //사용자가 속한 부서명
 	private String userBirthday; //사용자 생일
+	private boolean isSolar; //생일 양력 & 음력여부 (양력 true, 음력 false)
 	
 	public String getUserName() {
 		return userName;
@@ -39,10 +40,17 @@ public class PortalUserInfoVO {
 		this.userBirthday = userBirthday;
 	}
 	
+	public boolean isSolar() {
+		return isSolar;
+	}
+	public void setSolar(boolean isSolar) {
+		this.isSolar = isSolar;
+	}
+	
 	@Override
 	public String toString() {
 		return "PortalUserInfoVO [userName=" + userName + ", userImg=" + userImg + ", userId=" + userId
-				+ ", userDeptName=" + userDeptName + ", userBirthday=" + userBirthday + "]";
+				+ ", userDeptName=" + userDeptName + ", userBirthday=" + userBirthday + ", isSolar=" + isSolar + "]";
 	}
 	
 }
