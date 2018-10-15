@@ -475,8 +475,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			
 			model.addAttribute("CommunityList", data.get("CommunityList"));
 			model.addAttribute("CommuSize", data.get("CommuSize"));
+			model.addAttribute("commuPath", data.get("commuPath"));
 		}
 		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("userInfo", userInfo);
 		
 		
 		logger.debug("phoroBoardPortlet End");
