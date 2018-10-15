@@ -8815,7 +8815,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		if (recordListVO.getOrderBy().equals("")) {
-			recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ");
+			//2018-10-15 김보미 - 분리첨부 연속으로 등록시 순서가 들쭉 날쭉 되는 문제 수정
+			//recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ");
+			recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO DESC ");
 		}
 		//다국어 추가 소스 수정
 		selectClause = "TBL_RECORD.RecordID, TBL_RECORD.DocID, TBL_RECORD.RegisterNo, TBL_SEPERATEATTACH.CreateDate as CreateDate, " +
@@ -21879,7 +21881,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getCabinetDetailInfo(Document xmlDom, int tenantID) throws Exception {
+	public String getCabinetDetailInfo(Document xmlDom, int tenantID, String offset) throws Exception {
 		
 		StringBuilder strXML = new StringBuilder();
 		String cabinetID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent();
@@ -21910,6 +21912,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         sb.append("<DATA>");
         
         for (int i = 0; i < apprGTaskVOList.size(); i++) {
+        	//보미 추가
+        	if (apprGTaskVOList.get(i).getCreateDate().indexOf(".") != -1) {
+        		apprGTaskVOList.get(i).setCreateDate(apprGTaskVOList.get(i).getCreateDate().toString().split(".")[0]);
+        	}
+        	apprGTaskVOList.get(i).setCreateDate(commonUtil.getDateStringInUTC(apprGTaskVOList.get(i).getCreateDate(), offset, false));
+        	
 			sb.append(commonUtil.getQueryResult(apprGTaskVOList.get(i)));
 		}
 		sb.append("</DATA>");
