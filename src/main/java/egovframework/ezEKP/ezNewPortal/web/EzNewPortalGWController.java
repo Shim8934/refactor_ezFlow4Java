@@ -1602,11 +1602,20 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
 			
-			PersonalLightPollVO poll = new PersonalLightPollVO();
-			poll = ezNewPortalService.getPollPortlet(companyId, tenantId);
+			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
+			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"));
+			
+			int itemSeq = pollInfo.getItemSeq();
+			List<PersonalLightPollVO> pollResult = ezNewPortalService.getPollPortletResult(companyId, tenantId, itemSeq);
+			
+			answerList = ezNewPortalService.getAssemblePollData(pollInfo, pollResult);
+			
+			
 			JSONObject data = new JSONObject();
-			data.put("poll", poll);
+			data.put("pollInfo", pollInfo);
+			data.put("answerList", answerList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

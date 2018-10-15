@@ -64,6 +64,8 @@
 <result property="answer8"              column="ANSWER8" />
 <result property="answer9"              column="ANSWER9" />
 <result property="answer10"             column="ANSWER10" />
+<result property="result"               column="RESULT" />
+<result property="count"                column="COUNT" />
 </resultMap>
 <resultMap class="ThemeInfoVO" id="ThemeInfoVO">
 <result property="themeId" 					column="THEME_ID" />
@@ -129,26 +131,63 @@ LIMIT #limit#
 <!-- 설문조사 리스트 출력 -->
 <select id="ezNewPortal.getPollPortlet" parameterClass="Map" resultClass="PersonalLightPollVO">
 <![CDATA[
-SELECT 
-	ITEMSEQ,
-	POLLTITLE,
-    ANSWER1,
-    ANSWER2,
-    ANSWER3,
-    ANSWER4,
-    ANSWER5,
-    ANSWER6,
-    ANSWER7,
-    ANSWER8,
-    ANSWER9,
-    ANSWER10
-FROM 
-	TBL_PS_LIGHTPOLL
-WHERE 
-	TENANT_ID = #tenantId#
-ORDER BY 
-	ITEMSEQ DESC
-LIMIT 1
+SELECT
+	 A.ITEMSEQ ,
+     STARTDATE ,
+     POLLSELECTIONCOUNT ,
+     POLLTITLE ,
+     POLLTITLE2 ,
+     ANSWER1 ,
+     ANSWER2 ,
+     ANSWER3 ,
+     ANSWER4 ,
+     ANSWER5 ,
+     ANSWER6 ,
+     ANSWER7 ,
+     ANSWER8 ,
+     ANSWER9 ,
+     ANSWER10 ,
+     IFNULL(B.RESULT, 0) Result,
+     (SELECT COUNT(*) FROM tbl_ps_lightpollresult WHERE itemSeq = A.ITEMSEQ AND TENANT_ID = #tenantId#) as count  
+FROM
+	TBL_PS_LIGHTPOLL A
+LEFT JOIN
+	TBL_PS_LIGHTPOLLRESULT B
+ON
+	A.TENANT_ID = B.TENANT_ID
+AND
+	A.ITEMSEQ = B.ITEMSEQ
+AND
+	USERID = #userId#
+WHERE
+	COMPANYID = #companyId#
+AND
+	ENDDATE IS NULL
+AND
+   	A.TENANT_ID = #tenantId#	
+ORDER BY
+	A.ITEMSEQ DESC
+LIMIT
+	1
+]]>
+</select>
+
+<select id="ezNewPortal.getPollPortletResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
+<![CDATA[
+SELECT
+	RESULT ,
+	COUNT(RESULT)  COUNT  
+FROM
+	TBL_PS_LIGHTPOLLRESULT 
+WHERE
+	ITEMSEQ = #itemSeq#
+AND
+	TENANT_ID = #tenantId#	
+GROUP BY
+	RESULT
+ORDER BY
+	COUNT DESC,
+   RESULT ASC
 ]]>
 </select>
 

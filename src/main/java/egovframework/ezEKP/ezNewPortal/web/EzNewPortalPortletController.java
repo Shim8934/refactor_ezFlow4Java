@@ -187,9 +187,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			logger.debug("pollllllllllll: " +  data.get("poll"));
-			model.addAttribute("poll", data.get("poll"));
+			JSONObject poll = (JSONObject) resultBody.get("data");
+			model.addAttribute("poll", poll);
 		} 		
 		return "json";
 	}
