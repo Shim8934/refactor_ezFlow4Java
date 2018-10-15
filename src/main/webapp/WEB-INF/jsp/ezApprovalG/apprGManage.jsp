@@ -669,7 +669,7 @@
 		        }
 		        
 		        var pCurSelRow = oArrRows[0];
-		        if (pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
 		        	alert(pAlertContent);
 		            return;
