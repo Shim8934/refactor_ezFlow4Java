@@ -8815,7 +8815,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		if (recordListVO.getOrderBy().equals("")) {
-			recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ");
+			//2018-10-15 김보미 - 분리첨부 연속으로 등록시 순서가 들쭉 날쭉 되는 문제 수정
+			//recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ");
+			recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO DESC ");
 		}
 		//다국어 추가 소스 수정
 		selectClause = "TBL_RECORD.RecordID, TBL_RECORD.DocID, TBL_RECORD.RegisterNo, TBL_SEPERATEATTACH.CreateDate as CreateDate, " +
@@ -21020,18 +21022,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecordSimpleInfo(Document xmlDom , String lang, int tenantID) throws Exception {
+	public String getRecordSimpleInfo(Document xmlDom , String lang, int tenantID, String offset) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
-
+		String utcMinute = commonUtil.getMinuteUTC(offset);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_RECORDID", RecID);
 		map.put("v_SEPATTNO", SepAttachNo);
 		map.put("v_TENANTID", tenantID);
+		map.put("offsetMin", utcMinute);
 		
 		List<ApprGRecordVO> docList =ezApprovalGDAO.getRecordSimpleInfo(map);
 		 StringBuffer sb = new StringBuffer();
@@ -21879,7 +21883,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getCabinetDetailInfo(Document xmlDom, int tenantID) throws Exception {
+	public String getCabinetDetailInfo(Document xmlDom, int tenantID, String offset) throws Exception {
 		
 		StringBuilder strXML = new StringBuilder();
 		String cabinetID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent();
@@ -21891,6 +21895,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CABINETID", cabinetID.trim());
 		map.put("v_CABINETCLASSNO", cabinetID.substring(0, cabinetID.trim().length()-3));
 		map.put("v_TENANTID", tenantID);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		StringBuilder userName = new StringBuilder() ;
 		List<ApprGRecordVO> userNameList = ezApprovalGDAO.selectUserName(map);

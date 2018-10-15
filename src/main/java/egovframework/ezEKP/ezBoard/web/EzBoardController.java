@@ -1,12 +1,16 @@
 package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,10 +20,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -35,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +53,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -7958,6 +7964,108 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("getSearchApprListItemXML ended");
 		return resultXML.toString();		
+	}
+	
+	/**
+	 * 2018-10-11 홍승비 - 모두저장(압축파일 내려받기)
+	 */
+	@RequestMapping(value="/ezBoard/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String filePath = request.getParameter("filePath");
+		String fileNames = request.getParameter("fileNames");
+		String fileNamesUID = request.getParameter("fileNamesUID");
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		String tempFileUploadPath = realPath + uploadFilePath + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String fullFilePath = realPath + filePath;
+		int bufferSize = 4096;
+
+		logger.debug("fullFilePath : " + fullFilePath);
+		logger.debug("fileNames : " + fileNames);
+		
+		ZipOutputStream zos = null;
+		String downFileName = "";
+		
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			tempFile = new File(tempFileUploadPath);
+			
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			
+			String[] fileNamesArr = fileNames.split(":");
+			String[] fileNamesUIDArr = fileNamesUID.split(":");
+			
+			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
+			
+			if (fileNamesArr.length != 0) {// 파일이 있으면
+				for (int i = 0; i < fileNamesArr.length; i++) { //파일 길이만큼
+					BufferedInputStream bis = null;
+					
+					try {
+						File sourceFile = new File(fullFilePath + fileNamesUIDArr[i]);
+				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
+				        ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+				        zos.putNextEntry(zentry);
+				        
+				        byte[] buffer = new byte[bufferSize];
+				        int cnt = 0;
+				        while ((cnt = bis.read(buffer, 0, bufferSize)) != -1) {
+				            zos.write(buffer, 0, cnt);
+			        }
+			        zos.closeEntry();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				zos.flush();
+				zos.close();
+				zos = null;
+	
+				File file = new File(pDirTempPath + ".zip");
+				
+				if (file.exists()) {
+					downFile(request, response, pDirTempPath + ".zip", downFileName);
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		logger.debug("downloadAttachAll ended.");
 	}
 
 }

@@ -2549,6 +2549,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// dhlee - end
 		
 		for (int i = 0; i < cn.length; i++) {
+			// 타 회사로의 퇴직자 복구 막음
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], "1", tenantID);
+			String userCompId = userVO.getPhysicalDeliveryOfficeName();
+			OrganDeptVO deptVO = ezOrganService.getDeptInfo(deptID, "1", tenantID);
+			String deptCompId = deptVO.getExtensionAttribute2();
+			
+			if (!deptCompId.equals(userCompId)) {
+				logger.debug("Restoration to other companies is not possible.");
+				logger.debug("userId=" + cn[i] + ",userCompId=" + userCompId + ",deptCompId=" + deptCompId);
+				logger.debug("restoreRetireUser ended. result=DIFF_COMPANY");
+				return "DIFF_COMPANY";
+			}
+			
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
 			
