@@ -16,6 +16,7 @@
 			var m_strColorOver = "#f4f5f5";
 			var m_strColorDefault = "#ffffff";
 			var m_strColorOpened = "#fafafa";
+			var searchMode = false; 
 	    	
 	        window.onload = function () {
 	        	companyID = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
@@ -122,8 +123,32 @@
 		        		},
 		        		complete : function(data) {
 		        			alert("삭제 하였습니다.");
-		        			$("#signList tr").empty();
-		        			signatureTemplateView();
+		        			if (searchMode) {
+		        				// 검색 중 삭제한 리스트만 없애기
+		        				$("#signList tr[signno=" + signNo +"]").remove();
+		        				
+		        				// 검색 중 데이터 다 삭제 되었을 때
+		        				if ($("#signList tr").length == 0) {
+		        					var _TBODY = document.getElementById("signList");
+	        						var _TR = document.createElement("TR");
+	        						_TR.setAttribute("id", "signatureTemplateNoData");
+	        						
+	        						var _NODATA = document.createElement("TD");
+	        		                _NODATA.style.textAlign = "center";
+	        		                _NODATA.style.border = "none";
+	        		                _NODATA.style.borderBottom = "1px solid #f2f2f2";
+	        		                _NODATA.style.padding = "0";
+	        		                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
+	        		                
+	        						_TR.appendChild(_NODATA);
+	        		                _TBODY.appendChild(_TR);
+		        				}
+		        				
+		        			} else {
+		        				$("#signList *").remove();
+			        			signatureTemplateView();
+		        			}
+		        			
 		        	    }
 		        	});
 	        	} else {
@@ -149,10 +174,12 @@
 	        			console.log(data);
 	        		},
 	        		complete : function(data) {
-	        			$("#signList tr").empty();
+	        			searchMode = true;
+	        			$("#signList *").remove();
 	        			makeSignatureList(data.responseJSON);
 	        	    }
 	        	});
+	        	searchMode = false;
 	        	
 	        }
 	        
