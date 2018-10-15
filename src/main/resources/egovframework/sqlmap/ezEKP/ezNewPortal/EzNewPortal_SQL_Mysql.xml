@@ -94,6 +94,13 @@
 <result property="isSolar"				column="IS_SOLAR"/>
 <result property="userImg"				column="USER_IMG"/>
 </resultMap>
+<resultMap class="PortalUserInfoVO" id="BestEmpVO">
+<result property="userName"				column="USER_NAME"/>
+<result property="userId"				column="CN"/>
+<result property="userDeptName"			column="DEPT_NAME"/>
+<result property="userImg"				column="USER_IMG"/>
+<result property="title"				column="TITLE"/>
+</resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
@@ -504,6 +511,31 @@ WHERE
 	 	TENANT_ID = #tenantId#
 	 AND
 	 	PHYSICALDELIVERYOFFICENAME = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getMonthlyBestEmployee" parameterClass="Map" resultMap="BestEmpVO">
+<![CDATA[
+SELECT	
+	A.DISPLAYNAME AS USER_NAME,
+	IFNULL(A.TITLE, '') AS TITLE,
+	A.DESCRIPTION AS DEPT_NAME,
+	B.EXTENSIONATTRIBUTE2 AS USER_IMG,
+	A.CN
+FROM
+	TBL_PS_EMPMONTH A
+JOIN
+	TBL_USERMASTER B
+ON
+	A.CN = B.CN
+AND
+	A.TENANT_ID = B.TENANT_ID  
+WHERE
+	TERM = #yearAndMonth#
+AND
+	A.TENANT_ID = #tenantId#
+AND
+	A.PHYSICALDELIVERYOFFICENAME = #companyId#
 ]]>
 </select>
 <!-- 이효진-->

@@ -38,6 +38,7 @@ public interface EzNewPortalService {
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
+	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
 	/**
 	 * 이효진
 	 */

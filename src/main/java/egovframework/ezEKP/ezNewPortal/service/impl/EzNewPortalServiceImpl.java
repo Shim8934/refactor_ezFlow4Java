@@ -369,6 +369,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	public String convertLunarToSolar (String birthday, int compMonth) {
+		LOGGER.debug("convertLunarToSolar started.");
 		String result = "";
 		ChineseCalendar cc = new ChineseCalendar();
 		Calendar cal = Calendar.getInstance();
@@ -386,7 +387,30 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			result = "";
 		}
 		
+		LOGGER.debug("convertLunarToSolar ended.");
 		return result;
+	}
+	
+	@Override
+	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId ) {
+		LOGGER.debug("getMonthlyBestEmployee started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("yearAndMonth", yearAndMonth);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		String imgPath = "";
+		PortalUserInfoVO portalUserInfo = ezNewPortalDAO.getMonthlyBestEmployee(map);
+		
+		if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+			imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+		} else {
+			imgPath = "/images/default_pic.gif";
+		}
+		
+		portalUserInfo.setUserImg(imgPath);
+		
+		LOGGER.debug("getMonthlyBestEmployee ended.");
+		return portalUserInfo;
 	}
 	/**
 	 * 이효진

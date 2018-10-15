@@ -105,8 +105,12 @@
 		//이번달 생일자 목록 불러오기
 		getMonthlyBirthdayEmployees();
 		
+		//이달의 우수사원 불러오기
+		getMonthlyBestEmployee();
+		
 		//개인환경설정으로 이동 동작 연결
 		$("#personalEnv").on("click", viewPersonalEnv);
+		$("#portletEnv").on("click", viewPortletEnv);
 		
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
@@ -360,6 +364,38 @@
 		});
 	}
 	
+	function getMonthlyBestEmployee() {
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/getMonthlyBestEmployee.do",
+			dataType : "json",
+			success : function(result) {
+				var bestEmployee = result.bestEmployee;
+				var strHTML = "";
+				
+				if (bestEmployee == null) {
+					$("#emPic").find("img").attr("src", "/images/ezNewPortal/bestEmployee_pic_none.png");
+					strHTML += "<dl class='nodata' style='margin-top:8px'>";
+					strHTML += "<dd>데이터가 없습니다</dd>";
+					strHTML += "</dl>";
+				} else {
+					$("#emPic").find("img").attr("src", bestEmployee.userImg);
+					strHTML += "<dd class='emName'>\"" + bestEmployee.userName + " " + bestEmployee.title + "\"</dd>";
+					strHTML += "<dd class='emTeam'>" + bestEmployee.userDeptName + "</dd>";
+				}
+				
+				$(".emDL").append(strHTML);
+			}
+		});
+	}
+	
+	function viewPortletEnv() {
+
+		var feature = GetOpenPosition(760, 645);
+    	
+		DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
+			"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	}
 	</script>
 	<style type="text/css">
 		.notEmptySlider {
@@ -408,7 +444,7 @@
                 		<dd class="infoTeam">${deptName}</dd>
                 		<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 		<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                		<dd class="infoSet" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
+                		<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
            			</dl>
 				</article>
 				<article class="time_check">
@@ -476,12 +512,9 @@
             		</div>
 				</article>
 				<article class="bestEmployee">
-					<p class="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
+					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
 					<dl class="emDL">
             			<dt class="emTit">이달의 우수사원</dt>
-                			<dl class="nodata" style="margin-top:8px">
-		            			<dd>"데이터가 없습니다"</dd>
-	            			</dl>
             		</dl>
 				</article>
 			</section>
@@ -495,5 +528,12 @@
 			<div class="portlet_area">
 			</div>
 		</section>
+		
+		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
+			
+		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		
 	</body>
 </html>

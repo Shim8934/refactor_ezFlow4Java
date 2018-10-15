@@ -459,6 +459,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 .dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
 
+/* layer */
+.layerpopup {background : #ffffff; border-radius : 4px;}
+
 /* main media query */
 @media only screen and (min-width :1921px) {
 	.box_shadow{ width:483px; float:left;}

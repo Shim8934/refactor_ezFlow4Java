@@ -221,6 +221,38 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return birthdayInfo;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/getMonthlyBestEmployee.do")
+	@ResponseBody
+	public JSONObject getMonthlyBestEmployee(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getMonthlyBestEmployee Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		
+		Calendar cal = Calendar.getInstance();
+		int month = cal.get(Calendar.MONTH) + 1;
+		
+		String url = "/rest/ezPortal/bestEmployee/months/" + month;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		JSONObject bestEmployee = new JSONObject();
+		
+		if (status.equals("ok")) {
+			bestEmployee.put("bestEmployee", resultBody.get("data"));
+		}
+		
+		logger.debug("getMonthlyBestEmployee End");
+		return bestEmployee;
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/portletSetting.do")
+	public String portletSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		
+		return "/ezNewPortal/portletSetting";
+	}
 	/**
 	 * ----
 	 */

@@ -102,6 +102,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(Map<String, Object> map) {
 		return (List<PortalUserInfoVO>) list("ezNewPortal.getMonthlyBirthdayEmployees", map);
 	}
+	
+	public PortalUserInfoVO getMonthlyBestEmployee(Map<String, Object> map) {
+		return (PortalUserInfoVO) select("ezNewPortal.getMonthlyBestEmployee", map);
+	}
 	/**
 	 * 이효진
 	 */

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -418,9 +419,18 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			Calendar cal = Calendar.getInstance();
+			String nowYear = String.valueOf(cal.get(Calendar.YEAR));
+			
+			String yearAndMonth = nowYear + "-" + month;
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", bestEmployee);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
