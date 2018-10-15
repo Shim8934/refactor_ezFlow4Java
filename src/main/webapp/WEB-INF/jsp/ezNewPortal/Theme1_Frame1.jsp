@@ -26,6 +26,9 @@
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/pollPortlet.js')}"></script>
 <!-- 종균 끝 -->
+<!-- 해안 시작 -->
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/communityPortlet.js')}"></script>
+<!-- 해안 끝 -->
 <script type="text/javascript">
 
 	var portletOrder = JSON.parse('${portletOrder}');
@@ -197,7 +200,7 @@
 			$(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
 			$(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
 			$("#photoBoardPlus").on("click", viewPhotoBoardList);
-		} else if (portletId == 10) {
+		} else if (portletId === 10) {
 			getTabList();
 		} else if (portletId === 12) { // 도움말
 			helpPortletLoadFunc();
@@ -205,6 +208,8 @@
 			noticePortletLoadFunc();
 		} else if (portletId === 5) {  // 설문조사
 			pollPortletLoadFunc();
+		} else if (portletId === 11) {  // 커뮤니티
+			$("#communityPlus").on("click", viewCommuList);
 		}
 	}
 	
