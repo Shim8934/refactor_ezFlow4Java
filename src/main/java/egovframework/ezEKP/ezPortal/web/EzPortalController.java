@@ -1187,7 +1187,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		//전자설문
-		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID()));
 		
 		//유저이미지
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
@@ -2085,7 +2085,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
 		
 		//전자설문
-		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID()));
 		
 		//유저이미지
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());

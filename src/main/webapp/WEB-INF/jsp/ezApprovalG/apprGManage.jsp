@@ -101,8 +101,8 @@
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
-		   
 		    var currentpage = 1;
+		    var selRowChangeFlag = false;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -669,7 +669,7 @@
 		        }
 		        
 		        var pCurSelRow = oArrRows[0];
-		        if (pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
 		        	alert(pAlertContent);
 		            return;

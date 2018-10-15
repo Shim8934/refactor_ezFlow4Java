@@ -202,8 +202,9 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (DATE_FORMAT(t.CREATE_DATE,'%Y-%m-%d %H:%i:%s') >=  #searchStartDate# 
+				 	AND DATE_FORMAT(t.CREATE_DATE,'%Y-%m-%d %H:%i:%s') <= #searchEndDate#)
+					
 			]]>
 		</isNotEqual>	
     </sql>
