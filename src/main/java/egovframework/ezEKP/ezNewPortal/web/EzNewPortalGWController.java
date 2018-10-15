@@ -1596,7 +1596,7 @@ public class EzNewPortalGWController {
 			
 			String type = request.getParameter("type");
 			
-			Map<String, Object> resultMap = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), info.getTenantId(), type);
+			Map<String, Object> resultMap = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), info.getTenantId(), info.getOffset(), type);
 			
 			JSONObject data = new JSONObject();
 			data.put("resultMap", resultMap);

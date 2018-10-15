@@ -225,7 +225,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	 * 이효진
 	 */
 	@Override
-	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String type) throws Exception {
+	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception {
 		LOGGER.debug("getApprovalList started.");
 		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
 		
@@ -233,9 +233,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("offset",commonUtil.getMinuteUTC(offset));
 		
 		List<ApprGDocListVO> list = null;
 		Map<String, Object> result = new HashMap<String, Object>();
+		
+		
 		
 		switch (type) {
 		case "doing":
