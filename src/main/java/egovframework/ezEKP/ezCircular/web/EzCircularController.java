@@ -2722,7 +2722,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			JSONArray fileNamesArr = (JSONArray)jp.parse(fileNames);
 			JSONArray fileNamesArr2 = (JSONArray)jp.parse(fileNames2);
 
-			downFileName = fileNamesArr2.get(0).toString() + " 외 " + (fileNamesArr2.size() - 1) + "개.zip";//zip파일명
+			downFileName = fileNamesArr2.get(0).toString() + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr2.size() - 1) + egovMessageSource.getMessage("ezCircular.t104", userInfo.getLocale()) +".zip";//zip파일명
 			
 			if (fileNamesArr.size() != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼

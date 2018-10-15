@@ -21029,18 +21029,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String utcMinute = commonUtil.getMinuteUTC(offset);
-
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_RECORDID", RecID);
 		map.put("v_SEPATTNO", SepAttachNo);
 		map.put("v_TENANTID", tenantID);
 		map.put("offsetMin", utcMinute);
-
+		
 		List<ApprGRecordVO> docList =ezApprovalGDAO.getRecordSimpleInfo(map);
 		 StringBuffer sb = new StringBuffer();
 	     sb.append("<DATA>");
-	     
+	        
 	     for (int i = 0; i < docList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(docList.get(i)));
 		 }
@@ -21895,6 +21895,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CABINETID", cabinetID.trim());
 		map.put("v_CABINETCLASSNO", cabinetID.substring(0, cabinetID.trim().length()-3));
 		map.put("v_TENANTID", tenantID);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		StringBuilder userName = new StringBuilder() ;
 		List<ApprGRecordVO> userNameList = ezApprovalGDAO.selectUserName(map);
@@ -21914,12 +21915,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         sb.append("<DATA>");
         
         for (int i = 0; i < apprGTaskVOList.size(); i++) {
-        	//보미 추가
-        	if (apprGTaskVOList.get(i).getCreateDate().indexOf(".") != -1) {
-        		apprGTaskVOList.get(i).setCreateDate(apprGTaskVOList.get(i).getCreateDate().toString().split(".")[0]);
-        	}
-        	apprGTaskVOList.get(i).setCreateDate(commonUtil.getDateStringInUTC(apprGTaskVOList.get(i).getCreateDate(), offset, false));
-        	
 			sb.append(commonUtil.getQueryResult(apprGTaskVOList.get(i)));
 		}
 		sb.append("</DATA>");
