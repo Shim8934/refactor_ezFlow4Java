@@ -2292,14 +2292,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void deleteSignatureTemplate(String companyId, String tenantId, String signNo) throws Exception {	
-		logger.debug("deleteSignatureTemplate started. signNo=" + signNo + ", companyId=" + companyId + ", tenantId=" + tenantId);
+	public void deleteSignatureTemplate(String signNo) throws Exception {	
+		logger.debug("deleteSignatureTemplate started. signNo=" + signNo);
 		
-		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
-		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
 		String signNoStr = "signNo=" + URLEncoder.encode(signNo, "UTF-8");
 		
-		String inputParams = companyIdStr + "&" + tenantStr + "&" + signNoStr;
+		String inputParams = signNoStr;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteSignatureTemplate", inputParams);
@@ -2314,6 +2312,37 @@ public class EzEmailServiceImpl implements EzEmailService {
         
         logger.debug("deleteSignatureTemplate ended.");
         
+	}
+	
+	@Override
+	public JSONArray selectOneSignatureTemplate(String signNo) throws Exception {
+		logger.debug("selectOneSignatureTemplate started.");
+		logger.debug("signNo=" + signNo);
+		
+		String signNoStr = "signNo=" + URLEncoder.encode(signNo, "UTF-8");
+		String inputParams = signNoStr;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getOneSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONArray json = new JSONArray();
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			json = (JSONArray) object.get("result");
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
+				//throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("selectOneSignatureTemplate ended.");
+		
+		return json;
 	}
 	
 }

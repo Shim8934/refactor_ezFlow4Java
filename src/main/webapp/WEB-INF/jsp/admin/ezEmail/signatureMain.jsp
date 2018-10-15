@@ -114,7 +114,7 @@
 	        	if (deleteConfirm) {
 	        		$.ajax({
 		        		type : "POST",
-		        		url : "/admin/ezEmail/deleteSignTemplate.do?companyId=" + companyID + "&signNo=" + signNo,
+		        		url : "/admin/ezEmail/deleteSignTemplate.do?signNo=" + signNo,
 		        		datatype : 'json',
 		        		error : function(data) {
 		        			alert("error");
@@ -178,6 +178,45 @@
 	        	
 	        	obj.childNodes[0].style.backgroundColor = m_strColorSelect;
 	        	obj.setAttribute("selected", "true");
+	        	
+	        	signPreview(obj.getAttribute("signno"));
+	        	
+	        }
+	        
+	        // 서명 미리보기 
+	        function signPreview(signno) {
+	        	$.ajax({
+	        		type : "POST",
+	        		url : "/admin/ezEmail/signaturePreview.do?signNo=" + signno,
+	        		datatype : 'json',
+	        		error : function(data) {
+	        			alert("error");
+	        			console.log(data);
+	        		},
+	        		complete : function(data) {
+	        			signPreviewChange(data.responseJSON);
+	        	    }
+	        	});
+	        }
+	        
+	        function signPreviewChange(data) {
+	        	var preTxt = $(".signPreViewTxt")[0];
+	        	var preIframe = $(".signPreViewIframe");
+	        	var txtDisplay = "block";
+	        	var iframeDisplay = "none";
+	        	var txtText = data[0].content;
+	        	//var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
+	        	
+	        	if (data !== undefined) {
+	        		preTxt.style.textAlign = "justify";
+	        		preTxt.style.position = "none";
+	        		preTxt.style.top = "0";
+	        		preTxt.style.transform = "none";
+	        		preTxt.style.display = txtDisplay;
+		        	preIframe[0].style.display = iframeDisplay;
+		        	preTxt.innerHTML = txtText;
+	        	}
+	        	
 	        	
 	        }
 	        
@@ -272,13 +311,12 @@
 				<td>
 					<div class="lmright" style="width: 578px; height: 448px">
 						<div class="lmPreview">
-							<div class="lmPreViewTxt"
+							<div class="signPreViewTxt"
 								style='text-align: center; position: relative; top: 48%; transform: translateY(-50%); font-size:13px'>
 								<spring:message code='ezBoard.t431' />
 							</div>
-							<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe"
-								onload="onloadPreview(this)" name="lmPreViewIframe"
-								style="display: none; border: none; width: 100%; height: 100%;"></iframe>
+							<iframe src="" class="signPreViewIframe lmPre" id="lmPreViewIframe"
+								onload=""style="display: none; border: none; width: 100%; height: 100%;"></iframe>
 						</div>
 					</div>
 				</td>

@@ -1244,20 +1244,42 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping("/admin/ezEmail/deleteSignTemplate.do")
 	@ResponseBody
-	public void deleteSignTemplate(@CookieValue("loginCookie") String loginCookie, String companyId, String signNo, HttpServletResponse response, Model model) throws Exception {
+	public void deleteSignTemplate(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("deleteSignTemplate started.");
-		logger.debug("companyId=" + companyId);
 		logger.debug("signNo=" + signNo);
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		try {
-			ezEmailService.deleteSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), signNo);
+			ezEmailService.deleteSignatureTemplate(signNo);
 		} catch (Exception e) {
 			 e.printStackTrace();
 		}
 		
 		logger.debug("deleteSignTemplate ended.");
+	}
+	
+	/**
+	 * 서명 템플릿 개별 조회
+	 * 
+	 * @param companyId, signNo
+	 * @return : void
+	 */
+	@RequestMapping("/admin/ezEmail/signaturePreview.do")
+	@ResponseBody
+	public JSONArray signaturePreview(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("signaturePreview started.");
+		logger.debug("signNo=" + signNo);
+
+		JSONArray returnJsonArr = new JSONArray();
+
+		try {
+			returnJsonArr = ezEmailService.selectOneSignatureTemplate(signNo);
+			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		logger.debug("signaturePreview ended.");
+		return returnJsonArr;
 	}
 	
 }
