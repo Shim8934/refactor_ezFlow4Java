@@ -94,10 +94,12 @@
 	                var _DEL = document.createElement("BUTTON");
 	                _EDIT.innerHTML = "수정";
 	                _EDIT.style.marginRight = "3px";
+	                _EDIT.setAttribute("class", "lmLetterModifyBtn");
+	                _EDIT.onclick = function() { signEditPopUp(this, "modify"); };
 	                _DEL.innerHTML = "삭제";
 	                _DEL.setAttribute("class", "lmLetterDeleteBtn");
 	                _DEL.onclick = function() { deleteSignTemplate(this); };
-	                _EDIT.setAttribute("class", "lmLetterModifyBtn");
+	                
 	                _DIV.appendChild(_EDIT);
 	                _DIV.appendChild(_DEL);
 	                
@@ -155,6 +157,18 @@
 	        		return;
 	        	}
 	        }
+	        
+	        // 템플릿 추가, 수정
+			function signEditPopUp(obj, type) {
+	        	var signno = 0;
+	        	if (obj.getAttribute("class") == 'lmLetterModifyBtn') {
+	        		signno = obj.parentElement.parentElement.parentElement.getAttribute("signno");
+	        	}
+	        	
+				var popUpType = "";
+				var url = "/admin/ezEmail/signEditPopUp.do?type=" + type + "&paramSignNo=" + signno;
+				var signPopUp = window.open(url, "signPopUp", GetOpenWindowfeature(1000, 660));
+			}
 	        
 	        // 검색 리스트 가져오기
 	        function searchSignList() {
@@ -353,8 +367,8 @@
 		
 		<!-- 버튼 -->
 		<div style="width:950px">
-			<div class="boxNo btnpositionJsp" data-boxNo="">
-				<a class="imgbtn" onClick="" style="margin-top: 15px;"><span>서명 템플릿 추가</span></a>
+			<div class="boxNo btnpositionJsp" >
+				<a class="imgbtn" onClick="signEditPopUp(this, 'add')" style="margin-top: 15px;"><span>서명 템플릿 추가</span></a>
 			</div>
 		</div>
 			

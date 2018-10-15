@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1280,6 +1281,55 @@ public class EzEmailAdminController {
 		
 		logger.debug("signaturePreview ended.");
 		return returnJsonArr;
+	}
+	
+	/**
+	 * 서명 템플릿 추가,수정 팝업 화면
+	 */
+	@RequestMapping("/admin/ezEmail/signEditPopUp.do")
+	public String signEditPopUp(
+			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, Model model) throws Exception {
+		logger.debug("signEditPopUp started.");
+		logger.debug("signNo=" + paramSignNo + ", type=" + type);
+		
+		String signNo = "";
+		String content = "";
+		String displayname = "";
+		String displayname2 = "";
+        
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		if (type.equals("modify")) { 
+			JSONArray returnJsonArr = new JSONArray();
+			
+			try {
+				returnJsonArr = ezEmailService.selectOneSignatureTemplate(paramSignNo);
+				logger.debug("jsonArr=" + returnJsonArr);
+				
+				JSONObject obj = (JSONObject) returnJsonArr.get(0);
+				signNo = obj.get("signNo").toString();
+				content = obj.get("content").toString();
+				displayname = obj.get("displayname").toString();
+				displayname2 = obj.get("displayname2").toString();
+				
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+		} 
+		
+		model.addAttribute("signNo", signNo);
+		model.addAttribute("content", content);
+		model.addAttribute("displayname", displayname);
+		model.addAttribute("displayname2", displayname2);
+		model.addAttribute("type", type);
+
+		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
+		logger.debug("signEditPopUp ended.");
+		return "admin/ezEmail/signatureEditPopUp";
 	}
 	
 }
