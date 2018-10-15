@@ -864,6 +864,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
+		// 여기에서 게시판정보, 게시판권한, 구분값 등등 설정하여 리턴
 		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
 		
 		if (boardPropertyVO.getAdminType() == null) {
@@ -884,6 +885,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardType(boardPropertyVO.getBoardType());
 		}
 		
+		// getBoardProperty 메서드는 상단의 BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo); 내부에서 쓰이고 있다.
+		// 한 번 더 사용할 의미가 있는건가? 일단 저쪽 지역변수랑은 다르게 쓰는듯...
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
 		
 		if (boardProperty != null && boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")) {
@@ -930,14 +933,34 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		BoardPropertyVO boardInfo = new BoardPropertyVO();
 		boardInfo.setSs_board_maxRows(20);
-		boardInfo.setSs_searchBoard_maxRows(10);             
+		boardInfo.setSs_searchBoard_maxRows(10);
+		// 그룹사 게시판임(게시판 그룹의 구분이 "A")을 판단하는 boolean플래그 추가
+		// boolean isAllGroupBoard = false;
+		// 그룹사 게시판에 관리자 권한이 있음을 판단하는 boolean 플래그 추가
+		// boolean isCompanyAdmin = false;
 		
+		// 해당 게시판의 ID가 없다면 게시판이름을 '예약게시물'로 셋팅하고, 삭제플래그를 true로 저장 후 리턴한다.
 		if (pBoardID == null || pBoardID.equals("")) {
 			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229", userInfo.getLocale()));
 			boardInfo.setDelete_FG("true");
 			return boardInfo;
 		}
+		// 하단에 게시판정보 가져오는 부분을 이쪽으로 옮겨주자. // BoardPropertyVO strProp = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
 		
+		// 해당 게시판에 대한 사용자의 권한을 개인 > 부서 > 회사 순으로 받아온다.
+		// 그룹사게시판에서는 이 동작이 필요하지 않으며, boardInfo객체에 임의로 플래그를 설정하면 된다.(관리자 플래그를 제외한 모든 플래그 true)
+		// if(boardInfo.gubun...) 등으로 분기를 나누자. 여기에서 해당 게시판의 상위(그룹)게시판의 구분값도 필요하므로, 해당 DAO 사용 서비스를 넣어야 한다.
+		
+		/* 해당 게시판의 상위(그룹)게시판 체크용 메서드 삽입, 구분값 받아오기(boardGroupinfo) */
+		// 만약 해당 게시판의 상위(그룹)게시판이 구분값 "A"이라면 isAllGroupBoard 플래그값 변경함
+		/* if (boardGroupinfo.getGubun().equals("A")
+		 * 		isAllGroupBoard = true;
+		 * if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1)
+		 * 		isCompanyAdmin = true;
+		 * 		
+		 * */
+		
+		/* if(isAllGroupBoard == false) { // isAllGroupBoard값이 false인 경우에만 분기를 타도록 수정 */
 		String deptPath = userInfo.getDeptPathCode();
 		String deptPathOrgan = "";
 		
@@ -961,8 +984,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
-		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
+		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG); // 이부분의 플래그 처리는 의미가 있나? OK / NO로 구분된다.
+		// BoardGroupAdmin_FG값은 boardItemlist.jsp 내에서 BoardAdmin_FG값과 함께 조건으로 사용되고 있다. (게시물 복사, 이동, 삭제 시)
+		// BoardAdmin_FG값과 BoardGroupAdmin_FG값이 전부 false에 "NO"라면 관리자 권한이 없는것으로 처리된다. > 즉, 하나라도 true에 OK라면 게시물 복사, 이동, 삭제가 가능하다.
+		// 전체관리자가 아니라면 BoardGroupAdmin_FG값을 임의로 "NO"로 설정해주어야 한다. (TBL_BOARD_BOARDMANAGE의 권한설정 무시함)
+		// 전체관리자는 BoardGroupAdmin_FG값을 임의로 "OK"로 설정해주어야 한다.
 		
+		/* isAllGroupBoard 분기의 끝 } */
+		
+		// 새게시물의 플래그 설정이 그룹사게시판 플래그 설정과 같은 스펙이므로, ||(OR)조건을 더 추가해준다. (전체관리자가 아닌 경우, boardAdmin 플래그는 false이다.)
+		//pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || (isAllGroupBoard == true && isCompanyAdmin == false))
 		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
@@ -971,7 +1002,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+		} 
+		/* and조건 뒤, 괄호 앞부분에 OR조건으로 (isAllGroupBoard == true && isCompanyAdmin == true) || 추가 */
+		else if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -997,6 +1030,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setDelete_FG("false");
 		}
 		
+		// 해당 게시판의 모든 정보(TBL_BOARD_BOARDINFO로부터)를 가져온다.
+		// 이걸 상단으로 옮겨야 구분값을 분기 조건으로 사용할 수 있다!!
 		BoardPropertyVO strProp = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
 		
 		if (strProp != null) {
@@ -7992,7 +8027,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String[] fileNamesArr = fileNames.split(":");
 			String[] fileNamesUIDArr = fileNamesUID.split(":");
 			
-			downFileName = fileNamesArr[0] + " 외 " + (fileNamesArr.length) + "개.zip";//zip파일명
+			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
 			
 			if (fileNamesArr.length != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.length; i++) { //파일 길이만큼
