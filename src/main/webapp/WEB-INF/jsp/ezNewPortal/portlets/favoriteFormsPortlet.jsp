@@ -130,6 +130,78 @@
 		    		return;
 		    	}
 		    }
+			
+			var getformcont_cross_dialogArguments = new Array();
+			var openForm = function() {
+		        var parameter = new Array();
+		        parameter[0] = "${userInfo.deptID}";
+		        parameter[1] = "A01000";
+	            url = "/ezApprovalG/getFormCont.do";
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            getformcont_Cross_OpenWin = window.open(url, "/ezApprovalG/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getformcont_Cross_OpenWin.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+		    }
+		    
+		    function openForm_Complete(ret) {
+		        getformcont_Cross_OpenWin.close();
+		        formURL = ret[0];
+		        formDocType = ret[1];
+		        if (formURL != "cancel") {
+		            openDraftUI(formURL, formDocType);
+		        }
+		    }
+		    
+		    //2018-09-18 구해안 팝업창 가져오기 위해 OpenInformationUI 함수 복붙
+		    var ezapropinion_cross_dialogArguments = new Array();
+		    function OpenInformationUI(pInformationContent, CompleteFunction, type, type2, formURL, formDocType) {
+			var parameter = pInformationContent;
+		    var url = "/ezApprovalG/ezAprOpinion.do";
+		    if (CrossYN() && (CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
+		        ezapropinion_cross_dialogArguments[0] = parameter;
+		        if (type == undefined && CompleteFunction != undefined) {
+		            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else if (type == undefined && CompleteFunction == undefined) {
+		            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else if (type != undefined && CompleteFunction != "") {
+		            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            ezapropinion_cross_dialogArguments[2] = true;
+		            var OpenWin = window.open(url + "?type="+type2+"&formURL="+formURL+"&formDocType="+formDocType, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		        else if (type != undefined && CompleteFunction == "") {
+		        	ezapropinion_cross_dialogArguments[2] = true;
+		            var OpenWin = window.open(url + "?type="+type2+"&formURL="+formURL+"&formDocType="+formDocType, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+			    } else {
+			        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+			        feature = feature + GetShowModalPosition(330, 205);
+			        var RtnVal = window.showModalDialog(url, parameter, feature);
+			    }
+			    return RtnVal;
+			}
+			
+			function OpenInformationUI_Complete() {
+			    DivPopUpHidden();
+			}
 		    
 		    function openDraftUI(formURL, formDocType) {
 		        var openLocation = "";
