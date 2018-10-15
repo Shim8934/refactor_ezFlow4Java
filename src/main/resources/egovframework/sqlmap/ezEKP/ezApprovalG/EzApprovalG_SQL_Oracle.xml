@@ -19485,7 +19485,7 @@
 	             DOCTRANSFERYEAR ,
 	             TBCAB.CabinetID ,
 	             TBCAB.VolumeNo ,
-	             TBCAB.CreateDate ,
+	             TBCAB.CreateDate + ($offsetMin$/(24*60)) AS CreateDate,
 	             TBCAB.CabinetTransferFlag ,
 	             TBCAB.TCabinetID ,
 	             TBCAB.TDeptCode ,
