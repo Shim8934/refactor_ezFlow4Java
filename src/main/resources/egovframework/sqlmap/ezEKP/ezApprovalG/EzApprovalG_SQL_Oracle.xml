@@ -18341,7 +18341,7 @@
              PUBLICITYYN ,
              LIMITRANGE ,
              MANUALREGFLAG ,
-             REGISTERDATE ,
+             to_char(REGISTERDATE + $offsetMin$/(24*60),'yyyy-MM-dd HH24:mi:ss') as REGISTERDATE,
              EXECUTEDATE ,
              SEPERATEATTACHNO ,
              SPECIALCATALOGFLAG 

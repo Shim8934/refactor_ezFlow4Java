@@ -136,7 +136,6 @@
 	
 	            for (var i = 0; i < nodes.length ; i++) {
 	                var rtnMode = getNodeText(GetChildNodes(nodes[i])[5]);
-	
 	                var imgFileName = getNodeText(GetChildNodes(nodes[i])[0]);
 	                var localFileName = getNodeText(GetChildNodes(nodes[i])[2]);
 	                var imgFileSize = getNodeText(GetChildNodes(nodes[i])[3]);
@@ -171,7 +170,7 @@
 		            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
 		            	var file1val = document.getElementById("file1").files[i].name;
 				        var exIndex = file1val.lastIndexOf('.');
-						var extension = file1val.substring(exIndex+1, file1val.lenght);
+						var extension = file1val.substring(exIndex+1, file1val.length);
 				        var check = false;
 				        check = compareExtension(check, extension);
 				        

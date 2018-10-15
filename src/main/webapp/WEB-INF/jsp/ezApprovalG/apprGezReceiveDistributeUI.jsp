@@ -374,6 +374,11 @@
 	        if (selRow) {
 	            listview.DeleteRow(listview.GetSelectedRowID(listview.GetSelectedIndexes()));
 	        }
+	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+	        var totalRows = listview.GetDataRows();
+		    if(totalRows.length == 0) {
+		    	setDeleteRow("listAPRLINE1");
+		    }
 	    }
 	    function btn_searchDept_onclick() {
 	        try {
@@ -787,6 +792,11 @@
 	                alert(e.description);
 	            }
 	        }
+	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+	        var totalRows = listview.GetDataRows();
+		    if(totalRows.length == 0) {
+		    	setDeleteRow("listAPRLINE1");
+		    }
 	    }
 	    function DeptRowDelelte(SelectIndex, ColRow) {
 	        var RowDelCheck;

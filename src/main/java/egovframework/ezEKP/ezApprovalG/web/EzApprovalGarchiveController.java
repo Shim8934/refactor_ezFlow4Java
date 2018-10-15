@@ -416,7 +416,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-        String result = ezApprovalGService.getRecordSimpleInfo(xmlDom,userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getRecordSimpleInfo(xmlDom,userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
         
         logger.debug("getRecordSimpleInfo ended");
         

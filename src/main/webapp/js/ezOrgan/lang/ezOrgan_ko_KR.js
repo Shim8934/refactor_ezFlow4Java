@@ -31,3 +31,4 @@ var strLang30 = "모든 겸직을 삭제하시겠습니까?";
 var strLang31 = "전체관리자 권한을 지정할 수 없습니다.";
 var strLang32 = "의 모든 권한을 삭제 하시겠습니까?";
 var strLang535 = "데이터가 없습니다.";
+var strLangLHM01 = "타 회사로의 복구는 지원되지 않습니다.";

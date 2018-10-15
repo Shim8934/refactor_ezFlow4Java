@@ -164,7 +164,7 @@
 		
 		                    if (g_DraftFlag == "REDRAFT") {
 		                        setMenuBar("btnAssign", false);
-		                        setMenuBar("btnDistribute", false);
+// 		                        setMenuBar("btnDistribute", false);
 		                    }
 
 		                    if (pOrg_orgDocID == "") {
@@ -319,7 +319,10 @@
 					    FieldsAvailable(isTrue);
 					}
 			        HwpCtrl.ChangeMode(3);
-			
+					
+			        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
+			        HwpCtrl.SetFieldText("receiptnumber", "");
+			        
 			        HwpCtrl.SetFieldFocus("doctitle");
 			        HwpCtrl.ezSetScrollPosInfo(0);
 			    }
