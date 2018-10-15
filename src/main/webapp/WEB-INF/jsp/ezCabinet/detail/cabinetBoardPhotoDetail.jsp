@@ -12,7 +12,24 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabDetail">
-		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
+		<%-- <h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1> --%>
+		<div class="cabBttnDiv2" id="fileDivBttn">
+			<c:if test="${permission != 0}">
+				<a class="cabBttn2"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBttn2"><span><spring:message code='ezCabinet.t46'/></span></a>
+			</c:if>
+			<a class="cabBttn2"><span><spring:message code='ezCabinet.t144'/></span></a>
+			<%-- <a class="cabBttnP"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
+		</div>
+		
+		<jsp:include page="/WEB-INF/jsp/ezCabinet/detail/cabinetPhotoDownload.jsp"></jsp:include>
+		
+		<c:if test="${permission != 0}">
+			<div class="cabBttnDiv2" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBttn2"><span><spring:message code='ezCabinet.t14'/></span></a>
+				<a class="cabBttn2"><span><spring:message code='ezCabinet.t15'/></span></a>
+			</div>
+		</c:if>
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
 			<table class="tblBoardInf cabcolor">
@@ -56,7 +73,7 @@
 		
 		<div class="boardContDiv2"><iframe id="boardIframe" class="cabrlframe2"></iframe></div>
 		
-		<div class="cabBttnDiv" id="fileDivBttn">
+		<%-- <div class="cabBttnDiv" id="fileDivBttn">
 			<c:if test="${permission != 0}">
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
@@ -72,7 +89,7 @@
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
 				<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 			</div>
-		</c:if>
+		</c:if> --%>
 		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')             }"></script>
