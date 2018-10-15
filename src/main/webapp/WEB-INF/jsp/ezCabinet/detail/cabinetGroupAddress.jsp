@@ -12,7 +12,22 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabDetail">
-		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
+		<%-- <h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1> --%>
+		<div class="cabBttnDivG" id="fileDivBttn">
+			<c:if test="${permission != 0}">
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t46'/></span></a>
+			</c:if>
+			<a class="cabBttnG"><span><spring:message code='ezCabinet.t111'/></span></a>
+			<%-- <a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
+		</div>
+		<c:if test="${permission != 0}">
+			<div class="cabBttnDivG" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t14'/></span></a>
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t15'/></span></a>
+			</div>
+		</c:if>
+		
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
 			<table class="tblEmailInf cabcolor">
@@ -58,20 +73,20 @@
 		
 		<div class="addressContDiv">${item.contentPath}</div>
 		
-		<div class="cabBttnDiv" id="fileDivBttn">
+		<%-- <div class="cabBttnDivG" id="fileDivBttn">
 			<c:if test="${permission != 0}">
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t46'/></span></a>
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t78'/></span></a>
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t46'/></span></a>
 			</c:if>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t111'/></span></a>
+			<a class="cabBttnG"><span><spring:message code='ezCabinet.t111'/></span></a>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		<c:if test="${permission != 0}">
-			<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-				<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+			<div class="cabBttnDivG" id="fileModifyDivBttn" style="display: none;">
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t14'/></span></a>
+				<a class="cabBttnG"><span><spring:message code='ezCabinet.t15'/></span></a>
 			</div>
-		</c:if>
+		</c:if> --%>
 		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		

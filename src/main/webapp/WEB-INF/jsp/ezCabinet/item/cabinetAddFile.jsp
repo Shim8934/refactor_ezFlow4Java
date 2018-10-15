@@ -69,6 +69,7 @@
 					var storeBttn           = storeBttnElmt.children;
 					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
 					storeBttn[0].onclick    = function(e) {saveItem();};
+					storeBttn[1].onclick    = function(e) {startUpload();};
 					
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
