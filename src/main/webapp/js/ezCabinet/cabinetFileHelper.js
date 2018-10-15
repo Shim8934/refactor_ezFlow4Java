@@ -50,17 +50,17 @@ var CabinetFileHelper = function() {
 				//Write privilege
 				var listModifyBttns = cabBttnModify.children;
 				
-				if (totalBttn == 4) {
+				if (totalBttn == 3) {
 					listBttns[0].onclick = function(e) {fileModify()  ;};
 					listBttns[1].onclick = function(e) {fileDelete()  ;};
 					listBttns[2].onclick = function(e) {specialFunct();};
-					listBttns[3].onclick = function(e) {closeWindow() ;};
+					//listBttns[3].onclick = function(e) {closeWindow() ;};
 				}
-				else if (totalBttn == 3) {
+				else if (totalBttn == 2) {
 					//Community photo
 					listBttns[0].onclick = function(e) {fileModify() ;};
 					listBttns[1].onclick = function(e) {fileDelete() ;};
-					listBttns[2].onclick = function(e) {closeWindow();};
+					//listBttns[2].onclick = function(e) {closeWindow();};
 				}
 				
 				listModifyBttns[0].onclick = function(e) {saveItem()     ;};
@@ -68,14 +68,16 @@ var CabinetFileHelper = function() {
 			}
 			else {
 				//Read privilege
-				if (totalBttn == 2) {
+				if (totalBttn == 1) {
 					listBttns[0].onclick = function(e) {specialFunct();};
-					listBttns[1].onclick = function(e) {closeWindow() ;};
+				}
+				/*	listBttns[0].onclick = function(e) {specialFunct();};
+					//listBttns[1].onclick = function(e) {closeWindow() ;};
 				}
 				else if (totalBttn == 1) {
 					//Community photo
-					listBttns[0].onclick = function(e) {closeWindow();};
-				}
+					//listBttns[0].onclick = function(e) {closeWindow();};
+				}*/
 			}
 			
 			document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
