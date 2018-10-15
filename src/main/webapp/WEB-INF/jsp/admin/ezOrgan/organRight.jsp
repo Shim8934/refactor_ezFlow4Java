@@ -1146,7 +1146,7 @@
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
 			    //if (CrossYN()) {
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
-		        selectdept_cross_dialogArguments[1] = mov_user_Complete;
+		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
 		        try { OpenWin.focus(); } catch (e) { }
 			    <%-- }else {
@@ -1186,6 +1186,12 @@
 			    } --%>
 			}
 			
+            function move_user_CompleteWithTimeout(rtnValue) {
+                setTimeout(function() {
+                    mov_user_Complete(rtnValue);
+                }, 10);
+            }
+            
 		    function mov_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var listview = new ListView();
