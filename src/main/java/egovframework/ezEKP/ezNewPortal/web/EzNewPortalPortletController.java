@@ -474,12 +474,47 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			JSONObject data = (JSONObject) resultBody.get("data");
 			
 			model.addAttribute("CommunityList", data.get("CommunityList"));
+			model.addAttribute("CommuSize", data.get("CommuSize"));
 		}
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		
 		
 		logger.debug("phoroBoardPortlet End");
 		
 		return "/ezNewPortal/portlets/communityPortlet";
 	}
+	
+	/**
+	 * 포들릿 - 커뮤니티 허가여부
+	 */
+	@RequestMapping(value="/ezNewPortal/getCommunityPermit.do")
+	@ResponseBody
+	public String CommunityPermit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+		logger.debug("get_favoriteList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String url = "/rest/ezPortal/portlets/community/permits";
+    	
+    	String userId = userInfo.getId();
+    	String clubNo = request.getParameter("clubNo");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("clubNo", clubNo);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);		
+		
+		String status = resultBody.get("status").toString();
+		String result = "";
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			result = (String) data.get("memberChk");			
+		}
+
+		logger.debug("get_favoriteList ended");
+		return result;
+	}	
 	
 	/**
 	 * 포틀릿 - 공지사항

@@ -7,32 +7,62 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script type="text/javascript">
+var clubNo = "";
+var CommuSize = "${CommuSize}";
+for (var i=1; i < CommuSize; i ++) {	
+	clubNo = $('.comListDL0'+i).attr('data1');
+	
+	$('.comListDL0'+i).on("click",{ clubNo : clubNo }, view_bestCommunity);
+}
+
+function view_bestCommunity(clubNo) {
+	
+	var clubType = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezNewPortal/getCommunityPermit.do",
+		data : {
+				clubNo	:	clubNo,
+			   },
+		success: function(result){
+			clubType = result;
+		}
+	});
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezCommunity/remote/getACL.do",
+		data : { cID	:	clubNo,
+				 uID	:	"${userId}"
+		},
+		success: function(result){
+			
+			if (result == "ERR" || clubType == "1") {
+				OpenAlertUI("<spring:message code='main.t1004'/><br><spring:message code='main.t1005'/>", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
+			} else {
+				var wWeight = "1300";
+                var wHeight = "900";
+
+                var heigth = window.screen.availHeight;
+                var width = window.screen.availWidth;
+
+                var left = (width - wWeight) / 2;
+                var top = (heigth - wHeight) / 2 - 30;
+
+                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+			}
+		}
+	});
+}
+</script>
 </head>
 <body>
-<div class="layDIV">
-	<dl class="portlet_title photo_board">
-		<dt class="portletText" data1="${boardId }"><c:out value="${portletName }"/></dt>
-		<dd class="portletPlus" id="photoBoardPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
-	<c:if test="${access eq 'true' }">
-		<dd class="nextBtn"><img src="/images/ezNewPortal/photo_next.png"></dd>
-		<dd class="preBtn"><img src="/images/ezNewPortal/photo_pre.png"></dd>
-	</dl>
-	<ul class="photoList" id="photoul">
-		<c:forEach items="${photoBoardList }" var="photo">
-		 	<li><img src="${photo.filePath }" data1="${photo.boardID }" data2="${photo.itemID }" onclick="photoItemRead(this)"></li>
-		</c:forEach>
-	</ul>
-	</c:if>
-	<c:if test="${access eq 'false' }">
-	</dl>
-	<ul class="portlet_list">
-		<dl class="nodata">
-			<dt><img src="/images/ezNewPortal/nodata.png"></dt>
-			<dd>해당 게시판의 접근 권한이 없습니다.</dd>
-		</dl>
-	</ul>
-	</c:if>
-</div>
 <div class="layDIV">
     <dl class="portlet_title">
         <dt class="portletText"><c:out value="${portletName }"/></dt>
@@ -53,13 +83,21 @@
 				</ul>
 			</c:when>
 			<c:when test = "${fn:length(CommunityList) == 1 }">
-				<c:forEach var="commu" items="${CommunityList }" varStatus="i">
-			        <dl class="comListDL0${i.count}" style="cursor:pointer" onclick="go_best('${commu.c_ClubNo}','${memberChk}')">
+				<c:forEach var="commu" begin="0" end="1" items="${CommunityList }" varStatus="i">
+			        <dl class="comListDL0${i.count}" data1="${commu.c_ClubNo}" style="cursor:pointer">
 			        	<dt class="comPic">
 			        		<span class="best"><img src="/images/kr/main/com_best.png"></span>
-			        		<img src="/ezCommon/downloadAttach.do?filePath=/fileroot/0/files/upload_community/logo/C_5_thumbnail.png">
+			        		<c:choose>
+				        		<c:when test = "${commu.c_Logo_Thumbnail == 'default_logo_type'}">
+				        			<img src="/images/ezCommunity/logo/${commu.c_Logo_Thumbnail}">
+				        		</c:when>
+				        		<c:otherwise>
+					        		<img src="/ezCommon/downloadAttach.do?filePath=${commuPath}/${commu.c_Logo_Thumbnail}">
+				        		</c:otherwise>
+			        		</c:choose>
+			        		
 			        	</dt>
-			        	<dd class="comTit">"${commu.c_ClubName } }"</dd>
+			        	<dd class="comTit">"${commu.c_ClubName }"</dd>
 			        	<dd class="comText">${commu.c_ClubDesc }</dd>
 			        </dl>
 		    	</c:forEach>
@@ -69,13 +107,22 @@
                     </dl>
 			</c:when>
 			<c:otherwise>
-				<c:forEach var="commu" items="${CommunityList }" varStatus="i">
-			        <dl class="comListDL0${i.count}" style="cursor:pointer" onclick="go_best('${commu.c_ClubNo}','${memberChk}${i.count}')">
+				<c:forEach var="commu" begin="0" end="1" items="${CommunityList }" varStatus="i">
+			        <dl class="comListDL0${i.count}" data1="${commu.c_ClubNo}" style="cursor:pointer">
 			        	<dt class="comPic">
-			        		<span class="best"><img src="/images/kr/main/com_best.png"></span>
-			        		<img src="/ezCommon/downloadAttach.do?filePath=/fileroot/0/files/upload_community/logo/C_5_thumbnail.png">
+						<c:if test="${i.count == 0}">
+							<span class="best"><img src="/images/kr/main/com_best.png"></span>
+						</c:if>
+			        		<c:choose>
+				        		<c:when test = "${commu.c_Logo_Thumbnail == 'default_logo_type'}">
+				        			<img src="/images/ezCommunity/logo/${commu.c_Logo_Thumbnail}">
+				        		</c:when>
+				        		<c:otherwise>
+					        		<img src="/ezCommon/downloadAttach.do?filePath=${commuPath}/${commu.c_Logo_Thumbnail}">
+				        		</c:otherwise>
+			        		</c:choose>
 			        	</dt>
-			        	<dd class="comTit">"${commu.c_ClubName } }"</dd>
+			        	<dd class="comTit">"${commu.c_ClubName }"</dd>
 			        	<dd class="comText">${commu.c_ClubDesc }</dd>
 			        </dl>
 		    	</c:forEach>

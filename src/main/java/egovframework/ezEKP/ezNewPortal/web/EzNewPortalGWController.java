@@ -1327,46 +1327,50 @@ public class EzNewPortalGWController {
 			
 			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, companyId, tenantId);
 			
-			int CommuSize = CommunityList.size();
+//			int CommuSize = CommunityList.size();
+//			
+//			if (CommuSize == 0) {
+//				data.put("CommunityList", CommunityList);
+//			} else if (CommuSize == 1) {				
+//				data.put("CommunityList", CommunityList);
+//				if (CommunityList.get(0).getC_ClubGubun() != null && CommunityList.get(0).getC_ClubGubun().equals("3")) {
+//					
+//					String memberChk = ezNewPortalService.getMemberChk(CommunityList.get(0).getC_ClubNo(), userId, tenantId);
+//					
+//					data.put("memberChk", memberChk);
+//				}
+//			} else {
+//				data.put("CommunityList", CommunityList);
+//				for (int i = 0; i < 2; i++) {
+//					
+//					if (CommunityList.get(i).getC_ClubGubun() != null && CommunityList.get(i).getC_ClubGubun().equals("3")) {
+//						String memberChk0 = ezNewPortalService.getMemberChk(CommunityList.get(i).getC_ClubNo(), userId, tenantId);
+//						String memberChk1 = ezNewPortalService.getMemberChk(CommunityList.get(i).getC_ClubNo(), userId, tenantId);
+//						
+//						data.put("memberChk0", memberChk0);
+//						data.put("memberChk1", memberChk1);
+//					}
+//					
+//					String bannerSrc = "";
+//					
+//					if (CommunityList.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+//						bannerSrc = "/images/ezCommunity/logo/" + CommunityList.get(i).getC_Logo_Thumbnail().trim();
+//					} else {
+//						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", tenantId)+commonUtil.separator+CommunityList.get(i).getC_Logo_Thumbnail();
+//					}
+//				}
+//			}
+			String commuPath = commonUtil.getUploadPath("upload_community.LOGO", tenantId);
 			
-			if (CommuSize == 0) {
-				data.put("CommunityList", CommunityList);
-			} else if (CommuSize == 1) {				
-				data.put("CommunityList", CommunityList);
-				if (CommunityList.get(0).getC_ClubGubun() != null && CommunityList.get(0).getC_ClubGubun().equals("3")) {
-					
-					String memberChk = ezNewPortalService.getMemberChk(CommunityList.get(0).getC_ClubNo(), userId, tenantId);
-					
-					data.put("memberChk", memberChk);
-				}
-			} else {
-				data.put("CommunityList", CommunityList);
-				for (int i = 0; i < 2; i++) {
-					
-					if (CommunityList.get(i).getC_ClubGubun() != null && CommunityList.get(i).getC_ClubGubun().equals("3")) {
-						String memberChk0 = ezNewPortalService.getMemberChk(CommunityList.get(i).getC_ClubNo(), userId, tenantId);
-						String memberChk1 = ezNewPortalService.getMemberChk(CommunityList.get(i).getC_ClubNo(), userId, tenantId);
-						
-						data.put("memberChk0", memberChk0);
-						data.put("memberChk1", memberChk1);
-					}
-					
-					String bannerSrc = "";
-					
-					if (CommunityList.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-						bannerSrc = "/images/ezCommunity/logo/" + CommunityList.get(i).getC_Logo_Thumbnail().trim();
-					} else {
-						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", tenantId)+commonUtil.separator+CommunityList.get(i).getC_Logo_Thumbnail();
-					}
-				}
-			}
-			
-			
+			data.put("CommunityList", CommunityList);
+			data.put("CommuSize", CommunityList.size());
+			data.put("commuPath", commuPath);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1374,6 +1378,42 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W getCommunityPortlet ended.");
 		return result;
 	}
+	
+	/**
+	 * 포탈개인화  G/W [GET] 포틀릿 - 커뮤니티 허가여부
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value= "/rest/ezPortal/portlets/community/permits", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject CommunityPermit(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getCommunityPortlet started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			String clubNo = request.getParameter("clubNo");
+			
+			String memberChk = ezNewPortalService.getCommunityPermit(clubNo, userId, tenantId);
+			
+			data.put("memberChk", memberChk);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getCommunityPortlet ended.");
+		return result;
+	}
+	
 	/**
 	 * 포탈개인화  G/W [GET] 포틀릿 - 받은 메일 포틀릿 조회
 	 */
