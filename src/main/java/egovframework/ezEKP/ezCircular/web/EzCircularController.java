@@ -1098,6 +1098,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userMyName = "";
 		String userMyName2 = "";
 		String mode = req.getParameter("mode");
+		
+		// 2018-10-15 김민성 - mode값 없는 경우 write로 지정
+		if(req.getParameter("mode") == null) {
+			mode = "write";
+		}
 		CircularListVO result = new CircularListVO();
 
 		if (user.get(0).getMemberID() != "") {	
