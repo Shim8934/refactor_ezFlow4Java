@@ -2265,6 +2265,8 @@
                    	RESPONSE_DATE IS NULL
                 AND
                    	B.COMPLETE_FLAG = 'Y'
+                AND
+                   	B.COMPANYID = #companyID#
               	UNION
 	            	SELECT
 	            		A.ITEM_NO 
@@ -2303,7 +2305,9 @@
                     AND
                     	A.TENANT_ID = #tenantID#	
                     AND
-                    	C.RESPONSE_RANGE = '0') CNT
+                    	C.RESPONSE_RANGE = '0'
+                   	AND
+                   		A.COMPANYID = #companyID#) CNT
 		]]>
 	</select>
 	
