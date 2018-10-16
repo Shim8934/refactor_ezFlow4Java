@@ -136,7 +136,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
-	
+		
+		resp.setHeader("Pragma", "no-cache"); //HTTP 1.0 
+		resp.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
+		resp.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
+		resp.setDateHeader("Expires", 0L); // Do not cache in proxy server
+
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			model.addAttribute("portletOrder", data.get("portletOrder"));
@@ -147,11 +152,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("userName", data.get("userName"));
 			model.addAttribute("userTitle", data.get("userTitle"));
 			model.addAttribute("deptName", data.get("deptName"));
-			model.addAttribute("pollCount", data.get("pollCount"));
-			model.addAttribute("circularCount", data.get("circularCount"));
-			model.addAttribute("scheduleCount", data.get("scheduleCount"));
-			model.addAttribute("approvalCount", data.get("approvalCount"));
-			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("serverTime", serverTime);
 			model.addAttribute("nowMonth", nowMonth);
 			
@@ -263,6 +263,33 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	public String portletSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		
 		return "/ezNewPortal/portletSetting";
+	}
+	
+	//읽지 않은 메일, 결재할 문서, 전자설문, 오늘일정, 회람판 개수 불러오기
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/unreadCounts.do")
+	@ResponseBody
+	public JSONObject getUnreadCounts(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getUnreadCounts Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();		
+		String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		String status = resultBody.get("status").toString();
+		JSONObject unreadCounts = new JSONObject();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			unreadCounts.put("pollCount", data.get("pollCount"));
+			unreadCounts.put("circularCount", data.get("circularCount"));
+			unreadCounts.put("scheduleCount", data.get("scheduleCount"));
+			unreadCounts.put("approvalCount", data.get("approvalCount"));
+			unreadCounts.put("unreadMailCount", data.get("unreadMailCount"));
+		}
+		
+		logger.debug("getUnreadCounts End");
+		return unreadCounts;
 	}
 	/**
 	 * ----

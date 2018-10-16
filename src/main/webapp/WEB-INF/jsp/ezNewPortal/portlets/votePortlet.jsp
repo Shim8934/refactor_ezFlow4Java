@@ -17,7 +17,7 @@
 	<c:choose>
 	<c:when test="${voteCount ne 0 }">
 	<p class="voteTitle">"<c:out value="${title }"/>"</p>
-	<p class="voteBtn" id="V<c:out value='${qstId }'/>">참여</p>
+	<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>">참여</p>
 	<ul class="voteList">
 		<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
 		<c:if test="${status.index lt 4 }">

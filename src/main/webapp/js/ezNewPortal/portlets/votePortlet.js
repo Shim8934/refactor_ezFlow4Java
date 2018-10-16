@@ -6,7 +6,7 @@ function viewQstList() {
 }
 
 function votePoll() {
-	var qstId = $(".voteBtn").attr("id");
+	var qstId = $(".votePortlet").attr("id");
 	qstId = qstId.substring(1);
 
 	$.ajax({

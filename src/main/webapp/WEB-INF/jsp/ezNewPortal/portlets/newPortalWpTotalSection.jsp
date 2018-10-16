@@ -294,7 +294,6 @@
 			}
 			
 			// 표준모듈 (2007.03.23) 수정 : 전자메모보고 처리할 메모 갯수 		
-			var xmlHttp_getMemocount_total = null;
 			
 			function getMemocount() {		
 			    xmlHttp_getMemocount_total = createXMLHttpRequest();// new ActiveXObject("Microsoft.XMLHTTP");
