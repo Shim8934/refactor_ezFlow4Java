@@ -805,8 +805,8 @@
 			<ul>
 			    <li><span  onClick="new_address()"><spring:message code='ezAddress.t236' /></span></li>
 				<li><span  onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
-				<li id="importaddress"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
-				<li id="exportaddress"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
+				<li id="importaddress" style="display:none;"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
+				<li id="exportaddress" style="display:none;"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
 				<li id="importaddress_Cross"><span onclick="clickImport()"><spring:message code='ezAddress.t210' /></span></li>
         		<li id="exportaddress_Cross"><span onclick="clickExport()"><spring:message code='ezAddress.t143' /></span></li>
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
