@@ -22,6 +22,9 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
+	
+	/* 박종균 시작 */
+	
 	// 공지사항 리스트
 	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
@@ -38,6 +41,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PersonalLightPollVO> getPollPortletResult (Map<String, Object> map) throws Exception {
 		return (List<PersonalLightPollVO>) list("ezNewPortal.getPollPortletResult", map);
 	}
+	
+	public String getPortalLogoInfo (Map<String, Object> map) throws Exception {
+		return (String) select("ezNewPortal.getPortalLogoInfo", map);
+	}
+	
+	/* 박종균 끝 */
 	
 	/**
 	 * 유은정

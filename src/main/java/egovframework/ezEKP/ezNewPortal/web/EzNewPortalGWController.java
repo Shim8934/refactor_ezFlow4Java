@@ -476,6 +476,31 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String logoType = "portal";
+			/**
+			 * 1. 로고
+			 * 2. 메인메뉴 및 서브메뉴
+			 * 3. 유틸메뉴
+			 */
+			
+			/**
+			 * 1) 로고
+			 */
+			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
+			LOGGER.debug("logoUrl : " + logoUrl);
+			
+			/**
+			 * 2) 메인메뉴 및 서브메뉴
+			 * - 권한체크 확실하게 할 것
+			 */
+			
+			
+			/**
+			 * 3) 유틸메뉴
+			 * - 관리자 권한의 유무
+			 */
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1647,7 +1672,6 @@ public class EzNewPortalGWController {
 			List<PersonalLightPollVO> pollResult = ezNewPortalService.getPollPortletResult(companyId, tenantId, itemSeq);
 			
 			answerList = ezNewPortalService.getAssemblePollData(pollInfo, pollResult);
-			
 			
 			JSONObject data = new JSONObject();
 			data.put("pollInfo", pollInfo);

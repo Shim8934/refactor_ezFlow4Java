@@ -29,6 +29,11 @@ var pollPlus = function () {
 	window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + top + ",left=" + left, "");
 }
 
+var nodata = function () {
+	var str = '<dl class="nodata"><dt><img src="/images/ezNewPortal/nodata.png"></dt><dd>'+ messages.strLang1 +'</dd></dl>';
+	document.getElementById('pollList').innerHTML = str;
+}
+
 var assemblePollList = function (poll) {
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
@@ -36,13 +41,15 @@ var assemblePollList = function (poll) {
 	
 	var answerList = poll.answerList;
 	var str = '';
-	
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {
 			var percentage = 0;
 			if (answerList[i].count) {
 				percentage = (answerList[i].count / poll.pollInfo.count * 1) * 100;	
 			}
+			
+			str += '<p class="pollTitle" id="pollTitle"></p>';
+			str += '<p class="pollBtn" id="pollBtn">참여</p>';
 			str += '<li class="pollList_0'+ answerList[i].result +'">';
 			str += '<div class="pollT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
 			str += '<div class="percent" id="percent1">' + percentage + '%</div>';
@@ -64,7 +71,12 @@ var getPollPortletList = function () {
 	xhr.onload = function () {
 		if (xhr.status >= 200 && xhr.status < 300) {
 			var poll = JSON.parse(xhr.responseText).poll;
-			assemblePollList(poll);
+			
+			if(poll === undefined) {
+				nodata();
+			} else {
+				assemblePollList(poll);	
+			}
 		} else {
 			console.error(xhr.responsText);	
 		}
