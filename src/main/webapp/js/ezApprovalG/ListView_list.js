@@ -1581,7 +1581,7 @@ function SetUnSelected(pTableID) {
 }
 
 function setDeleteRow(nodeId) {
-	var colCount = document.getElementById(nodeId+"_TH").childElementCount;
+	var colCount = _dataSource.getElementsByTagName("ROW");
 	var oTable = document.getElementById(nodeId);
 	var oTbody = oTable.lastChild;
 	
