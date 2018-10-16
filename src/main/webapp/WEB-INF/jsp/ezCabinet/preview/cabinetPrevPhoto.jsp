@@ -68,9 +68,16 @@
 					}
 					
 					showNewMainPhoto(crrPhotoIdx);
-					var ulElmt = document.querySelector("ul[class='cabphotoul']");
-					var liList = ulElmt.children;
+					var ulElmt  = document.querySelector("ul[class='cabphotoul']");
+					var liList  = ulElmt.children;
 					liList[0].firstElementChild.className = "selectedImg";
+					
+					if (totalImg < 10) {
+						var unnecessaryLiCnt = 10 - totalImg;
+						for (var i = 0; i < unnecessaryLiCnt; i++) {
+							ulElmt.removeChild(ulElmt.lastElementChild);
+						}
+					}
 					
 					for (var i = 0, len = liList.length; i < len; i++) {
 						var imgElmt = liList[i].firstElementChild;
