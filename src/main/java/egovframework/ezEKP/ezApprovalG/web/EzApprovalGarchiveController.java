@@ -16,6 +16,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -844,7 +851,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.getCabinetDetailInfo(xmlDom, userInfo.getTenantId());
+		String result = ezApprovalGService.getCabinetDetailInfo(xmlDom, userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getCabinetDetailInfo ended");
 		
@@ -1891,7 +1898,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         }
         
         Document objXML = commonUtil.convertStringToDocument(excelValue);
-		
+        //2018-10-16 김보미 - 개인문서함 엑셀출력 workBook 이용해서 출력하도록 변경
+/*		
 		resultExcel.append("<table><tr>");
 		
 		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
@@ -1929,7 +1937,73 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		//2018-07-13 천성준 - (#13042) 임시로 euc-kr로 해결, 추후에 왜 utf-8이 안먹는지 분석해서 utf-8로 고쳐야됨.  
 		response.getOutputStream().write(resultExcel.toString().getBytes("euc-kr"));
+*/
+        
+        //엑셀시작
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+	
+		//헤더 폰트 굵게
+		HSSFFont headerFont = workbook.createFont();
+		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
 		
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		headerStyle.setFont(headerFont);
+		
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		 
+		Row row;
+		Cell cell;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		for (int i = 0; i <objXML.getElementsByTagName("HEADER").getLength(); i++) {
+			String headerName = objXML.getElementsByTagName("NAME").item(i).getTextContent();
+			
+			cell = row.createCell(i);
+			cell.setCellValue(headerName);
+			cell.setCellStyle(headerStyle);
+		    row.setHeight((short)512);
+		    sheet.autoSizeColumn(i);
+		    sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+		}//header
+		
+		NodeList objRow = objXML.getElementsByTagName("ROW");
+	
+		for (int j = 0; j < objRow.getLength(); j++) {
+			row = sheet.createRow((j + 1));
+			
+			Element rowElem = (Element) objRow.item(j);
+			NodeList objCell = rowElem.getElementsByTagName("CELL");
+	
+			for (int k = 0; k < objCell.getLength(); k++) {
+				Element cellElem = (Element) objCell.item(k);
+	 			String cellValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
+				
+				cell = row.createCell(k);
+				cell.setCellValue(cellValue);
+				cell.setCellStyle(bodyStyle);
+				row.setHeight((short)384);
+				sheet.autoSizeColumn(k);
+			    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 512);
+			}
+		}//body
+	
+		workbook.write(response.getOutputStream());
+		workbook.close();
 		logger.debug("getUserContListSave ended");
 	}
 	

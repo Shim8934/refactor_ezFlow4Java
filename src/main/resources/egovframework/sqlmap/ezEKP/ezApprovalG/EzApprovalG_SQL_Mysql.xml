@@ -19405,7 +19405,7 @@
 	             DOCTRANSFERYEAR ,
 	             TBCAB.CabinetID ,
 	             TBCAB.VolumeNo ,
-	             TBCAB.CreateDate ,
+	             DATE_ADD(DATE_FORMAT(TBCAB.CreateDate ,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) AS CreateDate, 
 	             TBCAB.CabinetTransferFlag ,
 	             TBCAB.TCabinetID ,
 	             TBCAB.TDeptCode ,
