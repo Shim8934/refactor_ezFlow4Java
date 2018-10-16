@@ -918,7 +918,7 @@
 		</ul>
 		<div style="vertical-align:top;border:0px solid red; white-space:nowrap; overflow-x:auto; overflow-y:hidden;" id="list_Layer">
 			<div style="min-width:700px;">
-				<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
+				<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%; display: none;">
 				    <tr>
 						<th style="cursor:pointer;text-align:center;width:20px;">
 					    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
@@ -934,7 +934,7 @@
 				</table>
 			</div>
 			<div id="contentlist" name="contentlist" style="min-width:700px;border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
-				<table class="mainlist" style="width: 100%; table-layout: fixed;" id="MailList" ></table>
+				<table class="mainlist" style="width: 100%; table-layout: fixed; display:none;" id="MailList" ></table>
 				<div style="height:100%;display:none;" id="MailListCard" ></div>
 			</div>
 			
