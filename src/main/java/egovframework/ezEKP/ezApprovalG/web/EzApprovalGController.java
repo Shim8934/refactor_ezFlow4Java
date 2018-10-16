@@ -873,7 +873,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
-		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String reuseTitleYN = ezCommonService.getTenantConfig("reuseTitleYN", userInfo.getTenantId());
 		
@@ -3799,7 +3800,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", tenantID);
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
-		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		// a=1 수발신담당자
@@ -3833,6 +3834,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			userInfo.setCompanyID(orgCompanyID);
 		}
 		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String orgDocID = request.getParameter("orgDocID");
 		
 		if (orgDocID == null) {
@@ -4920,7 +4922,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
