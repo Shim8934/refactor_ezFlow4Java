@@ -501,9 +501,12 @@ public class EzNewPortalGWController {
 			 * 3) 유틸메뉴
 			 * - 관리자 권한의 유무
 			 */
+			JSONObject data = new JSONObject();
+			data.put("logoUrl", logoUrl);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

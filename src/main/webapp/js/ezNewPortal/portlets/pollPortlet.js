@@ -31,25 +31,26 @@ var pollPlus = function () {
 
 var nodata = function () {
 	var str = '<dl class="nodata"><dt><img src="/images/ezNewPortal/nodata.png"></dt><dd>'+ messages.strLang1 +'</dd></dl>';
-	document.getElementById('pollList').innerHTML = str;
+	document.getElementById('pollInfo').innerHTML = str;
 }
 
 var assemblePollList = function (poll) {
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
-	document.getElementById('pollList').innerHTML = '';
+	
+	// document.getElementById('pollList').innerHTML = '';
 	
 	var answerList = poll.answerList;
 	var str = '';
+	
+	str += '<p class="pollTitle" id="pollTitle"></p>';
+	str += '<p class="pollBtn" id="pollBtn">참여</p>';	
+	str += '<div class="pollList">';
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {
 			var percentage = 0;
 			if (answerList[i].count) {
 				percentage = (answerList[i].count / poll.pollInfo.count * 1) * 100;	
 			}
-			
-			str += '<p class="pollTitle" id="pollTitle"></p>';
-			str += '<p class="pollBtn" id="pollBtn">참여</p>';
 			str += '<li class="pollList_0'+ answerList[i].result +'">';
 			str += '<div class="pollT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
 			str += '<div class="percent" id="percent1">' + percentage + '%</div>';
@@ -59,8 +60,9 @@ var assemblePollList = function (poll) {
 			str += '</li>';
 		}
 	}
-	document.getElementById('pollList').innerHTML = str;
-	
+	str += '</div>';
+	document.getElementById('pollInfo').innerHTML = str;
+	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
 	document.getElementById('pollBtn').addEventListener('click', joinPoll);
 	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 };

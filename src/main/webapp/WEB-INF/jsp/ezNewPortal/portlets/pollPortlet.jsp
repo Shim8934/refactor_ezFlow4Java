@@ -10,7 +10,7 @@
 		<dt class="portletText">설문조사</dt>
 		<dd class="portletPlus" id="pollPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
 	</dl>
-	<div id="pollList"></div>
+	<div id="pollInfo"></div>
 </div>
 </body>
 </html>
