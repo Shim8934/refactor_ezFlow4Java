@@ -2473,11 +2473,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 * 게시판 트리 표출 Method
 	 */
 	@Override
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, int tenantID) throws Exception {
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, String isAdminLeft, boolean isCompanyAdmin, int tenantID) throws Exception {
 		logger.debug("getBoardTree started");
 		int count = 0;
 		String strForbiddenBoardIDList = "";
-		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
+		String showAllGroupBoard = "";
+		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
 		
 		if (retValue != null && retValue.length() > 30) {
 			return retValue;
@@ -2493,18 +2494,30 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
+		
+		/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 설정 */
+		if (!isAdminLeft.equals("Y") || (isAdminLeft.equals("Y") && isCompanyAdmin == true)) {
+			showAllGroupBoard = "Y";
+		} else { // isAdminLeft가 Y이고, isCompanyAdmin이 false라면 그룹사게시판 표출 안함
+			showAllGroupBoard = "N";
+		}
+		
+		logger.debug("showAllGroupBoard     ::    "  + showAllGroupBoard);
+		
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
 		
+		// 일반 사용자의 게시판 표출 시... 그룹사게시판에는 권한이 안들어가있어서 accessID 문제로 제대로 나오지 않을것임
 		for (int i = 0; i < pAccessID.split(",").length; i++) {
 			String boardID = "";
 			
 			if (pMode == 0) {
-				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0);            
+				// String isAdminLeft 인자를 추가해주자.
+				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard);            
 			} else {
 				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
 				int isEqaulDept = pAccessID.split(",")[i].trim().equalsIgnoreCase(pDeptID) ? 1 : 0;
 				int isDept = ezBoardDAO.isDeptChk(pAccessID.split(",")[i].trim(), tenantID);
-				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept);
+				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard);
 
 				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
 					for (BoardTreeVO k : tempBrdBoardTreeList) {
@@ -2523,6 +2536,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						} else {
 							brdBoardTreeList.add(k);
 						}
+						
+						
+						logger.debug("가져온 게시판 리스트     ::  " + k.getBoardName());
+						
 					}
 				}
 			}
@@ -2532,9 +2549,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				if (boardTreeList.size() > 0) {
 					for (int r = 0; r < boardTreeList.size(); r++) {
+						
+						// 그룹사게시판이 여기에 나타날까? boardManage테이블에서 가져오는건데...
+						logger.debug("getBoardTree_Get2의 결과     ::    " + boardTreeList.get(r).getBoardName());
+						
 						boardID = boardTreeList.get(r).getBoardId();
 						if (strForbiddenBoardIDList.indexOf(boardID.split(",")[0]) == -1) {
-							strForbiddenBoardIDList += boardID.trim(); 
+							strForbiddenBoardIDList += boardID.trim();
+							
+							logger.debug("strForbiddenBoardIDList     ::    " + strForbiddenBoardIDList);
 						}
 					}
 				}
@@ -2622,8 +2645,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			result.append("</TREEVIEWDATA>");
 		}
 		
-		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
-		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString(), tenantID);
+		// 관리자단과 사용자단의 게시판 표출용 트리캐시를 다르게 생성한다. (isAdminLeft 플래그 추가)
+		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
+		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, result.toString(), tenantID);
 
 		logger.debug("getBoardTree ended");
         return result.toString();

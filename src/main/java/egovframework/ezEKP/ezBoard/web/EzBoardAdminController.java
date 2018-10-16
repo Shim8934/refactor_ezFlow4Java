@@ -131,16 +131,24 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("get_Admin_TopBoardList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String parentBoardID = request.getParameter("boardType");
+		String rollInfo = userInfo.getRollInfo(); // 전체관리자 권한 확인용
+		boolean isCompanyAdmin = false;
 		
-		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
-		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 전체관리자라면 isCompanyAdmin 플래그를 true로 넣어준다. */
+		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
+			isCompanyAdmin = true;
+		}
+		logger.debug("isCompanyAdmin     ::     " + isCompanyAdmin);
+		
+		/* 2018-10-15 홍승비 - 그룹사게시판 표출용 전체관리자 확인 플래그 추가 */
+		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트(그룹) 표출 시 companyID 조건 추가 */
+		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId(), isCompanyAdmin);
 		
 		for (int i = 0; i < list.size(); i++) {
 			BoardTreeVO vo = list.get(i);
-			String creanValue = commonUtil.cleanValue(vo.getBoardName());
-			vo.setBoardName(creanValue);
+			String cleanValue = commonUtil.cleanValue(vo.getBoardName());
+			vo.setBoardName(cleanValue);
 		}
 		
 		model.addAttribute("topBoardList", list);
@@ -162,7 +170,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String use_multiData = ezCommonService.getTenantConfig("Use_MultiData", userInfo.getTenantId());
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
+		String rollInfo = userInfo.getRollInfo();
 		
+		/* 2018-10-15 홍승비 - 관리자단 게시판그룹생성 진입 시 전체관리자 여부 확인 */
+		/* 전체관리자라면 isCompanyAdmin 플래그를 true로 넣어준다. */
+		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
+			model.addAttribute("isCompanyAdmin", true);
+		}
 		model.addAttribute("use_multiData", use_multiData);
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
@@ -182,10 +196,15 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String groupName1 = URLDecoder.decode(boardPropertyVO.getBoardGroupName(), "utf-8");
 		String groupName2 = URLDecoder.decode(boardPropertyVO.getBoardGroupName2(), "utf-8");
+		String guBun = boardPropertyVO.getGuBun();
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
 		
+		logger.debug("게시판그룹의 guBun      ::     " + guBun);
+		
+		// 그룹사게시판 옵션으로 게시판 그룹을 생성할 경우, 게시판그룹의 구분값을 "99"로 넣어준다.
+		// 게시판그룹은 PARENTBOARDID가 top이며, 원래는 구분값을 가지지 않는다(null). 또한 BOARDGROUPID도 null이다.
 		boardPropertyVO.setBoardGroupName(groupName1);
 		boardPropertyVO.setBoardGroupName2(groupName2);
 		boardPropertyVO.setAccessID(uID);
@@ -196,7 +215,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		logger.debug("createBoardGroup ended");
 		
-		/* 2018-06-25 홍승비 - 게시판 그룹 생성 시 companyID 부여 */
 		ezBoardAdminService.createBoardGroup(boardPropertyVO);
 	}
 
@@ -247,9 +265,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardName1 = URLDecoder.decode(boardPropertyVO.getBoardName(), "utf-8");
 		String boardName2 = URLDecoder.decode(boardPropertyVO.getBoardName2(), "utf-8");
+		String boardGroupID = boardPropertyVO.getBoardGroupID();
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
+		
+		BoardPropertyVO boardGroupPropertyVO = ezBoardService.getBoardProperty(boardGroupID, user.getTenantId());
+		
+		// 해당 게시판이 속하게 될 게시판그룹의 구분이 99라면, 그룹사게시판이다.
+		if (boardGroupPropertyVO.getGuBun().equals("99")) {
+			boardPropertyVO.setIsAllGroupBoard("Y");
+		}
 		
 		boardPropertyVO.setBoardName(boardName1);
 		boardPropertyVO.setBoardName2(boardName2);
@@ -309,11 +335,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("getSubBoards started");
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
-		
 		String upperBoardID = request.getParameter("upperBoardID");
+		/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 플래그 추가 */
+		String isAdminLeft = request.getParameter("isAdminLeft"); // 관리자단의 좌측게시판리스트 확장(하위게시판 호출) 시 이 플래그를 Y로 설정한다.
+		boolean isCompanyAdmin = false;
+		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
+		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
+			isCompanyAdmin = true;
+		}
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
-		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, user.getTenantId());
 
 		logger.debug("getSubBoards ended");
 		return boardTree;
@@ -330,10 +362,16 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
+		String isAdminLeft = request.getParameter("isAdminLeft");
+		boolean isCompanyAdmin = false;
+		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
+		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
+			isCompanyAdmin = true;
+		}
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, user.getTenantId());
 		
-		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, user.getTenantId());
 		if (boardTree.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
 		} else {

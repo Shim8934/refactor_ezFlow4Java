@@ -137,8 +137,10 @@ public interface EzBoardService {
 	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
+	/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 isAdminLeft 플래그를 인자로 추가 */
 	/* 2018-06-25 홍승비 - 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가 */
-	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
+	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy,
+			String pExcludeBoardID, String lang, String isAdminLeft, boolean isCompanyAdmin, int tenantID) throws Exception;
 	
 	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
 	public int getReservedItemListCount(String userID, String companyID, int tenantID) throws Exception;
