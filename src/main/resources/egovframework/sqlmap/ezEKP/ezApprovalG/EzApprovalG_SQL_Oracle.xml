@@ -27416,4 +27416,42 @@
 		and 
 			tenant_id = #tenantId#
 	</select>
+	
+	<select id="EzApprovalG.getDocNumZeroCnt" parameterClass="Map" resultClass="String">
+		SELECT
+			NVL
+			(
+				EXTENSIONATTRIBUTE7,
+				(
+					SELECT 
+						PROPERTY_VALUE 
+					FROM 
+						TBL_TENANT_CONFIG 
+					WHERE 
+						PROPERTY_NAME = 'docNumZeroCnt' 
+					AND 
+						TENANT_ID = #v_tenantID#
+				)
+			) AS EXTENSIONATTRIBUTE7
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			CN = EXTENSIONATTRIBUTE2 
+		AND 
+			TENANT_ID = #v_tenantID#
+		AND 
+			CN = #v_companyID#
+	</select>
+	<update id="EzApprovalG.setDocNumZeroCnt" parameterClass="Map">
+		UPDATE 
+			TBL_DEPTMASTER
+		SET
+			EXTENSIONATTRIBUTE7 = #v_docNumZeroCnt#
+		WHERE
+			CN = EXTENSIONATTRIBUTE2
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			CN = #v_companyID#
+	</update>
 </sqlMap>

@@ -5982,7 +5982,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgName2 = "";
 		String orgDeptID = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		
@@ -6722,7 +6723,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String realPath = commonUtil.getRealPath(request);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, userInfo.getTenantId());
 		String content = "";
 		String pTitle = "";
 		String jikwe = "";
@@ -14551,7 +14553,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		boolean isHesong = false;
 		String subSQL = "";
-		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, userInfo.getTenantId());
 		
 		subSQL = setLastOpinionToOrgDoc(docID, orgDocID, companyID, orgCompanyID, "QUERY", lang, userInfo.getTenantId());
 		
@@ -27552,4 +27555,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return fileVO;
 	};
+	
+	@Override
+	public String getDocNumZeroCnt(String companyID, int tenantID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_companyID",  companyID);
+		map.put("v_tenantID",  tenantID);
+		
+		String rtnVal = ezApprovalGDAO.getDocNumZeroCnt(map);
+		
+		return rtnVal;
+	}
+	@Override
+	public String setDocNumZeroCnt(String docNumZeroCnt, String companyID, int tenantID) throws Exception {
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_docNumZeroCnt",  docNumZeroCnt);
+		map.put("v_companyID",  companyID);
+		map.put("v_tenantID",  tenantID);
+		
+		try {
+			ezApprovalGDAO.setDocNumZeroCnt(map);
+			rtnVal = "true";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "false";
+		}
+		
+		return rtnVal;
+	}
 }

@@ -576,4 +576,7 @@ public interface EzApprovalGService {
 	
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 
+	public String getDocNumZeroCnt(String companyID, int tenantID) throws Exception;
+	
+	public String setDocNumZeroCnt(String docNumZeroCnt, String companyID, int tenantID) throws Exception;
 }
