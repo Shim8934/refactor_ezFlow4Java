@@ -634,7 +634,7 @@ public class EzNewPortalGWController {
 			String password = jspw;
 
 			//전자 설문 개수 불러오기
-			int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset);
+			int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
 			
 			//오늘 일정 개수 불러오기
 			String startDate = nowDate + " 00:00:00";
