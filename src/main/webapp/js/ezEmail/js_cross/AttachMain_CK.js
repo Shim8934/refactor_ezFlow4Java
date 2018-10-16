@@ -289,18 +289,20 @@ function AppendFileAttachInfo(ret) {
                         
                         objTr.appendChild(objTd3);
                         
-                        // 대용량 다운로드 기한 표시
-                        var objTd4 = document.createElement("TD");
-                        
-                        if(is_big == "Y") {
-                        	if(CrossYN()) {
-                        		objTd4.textContent = _pBigAttachDownloadPeriod;
-                        	} else {
-                        		objTd4.innerText = _pBigAttachDownloadPeriod;
-                        	}
+                        if (totBigSizeAttachMBSize > 0) {
+                        	// 대용량 다운로드 기한 표시
+                            var objTd4 = document.createElement("TD");
+                            
+                            if(is_big == "Y") {
+                            	if(CrossYN()) {
+                            		objTd4.textContent = _pBigAttachDownloadPeriod;
+                            	} else {
+                            		objTd4.innerText = _pBigAttachDownloadPeriod;
+                            	}
+                            }
+                            
+                            objTr.appendChild(objTd4);
                         }
-                        
-                        objTr.appendChild(objTd4);
 
                         dadiframe.document.getElementById("filelist").appendChild(objTr);
                     } else {
@@ -392,18 +394,20 @@ function AppendFileAttachInfo(ret) {
                             
                             objTr.appendChild(objTd3);
                             
-                            // 대용량 다운로드 기한 표시
-                            var objTd4 = document.createElement("TD");
-                            
-                            if(is_big == "Y") {
-                            	if(CrossYN()) {
-                            		objTd4.textContent = _pBigAttachDownloadPeriod;
-                            	} else {
-                            		objTd4.innerText = _pBigAttachDownloadPeriod;
-                            	}
+                            if (totBigSizeAttachMBSize > 0) {
+                            	// 대용량 다운로드 기한 표시
+                                var objTd4 = document.createElement("TD");
+                                
+                                if(is_big == "Y") {
+                                	if(CrossYN()) {
+                                		objTd4.textContent = _pBigAttachDownloadPeriod;
+                                	} else {
+                                		objTd4.innerText = _pBigAttachDownloadPeriod;
+                                	}
+                                }
+                                
+                                objTr.appendChild(objTd4);
                             }
-                            
-                            objTr.appendChild(objTd4);
 
                             dadiframe.document.getElementById("filelist").appendChild(objTr);
                         } else {
