@@ -79,10 +79,11 @@
 	                _SPAN.style.lineHeight = "30px";
 	                _SPAN.style.float = "left";
 	                _SPAN.style.display = "inline-block";
-	                _SPAN.style.width = "70%";
+	                _SPAN.style.width = "67%";
 	                _SPAN.style.whiteSpace = "nowrap";
 	                _SPAN.style.overflow = "hidden";
 	                _SPAN.style.textOverflow = "ellipsis";
+	                _SPAN.style.marginLeft = "6px";
 	                _TD.appendChild(_SPAN);
 	                _TR.appendChild(_TD);
 	                
