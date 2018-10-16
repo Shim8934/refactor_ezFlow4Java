@@ -2345,4 +2345,55 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return json;
 	}
 	
+	@Override
+	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception {
+		logger.debug("addSignatureTemplate started. signTemplate=" + signTemplate);
+		
+		String companyIdStr = "companyId=" + signTemplate.getCompanyId();
+		String tenantIdStr = "tenantId=" + signTemplate.getTenantId();
+		String displaynameStr = "displayname=" + signTemplate.getDisplayname();
+		String displayname2Str = "displayname2=" + signTemplate.getDisplayname2();
+		String contentStr = "content=" + signTemplate.getContent();
+		
+		String inputParams = companyIdStr + "&" + tenantIdStr + "&" + displaynameStr + "&" + displayname2Str + "&" + contentStr;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/insertSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK")) {
+        	throw new Exception("JGwServer ERROR");
+        }
+        
+        logger.debug("addSignatureTemplate ended.");
+	}
+	
+	@Override
+	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception {
+		logger.debug("setSignatureTemplate started. signTemplate=" + signTemplate);
+		
+		String displaynameStr = "displayname=" + signTemplate.getDisplayname();
+		String displayname2Str = "displayname2=" + signTemplate.getDisplayname2();
+		String contentStr = "content=" + signTemplate.getContent();
+		String signNoStr = "signNo=" + signTemplate.getSignNo();
+		
+		String inputParams = displaynameStr + "&" + displayname2Str + "&" + contentStr + "&" + signNoStr;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK")) {
+        	throw new Exception("JGwServer ERROR");
+        }
+        
+        logger.debug("setSignatureTemplate ended.");
+	}
+	
 }

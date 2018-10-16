@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +47,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
+import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -1296,6 +1298,8 @@ public class EzEmailAdminController {
 		String content = "";
 		String displayname = "";
 		String displayname2 = "";
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+        logger.debug("defaultFontAndSize=" + defaultFontAndSize);
         
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -1320,7 +1324,7 @@ public class EzEmailAdminController {
 				// e.printStackTrace();
 			}
 		} 
-		
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("signNo", signNo);
 		model.addAttribute("content", content);
 		model.addAttribute("displayname", displayname);
@@ -1330,6 +1334,37 @@ public class EzEmailAdminController {
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");
 		return "admin/ezEmail/signatureEditPopUp";
+	}
+	
+	/**
+	 * 서명 템플릿 추가
+	 * 
+	 * @param String loginCookie, Model model
+	 */
+	@RequestMapping(value = "/admin/ezEmail/setSignatureTemplate.do")
+	@ResponseBody
+	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type) throws Exception {
+		logger.debug("setSignatureTemplate started.");
+		logger.debug("signTemplate=" + signTemplate);
+		logger.debug("type=" + type);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		try {
+			if (type.equals("add")) {
+				signTemplate.setCompanyId(userInfo.getCompanyID());
+				signTemplate.setTenantId(Integer.toString(userInfo.getTenantId()));
+				ezEmailService.addSignatureTemplate(signTemplate);
+			} else {
+				ezEmailService.setSignatureTemplate(signTemplate);
+			}
+			
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+
+		logger.debug("setSignatureTemplate ended.");
+
 	}
 	
 }

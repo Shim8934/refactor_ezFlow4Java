@@ -20,25 +20,74 @@
 		}
 	</style>
 	<script>
-	
 		var type = "${type}"
 		var signNo = "${signNo}";
 		var displayname = "${displayname}";
 		var displayname2 = "${displayname2}";
+		var defaultFontAndSize = "${defaultFontAndSize}";
 		
 		window.onload = function() {
+			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILSIGNTEMPLATE");
+			
 			if (type == "modify") {
 				document.title = "서명 템플릿 수정";
 				$(".leTitle")[0].innerText = "서명 템플릿 수정";
-				document.getElementById("displayname").value = displayname;
-				document.getElementById("displayname2").value = displayname2;
-				
+				modifyDataView();
 			} else {
 				document.title = "서명 템플릿 추가";
 				$(".leTitle")[0].innerText = "서명 템플릿 추가";
 			}
+		}
+		
+		function saveSignTemplate() {
+			displayname = document.getElementById("displayname").value;
+			displayname2 = document.getElementById("displayname2").value;
+			content = window.message.GetEditorContent();
 			
-			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILLETTER");
+			var url = "/admin/ezEmail/setSignatureTemplate.do?displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
+			
+			if (type == "modify") {
+				url += "&signNo=" + signNo + "&type=" + type;
+			} else {
+				url += "&type=" + type;
+			}
+			
+			$.ajax({
+        		type : "POST",
+        		url : url,
+        		datatype : 'json',
+        		error : function(data) {
+        			alert("error");
+        			console.log(data);
+        		},
+        		complete : function(data) {
+        			alert("저장하였습니다.");
+        			window.close();
+        			$(opener.document).find("#signList *").remove();
+        			opener.signatureTemplateView();
+        	    }
+        	});
+		}
+		
+		// editor onload 됐을때
+		function Editor_Complete() {
+			if (type == "modify") {
+				modifyDataView();
+			}
+			
+			rebody();
+		}
+		
+		function rebody() {
+			if (type != "modify") {
+				window.message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>");
+			}
+	    }
+		
+		function modifyDataView() {
+			document.getElementById("displayname").value = displayname;
+			document.getElementById("displayname2").value = displayname2;
+			window.message.SetEditorContent(document.getElementById("signatureTemplate").innerHTML);
 		}
 	
 	</script>
@@ -149,10 +198,12 @@
 				</div>
 				
 				<div class="btnpositionNew">
-		            <a class="imgbtn"><span onClick=""><spring:message code='main.sp09'/></span></a>
+		            <a class="imgbtn"><span onClick="saveSignTemplate()"><spring:message code='main.sp09'/></span></a>
 		            <a class="imgbtn"><span onClick="">미리보기</span></a>
 			    </div>
 			</div>
 		</div>
+		
+		<xml id="signatureTemplate" style="display: none;">${content}</xml>
 	</body>
 </html>
