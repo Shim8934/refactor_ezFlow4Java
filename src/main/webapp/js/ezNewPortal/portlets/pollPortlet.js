@@ -40,18 +40,13 @@ var assemblePollList = function (poll) {
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {
 			var percentage = 0;
-			//console.log('result: ', answerList[i].result);
-			//console.log('answer: ', answerList[i].answer);
-			//if(answerList[i].count) console.log('count: ', answerList[i].count);
 			if (answerList[i].count) {
 				percentage = (answerList[i].count / poll.pollInfo.count * 1) * 100;	
 			}
-			console.log('percentage : ', percentage);
-			
-			str += '<li class="voteList_0'+ answerList[i].result +'">';
-			str += '<div class="voteT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
+			str += '<li class="pollList_0'+ answerList[i].result +'">';
+			str += '<div class="pollT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
 			str += '<div class="percent" id="percent1">' + percentage + '%</div>';
-			str += '<div class="voteGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';
+			str += '<div class="pollGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';
 			str += '	<span id="pollGraph' + answerList[i].result + '" style="width:'+ percentage +'%"></span>';
 			str += '</div>';
 			str += '</li>';
