@@ -174,7 +174,7 @@
 	        function searchSignList() {
 	        	var search = document.getElementById("signSearchInput").value;
 	        	
-	        	if (search == '' || search.length == 0) {
+	        	if (search == '' || search.length == 0 || search.trim().length == 0 || search.trim().length ==0) {
 	        		alert("검색어를 입력해주세요.");
 	        		return;
 	        	}
