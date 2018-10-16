@@ -413,7 +413,11 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("Parameter error!");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
+			
+			LOGGER.debug("fileList method ended");
+			return jsonObj;
 		}
+		
 		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = common.getTenantId();
@@ -429,9 +433,11 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
-			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
+			
+			if (listCount == 0) {
 				listCount = usrListCnt ;
 			}
+			
 			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
 			int pEnd = listCount;
 			
