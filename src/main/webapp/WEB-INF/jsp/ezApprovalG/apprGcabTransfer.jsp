@@ -57,7 +57,7 @@
 	        		기록물철 인계할 때 인계부서 단위업무 체크 로직 추가
 	        	*/
 	        	var isEmptyCode = $("#tdSTaskCode").text().trim();
-	        	
+        	
 	        	if(isEmptyCode === "" || isEmptyCode === null) {
 	        		alert("<spring:message code='ezApprovalG.pjg05'/>");
 	        		return;
@@ -66,25 +66,24 @@
 	            var SelCabinetList = new ListView();
 	            SelCabinetList.LoadFromID("DivSelCabinetList");
 	            var length = SelCabinetList.GetRowCount();
-	            if (length > 0) {
-	                if (g_DDeptCode == "") {
-	                    alert("<spring:message code='ezApprovalG.t561'/>");
-	            }
-	            else if (g_DTaskCode == "") {
-	                alert("<spring:message code='ezApprovalG.t562'/>");
-	            }
-	            else {
-	                if (TransferCabinet()) {
-	                    alert("<spring:message code='ezApprovalG.t563'/>");
-	                    GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2");
-	                    DelAllRowOfLV(SelCabinetList);
-	                }
-	            }
-	    }
-	    else {
-	        alert("<spring:message code='ezApprovalG.t566'/>");
-	        }
-	    }
+	            if (length > 0 && SelCabinetList.GetDataRows()[0].id.indexOf("noItems") == -1) {
+					if (g_DDeptCode == "") {
+					    alert("<spring:message code='ezApprovalG.t561'/>");
+					}
+					else if (g_DTaskCode == "") {
+					    alert("<spring:message code='ezApprovalG.t562'/>");
+					}
+					else {
+					    if (TransferCabinet()) {
+					        alert("<spring:message code='ezApprovalG.t563'/>");
+					        GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2");
+					        DelAllRowOfLV("DivSelCabinetList");
+					    }
+					}
+			    } else {
+		        	alert("<spring:message code='ezApprovalG.t566'/>");
+		        }
+	    	}
 	
 	    function GetDeptRecAdminInfo() {
 	        var pSearchList = "extensionAttribute1::m=1;;EXACT_Department::" + g_DDeptCode;
@@ -237,6 +236,7 @@
 	
 	    function SelCabinetList_rowdblclick() {
 	        DelListRow("DivSelCabinetList");
+	        setDeleteRow("DivSelCabinetList");
 	    }
 	
 	    function CabinetList_rowdblclick() {
