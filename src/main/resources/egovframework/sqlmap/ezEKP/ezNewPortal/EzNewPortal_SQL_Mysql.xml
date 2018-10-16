@@ -52,21 +52,21 @@
 <result property="guBun" 				column="GUBUN" />
 </resultMap>
 <resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
-<result property="itemSeq"              column="ITEMSEQ" />
-<result property="pollTitle"            column="POLLTITLE" />
-<result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" />
-<result property="answer1"              column="ANSWER1" />
-<result property="answer2"              column="ANSWER2" />
-<result property="answer3"              column="ANSWER3" />
-<result property="answer4"              column="ANSWER4" />
-<result property="answer5"              column="ANSWER5" />
-<result property="answer6"              column="ANSWER6" />
-<result property="answer7"              column="ANSWER7" />
-<result property="answer8"              column="ANSWER8" />
-<result property="answer9"              column="ANSWER9" />
-<result property="answer10"             column="ANSWER10" />
-<result property="result"               column="RESULT" />
-<result property="count"                column="COUNT" />
+<result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
+<result property="pollTitle"            column="POLLTITLE" nullValue=""/>
+<result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" nullValue=""/>
+<result property="answer1"              column="ANSWER1" nullValue=""/>
+<result property="answer2"              column="ANSWER2" nullValue=""/>
+<result property="answer3"              column="ANSWER3" nullValue=""/>
+<result property="answer4"              column="ANSWER4" nullValue=""/>
+<result property="answer5"              column="ANSWER5" nullValue=""/>
+<result property="answer6"              column="ANSWER6" nullValue=""/>
+<result property="answer7"              column="ANSWER7" nullValue=""/>
+<result property="answer8"              column="ANSWER8" nullValue=""/>
+<result property="answer9"              column="ANSWER9" nullValue=""/>
+<result property="answer10"             column="ANSWER10" nullValue=""/>
+<result property="result"               column="RESULT" nullValue=""/>
+<result property="count"                column="COUNT" nullValue=""/>
 </resultMap>
 <resultMap class="ThemeInfoVO" id="ThemeInfoVO">
 <result property="themeId" 					column="THEME_ID" />
@@ -145,7 +145,7 @@ LIMIT #limit#
 </select>
 
 <!-- 설문조사 리스트 출력 -->
-<select id="ezNewPortal.getPollPortlet" parameterClass="Map" resultClass="PersonalLightPollVO">
+<select id="ezNewPortal.getPollPortlet" parameterClass="Map" resultMap="PersonalLightPollVO">
 <![CDATA[
 SELECT
 	 A.ITEMSEQ ,
@@ -188,11 +188,10 @@ LIMIT
 ]]>
 </select>
 
-<select id="ezNewPortal.getPollPortletResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
-<![CDATA[
+<select id="ezNewPortal.getPollPortletResult" parameterClass="Map" resultClass="PersonalLightPollVO">
 SELECT
-	RESULT ,
-	COUNT(RESULT)  COUNT  
+	result,
+	COUNT(RESULT) AS count  
 FROM
 	TBL_PS_LIGHTPOLLRESULT 
 WHERE
@@ -202,9 +201,22 @@ AND
 GROUP BY
 	RESULT
 ORDER BY
-	COUNT DESC,
-   RESULT ASC
-]]>
+	COUNT DESC, RESULT ASC
+</select>
+
+<select id="ezNewPortal.getPortalLogoInfo" parameterClass="Map" resultClass="String">
+<![CDATA[
+SELECT
+	LOGO_URL
+FROM 
+	TBL_PORTAL_LOGO
+WHERE 
+	COMPANY_ID = #companyId#
+AND 
+	TENANT_ID = #tenantId#
+AND 
+	LOGO_TYPE = #logoType#
+]]>	
 </select>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->

@@ -25,6 +25,7 @@ public interface EzNewPortalService {
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId) throws Exception;
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
+	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception;
 	/**
 	 * 유은정
 	 */

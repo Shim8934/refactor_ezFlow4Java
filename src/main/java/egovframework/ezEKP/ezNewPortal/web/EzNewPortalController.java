@@ -104,8 +104,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 탑메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do")
-	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalTopMenu Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/menus/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		String status = resultBody.get("status").toString();
+
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+		}
+		
+		
 		logger.debug("portalTopMenu End");
 		return "/ezNewPortal/newPortalTopMenu";
 	}

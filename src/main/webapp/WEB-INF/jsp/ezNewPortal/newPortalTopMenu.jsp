@@ -22,7 +22,11 @@
 	<body>
 	<header>
 		<ul class="contentlayout">
-			<li class="contentlayout_left">로고</li>
+			<li class="contentlayout_left">
+				<div class="logo">
+					<img src="/files/upload_portal/S907000/Logo/logo.gif" style="cursor:pointer" onclick="OpenWindow(event, &quot;/ezPortal/myPortal.do&quot;, &quot;main&quot;, &quot; &quot;)" width="106" height="42">
+				</div>
+			</li>
 			<li class="contentlayout_right">유틸메뉴</li>
 			<li class="contentlayout_none">
 				<ul class="contentlayout topmenu">

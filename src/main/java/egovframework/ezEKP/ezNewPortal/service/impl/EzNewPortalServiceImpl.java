@@ -112,6 +112,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return answerList;
 	}
 	
+	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception {
+		LOGGER.debug("[Service] getPortalLogoInfo started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("logoType", logoType);
+		LOGGER.debug("[Service] getPortalLogoInfo ended");
+		return ezNewPortalDAO.getPortalLogoInfo(map);
+	}
+	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");

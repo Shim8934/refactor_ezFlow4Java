@@ -29,14 +29,22 @@ var pollPlus = function () {
 	window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + top + ",left=" + left, "");
 }
 
+var nodata = function () {
+	var str = '<dl class="nodata"><dt><img src="/images/ezNewPortal/nodata.png"></dt><dd>'+ messages.strLang1 +'</dd></dl>';
+	document.getElementById('pollInfo').innerHTML = str;
+}
+
 var assemblePollList = function (poll) {
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
-	document.getElementById('pollList').innerHTML = '';
+	
+	// document.getElementById('pollList').innerHTML = '';
 	
 	var answerList = poll.answerList;
 	var str = '';
 	
+	str += '<p class="pollTitle" id="pollTitle"></p>';
+	str += '<p class="pollBtn" id="pollBtn">참여</p>';	
+	str += '<div class="pollList">';
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {
 			var percentage = 0;
@@ -52,8 +60,9 @@ var assemblePollList = function (poll) {
 			str += '</li>';
 		}
 	}
-	document.getElementById('pollList').innerHTML = str;
-	
+	str += '</div>';
+	document.getElementById('pollInfo').innerHTML = str;
+	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
 	document.getElementById('pollBtn').addEventListener('click', joinPoll);
 	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 };
@@ -64,7 +73,12 @@ var getPollPortletList = function () {
 	xhr.onload = function () {
 		if (xhr.status >= 200 && xhr.status < 300) {
 			var poll = JSON.parse(xhr.responseText).poll;
-			assemblePollList(poll);
+			
+			if(poll === undefined) {
+				nodata();
+			} else {
+				assemblePollList(poll);	
+			}
 		} else {
 			console.error(xhr.responsText);	
 		}
