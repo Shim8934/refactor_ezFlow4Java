@@ -989,6 +989,8 @@
 			    parameter[1] = "HeSong";
 			    parameter[2] = KuyjeType;
 			    parameter[3] = "";
+			    
+			    parameter[98] = companyID;
 			
 			    if (pDocSN != "")
 			        parameter[4] = "Y";
