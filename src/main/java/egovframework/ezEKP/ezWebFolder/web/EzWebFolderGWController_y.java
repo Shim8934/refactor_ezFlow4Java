@@ -74,7 +74,7 @@ public class EzWebFolderGWController_y {
 	public JSONObject checkRootFolder(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("checkRootFolder started.");
 		
-		String serverName = orElse(request.getHeader("host-name"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
 		LOGGER.debug("userId: " + userId + " || serverName: " + serverName);
 		
 		JSONObject result = new JSONObject();
