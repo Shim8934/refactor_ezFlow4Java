@@ -40,12 +40,19 @@
 	var photoBoardPage = 1;
 	var photoCount = 4;
  	var nowAttiTime = "";
+ 	var beforeAlertDate = "";
+	var afterAlertDate = "";
+	var overTime = "";
  	var serverTime = "<c:out value='${serverTime}'/>";
  	var birthdayMonth = Number("<c:out value='${nowMonth}'/>");
  	var birthdayCurPage = 0;
  	var birthdayTotalCount = 0;
  	var timer;
 	
+ 	$(document).on("pageload",function(){
+ 		window.location.reload(true);
+ 	});
+
 	$(function() {
 		$("#featured").orbit();
 		
@@ -60,7 +67,7 @@
 			$(".portlet_area").append(strHTML);
 			
 			//해당 포틀릿 관련 js 추가
-			var head = document.getElementsByTagName("head")[0];
+			/* var head = document.getElementsByTagName("head")[0];
 			var js = document.createElement("script");
 			js.type = "text/javascript";
 			
@@ -70,7 +77,7 @@
 				js.src = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
 			}
 			
-			head.appendChild(js);
+			head.appendChild(js); */
 		}
 		
 		for (var i = 0; i < portletCount; i++) {
@@ -198,12 +205,40 @@
 	
 	function eventSetting(portletId) {
 		if (portletId == 4) { //투표
-			$("#votePlus").on("click", viewQstList);
-			$(".voteBtn").on("click", votePoll);
+			var url = "/js/ezNewPortal/portlets/votePortlet.js";
+			
+			$.getScript(url)
+			.done(function(script, textStatus) {
+				try {
+					$("#" + portletId + "Portlet").find("#votePlus").on("click", viewQstList);
+					$("#" + portletId + "Portlet").find(".voteBtn").on("click", votePoll);
+				} catch(err) {
+					console.log(err);
+					alert("에러가 발생하였습니다.");
+				}
+			})
+			.fail(function(jqxhr, settings, exception) {
+				console.log(exception);
+				alert("에러가 발생하였습니다.")
+			});
 		} else if (portletId == 9) { //포토게시판
-			$(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
-			$(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
-			$("#photoBoardPlus").on("click", viewPhotoBoardList);
+			var url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
+		
+			$.getScript(url)
+			.done(function(script, textStatus) {
+				try {
+					$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
+					$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
+					$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);
+				} catch(err) {
+					console.log(err);
+					alert("에러가 발생하였습니다.");
+				}
+			})
+			.fail(function(jqxhr, settings, exception) {
+				console.log(exception);
+				alert("에러가 발생하였습니다.")
+			});
 		} else if (portletId === 10) {
 			getTabList();
 		} else if (portletId === 12) { // 도움말
@@ -334,7 +369,7 @@
 					for (var i = 0; i < resultCount; i++) {
 						var userBirthday = birthdayList[i].userBirthday.substring(5);
 						
-						strHTML += "<li>";
+						strHTML += "<li id='B" + birthdayList[i].userId + "'>";
 						strHTML += "<dl class='birthListDL'>";
 						strHTML += "<dt class='birthPic'>";
 						strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
@@ -346,6 +381,11 @@
 					}
 					
 					$("#userList").html(strHTML);
+					
+					for (var i = 0; i< resultCount; i++) {
+						var userInfo = birthdayList[i];
+						$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+					}
 				} else {
 					$("#nodata_NewBirth").css("display", "");
 					$("#birthcont").css("display", "none");
@@ -362,6 +402,16 @@
 				alert("오류가 발생하였습니다.");
 			}
 		});
+	}
+	
+	function openUserInfo(event) {
+		var userId = event.data.userId;
+		var heigth = window.screen.availHeight;
+    	var width = window.screen.availWidth;
+    	var left = (width - 500) / 2;
+    	var top = (heigth - 400) / 2;
+    	
+    	window.open("/ezCommon/showPersonInfo.do?id=" + userId, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	}
 	
 	function getMonthlyBestEmployee() {
@@ -410,6 +460,11 @@
 		}
 		.mainbg {
 			min-width : 1280px;
+		}
+		
+		#userList li {
+			cursor : pointer;
+			display: block;
 		}
 	</style>
 </head>
