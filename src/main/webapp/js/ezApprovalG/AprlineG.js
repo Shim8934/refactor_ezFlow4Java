@@ -1000,12 +1000,16 @@ function CheckSignCellValueLast() {
     var pCurHapyui = 0;			//협조 결재참가자수
     // 수정(2005.08.25) : 사전감사 기능 추가
     var pCurGamsa = 0;			//사전감사 결재참가자수
-
+    // 2018-10-15 배현상, 대결 다음 결재자가 확인이 오는 오류 수정
+    var pCurWhoakin = 0;
+    
     var i;
     var pCurSignFlag = false;	//결재, 전결, 대결 뒤에 검토가 오는지 확인.
     var pCurHSignFlag = false;	//결재, 전결, 대결 뒤에 협조가 오는지 확인.
     // 수정(2005.08.25) : 사전감사 기능 추가
     var pCurGamsaFlag = false;	//결재, 전결, 대결 뒤에 사전감사가 오는지 확인.
+    // 2018-10-15 배현상, 대결 다음 결재자가 확인이 오는 오류 수정
+    var pCurWhoakinFlag = false;
 
     //var pFirstAprType = AprLineRow.item(CurListLen - 1).cells(4).innerText;
     //var pFirstAprType = AprLineRow.item(CurListLen - 1).cells(0).DATA11;
@@ -1043,6 +1047,10 @@ function CheckSignCellValueLast() {
             // 수정(2005.08.25) : 사전감사가 대결 뒤에 오는지 체크
             if (pCurGamsa > 0)
                 pCurGamsaFlag = true;
+            if (pCurWhoakin > 0) {
+            	//2018-10-12 배현상, 최종결재자 직전에 결재자가 대결인 경우 최종결재자의 결재유형이 확인이 올 수 있는 경우 제거
+            	pCurWhoakinFlag = true;
+            }
         }
             //else if(AprLineRow.item(i).cells(0).DATA11 == strAprType4)
         else if (GetAttribute(AprLineRow[i], "DATA11") == strAprType4) {
@@ -1055,7 +1063,10 @@ function CheckSignCellValueLast() {
             if (pCurGamsa > 0)
                 pCurGamsaFlag = true;
         }
-            //		else if(AprLineRow.item(i).cells(0).DATA11 == strAprType9 || AprLineRow.item(i).cells(0).DATA11 == strAprType8 || AprLineRow.item(i).cells(0).DATA11 == strAprType11 || AprLineRow.item(i).cells(0).DATA11 == strAprType12) 
+        else if (GetAttribute(AprLineRow[i], "DATA11") == strAprType2) {
+        	//2018-10-12 배현상, 최종결재자 직전에 결재자가 대결인 경우 최종결재자의 결재유형이 확인이 올 수 있는 경우 제거
+        	pCurWhoakin = pCurWhoakin + 1;
+        }
         else if (GetAttribute(AprLineRow[i], "DATA11") == strAprType9 || GetAttribute(AprLineRow[i], "DATA11") == strAprType8 || GetAttribute(AprLineRow[i], "DATA11") == strAprType11 || GetAttribute(AprLineRow[i], "DATA11") == strAprType12)
             pCurHapyui = pCurHapyui + 1;
     }
@@ -1111,7 +1122,11 @@ function CheckSignCellValueLast() {
     if (pCurGamsaFlag) {
         pAlertContent = pAlertContent + "" + strLang361 + "<br> ";
     }
-
+    
+    if (pCurWhoakinFlag) {
+    	pAlertContent = pAlertContent + "" + strLangBae2 + "<br> ";
+    }
+    
     if (pFirstAprType != strAprType18 && pFirstAprType != strAprType1 && pFirstAprType != strAprType4 && pFirstAprType != strAprType16)
         pAlertContent = pAlertContent + "" + strLang362 + "" + ConvertAprLineType(pFirstAprType, "Value") + "" + strLang363 + "<br> ";
 
