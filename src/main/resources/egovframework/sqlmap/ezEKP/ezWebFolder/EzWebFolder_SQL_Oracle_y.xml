@@ -150,7 +150,7 @@
 				folder.FOLDER_ID    AS FILE_ID 	    ,     
 				folder.FOLDER_NAME1 AS FILE_NAME	,     
 				folder.FOLDER_PATH  AS FILE_PATH	,     
-				'0'					AS FILE_SIZE	,     
+				0					AS FILE_SIZE	,     
 				'folder'			AS TYPE_ID		, 	  
 				0 					AS DOWN_COUNT   ,     
 				'folder'            AS FILE_EXT     ,     

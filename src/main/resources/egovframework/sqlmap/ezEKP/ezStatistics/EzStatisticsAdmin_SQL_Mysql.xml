@@ -671,7 +671,9 @@
                         AND 
                         	CONNECTTIME < #endDate# 
                        	AND
-                       		COMPANYID = #company# ) TOTAL  
+                       		COMPANYID = #company#
+                       	AND
+                       		TENANT_ID = #tenantID# ) TOTAL  
               	  FROM 
               	  		TBL_CONNECTION_INFO 
             	  WHERE  
@@ -680,6 +682,8 @@
                    		CONNECTTIME < #endDate#
                   AND
                     	COMPANYID = #company#
+                  AND
+                    	TENANT_ID = #tenantID#
            	      GROUP BY 
            	      		DATE_FORMAT(CONNECTTIME, '%H')
            	      
@@ -694,6 +698,8 @@
            	      	  TBL_CONNECTION_INFO
            	      WHERE
            	      	  COMPANYID = #company# 
+           	      AND
+           	      	  TENANT_ID = #tenantID#
            	      GROUP BY 
            	      	  DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') ) A
         	ORDER BY 
@@ -716,7 +722,9 @@
                   AND 
                   	 CONNECTTIME < #endDate# 
                   AND
-                  	 COMPANYID = #company#) TOTAL  
+                  	 COMPANYID = #company#
+                  AND
+                  	 TENANT_ID = #tenantID#) TOTAL  
 			FROM 
         	    TBL_CONNECTION_INFO 
       		WHERE  
@@ -725,6 +733,8 @@
             	CONNECTTIME < #endDate#
             AND
             	COMPANYID = #company#
+            AND
+            	TENANT_ID = #tenantID#
       		GROUP BY 
       			CONNECTBROWSER
         	ORDER BY 
@@ -747,7 +757,9 @@
                   AND 
                   	  CONNECTTIME < #endDate# 
                   AND
-                    	COMPANYID = #company#) TOTAL  
+                    	COMPANYID = #company#
+                  AND
+                    	TENANT_ID = #tenantID#) TOTAL  
             FROM 
             	TBL_CONNECTION_INFO 
        		WHERE  
@@ -756,6 +768,8 @@
             	CONNECTTIME < #endDate#
             AND
                	COMPANYID = #company#
+            AND
+               	TENANT_ID = #tenantID#
         	GROUP BY 
         		CONNECTOS
       
@@ -775,7 +789,9 @@
             AND 
             	CONNECTTIME < #endDate#
             AND
-                COMPANYID = #company#	
+                COMPANYID = #company#
+            AND
+                TENANT_ID = #tenantID#
       
       		UNION ALL
       		 
@@ -793,7 +809,9 @@
             AND 
             	CONNECTTIME < #endDate#
             AND
-                COMPANYID = #company#	
+                COMPANYID = #company#
+            AND
+                TENANT_ID = #tenantID#
         	ORDER BY 
         		TYPE DESC,
                 CONNECTCNT DESC ;

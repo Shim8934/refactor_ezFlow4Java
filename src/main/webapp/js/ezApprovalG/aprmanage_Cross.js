@@ -12,7 +12,7 @@ function getDocList() {
     if (typeof (psearch) == "object")
         document.getElementById("psearch").style.display = "none";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -97,11 +97,23 @@ function getDocList_after(xml) {
     
     totalPage = Math.ceil(new Number(lstCnt / pageSize));
     pTotalCnt = lstCnt;
+    
+    //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+    if (totalPage <= 0)
+    	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
+    
     if (pageNum > totalPage) {
         pageNum--;
         getDocList();
         return;
     }
+    
+	// 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+    var preDocList = new ListView();
+   	preDocList.LoadFromID('DocList');
+   	var preSelectedRow = preDocList.GetSelectedRows();
+   	
+   	console.log('preSelectedRow', preSelectedRow);
 
     makePageSelPage();
 
@@ -117,7 +129,7 @@ function getDocList_after(xml) {
         xmlDoc = createXmlDom();
         xmlDoc.appendChild(listNode);
     }
-
+   
     if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
     //if (pListTypeValue == "21") {
     //    var listcnt = SelectNodes(xmlDoc, "LISTVIEWDATA/ROWS/ROW").length;
@@ -127,6 +139,7 @@ function getDocList_after(xml) {
     //        GetChildNodes(row, "VALUE")[4].textContent = GetChildNodes(row, "VALUE")[5].textContent.trim();
     //    }
     //}
+    
     var DocList = new ListView();
     DocList.SetID("DocList");
     DocList.SetMulSelectable(false);
@@ -137,8 +150,21 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
+    
+    // 리스트를 닫기 전에 미리 선택한 row로 재선택
+    if (selRowChangeFlag && preSelectedRow.length > 0) {
+    	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+    	selRowChangeFlag = false;
+    	var docListLength = DocList.GetRowCount() - 1;
+    	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+    	if (docListLength < preSelectedRow[0].getAttribute('id').split("_")[2]) {
+    		DocList.SetSelectedIndex(docListLength);
+    	} else {
+    		DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+    	}
+    }    
     DocList = null;
-
+    
     HiddenMailProgress();
 
     chkUrgent();
@@ -223,7 +249,7 @@ function getReceivedDocList(p_FormCd) {
     }
 
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -276,6 +302,10 @@ function getReceivedDocList_after(xml) {
         var lstCnt = getNodeText(cntNode);
         totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
+        
+        //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을 때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+        if (totalPage <= 0)
+        	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
 
         if (pageNum > totalPage) {
             pageNum--;
@@ -364,7 +394,7 @@ function getReceivedDocList_after(xml) {
 function getSendOutDocList() {    
     pSelMenu = "all";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -815,7 +845,7 @@ function openApprovUI(allFlag) {
         	if (isIE()) {
         		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
         		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	} else {
         		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
         		alert(pAlertContent);
@@ -826,7 +856,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode)+"&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -890,7 +920,7 @@ function InitlvAprLine() {
     }
 }
 
-function RemoveDoc(pDocID) {
+function RemoveDoc(pDocID, orgCompanyID) {
 	var result = "";
 	
     $.ajax({
@@ -900,7 +930,8 @@ function RemoveDoc(pDocID) {
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
 				docID : pDocID,
-				field  : "MUST"
+				field  : "MUST",
+				orgCompanyID : orgCompanyID 
 				},
 		success: function(xml){
 			result = xml;
@@ -1598,6 +1629,8 @@ function openergetDocInfo() {
     if (CallPage == "Left") return;
 
     try {
+    	//이전에 선택된 row를 유지하기 위한 Flag
+    	selRowChangeFlag = true;
         if (pListTypeValue == "6")
             getSimsaDocList();
         else if (pListTypeValue == "4")
@@ -2340,7 +2373,7 @@ function getSimsaDocList() {
     pageSize = "10";
     
     var manager;
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";

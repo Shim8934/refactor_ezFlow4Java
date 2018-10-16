@@ -426,6 +426,8 @@ function openOpinionUI(ret)
 	parameter[2] = KuyjeType; 
 	parameter[3] = pOrgDocID;
 	parameter[5] = window;
+	
+	parameter[98] = orgCompanyID;
     //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
     parameter[99] = "hwp";
     
@@ -618,6 +620,7 @@ function SaveApproveInfo(pApproveFlag)
 
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
+	createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 	
 	if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
@@ -748,7 +751,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
+			html  : HwpCtrl.GetCloneData("", "HWP"),
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;

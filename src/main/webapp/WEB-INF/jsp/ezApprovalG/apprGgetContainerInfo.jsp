@@ -428,8 +428,10 @@
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
 	    	   for(var i =0; i < returnvalue.length; i++) {
-					//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
-		        	//condition[i] = returnvalue[i];
+					if (returnvalue[i] == null) {
+						returnvalue[i] = "";
+					}
+					
 	    		    condition[i] = replaceCond(returnvalue[i]);
 		        }
 	    	   
@@ -598,7 +600,7 @@
 		                }
 		            }
 		            else {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN");
+		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN","");
 		                return "";
 		            }
 		        }

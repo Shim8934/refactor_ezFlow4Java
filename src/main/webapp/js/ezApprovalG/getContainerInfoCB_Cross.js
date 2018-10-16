@@ -182,6 +182,27 @@ function openUserInfo() {
 }
 
 function GetDocDeliveryList(g_DeliverySearchParamXml) {
+	if (g_isSearching) {
+    	var searchParamXml = loadXMLString(g_DeliverySearchParamXml);
+        var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
+        var endDate = SelectSingleNodeValue(searchParamXml.firstChild, "EREGDATE");
+        
+    	if (startDate == "") {
+    		var date = new Date();
+    		date.setFullYear(date.getFullYear() - 1);
+    		
+    		g_searchDate.startDate = date;
+    	} else {
+    		g_searchDate.startDate = new Date(startDate.replace(/-/g,'/'));
+    	}
+    	
+        if (endDate == "") {
+        	g_searchDate.endDate = new Date();
+        } else {
+        	g_searchDate.endDate = new Date(endDate.replace(/-/g,'/'));
+        }
+    }
+	
     DocListType = "DeliveryList";
     if (pChackYN == "FALSE") {
         curpage = 1;
@@ -201,8 +222,8 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     createNodeAndInsertText(xmlpara, objNode, "ISDOCPRINT", "FALSE");
     if (g_DeliverySearchParamXml != "" && g_DeliverySearchParamXml != undefined) {
         createNodeAndInsertText(xmlpara, objNode, "search", "1");
-            var oSParam = loadXMLString(g_DeliverySearchParamXml);
-            xmlpara.documentElement.appendChild(oSParam.documentElement);
+        var oSParam = loadXMLString(g_DeliverySearchParamXml);
+        xmlpara.documentElement.appendChild(oSParam.documentElement);
     }
     else {
         createNodeAndInsertText(xmlpara, objNode, "search", "0");

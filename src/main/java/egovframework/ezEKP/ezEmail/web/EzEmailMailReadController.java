@@ -626,6 +626,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
+        	
+		// 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
         
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -638,6 +646,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("deptId", userInfo.getDeptID());
 		model.addAttribute("Name", userInfo.getDisplayName());	
 		model.addAttribute("Id", userInfo.getId());
+		model.addAttribute("memoFlag", memoFlag);
 		
 		logger.debug("readMailContent ended.");
 		
@@ -1046,11 +1055,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
 			
 		int tenantId = Integer.parseInt(tenantIdStr);
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
-		String realPath = commonUtil.getRealPath(request);
-		pDirPath = realPath + pDirPath;
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", tenantId);
+		
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			pDirPath += commonUtil.separator + "largeFile";
+		}
+		
 		String realFilePath = pDirPath + commonUtil.separator + fileDate;
 			
 		try {
@@ -1711,13 +1727,23 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-        
+        		
+		// 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
+		
+		logger.debug("readMailContent ended.");
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("memoFlag", memoFlag);
 		
 		logger.debug("previewContent ended.");
 		

@@ -6,7 +6,7 @@ public class ShareVO {
 	private String folderFileType;
 	private String folderType;
 	private String filePosition;
-	private String fileSize;
+	private long fileSize;
 	private String fileExt;
 	private String folderPath;
 	private String ownerId;
@@ -58,10 +58,10 @@ public class ShareVO {
 	public void setFilePosition(String filePosition) {
 		this.filePosition = filePosition;
 	}
-	public String getFileSize() {
+	public long getFileSize() {
 		return fileSize;
 	}
-	public void setFileSize(String fileSize) {
+	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
 	public String getFileExt() {

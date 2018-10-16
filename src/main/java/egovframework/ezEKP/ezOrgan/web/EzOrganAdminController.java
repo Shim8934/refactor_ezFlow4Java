@@ -124,6 +124,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addAddJobMasterOrderBy();
     	ezCommonService.createTblIPAccessID();
     	ezCommonService.createTblIPAccessIP();
+    	ezCommonService.addUserMasterManualFlag();
+    	ezCommonService.addDeptMasterManualFlag();
     	
     	logger.debug("init ended.");
     }
@@ -249,10 +251,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		skipInitData = skipInitData != null ? skipInitData : "";
 		String operatorId = request.getParameter("operatorId");
 		operatorId = operatorId != null ? operatorId : "";
+		String manualFlag = request.getParameter("manualFlag");
+		manualFlag = manualFlag != null ? manualFlag : "N";
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
-				+ ",displayName2=" + displayName2 + ",mailId=" + mailId
-				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData + ",operatorId=" + operatorId);
+				+ ",displayName2=" + displayName2 + ",mailId=" + mailId + ",extensionAttribute15=" + extensionAttribute15 
+				+ ",skipInitData=" + skipInitData + ",operatorId=" + operatorId + ",manualFlag=" + manualFlag);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -348,7 +352,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
-									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
+									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, manualFlag, tenantID, userInfo);
 							
 							if (!operatorId.equals("")) {
 								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
@@ -2548,6 +2552,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// dhlee - end
 		
 		for (int i = 0; i < cn.length; i++) {
+			// 타 회사로의 퇴직자 복구 막음
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], "1", tenantID);
+			String userCompId = userVO.getPhysicalDeliveryOfficeName();
+			OrganDeptVO deptVO = ezOrganService.getDeptInfo(deptID, "1", tenantID);
+			String deptCompId = deptVO.getExtensionAttribute2();
+			
+			if (!deptCompId.equals(userCompId)) {
+				logger.debug("Restoration to other companies is not possible.");
+				logger.debug("userId=" + cn[i] + ",userCompId=" + userCompId + ",deptCompId=" + deptCompId);
+				logger.debug("restoreRetireUser ended. result=DIFF_COMPANY");
+				return "DIFF_COMPANY";
+			}
+			
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
 			

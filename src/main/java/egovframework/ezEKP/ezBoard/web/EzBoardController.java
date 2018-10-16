@@ -1,12 +1,16 @@
 package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,10 +20,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -48,9 +54,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
-
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -70,6 +73,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezMemo.service.EzMemoService;
+import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -128,6 +133,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "EzMemoService")
+	private EzMemoService ezMemoService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
@@ -229,6 +237,14 @@ public class EzBoardController extends EgovFileMngUtil{
         else {
         	ladderFlag = "NO";
         }
+        
+        // 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", tenantID).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
@@ -321,6 +337,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("useQuestion", useQuestion);
         modelMap.addAttribute("pollFlag", pollFlag);
         modelMap.addAttribute("ladderFlag", ladderFlag);
+        modelMap.addAttribute("memoFlag", memoFlag);
         
 		logger.debug("boardLeft ended");
 
@@ -391,7 +408,17 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         //end
         
+        // 2018-08-06 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        }
+        else {	// 개발 끝나면 NO로 변경
+        	memoFlag = "NO";
+        }
+        
         modelMap.addAttribute("pollFlag", pollFlag);
+        modelMap.addAttribute("memoFlag", memoFlag);
 
 		return "ezBoard/boardConfig";
 	}
@@ -597,6 +624,72 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	//end
 	
+	
+	
+	/**
+	 * 게시판 메모 환경설정 호출
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoSetting.do", method = RequestMethod.GET)
+	public String boardMemoSetting(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardMemoSetting started");	
+		userInfo = commonUtil.userInfo(loginCookie); 
+		
+		MemoConfigVO memoConfigVO = new MemoConfigVO();
+		memoConfigVO.setUser_id(userInfo.getId());
+		memoConfigVO.setTenant_id(userInfo.getTenantId());
+		memoConfigVO.setCompany_id(userInfo.getCompanyID());
+		
+		memoConfigVO = ezMemoService.getMemoConfig(memoConfigVO);
+		
+		model.addAttribute("memoConfigVO", memoConfigVO);
+		
+		logger.debug("boardMemoSetting ended");
+		return "ezBoard/boardMemo";	
+	}
+	
+	
+	/**
+	 * 게시판 메모 환경설정 저장
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param request
+	 * @param response
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoConfigSave.do", method = RequestMethod.POST)
+	public String boardMemoConfigSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, MemoConfigVO memoConfigVO) throws Exception {
+		logger.debug("boardMemoConfigSave started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		memoConfigVO.setUser_id(userInfo.getId());
+		memoConfigVO.setTenant_id(userInfo.getTenantId());
+		memoConfigVO.setCompany_id(userInfo.getCompanyID());
+		
+		ezMemoService.setMemoConfig(memoConfigVO);
+		logger.debug("boardMemoConfigSave ended");
+		return "json";
+	}
+	
+	/**
+	 * 게시판 환경설정 메모 분류 호출
+	 * @param loginCookie
+	 * @param userInfo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezBoard/boardMemoDivision.do", method = RequestMethod.GET)
+	public String boardMemoDivision(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardMemoDivision started");	
+		logger.debug("boardMemoDivision ended");
+		return "ezBoard/boardMemoDivision";	
+	}
 	/**
 	 * 게시판 부모게시판명 표출 Method
 	 */
@@ -3479,6 +3572,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardType = "";
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String browser = ClientUtil.getClientInfo(request, "browser");
+		String orgCompanyID = request.getParameter("orgCompanyID");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
@@ -3509,6 +3603,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (request.getParameter("reservedItem") != null) {
 			reservedItem = request.getParameter("reservedItem");
+		}
+		
+		if (orgCompanyID == null) {
+			orgCompanyID = "";
 		}
 		
 		String newGuid = UUID.randomUUID().toString();
@@ -3677,6 +3775,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -7847,6 +7946,108 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("getSearchApprListItemXML ended");
 		return resultXML.toString();		
+	}
+	
+	/**
+	 * 2018-10-11 홍승비 - 모두저장(압축파일 내려받기)
+	 */
+	@RequestMapping(value="/ezBoard/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String filePath = request.getParameter("filePath");
+		String fileNames = request.getParameter("fileNames");
+		String fileNamesUID = request.getParameter("fileNamesUID");
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		String tempFileUploadPath = realPath + uploadFilePath + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String fullFilePath = realPath + filePath;
+		int bufferSize = 4096;
+
+		logger.debug("fullFilePath : " + fullFilePath);
+		logger.debug("fileNames : " + fileNames);
+		
+		ZipOutputStream zos = null;
+		String downFileName = "";
+		
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			tempFile = new File(tempFileUploadPath);
+			
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			
+			String[] fileNamesArr = fileNames.split(":");
+			String[] fileNamesUIDArr = fileNamesUID.split(":");
+			
+			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
+			
+			if (fileNamesArr.length != 0) {// 파일이 있으면
+				for (int i = 0; i < fileNamesArr.length; i++) { //파일 길이만큼
+					BufferedInputStream bis = null;
+					
+					try {
+						File sourceFile = new File(fullFilePath + fileNamesUIDArr[i]);
+				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
+				        ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+				        zos.putNextEntry(zentry);
+				        
+				        byte[] buffer = new byte[bufferSize];
+				        int cnt = 0;
+				        while ((cnt = bis.read(buffer, 0, bufferSize)) != -1) {
+				            zos.write(buffer, 0, cnt);
+			        }
+			        zos.closeEntry();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				zos.flush();
+				zos.close();
+				zos = null;
+	
+				File file = new File(pDirTempPath + ".zip");
+				
+				if (file.exists()) {
+					downFile(request, response, pDirTempPath + ".zip", downFileName);
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		logger.debug("downloadAttachAll ended.");
 	}
 
 }

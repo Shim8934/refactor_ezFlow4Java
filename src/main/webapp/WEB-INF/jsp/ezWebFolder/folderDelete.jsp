@@ -50,13 +50,17 @@
 				async: false,
 				success : function(data) {
 					var reason = data.status;
-					
-					if (reason == "ok") {
+					var code = data.code;
+					if (code == "0") {
 						wClose();
+						alert("<spring:message code='ezWebFolder.t280'/>");
 						ReturnFunction(folderId);
-						alert("<spring:message code='ezWebFolder.t280'/>")
+					} else if (code == "4") {
+						wClose();
+						alert("<spring:message code='ezWebFolder.t401'/>");
 					} else {
-						alert("<spring:message code='ezWebFolder.t113'/>");
+						wClose();
+						alert("<spring:message code='ezWebFolder.t114'/>");
 						afterDeleteSuccess();
 					}
 				},
