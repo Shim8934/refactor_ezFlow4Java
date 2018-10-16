@@ -44,29 +44,64 @@
 			displayname2 = document.getElementById("displayname2").value;
 			content = window.message.GetEditorContent();
 			
-			var url = "/admin/ezEmail/setSignatureTemplate.do?displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
+			var disName1Chk = strChk(displayname);
+			var disName2Chk = false;
 			
-			if (type == "modify") {
-				url += "&signNo=" + signNo + "&type=" + type;
+			if (disName1Chk) {
+				disName2Chk = strChk(displayname2);
 			} else {
-				url += "&type=" + type;
+				return;
+			} 
+			
+			if (disName1Chk && disName2Chk) {
+				var url = "/admin/ezEmail/setSignatureTemplate.do?displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
+				
+				if (type == "modify") {
+					url += "&signNo=" + signNo + "&type=" + type;
+				} else {
+					url += "&type=" + type;
+				}
+				
+				$.ajax({
+	        		type : "POST",
+	        		url : url,
+	        		datatype : 'json',
+	        		error : function(data) {
+	        			alert("error");
+	        			console.log(data);
+	        		},
+	        		complete : function(data) {
+	        			alert("저장하였습니다.");
+	        			window.close();
+	        			$(opener.document).find("#signList *").remove();
+	        			opener.signatureTemplateView();
+	        	    }
+	        	});
+			}
+		}
+		
+		// 템플릿명 체크
+		function strChk(txt) {
+			var strTrim = txt.trim();
+			
+			//var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
+			
+			if (strTrim == '' || strTrim.length == 0) {
+				alert("서명 템플릿명을 입력해주세요.");
+				return;
 			}
 			
-			$.ajax({
-        		type : "POST",
-        		url : url,
-        		datatype : 'json',
-        		error : function(data) {
-        			alert("error");
-        			console.log(data);
-        		},
-        		complete : function(data) {
-        			alert("저장하였습니다.");
-        			window.close();
-        			$(opener.document).find("#signList *").remove();
-        			opener.signatureTemplateView();
-        	    }
-        	});
+			if (txt.length > 50) {
+				alert("템플릿명은 최대 50자를 넘을 수 없습니다.");
+				return;
+			}
+			
+			/* if (speCha.test(strTrim)) {
+				alert("템플릿명을 정확히 입력해주세요.");
+				return;
+			} */
+			
+			return true;
 		}
 		
 		// editor onload 됐을때
