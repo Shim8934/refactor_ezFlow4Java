@@ -395,6 +395,41 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .voteList .voteList_04 .voteGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff;}
 .voteList .voteList_04 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
 
+/* poll */
+.poll{ overflow:hidden;}
+.pollTitle{ margin:0px 10px;; padding:10px 0px; text-align:left; font-size:13px; font-weight:bold; color:#333; letter-spacing:-0.5; float:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:80%;}
+.pollBtn{ margin:7px 10px 0px 0px; padding:2px 10px; float:right; font-size:12px; font-weight:bold; border:1px solid #bbb; background:line-gradient; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; cursor:pointer; color:#333;}
+.pollList{margin:0px 10px; padding:3px 0px; list-style:none; clear:both; overflow:hidden; border-top:1px solid #e3e3e3; }
+.pollList li{ margin:0px 0px; padding:9px 0px;}
+.pollList .pollList_01{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.pollList .pollList_01 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_01 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0470e4; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_01 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_01 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_01 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0470e4;}
+.pollList .pollList_01 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollList .pollList_02{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.pollList .pollList_02 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_02 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#81bc3d; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_02 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_02 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_02 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#81bc3d;}
+.pollList .pollList_02 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollList .pollList_03{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.pollList .pollList_03 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_03 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_03 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_03 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_03 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900;}
+.pollList .pollList_03 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollList .pollList_04{overflow:hidden; height:20px; line-height:20px;}
+.pollList .pollList_04 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_04 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_04 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_04 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_04 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff;}
+.pollList .pollList_04 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+
 /* photo_board */
 .photo_board{}
 .photo_board .nextBtn{ margin:0px; padding:0px; float:right; cursor:pointer;}
