@@ -338,3 +338,175 @@ function viewPortletEnv() {
 	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
 		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
+
+//근태관리 연동
+function getAttitudeList() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezAttitude/getAttitudeList.do",
+		data : {},
+		success : function(result) {
+			for (var i = 0; i < result.length; i++) {
+				if (result[i].typeId == "A01") {
+ 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#inAttiBtn").removeClass("out").addClass("in");
+					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+				} else if (result[i].typeId == "A02") {
+					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#inAttiBtn").removeClass("out").addClass("lateIn");
+					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+				} else if (result[i].typeId == "A03") {
+					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#outAttiBtn").removeClass("out").addClass("in");
+					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+				}
+			}
+		}
+	})
+}
+
+//시간놓고 alert내용을 파라미터로 던져서 체크??
+function addAttitude(obj) {
+	var pTypeId = obj.getAttribute("type");
+	var pDateType = obj.getAttribute("datetype");
+	if (pTypeId == "A03") {
+		var returnValue = getIsAttitude("A01");
+		if (returnValue == 0) {
+			alert("출근 후 퇴근이 가능합니다.");
+    		return;
+		} else {
+			getAttitudeList();
+		}
+	}
+	
+	beforeAlertDate = new Date();
+	var dateAlert = nowAttiTime.getFullYear() + "년 " + (nowAttiTime.getMonth() + 1) + "월 " + (nowAttiTime.getDate()) + "일 " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+	var saveFlag = confirm("현재 시각은 " + dateAlert + "입니다.");
+	if (!saveFlag) {
+		afterAlertDate = new Date();
+		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		return;
+	} 
+	$.ajax({
+		type : "POST",
+		async : true,
+		url : "/ezAttitude/attitudeSave.do",
+		data : {
+			typeId : pTypeId,
+			dateType : pDateType,
+			mode : "new"
+		},
+		success : function(result) {
+			getAttitudeList();
+		},
+		complete : function() {
+			afterAlertDate = new Date();
+    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		}
+	})
+}
+
+function getHolidayList() {
+	$.ajax({
+		type:"POST",
+		dataType : "json",
+		async : true,
+		url : "/ezAttitude/getHolidayList.do",
+		data : {
+			//isRest : "rest"
+		},
+		success : function(result) {
+			for (var i = 0; i < result.holidayList.length; i++) {
+				if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+					memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+													  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+													  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+				} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+					yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+															  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+															  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+															  result.holidayList[i].isRest == 1 ? true : false));
+				}
+			}
+			closedDay = result.attitudeConfigVO.closedDay.split(",");
+		}
+	});
+}
+
+//휴일 체크
+function checkHoliday(obj) {
+	var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
+	var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
+	var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+	var addAttitude = true; // true 등록 가능
+	
+	if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+		addAttitude = false;				
+	} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+		if (todayMemorialDayList.length != 0 ) {
+			for (var i = 0; i < todayMemorialDayList.length; i++) {
+				if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+					addAttitude = false;
+				}
+			}
+		} 
+		if (todayYearMemorialDayList.length != 0) {
+			for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+				if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+					addAttitude = false;
+				}
+			}
+		}
+	}
+	
+	if(addAttitude) {
+		checkAttitude(obj);
+	} else {
+		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
+	}
+}
+
+//근태 중복 체크
+	function checkAttitude(obj) {
+	var returnValue = getIsAttitude(obj.getAttribute("type"));
+	
+	if (returnValue == 0) {
+		addAttitude(obj);
+	} else {
+		alert("조퇴 후 퇴근은 불가능합니다.");
+		getAttitudeList();
+		try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+	}
+	}
+
+function getIsAttitude(typeId) {
+	var isAttitudeReturn = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezAttitude/getIsAttitude.do",
+		data : {
+			typeId : typeId
+		},
+		success : function(result) {
+			isAttitudeReturn = result;
+		},
+		complete : function() {
+			
+		}
+	})
+	return isAttitudeReturn;
+}
+
+function setAttiBtnHover() {
+	$("#inAttiBtn, #outAttiBtn").hover(function(){
+		$(this).addClass("btn_hover");
+	}, function(){
+		$(this).removeClass("btn_hover");
+	})
+}

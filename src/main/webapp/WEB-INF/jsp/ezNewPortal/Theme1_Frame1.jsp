@@ -22,6 +22,7 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 <!-- 종균 시작-->
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
@@ -83,6 +84,9 @@
 		//근태관리 연동
 		parseDate();
 		attiClock();
+		setAttiBtnHover();
+		getAttitudeList();
+		getHolidayList();
 		
 		//생일자 조회 기능 연동
 		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);
