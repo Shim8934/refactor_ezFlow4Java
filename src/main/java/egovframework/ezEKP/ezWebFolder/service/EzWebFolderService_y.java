@@ -14,13 +14,23 @@ public interface EzWebFolderService_y {
 	
 	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception;
 	
-	// 파일리스트
+	// 파일리스트(루트폴더일 경우 모든 파일 가져옴)
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
 			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
 			int pStart, int pEnd, String offset, String primary) throws Exception;
 	
-	// 파일리스트의 총 개수 가져오는 메서드
+	// 파일리스트
+	List<FileVO> getFileList2(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
+			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
+			int pStart, int pEnd, String offset, String primary) throws Exception;
+	
+	// 파일리스트의 총 개수 가져오는 메서드(루트폴더일 경우 모든 파일의 개수 가져옴)
 	Map<String, Integer> getFileToTalCount(String folderId, String userId, String deptId, int tenantId, String parameter,
+			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
+			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
+
+	// 파일리스트의 총 개수 가져오는 메서드
+	Map<String, Integer> getFileToTalCount2(String folderId, String userId, String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
 
