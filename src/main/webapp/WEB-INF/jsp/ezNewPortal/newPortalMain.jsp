@@ -6,6 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
