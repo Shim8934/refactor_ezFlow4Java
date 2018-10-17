@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -481,6 +482,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getMonthlyBestEmployee ended.");
 		return portalUserInfo;
 	}
+
+	@Override
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId) {
+		LOGGER.debug("getUserThemeList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("getUserThemeList ended.");
+		return ezNewPortalDAO.getUserThemeList(map);
+	}
+	
 	/**
 	 * 이효진
 	 */
@@ -560,6 +573,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return result;
 	}
+	
 	/** -------------------- */
 
 	@Override

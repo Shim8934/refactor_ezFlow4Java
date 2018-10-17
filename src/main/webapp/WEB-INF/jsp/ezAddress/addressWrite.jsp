@@ -542,7 +542,7 @@
 		    </tr>
 		    <tr style="height:74px;">
 		      <th style="height:74px;"><spring:message code='ezAddress.t91' /></th>
-		      <td colSpan="3" style="height:74px;"><textarea id="TextMemo" name="TextMemo" style="width:100%;height:69px;word-break:break-all;" class="txtClass"><c:out value="${addressInfo.sMemo}"></c:out> </textarea></td>
+		      <td colSpan="3" style="height:74px;"><textarea id="TextMemo" name="TextMemo" style="width:100%;height:69px;word-break:break-all;resize: none;" class="txtClass"><c:out value="${addressInfo.sMemo}"></c:out> </textarea></td>
 		    </tr>
 		    <tr style="display:none;height:62px;">
 		      <th><spring:message code='ezAddress.t298' /></th>

@@ -96,7 +96,7 @@
 			    var personpicture_cross_dialogArguments = new Array();
 			    
 			    function btnPhoto_onclick() {
-			        var wWeight = "400";
+			        var wWeight = "474";
 			        var wHeight = "280";
 	
 			        var heigth = window.screen.availHeight;
@@ -107,12 +107,12 @@
 	
 			        if (CrossYN()) {
 			            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
-			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(405, 280));
+			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(474, 280));
 			            try { OpenWin.focus(); } catch (e) { }
 			        }
 			        else {
 			            var ret;
-			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:474px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
 			            window.location.reload(true);
 			        }
 			    }

@@ -143,7 +143,7 @@
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/saveCompanyInfo.do",
 		        	async : false,
-		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId , operatorId: operatorID.value},
+		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId, operatorId : operatorID.value, manualFlag : "Y"},
 		        	success : function(result){
 		        		 var retVal = result;
 		        		 

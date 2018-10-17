@@ -7,62 +7,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript">
-var clubNo = "";
-var CommuSize = "${CommuSize}";
-for (var i=1; i < CommuSize; i ++) {	
-	clubNo = $('.comListDL0'+i).attr('data1');
-	
-	$('.comListDL0'+i).on("click",{ iClubNo : clubNo }, view_bestCommunity);
-}
-
-function view_bestCommunity(event) {
-	var clubType = "";
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : true,
-		url : "/ezNewPortal/getCommunityPermit.do",
-		data : {
-				clubNo	:	event.data.iClubNo,
-			   },
-		success: function(result){
-			clubType = result;
-		}
-	});
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : true,
-		url : "/ezCommunity/remote/getACL.do",
-		data : { cID	:	clubNo,
-				 uID	:	"${userinfo.userId}"
-		},
-		success: function(result){
-			
-			if (result == "ERR" || clubType == "1") {
-				OpenAlertUI("<spring:message code='main.t1004'/><br><spring:message code='main.t1005'/>", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
-			} else {
-				var wWeight = "1300";
-                var wHeight = "900";
-
-                var heigth = window.screen.availHeight;
-                var width = window.screen.availWidth;
-
-                var left = (width - wWeight) / 2;
-                var top = (heigth - wHeight) / 2 - 30;
-
-                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
-			}
-		}
-	});
-}
-</script>
 </head>
 <body>
 <div class="layDIV">
+	<input type="hidden" id="CommuSize" value="${CommuSize}">
     <dl class="portlet_title sortablePortlet">
         <dt class="portletText"><c:out value="${portletName }"/></dt>
         <dd class="portletPlus" id="communityPlus"><img src="/images/kr/main/portlet_Plus.png"></dd>

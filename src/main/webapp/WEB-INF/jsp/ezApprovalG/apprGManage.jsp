@@ -101,8 +101,8 @@
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
-		   
 		    var currentpage = 1;
+		    var selRowChangeFlag = false;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -169,7 +169,6 @@
 	            }
 
 	            if (beforeJob != pListTypeValue) {
-		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
 		        if (arr_userinfo[10] == "YES" || arr_userinfo[10] == "Y")
@@ -670,6 +669,12 @@
 		        }
 		        
 		        var pCurSelRow = oArrRows[0];
+		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
 		            //OpenAlertUI(pAlertContent);
@@ -736,7 +741,7 @@
 		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
 		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
 		            else
-		                RemoveDoc(pCurSelRow.getAttribute("DATA1"));
+		                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 		            if (pListTypeValue == "4")
 		                getReceivedDocList();
 		            else if (pListTypeValue == "6")
@@ -1090,6 +1095,8 @@
 		    function passValLeftMenu(strVal) {
 		        pageNum = 1;
 		        SQLPARADATA = "";
+		        //2018-10-11 배현상, 검색조건인 SearchCont 초기화 작업이 미처리되있어 상단에 다른탭에서 검색한 날짜가 적용되있는 오류 수정
+		        SearchCond = new Array();
 		        pListTypeValue = strVal;
 		        window.parent.frames["left"].pListTypeValue = strVal;
 		        if (pListTypeValue == "7")
@@ -1352,7 +1359,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
 
-		        var wWeigth = 630;
+		        var wWeigth = 700;
 		        var wHeigth = 480;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -18,10 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,8 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
@@ -89,6 +88,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
 	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
 	/**
 	 * 포틀릿 - 공지사항
 	 */
@@ -124,14 +126,40 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}
 
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 받은메일
 	 */
 	@RequestMapping(value = "/ezNewPortal/receivedMailPortlet.do")
 	public String portalReceivedMailPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);	
+		String url = "/rest/ezPortal/portlets/receivedMail";
 		
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("password", password);
+		param.put("portletId", req.getParameter("portletId"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("mailList", data.get("mailList"));
+			model.addAttribute("unreadCount", data.get("unreadCount"));
+			model.addAttribute("mailboxQuotaStr", data.get("mailboxQuotaStr"));
+			model.addAttribute("mailboxDetail", data.get("mailboxDetail"));
+			model.addAttribute("mailPercent", data.get("mailPercent"));
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("portalReceivedMailPortlet End");
 		return "/ezNewPortal/portlets/receivedMailPortlet";
 	}
+	
 	
 	/**
 	 * 포틀릿 - 투표 포틀릿 

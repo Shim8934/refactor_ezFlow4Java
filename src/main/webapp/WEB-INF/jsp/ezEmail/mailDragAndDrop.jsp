@@ -120,9 +120,16 @@
 		            return;
 		        }
 		        
-		        if (bigFileCheck && alertCnt < 2) {
-		            alert(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
-		            alertCnt++;
+		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
+		        if (bigFileCheck && isbigyn == "N") {
+		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
+		        	var bigFileAttachChk = confirm(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
+		        	
+		        	if (!bigFileAttachChk) {
+		        		return;
+		        	}
+		        	
+		            //alertCnt++;
 		        }
 		        
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
@@ -238,7 +245,7 @@
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
-		        objTh2.style.width = "67%";
+		        objTh2.style.width = "87%";
 		        setNodeText(objTh2, "<spring:message code='ezEmail.t725' />");
 		        objTr.appendChild(objTh2);
 		
@@ -247,17 +254,21 @@
 		        objTh3.style.width = "13%";
 		        objTr.appendChild(objTh3);
 		        
-		        var objTh4 = document.createElement("TH");
-		        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
-		        objTh4.style.width = "20%";
-		        objTr.appendChild(objTh4);
-		
+		        if (window.parent.totBigSizeAttachMBSize > 0) {
+		        	objTh2.style.width = "67%";
+		        	
+		        	var objTh4 = document.createElement("TH");
+			        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
+			        objTh4.style.width = "20%";
+			        objTr.appendChild(objTh4);
+		        }
+		        
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
 		        parent.DragObjectComplet();
 		        
 		        if (window.parent.totBigSizeAttachMBSize == 0) {
-					$("body div:first span:first a:nth-child(2)").css("display","none");
+					$("#btnBigFileUpload").css("display","none");
 		        }
 		        
 		    }
@@ -659,7 +670,7 @@
         <div style="width:845px;white-space:nowrap;display:inline-block">
             <span style="float:left;">
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
-                <a class="imgbtn imgbck" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
+                <a class="imgbtn imgbck" id="btnBigFileUpload" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
                 <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
             </span>
             <div id="progdiv" class="progarea" style="display:none">
@@ -668,7 +679,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px;display:none;" />
+        <input id="file" type="file" onchange="filechange(event);this.value=null;return false;" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
   </body>
 </html>

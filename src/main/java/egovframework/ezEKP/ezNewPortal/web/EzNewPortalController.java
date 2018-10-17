@@ -292,6 +292,37 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("getUnreadCounts End");
 		return unreadCounts;
 	}
+	
+	//테마 설정 화면 호출
+	@RequestMapping(value = "/ezNewPortal/userThemeSetting.do")
+	public String userThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("userThemeSetting Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+
+		//현재 사용하고 있는 테마 정보 불러오기
+		String settingUrl = "/rest/ezPortal/settingInfo/users/" + userId;
+		JSONObject settingResultBody = commonUtil.getJsonFromRestApi(settingUrl, null, req, "get", null);
+		String settingStatus = settingResultBody.get("status").toString();
+
+		if (settingStatus.equals("ok")) {
+			JSONObject settingData = (JSONObject) settingResultBody.get("data");
+			model.addAttribute("usedTheme", settingData.get("usedTheme"));
+		}
+		
+		//사용자가 선택 가능한 테마 목록 불러오기
+		String themeUrl = "/rest/ezPortal/themes/users/" + userId;
+		JSONObject themeResultBody = commonUtil.getJsonFromRestApi(themeUrl, null, req, "get", null);
+		String themeStatus = themeResultBody.get("status").toString();
+		
+		if (themeStatus.equals("ok")) {
+			model.addAttribute("themeList", themeResultBody.get("data"));
+		}
+		
+		logger.debug("userThemeSetting End");
+		return "/ezNewPortal/userThemeSetting";
+	}
+	
 	/**
 	 * ----
 	 */

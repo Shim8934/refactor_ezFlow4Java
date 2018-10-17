@@ -6,12 +6,12 @@ import java.util.Map;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -44,6 +44,8 @@ public interface EzNewPortalService {
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId);
+	
 	/**
 	 * 이효진
 	 */

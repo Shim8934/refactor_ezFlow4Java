@@ -662,9 +662,10 @@ public class LoginController {
     	cookieID.setPath("/");
     	response.addCookie(cookieID);
     	
+    	// loginCookieSSO 라는 이름으로 쿠키를 추가로 생성할 것인지
     	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
     	
-    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
+    	if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
     		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
     		ssoLoginCookie.setPath("/");
     		ssoLoginCookie.setDomain(useSSOCookie);

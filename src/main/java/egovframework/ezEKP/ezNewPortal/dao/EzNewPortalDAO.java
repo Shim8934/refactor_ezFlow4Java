@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -126,6 +127,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public PortalUserInfoVO getMonthlyBestEmployee(Map<String, Object> map) {
 		return (PortalUserInfoVO) select("ezNewPortal.getMonthlyBestEmployee", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ThemeInfoVO> getUserThemeList(Map<String, Object> map) {
+		return (List<ThemeInfoVO>) list("ezNewPortal.getUserThemeList", map);
+	}
+	
 	/**
 	 * 이효진
 	 */

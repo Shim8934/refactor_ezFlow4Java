@@ -94,9 +94,15 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 일정공유관리 화면
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do")
-	public String  scheduleAdminShareManage() throws Exception {
+	public String  scheduleAdminShareManage(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		
 		logger.debug("============ scheduleAdminShareManage started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		return "/admin/ezSchedule/scheduleAdminShareManage";
 	}

@@ -49,6 +49,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql_m.xml"/>
 	<!--사다리게임 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Mysql.xml"/>
+    <!-- 메모 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezMemo/EzMemo_SQL_Mysql.xml"/>
 	<!-- 포탈개인화 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortal_SQL_Mysql.xml"/>
     

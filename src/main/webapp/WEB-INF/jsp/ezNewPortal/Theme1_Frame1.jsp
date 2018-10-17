@@ -23,6 +23,7 @@
 <script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 <!-- 종균 시작-->
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
@@ -30,6 +31,8 @@
 <!-- 종균 끝 -->
 <!-- 해안 시작 -->
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/communityPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/favoriteBoardPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/receivedMailPortlet.js')}"></script>
 <!-- 해안 끝 -->
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
@@ -84,6 +87,9 @@
 		//근태관리 연동
 		parseDate();
 		attiClock();
+		setAttiBtnHover();
+		getAttitudeList();
+		getHolidayList();
 		
 		//생일자 조회 기능 연동
 		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);
@@ -98,6 +104,12 @@
 		//개인환경설정으로 이동 동작 연결
 		$("#personalEnv").on("click", viewPersonalEnv);
 		$("#portletEnv").on("click", viewPortletEnv);
+		//메뉴 이동(왼쪽)
+		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
+		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
+		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
+		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
+		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
@@ -183,31 +195,31 @@
 				
 				<article class="countingIcon">
 					<div class="countingIcon01">
-						<dl id="NewMail" onclick="btnSumming_click(this)">
+						<dl id="NewMail">
                 			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
                     		<dd class="iconText">새메일</dd>
                     		<dd id="unreadMailCount" class="iconCount_none">0</dd>
                 		</dl>
-                		<dl id="AprSign" onclick="btnSumming_click(this)">
+                		<dl id="AprSign">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
                     
                     		<dd class="iconText">결재문서</dd>
                     		<dd id="approvalCount" class="iconCount_none">0</dd>
                 		</dl>
-                		<dl id="Schedule" onclick="btnSumming_click(this)">
+                		<dl id="Schedule">
                   		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
                     		<dd class="iconText">오늘일정</dd>
                 		    <dd id="scheduleCount" class="iconCount_none">0</dd>
                			</dl>
 					</div>
 					<div class="countingIcon02">
-            			<dl id="Poll" onclick="btnSumming_click(this)">
+            			<dl id="Poll">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
                     		<dd class="iconText">전자설문</dd>                        
                     		<dd id="pollCount" class="iconCount_none">0</dd>
                 		</dl>
             	
-                		<dl id="Circular" onclick="btnSumming_click(this)"> 
+                		<dl id="Circular"> 
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
                     		<dd class="iconText">회람판</dd>
                     		<dd id="circularCount" class="iconCount_none">0</dd>

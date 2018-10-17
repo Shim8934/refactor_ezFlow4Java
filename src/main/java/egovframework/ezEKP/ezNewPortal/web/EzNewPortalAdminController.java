@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -161,6 +163,37 @@ public class EzNewPortalAdminController {
 		}
 		
 		LOGGER.debug("getCompanys ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 관리자 포탈 테마목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getPortalThemes.do")
+	public String getPortalThemes(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getPortalThemes started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("companyId", paramMap.get("companyId"));
+		
+		String url = "/rest/admin/ezportal/companies";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String companyId = (String) resultBody.get("userCompany");
+			JSONArray companyList = (JSONArray) resultBody.get("data");
+			model.addAttribute("userCompany", companyId);
+			model.addAttribute("list", companyList);
+		}
+		
+		LOGGER.debug("getPortalThemes ended.");
 		
 		return "json";
 	}

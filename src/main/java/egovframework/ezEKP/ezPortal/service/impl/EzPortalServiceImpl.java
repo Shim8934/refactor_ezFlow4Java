@@ -2230,6 +2230,14 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			        }
 				}
 				
+				// 2018-09-06 황윤호 추가 
+				// tenant_config 테이블 useMemo가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=5")) {
+					if (!ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				
 				String menuitemLinkLocation = result2.get(j).getLinkLocation();
 				String menuitemWindowOption = result2.get(j).getWindowOption();
 				

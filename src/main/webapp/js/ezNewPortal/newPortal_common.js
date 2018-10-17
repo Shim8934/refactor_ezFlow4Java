@@ -26,11 +26,11 @@ function updatePortletOrderUser() {
 		data : JSON.stringify(data),
 		success : function(result) {
 			if (result === "failed") {
-				alert("오류가 발생하였습니다.");
+				alert(messages.strLang2);
 			}
 		},
 		error : function() {
-			alert("오류가 발생하였습니다.");
+			alert(messages.strLang2);
 		}
 	});
 }
@@ -85,12 +85,12 @@ function eventSetting(portletId) {
 				$("#" + portletId + "Portlet").find(".voteBtn").on("click", votePoll);
 			} catch(err) {
 				console.log(err);
-				alert("에러가 발생하였습니다.");
+				alert(messages.strLang2);
 			}
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log(exception);
-			alert("에러가 발생하였습니다.")
+			alert(messages.strLang2);
 		});
 	} else if (portletId == 9) { //포토게시판
 		var url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
@@ -103,15 +103,29 @@ function eventSetting(portletId) {
 				$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);
 			} catch(err) {
 				console.log(err);
-				alert("에러가 발생하였습니다.");
+				alert(messages.strLang2);
 			}
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log(exception);
-			alert("에러가 발생하였습니다.")
+			alert(messages.strLang2);
 		});
-	} else if (portletId === 10) {
-		getTabList();
+	} else if (portletId === 10) {// 즐겨찾기
+		var url = "/js/ezNewPortal/portlets/favoriteBoardPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				getTabList();
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
 	} else if (portletId === 12) { // 도움말
 		helpPortletLoadFunc();
 	} else if (portletId === 2) {  // 공지사항
@@ -119,7 +133,42 @@ function eventSetting(portletId) {
 	} else if (portletId === 5) {  // 설문조사
 		pollPortletLoadFunc();
 	} else if (portletId === 11) {  // 커뮤니티
-		$("#communityPlus").on("click", viewCommuList);
+		var url = "/js/ezNewPortal/portlets/communityPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				$("#communityPlus").on("click", viewCommuList);
+				
+				for (var i=1; i < CommuSize; i ++) {
+					clubNo = $('.comListDL0'+i).attr('data1');
+					$('.comListDL0'+i).on("click",{ iClubNo : clubNo }, view_bestCommunity);
+				}
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+	} else if (portletId === 1) { // 메일
+		var url = "/js/ezNewPortal/portlets/receivedMailPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				$("#mGraphSpan").css("width", mailPercent + "px");
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
 	}
 }
 
@@ -291,7 +340,7 @@ function getBirthdayEmployeesList() {
 			}, 5000);
 		},
 		error : function() {
-			alert("오류가 발생하였습니다.");
+			alert(messages.strLang2);
 		}
 	});
 }
@@ -318,7 +367,7 @@ function getMonthlyBestEmployee() {
 			if (bestEmployee == null) {
 				$("#emPic").find("img").attr("src", "/images/ezNewPortal/bestEmployee_pic_none.png");
 				strHTML += "<dl class='nodata' style='margin-top:8px'>";
-				strHTML += "<dd>데이터가 없습니다</dd>";
+				strHTML += "<dd>" + messages.strLang1 + "</dd>";
 				strHTML += "</dl>";
 			} else {
 				$("#emPic").find("img").attr("src", bestEmployee.userImg);
@@ -337,4 +386,210 @@ function viewPortletEnv() {
 	
 	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
 		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+}
+
+//근태관리 연동
+function getAttitudeList() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezAttitude/getAttitudeList.do",
+		data : {},
+		success : function(result) {
+			for (var i = 0; i < result.length; i++) {
+				if (result[i].typeId == "A01") {
+ 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#inAttiBtn").removeClass("out").addClass("in");
+					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+				} else if (result[i].typeId == "A02") {
+					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#inAttiBtn").removeClass("out").addClass("lateIn");
+					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+				} else if (result[i].typeId == "A03") {
+					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#outAttiBtn").removeClass("out").addClass("in");
+					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+				}
+			}
+		}
+	})
+}
+
+//시간놓고 alert내용을 파라미터로 던져서 체크??
+function addAttitude(obj) {
+	var pTypeId = obj.getAttribute("type");
+	var pDateType = obj.getAttribute("datetype");
+	if (pTypeId == "A03") {
+		var returnValue = getIsAttitude("A01");
+		if (returnValue == 0) {
+			alert(messages.strLang3);
+    		return;
+		} else {
+			getAttitudeList();
+		}
+	}
+	
+	beforeAlertDate = new Date();
+	var dateAlert = nowAttiTime.getFullYear() + messages.strLang4 + (nowAttiTime.getMonth() + 1) + messages.strLang5 + (nowAttiTime.getDate()) + messages.strLang6 + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
+	if (!saveFlag) {
+		afterAlertDate = new Date();
+		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		return;
+	} 
+	$.ajax({
+		type : "POST",
+		async : true,
+		url : "/ezAttitude/attitudeSave.do",
+		data : {
+			typeId : pTypeId,
+			dateType : pDateType,
+			mode : "new"
+		},
+		success : function(result) {
+			getAttitudeList();
+		},
+		complete : function() {
+			afterAlertDate = new Date();
+    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		}
+	})
+}
+
+function getHolidayList() {
+	$.ajax({
+		type:"POST",
+		dataType : "json",
+		async : true,
+		url : "/ezAttitude/getHolidayList.do",
+		data : {
+			//isRest : "rest"
+		},
+		success : function(result) {
+			for (var i = 0; i < result.holidayList.length; i++) {
+				if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+					memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+													  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+													  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+				} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+					yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+															  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+															  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+															  result.holidayList[i].isRest == 1 ? true : false));
+				}
+			}
+			closedDay = result.attitudeConfigVO.closedDay.split(",");
+		}
+	});
+}
+
+//휴일 체크
+function checkHoliday(obj) {
+	var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
+	var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
+	var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+	var addAttitude = true; // true 등록 가능
+	
+	if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+		addAttitude = false;				
+	} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+		if (todayMemorialDayList.length != 0 ) {
+			for (var i = 0; i < todayMemorialDayList.length; i++) {
+				if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+					addAttitude = false;
+				}
+			}
+		} 
+		if (todayYearMemorialDayList.length != 0) {
+			for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+				if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+					addAttitude = false;
+				}
+			}
+		}
+	}
+	
+	if(addAttitude) {
+		checkAttitude(obj);
+	} else {
+		alert(messages.strLang9);
+	}
+}
+
+//근태 중복 체크
+	function checkAttitude(obj) {
+	var returnValue = getIsAttitude(obj.getAttribute("type"));
+	
+	if (returnValue == 0) {
+		addAttitude(obj);
+	} else {
+		alert(messages.strLang10);
+		getAttitudeList();
+		try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+	}
+	}
+
+function getIsAttitude(typeId) {
+	var isAttitudeReturn = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezAttitude/getIsAttitude.do",
+		data : {
+			typeId : typeId
+		},
+		success : function(result) {
+			isAttitudeReturn = result;
+		},
+		complete : function() {
+			
+		}
+	})
+	return isAttitudeReturn;
+}
+
+function setAttiBtnHover() {
+	$("#inAttiBtn, #outAttiBtn").hover(function(){
+		$(this).addClass("btn_hover");
+	}, function(){
+		$(this).removeClass("btn_hover");
+	})
+}
+
+function quickMenuOpen(event) {
+	var url = "";
+	var location = "";
+	var option = " ";
+	var menu = event.data.menu;
+	
+	switch (menu) {
+		case "NewMail" : 
+			url = "/ezEmail/mailMain.do";
+			location = "main";
+			break;						
+		case "ApprG" : 	
+			// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
+			var listType = 1;
+			url = "/ezApprovalG/apprGMain.do?listType=" + listType;
+			location = "main";
+			break;
+		case "Schedule" :
+			url = "/ezSchedule/scheduleIndex.do?funCode=2";
+			location = "main";
+			break;
+		case "Poll" :
+			url = "/ezBoard/boardMain.do?func=1";
+			location = "main";
+			break;
+	    case "Circular":
+			url = "/ezCircular/circularIndex.do";
+			location = "main";
+	        break; 
+	}
+	
+	window.open(url, location, option);
 }

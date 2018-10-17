@@ -570,6 +570,24 @@ CREATE TABLE `jmocha_mail_color` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_mail_countryip`
+--
+
+DROP TABLE IF EXISTS `jmocha_mail_countryip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_mail_countryip` (
+  `START_IP` varchar(45) NOT NULL,
+  `END_IP` varchar(45) NOT NULL,
+  `START_IP_NUMBER` bigint(20) NOT NULL,
+  `END_IP_NUMBER` bigint(20) NOT NULL,
+  `COUNTRY_CODE` varchar(45) NOT NULL,
+  `COUNTRY_NAME` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`START_IP_NUMBER`,`END_IP_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_mail_delete`
 --
 
@@ -4730,6 +4748,7 @@ CREATE TABLE `tbl_deptmaster` (
   `ADFLAG` varchar(4) DEFAULT NULL,
   `ADSPATH` varchar(400) DEFAULT NULL,
   `UPDATEDT` datetime DEFAULT NULL,
+  `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -9948,6 +9967,7 @@ CREATE TABLE `tbl_usermaster` (
   `IPADDRESS` varchar(15) DEFAULT NULL,
   `LASTLOGIN` datetime DEFAULT NULL,
   `LOGINCNT` bigint(10) DEFAULT '0',
+  `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `LISTTYPE` varchar(3) DEFAULT 'TXT',
   PRIMARY KEY (`TENANT_ID`,`CN`),
@@ -10350,7 +10370,7 @@ CREATE TABLE `tbl_webfolder_file` (
   `FILE_ID` varchar(100) NOT NULL COMMENT '파일 아이디',
   `FILE_NAME` varchar(250) NOT NULL COMMENT '파일 이름',
   `FILE_PATH` varchar(250) NOT NULL COMMENT '파일 경로',
-  `FILE_SIZE` varchar(100) NOT NULL COMMENT '파일 크기',
+  `FILE_SIZE` bigint(20) NOT NULL COMMENT '파일 크기',
   `TYPE_ID` varchar(100) NOT NULL COMMENT '파일 유형 아이디',
   `DOWN_COUNT` bigint(20) NOT NULL DEFAULT '0' COMMENT '다운로드 카운트',
   `FILE_EXT` varchar(10) NOT NULL COMMENT '파일 확장자명',
@@ -10448,7 +10468,7 @@ CREATE TABLE `tbl_webfolder_log` (
   `LOG_ID` varchar(200) NOT NULL COMMENT '로그 순번',
   `FILE_TYPE` varchar(200) DEFAULT NULL COMMENT '파일유형',
   `FILE_NAME` varchar(200) DEFAULT NULL COMMENT '파일이름',
-  `FILE_SIZE` varchar(200) DEFAULT NULL COMMENT '파일크기',
+  `FILE_SIZE` bigint(20) DEFAULT NULL COMMENT '파일크기',
   `FILE_EXT` varchar(10) DEFAULT NULL COMMENT '파일확장자',
   `LOG_TYPE` varchar(200) DEFAULT NULL COMMENT '수행사항(업로드:C, 다운로드:D, 수정:U, 삭제: R, 영구삭제:P)',
   `CREATE_ID` varchar(200) DEFAULT NULL COMMENT '생성자 아이디',
