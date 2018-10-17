@@ -66,7 +66,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", req.getServerName());
+		headers.set("x-user-host", req.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
@@ -97,7 +97,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
@@ -126,7 +126,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
@@ -163,7 +163,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
@@ -230,7 +230,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
 		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
@@ -266,7 +266,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			@Override
 			public void doWithRequest(ClientHttpRequest req) throws IOException {
 				req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-				req.getHeaders().set("host-name", request.getServerName());
+				req.getHeaders().set("x-user-host", request.getServerName());
 			}
 		};
 		
@@ -322,7 +322,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("fileList", listFileId);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		RestTemplate rest    = new RestTemplate();
@@ -372,7 +372,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		RestTemplate rest    = new RestTemplate();
@@ -405,7 +405,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("mode", mode);
@@ -455,7 +455,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		RestTemplate rest    = new RestTemplate();
@@ -483,7 +483,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolder/foldersTree";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -516,7 +516,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolder/depart-tree";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -548,7 +548,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolder/sub-tree/" + deptId;
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -578,7 +578,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolder/dept-member/" + deptId;
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
@@ -609,7 +609,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolder/foldersTree/file";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -642,7 +642,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolder/env/" + listCount + "/update";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
@@ -667,7 +667,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
@@ -692,7 +692,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
@@ -717,7 +717,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -749,7 +749,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -775,7 +775,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);

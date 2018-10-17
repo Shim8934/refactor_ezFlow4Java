@@ -268,6 +268,8 @@ function datanameweek(year, month, day, contral)
 //주보기시...
 function tableListControl_Week()
 {
+	// 2018-10-17 김민성 - 자원관리 주보기 오늘 날짜 표시 위한 today 정보 추가
+	var today = datanameweek(weektodate.getFullYear(), weektodate.getMonth()+1, weektodate.getDate(), "ADD");		// 오늘 날짜
 	var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
 	if (DefaultView == 0) { //일요일시작
 		dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
@@ -522,7 +524,12 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                     _mtd2.style.width = "14.2%";
-                    _mtd2.setAttribute("class", "weektd_02");
+                    if(weekdatename[i] == today) {								// 날짜가 오늘이면
+                    	_mtd2.setAttribute("class", "weektd_02 today");
+                    }
+                    else {
+                    	_mtd2.setAttribute("class", "weektd_02");
+                    }
                     _mtd2.verticalAlign = "top";
                     _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
                     _mtr2.appendChild(_mtd2);
@@ -535,7 +542,12 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                     _mtd2.style.width = "14.2%";
-                    _mtd2.setAttribute("class", "weektd_02");
+                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    	_mtd2.setAttribute("class", "weektd_02 today");
+                    }
+                    else {
+                    	_mtd2.setAttribute("class", "weektd_02");
+                    }
                     _mtd2.verticalAlign = "top";
                     _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
                     _mtr2.appendChild(_mtd2);

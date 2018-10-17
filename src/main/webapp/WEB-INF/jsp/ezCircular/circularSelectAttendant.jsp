@@ -11,7 +11,7 @@
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
-	    	.mainlist tr td:first-child {
+	    	#txtlist_table tr td:first-child {
 	    		padding-left:15px;
 	    	}
 	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */

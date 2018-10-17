@@ -104,7 +104,6 @@
 		    	}	    	
 		    	
 		    	clickOutside.mouseup(function (e) {
-		    		console.log("1")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
@@ -113,12 +112,10 @@
 		    	});
 		    	
 		    	$(parent.document).mouseup(function (e) {
-		    		console.log("2")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
 		    	$(document).mouseup(function (e) {
-		    		console.log("3")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
