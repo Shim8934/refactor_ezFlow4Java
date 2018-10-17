@@ -12,6 +12,7 @@
 <typeAlias alias="CommunityMyCommunityVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 <typeAlias alias="CommunityCClubUserVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
 <typeAlias alias="PortalUserInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO"/>
+<typeAlias alias="MenuInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -217,6 +218,103 @@ AND
 AND 
 	LOGO_TYPE = #logoType#
 ]]>	
+</select>
+
+<!-- 사용자 접근 가능 메뉴 리스트 -->
+<select id="ezNewPortal.getUserMenuList" parameterClass="Map" resultClass="MenuInfoVO">
+SELECT
+	comp.MENU_ID          AS MEMUID,
+    name.MENU_NAME        AS MENUNAME,
+    comp.MENU_USED        AS MENUUSED,
+	comp.COMPANY_LANG     AS COMPANYLANG,
+	main.MENU_URL         AS MENUURL,
+    main.ICON_URL         AS ICONURL,
+    main.DEFAULT_ORDER    AS DEFAULTORDER,
+    user.menu_order       AS MENUORDER
+FROM 
+	tbl_portal_menu_comp as comp
+JOIN 
+	tbl_portal_menu as main
+ON 
+	comp.MENU_ID = main.MENU_ID
+JOIN 
+	tbl_portal_menu_name as name
+ON 
+	comp.MENU_ID = name.MENU_ID
+AND 
+	comp.COMPANY_ID = name.COMPANY_ID
+AND 
+	comp.TENANT_ID = name.TENANT_ID
+LEFT OUTER JOIN
+	tbl_portal_menu_auth as auth
+ON
+	comp.COMPANY_ID = auth.COMPANY_ID
+AND
+	comp.TENANT_ID = auth.TENANT_ID
+AND
+	comp.MENU_ID = auth.MENU_ID
+LEFT OUTER JOIN
+	tbl_portal_menu_user as user
+ON
+	comp.company_id = user.company_id
+AND
+	comp.tenant_id = user.tenant_id
+AND
+	comp.menu_id = user.menu_id
+WHERE 
+	comp.MENU_USED = 'Y'
+AND 
+	comp.COMPANY_ID = #companyId#
+AND
+	comp.COMPANY_LANG = #langType#
+AND
+	comp.TENANT_ID = #tenantId#
+AND
+	user.user_id = #userId#
+</select>
+
+<!-- 회사 접근 가능한 메뉴 리스트 -->
+<select id="ezNewPortal.getComppanyMenuList" parameterClass="Map" resultClass="MenuInfoVO">
+<![CDATA[
+SELECT
+	comp.MENU_ID          AS MEMUID,
+    name.MENU_NAME        AS MENUNAME,
+    comp.MENU_USED        AS MENUUSED,
+	comp.COMPANY_LANG     AS COMPANYLANG,
+	main.MENU_URL         AS MENUURL,
+    main.ICON_URL         AS ICONURL,
+    main.DEFAULT_ORDER    AS DEFAULTORDER
+FROM 
+	tbl_portal_menu_comp as comp
+JOIN 
+	tbl_portal_menu as main
+ON 
+	comp.MENU_ID = main.MENU_ID
+JOIN 
+	tbl_portal_menu_name as name
+ON 
+	comp.MENU_ID = name.MENU_ID
+AND 
+	comp.COMPANY_ID = name.COMPANY_ID
+AND 
+	comp.TENANT_ID = name.TENANT_ID
+LEFT OUTER JOIN
+	tbl_portal_menu_auth as auth
+ON
+	comp.COMPANY_ID = auth.COMPANY_ID
+AND
+	comp.TENANT_ID = auth.TENANT_ID
+AND
+	comp.MENU_ID = auth.MENU_ID
+WHERE 
+	comp.MENU_USED = 'Y'
+AND 
+	comp.COMPANY_ID = #companyId#
+AND
+	comp.COMPANY_LANG = #langType#
+AND
+	comp.TENANT_ID = #tenantId#
+]]>		
 </select>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->

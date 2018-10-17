@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
@@ -46,6 +47,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (String) select("ezNewPortal.getPortalLogoInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getUserMenuList(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getUserMenuList", map);
+	}
 	/* 박종균 끝 */
 	
 	/**

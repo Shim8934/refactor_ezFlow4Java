@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
@@ -121,6 +122,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("logoType", logoType);
 		LOGGER.debug("[Service] getPortalLogoInfo ended");
 		return ezNewPortalDAO.getPortalLogoInfo(map);
+	}
+	
+	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("langType", langType);
+		map.put("userId", userId);
+		return ezNewPortalDAO.getUserMenuList(map);
 	}
 	
 	@Override

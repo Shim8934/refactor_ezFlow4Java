@@ -12,6 +12,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.gson.JsonArray;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -40,6 +43,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
@@ -478,7 +482,9 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			String langType = info.getLang();
 			String logoType = "portal";
+			LOGGER.debug("roleInfo : " + info.getRollInfo());
 			/**
 			 * 1. 로고
 			 * 2. 메인메뉴 및 서브메뉴
@@ -493,16 +499,31 @@ public class EzNewPortalGWController {
 			
 			/**
 			 * 2) 메인메뉴 및 서브메뉴
-			 * - 권한체크 확실하게 할 것
+			 * - 권한체크
+			 * - user 순서가 없을 경우 회사 순서로 진행
 			 */
-			
-			
+			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId);
+			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
+			LOGGER.debug("list.toString() : " + userMenuList.toString());
+			if(userMenuList.size() == 0) {
+				compMenuList = ezNewPortalService.getCompanyMenuList(companyId, tenantId, langType);
+			}
 			/**
 			 * 3) 유틸메뉴
 			 * - 관리자 권한의 유무
+			 * - DB에서 가져오지 말고 그냥 다 출력
 			 */
+			
 			JSONObject data = new JSONObject();
+			String roleInfo = "user";
+			if(info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1) {
+				roleInfo = "admin";
+				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
+				data.put("utilAdminUrl", "");
+			}
 			data.put("logoUrl", logoUrl);
+			data.put("roleInfo", roleInfo);
+			data.put("userMenuList", userMenuList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

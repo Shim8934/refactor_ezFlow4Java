@@ -2087,7 +2087,7 @@ logger.debug("map.toString()" + map.toString());
 			}
 		}
 		sb.append("</ul></article>\n");
-		logger.debug("sb="+sb.toString());
+		logger.debug("getUtilMenuHTML="+sb.toString());
 		logger.debug("getUtilMenuHTML ended");
 		
 		return sb.toString();
