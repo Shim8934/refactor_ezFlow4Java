@@ -473,10 +473,15 @@
 			    
 		        selectdept_cross_dialogArguments = new Array();
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t19' />";
-		        selectdept_cross_dialogArguments[1] = mov_dept_Complete;
+		        selectdept_cross_dialogArguments[1] = mov_dept_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));		        
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
+		    function mov_dept_CompleteWithTimeout(rtnValue) {
+		    	 setTimeout(function() {
+		    		 mov_dept_Complete(rtnValue);
+	                }, 10);
+		    }
 		    
 		    function GetDeptFullPath(DeptID, topid){
 		    	var data;
