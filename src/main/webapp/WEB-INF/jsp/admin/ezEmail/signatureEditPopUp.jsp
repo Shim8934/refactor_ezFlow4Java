@@ -32,15 +32,15 @@
 		
 		window.onload = function() {
 			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILSIGNTEMPLATE");
+			var titleTxt = "추가";
 			
 			if (type == "modify") {
-				document.title = "서명 템플릿 수정";
-				$(".leTitle")[0].innerText = "서명 템플릿 수정";
-				modifyDataView();
-			} else {
-				document.title = "서명 템플릿 추가";
-				$(".leTitle")[0].innerText = "서명 템플릿 추가";
-			}
+				titleTxt = "수정";
+			} 
+			
+			document.title = "서명 템플릿 " + titleTxt;
+			$(".leTitle")[0].innerText = "서명 템플릿 " + titleTxt;
+			
 			
 			// 입력정보 클릭, mouse over 이벤트 추가
 			// 입력정보 리스트 기준은 (조직도>사원추가>우편번호, 집주소 빼고 전부)
