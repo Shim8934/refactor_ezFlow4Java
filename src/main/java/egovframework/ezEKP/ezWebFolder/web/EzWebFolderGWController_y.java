@@ -377,7 +377,7 @@ public class EzWebFolderGWController_y {
 		return jsonObj;
 	}
 	
-	// 파일리스트 조회 
+	// 파일리스트 조회(루트폴더일 경우 모든 파일 가져옴)
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
 	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request)  {
@@ -413,7 +413,11 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("Parameter error!");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
+			
+			LOGGER.debug("fileList method ended");
+			return jsonObj;
 		}
+		
 		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = common.getTenantId();
@@ -429,9 +433,11 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
-			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
+			
+			if (listCount == 0) {
 				listCount = usrListCnt ;
 			}
+			
 			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
 			int pEnd = listCount;
 			
@@ -468,6 +474,185 @@ public class EzWebFolderGWController_y {
 			
 			
 			fileList = service.getFileList(folderId, userId, deptId, tenantId , comId,
+					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
+					searchPageCount, pStart, pEnd, offset, primary);
+			
+			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
+			
+			
+			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			String folderPath     = folder.getFolderPath();
+			String folderPath2    = folder.getFolderPath();
+			folderPath            = folderPath.substring(1, folderPath.length() - 1);
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
+			
+			LOGGER.debug("OriginalPath: " + originalPath);
+					
+			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
+
+			if (fileList.size() > 0) {
+				String [] rootPath  = folderPath.split("\\|");
+				Set<String> testbnk = new HashSet<String>();
+				
+				for (FileVO file : fileList ) {
+					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+					String[] fldPathArr = fldPath.split("\\|");
+					testbnk.addAll(Arrays.asList(fldPathArr));
+				}
+				
+				List<String> listName = new ArrayList<String>(testbnk);
+				filePathMap           = ezWebFolderService.getAllFolderNameMap(listName, primary, tenantId);
+				
+				for (FileVO file : fileList) {
+					
+					if (file.getFilePosition() == null || file.getFilePosition().equals("")) {
+						String file_path    = originalPath;
+						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+						String[] fldPathArr = fldPath.split("\\|");
+						
+						if (folder.getFolderUpper().equals("root")) {
+							for (int i = rootPath.length; i < fldPathArr.length; i++) {
+								file_path += filePathMap.get(fldPathArr[i]) + "/";
+							}
+						} else {
+							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
+								file_path += filePathMap.get(fldPathArr[i]) + "/";
+							}
+						}
+						file_path = file_path.substring(0, file_path.length() - 1);
+						file.setFilePosition(file_path );
+					}
+				}
+			}
+			
+			FolderVO fldDetail = service.getFolderDetail(folderId, userId, tenantId, comId);
+			
+			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
+			
+			data.put("folderUpp", fldDetail.getFolderUpper());
+			data.put("folderPath", folderPath2);
+			data.put("originalPath", originalPath);
+			data.put("fileList", fileList);
+			data.put("fileCnt", fileCnt);
+			data.put("fldCnt", fldCnt);
+			data.put("totalRows", fileCnt+fldCnt);
+			data.put("totalPages", totalpages );
+			data.put("listCount", listCount );
+			data.put("currPage", currPage );
+			
+			jsonObj.put("status", "ok");
+			jsonObj.put("code", 0);
+			jsonObj.put("data", data);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.debug(" fail ");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 2);
+			jsonObj.put("data", "");
+		}
+		
+		LOGGER.debug("fileList method ended");
+		return jsonObj;
+	}
+	
+	// 파일리스트 조회 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list2", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
+	public JSONObject fileList2 (@PathVariable String folderId, HttpServletRequest request)  {
+		LOGGER.debug("fileList2 method started");
+		
+		JSONObject jsonObj = new JSONObject();
+		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
+		String userId = request.getParameter("userId");
+		String searchExt = request.getParameter("searchExt")			 	!= null ? request.getParameter("searchExt") 		: "" ;
+		String searchFileName = request.getParameter("searchFileName") 		!= null ? request.getParameter("searchFileName")	: "" ;
+		String searchFileType = request.getParameter("searchFileType") 		!= null ? request.getParameter("searchFileType") 	: "" ;
+		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	: "" ;
+		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
+		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
+		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
+   		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
+   		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);
+		
+		LOGGER.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName);
+		LOGGER.debug("searchFileType : " + searchFileType + " || searchCreateName : " + searchCreateName);
+		
+		int totalCount = request.getParameter("totalCount") 				!= null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
+		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
+		int totalpages = request.getParameter("totalpages") 				!= null ? Integer.parseInt(request.getParameter("totalpages"))	: 1;
+		
+		List<FileVO> fileList = new ArrayList<FileVO>();
+		JSONObject data = new JSONObject();
+		
+		if (folderId.equals("") || userId.equals("") ) {
+			LOGGER.debug("Parameter error!");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 1);
+			
+			LOGGER.debug("fileList method ended");
+			return jsonObj;
+		}
+		
+		try {
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = common.getTenantId();
+			String deptId = common.getDeptId();
+			String offset = common.getOffSet();
+			String primary = common.getPrimary();
+			String comId = common.getCompanyId();
+			
+			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
+			int usrListCnt = service.getUsrListCount(tenantId, userId);
+			
+			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
+			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
+			
+			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
+			
+			if (listCount == 0) {
+				listCount = usrListCnt ;
+			}
+			
+			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			int pEnd = listCount;
+			
+			if (usrListCnt != listCount) {
+				service.insertEnv(userId, tenantId, listCount);
+			}
+			
+			LOGGER.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
+			LOGGER.debug("folderId : " + folderId + " || deptId : "+ deptId + " || offset : " + offset );
+			LOGGER.debug("pStart : " + pStart + " || pEnd : " + pEnd);
+			
+			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
+			Map<String, Integer> cnt = service.getFileToTalCount2(folderId, userId, deptId, tenantId, comId,
+					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
+					searchPageCount, pStart, pEnd, offset , primary);
+			
+			LOGGER.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
+			
+			int fileCnt = cnt.get("fileTotalCnt");
+			int fldCnt  = cnt.get("fldTotalCnt");
+			totalCount  = cnt.get("totalCount");
+			
+			if (totalCount % listCount == 0) {
+				totalpages = (totalCount / listCount);
+			} else {
+				totalpages = (totalCount / listCount) + 1;
+			}
+			
+			if (currPage > totalpages & totalCount != 0) {
+				currPage = totalpages;
+				pStart = (currPage -1 )* listCount;
+			}
+			pEnd = listCount;
+			
+			
+			fileList = service.getFileList2(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary);
 			
