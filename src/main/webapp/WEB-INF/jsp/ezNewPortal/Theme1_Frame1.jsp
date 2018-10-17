@@ -31,6 +31,8 @@
 <!-- 종균 끝 -->
 <!-- 해안 시작 -->
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/communityPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/favoriteBoardPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/receivedMailPortlet.js')}"></script>
 <!-- 해안 끝 -->
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
