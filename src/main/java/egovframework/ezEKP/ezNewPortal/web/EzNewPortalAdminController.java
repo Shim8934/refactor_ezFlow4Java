@@ -198,7 +198,25 @@ public class EzNewPortalAdminController {
 	/**
 	 * @author 구해안
 	 */
-	
+	/**
+	 * 관리자 포탈 메뉴관리 화면조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/portalPortlets.do")
+	public String portalManagePortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset) throws Exception {
+		LOGGER.debug("portalPortlets started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("portalPortlets accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("portalPortlets ended.");
+			
+			return "/admin/ezNewPortal/portalPortlets";
+		}
+	}
 	
 	/** ----------------------------------------------- */
 }
