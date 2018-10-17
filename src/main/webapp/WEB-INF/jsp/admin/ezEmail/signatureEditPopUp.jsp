@@ -25,6 +25,10 @@
 		var displayname = "${displayname}";
 		var displayname2 = "${displayname2}";
 		var defaultFontAndSize = "${defaultFontAndSize}";
+		var m_strColorSelect = "#edf4fd";
+		var m_strColorOver = "#f4f5f5";
+		var m_strColorDefault = "#ffffff";
+		var m_strColorOpened = "#fafafa";
 		
 		window.onload = function() {
 			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILSIGNTEMPLATE");
@@ -37,7 +41,55 @@
 				document.title = "서명 템플릿 추가";
 				$(".leTitle")[0].innerText = "서명 템플릿 추가";
 			}
+			
+			// 입력정보 클릭, mouse over 이벤트 추가
+			// 입력정보 리스트 기준은 (조직도>사원추가>우편번호, 집주소 빼고 전부)
+			inputInfoListEvent();
 		}
+		
+		function inputInfoListEvent() {
+			var infoBody = document.getElementById("inputInfoBody");
+			var infoBodyChild = infoBody.children;
+			
+			for (var i = 0; i < infoBodyChild.length; i++) {
+				infoBodyChild[i].onclick = function() { event_listclick(this); };
+				infoBodyChild[i].onmouseover = function () { event_listMover(this); };
+				infoBodyChild[i].onmouseout = function () { event_listMout(this); };
+			}
+		}
+		
+		function event_listclick(obj) {
+			var prevSelected = $("#inputInfoBody tr[selected=true]")[0];
+        	if (prevSelected != undefined) {
+        		prevSelected.childNodes[1].style.backgroundColor = m_strColorDefault;
+	        	prevSelected.setAttribute("selected", "false");
+        	}
+        	
+			obj.childNodes[1].style.backgroundColor = m_strColorSelect;
+        	obj.setAttribute("selected", "true");
+        	
+        	changeInfoTarget(obj);
+		}
+		
+		function changeInfoTarget(obj) {
+			document.getElementById("infoIdTarget").innerHTML = obj.getAttribute("infoid");
+			document.getElementById("infoContentTarget").innerHTML = obj.getAttribute("infocontent");
+			document.getElementById("infoTypeTarget").innerHTML = obj.getAttribute("infotype");
+		}
+		
+		function event_listMover(obj) {
+        	if (obj.getAttribute("selected") != "true") {
+        		obj.childNodes[1].style.backgroundColor = m_strColorOver;
+        	}
+        	
+        }
+        
+        function event_listMout(obj) {
+        	if (obj.getAttribute("selected") != "true") {
+        		obj.childNodes[1].style.backgroundColor = m_strColorDefault;
+        	}
+        }
+		
 		
 		function saveSignTemplate() {
 			displayname = document.getElementById("displayname").value;
@@ -175,55 +227,55 @@
 							</thead>
 							
 							<tbody id="inputInfoBody">
-								<tr>
+								<tr style="cursor: pointer;" infoId="signName" infoContent="사용자 이름" infoType="TD" >
 									<td>이름</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signEmail" infoContent="이메일" infoType="TD">
 									<td>이메일</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signDept" infoContent="부서" infoType="TD">
 									<td>부서</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signPosition" infoContent="직위" infoType="TD">
 									<td>직위</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signResponsibilities" infoContent="직책" infoType="TD">
 									<td>직책</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signBirth" infoContent="생년월일" infoType="TD">
 									<td>생년월일</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signCompanyNum" infoContent="사번" infoType="TD">
 									<td>사번</td>
 								</tr>
-								<tr>
+								<tr  style="cursor: pointer;"infoId="signComapnyPhone" infoContent="사내전화" infoType="TD">
 									<td>사내전화</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signPhone" infoContent="전화번호" infoType="TD">
 									<td>전화번호</td>
-								</tr>
-								<tr>
+								</tr >
+								<tr style="cursor: pointer;" infoId="signMovePhone" infoContent="이동전화" infoType="TD">
 									<td>이동전화</td>
 								</tr>
-								<tr>
+								<tr style="cursor: pointer;" infoId="signFaxNumber" infoContent="팩스번호" infoType="TD">
 									<td>팩스번호</td>
 								</tr>
 							</tbody>
 						</table>
 						
 						<table class="content" style="width:100%; border:none; margin-top:10px;">
-							<thead id="inputInfoDetail">
+							<tbody id="inputInfoDetail">
 								<tr>
 									<th style="text-align:center;"><b>ID</b></th>
-									<td></td>
+									<td id="infoIdTarget"></td>
 								</tr>
 								<tr>
 									<th style="text-align:center;"><b>내용</b></th>
-									<td></td>
+									<td id="infoContentTarget"></td>
 								</tr>
 								<tr>
 									<th style="text-align:center;"><b>타입</b></th>
-									<td></td>
+									<td id="infoTypeTarget"></td>
 								</tr>
 								<tr>
 									<td align="center" colspan="2" height="40px" style="border: 0px;">
@@ -235,7 +287,7 @@
 										</div>
 									</td>
 								</tr>
-							</thead>
+							</tbody>
 						</table>
 					</div>
 				</div>
