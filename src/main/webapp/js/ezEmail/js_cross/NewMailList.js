@@ -814,7 +814,7 @@ function MailSelect_One() {
         document.getElementById("Maillist_0").onclick();
 }
 var pOldSearchKeyword;
-function GetListInfo(HeaderObject, ContentObject) {
+function GetListInfo(HeaderObject, ContentObject, shareId) {
 	/* 수아 재은 수정 */
 	checkedHrefArry = getCheckHrefArry();
     
@@ -851,12 +851,18 @@ function GetListInfo(HeaderObject, ContentObject) {
     pOldSearchKeyword = SearchKeyword;
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
-    if(p_ListorderValue == "GROUPSUBLIST")
-        createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
-
+    
+    if (p_ListorderValue == "GROUPSUBLIST") {
+    	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
+    }
+    
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	createNodeAndInsertText(xmlpara, objNode, "SHAREID", shareId);
+    }
     
     var _url = "/ezEmail/mailGetList.do";
     
@@ -1062,7 +1068,7 @@ function on_changeView(listtypeValue) {
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     HeaderIni(HeaderObject);
-    GetListInfo(HeaderObject,ContentObject);
+    GetListInfo(HeaderObject,ContentObject, shareId);
 }
 function mf_updatePageInfo(szRangeHeader) {
     var pageCount = parseInt(document.getElementById("MailList").getAttribute("listpageCount"));
@@ -1169,13 +1175,13 @@ function BasicViewHeaderChange(pGubun, pFolderType) {
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     HeaderIni(HeaderObject);
-    GetListInfo(HeaderObject, ContentObject);
+    GetListInfo(HeaderObject, ContentObject, shareId);
 }
 function goToPageByNum(szNum) {
     document.getElementById("MailList").setAttribute("curPage", szNum)
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
-    GetListInfo(HeaderObject,ContentObject);
+    GetListInfo(HeaderObject,ContentObject, shareId);
 }
 function selbeforeBlock() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
@@ -1383,7 +1389,7 @@ function event_HeaderClick(obj) {
     }
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
-    GetListInfo(HeaderObject, ContentObject);
+    GetListInfo(HeaderObject, ContentObject, shareId);
 }
 
 function event_SubHeaderClick(obj) {

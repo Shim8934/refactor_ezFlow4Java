@@ -2224,4 +2224,56 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return resultList;
 	}
 	
+	@Override
+	public List<Map<String, String>> getUserSharedMailboxList(String userId, String primary, int tenantId) throws Exception {
+		logger.debug("getUserSharedMailboxList started.");
+		logger.debug("userId=" + userId + ",primary=" + primary + ",tenantId=" + tenantId);
+		
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getUserSharedMailboxList";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK")) {
+        	JSONArray array = (JSONArray)object.get("result");
+        	
+        	if (array != null) {
+        		int length = array.size();
+        		Map<String, String> map = null;
+        		
+        		for (int i = 0; i < length; i++) {
+        			JSONObject obj = (JSONObject)array.get(i);
+        			
+        			map = new HashMap<String, String>();
+        			map.put("shareId", (String)obj.get("shareId"));
+        			map.put("deletePermission", (String)obj.get("deletePermission"));
+        			map.put("sendPermission", (String)obj.get("sendPermission"));
+        			
+        			if (primary.equals("1")) {
+        				map.put("shareName", (String)obj.get("shareName"));
+        			} else {
+        				map.put("shareName", (String)obj.get("shareName2"));
+        			}
+        			
+        			map.put("mail", (String)obj.get("mail"));
+        			map.put("compId", (String)obj.get("compId"));
+        			
+        			list.add(map);
+        		}
+        	}
+        }
+		
+		logger.debug("getUserSharedMailboxList ended.");
+		return list;
+	}
+	
 }

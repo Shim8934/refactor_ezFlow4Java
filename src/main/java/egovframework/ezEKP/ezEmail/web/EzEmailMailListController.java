@@ -104,9 +104,10 @@ public class EzEmailMailListController {
 		String dispname = request.getParameter("dispname");
 		String url = request.getParameter("url");
 		url = (url != null) ? url : "INBOX";
+		String shareId = request.getParameter("shareId");
 		
-		logger.debug("dispname=" + dispname + ",url=" + url);
-				
+		logger.debug("dispname=" + dispname + ",url=" + url + ",shareId=" + shareId);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -191,11 +192,12 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
+		model.addAttribute("shareId", shareId);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ",shareId=" + shareId);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -587,8 +589,6 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
         
-        logger.debug("userEmail=" + userEmail);
-        
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String folderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -599,7 +599,16 @@ public class EzEmailMailListController {
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		
-		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
+		if (doc.getElementsByTagName("SHAREID").item(0) != null) {
+			//TODO: shareId 체크
+			
+			String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
+			logger.debug("shareId=" + shareId);
+			
+			userEmail = shareId + "@" + domainName;
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
 					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
 		

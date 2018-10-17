@@ -99,6 +99,7 @@
 		    var isSentItems = "${isSentItems}";
 		    var importExportMode = false;
 		    var useCountryIP = "${useCountryIP}";
+		    var shareId = "${shareId}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -284,7 +285,7 @@
 		        var HeaderObject = document.getElementById("MailHeader");
 		        var ContentObject = document.getElementById("MailList");	        
 		        HeaderIni(HeaderObject);       
-		        GetListInfo(HeaderObject, ContentObject);	        
+		        GetListInfo(HeaderObject, ContentObject, shareId);	        
 		        PreviewMode_ChangeBtn();
 		        window_onunload_Event = true;
 		                        

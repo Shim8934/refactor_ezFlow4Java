@@ -1025,6 +1025,179 @@
 
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", feature);
 		    }
+			
+			// 2018-10-16 공유사서함 관련 함수 추가
+			function Share_Menu_Click(i, shareId) {
+			    var str = 'shareTreeView_' + i;
+			    
+			    if (document.getElementById(str).innerHTML === "") {
+			        var xmlHTTP = createXMLHttpRequest();
+			        var xmlDOM = createXmlDom();
+			        var objNode;
+			        createNodeInsert(xmlDOM, objNode, "DATA");
+			        createNodeAndInsertText(xmlDOM, objNode, "SHAREID", shareId);
+			        xmlHTTP.open("POST", "/ezEmail/getSharedFolderlist.do", false);
+			        xmlHTTP.send(xmlDOM);
+
+			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");
+			        LoadEmailTree2(nodeTreeXml, i);
+			        
+			    } else {
+			    	eval(str).select(1);
+			    }
+			}
+			
+			function LoadEmailTree2(RootShareFolderXML, i) {
+			    if (RootShareFolderXML.trim() == "") {
+			        return;
+			    }
+			    
+			    var shareTreeView = new TreeView('shareTreeView_' + i, 'shareTreeView_' + i);
+			    shareTreeView.attachEvent('requestdata', requestdata);
+			    shareTreeView.attachEvent('nodeselect', function () { selectnode2(i); });
+			    shareTreeView.attachEvent('nodedblclick', function () { shareTreeView.toggle(shareTreeView.selectedIndex()) });
+			    shareTreeView.attachEvent('dragdrop', email_dragdrop);
+			    shareTreeView.dragdrop(true);
+			    
+			    var xmlHTTP = createXMLHttpRequest();
+			    xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+			    xmlHTTP.send();
+				
+			    var treeconfig;
+	            if (CrossYN()) {
+	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+	            } else {
+	                treeconfig = xmlHTTP.responseXML;
+	            }
+			    
+			    shareTreeView.config(treeconfig);
+			    shareTreeView.source("<tree><nodes>" + RootShareFolderXML + "</nodes></tree>");
+			    shareTreeView.update();
+			    
+			    shareTreeView.select(1);
+			    
+			    selectnode2(i);
+			}
+
+			function selectnode2(i, event) {
+	        	if (!event) event = window.event;
+				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
+	        	if (event != undefined) {
+		        	if (event.which != 3) {
+		        		var str = 'shareTreeView_' + i;
+					    var nodeIdx = eval(str).selectedIndex();
+					    var href = eval(str).getvalue(nodeIdx, "href");
+					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(str).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(href) + "&shareId=" + encodeURIComponent(GetAttribute(document.getElementById(str), "value"));
+					    
+			            try {
+			                if (typeof (parent.frames["right"]) != "undefined") {
+			                    parent.frames["right"].Window_onunload();
+			                }
+			            } catch (e) { }
+			            
+			            if (g_firstOpen) {
+			                g_firstOpen = false;
+			            } else {
+			                window.open(url, "right");
+			            }
+			            
+			            get_unreadcount2(i);
+		        	}
+	        	}
+			}
+
+			function get_unreadcount2(index) {
+			    return get_unreadcount2_2010(index);
+			}
+
+			var xmlHTTP_Unread2 = null;
+			
+			function get_unreadcount2_2010(index) {
+			    if (xmlHTTP_Unread2 != null) {
+			        return;
+			    }
+			    
+			    try {
+			    	var str = 'shareTreeView_' + index;
+			    	
+			    	xmlHTTP_Unread2 = createXMLHttpRequest();
+	                var xmlpara = createXmlDom();
+	                var objNode;
+	                createNodeInsert(xmlpara, objNode, "DATA");
+	                createNodeAndInsertText(xmlpara, objNode, "URL", eval(str).getvalue(eval(str).selectedIndex(), "href"));
+	                createNodeAndInsertText(xmlpara, objNode, "SHAREID", GetAttribute(document.getElementById(str), "value"));
+	                xmlHTTP_Unread2.open("POST", "/ezEmail/getFolderUnreadCount.do", true);
+	                xmlHTTP_Unread2.onreadystatechange = function () { get_unreadend2_2010(index); };
+	                get_unreadend2_2010.href = eval(str).getvalue(eval(str).selectedIndex(), "href");
+	                xmlHTTP_Unread2.send(xmlpara);
+	            }
+	            catch (e) {
+	            	xmlHTTP_Unread2 = null;
+	            }
+			}
+			
+			function get_unreadend2_2010(index) {
+			    if (xmlHTTP_Unread2 == null || xmlHTTP_Unread2.readyState != 4) {
+			        return;
+			    }
+			    
+			    if (xmlHTTP_Unread2.status >= 200 && xmlHTTP_Unread2.status < 300) {
+			        var str = 'shareTreeView_' + index;
+			        var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread2.responseXML, "DATA")[0]);
+			        var caption = eval(str).getvalue(eval(str).selectedIndex(), "foldername");
+
+			        if (get_unreadend2_2010.href == eval(str).getvalue(eval(str).selectedIndex(), "href")) {
+			            if (unreadcount == "0") {
+			                eval(str).putcaption(eval(str).selectedIndex(), caption);
+			                eval(str).putstyle(eval(str).selectedIndex(), "font-weight : ''");
+			            } else {
+			            	eval(str).putcaption(eval(str).selectedIndex(), caption + "(" + unreadcount + ")");
+			            	eval(str).putstyle(eval(str).selectedIndex(), "font-weight : bold");
+			            }
+			            
+			            var pageTitle = parent.frames["right"].document.title;
+			            
+			            if (pageTitle == "mail_list") {
+                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
+	                    }
+			            
+			            xmlDom = null;
+			        }
+			    }
+			    
+			    xmlHTTP_Unread2 = null;
+			}
+
+			function SharefindID() {
+			    var str = "";
+			    
+			    for (var i = 0; i < document.getElementsByTagName("ul").length; i++) {
+			        if (document.getElementsByTagName("ul")[i].className == "on") {
+			            str = document.getElementsByTagName("ul")[i];
+			        }
+			    }
+			    
+			    str = str.getElementsByTagName("div")[0].id;
+			    var rtn = GetAttribute(document.getElementById(str), "value");
+			    
+			    return rtn;
+			}
+
+			function SharefindIndex() {
+			    var str = "";
+			    
+			    for (var i = 0; i < document.getElementsByTagName("ul").length; i++) {
+			        if (document.getElementsByTagName("ul")[i].className == "on") {
+			            str = document.getElementsByTagName("ul")[i];
+			        }
+			    }
+			    
+			    str = str.getElementsByTagName("div")[0].id;
+			    var rtn = GetAttribute(document.getElementById(str), "index");
+			    
+			    return rtn;
+			}
+
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1077,6 +1250,14 @@
                 <li><span onclick="openSpamBox()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.ldh01" /></span></li>
                 </c:if>
 	        </ul>
+	        
+	        <c:forEach items="${shareInfoList}" var="shareInfo" varStatus="status">
+	        	<h2><span onclick="Share_Menu_Click(${status.index}, '${shareInfo.shareId}');" style="width: 100%; display: inline-block;">${shareInfo.shareName}</span></h2>
+	        	<ul>
+	            	<div id="shareTreeView_${status.index}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+	        	</ul>
+	        </c:forEach>
+	        
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow-x:hidden; overflow-y: auto; padding-left: 20px;" id="AddressTreeView"></div>
