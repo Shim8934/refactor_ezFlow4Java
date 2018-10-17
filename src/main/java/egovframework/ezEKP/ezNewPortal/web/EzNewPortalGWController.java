@@ -333,7 +333,8 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getUserThemeList(companyId, tenantId);
+//			List<ThemeInfoVO> userThemeList = ezNewPortalService.getUserThemeList(companyId, tenantId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -824,10 +825,12 @@ public class EzNewPortalGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
-			//테마정보조회 서비스 하나 만들까 합쳐놀까
+//			List<ThemeInfoVO> themeList = ezNewPortalService.getUserThemeList(companyId, tenantId);
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", themeList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

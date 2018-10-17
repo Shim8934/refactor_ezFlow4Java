@@ -791,6 +791,38 @@ AND
 				DOCINFO.docstate not in ('015')
 		]]>
 	</select>
+	
+	<select id="ezNewPortal.getCompanyThemes" parameterClass="Map" resultClass="ThemeInfoVO">
+		<![CDATA[
+			SELECT
+				B.theme_id AS themeid,
+				B.theme_name AS themename,
+			    B.theme_content AS themecontent,
+			    A.theme_used AS themeused,
+			    A.theme_default AS themedefault
+			    C.frame_id AS framedefault
+			FROM
+				TBL_PORTAL_THEME_COMP A
+			JOIN
+				TBL_PORTAL_THEME B
+			ON
+				A.theme_id = B.theme_id
+			JOIN
+				TBL_PORTAL_FRAME_COMP C
+			ON
+				A.tenant_id = C.tenant_id
+			AND
+				A.company_id = C.company_id
+			AND
+				A.theme_id = C.theme_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+				C.frame_default = 'Y'
+		]]>
+	</select>
 
 <!-- 사용자 포탈 설정 가져오기(테마, 프레임) -->
 <select id="ezNewPortal.getUserPortalSetting" parameterClass="Map" resultMap="UserPortalSettingVO">

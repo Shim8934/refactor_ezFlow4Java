@@ -25,7 +25,7 @@
 		    </span>
 		</div>
 		
-		<div class="main">
+		<div id="thumbnailGrid" class="main">
 			<ul id="og-grid" class="og-grid">
 				<li>
 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="1번 테마 제목" data-description="1번 테마 설명">
@@ -90,6 +90,7 @@
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/getCompanies.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
 	
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
@@ -122,28 +123,34 @@
 		
 		var getThemes = function () {
 			var companiesObj = document.getElementById("ListCompany");
-			var companyValue = companiesObj.options[companiesObj.selectedIndex].value);
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/getThemes.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
 	
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
 					var result = JSON.parse(request.responseText);
 					
-					var userCompany = result.userCompany;
-					var companyList = result.list;
-					var companiesHTML = "";
+					var themes = result.list;
+					var themesHTML = "";
 					
-					companyList.forEach(function (item, index) {
-						companiesHTML += "<option value=" + item.cn + ((item.cn == userCompany) ? ' selected>' : '>') + item.displayName + "</option>";
+					themes.forEach(function (item, index) {
+alert(index);
+						//class 보고 찾아서  html 그림 그리면 그림 나오냐
+						themesHTML += "<ul id='og-grid' class='og-grid'>";
+						
+						themesHTML += "<li>";
+						themesHTML += "<a href='http://cargocollective.com/jaimemartinez/' data-largesrc='/images/kr/main/nodata.png' data-title='Veggies sunt bona vobis' data-description='Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu.'>";
+						themesHTML += "<img src='/images/kr/main/nodata.png' alt='img02'/>";
+						themesHTML += "</a>";
+						themesHTML += "</li>";
+					
+						themesHTML += "</ul>";
 					});
 					
-					document.getElementById("ListCompany").innerHTML = companiesHTML;
-					
-					document.getElementById("ListCompany").addEventListener('change', function() {
-						getThemes();
-					});
+					document.getElementById("thumbnailGrid").innerHTML = companiesHTML;
 				} else {
 					// We reached our target server, but it returned an error
 				}
@@ -158,7 +165,6 @@
 			});
 			
 			request.send(data);
-			
 		}
 	</script>
 </html>
