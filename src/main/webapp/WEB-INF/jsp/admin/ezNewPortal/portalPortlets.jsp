@@ -13,6 +13,90 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
+	<style type="text/css">
+	/* main media query */
+@media only screen and (min-width :1921px) {
+	.box_shadow{ width:483px; float:left;}
+}
+
+@media only screen and (max-width :1920px) and (min-width :1686px) { 
+	.section_main .mainLayout_right_move{  width:33.3%;}
+	.section_main .mainLayout_right{  width:33.3%;}
+	.section_main .mainLayout_left{ width:33.3%;}
+	.section_main .mainLayout_middle{ width:33.3%;}
+	.box_shadow{ width:32%; float:left;}
+	.bannerText{ padding:73px 18px 0px 0px;}
+}
+
+@media only screen and (max-width :1685px) and (min-width :1280px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.box_shadow{width:48%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px}
+	
+}
+
+@media only screen and (max-width : 1279px) {
+	.box_shadow {width:410px; float:left;}
+}
+body {
+    min-width: 520px;
+  }
+  .column {
+    width: 320px;
+    float: left;
+    padding-bottom: 100px;
+  }
+  .portlet {
+    margin: 0 1em 1em 0;
+    padding: 0.3em;
+  }
+  .portlet-header {
+    padding: 0.2em 0.3em;
+    margin-bottom: 0.5em;
+    position: relative;
+  }
+  .portlet-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+  }
+  .portlet-content {
+    padding: 0.4em;
+  }
+  .portlet-placeholder {
+    border: 1px dotted black;
+    margin: 0 1em 1em 0;
+    height: 50px;
+  }
+	</style>
+	<script type="text/javascript">
+	$( function() {
+	    $( ".column" ).sortable({
+	      connectWith: ".column",
+	      handle: ".portlet-header",
+	      cancel: ".portlet-toggle",
+	      placeholder: "portlet-placeholder ui-corner-all"
+	    });
+	 
+	    $( ".portlet" )
+	      .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+	      .find( ".portlet-header" )
+	        .addClass( "ui-widget-header ui-corner-all" )
+	        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+	 
+	    $( ".portlet-toggle" ).on( "click", function() {
+	      var icon = $( this );
+	      icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+	      icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+	    });
+	  } );
+	</script>
 </head>
 	
 <body class="mainbody" marginwidth="0" marginheight="0">
@@ -32,68 +116,51 @@
 	</div>
 	
 	# 드래그 앤 드롭을 하고 순서저장 버튼을 누르면 기본 포틀릿 순서를 지정할 수 있습니다.
+	<br>
 		
-	<div id="accordion">
-		<div class="group">
-			<h3>Section 1</h3>
-			<div>
-				<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
-			</div>
-		</div>
-		<div class="group">
-			<h3>Section 2</h3>
-			<div>
-				<p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
-				</div>
-			</div>
-		<div class="group">
-			<h3>Section 3</h3>
-			<div>
-				<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
-				<ul>
-					<li>List item one</li>
-					<li>List item two</li>
-					<li>List item three</li>
-				</ul>
-			</div>
-		</div>
-		<div class="group">
-			<h3>Section 4</h3>
-			<div>
-				<p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
-			</div>
-		</div>
-	</div>
+	<div class="column">
+ 
+  <div class="portlet">
+    <div class="portlet-header">Feeds</div>
+    <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
+  </div>
+ 
+  <div class="portlet">
+    <div class="portlet-header">News</div>
+    <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
+  </div>
+ 
+</div>
+ 
+<div class="column">
+ 
+  <div class="portlet">
+    <div class="portlet-header">Shopping</div>
+    <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
+  </div>
+ 
+</div>
+ 
+<div class="column">
+ 
+  <div class="portlet">
+    <div class="portlet-header">Links</div>
+    <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
+  </div>
+ 
+  <div class="portlet">
+    <div class="portlet-header">Images</div>
+    <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>
+  </div>
+ 
+</div>
 </body>
 	
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 
 <!-- thumbGrid opensource -->
 <script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/modernizr.custom.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/grid.js')}"></script>
 
-<script type="text/javascript">
-$( function() {
-  $( "#accordion" ).accordion({
-		header: "> div > h3",
-    	collapsible: true
-    })
-    .sortable({
-      axis: "y",
-      handle: "h3",
-      stop: function( event, ui ) {
-        // IE doesn't register the blur when sorting
-        // so trigger focusout handlers to remove .ui-state-focus
-        ui.item.children( "h3" ).triggerHandler( "focusout" );
-
-        // Refresh accordion to handle new order
-        $( this ).accordion( "refresh" );
-      }
-    });
-} );
-
-
-</script>
 </html>
