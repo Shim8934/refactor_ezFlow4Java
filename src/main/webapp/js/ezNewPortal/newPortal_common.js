@@ -110,8 +110,22 @@ function eventSetting(portletId) {
 			console.log(exception);
 			alert(messages.strLang2);
 		});
-	} else if (portletId === 10) {
-		getTabList();
+	} else if (portletId === 10) {// 즐겨찾기
+		var url = "/js/ezNewPortal/portlets/favoriteBoardPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				getTabList();
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
 	} else if (portletId === 12) { // 도움말
 		helpPortletLoadFunc();
 	} else if (portletId === 2) {  // 공지사항
@@ -119,7 +133,42 @@ function eventSetting(portletId) {
 	} else if (portletId === 5) {  // 설문조사
 		pollPortletLoadFunc();
 	} else if (portletId === 11) {  // 커뮤니티
-		$("#communityPlus").on("click", viewCommuList);
+		var url = "/js/ezNewPortal/portlets/communityPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				$("#communityPlus").on("click", viewCommuList);
+				
+				for (var i=1; i < CommuSize; i ++) {
+					clubNo = $('.comListDL0'+i).attr('data1');
+					$('.comListDL0'+i).on("click",{ iClubNo : clubNo }, view_bestCommunity);
+				}
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+	} else if (portletId === 1) { // 메일
+		var url = "/js/ezNewPortal/portlets/receivedMailPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				$("#mGraphSpan").css("width", mailPercent + "px");
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
 	}
 }
 

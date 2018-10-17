@@ -8,5 +8,7 @@ var messages = {
 	strLang7 : "현재 시각은 ",
 	strLang8 : "입니다.",
 	strLang9 : "휴일은 출/퇴근을 등록할 수 없습니다.",
-	strLang10 : "조퇴 후 퇴근은 불가능합니다."
+	strLang10 : "조퇴 후 퇴근은 불가능합니다.",
+	strLang11 : "비공개 CoP입니다.",
+	strLang12 : "회원가입을 하시기 바랍니다.	",
 }

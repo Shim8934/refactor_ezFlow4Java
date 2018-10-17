@@ -1,6 +1,52 @@
 /**
  * 구해안
  */
+var clubNo = "";
+var CommuSize = $('#CommuSize').val();
+
+function view_bestCommunity(event) {
+	var clubType = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezNewPortal/getCommunityPermit.do",
+		data : {
+				//꺼내쓸때 event.data.변수명 으로 꺼낸다
+				clubNo	:	event.data.iClubNo,
+			   },
+		success: function(result){
+			clubType = result;
+		}
+	});
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezCommunity/remote/getACL.do",
+		data : { cID	:	clubNo,
+				 uID	:	"${userinfo.userId}"
+		},
+		success: function(result){
+			
+			if (result == "ERR" || clubType == "1") {
+				OpenAlertUI(messages.strLang11+"<br>"+messages.strLang12, null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
+			} else {
+				var wWeight = "1300";
+                var wHeight = "900";
+
+                var heigth = window.screen.availHeight;
+                var width = window.screen.availWidth;
+
+                var left = (width - wWeight) / 2;
+                var top = (heigth - wHeight) / 2 - 30;
+
+                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+			}
+		}
+	});
+}
 
 function viewCommuList() {
     window.open("/ezCommunity/communityMain.do?funCode=5", "main", "");
