@@ -129,7 +129,7 @@
 						
 	            	    //2016-08-18 urc 수정
 	                	//var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(BoardID) + "&FILENAME=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
-						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
+						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + encodeURIComponent(Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1), Imgsrc.length);
 
 	                	_span1.innerHTML = "<img src='" + imgSrc + "' width='107px' height='75px' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>";
 
