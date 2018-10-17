@@ -120,6 +120,8 @@ function eventSetting(portletId) {
 		pollPortletLoadFunc();
 	} else if (portletId === 11) {  // 커뮤니티
 		$("#communityPlus").on("click", viewCommuList);
+	} else if (portletId === 1) { // 메일
+		$("#mGraphSpan").css("width", mailPercent + "px");
 	}
 }
 
