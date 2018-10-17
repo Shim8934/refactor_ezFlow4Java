@@ -35,10 +35,12 @@
 				        window.parent.frames.right.document.location.href = "/ezBoard/boardConfig.do";
 				        break;
 					case "Portal":
-					    window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
+					    //window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
+					    window.parent.frames.right.document.location.href="/ezNewPortal/userThemeSetting.do";//ezNewPortal
 						break;
 					case "Portal_sub1":
-					    window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
+					    //window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
+					    window.parent.frames.right.document.location.href="/ezNewPortal/userThemeSetting.do";//ezNewPortal
 						break;
 					case "Portal_sub2":
 						window.parent.frames.right.document.location.href="/myoffice/ezPortal/environ/UserSkin.aspx?";

@@ -26,11 +26,11 @@ function updatePortletOrderUser() {
 		data : JSON.stringify(data),
 		success : function(result) {
 			if (result === "failed") {
-				alert("오류가 발생하였습니다.");
+				alert(messages.strLang2);
 			}
 		},
 		error : function() {
-			alert("오류가 발생하였습니다.");
+			alert(messages.strLang2);
 		}
 	});
 }
@@ -85,12 +85,12 @@ function eventSetting(portletId) {
 				$("#" + portletId + "Portlet").find(".voteBtn").on("click", votePoll);
 			} catch(err) {
 				console.log(err);
-				alert("에러가 발생하였습니다.");
+				alert(messages.strLang2);
 			}
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log(exception);
-			alert("에러가 발생하였습니다.")
+			alert(messages.strLang2);
 		});
 	} else if (portletId == 9) { //포토게시판
 		var url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
@@ -103,12 +103,12 @@ function eventSetting(portletId) {
 				$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);
 			} catch(err) {
 				console.log(err);
-				alert("에러가 발생하였습니다.");
+				alert(messages.strLang2);
 			}
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log(exception);
-			alert("에러가 발생하였습니다.")
+			alert(messages.strLang2);
 		});
 	} else if (portletId === 10) {
 		getTabList();
@@ -291,7 +291,7 @@ function getBirthdayEmployeesList() {
 			}, 5000);
 		},
 		error : function() {
-			alert("오류가 발생하였습니다.");
+			alert(messages.strLang2);
 		}
 	});
 }
@@ -318,7 +318,7 @@ function getMonthlyBestEmployee() {
 			if (bestEmployee == null) {
 				$("#emPic").find("img").attr("src", "/images/ezNewPortal/bestEmployee_pic_none.png");
 				strHTML += "<dl class='nodata' style='margin-top:8px'>";
-				strHTML += "<dd>데이터가 없습니다</dd>";
+				strHTML += "<dd>" + messages.strLang1 + "</dd>";
 				strHTML += "</dl>";
 			} else {
 				$("#emPic").find("img").attr("src", bestEmployee.userImg);
@@ -374,7 +374,7 @@ function addAttitude(obj) {
 	if (pTypeId == "A03") {
 		var returnValue = getIsAttitude("A01");
 		if (returnValue == 0) {
-			alert("출근 후 퇴근이 가능합니다.");
+			alert(messages.strLang3);
     		return;
 		} else {
 			getAttitudeList();
@@ -382,8 +382,8 @@ function addAttitude(obj) {
 	}
 	
 	beforeAlertDate = new Date();
-	var dateAlert = nowAttiTime.getFullYear() + "년 " + (nowAttiTime.getMonth() + 1) + "월 " + (nowAttiTime.getDate()) + "일 " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-	var saveFlag = confirm("현재 시각은 " + dateAlert + "입니다.");
+	var dateAlert = nowAttiTime.getFullYear() + messages.strLang4 + (nowAttiTime.getMonth() + 1) + messages.strLang5 + (nowAttiTime.getDate()) + messages.strLang6 + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
 	if (!saveFlag) {
 		afterAlertDate = new Date();
 		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
@@ -466,7 +466,7 @@ function checkHoliday(obj) {
 	if(addAttitude) {
 		checkAttitude(obj);
 	} else {
-		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
+		alert(messages.strLang9);
 	}
 }
 
@@ -477,7 +477,7 @@ function checkHoliday(obj) {
 	if (returnValue == 0) {
 		addAttitude(obj);
 	} else {
-		alert("조퇴 후 퇴근은 불가능합니다.");
+		alert(messages.strLang10);
 		getAttitudeList();
 		try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 	}
@@ -509,4 +509,38 @@ function setAttiBtnHover() {
 	}, function(){
 		$(this).removeClass("btn_hover");
 	})
+}
+
+function quickMenuOpen(event) {
+	var url = "";
+	var location = "";
+	var option = " ";
+	var menu = event.data.menu;
+	
+	switch (menu) {
+		case "NewMail" : 
+			url = "/ezEmail/mailMain.do";
+			location = "main";
+			break;						
+		case "ApprG" : 	
+			// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
+			var listType = 1;
+			url = "/ezApprovalG/apprGMain.do?listType=" + listType;
+			location = "main";
+			break;
+		case "Schedule" :
+			url = "/ezSchedule/scheduleIndex.do?funCode=2";
+			location = "main";
+			break;
+		case "Poll" :
+			url = "/ezBoard/boardMain.do?func=1";
+			location = "main";
+			break;
+	    case "Circular":
+			url = "/ezCircular/circularIndex.do";
+			location = "main";
+	        break; 
+	}
+	
+	window.open(url, location, option);
 }

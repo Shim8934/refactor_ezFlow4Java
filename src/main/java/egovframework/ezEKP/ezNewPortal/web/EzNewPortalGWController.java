@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -322,22 +323,27 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value= "/rest/ezPortal/themes/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getThemeList(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getThemeList started.");
+	public JSONObject getUserThemeList(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getUserThemeList started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getUserThemeList(companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", userThemeList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getThemeList ended.");
+		LOGGER.debug("ezNewPortal G/W getUserThemeList ended.");
 		return result;
 	}
 	

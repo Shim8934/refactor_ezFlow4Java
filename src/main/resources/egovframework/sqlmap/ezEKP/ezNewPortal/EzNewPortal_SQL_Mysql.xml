@@ -74,6 +74,7 @@
 <result property="themeContent" 			column="THEME_CONTENT" />
 <result property="themeUsed" 				column="THEME_USED" />
 <result property="themeDefault" 			column="THEME_DEFAULT" />
+<result property="frameDefault" 			column="FRAME_DEFAULT" />
 </resultMap>
 <resultMap class="UserPortalSettingVO" id="UserPortalSettingVO">
 <result property="userId" 					column="USER_ID" />
@@ -587,6 +588,36 @@ AND
 	A.TENANT_ID = #tenantId#
 AND
 	A.PHYSICALDELIVERYOFFICENAME = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getUserThemeList" parameterClass="Map" resultMap="ThemeInfoVO">
+<![CDATA[
+SELECT
+	A.theme_id,
+	A.theme_name,
+    A.theme_content,
+    B.theme_used,
+    B.theme_default,
+    C.frame_id as frame_default
+FROM
+	TBL_PORTAL_THEME A
+JOIN
+	TBL_PORTAL_THEME_COMP B
+ON
+	A.theme_id = B.theme_id
+JOIN
+	TBL_PORTAL_FRAME_COMP C
+ON
+	B.theme_id = C.theme_id
+WHERE
+	B.company_id = #companyId#
+AND
+	B.tenant_id = #tenantId#
+AND
+	B.theme_used = 'Y'
+AND
+	C.frame_default = 'Y'
 ]]>
 </select>
 <!-- 이효진-->
