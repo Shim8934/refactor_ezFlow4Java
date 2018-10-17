@@ -420,8 +420,7 @@ public class EzNewPortalGWController {
 			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
 			LOGGER.debug("list.toString() : " + userMenuList.toString());
 			if (userMenuList.size() == 0) {
-				compMenuList = ezNewPortalService.getCompanyMenuList(companyId,
-						tenantId, langType);
+				// compMenuList = ezNewPortalService.getCompanyMenuList(companyId,	tenantId, langType);
 			}
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
