@@ -1637,7 +1637,7 @@ public class EzNewPortalGWController {
 					
 					Map<Object, String> mailMap = new HashMap<Object, String>();
 					mailMap.put("href", href);
-					mailMap.put("receivedDateStr", receivedDateStr);
+					mailMap.put("receivedDateStr", receivedDateStr.substring(5));
 					mailMap.put("sender", sender);
 					mailMap.put("subject", subject);
 					mailMap.put("readClass", readClass);
