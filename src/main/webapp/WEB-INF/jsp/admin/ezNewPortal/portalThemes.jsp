@@ -20,7 +20,7 @@
 		
 		<div id="mainmenu">    
 		    <span><b>회사선택 :</b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
+			    <select id="ListCompany">
 			    </select><br /><br />
 		    </span>
 		</div>
@@ -82,6 +82,11 @@
 	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/grid.js')}"></script>
 	
 	<script type="text/javascript">
+		$(function() {
+			getCompanies();
+			Grid.init();
+		});
+		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/getCompanies.do', true);
@@ -101,7 +106,7 @@
 					document.getElementById("ListCompany").innerHTML = companiesHTML;
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
-						selectCompanyID();
+						getThemes();
 					});
 				} else {
 					// We reached our target server, but it returned an error
@@ -115,17 +120,45 @@
 			request.send();
 		}
 		
-		var selectCompanyID = function () {
-// 			회사변경 시 테마 가져오기
+		var getThemes = function () {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value);
+			
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getThemes.do', true);
+	
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var result = JSON.parse(request.responseText);
+					
+					var userCompany = result.userCompany;
+					var companyList = result.list;
+					var companiesHTML = "";
+					
+					companyList.forEach(function (item, index) {
+						companiesHTML += "<option value=" + item.cn + ((item.cn == userCompany) ? ' selected>' : '>') + item.displayName + "</option>";
+					});
+					
+					document.getElementById("ListCompany").innerHTML = companiesHTML;
+					
+					document.getElementById("ListCompany").addEventListener('change', function() {
+						getThemes();
+					});
+				} else {
+					// We reached our target server, but it returned an error
+				}
+			};
+	
+			request.onerror = function() {
+			  // There was a connection error of some sort
+			};
+			
+			var data = JSON.stringify({
+				companyId : companyValue
+			});
+			
+			request.send(data);
+			
 		}
-		
-		
-		
-		//load
-		getCompanies();
-		
-		$(function() {
-			Grid.init();
-		});
 	</script>
 </html>

@@ -813,14 +813,18 @@ public class EzNewPortalGWController {
 	 * 포탈개인화  G/W [GET] 회사별 테마 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/admin/ezPortal/themes/companies/{companyId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getCompanyThemeList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyList started.");
+	@RequestMapping(value= "/rest/admin/ezportal/themes/companies/{companyId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCompanyThemes(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getCompanyThemes} started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			//테마정보조회 서비스 하나 만들까 합쳐놀까
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -829,7 +833,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyList ended.");
+		LOGGER.debug("ezNewPortal G/W getCompanyThemes ended.");
 		return result;
 	}
 	
