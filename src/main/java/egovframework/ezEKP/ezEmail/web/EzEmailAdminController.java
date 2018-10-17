@@ -1367,4 +1367,21 @@ public class EzEmailAdminController {
 
 	}
 	
+	/**
+	 * 서명 템플릿 미리보기 (팝업창)
+	 * 
+	 * @param String loginCookie, Model model
+	 */
+	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do")
+	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, String content) throws Exception {
+		logger.debug("signaturePreviewContent started.");
+		logger.debug("content=" + content);
+		
+		model.addAttribute("content", content);
+
+		logger.debug("signaturePreviewContent ended.");
+		return "admin/ezEmail/signaturePreview";
+
+	}
+	
 }

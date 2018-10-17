@@ -124,6 +124,16 @@
 			document.getElementById("displayname2").value = displayname2;
 			window.message.SetEditorContent(document.getElementById("signatureTemplate").innerHTML);
 		}
+		
+		function previewSignTemplate() {
+			var contentStr = window.message.GetEditorContent();
+			
+			if (contentStr !== undefined) {
+				url = "/admin/ezEmail/signaturePreviewContent.do?content=" + encodeURIComponent(contentStr);
+		    	window.open(url,"_blank","width=890, height=660");
+			}
+			
+		}
 	
 	</script>
 	
@@ -234,7 +244,7 @@
 				
 				<div class="btnpositionNew">
 		            <a class="imgbtn"><span onClick="saveSignTemplate()"><spring:message code='main.sp09'/></span></a>
-		            <a class="imgbtn"><span onClick="">미리보기</span></a>
+		            <a class="imgbtn"><span onClick="previewSignTemplate()">미리보기</span></a>
 			    </div>
 			</div>
 		</div>

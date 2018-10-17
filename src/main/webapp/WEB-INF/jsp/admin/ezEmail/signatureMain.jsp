@@ -358,7 +358,7 @@
 								<spring:message code='ezBoard.t431' />
 							</div>
 							<iframe src="" class="signPreViewIframe lmPre" id="lmPreViewIframe"
-								onload=""style="display: none; border: none; width: 100%; height: 100%;"></iframe>
+								style="display: none; border: none; width: 100%; height: 100%;"></iframe>
 						</div>
 					</div>
 				</td>
