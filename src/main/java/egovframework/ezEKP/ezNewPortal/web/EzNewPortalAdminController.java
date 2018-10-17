@@ -171,7 +171,7 @@ public class EzNewPortalAdminController {
 	 * 관리자 포탈 테마목록 조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getPortalThemes.do")
-	public String getPortalThemes(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest requset, Model model) throws Exception {
+	public String getPortalThemes(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getPortalThemes started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
