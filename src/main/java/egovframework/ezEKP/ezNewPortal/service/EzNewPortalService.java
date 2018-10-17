@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
@@ -26,6 +27,7 @@ public interface EzNewPortalService {
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
 	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception;
+	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId) throws Exception;
 	/**
 	 * 유은정
 	 */
@@ -49,6 +51,15 @@ public interface EzNewPortalService {
 	 */
 	
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 테마목록조회
+	 * @param admin true(admin) false(user)
+	 * @param companyId
+	 * @param tenantId
+	 * @return List<ThemeInfoVO>
+	 * @throws Exception
+	 */
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

@@ -7,43 +7,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	
-		<%-- <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
-		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>	 --%>	
-		<script type="text/javascript">
-		    
-	    var pUserID = "${userInfo.id}";
-	    var companyID = "${userInfo.companyID}";
-	    var strLang1_NewApprMail = "<spring:message code='main.t00026' />";
-	    var mailPercent = "${mailPercent}";
-	    
-	    function open_mail(url) {
-	        var pheight = window.screen.availHeight;
-	        var conHeight = pheight * 0.8;
-	        var pwidth = window.screen.availWidth;
-	        var conWidth = pwidth * 0.8;
-	        if (conWidth > 890)
-	            conWidth = 890;
-	        var pTop = (pheight - conHeight) / 2;
-	        var pLeft = (pwidth - 890) / 2;
-
-	        var newwin;
-	        var pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
-
-	        newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	        newwin.focus();
-	        getMailGraph();
-	    }
-	
-	    function Mailmore_btnClick() {
-	        window.open("/ezEmail/mailMain.do", "main");
-	    }
-		    
-		</script>
 	</head>
 <body>
+	<input type="hidden" id="mailPercent" value="${mailPercent}">
 	<div class="layDIV">
         <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><spring:message code='main.t00038' /></dt>
@@ -67,21 +33,14 @@
 			<c:otherwise>
 				<c:forEach var="mail" begin="0" end="4" items="${mailList}" varStatus="i">
 					<li class="${mail.readClass}" onclick="open_mail('${mail.href}')">
-						<span class='txt'>${mail.subject }</span>
-						<span class='date'>${mail.receivedDateStr }</span>
-						<span class='name'>${mail.sender }</span>
+						<span class='txt'><c:out value="${mail.subject }" escapeXml="true"/></span>
+						<span class='date'><c:out value="${mail.receivedDateStr }" escapeXml="true"/></span>
+						<span class='name'><c:out value="${mail.sender }" escapeXml="true"/></span>
 					</li>
 				</c:forEach>
 			</c:otherwise>
 		</c:choose>	     
 		</ul>
-          	
-         <%-- <c:if test="">
-          <dl class='nodata'>"
-            	<dt><img src='/images/kr/main/nodata.png'></dt>
-            	<dd>데이터 없음</dd>
-          </dl>
-         </c:if> --%>
      </div>
 </body>
 </html>
