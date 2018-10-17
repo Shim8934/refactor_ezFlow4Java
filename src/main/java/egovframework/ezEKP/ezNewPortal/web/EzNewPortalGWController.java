@@ -1,15 +1,22 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
@@ -1528,13 +1535,132 @@ public class EzNewPortalGWController {
 	public JSONObject getReceivedMainPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getReceivedMainPortlet started.");
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		String password = request.getParameter("password");
+		String userId = request.getParameter("userId");
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
+			Locale locale = info.getLocale();
+			
+			//start
+
+			String folderPath = "INBOX";
+			IMAPAccess ia = null;
+			
+			try {
+				// get user credentials
+					
+				
+		        String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+		        String userAccount = userId + "@" + domainName;
+				
+		        LOGGER.debug("userEmail=" + userAccount);
+		        
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userAccount, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
+				
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+				
+				double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+				double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+				
+				// 재은 수정
+				String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
+				String mailPercent = "";
+				String mailboxDetail = "";
+				String mailboxQuotaStr = "";
+				
+				if (mailUse != null) {
+					mailPercent = mailUse[0];
+					mailboxDetail = mailUse[1];
+					mailboxQuotaStr = mailUse[2];
+				}
+						
+				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
+				
+				Folder folder = ia.getFolder(folderPath);		
+				folder.open(Folder.READ_ONLY);
+		        
+		        Message[] messages = null;
+		        
+		        // set mailCount
+	 			int mailCount = 7;
+	 			int unreadCount = ia.getUnreadCount(folderPath);
+//	 			if (unreadCount < mailCount) {
+//	 				mailCount = unreadCount;
+//	 			}
+	 			
+		        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
+		        		false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
+		        
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				
+				int messagesLength = messages.length;
+				List<Map<Object, String>> mailList = new ArrayList<Map<Object, String>>();
+				
+				for (int i=0; i<messagesLength; i++) {
+					Message message = messages[i];
+					UIDFolder uidFolder = (UIDFolder)message.getFolder();
+					
+					// href
+					String href = "INBOX/" + uidFolder.getUID(message);
+					
+					// received date
+					Date receivedDate = message.getReceivedDate();
+					String receivedDateStr = sdf.format(receivedDate);
+					receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffset(), false);
+					
+					// sender
+					String sender = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+					
+					// subject
+					String subject = ezEmailUtil.getSubject(message);				
+					subject = (subject != null) ? subject : "";
+					
+					if (ezEmailUtil.hasSecureMailFlag(message)) {
+						subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+					}
+					
+					int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+					String readClass = "";
+					
+					if (readFlag == 0) {
+						readClass = "mail_close";
+                    } else {
+                    	readClass = "mail_open";
+                    }
+					
+					Map<Object, String> mailMap = new HashMap<Object, String>();
+					mailMap.put("href", href);
+					mailMap.put("receivedDateStr", receivedDateStr);
+					mailMap.put("sender", sender);
+					mailMap.put("subject", subject);
+					mailMap.put("readClass", readClass);
+					
+					mailList.add(mailMap);
+				}
+				data.put("mailList", mailList);
+				data.put("unreadCount", unreadCount);
+				data.put("mailboxQuotaStr", mailboxQuotaStr);
+				data.put("mailboxDetail", mailboxDetail);
+				data.put("mailPercent", mailPercent);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

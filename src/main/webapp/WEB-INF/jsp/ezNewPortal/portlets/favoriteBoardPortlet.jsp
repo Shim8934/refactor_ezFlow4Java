@@ -103,6 +103,7 @@ function getBoardList_NewBoardSTD() {
            	writerName = result[i].writerName;
            	boardType = result[i].gubun;
            	boardId = result[i].boardId;
+           	itemId = result[i].itemId;
             	
              listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
              

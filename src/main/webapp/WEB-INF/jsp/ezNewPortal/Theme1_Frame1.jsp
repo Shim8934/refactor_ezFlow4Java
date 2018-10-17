@@ -120,6 +120,282 @@
 		$(".portlet_area").disableSelection();
 	});
 	
+	function updatePortletOrderUser() {
+		debugger
+		var portlets = $(".box_shadow");
+		var updateOrder = [];
+		var portletsCount = portlets.length;
+		
+		for (var i = 0; i < portletsCount; i++) {
+			var portletId = portlets.eq(i).attr("id");
+			portletId = portletId.substring(0, portletId.indexOf("P"));
+			
+			updateOrder.push({"portletOrder" : i + 1, "portletId" : portletId});
+		}
+		
+		var data = {
+			updateOrder : updateOrder
+		};
+		
+		//ajax로 순서 변경
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/updatePortletOrderUser.do",
+			contentType : "application/json",
+			dataType : "text",
+			data : JSON.stringify(data),
+			success : function(result) {
+				if (result === "failed") {
+					alert("오류가 발생하였습니다.");
+				}
+			},
+			error : function() {
+				alert("오류가 발생하였습니다.");
+			}
+		});
+	}
+	
+	function parseDate() {
+		var _strDate = "";
+		nowAttiTime = new Date(serverTime);
+		
+		if (nowAttiTime.toString() == 'Invalid Date') {
+		    var _parts = serverTime.split(' ');
+		
+		    var _dateParts = _parts[0];
+		    nowAttiTime = new Date(_dateParts);
+		
+		    if (_parts.length > 1) {
+		        var _timeParts = _parts[1].split(':');
+		        nowAttiTime.setHours(_timeParts[0]);
+		        nowAttiTime.setMinutes(_timeParts[1]);
+		        if (_timeParts.length > 2) {
+		        	nowAttiTime.setSeconds(_timeParts[2]);
+		        }
+		    }
+		}
+		
+		//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
+		
+	}
+	
+	function attiClock() {
+        var h, m;
+        var s;
+        var time = " ";
+        
+        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+        document.getElementById("timeFlow").innerHTML = time;
+        if (time == "00:00:00") {
+        	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+        }
+        gizmo = setTimeout("attiClock()", 1000);
+        
+    }
+	
+	function eventSetting(portletId) {
+		if (portletId == 4) { //투표
+			$("#votePlus").on("click", viewQstList);
+			$(".voteBtn").on("click", votePoll);
+		} else if (portletId == 9) { //포토게시판
+			$(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
+			$(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
+			$("#photoBoardPlus").on("click", viewPhotoBoardList);
+		} else if (portletId === 10) {
+			getTabList();
+		} else if (portletId === 12) { // 도움말
+			helpPortletLoadFunc();
+		} else if (portletId === 2) {  // 공지사항
+			noticePortletLoadFunc();
+		} else if (portletId === 5) {  // 설문조사
+			pollPortletLoadFunc();
+		} else if (portletId === 11) {  // 커뮤니티
+			$("#communityPlus").on("click", viewCommuList);
+		} else if (portletId === 1) { // 메일
+			$("#mGraphSpan").css("width", mailPercent + "px");
+		}
+	}
+	
+	//개인 환경설정으로 이동
+	function viewPersonalEnv() {
+	    window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
+	}
+	
+	function getCountSetting() {
+		if (pollCount > 99) {
+			pollCount = "99+";
+			$("#pollCount").addClass("iconCount");
+		} else if (pollCount == 0) {
+			$("#pollCount").addClass("iconCount_none");
+		} else {
+			$("#pollCount").addClass("iconCount");
+		}
+		
+		if (circularCount > 99) {
+			circularCount = "99+";
+			$("#circularCount").addClass("iconCount");
+		} else if (circularCount == 0) {
+			$("#circularCount").addClass("iconCount_none");
+		} else {
+			$("#circularCount").addClass("iconCount");
+		}
+		
+		if (scheduleCount > 99) {
+			scheduleCount = "99+";
+			$("#scheduleCount").addClass("iconCount");
+		} else if (scheduleCount == 0) {
+			$("#scheduleCount").addClass("iconCount_none");
+		} else {
+			$("#scheduleCount").addClass("iconCount");
+		}
+		
+		if (approvalCount > 99) {
+			approvalCount = "99+";
+			$("#approvalCount").addClass("iconCount");
+		} else if (approvalCount == 0) {
+			$("#approvalCount").addClass("iconCount_none");
+		} else {
+			$("#approvalCount").addClass("iconCount");
+		}
+		
+		if (unreadMailCount > 99) {
+			unreadMailCount = "99+";
+			$("#unreadMailCount").addClass("iconCount");
+		} else if (unreadMailCount == 0) {
+			$("#unreadMailCount").addClass("iconCount_none");
+		} else {
+			$("#unreadMailCount").addClass("iconCount");
+		}
+		
+		$("#pollCount").text(pollCount);
+		$("#circularCount").text(circularCount);
+		$("#scheduleCount").text(scheduleCount);
+		$("#approvalCount").text(approvalCount);
+		$("#unreadMailCount").text(unreadMailCount);
+	}
+	
+	//생일자 불러오기
+	function getMonthlyBirthdayEmployees(event) {
+		if (event  != undefined) {
+			var isNext = event.data.isNext;
+			
+			if (isNext) {
+				if (birthdayMonth === 12) {
+					birthdayMonth = 1;
+				} else {
+					birthdayMonth += 1;
+				}
+			} else {
+				if (birthdayMonth === 1) {
+					birthdayMonth = 12;
+				} else {
+					birthdayMonth -= 1;
+				}
+			}
+		}
+		
+		birthdayCurPage = 0;
+		getBirthdayEmployeesList();
+	}
+	
+	function getBirthdayEmployeesList() {
+		window.clearTimeout(timer);
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
+			dataType : "json",
+			data : {"birthdayMonth" : birthdayMonth, "birthdayCurPage" : birthdayCurPage, "birthdayCount" : 6},
+			success : function(result) {
+				birthdayTotalCount = result.birthdayTotalCount;
+				
+				if (birthdayCurPage != 0) {
+					birthdayCurPage = result.birthdayCurPage;
+				}
+				
+				var birthdayList = result.birthdayList;
+				
+				var birth = birthdayMonth;
+				
+				if (birth < 10) {
+					birth = "0" + birth;
+				}
+				
+				$("#curMon").text(birth);
+				
+				if (birthdayList.length > 0 && birthdayList != null) {
+					$("#nodata_NewBirth").css("display", "none");
+					$("#birthcont").css("display", "");
+					
+					var strHTML = "";
+					var resultCount = birthdayList.length;
+					
+					for (var i = 0; i < resultCount; i++) {
+						var userBirthday = birthdayList[i].userBirthday.substring(5);
+						
+						strHTML += "<li>";
+						strHTML += "<dl class='birthListDL'>";
+						strHTML += "<dt class='birthPic'>";
+						strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
+						strHTML += "</dt>";
+						strHTML += "<dd class='birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
+						strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
+						strHTML += "</dl>";
+						strHTML += "</li>";
+					}
+					
+					$("#userList").html(strHTML);
+				} else {
+					$("#nodata_NewBirth").css("display", "");
+					$("#birthcont").css("display", "none");
+				}
+				
+				timer = window.setInterval(function() {
+					if (birthdayTotalCount > 6) {
+						birthdayCurPage++;
+						getBirthdayEmployeesList();
+					}
+				}, 5000);
+			},
+			error : function() {
+				alert("오류가 발생하였습니다.");
+			}
+		});
+	}
+	
+	function getMonthlyBestEmployee() {
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/getMonthlyBestEmployee.do",
+			dataType : "json",
+			success : function(result) {
+				var bestEmployee = result.bestEmployee;
+				var strHTML = "";
+				
+				if (bestEmployee == null) {
+					$("#emPic").find("img").attr("src", "/images/ezNewPortal/bestEmployee_pic_none.png");
+					strHTML += "<dl class='nodata' style='margin-top:8px'>";
+					strHTML += "<dd>데이터가 없습니다</dd>";
+					strHTML += "</dl>";
+				} else {
+					$("#emPic").find("img").attr("src", bestEmployee.userImg);
+					strHTML += "<dd class='emName'>\"" + bestEmployee.userName + " " + bestEmployee.title + "\"</dd>";
+					strHTML += "<dd class='emTeam'>" + bestEmployee.userDeptName + "</dd>";
+				}
+				
+				$(".emDL").append(strHTML);
+			}
+		});
+	}
+	
+	function viewPortletEnv() {
+
+		var feature = GetOpenPosition(760, 645);
+    	
+		DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
+			"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	}
 	</script>
 	<style type="text/css">
 		.notEmptySlider {
