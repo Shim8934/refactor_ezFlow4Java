@@ -3720,6 +3720,7 @@ function getNextDocInfo() {
             NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
             NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
             pCompanyID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "COMPANYID"));
+            docNumZeroCnt = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCNUMZEROCNT"));
             orgCompanyID = pCompanyID;
         }
     } catch (e) { }

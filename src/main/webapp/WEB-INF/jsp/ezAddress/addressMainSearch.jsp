@@ -51,17 +51,6 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	
-	            listContentArry = new Array();
-	            if (document.getElementById("ListViewType").value == "list") {
-	                document.getElementById("MailList").style.display = "";
-	                document.getElementById("MailListCard").style.display = "none";
-	                document.getElementById("DetailList_header").style.display = "";
-	            }
-	            else {
-	                document.getElementById("DetailList_header").style.display = "none";
-	                document.getElementById("MailList").style.display = "none";
-	                document.getElementById("MailListCard").style.display = "";
-	            }
 	            Window_onresize();
 	        }
 	        function search_keypress() {
@@ -418,7 +407,7 @@
 	        </tr>
 	    </table>
 	    <div style="vertical-align: top; border: 0px solid red;" id="list_Layer">
-	        <table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed;">
+	        <table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed; display:none;">
 	            <tr>
 	                <th style="cursor: pointer;text-align:center; margin:0px; width: 20px;">
 	                	<input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)">

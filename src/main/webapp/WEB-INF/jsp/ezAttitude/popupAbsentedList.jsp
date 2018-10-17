@@ -167,11 +167,32 @@
 		            	getAbsentedList();
 		        }
 		    }
+			
+			//엑셀
+			function excelDown() {
+	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+					alert("<spring:message code='ezAttitude.t56'/>");
+					return;
+				}
+	    		
+		    	exportExcelframe.location.href = "/ezAttitude/excelAbsentedListExport.do?companyId=" + companyId + "&deptId=" + searchDeptId + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated = duplicated";//마지막 무엇?
+		    	exportExcelframe.target = "_blank";
+			}
 		</script>
 	</head>
 	
 	<body class="popup">
-		<h1><spring:message code='ezAttitude.t111'/><span id="mailBoxInfo"></span><c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; margin-top:1px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
+		<h1><spring:message code='ezAttitude.t111'/><span id="mailBoxInfo"></span></h1>
+		<div id="close">
+			<ul>
+				<li>
+					<c:if test="${searchEndDate != ''}">
+						<img style="margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()">
+					</c:if>
+					<span onclick="return btnClose_onclick()"></span>
+				</li>
+			</ul>
+		</div>
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
@@ -189,7 +210,9 @@
 		</div>
 		
 		<div class="btnposition btnpositionNew">
-			<a class="imgbtn"><span onclick="return btnClose_onclick()"><spring:message code='ezAttitude.t157'/></span></a>
+			<a class="imgbtn"><span onclick="excelDown()"><spring:message code='ezAttitude.t145'/></span></a>
 		</div>
+		
+		<iframe id="exportExcelframe" name="exportExcelframe" style="display: none"></iframe>
 	</body>
 </html>
