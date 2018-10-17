@@ -149,7 +149,7 @@ public class EzEmailMailListController {
 			folderName = dispname;
 		}
 		
-		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezJournal.t113", locale))) {
+		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezEmail.t516", locale))) {
 			folderType = "sent";
 			isSentItems = true;
 		}

@@ -275,6 +275,9 @@
 	                        	parent.isEditorComplete = true;
 	                        }
 	                    }
+	                    
+	                    // 2018.10.15 필드도 free 속성일 시에 수정 가능하도록 수정
+	                    parent.FieldsAvailable();
 	
 	                    if (parent.pDraftFlag != "REDRAFT") {
   							var Body_innerHTML = "";
@@ -329,8 +332,6 @@
 	                    /* for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
 	                        SetAttribute(document.getElementById("body"), getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
 	                    } */
-	
-	                    parent.FieldsAvailable();
 	                }
 	            }
 	            catch (e)

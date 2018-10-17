@@ -56,6 +56,19 @@ function DelListRow(objListView) {
 }
 
 function DelAllRowOfLV(objListView) {
+	var pListView = new ListView();
+	pListView.LoadFromID(objListView);
+	
+	var count;
+	var rowLength = pListView.GetRowCount();
+	
+	if (rowLength != 0) {
+		for (count = 0; count < rowLength; count++) {
+			pListView.DeleteRow(pListView.GetSelectedRowID(count));
+		}
+	}
+	
+	setDeleteRow(pListView.GetID());
 }
 
 function selectRow(oListView, RowIndex) {

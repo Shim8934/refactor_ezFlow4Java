@@ -1147,6 +1147,7 @@ function openOpinionUI(pOpinionFlag)
     parameter[1]	= pOpinionFlag;
     parameter[2]	= KuyjeType;
     parameter[3]	= pDraftFlag;
+    parameter[98]	= orgCompanyID;
     //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
     parameter[99] = "hwp";
     
