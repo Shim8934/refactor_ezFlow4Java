@@ -156,6 +156,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<ApprGFormVO>) list("ezNewPortal.getFavoriteForms", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
+		return (List<ThemeInfoVO>) list("ezNewPortal.getCompanyThemes", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) throws Exception {
 		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
 	}

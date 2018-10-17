@@ -51,6 +51,15 @@ public interface EzNewPortalService {
 	 */
 	
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 테마목록조회
+	 * @param admin true(admin) false(user)
+	 * @param companyId
+	 * @param tenantId
+	 * @return List<ThemeInfoVO>
+	 * @throws Exception
+	 */
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

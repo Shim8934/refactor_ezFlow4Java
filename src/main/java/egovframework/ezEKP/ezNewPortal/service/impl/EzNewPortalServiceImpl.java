@@ -515,17 +515,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		switch (type) {
 		case "doing":
+			//결재할
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
-			//첫문서 결재라인 조회
 			
 			break;
 		case "reject":
+			//반송
 			list = ezNewPortalDAO.getApprovalRejectList(map);
 			result.put("list", list);
 			
 			break;
 		case "draft":
+			//기안
 			list = ezNewPortalDAO.getApprovalDraftList(map);
 			result.put("list", list);
 			
@@ -539,6 +541,37 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return result;
 	}
+	
+	@Override
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		List<ThemeInfoVO> list = null;
+		
+		if (admin) {
+			list = getCompanyThemes(companyId, tenantId);
+		} else {
+			list = getUserThemeList(companyId, tenantId);
+		}
+		
+		LOGGER.debug("getThemes ended.");
+		
+		return list;
+	}
+	
+	public List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getComapnyThemes started.");
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<ThemeInfoVO> list = ezNewPortalDAO.getCompanyThemes(map);
+		
+		LOGGER.debug("getComapnyThemes ended.");
+		
+		return list;
+	}
+	
 	
 	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {

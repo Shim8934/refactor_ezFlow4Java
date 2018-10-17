@@ -521,7 +521,7 @@ var Grid = (function() {
 			return this.$previewEl;
 		},
 		getThemeDetail : function(obj) {
-			alert('getThemeDetail started.');
+//			alert('getThemeDetail started.');
 //			서버들려서 themeDetail 정보 받아오고 dataEl 배열 생성해서 return
 			eldata = {
 					//이효진 속성 추가시켜놓고 쓸수 있게 하는곳
@@ -534,7 +534,7 @@ var Grid = (function() {
 					defaultYN : obj.data( 'default')
 			};
 			/*리스트에 있는건 꺼내쓰고 없는건 받아서 쓰고*/
-			alert('getThemeDetail ended.');
+//			alert('getThemeDetail ended.');
 			
 			return eldata;
 		}

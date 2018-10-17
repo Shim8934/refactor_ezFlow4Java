@@ -156,10 +156,8 @@ public class EzNewPortalAdminController {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			String companyId = (String) resultBody.get("userCompany");
-			JSONArray companyList = (JSONArray) resultBody.get("data");
-			model.addAttribute("userCompany", companyId);
-			model.addAttribute("list", companyList);
+			model.addAttribute("userCompany", resultBody.get("userCompany"));
+			model.addAttribute("list", resultBody.get("data"));
 		}
 		
 		LOGGER.debug("getCompanys ended.");
@@ -170,7 +168,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 테마목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/getPortalThemes.do")
+	@RequestMapping(value = "/admin/ezNewPortal/getThemes.do")
 	public String getPortalThemes(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getPortalThemes started.");
 		
@@ -178,19 +176,15 @@ public class EzNewPortalAdminController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("companyId", paramMap.get("companyId"));
 		
-		String url = "/rest/admin/ezportal/companies";
+		String url = "/rest/admin/ezportal/themes/companies/" + paramMap.get("companyId");
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 				
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			String companyId = (String) resultBody.get("userCompany");
-			JSONArray companyList = (JSONArray) resultBody.get("data");
-			model.addAttribute("userCompany", companyId);
-			model.addAttribute("list", companyList);
+			model.addAttribute("list", resultBody.get("data"));
 		}
 		
 		LOGGER.debug("getPortalThemes ended.");
