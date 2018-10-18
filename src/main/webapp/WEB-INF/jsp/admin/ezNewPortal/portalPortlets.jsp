@@ -88,7 +88,7 @@ body {
 	</style>
 	<script type="text/javascript">
 	$( function() {
-	    $( ".column" ).sortable({
+	    $( ".column .col-container" ).sortable({
 	      connectWith: ".col-container",
 	      handle: ".portlet-header",
 	      cancel: ".portlet-toggle",
@@ -177,6 +177,8 @@ body {
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
 		</div>
+		</div>
+		<div class="col-container">
 		<div class="portlet col" id="portlet4" data="por4">
 			<div class="portlet-header">게시판4</div>
 			<div class="portlet-content">
@@ -210,6 +212,8 @@ body {
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
 		</div>
+		</div>
+		<div class="col-container">
 		<div class="portlet col" id="portlet7" data="por7">
 			<div class="portlet-header">게시판7</div>
 			<div class="portlet-content">
