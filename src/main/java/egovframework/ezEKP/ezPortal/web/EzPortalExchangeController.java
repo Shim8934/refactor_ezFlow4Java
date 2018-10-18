@@ -79,4 +79,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzPortalController.
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@RequestMapping(value = "/ezExchange/ExchangeRate.do")
+	public String exchangeRateSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception{
+		logger.debug("exchangeRateSection started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("exchangeRateSection end");
+		
+		return "/ezExchange/exchangeRate";
+	}
+	
 }
