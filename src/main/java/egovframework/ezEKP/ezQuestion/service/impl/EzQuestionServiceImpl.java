@@ -1043,10 +1043,11 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 	}
 
 	@Override
-	public int wpCountPollCount(String userID, int tenantID, String offset) throws Exception {
+	public int wpCountPollCount(String userID, int tenantID, String offset, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUSERID", userID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		return ezQuestionDAO.wpCountPollCount(map);
 	}

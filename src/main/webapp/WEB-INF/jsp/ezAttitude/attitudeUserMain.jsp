@@ -1291,6 +1291,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
 		<!-- 근태유형별 팝업창 -->
 		<div id="popup" class="popupwrap1" style="display:none;margin-bottom:50px;max-width:800px;">
 			<div class="popupJQLayer">

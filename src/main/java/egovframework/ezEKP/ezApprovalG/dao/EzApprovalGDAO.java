@@ -3103,4 +3103,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getDocSendType(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocSendType", map);
 	}
+	
+	public String getDocNumZeroCnt(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocNumZeroCnt", map);
+	}
+	
+	public void setDocNumZeroCnt(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setDocNumZeroCnt", map);
+	}
 }

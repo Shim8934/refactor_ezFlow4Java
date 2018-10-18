@@ -626,6 +626,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
+        	
+		// 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
         
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -638,6 +646,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("deptId", userInfo.getDeptID());
 		model.addAttribute("Name", userInfo.getDisplayName());	
 		model.addAttribute("Id", userInfo.getId());
+		model.addAttribute("memoFlag", memoFlag);
 		
 		logger.debug("readMailContent ended.");
 		
@@ -1718,13 +1727,23 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-        
+        		
+		// 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
+		
+		logger.debug("readMailContent ended.");
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("memoFlag", memoFlag);
 		
 		logger.debug("previewContent ended.");
 		

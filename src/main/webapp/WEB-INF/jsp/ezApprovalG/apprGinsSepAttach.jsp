@@ -491,9 +491,9 @@
 			    } 
 			    
 			    /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
-				/* if(totalRows.length == 0) {
+				if(totalRows.length == 0) {
 					setDeleteRow("pLvList");
-			    }  */
+			    }  
 		    }
 		    
 		    function btnOK_onclick() {
@@ -502,9 +502,9 @@
 		        
 		        var totalRows = pLvList.GetDataRows();
 		        
-		        if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
-		            alert("<spring:message code='ezApprovalG.t1031'/>");
-		            return;
+		        /* 2018-10-16 김민성 - 분리첨부 삭제 후 확인버튼 로직 수정 */
+		         if (totalRows.length == 1 && totalRows[0].id.indexOf("noItems") > -1) {
+		        	 pLvList.DeleteRow("pLvList_TR_noItems");
 		        } 
 		        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
 			        if (!CheckSepAttParamXmlNull()) {

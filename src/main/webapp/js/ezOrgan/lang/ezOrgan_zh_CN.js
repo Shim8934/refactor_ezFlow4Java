@@ -33,3 +33,4 @@ var strLang30 = "你确定要删除所有并发位置？";
 var strLang31 = "您不能指定一个完整的管理员权限。.";
 
 var strLang535 = "No Items";
+var strLangLHM01 = "Restoration to the other companies is not supported.";

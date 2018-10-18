@@ -4063,4 +4063,61 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("aprDeptName ended");
 		return "/admin/ezApprovalG/apprGaprDeptName";
 	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/docNumZeroCnt.do")
+	public String docNumZeroCnt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docNumZeroCnt started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("docNumZeroCnt ended");
+		return "/admin/ezApprovalG/apprGDocNumZeroCnt";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/getDocNumZeroCnt.do")
+	@ResponseBody
+	public String getDocNumZeroCnt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getDocNumZeroCnt started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		String rtnVal = ezApprovalGService.getDocNumZeroCnt(companyID, userInfo.getTenantId());
+		
+		logger.debug("getDocNumZeroCnt ended");
+		return rtnVal;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/setDocNumZeroCnt.do")
+	@ResponseBody
+	public String setDocNumZeroCnt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("setDocNumZeroCnt started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String docNumCnt = request.getParameter("docNumCnt");
+		
+		String rtnVal = ezApprovalGService.setDocNumZeroCnt(docNumCnt, companyID, userInfo.getTenantId());
+		
+		logger.debug("setDocNumZeroCnt ended | result = " + rtnVal);
+		return rtnVal;
+	}
 }

@@ -348,7 +348,7 @@
 	                        }
 	                        if (BODYTag.childNodes.length >= 1) {
 	                            if (BODYTag.children[0].id != "bodyblock") {
-	                                BODYTag.innerHTML = "<div id='bodyblock' style='margin-top:5px;TEXT-ALIGN:left;'>" + BODYTag.innerHTML + "</div>";
+	                                BODYTag.innerHTML = "<div id='bodyblock' style='height: 100%;'>" + BODYTag.innerHTML + "</div>";
 	                            }
 	                        }
 	                        div_BODY.innerHTML = BODYTag.innerHTML;
