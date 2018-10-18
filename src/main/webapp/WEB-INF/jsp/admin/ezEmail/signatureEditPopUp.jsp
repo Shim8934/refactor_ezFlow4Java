@@ -16,7 +16,7 @@
 		.inputInfoBtn {
 		    float: left;
 		    position: relative;
-		    left: 36%;
+		    left: 43%;
 		}
 	</style>
 	<script>
@@ -288,7 +288,6 @@
 										<div id="mainmenu" style="margin-top: 7px;">
 											<ul style="width: 100%;">
 												<li class="inputInfoBtn"><span onclick="applyInfo()">적 용 </span></li>
-												<li class="inputInfoBtn"><span>취 소 </span></li>
 											</ul>
 										</div>
 									</td>

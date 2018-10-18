@@ -2349,11 +2349,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception {
 		logger.debug("addSignatureTemplate started. signTemplate=" + signTemplate);
 		
-		String companyIdStr = "companyId=" + signTemplate.getCompanyId();
-		String tenantIdStr = "tenantId=" + signTemplate.getTenantId();
-		String displaynameStr = "displayname=" + signTemplate.getDisplayname();
-		String displayname2Str = "displayname2=" + signTemplate.getDisplayname2();
-		String contentStr = "content=" + signTemplate.getContent();
+		String companyIdStr = "companyId=" + URLEncoder.encode(signTemplate.getCompanyId(), "UTF-8");
+		String tenantIdStr = "tenantId=" + URLEncoder.encode(signTemplate.getTenantId(), "UTF-8");
+		String displaynameStr = "displayname=" + URLEncoder.encode(signTemplate.getDisplayname(), "UTF-8");
+		String displayname2Str = "displayname2=" + URLEncoder.encode(signTemplate.getDisplayname2(), "UTF-8");
+		String contentStr = "content=" + URLEncoder.encode(signTemplate.getContent(), "UTF-8");
 		
 		String inputParams = companyIdStr + "&" + tenantIdStr + "&" + displaynameStr + "&" + displayname2Str + "&" + contentStr;
 		logger.debug("inputParams=" + inputParams);
@@ -2375,10 +2375,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception {
 		logger.debug("setSignatureTemplate started. signTemplate=" + signTemplate);
 		
-		String displaynameStr = "displayname=" + signTemplate.getDisplayname();
-		String displayname2Str = "displayname2=" + signTemplate.getDisplayname2();
-		String contentStr = "content=" + signTemplate.getContent();
-		String signNoStr = "signNo=" + signTemplate.getSignNo();
+		String displaynameStr = "displayname=" + URLEncoder.encode(signTemplate.getDisplayname(), "UTF-8");
+		String displayname2Str = "displayname2=" + URLEncoder.encode(signTemplate.getDisplayname2(), "UTF-8");
+		String contentStr = "content=" + URLEncoder.encode(signTemplate.getContent(), "UTF-8");
+		String signNoStr = "signNo=" + URLEncoder.encode(signTemplate.getSignNo(), "UTF-8");
 		
 		String inputParams = displaynameStr + "&" + displayname2Str + "&" + contentStr + "&" + signNoStr;
 		logger.debug("inputParams=" + inputParams);
