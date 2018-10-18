@@ -838,18 +838,18 @@
 			f.form_name as form_name,
 			ft.type_id as type_id,
 			(select 
-				count(jr.reply_id) 
+				count(*) 
 			from 
 				tbl_journal_reply jr 
-			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id and jr.reply_writer in (select CN from tbl_usermaster)) as reply_count,
+			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as reply_count,
 			(select 
-				count(jf.file_id) 
+				count(*) 
 			from 
 				tbl_journal_file jf 
 			where
 				jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as file_count,
 			(select 
-				count(v.user_id) 
+				count(*) 
 			from 
 				(select 
 					user_id, journal_id, TENANT_ID 
@@ -863,15 +863,19 @@
 				where 
 					recieve_date is not null) v
 			where
-				v.user_id in (select CN from tbl_usermaster)
-			and	 
 				not(v.user_id = j.journal_writer) and v.journal_id = j.journal_id and v.tenant_id = j.tenant_id) as view_count,
 			(select 
-				count(r.user_id) 
+				count(*) 
 			from 
 				tbl_journal_recv r 
 			where
-				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as total_recv,
+				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id) as total_recv,
+			(select 
+				count(*) 
+			from 
+				tbl_journal_recv r 
+			where
+				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.recieve_date is not null) as check_recv,
 			(select 
 				count(r.recieve_date) 
 			from 
