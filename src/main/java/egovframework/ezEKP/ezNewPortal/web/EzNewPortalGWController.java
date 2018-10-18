@@ -400,44 +400,37 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();
 			String logoType = "portal";
-			LOGGER.debug("roleInfo : " + info.getRollInfo());
-			/**
-			 * 1. 로고 2. 메인메뉴 및 서브메뉴 3. 유틸메뉴
-			 */
-
+			JSONObject data = new JSONObject();
 			/**
 			 * 1) 로고
 			 */
-			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId,
-					tenantId, logoType);
+			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
 			LOGGER.debug("logoUrl : " + logoUrl);
 
 			/**
 			 * 2) 메인메뉴 및 서브메뉴 - 권한체크 - user 순서가 없을 경우 회사 순서로 진행
 			 */
-			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(
-					companyId, tenantId, langType, userId);
+			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId);
 			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
 			LOGGER.debug("list.toString() : " + userMenuList.toString());
 			if (userMenuList.size() == 0) {
-				// compMenuList = ezNewPortalService.getCompanyMenuList(companyId,	tenantId, langType);
+				compMenuList = ezNewPortalService.getCompanyMenuList(companyId,	tenantId, langType);
+				data.put("menuList", compMenuList);
+			} else {
+				data.put("menuList", userMenuList);
 			}
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
 			 */
-
-			JSONObject data = new JSONObject();
 			String roleInfo = "user";
-			if (info.getRollInfo().indexOf("c=1") > -1
-					|| info.getRollInfo().indexOf("k=1") > -1) {
+			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
-				data.put("utilAdminUrl", "");
+				data.put("utilAdminUrl", "/admin/main.do");
 			}
 			data.put("logoUrl", logoUrl);
 			data.put("roleInfo", roleInfo);
-			data.put("userMenuList", userMenuList);
-
+LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);

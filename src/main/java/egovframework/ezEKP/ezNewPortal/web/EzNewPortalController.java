@@ -114,8 +114,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			
+logger.debug("TopMenu : " + data.toJSONString());
 			model.addAttribute("logoUrl", data.get("logoUrl"));
 			model.addAttribute("roleInfo", data.get("roleInfo"));
+			model.addAttribute("menuList", data.get("menuList"));
 		}
 		
 		logger.debug("portalTopMenu End");

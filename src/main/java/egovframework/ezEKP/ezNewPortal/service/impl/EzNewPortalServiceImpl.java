@@ -134,6 +134,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getUserMenuList(map);
 	}
 	
+	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("langType", langType);
+		return ezNewPortalDAO.getCompanyMenuList(map);
+	}
+	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");
