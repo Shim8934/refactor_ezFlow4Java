@@ -49,8 +49,9 @@ public interface EzBoardAdminService {
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception;
 	
+	/* 2018-10-18 홍승비 - 그룹사게시판 즐겨찾기 분기 추가 */
 	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
-	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception;
+	public String addMyBoards(String userID, String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception;
 	
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	

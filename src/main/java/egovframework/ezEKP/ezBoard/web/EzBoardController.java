@@ -993,7 +993,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
-		
+		boardInfo.setIsAllGroupBoard("");
 
 		/* 2018-10-17 홍승비 - 해당 게시판의 모든 정보(TBL_BOARD_BOARDINFO오로부터)를 가져오는 부분을 상단으로 이동함 */
 		BoardPropertyVO strProp = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -1023,20 +1023,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			logger.debug("게시판그룹ID        ::   " + boardGroupID);
 			
 			if (boardGroupID != null) { // 새게시물과 부모가 top인 게시판들(그룹)은 그룹아이디가 없다. null임
-				
-				logger.debug("1111");
-				
 				BoardPropertyVO strGroupProp = ezBoardService.getBoardProperty(boardGroupID, userInfo.getTenantId());
 				if (strGroupProp.getGuBun() != null && strGroupProp.getGuBun().equals("99")) {
-					logger.debug("2222");
 					boardInfo.setIsAllGroupBoard("Y");
-				} else {
-					logger.debug("3333");
-					boardInfo.setIsAllGroupBoard("");
 				}
-			} else {
-				logger.debug("4444");
-				boardInfo.setIsAllGroupBoard("");
 			}
 		}
 		
@@ -2347,6 +2337,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO);
 		}
 		
+		/* 2018-10-18 홍승비 - 나의게시물 검색을 위해 companyID 추가 */
 		BoardListVO boardListVO = new BoardListVO();
 		
 		boardListVO.setPageCount(boardCount);
@@ -2356,6 +2347,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setOrderBySub(orderOption1);
 		boardListVO.setOrderByMain(orderOption2);
 		boardListVO.setUserID(userInfo.getId());
+		boardListVO.setWriterCompanyID(userInfo.getCompanyID());	
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
@@ -4720,8 +4712,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
+		String isAllGroupBoard = "";
+		
+		/* 2018-10-18 홍승비 - 그룹사게시판 즐겨찾기 분기 추가 */
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		if (boardProp.getBoardGroupID() != null) {
+			String boardGroupID = boardProp.getBoardGroupID();
+			
+			BoardPropertyVO boardGroupProp = getBoardInfo(boardGroupID, userInfo);
+			
+			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
+				isAllGroupBoard = "Y";
+			}
+		}
+		
 		/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
-		String result = ezBoardAdminService.addMyBoards(userInfo.getId(), boardID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezBoardAdminService.addMyBoards(userInfo.getId(), boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("addToMyBoards ended");
 		return "<RESULT>" + result + "</RESULT>";
@@ -6904,6 +6910,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			isAdminLeft = req.getParameter("isAdminLeft"); // 관리자단의 좌측게시판리스트 확장(하위게시판 호출) 시 이 플래그를 Y로 설정한다.
 		}
 		
+		logger.debug("관리자단 포틀릿관리에서 게시판리스트 호출, isAdminLeft      ::     " + isAdminLeft);
+		
 		String boardGroupAdminFG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int pMode = 0;
@@ -6928,6 +6936,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("isAdminLeft", isAdminLeft);
 
 		logger.debug("boardSelect ended");
 		return "ezBoard/boardBoardSelect";

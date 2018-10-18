@@ -75,8 +75,13 @@
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezBoard/getSubBoards.do",	        			
-					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
+					url : "/ezBoard/getSubBoards.do",
+					data : {
+						rootBoardID : pRootBoardID,
+						subFlag : pSubFlag,
+						selectFlag : "0",
+						isAdminLeft : "Y"
+						},
 					success: function(result){
 						ret = loadXMLString(result);				
 					}
@@ -129,7 +134,10 @@
 					dataType : "text",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",
-					data : { rootBoardID : 'top', subFlag : '0'},
+					data : {
+						rootBoardID : 'top',
+						subFlag : '0',
+						isAdminLeft : "Y"},
 					success : function(result){
 						MakeTopBoardView(result);
 					}
@@ -210,14 +218,15 @@
 			    }
 			}		
 			
+			/* 2018-10-18 홍승비 - 게시판의 그룹ID가 잘못 들어가는 부분 수정 */
 			function TreeCtrl_onNodeClick(pNodeID, pTreeID){
 			    var treeNode = new TreeNode();
 			    treeNode.LoadFromID(pNodeID);
 			    tmpSelectedBoardGroupID = "";
 			    tmpSelectedBoardGroupName = "";
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");
-			    selectedBoardGroupID = treeNode.GetNodeData("DATA1")
-			    SelectedBoardName = treeNode.GetNodeData("DATA2")
+			    selectedBoardGroupID = treeNode.GetNodeData("DATA3");
+			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			}
 			
 			function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {

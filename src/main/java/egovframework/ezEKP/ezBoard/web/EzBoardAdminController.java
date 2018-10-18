@@ -706,9 +706,42 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String orgBoardID = request.getParameter("orgBoardID");
 		String newParentBoardID = request.getParameter("newParentBoardID");
-		String newBoardGroupID = request.getParameter("newBoardGroupID");
+		String newBoardGroupID = request.getParameter("newBoardGroupID"); // 이거 잘못들어가고있다.
+		String isAllGroupBoardORG = "";
+		String isAllGroupBoardNEW = "";
 		
-		ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
+		logger.debug("orgBoardID       ::     " + orgBoardID);
+		logger.debug("newParentBoardID       ::     " + newParentBoardID);
+		logger.debug("newBoardGroupID       ::     " + newBoardGroupID);
+		
+		/* 2018-10-18 홍승비 - 그룹사게시판과 일반 게시판(그룹)과는 서로 게시판 이동 불가능함 */
+		BoardPropertyVO orgBoardProp = ezBoardService.getBoardProperty(orgBoardID, userInfo.getTenantId());		
+		if (orgBoardProp.getBoardGroupID() != null) {
+			String orgBoardGroupID = orgBoardProp.getBoardGroupID();
+			
+			logger.debug("orgBoardGroupID       ::     " + orgBoardGroupID);
+			
+			BoardPropertyVO orgBoardGroupProp = ezBoardService.getBoardProperty(orgBoardGroupID, userInfo.getTenantId());
+			
+			if (orgBoardGroupProp.getGuBun() != null && orgBoardGroupProp.getGuBun().equals("99")) {
+				isAllGroupBoardORG = "Y";
+			}
+		}
+				
+		BoardPropertyVO newBoardGroupProp = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());	
+		if (newBoardGroupProp.getGuBun() != null && newBoardGroupProp.getGuBun().equals("99")) {
+			isAllGroupBoardNEW = "Y";
+		}
+		
+		logger.debug("isAllGroupBoardORG       ::     " + isAllGroupBoardORG);
+		logger.debug("isAllGroupBoardNEW       ::     " + isAllGroupBoardNEW);
+			
+		if (isAllGroupBoardORG.equals(isAllGroupBoardNEW)) {	
+			ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
+		}
+		else { // 임의로 에러를 발생시킨다.
+			response.sendError(500);
+		}
 
 		logger.debug("moveBoard ended");
 	}

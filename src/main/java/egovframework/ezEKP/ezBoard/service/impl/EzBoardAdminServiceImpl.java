@@ -65,9 +65,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return ezBoardAdminDAO.checkIfBoardGroupAdmin(map);
 	}
 	
+	/* 2018-10-18 홍승비 - 그룹사게시판 즐겨찾기 분기 isAllGroupBoard 플래그 추가, companyID브랜치용 임시 메서드 제거 */
 	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
 	@Override
-	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception {
+	public String addMyBoards(String userID, String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception {
 		logger.debug("addMyBoards started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -77,24 +78,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_PQUERY", userID);
+		map.put("v_isAllGroupBoard", isAllGroupBoard);
 		
-		
-		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
+		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가 */
 		try {
-			// 해당 테이블이 companyID 칼럼을 가지고 있는 경우
-			if (ezBoardAdminDAO.checkCompanyIDCol() != 0) {
-				ezBoardAdminDAO.addMyBoardsComp(map);
-				ezBoardAdminDAO.getBoardTree_Set_D(map);
-			}
-			// 해당 테이블에 companyID 칼럼이 없는 경우
-			else {
-				ezBoardAdminDAO.addMyBoards(map);
-				ezBoardAdminDAO.getBoardTree_Set_D(map);
-			}
+			ezBoardAdminDAO.addMyBoards(map);
+			ezBoardAdminDAO.getBoardTree_Set_D(map);
 			
 			logger.debug("addMyBoards ended");
 			return "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "NO";
 		}
 	}
@@ -428,6 +422,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("userDeptPath", userDeptPath);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		
+		logger.debug("권한 가져오는 쿼리의 map      ::     " + map.toString());
 
 		logger.debug("getACL ended");
 		return ezBoardAdminDAO.getACL(map);

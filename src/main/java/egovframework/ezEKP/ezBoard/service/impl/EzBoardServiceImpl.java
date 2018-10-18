@@ -1221,10 +1221,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
 
+		logger.debug("나의게시물 검색쿼리 map      ::     " + map.toString());
+		
+		
 		logger.debug("getSearchMyBoardItemList ended");
 		return ezBoardDAO.getSearchMyBoardItemList(map);
 	}
@@ -1257,8 +1261,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
+		
+		logger.debug("임시보관함 검색쿼리 map      ::     " + map.toString());
 		
 		logger.debug("getSearchMyBoardItemListTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemListTemp(map);
@@ -1663,7 +1670,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		logger.debug("나의게시물 검색 카운트 map      ::      " + map.toString());
 
 		logger.debug("getSearchMyBoardItemCount ended");
 		return ezBoardDAO.getSearchMyBoardItemCount(map);
@@ -1683,6 +1693,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		
+		logger.debug("임시보관함 검색 카운트 map      ::      " + map.toString());
 
 		logger.debug("getSearchMyBoardItemCountTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
@@ -3980,6 +3993,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
 		}
 		
+		logger.debug("게시판전체 검색쿼리 리스트 map      ::     " + map.toString());
+		
 		logger.debug("getSearchAllBoardItemList ended");
 		return ezBoardDAO.getSearchAllBoardItemList(map);
 	}
@@ -4030,6 +4045,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else if (boardVO.getSubFlag().equals("YY")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
 		}
+		
+		
+		logger.debug("게시판전체 검색쿼리 카운트 map      ::     " + map.toString());
 		
 		logger.debug("getSearchAllBoardItemCount ended");
 		return ezBoardDAO.getSearchAllBoardItemCount(map);

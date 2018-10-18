@@ -229,7 +229,7 @@
 						AND 
                 			BoardID <> #v_pExcludeBoardID#
 						AND
-		              		(CompanyID = ''	OR	CompanyID IS NULL))
+		              		(TRIM(CompanyID) = '' OR CompanyID IS NULL))
 	          		]]>
 	          	</isEqual>
 				<![CDATA[
@@ -326,7 +326,7 @@
 						AND 
                 			BoardID <> #v_pExcludeBoardID#
 						AND
-		              		(CompanyID = ''	OR	CompanyID IS NULL))
+		              		(TRIM(CompanyID) = ''	OR	CompanyID IS NULL))
 	          		]]>
 	          	</isEqual>
 				<![CDATA[
@@ -361,7 +361,7 @@
 			]]>
           	<isEqual property="v_showAllGroupBoard" compareValue="Y">
           		<![CDATA[
-          			OR	A.companyid = ''	OR	A.companyid IS NULL
+          			OR	TRIM(A.companyid) = ''	OR	A.companyid IS NULL
           		]]>
           	</isEqual>
           			)
@@ -763,7 +763,7 @@
 		]]>
 		<isEqual property="isCompanyAdmin" compareValue="true">
 			<![CDATA[
-				OR	companyID = ''	OR	companyID IS NULL
+				OR	TRIM(companyID) = ''	OR	companyID IS NULL
 			]]>
 		</isEqual>
 				)
@@ -1216,90 +1216,94 @@
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_MyBoards ( 
-				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
-			)
-         	( SELECT 
-         		#v_PUSERID# USERID ,
-              	BOARDID ,
-                BOARDNAME ,
-                BOARDNAME2 ,
-                ( SELECT 
-                	COUNT(BOARDID) + 1
-     			  FROM 
-     			  	TBL_Board_MyBoards 
-     			  WHERE
-     			  	TENANT_ID = #v_TENANTID#
-     			  AND
-     			  	COMPANYID = #v_COMPANYID#
-     			  AND  
-     			  	USERID = #v_PUSERID# ),
-                ( SELECT
-                	CASE 
-                		WHEN MAX(VIEWORDER) IS NULL 
-                		THEN 2 
-                		ELSE MAX(VIEWORDER) + 1 
-                	END 
-                  FROM 
-                  	TBL_Board_MyBoards 
-                  WHERE  
-                  	TENANT_ID = #v_TENANTID#
-                  AND
-     			  	COMPANYID = #v_COMPANYID#
-                  AND
-                  	USERID = #v_PUSERID# ),
-                TENANT_ID,
-                COMPANYID
-           	  FROM 
-           	  	TBL_Board_BoardInfo 
-           	  WHERE
-           	  	TENANT_ID = #v_TENANTID#
-           	  AND
-           	  	BOARDID = #v_PBOARDID# )
-		]]>
-	</insert>
-	
-	<!-- companyID 브랜치에 master 브랜치를 merge할 경우, companyID 브랜치의 쿼리를 남기도록 한다.(companyID 삽입을 위해) -->
-	<insert id="EzBoardAdminDAO.addMyBoardsComp" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_MyBoards ( 
-				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
-			)
-         	( SELECT 
-         		#v_PUSERID# USERID ,
-              	BOARDID ,
-                BOARDNAME ,
-                BOARDNAME2 ,
-                ( SELECT 
-                	COUNT(BOARDID) + 1
-     			  FROM 
-     			  	TBL_Board_MyBoards 
-     			  WHERE
-     			  	TENANT_ID = #v_TENANTID#
-     			  AND  
-     			  	USERID = #v_PUSERID# ),
-                ( SELECT
-                	CASE 
-                		WHEN MAX(VIEWORDER) IS NULL 
-                		THEN 2 
-                		ELSE MAX(VIEWORDER) + 1 
-                	END 
-                  FROM 
-                  	TBL_Board_MyBoards 
-                  WHERE  
-                  	TENANT_ID = #v_TENANTID#
-                  AND
-                  	USERID = #v_PUSERID# ),
-                TENANT_ID,
-                COMPANYID
-           	  FROM 
-           	  	TBL_Board_BoardInfo 
-           	  WHERE
-           	  	TENANT_ID = #v_TENANTID#
-           	  AND
-           	  	BOARDID = #v_PBOARDID# )
-		]]>
+		<isEqual  property="v_isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards ( 
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT 
+	         		#v_PUSERID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT 
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards 
+	     			  WHERE
+	     			  	TENANT_ID = #v_TENANTID#
+	     			  AND
+	     			  	(COMPANYID = #v_COMPANYID#	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #v_PUSERID# ),
+	                ( SELECT
+	                	CASE 
+	                		WHEN MAX(VIEWORDER) IS NULL 
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1 
+	                	END 
+	                  FROM 
+	                  	TBL_Board_MyBoards 
+	                  WHERE  
+	                  	TENANT_ID = #v_TENANTID#
+	                  AND
+	     			  	(COMPANYID = #v_COMPANYID# 	OR COMPANYID = '*')
+	                  AND
+	                  	USERID = #v_PUSERID# ),
+	                TENANT_ID,
+	                '*' as COMPANYID
+	           	  FROM 
+	           	  	TBL_Board_BoardInfo 
+	           	  WHERE
+	           	  	TENANT_ID = #v_TENANTID#
+	           	  AND
+	           	  	BOARDID = #v_PBOARDID# )
+			]]>
+		</isEqual>
+		<isNotEqual  property="v_isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards ( 
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT 
+	         		#v_PUSERID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT 
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards 
+	     			  WHERE
+	     			  	TENANT_ID = #v_TENANTID#
+	     			  AND
+	     			  	(COMPANYID = #v_COMPANYID# 	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #v_PUSERID# ),
+	                ( SELECT
+	                	CASE 
+	                		WHEN MAX(VIEWORDER) IS NULL 
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1 
+	                	END 
+	                  FROM 
+	                  	TBL_Board_MyBoards 
+	                  WHERE  
+	                  	TENANT_ID = #v_TENANTID#
+	                  AND
+	     			  	(COMPANYID = #v_COMPANYID# 	OR COMPANYID = '*')
+	                  AND
+	                  	USERID = #v_PUSERID# ),
+	                TENANT_ID,
+	                COMPANYID
+	           	  FROM 
+	           	  	TBL_Board_BoardInfo 
+	           	  WHERE
+	           	  	TENANT_ID = #v_TENANTID#
+	           	  AND
+	           	  	BOARDID = #v_PBOARDID# )
+			]]>
+		</isNotEqual>	
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
