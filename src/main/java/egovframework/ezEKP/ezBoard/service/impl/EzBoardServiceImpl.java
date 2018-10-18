@@ -2495,6 +2495,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
 		
+		logger.debug("isAdminLeft      ::     " + isAdminLeft);
+		
 		/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 설정 */
 		if (!isAdminLeft.equals("Y") || (isAdminLeft.equals("Y") && isCompanyAdmin == true)) {
 			showAllGroupBoard = "Y";
@@ -2549,15 +2551,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				if (boardTreeList.size() > 0) {
 					for (int r = 0; r < boardTreeList.size(); r++) {
-						
-						// 그룹사게시판이 여기에 나타날까? boardManage테이블에서 가져오는건데...
-						logger.debug("getBoardTree_Get2의 결과     ::    " + boardTreeList.get(r).getBoardName());
-						
 						boardID = boardTreeList.get(r).getBoardId();
 						if (strForbiddenBoardIDList.indexOf(boardID.split(",")[0]) == -1) {
 							strForbiddenBoardIDList += boardID.trim();
-							
-							logger.debug("strForbiddenBoardIDList     ::    " + strForbiddenBoardIDList);
 						}
 					}
 				}

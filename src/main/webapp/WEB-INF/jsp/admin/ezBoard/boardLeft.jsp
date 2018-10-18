@@ -219,7 +219,7 @@
 	            }
 	        }
 	        
-	        /* 2018-10-16 홍승비 - 관리자단에서 좌측게시판리스트 하위게 접근하는지 판단하는 플래그 추가  */
+	        /* 2018-10-16 홍승비 - 관리자단에서 좌측게시판리스트 하위에 접근하는지 판단하는 플래그 추가  */
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
 		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&isAdminLeft=Y", false);

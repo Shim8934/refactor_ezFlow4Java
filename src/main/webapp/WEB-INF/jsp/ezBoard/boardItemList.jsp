@@ -866,13 +866,15 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
+		    
+		    /* 2018-10-17 홍승비 - 작성자 ID의 '일부'가 SSUserID와 완벽하게 일치하면 참으로 리턴되는 문제 수정 */
 		    function CheckOwnerShip() {
 		        var arrList = new Array();
 		        var i = 0;
 		
 		        arrList = strListInfo.split(";");
 		        for (i = 0; i < arrList.length - 1; i++) {
-		            if (arrList[i].split(",")[1].indexOf(SSUserID) == -1) {
+		            if (arrList[i].split(",")[1] != SSUserID) {
 		                arrList = null;
 		                return false;
 		            }

@@ -212,6 +212,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessName2(accessName2);
 		boardPropertyVO.setCompanyID(user.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
+		boardPropertyVO.setLoginVO(user);
 
 		logger.debug("createBoardGroup ended");
 		
@@ -273,8 +274,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		BoardPropertyVO boardGroupPropertyVO = ezBoardService.getBoardProperty(boardGroupID, user.getTenantId());
 		
 		// 해당 게시판이 속하게 될 게시판그룹의 구분이 99라면, 그룹사게시판이다.
-		if (boardGroupPropertyVO.getGuBun().equals("99")) {
+		if (boardGroupPropertyVO.getGuBun() != null && boardGroupPropertyVO.getGuBun().equals("99")) {
 			boardPropertyVO.setIsAllGroupBoard("Y");
+		} else {
+			boardPropertyVO.setIsAllGroupBoard("");
 		}
 		
 		boardPropertyVO.setBoardName(boardName1);
@@ -336,9 +339,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String upperBoardID = request.getParameter("upperBoardID");
-		/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 플래그 추가 */
-		String isAdminLeft = request.getParameter("isAdminLeft"); // 관리자단의 좌측게시판리스트 확장(하위게시판 호출) 시 이 플래그를 Y로 설정한다.
+		String isAdminLeft = "Y";
 		boolean isCompanyAdmin = false;
+		
 		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
 		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
 			isCompanyAdmin = true;
@@ -362,7 +365,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
-		String isAdminLeft = request.getParameter("isAdminLeft");
+		String isAdminLeft = "Y";
 		boolean isCompanyAdmin = false;
 		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
 		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
@@ -916,8 +919,26 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String pParentNeed = request.getParameter("parentNeed");
 		String pAccessLevel = request.getParameter("accessLevel");
 		String primary = userInfo.getPrimary(); // 사용하지 않는 userLang 변수 제거, primary로 대체
+		String isAllGroupBoard = "";
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		
+		/* 2018-10-17 홍승비 - 그룹사게시판이라면 권한설정 버튼을 숨긴다. */
+		String boardGroupID = boardProperty.getBoardGroupID();
+		// 하위게시판인 경우
+		if (!boardProperty.getParentBoardID().equals("top") && boardGroupID != null) {
+			BoardPropertyVO strGroupProp = ezBoardService.getBoardProperty(boardGroupID, userInfo.getTenantId());
+			if (strGroupProp.getGuBun() != null && strGroupProp.getGuBun().equals("99")) {
+				isAllGroupBoard = "Y";
+			}
+		}
+		// 게시판 그룹인 경우
+		else if (boardProperty.getParentBoardID().equals("top")) {
+			if (boardProperty.getGuBun() != null && boardProperty.getGuBun().equals("99")) {
+				isAllGroupBoard = "Y";
+			}
+		}
+		
 		String boardName = boardProperty.getBoardName();
 		
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
@@ -969,6 +990,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("pAccessLevel", pAccessLevel);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("strList", result);
+		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 
 		logger.debug("boardACL ended");
 		return "admin/ezBoard/boardACL";

@@ -21,6 +21,7 @@
 	        var APPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
 	        var APPRMAILFLAG = $.trim("<c:out value='${model.apprMailFlag}'/>");
 	        var orgAPPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
+	        var parentBoardID =  "<c:out value='${model.parentBoardID}'/>";
 	        var primary = "<c:out value='${primary}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
@@ -238,19 +239,25 @@
 	            	oneLineReply = 1;
 	            }
 	            
+	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezBoard/saveBoardProperty.do",
 	            	async : false,
-	            	data : { boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(), boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
-	            		     itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter, boardColor:brd_color, portlet:portlet, backGround:background,
-	            		     formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG, apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG},
+	            	data : {
+	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
+	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
+	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
+	            		boardColor:brd_color, portlet:portlet, backGround:background,
+	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
+	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID
+	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;	            			
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
 	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;
