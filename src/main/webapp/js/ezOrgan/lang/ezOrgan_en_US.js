@@ -31,3 +31,4 @@ var strLang30 = "Are you sure you want to delete all the concurrent position?";
 var strLang31 = "You can not specify a full administrator privileges.";
 var strLang32 = "Are you sure you want to delete all of the authority?";
 var strLang535 = "No Items";
+var strLangLHM01 = "Restoration to the other companies is not supported.";
