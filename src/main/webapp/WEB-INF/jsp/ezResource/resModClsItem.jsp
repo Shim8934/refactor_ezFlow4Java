@@ -182,17 +182,15 @@
         				<tr>
           					<th> <spring:message code="ezResource.t151"/></th>
           					<td><input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 100%"></td>
-          					<th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"> ${makeDate} </td>
+          					<th> <spring:message code="ezResource.t155"/></th>
+          					<td style="white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxLength="20"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t153"/></th>
-          					<td><input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
-								value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly>
+          					<td colspan="3" ><%-- <input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
+								value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly> --%>
 								<a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span></a>
 							</td>
-          					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxLength="20"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>
