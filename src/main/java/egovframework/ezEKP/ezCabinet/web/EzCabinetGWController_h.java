@@ -302,10 +302,10 @@ public class EzCabinetGWController_h {
 	}
 	
 	@RequestMapping(value="/rest/ezCabinet/shared-member/cabinetId/{cabinetId}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject saveShareUserList(@PathVariable(value="cabinetId") String cabinetId,   HttpServletRequest request) throws Exception {
-		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
-		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
-		String userList       = request.getParameter("userList")     != null ? request.getParameter("userList")          : "";
+	public JSONObject saveShareUserList(@PathVariable(value="cabinetId") String cabinetId, HttpServletRequest request) throws Exception {
+		String serverName     = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String userId         = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
+		String userList       = request.getParameter("userList") != null ? request.getParameter("userList") : "";
 		JSONParser jp         = new JSONParser();
 		JSONObject result     = new JSONObject();
 		
@@ -322,6 +322,38 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			JSONArray listUsers       = (JSONArray)jp.parse(userList);
 			result                    = cabinetService_h.saveShareUserList(listUsers, cabinetId, userInfo);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/shared-member/cabinetId/{cabinetId}/modify", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject modifyShareUserList(@PathVariable(value="cabinetId") String cabinetId, HttpServletRequest request) throws Exception {
+		String serverName     = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String userId         = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
+		String userList       = request.getParameter("userList") != null ? request.getParameter("userList") : "";
+		String actMode        = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		JSONParser jp         = new JSONParser();
+		JSONObject result     = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || userList" + userList + " || Mode: " + actMode);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			JSONArray listUsers       = (JSONArray)jp.parse(userList);
+			result                    = cabinetService_h.modifyShareUserList(listUsers, actMode, cabinetId, userInfo);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

@@ -774,4 +774,161 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return permission;
 	}
+	
+	@Override
+	public JSONObject modifyShareUserList(JSONArray listUsers, String actMode, String cabinetId, LoginVO userInfo) throws Exception {
+		JSONObject result = new JSONObject();
+		
+		if (actMode.equals("delete")) {
+			result = deleteShareUserList(listUsers, cabinetId, userInfo);
+		}
+		else {
+			result = modifyShareUserList(listUsers, cabinetId, userInfo);
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private synchronized JSONObject modifyShareUserList(JSONArray listUsers, String cabinetId, LoginVO userInfo) throws Exception {
+		JSONObject result       = new JSONObject();
+		String userId           = userInfo.getId();
+		int tenantId            = userInfo.getTenantId();
+		String companyId        = userInfo.getCompanyID();
+		String primary          = userInfo.getPrimary();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cabinetId",   cabinetId);
+		map.put("userId",      userId);
+		map.put("tenantId",    tenantId);
+		
+		//Add new shared users
+		for (int i = 0; i < listUsers.size(); i++) {
+			JSONObject sharedInfo = (JSONObject)listUsers.get(i);
+			String sharedId  = (String)sharedInfo.get("userId");
+			String userType  = (String)sharedInfo.get("userType");
+			String sharePerm = (String)sharedInfo.get("permis");
+			String subPerm   = (String)sharedInfo.get("subPerm");
+			
+			switch(userType) {
+				case "user": 
+					LoginVO login = new LoginVO();
+					login.setId(sharedId);
+					login.setDn("NOPASSWORD");
+					login.setTenantId(tenantId);
+					LoginVO user = loginService.selectUser(login);
+					
+					if (user == null) {
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					
+					map.put("shareType", 2);
+					break;
+				case "dept":
+					OrganDeptVO dept = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+					if (dept == null) {
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					
+					map.put("shareType", 1);
+					break;
+				case "comp": 
+					OrganDeptVO company = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+					if (company == null) {
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					
+					map.put("shareType", 0);
+					break;
+				default:
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+			}
+			
+			map.put("sharedId",        sharedId);
+			map.put("permission",      Integer.parseInt(sharePerm));
+			map.put("childPermission", Integer.parseInt(subPerm));
+			ezCabinetDAO_h.modifyShareUserList(map);
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private synchronized JSONObject deleteShareUserList(JSONArray listUsers, String cabinetId, LoginVO userInfo) throws Exception {
+		JSONObject result       = new JSONObject();
+		String userId           = userInfo.getId();
+		int tenantId            = userInfo.getTenantId();
+		String companyId        = userInfo.getCompanyID();
+		String primary          = userInfo.getPrimary();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cabinetId",   cabinetId);
+		map.put("userId",      userId);
+		map.put("tenantId",    tenantId);
+		
+		for (int i = 0; i < listUsers.size(); i++) {
+			JSONObject sharedInfo = (JSONObject)listUsers.get(i);
+			String sharedId  = (String)sharedInfo.get("userId");
+			String userType  = (String)sharedInfo.get("userType");
+			
+			logger.debug("userType: " + userType);
+			
+			switch(userType) {
+				case "user":
+					LoginVO login = new LoginVO();
+					login.setId(sharedId);
+					login.setDn("NOPASSWORD");
+					login.setTenantId(tenantId);
+					LoginVO user = loginService.selectUser(login);
+					
+					if (user == null) {
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					
+					map.put("shareType", 2);
+					break;
+				case "dept":
+					OrganDeptVO dept = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+					if (dept == null) {
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					
+					map.put("shareType", 1);
+					break;
+				case "comp": 
+					OrganDeptVO company = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+					if (company == null) {
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					
+					map.put("shareType", 0);
+					break;
+				default:
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+			}
+			
+			map.put("sharedId", sharedId);
+			ezCabinetDAO_h.deleteShareUserList(map);
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
 }

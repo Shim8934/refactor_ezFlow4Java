@@ -59,19 +59,20 @@
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t46'/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')        }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')  }"></script>
 		<script type="text/javascript">
-			(function() {
+			var CabinetSearchShare = function() {
+				var cabinetId     = null;
 				var selectedUsers = new CabinetTable({
 					normal   : "bnkCabNormal",
 					selected : "bnkCabSelect",
 					mode     : "received"
 				});
 				
-				initEvents();
-				
-				function initEvents() {
+				function initEvents(cabId) {
+					cabinetId               = cabId;
 					document.onselectstart  = function () { return false;};
 					document.getElementById("closeBttn").addEventListener("click", function(e) {closeWindow();}, false);
 					
@@ -91,18 +92,35 @@
 					if (!listTr || listTr.length == 0) {alert(CabinetMessages.strSelect2); return;}
 						
 					if (confirm(CabinetMessages.strDelete4)) {
-						var userList   = [];
+						var userList = [];
 						
 						for(var i = 0, len = listTr.length; i < len; i++) {
 							var userId   = listTr[i].getAttribute("role");
-							var userType = listTr[i].getAttribute("userType");
+							var userType = convertUserType(listTr[i].getAttribute("userType"));
 							userList.push({userId: userId, userType : userType});
 						}
 						
-						var parentWd = window.opener;
-						if (parentWd && parentWd.CabinetShareItem) {parentWd.CabinetShareItem.deleteUsers(userList);}
-						closeWindow();
+						var url  = "/ezCabinet/modifyShareUserList.do";
+						var data = {"cabinetId" : cabinetId, "mode" : "delete", "userList" : JSON.stringify(userList)};
+						makeAjaxCall(data, "POST", url, handleModify, null, null, null);
 					}
+				}
+				
+				function handleModify(data) {
+					var code = data.code;
+					switch(code) {
+						case 0 : afterModifySuccessfully()          ; break;
+						case 1 : alert(CabinetMessages.strParamErr) ; break;
+						case 2 : alert(CabinetMessages.strError)    ; break;
+						case 3 : alert(CabinetMessages.strPerm)     ; break;
+						default: alert(CabinetMessages.strError)    ; return;
+					}
+				}
+				
+				function afterModifySuccessfully() {
+					var parentWd = window.opener;
+					if (parentWd && parentWd.CabinetShareItem) {parentWd.CabinetShareItem.reloadList();}
+					closeWindow();
 				}
 				
 				function changeShareUsers() {
@@ -112,7 +130,7 @@
 					
 					for (var i = 1, len = listTr.length; i < len; i++) {
 						var userId   = listTr[i].getAttribute("role");
-						var userType = listTr[i].getAttribute("userType");
+						var userType = convertUserType(listTr[i].getAttribute("userType"));
 						var perSlBox = listTr[i].children[2].firstElementChild;
 						var subSlBox = listTr[i].children[3].firstElementChild;
 						var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
@@ -120,13 +138,46 @@
 						userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm});
 					}
 					
-					var parentWd    = window.opener;
-					if (parentWd && parentWd.CabinetShareItem) {parentWd.CabinetShareItem.changeUsers(userList);}
-					closeWindow();
+					var url  = "/ezCabinet/modifyShareUserList.do";
+					var data = {"cabinetId" : cabinetId, "mode" : "change", "userList" : JSON.stringify(userList)};
+					makeAjaxCall(data, "POST", url, afterModifySuccessfully, null, null, null);
+				}
+				
+				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
+					$.ajax({
+						type: ajaxType,
+						url: ajaxUrl,
+						data: ajaxData,
+						dataType: "JSON",
+						async: asyncMode != false ? true : false,
+						success : function(data) {
+							handleSuccess(data, moreParam);
+						},
+						error : function(error) {
+							if (handleError != null) {handleError();}
+							
+							alert(CabinetMessages.strError);
+						}
+					});
+				}
+				
+				function convertUserType(userType) {
+					var type = "";
+					
+					switch(parseInt(userType)) {
+						case 0 : type = "comp"; break;
+						case 1 : type = "dept"; break;
+						case 2 : type = "user"; break;
+					}
+					
+					return type;
 				}
 				
 				function closeWindow() {window.close();}
-			})();
+				
+				return {init: initEvents};
+			}();
 		</script>
+		<script type="text/javascript">CabinetSearchShare.init("<c:out value='${cabinetId}'/>");</script>
 	</body>
 </html>

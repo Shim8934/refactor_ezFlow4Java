@@ -404,6 +404,10 @@
 		<![CDATA[select nvl(max(share_id), 0) from tbl_cb_share where tenant_id = #tenantId#]]>
 	</select>
 	
+	<delete id="EzCabinetDAO_h.deleteShareList">
+		delete from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
+	</delete>
+	
 	<insert id="EzCabinetDAO_h.saveShareUserList">
 		<selectKey keyProperty="temp" resultClass="Integer">
 			<![CDATA[ select 1 from dual where not exists (select share_id, cabinet_id from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#)]]>
@@ -433,6 +437,16 @@
 			]]>
 		</isNotEqual>
 	</insert>
+	
+	<update id="EzCabinetDAO_h.modifyShareUserList">
+		update
+			tbl_cb_share 
+		set
+			use_status       = 1,
+			permission       = #permission#,
+			child_permission = #childPermission#
+		where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
+	</update>
 	
 	<!--***********************************************************************************
 	**                             Cabinet item process                                   **

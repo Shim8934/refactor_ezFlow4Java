@@ -121,6 +121,7 @@ public class EzCabinetController_h {
 			model.addAttribute("listUsers", listUsers);
 		}
 		
+		model.addAttribute("cabinetId", cabinetId);
 		logger.debug("jspGetShareUsers ended");
 		return "ezCabinet/share/cabinetSearchShare";
 	}
@@ -261,6 +262,31 @@ public class EzCabinetController_h {
 		resultObj = cabinetRestService_h.saveShareUserList(request, user.getId(), cabinetId, userList);
 		
 		logger.debug("jsonSaveShareUserList ended");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/modifyShareUserList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonModifyShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonModifyShareUserList started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String userList    = request.getParameter("userList")  != null ? request.getParameter("userList")  : "";
+		String actMode     = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		
+		logger.debug("CabinetId: " + cabinetId + " || userList" + userList + " || Action mode: " + actMode);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.modifyShareUserList(request, user.getId(), cabinetId, userList, actMode);
+		
+		logger.debug("jsonModifyShareUserList ended");
 		return resultObj.toString();
 	}
 	

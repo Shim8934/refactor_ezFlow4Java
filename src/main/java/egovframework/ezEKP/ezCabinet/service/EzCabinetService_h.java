@@ -31,4 +31,5 @@ public interface EzCabinetService_h {
 	JSONObject savePhotoCommunityitem(String realPath, String mode, int parseInt, String title, String summary, String commuTitle, String writer, String content, Locale locale, LoginVO userInfo) throws Exception;
 	List<SimpleUserVO> getAncestorShareUserList(String cabinetId, String userId, String primary, int tenantId) throws Exception;
 	int checkItemPermission(int cabinetId, LoginVO userInfo) throws Exception;
+	JSONObject modifyShareUserList(JSONArray listUsers, String actMode, String cabinetId, LoginVO userInfo) throws Exception;
 }

@@ -380,8 +380,7 @@ var CabinetShareItem = function() {
 			url: "/ezOrgan/setListType.do",
 			async: false,
 			data: {listType : pListType},
-			success: function(result) {
-			}
+			success: function(result) {}
 		});
 	}
 	
@@ -402,14 +401,19 @@ var CabinetShareItem = function() {
 					default: alert(CabinetMessages.strError)    ; return;
 				}
 			},
-			error: function(error) {
-			}
+			error: function(error) {}
 		});
 	}
 	
 	function getDataSuccessfully(data) {
 		var listUser = data.shareList;
 		if (!listUser || listUser.length == 0) {return;}
+		
+		var selectedTable = document.getElementById("sharedTable");
+		
+		while (selectedTable.rows.length > 1) {
+			selectedTable.deleteRow(1);
+		}
 		
 		for (var i = 0, len = listUser.length; i < len; i++) {
 			var userId   = listUser[i]["userId"];
@@ -535,35 +539,6 @@ var CabinetShareItem = function() {
 	
 	function closeWindow() {window.close();}
 	
-	function deleteUsers(userList) {
-		var selectedTable = document.getElementById("sharedTable");
-		
-		for (var i = 0, len = userList.length; i < len; i++) {
-			var userId   = userList[i]["userId"];
-			var userType = convertUserType(userList[i]["userType"]);
-			var trElmt   = selectedTable.querySelector("tr[role='" + userId + "'][usertype='" + userType + "']");
-			if (trElmt) {selectedTable.removeChild(trElmt);}
-		}
-	}
-	
-	function changeUsers(userList) {
-		var selectedTable = document.getElementById("sharedTable");
-		for (var i = 0, len = userList.length; i < len; i++) {
-			var userId   = userList[i]["userId"];
-			var userType = convertUserType(userList[i]["userType"]);
-			var permiss  = userList[i]["permis"];
-			var subPerm  = userList[i]["subPerm"];
-			
-			var trElmt   = selectedTable.querySelector("tr[role='" + userId + "'][usertype='" + userType + "']");
-			if (trElmt) {
-				var perSlBox = trElmt.children[2].firstElementChild;
-				var subSlBox = trElmt.children[3].firstElementChild;
-				if (permiss == 0) {perSlBox.selectedIndex = 0;} else {perSlBox.selectedIndex = 1;}
-				if (subPerm == 0) {subSlBox.selectedIndex = 0;} else {subSlBox.selectedIndex = 1;}
-			}
-		}
-	}
-	
 	function convertUserType(userType) {
 		var type = "";
 		
@@ -577,8 +552,7 @@ var CabinetShareItem = function() {
 	}
 	
 	return {
-		init        : initEvents,
-		deleteUsers : deleteUsers,
-		changeUsers : changeUsers
+		init       : initEvents,
+		reloadList : getShareList
 	};
 }();

@@ -3,10 +3,7 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -20,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 
 @Service
@@ -140,6 +136,18 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",      userId);
 		param.put("userList",    userList);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject modifyShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList, String actMode) throws Exception {
+		String url                = "/rest/ezCabinet/shared-member/cabinetId/" + cabinetId + "/modify";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   userId);
+		param.put("mode",     actMode);
+		param.put("userList", userList);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
