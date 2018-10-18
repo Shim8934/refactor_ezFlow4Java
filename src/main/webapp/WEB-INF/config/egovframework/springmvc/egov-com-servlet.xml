@@ -74,12 +74,8 @@
         </mvc:interceptor>
         
         <mvc:interceptor>            
-            <mvc:mapping path="/rest/**"/>
-		    <bean class="egovframework.com.cmm.interceptor.RestAuthenticInterceptor" />
-        </mvc:interceptor>
-        
-        <mvc:interceptor>            
             <mvc:mapping path="/mobile/**"/>
+            <mvc:mapping path="/rest/**"/>
 		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
         </mvc:interceptor>    
 	</mvc:interceptors>

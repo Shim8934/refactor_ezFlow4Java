@@ -80,6 +80,10 @@
 						//부재자 설정관리
 					    url = "/admin/ezApprovalG/adminBujae.do";
 						break;
+					case 15:
+						//채번 관리
+						url = "/admin/ezApprovalG/docNumZeroCnt.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -91,6 +95,7 @@
 			<div class="left_admin" title="<spring:message code='main.t10'/>"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='main.t25'/></div>
 			
 	        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span><ul></ul></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(15)"><spring:message code='ezApprovalG.csj02'/></span><ul></ul></h2>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span><ul></ul></h2>
 				
 				<c:if test="${approvalFlag == 'S' }">

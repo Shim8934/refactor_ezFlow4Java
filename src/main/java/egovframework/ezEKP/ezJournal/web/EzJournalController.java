@@ -733,10 +733,12 @@ public class EzJournalController extends EgovFileMngUtil {
 			JSONObject journal = (JSONObject) result.get("data");
 			String formName = (String) journal.get("formName");
 			
+			nowDate = commonUtil.getDateStringInUTC(nowDate, userInfo.getOffset(), false);
 			String journalTitle = "[" +formName+ "] " + nowDate + " (" + userInfo.getDisplayName() + ")";
 			String journalContent = (String) journal.get("formContent");
 			// 예약어 부분에 내용 치환
 			nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			nowDate = commonUtil.getDateStringInUTC(nowDate, userInfo.getOffset(), false);
 			journalContent = journalContent.replaceAll("@journalWriterDept", userInfo.getDeptName());
 			journalContent = journalContent.replaceAll("@journalWriterName", userInfo.getDisplayName());
 			journalContent = journalContent.replaceAll("@journalWriteDate", nowDate);

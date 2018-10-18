@@ -8010,7 +8010,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String[] fileNamesArr = fileNames.split(":");
 			String[] fileNamesUIDArr = fileNamesUID.split(":");
 			
-			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
+			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
 			
 			if (fileNamesArr.length != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.length; i++) { //파일 길이만큼
