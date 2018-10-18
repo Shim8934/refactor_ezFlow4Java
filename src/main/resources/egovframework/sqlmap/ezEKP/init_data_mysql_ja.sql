@@ -33,6 +33,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 -- 게시판
 INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
+INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 'Top', 0);
 
 -- 전자결재
 INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000001', N'共通', N'ALL', N'ROOT', N'共通', N'DEPT003','Top',0);

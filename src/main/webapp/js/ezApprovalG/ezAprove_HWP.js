@@ -500,7 +500,7 @@ function makeOpinionList(OpinionXML) {
 function openFileAttachUI()
 {
 	var parameter = pDocID;
-	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&ext=" + "hwp";
+	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
 	var feature	= "status:no;dialogWidth:535px;dialogHeight:415px;edge:sunken;scroll:no"; 
 	var ret = window.showModalDialog(url,parameter,feature);
 
