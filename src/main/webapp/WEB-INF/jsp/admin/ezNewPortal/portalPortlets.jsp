@@ -52,10 +52,11 @@ body {
   }
   .portlet {
   	width:30%;
-  	float: left;
   	postion: relative;
     margin: 0 1em 1em 0;
     padding: 0.3em;
+    display : inline-block;
+    vertical-align : top;
   }
   .portlet-header {
     padding: 0.2em 0.3em;
@@ -78,18 +79,15 @@ body {
     height: 50px;
   }
   .col-container {
-    display: table;
     width: 100%;
 	}
 	.col {
-	    display: table-cell;
 	    padding: 16px;
 	}
 	</style>
 	<script type="text/javascript">
 	$( function() {
 	    $( ".column .col-container" ).sortable({
-	      connectWith: ".col-container",
 	      handle: ".portlet-header",
 	      cancel: ".portlet-toggle",
 	      placeholder: "portlet"
@@ -143,8 +141,8 @@ body {
 	<br>
 			
 	<div class="column">
-	<div class="col-container">
-		<div class="portlet col" id="portlet1" data="por1">
+	<ul class="col-container">
+		<li class="portlet col" id="portlet1" data="por1">
 			<div class="portlet-header">게시판1</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -154,8 +152,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		<div class="portlet col" id="portlet2" data="por2">
+		</li>
+		<li class="portlet col" id="portlet2" data="por2">
 			<div class="portlet-header">게시판2</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -165,8 +163,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		<div class="portlet col" id="portlet3" data="por3">
+		</li>
+		<li class="portlet col" id="portlet3" data="por3">
 			<div class="portlet-header">게시판3</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -176,10 +174,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		</div>
-		<div class="col-container">
-		<div class="portlet col" id="portlet4" data="por4">
+		</li>
+		<li class="portlet col" id="portlet4" data="por4">
 			<div class="portlet-header">게시판4</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -189,8 +185,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		<div class="portlet col" id="portlet5" data="por5">
+		</li>
+		<li class="portlet col" id="portlet5" data="por5">
 			<div class="portlet-header">게시판5</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -200,8 +196,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		<div class="portlet col" id="portlet6" data="por6">
+		</li>
+		<li class="portlet col" id="portlet6" data="por6">
 			<div class="portlet-header">게시판6</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -211,10 +207,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		</div>
-		<div class="col-container">
-		<div class="portlet col" id="portlet7" data="por7">
+		</li>
+		<li class="portlet col" id="portlet7" data="por7">
 			<div class="portlet-header">게시판7</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -224,8 +218,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		<div class="portlet col" id="portlet8" data="por8">
+		</li>
+		<li class="portlet col" id="portlet8" data="por8">
 			<div class="portlet-header">게시판8</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -235,8 +229,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-		<div class="portlet col" id="portlet9" data="por9">
+		</li>
+		<li class="portlet col" id="portlet9" data="por9">
 			<div class="portlet-header">게시판9</div>
 			<div class="portlet-content">
 				<div><b>포틀릿 사용  : </b></div>
@@ -246,8 +240,8 @@ body {
 				<div><b>포틀릿 사용  : </b></div>
 				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
 			</div>
-		</div>
-	</div>
+		</li>
+	</ul>
 		
 	</div> 
  
