@@ -81,15 +81,27 @@
 			}(portletId, portletUrl, portletName));
 		}
 		
+		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useCircular = "<c:out value='${useCircular}'/>";
+		var useMail = "<c:out value='${useMail}'/>";
+		var useApproval = "<c:out value='${useApproval}'/>";
+		var useSchedule = "<c:out value='${useSchedule}'/>";
+		
 		//ajax로 count 불러오기
-		getUnreadCounts();
+		getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
 		
 		//근태관리 연동
-		parseDate();
-		attiClock();
-		setAttiBtnHover();
-		getAttitudeList();
-		getHolidayList();
+		var useAttitude = "<c:out value='${useAttitude}'/>";
+		
+		if (useAttitude === "YES") {
+			parseDate();
+			attiClock();
+			setAttiBtnHover();
+			getAttitudeList();
+			getHolidayList();
+		} else {
+			$(".time_check").css("display", "none");
+		}
 		
 		//생일자 조회 기능 연동
 		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);

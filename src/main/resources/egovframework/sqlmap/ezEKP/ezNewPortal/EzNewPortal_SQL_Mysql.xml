@@ -224,7 +224,7 @@ AND
 <!-- 사용자 접근 가능 메뉴 리스트 -->
 <select id="ezNewPortal.getUserMenuList" parameterClass="Map" resultClass="MenuInfoVO">
 SELECT
-	comp.MENU_ID          AS MEMUID,
+	comp.MENU_ID          AS MENUID,
     name.MENU_NAME        AS MENUNAME,
     comp.MENU_USED        AS MENUUSED,
 	comp.COMPANY_LANG     AS COMPANYLANG,
@@ -278,7 +278,7 @@ AND
 <select id="ezNewPortal.getComppanyMenuList" parameterClass="Map" resultClass="MenuInfoVO">
 <![CDATA[
 SELECT
-	comp.MENU_ID          AS MEMUID,
+	comp.MENU_ID          AS MENUID,
     name.MENU_NAME        AS MENUNAME,
     comp.MENU_USED        AS MENUUSED,
 	comp.COMPANY_LANG     AS COMPANYLANG,

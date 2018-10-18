@@ -52,6 +52,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<MenuInfoVO> getUserMenuList(Map<String, Object> map) throws Exception {
 		return (List<MenuInfoVO>) list("ezNewPortal.getUserMenuList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getCompanyMenuList(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getCompanyMenuList", map);
+	}	
 	/* 박종균 끝 */
 	
 	/**
@@ -167,6 +172,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	/** -------------------- */
 	
+	/**
+	 * 구해안
+	 */
 	//즐겨찾기 게시판 포틀릿 리스트(새게시물)
 	@SuppressWarnings("unchecked")
 	public List<FavoriteBoardVO> getFavNewItemList(Map<String, Object> map) {
@@ -188,5 +196,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	//ezNewPortal.getCommunityPermit
 	public CommunityCClubUserVO getCommunityPermit(Map<String, Object> map) {
 		return (CommunityCClubUserVO) select("ezNewPortal.getCommunityPermit", map);
+	}
+	
+	//관리자-포틀릿관리-포틀릿 리스트
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getPortletList(Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getPortletList", map);
 	}
 }

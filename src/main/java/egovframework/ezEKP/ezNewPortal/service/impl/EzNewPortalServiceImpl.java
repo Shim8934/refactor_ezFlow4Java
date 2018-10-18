@@ -134,6 +134,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getUserMenuList(map);
 	}
 	
+	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("langType", langType);
+		return ezNewPortalDAO.getCompanyMenuList(map);
+	}
+	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");
@@ -608,6 +616,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	/** -------------------- */
+	
+	/**
+	 * 구해안
+	 */
 
 	@Override
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit) {
@@ -619,7 +631,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		map.put("limit", limit);
 		
-		return ezNewPortalDAO.getFavNewItemList(map);
+		List<FavoriteBoardVO> favNewItemList = ezNewPortalDAO.getFavNewItemList(map);
+		
+		LOGGER.debug("getFavNewItemList ended.");
+		return favNewItemList;
 	}
 	
 	@Override
@@ -631,7 +646,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("limit", limit);
 		
-		return ezNewPortalDAO.getFavItemList(map);
+		List<FavoriteBoardVO> FavItemList = ezNewPortalDAO.getFavItemList(map);
+		
+		LOGGER.debug("getFavItemList ended.");
+		return FavItemList;
 	}
 	
 	@Override
@@ -642,12 +660,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		return ezNewPortalDAO.getCommunityList(map);
+		List<CommunityMyCommunityVO> CommunityList = ezNewPortalDAO.getCommunityList(map);
+		
+		LOGGER.debug("getCommunityList ended.");
+		return CommunityList;
 	}
 	
 	@Override
 	public String getCommunityPermit(String cNo, String userId, int tenantId) {
-		LOGGER.debug("memberChk started");
+		LOGGER.debug("getCommunityPermit started");
 
 		String ret = "1";
 		
@@ -664,7 +685,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			ret = "0";
 		}
 
-		LOGGER.debug("memberChk ended");
+		LOGGER.debug("getCommunityPermit ended");
 		return ret;
+	}
+	
+	@Override
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId) {
+		LOGGER.debug("getPortletList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantID", tenantId);
+		
+		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
+		
+		LOGGER.debug("getPortletList started");
+		return portetList;
 	}
 }

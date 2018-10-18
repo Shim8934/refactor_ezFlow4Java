@@ -199,7 +199,38 @@ public class EzNewPortalGWController {
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO",
 						tenantId) + commonUtil.separator + imgUrl;
 			}
+			
+			//메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
+			String useAttitude = "";
+			String useQuestion = "";
+			String useCircular = "";
+			String useMail = "";
+			String useApproval = "";
+			String useSchedule = "";
+			
+			//1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE), 전자설문(useQuestion)
+			useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
+			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
+			
+			//2. 메뉴에 권한이 있는지  ================ 수정하기 start
+			if (useAttitude.equals("NO")) {
+				useAttitude = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				useQuestion = "YES";
+			}
+			
+			if (useCircular.equals("NO")) {
+				useCircular = "YES";
+			}
 
+			useMail = "YES";
+			useApproval = "YES";
+			useSchedule = "YES";
+			//=================================== 여기까지 end
+			
 			JSONObject data = new JSONObject();
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
@@ -209,6 +240,12 @@ public class EzNewPortalGWController {
 			data.put("userTitle", userTitle);
 			data.put("deptName", deptName);
 			data.put("userPhoto", userPhoto);
+			data.put("useAttitude", useAttitude);
+			data.put("useQuestion", useQuestion);
+			data.put("useCircular", useCircular);
+			data.put("useMail", useMail);
+			data.put("useApproval", useApproval);
+			data.put("useSchedule", useSchedule);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -367,7 +404,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 
 			// List<ThemeInfoVO> userThemeList =
-			// ezNewPortalService.getUserThemeList(companyId, tenantId);
+			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(
 					false, companyId, tenantId);
 
@@ -400,44 +437,37 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();
 			String logoType = "portal";
-			LOGGER.debug("roleInfo : " + info.getRollInfo());
-			/**
-			 * 1. 로고 2. 메인메뉴 및 서브메뉴 3. 유틸메뉴
-			 */
-
+			JSONObject data = new JSONObject();
 			/**
 			 * 1) 로고
 			 */
-			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId,
-					tenantId, logoType);
+			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
 			LOGGER.debug("logoUrl : " + logoUrl);
 
 			/**
 			 * 2) 메인메뉴 및 서브메뉴 - 권한체크 - user 순서가 없을 경우 회사 순서로 진행
 			 */
-			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(
-					companyId, tenantId, langType, userId);
+			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId);
 			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
 			LOGGER.debug("list.toString() : " + userMenuList.toString());
 			if (userMenuList.size() == 0) {
-				// compMenuList = ezNewPortalService.getCompanyMenuList(companyId,	tenantId, langType);
+				compMenuList = ezNewPortalService.getCompanyMenuList(companyId,	tenantId, langType);
+				data.put("menuList", compMenuList);
+			} else {
+				data.put("menuList", userMenuList);
 			}
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
 			 */
-
-			JSONObject data = new JSONObject();
 			String roleInfo = "user";
-			if (info.getRollInfo().indexOf("c=1") > -1
-					|| info.getRollInfo().indexOf("k=1") > -1) {
+			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
-				data.put("utilAdminUrl", "");
+				data.put("utilAdminUrl", "/admin/main.do");
 			}
 			data.put("logoUrl", logoUrl);
 			data.put("roleInfo", roleInfo);
-			data.put("userMenuList", userMenuList);
-
+LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -1228,11 +1258,18 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
-
+			MCommonVO info = mOptionService.commonInfoWeb(serverName,request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			
+			JSONObject data = new JSONObject();
+			
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
+			
+			data.put("portletList", portletList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

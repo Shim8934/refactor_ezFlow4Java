@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -23,10 +24,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -198,7 +201,67 @@ public class EzNewPortalAdminController {
 	/**
 	 * @author 구해안
 	 */
+	/**
+	 * 관리자 포탈 메뉴관리 화면조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/portalPortlet.do")
+	public String portalManagePortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("portalPortlets started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("portalPortlets accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			
+			HashMap<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userInfo.getId());
+			
+			String url = "/rest/admin/ezportal/companies";
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				model.addAttribute("companyList", resultBody.get("resultList"));
+				model.addAttribute("userCompany", resultBody.get("userCompany"));
+			}
+			
+			LOGGER.debug("portalPortlets ended.");
+			return "/admin/ezNewPortal/portalPortlets";
+		}
+	}
 	
+	/**
+	 * 관리자 포탈 포틀릿목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getPortlets.do")
+	@ResponseBody
+	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("getPortalPortlets started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String url = "/rest/admin/ezPortal/portlets/companies/"+ paramMap.get("companyId");;
+		
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());		
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			json = (JSONArray) data.get("PortletList");
+		}
+		
+		LOGGER.debug("getPortalPortlets Ended");
+		return json;
+	}
 	
 	/** ----------------------------------------------- */
 }

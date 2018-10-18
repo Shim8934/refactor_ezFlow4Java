@@ -15,21 +15,46 @@
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript">
 $(function(){
-	$(".my-flipster").flipster({
-		loop : true,
+	$("#themeList").flipster({
+		//loop : true,
 		style: 'carousel',
 	    spacing: -0.5,
 	    nav: true,
 	    buttons: true,
-	}).flipster('jump', $("#" + "<c:out value='${usedTheme}'/>"));
+	    fadeIn : 0
+	}).flipster('jump', $("#T" + "<c:out value='${usedTheme}'/>"));
 });
 </script>
+<style type="text/css">
+.themeImg {
+	height:400px;
+}
+.themeImage{
+	width: 800px;
+	height : 450px;
+	background-color : #bcdceb;
+	padding : 20px;
+	text-align : center;
+}
+#themeList {
+	height : 700px;
+}
+.themeContent {
+	border : 1px solid black;
+	padding : 10px 10px;
+	text-align : center;
+}
+
+.btnpositionJsp a.imgbtn span {
+	font-weight : normal;
+}
+</style>
 </head>
 <body class="mainbody">
 	<h1>테마 설정</h1>
 	<div id="mainmenu">
 		<ul>
-			<li><span>테마설정 초기화</span></li>
+			<li id="themeInit"><span>테마설정 초기화</span></li>
 		</ul>
 	</div>
 	<table border="0" cellspacing="0" cellpadding="0" class="ltitle">
@@ -51,13 +76,15 @@ $(function(){
 			<td  class="dotted"></td>
 		</tr>
 	</table>
-	<div class="my-flipster">
+	<div id="themeList">
 		<ul>
 			<c:forEach items="${themeList }" var="theme">
-				<li data-flip-title="${theme.themeName }" id="${theme.themeId }">
-					<img src="/images/ezNewPortal/Theme1.GIF" style="width:1000px; height:500px;">
-					<p>${theme.themeName}</p>
-					<p>${theme.themeContent}</p>
+				<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
+					<div class="themeImage">
+						<img src="/images/ezNewPortal/Theme1.GIF" class="themeImg">
+						<div class="btnpositionJsp"><a class="imgbtn"><span>기본 테마 선택</span></a></div>
+					</div>
+					<p class="themeContent">${theme.themeContent}</p>
 				</li>
 			</c:forEach>
 		</ul>
