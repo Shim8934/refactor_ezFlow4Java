@@ -24185,7 +24185,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
 				FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
+				
+				if (FieldName.toUpperCase().equals("LINKDATE")) {
+					resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet).substring(0, 10) + "]]></VALUE>");
+				} else {
+					resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
+				}
 			
 				if ( i == 0) {
 					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
