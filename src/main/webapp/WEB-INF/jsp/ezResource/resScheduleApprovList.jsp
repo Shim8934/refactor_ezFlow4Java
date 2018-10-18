@@ -813,7 +813,7 @@
             			<WIDTH>5%</WIDTH>
         			</HEADER>  
         			<HEADER>
-            			<NAME><spring:message code='ezResource.t193'/></NAME>
+            			<NAME><spring:message code='ezResource.t2003'/></NAME>
             			<WIDTH>5%</WIDTH>
         			</HEADER>  
         			<HEADER>

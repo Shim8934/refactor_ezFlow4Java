@@ -1579,7 +1579,7 @@ public class EzAttitudeController {
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		  
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
@@ -3021,16 +3021,16 @@ public class EzAttitudeController {
 			
 			//header
 			row.createCell(0).setCellValue("NO");
-			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("이름");
-			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("직위");
-			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("부서");
-			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("날짜");
-			row.getCell(4).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
 			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
+			row.getCell(0).setCellStyle(headerStyle);
+			row.getCell(1).setCellStyle(headerStyle);
+			row.getCell(2).setCellStyle(headerStyle);
+			row.getCell(3).setCellStyle(headerStyle);
+			row.getCell(4).setCellStyle(headerStyle);
 			row.getCell(5).setCellStyle(headerStyle);
 			
 			//body
@@ -3058,7 +3058,6 @@ public class EzAttitudeController {
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
 			}
-			
 			//width 조정
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
@@ -3066,21 +3065,27 @@ public class EzAttitudeController {
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
 			sheet.autoSizeColumn(5);
-			sheet.autoSizeColumn(6);
+			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+			
 		} else if (reqType.equals("absent")){
 //			미입력자조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";
 			
 			//header
 			row.createCell(0).setCellValue("NO");
+			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
+			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("날짜");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("이름");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("직위");
 			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("부서");
 			row.getCell(4).setCellStyle(headerStyle);
 			
 			//body
@@ -3099,34 +3104,40 @@ public class EzAttitudeController {
 				row.getCell(2).setCellStyle(bodyStyle);
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
+
 			}
-			
 			//width 조정
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
 			sheet.autoSizeColumn(2);
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
+			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			
 		} else if (reqType.equals("history")){
 //			관리내역조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_historyReport.xls";
 			
 			//header
 			row.createCell(0).setCellValue("NO");
+			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t149", locale));
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
+			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t62", locale));
+			row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t63", locale));
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("이름");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("직위");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("부서");
-			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("일시");
+			row.getCell(3).setCellStyle(headerStyle); 
 			row.getCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue("근태유형");
 			row.getCell(5).setCellStyle(headerStyle);
-			row.createCell(6).setCellValue("수정자");
 			row.getCell(6).setCellStyle(headerStyle);
-			row.createCell(7).setCellValue("수정일시");
 			row.getCell(7).setCellStyle(headerStyle);
 			
 			//body
@@ -3194,6 +3205,14 @@ public class EzAttitudeController {
 			sheet.autoSizeColumn(5);
 			sheet.autoSizeColumn(6);
 			sheet.autoSizeColumn(7);
+			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+			sheet.setColumnWidth(6, (sheet.getColumnWidth(6)) + 512);
+			sheet.setColumnWidth(7, (sheet.getColumnWidth(7)) + 512);
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
