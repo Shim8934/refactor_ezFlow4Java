@@ -94,12 +94,12 @@
 .zoomDiv >img {cursor: pointer;}
 
 .txtSpan {cursor: pointer;}
-.txtSpan:hover {color: #164aad !important;}
+.txtSpan:hover {color: #164aad !important; text-decoration: none !important;}
 .icDown, .icUp {margin: 0px 0px 0px 3px; cursor: pointer; width: 11px; height: 11px; display: inline-block; vertical-align: middle;}
 .icDown {background: url(/images/icon_graydown.gif) no-repeat center bottom;}
 .icUp {background: url(/images/icon_grayup.gif) no-repeat center bottom;}
 .relateList {padding: 0px; margin: 3px 0px 0px 0px; line-height: 18px;}
-.relateList .txtSpan {color: #3472e5;}
+.relateList .txtSpan {text-decoration: underline;}
 .relateList.hide {display: none;}
 .relateList em {font-style: normal;}
 .cabWrapFile {padding: 8px;}
