@@ -52,6 +52,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<MenuInfoVO> getUserMenuList(Map<String, Object> map) throws Exception {
 		return (List<MenuInfoVO>) list("ezNewPortal.getUserMenuList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getCompanyMenuList(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getCompanyMenuList", map);
+	}	
 	/* 박종균 끝 */
 	
 	/**

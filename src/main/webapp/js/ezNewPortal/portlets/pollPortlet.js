@@ -53,7 +53,7 @@ var assemblePollList = function (poll) {
 			}
 			str += '<li class="pollList_0'+ answerList[i].result +'">';
 			str += '<div class="pollT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
-			str += '<div class="percent" id="percent1">' + percentage + '%</div>';
+			str += '<div class="percent" id="percent1">' + Math.round(percentage) + '%</div>';
 			str += '<div class="pollGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';
 			str += '	<span id="pollGraph' + answerList[i].result + '" style="width:'+ percentage +'%"></span>';
 			str += '</div>';
