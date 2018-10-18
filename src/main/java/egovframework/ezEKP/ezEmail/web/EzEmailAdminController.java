@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -1370,12 +1371,27 @@ public class EzEmailAdminController {
 	/**
 	 * 서명 템플릿 미리보기 (팝업창)
 	 * 
-	 * @param String loginCookie, Model model
+	 * @param String loginCookie, Model modeOrganUserVOl
 	 */
 	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do")
 	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, String content) throws Exception {
 		logger.debug("signaturePreviewContent started.");
 		logger.debug("content=" + content);
+		
+		
+		if (content != null) {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			OrganUserVO _vo = ezOrganAdminService.getUserInfo(userInfo.getId(), "1", userInfo.getTenantId());
+			
+			content = content.replace("${company}", _vo.getCompany1()).replace("${engCompany}", _vo.getCompany2()).replace("${name}", _vo.getDisplayName1()).replace("${engName}", _vo.getDisplayName2())
+					.replace("${department}", _vo.getDescription1()).replace("${engDepartment}", _vo.getDescription2()).replace("${email}", _vo.getMail())
+					.replace("${title}", _vo.getTitle1() == null ? "" : _vo.getTitle1()).replace("${engTitle}", _vo.getTitle2() == null ? "" : _vo.getTitle2())
+					.replace("${position}", _vo.getExtensionAttribute101() == null ? "" : _vo.getExtensionAttribute101()).replace("${engPosition}", _vo.getExtensionAttribute102() == null ? "" : _vo.getExtensionAttribute102())
+					.replace("${officePhone}", _vo.getTelephoneNumber() == null ? "" : _vo.getTelephoneNumber()).replace("${homePhone}", _vo.getHomePhone() == null ? "" : _vo.getHomePhone())
+					.replace("${fax}", _vo.getFacsimileTelephoneNumber() == null ? "" : _vo.getFacsimileTelephoneNumber()).replace("${mobile}", _vo.getMobile() == null ? "" : _vo.getMobile())
+					.replace("${zipCode}", _vo.getPostalCode() == null ? "" : _vo.getPostalCode()).replace("${address}", _vo.getStreetAddress() == null ? "" : _vo.getStreetAddress());
+
+		}
 		
 		model.addAttribute("content", content);
 

@@ -47,6 +47,14 @@
 			inputInfoListEvent();
 		}
 		
+		function applyInfo() {
+			var selectedId = $("#inputInfoBody tr[selected=true]")[0].getAttribute("infoId");
+			var currentElement = window.message.xfe.getSelectedElement();
+			
+			currentElement.innerText = "$" + "{" + selectedId + "}";
+			
+		}
+		
 		function inputInfoListEvent() {
 			var infoBody = document.getElementById("inputInfoBody");
 			var infoBodyChild = infoBody.children;
@@ -74,7 +82,6 @@
 		function changeInfoTarget(obj) {
 			document.getElementById("infoIdTarget").innerHTML = obj.getAttribute("infoid");
 			document.getElementById("infoContentTarget").innerHTML = obj.getAttribute("infocontent");
-			document.getElementById("infoTypeTarget").innerHTML = obj.getAttribute("infotype");
 		}
 		
 		function event_listMover(obj) {
@@ -227,38 +234,41 @@
 							</thead>
 							
 							<tbody id="inputInfoBody">
-								<tr style="cursor: pointer;" infoId="signName" infoContent="사용자 이름" infoType="TD" >
+								<tr style="cursor: pointer;" infoId="name" infoContent="사용자 이름">
 									<td>이름</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signEmail" infoContent="이메일" infoType="TD">
+								<tr style="cursor: pointer;" infoId="email" infoContent="이메일">
 									<td>이메일</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signDept" infoContent="부서" infoType="TD">
+								<tr style="cursor: pointer;" infoId="department" infoContent="부서">
 									<td>부서</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signPosition" infoContent="직위" infoType="TD">
+								<tr style="cursor: pointer;" infoId="position" infoContent="직위">
 									<td>직위</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signResponsibilities" infoContent="직책" infoType="TD">
-									<td>직책</td>
-								</tr>
-								<tr style="cursor: pointer;" infoId="signBirth" infoContent="생년월일" infoType="TD">
+								<tr style="cursor: pointer;" infoId="birth" infoContent="생년월일">
 									<td>생년월일</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signCompanyNum" infoContent="사번" infoType="TD">
+								<tr style="cursor: pointer;" infoId="empNo" infoContent="사번">
 									<td>사번</td>
 								</tr>
-								<tr  style="cursor: pointer;"infoId="signComapnyPhone" infoContent="사내전화" infoType="TD">
+								<tr  style="cursor: pointer;"infoId="officePhone" infoContent="사내전화">
 									<td>사내전화</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signPhone" infoContent="전화번호" infoType="TD">
+								<tr style="cursor: pointer;" infoId="homePhone" infoContent="전화번호">
 									<td>전화번호</td>
 								</tr >
-								<tr style="cursor: pointer;" infoId="signMovePhone" infoContent="이동전화" infoType="TD">
+								<tr style="cursor: pointer;" infoId="mobile" infoContent="이동전화">
 									<td>이동전화</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="signFaxNumber" infoContent="팩스번호" infoType="TD">
+								<tr style="cursor: pointer;" infoId="fax" infoContent="팩스번호">
 									<td>팩스번호</td>
+								</tr>
+								<tr style="cursor: pointer;" infoId="zipCode" infoContent="우편번호">
+									<td>우편번호</td>
+								</tr>
+								<tr style="cursor: pointer;" infoId="address" infoContent="주소">
+									<td>주소</td>
 								</tr>
 							</tbody>
 						</table>
@@ -274,14 +284,10 @@
 									<td id="infoContentTarget"></td>
 								</tr>
 								<tr>
-									<th style="text-align:center;"><b>타입</b></th>
-									<td id="infoTypeTarget"></td>
-								</tr>
-								<tr>
 									<td align="center" colspan="2" height="40px" style="border: 0px;">
 										<div id="mainmenu" style="margin-top: 7px;">
 											<ul style="width: 100%;">
-												<li class="inputInfoBtn"><span>적 용 </span></li>
+												<li class="inputInfoBtn"><span onclick="applyInfo()">적 용 </span></li>
 												<li class="inputInfoBtn"><span>취 소 </span></li>
 											</ul>
 										</div>
