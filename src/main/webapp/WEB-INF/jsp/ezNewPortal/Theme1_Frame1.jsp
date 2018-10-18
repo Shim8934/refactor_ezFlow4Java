@@ -88,7 +88,7 @@
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
 		//ajax로 count 불러오기
-		getUnreadCounts(useQUestion, useCircular, useMail, useApproval, useSchedule);
+		getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
 		
 		//근태관리 연동
 		var useAttitude = "<c:out value='${useAttitude}'/>";
