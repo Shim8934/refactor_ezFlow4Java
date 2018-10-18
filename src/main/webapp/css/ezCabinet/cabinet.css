@@ -89,7 +89,8 @@
 .cabPreDate {display: inline-block; width: 150px; font-size: 12px; color: #333; text-align: center;}
 .cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
 .cabPrevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
-.cabPrevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 70px; line-height: 18px; word-break: break-all;}
+.cabPrevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 60px; line-height: 18px; word-break: break-all;}
+.cabPrevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
 
@@ -98,10 +99,10 @@
 .icDown, .icUp {margin: 0px 0px 0px 3px; cursor: pointer; width: 11px; height: 11px; display: inline-block; vertical-align: middle;}
 .icDown {background: url(/images/icon_graydown.gif) no-repeat center bottom;}
 .icUp {background: url(/images/icon_grayup.gif) no-repeat center bottom;}
-.relateList {padding: 0px; margin: 3px 0px 0px 0px; line-height: 18px;}
-.relateList .txtSpan {text-decoration: underline;}
-.relateList.hide {display: none;}
-.relateList em {font-style: normal;}
+.relateList, .relateList2 {padding: 0px; margin: 3px 0px 0px 0px; line-height: 18px;}
+.relateList2 .txtSpan {text-decoration: underline;}
+.relateList.hide, .relateList2.hide {display: none;}
+.relateList em, .relateList2 em {font-style: normal;}
 .cabWrapFile {padding: 8px;}
 .itemContentH, .itemContentW {overflow: auto; flex: 1; display: flex; flex-flow: column;}
 .itemContentH .fileDetailDiv, .itemContentW .fileDetailDiv {height: auto !important; min-height: auto !important;}

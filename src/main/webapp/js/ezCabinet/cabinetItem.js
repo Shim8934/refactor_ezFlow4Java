@@ -1191,17 +1191,17 @@ var CabinetItem = function() {
 		
 		//Forward
 		if (forwardList && forwardList.length > 0) {
-			createEmailFieldTitle(forwardColumn, forwardList, dlElmt);
+			createEmailFieldTitle(forwardColumn, forwardList, dlElmt, CabinetMessages.strForward);
 		}
 		
 		//Related documents title
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
-	function createEmailFieldTitle(columnJsonObj, fieldList, dlElmt) {
+	function createEmailFieldTitle(columnJsonObj, fieldList, dlElmt, dtName) {
 		var fdtElmt         = document.createElement("dt");
 		var fddElmt         = document.createElement("dd");
-		fdtElmt.textContent = columnJsonObj["columnName"] + ": ";
+		fdtElmt.innerHTML   = dtName ? dtName + ": " : columnJsonObj["columnName"] + ": ";
 		var totalField      = fieldList.length;
 		
 		if (totalField == 1) {
@@ -1272,10 +1272,10 @@ var CabinetItem = function() {
 		var creatorId   = itemInfo["creatorId"];
 		
 		//Creator title
-		generateCreatorTitle(dlElmt, creatorName, creatorId);
+		generateCreatorTitle(dlElmt, creatorName, creatorId, "rescmode");
 		
 		//Resource name
-		generateColumnTitle(dlElmt, resItemColumn);
+		generateColumnTitle(dlElmt, resItemColumn, "rescmode");
 		
 		//Related documents title
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
@@ -1390,28 +1390,32 @@ var CabinetItem = function() {
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
-	function generateCreatorTitle(dlElmt, creatorName, creatorId) {
+	function generateCreatorTitle(dlElmt, creatorName, creatorId, mode) {
 		var dtElmt       = document.createElement("dt");
 		var ddElmt       = document.createElement("dd");
 		var spanElmt     = document.createElement("span");
-		dtElmt.textContent   = CabinetMessages.strCreator + ": ";
+		dtElmt.innerHTML     = CabinetMessages.strCreator + ": ";
 		spanElmt.className   = "txtSpan";
 		spanElmt.textContent = creatorName;
 		spanElmt.addEventListener("click", function(e) {showUserInfoFromId(creatorId);}, false);
 		ddElmt.appendChild(spanElmt);
 		dlElmt.appendChild(dtElmt);
 		dlElmt.appendChild(ddElmt);
+		
+		if (mode) {ddElmt.className = "ddRes";}
 	}
 	
-	function generateColumnTitle(dlElmt, itemColumn) {
+	function generateColumnTitle(dlElmt, itemColumn, mode) {
 		var dtElmt           = document.createElement("dt");
 		var ddElmt           = document.createElement("dd");
 		var spanElmt         = document.createElement("span");
-		dtElmt.textContent   = itemColumn["columnName"] + ": ";
+		dtElmt.innerHTML     = itemColumn["columnName"] + ": ";
 		spanElmt.textContent = itemColumn["columnValue"];
 		ddElmt.appendChild(spanElmt);
 		dlElmt.appendChild(dtElmt);
 		dlElmt.appendChild(ddElmt);
+		
+		if (mode) {ddElmt.className = "ddRes";}
 	}
 	
 	function generateRelatedListTitle(dlElmt, relatedList) {
@@ -1441,7 +1445,7 @@ var CabinetItem = function() {
 			spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
 			spanElmt3.className   = "icDown";
 			spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
-			pElmt.className       = "relateList hide";
+			pElmt.className       = "relateList2 hide";
 			
 			for (var i = 0; i < totalCnt; i++) {
 				var spanChild = document.createElement("span");
@@ -1474,7 +1478,7 @@ var CabinetItem = function() {
 		if (summary && summary.replace(/\s/g,'')) {
 			var sDtElmt         = document.createElement("dt");
 			var sDdElmt         = document.createElement("dd");
-			sDtElmt.textContent = CabinetMessages.strSummary + ": ";
+			sDtElmt.innerHTML   = CabinetMessages.strSummary + ": ";
 			sDdElmt.textContent = summary;
 			dlElmt.appendChild(sDtElmt);
 			dlElmt.appendChild(sDdElmt);
@@ -1561,15 +1565,16 @@ var CabinetItem = function() {
 	}
 	
 	function showRelatedList(spanElmt) {
-		var currentClass = spanElmt.className;
-		var pElmt        = spanElmt.nextElementSibling;
+		var currentClass  = spanElmt.className;
+		var pElmt         = spanElmt.nextElementSibling;
+		var crrPElmtClass = pElmt.className;
 		if (currentClass == "icDown") {
 			spanElmt.className = "icUp";
-			pElmt.className    = "relateList";
+			pElmt.className    = crrPElmtClass.indexOf("relateList2") != -1 ? "relateList2" : "relateList";
 		}
 		else {
 			spanElmt.className = "icDown";
-			pElmt.className    = "relateList hide";
+			pElmt.className    = crrPElmtClass.indexOf("relateList2") != -1 ? "relateList2 hide" : "relateList hide";
 		}
 	}
 	
