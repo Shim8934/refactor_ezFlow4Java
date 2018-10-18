@@ -199,7 +199,38 @@ public class EzNewPortalGWController {
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO",
 						tenantId) + commonUtil.separator + imgUrl;
 			}
+			
+			//메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
+			String useAttitude = "";
+			String useQuestion = "";
+			String useCircular = "";
+			String useMail = "";
+			String useApproval = "";
+			String useSchedule = "";
+			
+			//1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE), 전자설문(useQuestion)
+			useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
+			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
+			
+			//2. 메뉴에 권한이 있는지  ================ 수정하기 start
+			if (useAttitude.equals("NO")) {
+				useAttitude = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				useQuestion = "YES";
+			}
+			
+			if (useCircular.equals("NO")) {
+				useCircular = "YES";
+			}
 
+			useMail = "YES";
+			useApproval = "YES";
+			useSchedule = "YES";
+			//=================================== 여기까지 end
+			
 			JSONObject data = new JSONObject();
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
@@ -209,6 +240,12 @@ public class EzNewPortalGWController {
 			data.put("userTitle", userTitle);
 			data.put("deptName", deptName);
 			data.put("userPhoto", userPhoto);
+			data.put("useAttitude", useAttitude);
+			data.put("useQuestion", useQuestion);
+			data.put("useCircular", useCircular);
+			data.put("useMail", useMail);
+			data.put("useApproval", useApproval);
+			data.put("useSchedule", useSchedule);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -367,7 +404,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 
 			// List<ThemeInfoVO> userThemeList =
-			// ezNewPortalService.getUserThemeList(companyId, tenantId);
+			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(
 					false, companyId, tenantId);
 

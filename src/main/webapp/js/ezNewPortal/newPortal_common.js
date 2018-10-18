@@ -177,7 +177,11 @@ function viewPersonalEnv() {
     window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
 }
 
-function getUnreadCounts() {
+function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
+	var data = {
+		"useQuestion" : useQuestion
+	};
+	
 	$.ajax({
 		type : "POST",
 		url : "/ezNewPortal/unreadCounts.do",
