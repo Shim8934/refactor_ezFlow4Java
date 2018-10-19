@@ -39,6 +39,11 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileList",map);
 	}
 	
+	// fileList 가져오는 메소드2 모든 폴더들이 다 동일한 조건 
+	public List<FileVO> getFileList2(Map<String, Object> map) {
+		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileList2",map);
+	}
+	
 	public List<FileVO> getFileListR(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileListR",map);
 	}
@@ -47,12 +52,20 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList",map);
 	}
 	
+	public List<FileVO> searchFileList2(Map<String, Object> map) {
+		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList",map);
+	}
+	
 	public List<FileVO> searchFileListR(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileListR",map);
 	}
 	
-	public int getFldTotalCount (Map<String, Object> map) {
+	public int getFldTotalCount(Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.getFldToTalCount",map);
+	}
+
+	public int getFldTotalCount2(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.getFldToTalCount2",map);
 	}
 	
 	public int getFileTotalCount (Map<String, Object> map) {
