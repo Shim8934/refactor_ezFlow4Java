@@ -146,7 +146,7 @@ public class EzNewPortalGWController {
 	@RequestMapping(value = "/rest/ezPortal/settingInfo/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserPortalSetting(HttpServletRequest request,
 			@PathVariable String userId, Locale locale) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUserPortalSetting started.");
+		LOGGER.debug("ezNewortal G/W getUserPortalSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -670,7 +670,12 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			int usedFrame = Integer.parseInt(request.getParameter("frameDefault"));
+			
+			ezNewPortalService.updateUserThemeSetting(themeId, usedFrame, userId, tenantId, companyId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -695,7 +700,11 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.deleteUserThemeSetting(userId, tenantId, companyId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -900,6 +909,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 		return result;
 	}
 	
+	//사용자 초기화면 정보 조회
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserStartPage (HttpServletRequest request, @PathVariable String userId) {
@@ -925,7 +935,32 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 		LOGGER.debug("ezNewPortal G/W getUserStartPage ended.");
 		return result;
 	}
+	
+	//사용자 초기화면 설정 실행
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/startpage/menus/{menuId}/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateUserStartPage (HttpServletRequest request, @PathVariable String userId, @PathVariable int menuId) {
+		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
+		JSONObject result = new JSONObject();
 
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+
+			ezNewPortalService.updateUserStartPage(menuId, userId, tenantId, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getUserStartPage ended.");
+		return result;
+	}
 	// ///관리자///////
 	/**
 	 * 포탈개인화 G/W [GET] 회사 목록 조회
