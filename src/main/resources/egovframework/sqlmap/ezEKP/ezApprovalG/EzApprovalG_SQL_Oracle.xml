@@ -17570,16 +17570,18 @@
     		COMPANYID = #companyID#
 	</delete>
 	
-<!-- 	<update id="EzApprovalG.updateOpinionInfo" parameterClass="Map"> -->
-<!-- 		 UPDATE  -->
-<!-- 		 	TBL_APRDOCINFO -->
-<!--          SET  -->
-<!--          	HASOPINIONYN = 'N' -->
-<!--        	 WHERE   -->
-<!--        	 	DOCID = #v_DOCID# -->
-<!--        	 AND -->
-<!--     		TENANT_ID =#v_TENANTID# -->
-<!-- 	</update> -->
+	<update id="EzApprovalG.updateOpinionInfo" parameterClass="Map">
+		 UPDATE 
+		 	TBL_APRDOCINFO
+         SET 
+         	HASOPINIONYN = 'N'
+       	 WHERE  
+       	 	DOCID = #v_DOCID#
+       	 AND
+    		TENANT_ID =#v_TENANTID#
+    	 AND
+    	 	COMPANYID = #companyID#
+	</update>
 
 <!-- 	<procedure id="EzApprovalG.deleteAttachFileInfo" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_DELETEATTACHFILEINFO(#v_DOCID#)} -->

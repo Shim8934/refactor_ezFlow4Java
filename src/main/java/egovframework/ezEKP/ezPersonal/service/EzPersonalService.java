@@ -52,4 +52,11 @@ public interface EzPersonalService {
 	public void insertResult (int pItemSeq, String pUserID, int pResult, int tenantID) throws Exception;
 	
 	public int checkPassword (String pCN, String pPassword, int tenantID) throws Exception;
+	
+	public String getShareApprovalList (String userID, String offset, int tenantID) throws Exception;
+	
+	public String insertShareApproval (String userID, String shareUserID, int tenantID) throws Exception;
+	
+	public String deleteShareApproval (String userID, String shareUserID, int tenantID) throws Exception;
+	
 }

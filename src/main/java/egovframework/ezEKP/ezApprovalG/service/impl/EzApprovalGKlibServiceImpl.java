@@ -233,14 +233,18 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			// 첨부파일 경로
 			String attachHref = attachInfo.getAttachFileHref();
 			Path attachFile = Paths.get(realPath, attachHref);
-
+			
 			LOGGER.debug("file: {}", attachHref);
 
 			// 암호화 성공시 TBL_ENDATTACHINFO 테이블의 HREF 컬럼 업데이트
 			if (encryptForApprovalFile(attachFile)) {
-				parameterMap.put("attachFileSN", attachInfo.getAttachFileSN());
+				// 원래 경로 
+				parameterMap.put("orgHref", attachHref);
+				// ezd 경로
 				parameterMap.put("href", attachHref + "." + ENCRYPTED_FILE_EXT);
-
+				// 첨부파일 순서
+				parameterMap.put("attachFileSN", attachInfo.getAttachFileSN());
+				
 				ezApprovalGKlibDAO.updateEndAttachInfoHref(parameterMap);
 				/* 진행 중인 문서의 해당 첨부파일이 존재하면 .ezd 확장자를 붙여준다.
 				 orgdocid를 현재 결재완료된 문서의 아이디를 쓰는 경우가 존재하기 때문이다.
