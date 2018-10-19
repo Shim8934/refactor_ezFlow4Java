@@ -194,7 +194,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPersonal/ezApprovalConfig.do")
 	public String ezApprovalConfig(Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		logger.debug("ezApprovalConfig started");
-
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+		
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useShareApproval", useShareApproval);
+		
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
 	}
@@ -1567,5 +1574,85 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 공유결재자 설정 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/manageShare.do")
+	public String manageShare(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("manageShare started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("manageShare ended");
+		return "/ezPersonal/persManageShare";
+	}
+	
+	/**
+	 * 공유결재자 선택 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/selectShareApproval.do")
+	public String selectShareApproval(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("selectShareApproval started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("selectShareApproval ended");
+		return "/ezPersonal/persSelectShareApproval";
+	}
+	
+	/**
+	 * 공유결재자 리스트 가져오는 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/shareApprovalList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String shareApprovalList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("shareApprovalList started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = ezPersonalService.getShareApprovalList(userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+		
+		logger.debug("shareApprovalList ended");
+		return result;
+	}
+	
+	/**
+	 * 공유결재자 추가 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/saveShareApproval.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveShareApproval(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("saveShareApproval started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String shareUserId = req.getParameter("shareUserId");
+		
+		ezPersonalService.insertShareApproval(userInfo.getId(), shareUserId, userInfo.getTenantId());
+		
+		logger.debug("saveShareApproval ended");
+		return "OK";
+	}
+	
+	/**
+	 * 공유결재자 삭제 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/removeShareApproval.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String deleteShareApproval(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("removeShareApproval started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String shareUserId = req.getParameter("shareUserId");
+		
+		ezPersonalService.deleteShareApproval(userInfo.getId(), shareUserId, userInfo.getTenantId());
+		
+		logger.debug("removeShareApproval ended");
+		return "OK";
 	}
 }

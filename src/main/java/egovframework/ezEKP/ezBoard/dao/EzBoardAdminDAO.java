@@ -314,12 +314,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (String) select("EzBoardAdminDAO.getMyBoardTreeUpper", boardMyFavoriteVO);
 	}
 
-	/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
+	/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가 */
 	public int checkCompanyIDCol() {
 		return (int) select("EzBoardAdminDAO.checkCompanyIDCol");
-	}
-	public void addMyBoardsComp(Map<String, Object> map) {
-		insert("EzBoardAdminDAO.addMyBoardsComp", map);
 	}
 	
 	/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
@@ -327,4 +324,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		update("EzBoardAdminDAO.saveBoardProperty3", map);
 	}
 
+	/* 2018-10-17 홍승비 - 모든 회사ID, 이름(다국어)을 리스트로 받아오는 쿼리 추가 */
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getCompanyList(Map<String, Object> map) throws Exception{
+		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getCompanyList", map);
+	}
 }

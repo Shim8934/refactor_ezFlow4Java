@@ -75,8 +75,13 @@
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezBoard/getSubBoards.do",	        			
-					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
+					url : "/ezBoard/getSubBoards.do",
+					data : {
+						rootBoardID : pRootBoardID,
+						subFlag : pSubFlag,
+						selectFlag : "0",
+						isAdminLeft : "Y"
+					},
 					success: function(result){
 						ret = loadXMLString(result);				
 					}
@@ -131,7 +136,11 @@
 					dataType : "text",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",
-					data : { rootBoardID : 'top', subFlag : '0'},
+					data : {
+						rootBoardID : 'top',
+						subFlag : '0',
+						isAdminLeft : "Y"
+					},
 					success : function(result){
 						MakeTopBoardView(result);
 					}
