@@ -3101,4 +3101,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void setDocNumZeroCnt(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.setDocNumZeroCnt", map);
 	}
+
+	public void updateOpinionInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpinionInfo", map);
+	}
 }

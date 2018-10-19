@@ -1,4 +1,4 @@
-﻿﻿function OpenInformationUI(pInformationContent)
+﻿﻿﻿function OpenInformationUI(pInformationContent)
 {
 	var parameter = pInformationContent;
 	var url = "/myoffice/ezCommunity/htm/ezAPROPINION.aspx";
@@ -62,7 +62,8 @@ function getBoardComment() {
 		dataType : "json",
 		data : {
 			itemID : pItemID,
-			boardID : pBoardID
+			boardID : pBoardID,
+			gubun : gubun
 		},
 		success : function(result) {
 			boardCommentList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";

@@ -25,9 +25,18 @@ public class FileVO {
 	private String folderName;
 	private String folderPath;
 	private String deleterId;
+	private String owerId;
 	private int    tenantId;
 	private int    folderSort;
 
+	public String getOwnerId() {
+		return owerId;
+	}
+	
+	public void setOwnerId(String owerId) {
+		this.owerId = owerId;
+	}
+	
 	public String getFavouriteStatus() {
 		return favouriteStatus;
 	}
