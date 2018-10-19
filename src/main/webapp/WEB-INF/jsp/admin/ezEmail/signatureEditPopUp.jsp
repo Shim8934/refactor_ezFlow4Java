@@ -243,7 +243,10 @@
 								<tr style="cursor: pointer;" infoId="department" infoContent="부서">
 									<td>부서</td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="position" infoContent="직위">
+								<tr style="cursor: pointer;" infoId="position" infoContent="직책">
+									<td>직책</td>
+								</tr>
+								<tr style="cursor: pointer;" infoId="title" infoContent="직위">
 									<td>직위</td>
 								</tr>
 								<tr style="cursor: pointer;" infoId="birth" infoContent="생년월일">

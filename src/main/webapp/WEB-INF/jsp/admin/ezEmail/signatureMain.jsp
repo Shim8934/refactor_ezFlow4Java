@@ -168,7 +168,7 @@
 	        	
 				var popUpType = "";
 				var url = "/admin/ezEmail/signEditPopUp.do?type=" + type + "&paramSignNo=" + signno;
-				var signPopUp = window.open(url, "signPopUp", GetOpenWindowfeature(1000, 660));
+				var signPopUp = window.open(url, "signPopUp", GetOpenWindowfeature(1000, 670));
 			}
 	        
 	        // 검색 리스트 가져오기
