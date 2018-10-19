@@ -1266,16 +1266,38 @@ public class EzEmailAdminController {
 	 * @param companyId, signNo
 	 * @return : void
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/admin/ezEmail/signaturePreview.do")
 	@ResponseBody
 	public JSONArray signaturePreview(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("signaturePreview started.");
 		logger.debug("signNo=" + signNo);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(userInfo.getId(), "1", userInfo.getTenantId());
+		String content = "";
 
 		JSONArray returnJsonArr = new JSONArray();
 
 		try {
+			
 			returnJsonArr = ezEmailService.selectOneSignatureTemplate(signNo);
+			JSONObject obj = (JSONObject) returnJsonArr.get(0);
+			content = obj.get("content").toString();
+			content = replaceUserInfo(vo, content);
+			
+			JSONObject newObj = new JSONObject();
+			
+			// content replace 메소드 후 리턴
+			newObj.put("signNo", obj.get("signNo").toString());
+			newObj.put("content", content);
+			newObj.put("displayname", obj.get("displayname").toString());
+			newObj.put("displayname2", obj.get("displayname2").toString());
+			
+			returnJsonArr = new JSONArray();
+			returnJsonArr.add(newObj);
+			
+			
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -1368,7 +1390,7 @@ public class EzEmailAdminController {
 	}
 	
 	/**
-	 * 서명 템플릿 미리보기 (팝업창)
+	 * 서명 템플릿 미리보기
 	 * 
 	 * @param String loginCookie, Model model
 	 */
@@ -1377,11 +1399,28 @@ public class EzEmailAdminController {
 		logger.debug("signaturePreviewContent started.");
 		logger.debug("content=" + content);
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(userInfo.getId(), "1", userInfo.getTenantId());
+		content = replaceUserInfo(vo, content);
+		
 		model.addAttribute("content", content);
 
 		logger.debug("signaturePreviewContent ended.");
 		return "admin/ezEmail/signaturePreview";
 
+	}
+	
+	private String replaceUserInfo(OrganUserVO _vo, String content) {
+		content = content.replace("${company}", _vo.getCompany1()).replace("${engCompany}", _vo.getCompany2()).replace("${name}", _vo.getDisplayName1()).replace("${engName}", _vo.getDisplayName2())
+				.replace("${department}", _vo.getDescription1()).replace("${engDepartment}", _vo.getDescription2()).replace("${email}", _vo.getMail())
+				.replace("${title}", _vo.getTitle1() == null ? "" : _vo.getTitle1()).replace("${engTitle}", _vo.getTitle2() == null ? "" : _vo.getTitle2())
+				.replace("${position}", _vo.getExtensionAttribute101() == null ? "" : _vo.getExtensionAttribute101()).replace("${engPosition}", _vo.getExtensionAttribute102() == null ? "" : _vo.getExtensionAttribute102())
+				.replace("${officePhone}", _vo.getTelephoneNumber() == null ? "" : _vo.getTelephoneNumber()).replace("${homePhone}", _vo.getHomePhone() == null ? "" : _vo.getHomePhone())
+				.replace("${fax}", _vo.getFacsimileTelephoneNumber() == null ? "" : _vo.getFacsimileTelephoneNumber()).replace("${mobile}", _vo.getMobile() == null ? "" : _vo.getMobile())
+				.replace("${zipCode}", _vo.getPostalCode() == null ? "" : _vo.getPostalCode()).replace("${address}", _vo.getStreetAddress() == null ? "" : _vo.getStreetAddress())
+				.replace("${birth}", _vo.getBirth() == null ? "" : _vo.getBirth());
+		
+		return content;
 	}
 	
 }

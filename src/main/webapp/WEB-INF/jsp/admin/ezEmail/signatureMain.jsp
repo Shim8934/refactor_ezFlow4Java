@@ -242,22 +242,6 @@
 	        }
 	        
 	        function signPreviewChange(data) {
-	        	/* var preTxt = $(".signPreViewTxt")[0];
-	        	var preIframe = $(".signPreViewIframe");
-	        	var txtDisplay = "block";
-	        	var iframeDisplay = "none";
-	        	var txtText = data[0].content;
-	        	//var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
-	        	
-	        	if (data !== undefined) {
-	        		preTxt.style.textAlign = "justify";
-	        		preTxt.style.position = "none";
-	        		preTxt.style.top = "0";
-	        		preTxt.style.transform = "none";
-	        		preTxt.style.display = txtDisplay;
-		        	preIframe[0].style.display = iframeDisplay;
-		        	preTxt.innerHTML = txtText;
-	        	} */
 	        	var preTxt = $(".signPreViewTxt")[0];
 	        	var preIframe = $(".signPreViewIframe");
 	        	var txtDisplay = "block";
