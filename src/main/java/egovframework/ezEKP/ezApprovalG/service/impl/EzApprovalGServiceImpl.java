@@ -11454,6 +11454,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
 		}
 		
+		//수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위해 추가
+		map.put("v_DocID", docID);
+		
+		ezApprovalGDAO.deleteOpinionInfo(map);
+		ezApprovalGDAO.updateOpinionInfo(map);
+		
+		ezApprovalGDAO.aprDeleteDocInfo(map);
+		ezApprovalGDAO.aprDeleteDocInfo2(map);
+		
 		sendMsg(docID, processorID, "JIJUNG", companyID, lang, tenantID);
 		
 		logger.debug("setJijung ended");
@@ -11961,6 +11970,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ReceivedDeptID", objRows.item(0).getTextContent());
 		map.put("v_ReceivedDeptName", objRows.item(1).getTextContent());
 		map.put("v_ReceivedDeptName2", objRows.item(2).getTextContent());
+		map.put("v_DocID", docID);
 		
 		if (approvalFlag.equals("G")) {
 			if (!gFlag.equals("G")) {
@@ -11977,6 +11987,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						objRows.item(1).getTextContent(), objRows.item(2).getTextContent(), "", "", "", sentDeptID, "", companyID, "QUERY", lang, tenantID, organUserName);
 				
 				if (subSQL.equals("<RESULT>TRUE</RESULT>")) {
+					//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+					ezApprovalGDAO.deleteOpinionInfo(map);
+					ezApprovalGDAO.updateOpinionInfo(map);
+					
 					return "<RESULT>TRUE</RESULT>";
 				} else {
 					return "<RESULT>FALSE</RESULT>";
@@ -12002,6 +12016,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				ezApprovalGDAO.deleteSetBebuExpAprLine(map);
 				ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
+				
+				//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+				ezApprovalGDAO.deleteOpinionInfo(map);
+				ezApprovalGDAO.updateOpinionInfo(map);
 				
 				subSQL = updateDeliveryList(docID, sentDeptID, ezOrganService.getPropertyValue(sentDeptID, "displayName", tenantID), ezOrganService.getPropertyValue(sentDeptID, "displayName2", tenantID), objRows.item(0).getTextContent(),
 						objRows.item(1).getTextContent(), objRows.item(2).getTextContent(), "", "", "", sentDeptID, "", companyID, "QUERY", lang, tenantID, userInfo.getDisplayName());
@@ -12046,6 +12064,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				ezApprovalGDAO.insertSetBebuLineInfoS(map);
 				ezApprovalGDAO.insertSetBebuExpLineInfoS(map);
+				
+				//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+				ezApprovalGDAO.deleteOpinionInfo(map);
+				ezApprovalGDAO.updateOpinionInfo(map);
 				
 				ezApprovalGDAO.updateSetBebuDocInfoS(map);
 				
