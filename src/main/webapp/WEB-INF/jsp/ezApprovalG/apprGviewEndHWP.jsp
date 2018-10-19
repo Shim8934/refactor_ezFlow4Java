@@ -181,7 +181,7 @@
 			
 	
 			function btnSave_onclick() {
-			    HwpCtrl.RegisterModule("FilePathCheckDLL", "FilePathCheck");
+				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 			    HwpCtrl.SetDocumentInfo(pFormID);
 			    var hwpDoctitle = HwpCtrl.GetFieldText("doctitle").replace("\r\n", "");
 			    hwpDoctitle = hwpDoctitle.replace(/\\/ig, '').replace(/\//ig, '').replace(/:/ig, '').replace(/\*/ig, '').replace(/\?/ig, '').replace(/“/ig, '').replace(/</ig, '').replace(/>/ig, '').replace(/|/ig, '').replace("“", "").replace("|", "");

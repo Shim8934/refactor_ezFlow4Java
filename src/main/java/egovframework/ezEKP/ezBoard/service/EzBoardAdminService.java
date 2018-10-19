@@ -16,33 +16,39 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardAdminService {
 	
-	public List<BoardVO> checkApplyUser(int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 게시물 승인권한 확인 companyID 조건 추가 */
+	public List<BoardVO> checkApplyUser(String companyID, int tenantID) throws Exception;
 	
 	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, int tenantID) throws Exception;
+	/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID) throws Exception;
 	
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardHeader(String gubun, String boardID, int tenantID) throws Exception;
 	
-	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, int tenantID) throws Exception;	
+	/* 2018-06-26 홍승비 - 마이게시판 트리 가져올때 companyID 조건 추가 */
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, String companyID, int tenantID) throws Exception;	
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
-	public List<BoardPropertyVO> getBoardAccessList(String boardID, int tenantID) throws Exception;
+	/* 2018-07-19 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type, int tenantID) throws Exception;
 	
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception;
+	/* 2018-06-25 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, String companyID, int tenantID) throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception;
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception;
 	
-	public String addMyBoards(String userID, String boardID, int tenantID) throws Exception;
+	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
+	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception;
 	
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	
@@ -84,13 +90,17 @@ public interface EzBoardAdminService {
 
 	public String saveHeader(Document doc, LoginVO userInfo, BoardListHeaderVO boardListHeaderVO) throws Exception;
 
+	public String getBoardTreePath(Map<String, Object> map) throws Exception;
+	
 	public void saveACL(Map<String, Object> map) throws Exception;
 
-	public void deleteACL(Document doc, int tenantID) throws Exception;
+	/* 게시판 권한 삭제 시 companyID 조건 부여 */
+	public void deleteACL(Document doc, String companyID, int tenantID) throws Exception;
 
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 권한전파 시 companyID 조건 추가 */
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, String companyID, int tenantID) throws Exception;
 
 	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode, int tenantID) throws Exception;
 
@@ -100,7 +110,8 @@ public interface EzBoardAdminService {
 
 	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
 
-	public String copyBoardAcl(Document doc, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 권한복사 시 companyID 추가 */
+	public String copyBoardAcl(Document doc, String companyID, int tenantID) throws Exception;
 	
 
 }

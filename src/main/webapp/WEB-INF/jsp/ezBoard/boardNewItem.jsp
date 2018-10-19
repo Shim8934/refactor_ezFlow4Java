@@ -119,6 +119,8 @@
 		    var defaultFontAndSize  = "${defaultFontAndSize}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
+		    var orgCompanyID = "${orgCompanyID}";
+		    
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
@@ -1201,7 +1203,7 @@
 		        }
 		        var xmlHTTP = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
-		        var xmlstring = "<DocID>" + pDocID + "</DocID>";
+		        var xmlstring = "<DOCINFO><DocID>" + pDocID + "</DocID><ORGCOMPANYID>"+ orgCompanyID +"</ORGCOMPANYID></DOCINFO>";
 		        xmlpara = loadXMLString(xmlstring);
 		        if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
 		            xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);

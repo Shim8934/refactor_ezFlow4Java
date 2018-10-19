@@ -54,6 +54,7 @@
 		    var ReturnFunction;
 		    var junGyulFlag = "${junGyulFlag}";
 		    var agreeReturnType = "${agreeReturnType}";
+		    var orgCompanyID = parent.orgCompanyID;
 		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
@@ -96,6 +97,11 @@
 		            pOrgDocID = RetValue[3];
 		            pWindow = RetValue[5];
 		            pHeSongFlag = RetValue[4];
+		            
+		            //한글일때 showmodaldialog 로 창이 열리기 때문에 parent로 값을 가져올수 없기때문에 추가
+		            if (orgCompanyID == undefined) {
+			            orgCompanyID = RetValue[98];
+		            }
 		            ext = RetValue[99];
 		            
 		            if (pHeSongFlag == "Y")

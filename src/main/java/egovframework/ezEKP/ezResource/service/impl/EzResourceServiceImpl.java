@@ -2524,9 +2524,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			//2018-09-02 구해안 기간이 상이할때 각 사이에 있는 날짜를 하나씩 다 꺼내와서 비교하기 위해 사이에 있는 예약을 다 가져옴
 			Date getD1 = format.parse( commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false) );
 			Date getD2 = format.parse( commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false) );
-			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
+			tmpEndDateTime2 = format.format(getD1.getTime()).substring(0, 10) + format.format(getD2.getTime()).substring(10);
+//			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
+			
+//			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
+			Date getDe1 = format.parse(tmpEndDateTime2);
 			logger.debug("tmpEndDateTime2 : " + tmpEndDateTime2);
-			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
 
 			Calendar getC1 = Calendar.getInstance();
 			Calendar getC2 = Calendar.getInstance();
@@ -2681,9 +2684,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			Date getD1 = format.parse( commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false) );
 			Date getD2 = format.parse( commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false) );
-			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
+			tmpEndDateTime2 = format.format(getD1.getTime()).substring(0, 10) + format.format(getD2.getTime()).substring(10);
+//			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
 			logger.debug("tmpEndDateTime2 : " + tmpEndDateTime2);
-			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
+//			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
+			Date getDe1 = format.parse(tmpEndDateTime2);
 
 			Calendar getC1 = Calendar.getInstance();
 			Calendar getC2 = Calendar.getInstance();
@@ -2940,6 +2945,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		logger.debug("resStruct ended");
 		return result;
+	}
+	
+	// 2018-07-06 김민성 - 사간겸직 시 deptID값 조회
+	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception {
+		logger.debug("getDeptID ended");
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("writerID", writerID);
+		map.put("deptNm", deptNm);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		logger.debug("getDeptID ended");
+		return ezResourceDAO.getDeptID(map);
 	}
 	
 	public List<Date[]> getchkRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {

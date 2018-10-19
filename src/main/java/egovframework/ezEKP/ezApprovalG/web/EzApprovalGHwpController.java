@@ -177,6 +177,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docState = request.getParameter("docState");
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -277,6 +283,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         model.addAttribute("docState", docState);
         model.addAttribute("isHWP", "Y");
         model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+        model.addAttribute("orgCompanyID", orgCompanyID);
         
 		LOGGER.debug("approvuiHWP ended");
 		
@@ -321,6 +328,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 
 		if (userInfo.getRollInfo().indexOf("a=1") > -1 ) {
 			susinAdmin = "YES";
@@ -381,6 +393,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		LOGGER.debug("ezviewAprHWP ended");
 		
@@ -396,102 +409,110 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LOGGER.debug("mail_interuploadX_Server started");
 
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
+
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		
+
 		String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
 		String sFileTitle = xmlDom.getElementsByTagName("name").item(0).getTextContent();
 		String sFileData = xmlDom.getElementsByTagName("filedata").item(0).getTextContent();
 		String sExt = xmlDom.getElementsByTagName("ext").item(0).getTextContent();
 		String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
 		String sPrefix = xmlDom.getElementsByTagName("prefix").item(0).getTextContent();
-		
+
 		String pBigFileUpload = sFileData;
 		String filename = sFileTitle;
 		String newguid = UUID.randomUUID().toString();
 		String newfilename = newguid + "." + sExt;
 		String newwindowid = xmlDom.getElementsByTagName("newid").item(0).getTextContent();
-		
+
 		if (newwindowid == null) {
 			newwindowid = "";
 		}
-		
+
 		String useExtension = "";
 		String pDirTempPath = "";
-	    if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
-            useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
-        }		
-	    String extResult = "";
+		if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
+			useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		}		
+		String extResult = "";
 		String pDate = "";
 		String sFileHref = xmlDom.getElementsByTagName("filehref").item(0).getTextContent(); 
 		String realPath = commonUtil.getRealPath(request);
-        String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-        String copyPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-        pDirPath = realPath + pDirPath;
-        
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String copyPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		pDirPath = realPath + pDirPath;
+
 		// 2018.07.05 - KLIB - ezd 확장자로 변경
 		if (sFileHref.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 			newfilename += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 		}
-		
-	       if (pBigFileUpload.equals("Y")) {
-               // 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
-               pDate = EgovDateUtil.getToday("");
-               pDirTempPath = pDirPath + commonUtil.separator + pDate;
-               copyPath = copyPath + commonUtil.separator + pDate;
-           } else {
-               // 일반 첨부파일인 경우에는 tempFileUpload 폴더를 사용한다.
-               pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
-               copyPath = copyPath + commonUtil.separator + "tempFileUpload";
-           }
 
-	          File f = new File(pDirTempPath);
-	          
-	            // 파일을 업로드할 폴더가 존재하지 않으면 생성한다.            
-	            if (!f.exists()) {
-	                f.mkdirs();
-	            }
+		if (pBigFileUpload.equals("Y")) {
+			// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
 
-	       String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
-           String orgFileName = sFileTitle + "." + sExt;            
-           long fileSize = 0;
-	       if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
-               extResult = "denied";
-           } else {
-        	// 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                
-               if (pBigFileUpload.equals("Y")) {                    
-                   String base64OrgFileName = Base64.encodeBase64String(orgFileName.getBytes("UTF-8"));
-                   FileOutputStream fos = null;
-                   
-                   try {
-                       File nameFile = new File(saveLocalPath + "__.txt");
-                       fos = new FileOutputStream(nameFile);
-                       fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
-                   } catch (Exception e) {
-                       throw e;
-                   } finally {
-                       if (fos != null) {
-                           fos.close();
-                       }
-                   }
-               }
-               
-       		File file2 = new File(pDirTempPath + commonUtil.separator + newfilename);
-       		File file3 = new File(realPath +  commonUtil.separator + sFileHref );
-       		
+			if (useSeparatedLargeFileFolder.equals("YES")) {
+				pDirPath += commonUtil.separator + "largeFile";
+				copyPath += commonUtil.separator + "largeFile";
+			}
+
+			// 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
+			pDate = EgovDateUtil.getToday("");
+			pDirTempPath = pDirPath + commonUtil.separator + pDate;
+			copyPath = copyPath + commonUtil.separator + pDate;
+		} else {
+			// 일반 첨부파일인 경우에는 tempFileUpload 폴더를 사용한다.
+			pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
+			copyPath = copyPath + commonUtil.separator + "tempFileUpload";
+		}
+
+		File f = new File(pDirTempPath);
+
+		// 파일을 업로드할 폴더가 존재하지 않으면 생성한다.            
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+
+		String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
+		String orgFileName = sFileTitle + "." + sExt;            
+		long fileSize = 0;
+		if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
+			extResult = "denied";
+		} else {
+			// 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                
+			if (pBigFileUpload.equals("Y")) {                    
+				String base64OrgFileName = Base64.encodeBase64String(orgFileName.getBytes("UTF-8"));
+				FileOutputStream fos = null;
+
+				try {
+					File nameFile = new File(saveLocalPath + "__.txt");
+					fos = new FileOutputStream(nameFile);
+					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+				} catch (Exception e) {
+					throw e;
+				} finally {
+					if (fos != null) {
+						fos.close();
+					}
+				}
+			}
+
+			File file2 = new File(pDirTempPath + commonUtil.separator + newfilename);
+			File file3 = new File(realPath +  commonUtil.separator + sFileHref );
+
 			if (!file2.exists()) {
 				FileUtils.copyFile(file3, file2);
 			}
-                                           
-               extResult = "OK";
-           }
 
-         LOGGER.debug("mail_interuploadX_Server ended");
-         if (pBigFileUpload == "Y") {
-        	 return pDate + "|!|" + copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
-         } else {
-        	 return copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
-         }
+			extResult = "OK";
+		}
+
+		LOGGER.debug("mail_interuploadX_Server ended");
+		if (pBigFileUpload == "Y") {
+			return pDate + "|!|" + copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+		} else {
+			return copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+		}
 	}
 	
 	/**

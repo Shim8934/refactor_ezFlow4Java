@@ -1,5 +1,5 @@
 var ezapralert_cross_dialogArguments = new Array();
-function OpenAlertUI(pAlertContent, CompleteFunction) {
+function OpenAlertUI(pAlertContent, CompleteFunction, type) {
     var parameter = pAlertContent;
     var url = "";
     if(CompleteFunction == "OPEN") 
@@ -14,6 +14,9 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
         if (CompleteFunction != undefined) {
             if (CompleteFunction == "OPEN")
             {
+            	if (type != undefined) { //2018-09-20 김보미 - 윈도우 팝업창 확인 안닫히는 문제
+            		ezapralert_cross_dialogArguments[2] = true;
+            	}
             	ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
                 var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
             }

@@ -12,7 +12,7 @@ function getDocList() {
     if (typeof (psearch) == "object")
         document.getElementById("psearch").style.display = "none";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -26,6 +26,8 @@ function getDocList() {
         
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
+    
+    var searchCompanyID = $("#selectCompany option:selected").val();
     
     $.ajax({
 		type : "POST",
@@ -43,7 +45,8 @@ function getDocList() {
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
-				subQuery     : SubQuery
+				subQuery     : SubQuery,
+				searchCompanyID : searchCompanyID
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -94,11 +97,23 @@ function getDocList_after(xml) {
     
     totalPage = Math.ceil(new Number(lstCnt / pageSize));
     pTotalCnt = lstCnt;
+    
+    //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+    if (totalPage <= 0)
+    	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
+    
     if (pageNum > totalPage) {
         pageNum--;
         getDocList();
         return;
     }
+    
+	// 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+    var preDocList = new ListView();
+   	preDocList.LoadFromID('DocList');
+   	var preSelectedRow = preDocList.GetSelectedRows();
+   	
+   	console.log('preSelectedRow', preSelectedRow);
 
     makePageSelPage();
 
@@ -114,7 +129,7 @@ function getDocList_after(xml) {
         xmlDoc = createXmlDom();
         xmlDoc.appendChild(listNode);
     }
-
+   
     if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
     //if (pListTypeValue == "21") {
     //    var listcnt = SelectNodes(xmlDoc, "LISTVIEWDATA/ROWS/ROW").length;
@@ -124,6 +139,7 @@ function getDocList_after(xml) {
     //        GetChildNodes(row, "VALUE")[4].textContent = GetChildNodes(row, "VALUE")[5].textContent.trim();
     //    }
     //}
+    
     var DocList = new ListView();
     DocList.SetID("DocList");
     DocList.SetMulSelectable(false);
@@ -134,8 +150,21 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
+    
+    // 리스트를 닫기 전에 미리 선택한 row로 재선택
+    if (selRowChangeFlag && preSelectedRow.length > 0) {
+    	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+    	selRowChangeFlag = false;
+    	var docListLength = DocList.GetRowCount() - 1;
+    	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+    	if (docListLength < preSelectedRow[0].getAttribute('id').split("_")[2]) {
+    		DocList.SetSelectedIndex(docListLength);
+    	} else {
+    		DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+    	}
+    }    
     DocList = null;
-
+    
     HiddenMailProgress();
 
     chkUrgent();
@@ -178,6 +207,7 @@ function getDocList_after(xml) {
         check_presence2();
     
     try {
+    	parent.frames["left"].pListTypeValue = pListTypeValue;
         parent.frames["left"].getAprCount();
         parent.frames["left"].setPresentValue("");
     } catch (e) { }
@@ -219,7 +249,7 @@ function getReceivedDocList(p_FormCd) {
     }
 
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -272,6 +302,10 @@ function getReceivedDocList_after(xml) {
         var lstCnt = getNodeText(cntNode);
         totalPage = Math.ceil(new Number(lstCnt / pageSize));
         pTotalCnt = lstCnt;
+        
+        //2018-10-08 천성준 - 상세검색 or 간편검색 시, 검색결과가 없을 때 totalPage가 0이 되버려서 무한검색 loop를 타는 버그 수정 
+        if (totalPage <= 0)
+        	totalPage = 1; //검색 결과가 없어도 페이징 토탈의 default는 1 이다.
 
         if (pageNum > totalPage) {
             pageNum--;
@@ -347,6 +381,7 @@ function getReceivedDocList_after(xml) {
 
         }
         try {
+        	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
             parent.frames["left"].setPresentValue("");
         } catch (e) { }
@@ -359,7 +394,7 @@ function getReceivedDocList_after(xml) {
 function getSendOutDocList() {    
     pSelMenu = "all";
 
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";
@@ -378,7 +413,9 @@ function getSendOutDocList() {
 				pageSize : pageSize,
 				pageNum  : pageNum,
 				orderCell : OrderCell,
-				orderOption : OrderOption
+				orderOption : OrderOption,
+				listType : pListTypeValue,
+				searchQuery  : SQLPARADATA
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
@@ -562,7 +599,8 @@ function DisplayWaitStat() {
 
 function getAprLine(tr) {
     var pDocID,pMode = "",pFlag = "";
-
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
+    
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
@@ -612,7 +650,8 @@ function getAprLine(tr) {
 		data : {
 				docID : pDocID,
 				mode  : pMode,
-				flag  : pFlag
+				flag  : pFlag,
+				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
 			getAprovSub_after(xml);
@@ -780,6 +819,7 @@ function openApprovUI(allFlag) {
         pArgument[1] = GetAttribute(tr[0], "DATA4");		
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
         pArgument[3] = GetAttribute(tr[0], "DATA7");	
+        var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
 
         if (GetAttribute(tr[0], "DATA12") == "017") {
         	   $.ajax({
@@ -805,7 +845,7 @@ function openApprovUI(allFlag) {
         	if (isIE()) {
         		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
         		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	} else {
         		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
         		alert(pAlertContent);
@@ -816,7 +856,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -880,7 +920,7 @@ function InitlvAprLine() {
     }
 }
 
-function RemoveDoc(pDocID) {
+function RemoveDoc(pDocID, orgCompanyID) {
 	var result = "";
 	
     $.ajax({
@@ -890,7 +930,8 @@ function RemoveDoc(pDocID) {
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
 				docID : pDocID,
-				field  : "MUST"
+				field  : "MUST",
+				orgCompanyID : orgCompanyID 
 				},
 		success: function(xml){
 			result = xml;
@@ -940,6 +981,7 @@ function openViewDocInfo(type) {
     var pArgument = new Array();
     var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     pArgument[0] = DocID;
     pArgument[1] = formURL;
@@ -1007,6 +1049,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
+        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -1273,6 +1316,8 @@ function getAprDocAproveInfo(tr) {
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
+    
+    var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
     if (pDocInfoValue == "4") {
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
@@ -1308,7 +1353,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getTotalAttachInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1353,7 +1399,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getOpinionInfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1394,7 +1441,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
     				docID : pDocID,
-    				mode  : pFlag
+    				mode  : pFlag,
+    				orgCompanyID : orgCompanyID
     				},
     		success: function(xml){
     			RtnVal = xml;
@@ -1431,7 +1479,8 @@ function getAprDocAproveInfo(tr) {
     		url : "/ezApprovalG/getCirculationinfo.do",
     		data : {
     			docID : pDocID,
-    			mode  : pFlag
+    			mode  : pFlag,
+    			orgCompanyID : orgCompanyID
     		},
     		success: function(xml){
     			RtnVal = xml;
@@ -1580,6 +1629,8 @@ function openergetDocInfo() {
     if (CallPage == "Left") return;
 
     try {
+    	//이전에 선택된 row를 유지하기 위한 Flag
+    	selRowChangeFlag = true;
         if (pListTypeValue == "6")
             getSimsaDocList();
         else if (pListTypeValue == "4")
@@ -1619,13 +1670,23 @@ function makePageSelPage() {
         var nowmonth = parseInt(nowDate.substring(5,7));
         var nowday = parseInt(nowDate.substring(8,10));
         
-    	if (SearchCond[5] != null && SearchCond[5] != "" ) {
-//    		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
-    		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
-    	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
-    		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + SearchCond[3].substring(5, 7) + strLang1029 + " " + SearchCond[3].substring(8, 10) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + SearchCond[4].substring(5, 7) + strLang1029 + " " + SearchCond[4].substring(8, 10) + strLang1030;
-    	} else {
-    		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        if (approvalFlag == "G") { //2018-10-01 김보미 - G버전일때 추가.
+        	if (SearchCond[3] != null && SearchCond[3] != "") {
+        		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
+        	} else if (SearchCond[9] != null && SearchCond[9] != "") {
+        		period = SearchCond[9] + strLang1028 + " " + SearchCond[10] + strLang1029 + " " + SearchCond[11] + strLang1030 + " ~ " + SearchCond[12] + strLang1028 + " " + SearchCond[13] + strLang1029 + " " + SearchCond[14] + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        	}
+        } else {
+        	if (SearchCond[5] != null && SearchCond[5] != "" ) {
+        		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
+        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
+        	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
+        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
+        	} else {
+        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        	}
         }
     } else {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
@@ -1784,6 +1845,7 @@ function setbuttonenable() {
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
     var pFunctionType = GetAttribute(tr, "DATA10");
+    var orgCompanyID = GetAttribute(tr, "ORGCOMPANYID");
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
@@ -2143,10 +2205,12 @@ function selFirstRow(Resultxml) {
 
         pDocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
+        orgCompanyID = tr.getAttribute("ORGCOMPANYID");
     }
     else {
         pDocID = "";
         pURL = "";
+        orgCompanyID = "" ;
     }
 
     switch (pDocInfoValue) {
@@ -2187,7 +2251,8 @@ function getDataInfo(jobState) {
         		url : "/ezApprovalG/getTotalAttachInfo.do",
         		data : {
         				docID : pDocID,
-        				flag  : pFlag
+        				flag  : pFlag,
+        				orgCompanyID : orgCompanyID
         				},
         		success: function(xml){
         			getdoclistSub_after(xml);
@@ -2308,7 +2373,7 @@ function getSimsaDocList() {
     pageSize = "10";
     
     var manager;
-    if (beforeJob != pListTypeValue || SelYearFlag) {
+    if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
         pageNum = 1;
         OrderOption = "";

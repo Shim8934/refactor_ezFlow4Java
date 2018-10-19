@@ -60,6 +60,15 @@ public interface EzCommonService {
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
 
+	public void addMailToJMochaDistribution() throws Exception;
+	
 	public void addAddJobMasterOrderBy() throws Exception;
-
+	
+	public void createTblIPAccessID() throws Exception;
+	
+	public void createTblIPAccessIP() throws Exception;
+	
+	public void addUserMasterManualFlag() throws Exception;
+	
+	public void addDeptMasterManualFlag() throws Exception;
 }

@@ -19,6 +19,7 @@ public class PollQuestionVO implements Serializable {
 	private String creator;
 	private String creatorName1;
 	private String creatorName2;
+	private String creatorDept;
 	private String creatorImage;
 	private int status;	
 	private String receiverType;
@@ -32,6 +33,8 @@ public class PollQuestionVO implements Serializable {
 	private int sendPostNotice;
 	private int openToAll;
 	private int cmtCnt;
+	private String companyId;
+	private String userDeptId;
 	
 	public int getQstId() {
 		return qstId;
@@ -135,6 +138,14 @@ public class PollQuestionVO implements Serializable {
 
 	public void setCreatorName2(String creatorName2) {
 		this.creatorName2 = creatorName2;
+	}
+
+	public String getCreatorDept() {
+		return creatorDept;
+	}
+
+	public void setCreatorDept(String creatorDept) {
+		this.creatorDept = creatorDept;
 	}
 
 	public String getCreatorImage() {
@@ -249,6 +260,14 @@ public class PollQuestionVO implements Serializable {
 		this.cmtCnt = cmtCnt;
 	}
 
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
 	public boolean equals(Object object) {
 		if (object instanceof PollQuestionVO) {
 			PollQuestionVO obj = (PollQuestionVO) object;
@@ -261,5 +280,13 @@ public class PollQuestionVO implements Serializable {
 	
 	public int hashCode() {
 		return 100 + qstId + tenantId;
+	}
+
+	public String getUserDeptId() {
+		return userDeptId;
+	}
+
+	public void setUserDeptId(String userDeptId) {
+		this.userDeptId = userDeptId;
 	}	
 }

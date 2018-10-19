@@ -355,29 +355,6 @@
 		        		result=loadXMLString(xml);
 		        		xmlDom = result;		        		
 	                    var LISTVIEWDATA = "<LISTVIEWDATA><ROWS>";
-	                    for (var i = 0; i < xmlDom.documentElement.getElementsByTagName("ROW").length; i++) {
-	                        LISTVIEWDATA = LISTVIEWDATA + "<ROW><CELL>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<VALUE>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])) + ")";
-	                        LISTVIEWDATA = LISTVIEWDATA + "</VALUE>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA1>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DEPARTMENT")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA1>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA2>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("CN")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA2>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA3>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE1")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA3>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA4>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE2")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA4>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA5>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
-	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
 	                    
 	                    //document.getElementById('UserAddJobList').innerHTML = "";
@@ -795,7 +772,7 @@
 		    function OK_Click() {
 		    	
 		    	if (document.getElementById("lvAddjobList") == null || document.getElementById("lvAddjobList") == undefined) {
-		    		alert("<spring:message code='ezAttitude.t52'/>");
+		    		alert("<spring:message code='ezOrgan.kyj05'/>");
 		    		return;
 		    	}
 		    	
@@ -803,7 +780,7 @@
 	            var strCnList = "";
 	            
 	            if (accessList.length == 0 || accessList == null) {
-	            	alert("<spring:message code='ezAttitude.t52'/>");
+	            	alert("<spring:message code='ezOrgan.kyj05'/>");
 	            	return;
 	            }
 	             
@@ -1219,7 +1196,7 @@
 	                                </td>    
 	                                <td>
 	                                	<div style="float: right; margin-right: 5px; position: relative;">
-                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezAttitude.t60'/></span></a>
+                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596'/></span></a>
                                             <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597'/></span></a>
                                         </div>
                                     </td>

@@ -660,6 +660,11 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     	document.getElementById("descript").innerHTML = "";
     }
     
+    // 2018-10-05 김민성 - 양식함 양식 선택시 양식설명 초기화
+    if (document.getElementById("descrip") != null) {
+    	document.getElementById("descrip").innerHTML = "";
+    }
+    
     if (preSelectID != "" && preSelectID != "undefined" && preSelectID!= null) {
         var objSpan = document.getElementById("spn_" + preSelectID);
         objSpan.className = TreeClasses["normal"];

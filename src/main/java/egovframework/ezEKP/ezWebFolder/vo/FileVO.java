@@ -4,7 +4,7 @@ public class FileVO {
 	private String fileId;
 	private String fileName;
 	private String filePath;
-	private String fileSize;
+	private long fileSize;
 	private String typeId;
 	private int    downloadCnt;
 	private String fileExt;
@@ -60,11 +60,11 @@ public class FileVO {
 		this.filePath = filePath;
 	}
 
-	public String getFileSize() {
+	public long getFileSize() {
 		return fileSize;
 	}
 
-	public void setFileSize(String fileSize) {
+	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
 

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -146,12 +147,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID)	throws Exception {
         logger.debug("getRetireList started");
         logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
         logger.debug("tenantID=" + tenantID + ",offset=" + offset);
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		logger.debug("searchCompanyID=" + searchCompanyID );
 	    
    		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -164,6 +166,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("searchEndDate", searchEndDate);
 		map.put("search_keycode", searchKeycode);
 		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
 				
 		List<OrganUserVO> retireList = ezOrganAdminDao.getRetireList(map);
 		
@@ -239,7 +242,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String moveEntry(String parentCn, String cn, String type, int tenantID) throws Exception {
+	public String moveEntry(String parentCn, String cn, String type, String offset, int tenantID) throws Exception {
 	    logger.debug("moveEntry started");
 	    logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
 	    
@@ -247,8 +250,25 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		if (parentCn.equals(cn)) {
 			result = "SAME";
-		}else{
-			// skyblue0o0
+		} else {
+			OrganDeptVO parentDept = ezOrganService.getDeptInfo(parentCn, "1", tenantID);
+			String compId = "";
+			
+			if (type.equalsIgnoreCase("group")) {
+				OrganDeptVO deptVO = ezOrganService.getDeptInfo(cn, "1", tenantID);
+				compId = deptVO.getExtensionAttribute2();
+			} else {
+				OrganUserVO userVO = getUserInfo(cn, "1", tenantID);
+				compId = userVO.getPhysicalDeliveryOfficeName();
+			}
+			
+			// 회사 간 사원/부서 이동하지 못하도록 막음
+			if (!parentDept.getExtensionAttribute2().equals(compId)) {
+				result = "DIFF_COMPANY";
+				logger.debug("moveEntry ended. result=" + result);
+				return result;
+			}
+			
 			String oldGroupAddr = "";
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			
@@ -267,21 +287,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			if (rc == 0) { // 성공
 				try {
-					moveDBData(parentCn, cn, type, tenantID);
+					moveDBData(parentCn, cn, type, offset, tenantID);
 		            result = "OK";
 				} catch (Exception e) {
+					e.printStackTrace();
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
 					result = "EMAIL_ERROR";
 				}				
 			} else {
 				result = "EMAIL_ERROR";
 			}
-			// skyblue0o0 - end
-			
 		}
 		
-		logger.debug("moveEntry ended");
-		
+		logger.debug("moveEntry ended. result=" + result);
 		return result;
 	}
 	
@@ -338,7 +356,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("updateProperty ended");
 	}
 	
-	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
+	public void moveDBData(String parentCn, String cn, String type, String offset, int tenantID) throws Exception {
         logger.debug("moveDBData started");
         logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
 	    
@@ -392,6 +410,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     			ezOrganAdminDao.moveDeptInAD(ctx, map, parentCn);
     		}
     	} else {
+    		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		Date date                  = new Date();
+    		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+    		
+    		map.put("timeUTC", timeUTC);
+    		
 	    	ezOrganAdminDao.moveGroupUser_U(map);
 	    	
 	    	/**
@@ -532,12 +556,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception {
 	    logger.debug("getRetireListCount started");
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
-   		
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -547,6 +571,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("searchEndDate", searchEndDate);
 		map.put("search_keycode", searchKeycode);
 		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
 		
 		logger.debug("getRetireListCount ended");
 		
@@ -570,11 +595,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr,
 					String parentCn, String ldapPath, String extensionAttribute15, String skipInitData,
-					int tenantID, LoginVO userInfo) throws Exception {
+					String manualFlag, int tenantID, LoginVO userInfo) throws Exception {
 	    logger.debug("insertDBData_company started");
 	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2
 	    		+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData
-	    		+ ",parentCn=" + parentCn + ",tenantID=" + tenantID);
+	    		+ ",manualFlag=" + manualFlag + ",parentCn=" + parentCn + ",tenantID=" + tenantID);
 	    
         if (displayName2 == null || displayName2.equals("")) {
             displayName2 = displayName;
@@ -590,6 +615,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PARENTCN", parentCn);
 		map.put("v_LDAPPATH", ldapPath);		
 		map.put("v_EXTENSIONATTRIBUTE15", extensionAttribute15);
+		map.put("v_MANUAL_FLAG", manualFlag);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -608,18 +634,44 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("userID", userInfo.getId());
 				map1.put("userName", userInfo.getName());
 				map1.put("nowDate", nowDate);
+				map1.put("portalUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoUUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaUUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnSubUUID", UUID.randomUUID().toString());
+				map1.put("topMenuKoSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuJaSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuEnSub2UUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoKoUUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
+				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
+				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
+				
+				for (int i = 0; i < 112; i++) {
+					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
+				}
+				
+				for (int i = 0; i < 19; i++) {
+					map1.put("portalItemUID"+i, UUID.randomUUID().toString());
+				}
+				
+				for (int i = 0; i < 44; i++) {
+					map1.put("menuItemSUID"+i, UUID.randomUUID().toString());
+				}
 				
 				ezOrganAdminDao.insertCompanyInfo_I1(map1);
 				ezOrganAdminDao.insertCompanyInfo_I2(map1);
 				ezOrganAdminDao.insertCompanyInfo_I3(map1);
 				ezOrganAdminDao.insertCompanyInfo_I4(map1);
 				ezOrganAdminDao.insertCompanyInfo_I5(map1);
-				ezOrganAdminDao.insertCompanyInfo_I6(map1);
+//				ezOrganAdminDao.insertCompanyInfo_I6(map1);
 				ezOrganAdminDao.insertCompanyInfo_I7(map1);
 				ezOrganAdminDao.insertCompanyInfo_I8(map1);
 				ezOrganAdminDao.insertCompanyInfo_I9(map1);
 				ezOrganAdminDao.insertCompanyInfo_I10(map1);
-				ezOrganAdminDao.insertCompanyInfo_I11(map1);
+//				ezOrganAdminDao.insertCompanyInfo_I11(map1);
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);
@@ -628,9 +680,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I17(map1);
 				ezOrganAdminDao.insertCompanyInfo_I18(map1);
 				ezOrganAdminDao.insertCompanyInfo_I19(map1);
+				
+				ezOrganAdminDao.insertCompanyInfo_IKMS(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS2(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS3(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS4(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS5(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS6(map1);
+				ezOrganAdminDao.insertCompanyInfo_IKMS7(map1);
+				
+				//회사등록시 근태설정(근태규율관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I20(map1);
 				map1.put("lang", userInfo.getLang());
 				ezOrganAdminDao.insertCompanyInfo_I21(map1);
+				
+				//회사 생성시 서브 메뉴 아이템 insert
+				ezOrganAdminDao.insertCompanyInfo_I22(map1);
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
@@ -743,12 +808,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");	
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
+		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
 		map.put("v_LDAPPATH", "");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
+		
 		
 		ezOrganAdminDao.insertDBData_dept(map);
 		
@@ -813,11 +880,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
 		map.put("v_PASS", vo.getPassword());
 		map.put("v_INSERTADPASS", oriPass);
-				
+		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
+		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
+		
 		
 		ezOrganAdminDao.insertDBData_user(map);
 				
@@ -917,6 +986,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteCompany_D17(map);
 	        ezOrganAdminDao.deleteCompany_D18(map);
 	        ezOrganAdminDao.deleteCompany_D19(map);
+	        ezOrganAdminDao.deleteCompany_D20(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
 	        
 		    /**
 		     * Active Directory
@@ -1172,7 +1243,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword) throws Exception {     
+    									 String keycode,String keyword,String companyId) throws Exception {     
     	logger.debug("getUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1183,6 +1254,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
 		
     	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
     	
@@ -1193,7 +1265,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
     // 사용자 이름,부서 목록개수를 반환한다.
     @Override
-    public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
+    public int getUserCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
     	logger.debug("getUserCount started");
    		
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1201,6 +1273,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	params.put("tenantID", tenantID);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
 		
 		int userCount = ezOrganAdminDao.getUserCount(params);
 		

@@ -152,9 +152,7 @@
                 	WHERE
                 		USERID = #v_PUSERID#
                 	AND
-                		TENANT_ID = #tenantID#
-                	AND
-                		COMPANYID = #companyID#	 ) <> 0
+                		TENANT_ID = #tenantID# ) <> 0
 		]]>
 	</select>
 	
@@ -171,8 +169,6 @@
 	        		USERID = #v_PUSERID#
 	        	AND
 	        		TENANT_ID = #tenantID#
-	        	AND
-	        		COMPANYID = #companyID#	
 			]]>
 		</isEqual> 
 		<isEqual property="v_PFLAG" compareValue="N"> 
@@ -185,8 +181,6 @@
 	        		USERID = #v_PUSERID#
 	        	AND
 	        		TENANT_ID = #tenantID#
-	        	AND
-	        		COMPANYID = #companyID#	
 			]]>		
 		</isEqual>
 	</update>	
@@ -202,8 +196,6 @@
         		USERID = #v_PUSERID#
         	AND
         		TENANT_ID = #tenantID#
-        	AND
-        		COMPANYID = #companyID#	
 			]]>		
 	</update>		
 	
@@ -213,7 +205,13 @@
 				TBL_PWDINFO
           		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID, COMPANYID  )
           	VALUES
-          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID#, #companyID# )
+          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID#, (SELECT 
+          																			PHYSICALDELIVERYOFFICENAME 
+          																		FROM 
+          																			TBL_USERMASTER
+          																		WHERE CN = #v_PUSERID#
+          																		AND TENANT_ID = #tenantID#)
+          																									)
 		]]>
 	</insert>
 		
@@ -313,9 +311,7 @@
            		FROM
            			TBL_PS_LIGHTPOLL 
           		WHERE
-          			( COMPANYID = #v_pCompanyID#
-                OR
-                	COMPANYID = 'Top' )
+          			COMPANYID = #v_pCompanyID#
                 AND
                 	TENANT_ID = #tenantID#	
 			]]>
@@ -334,9 +330,7 @@
        			FROM
        				TBL_PS_LIGHTPOLL 
       			WHERE
-      				( COMPANYID = #v_pCompanyID#
-               	OR
-               		COMPANYID = 'Top' )
+      				COMPANYID = #v_pCompanyID#
                	AND
                		TENANT_ID = #tenantID#
        			ORDER BY
@@ -397,9 +391,7 @@
            	AND
            		USERID = #v_pUserID#
    			WHERE
-   				(COMPANYID = #v_pCompanyID#
-            		OR
-            	COMPANYID = 'Top' )
+   				COMPANYID = #v_pCompanyID#
             AND
             	STARTDATE < DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
@@ -439,8 +431,6 @@
           			TENANT_ID = #tenantID#
        			AND
           			COMPANYID = #v_pCompanyID#
-                OR
-                	COMPANYID = 'Top'
 			]]>
 		</isNotEqual>
 	</select>
@@ -565,9 +555,7 @@
         	FROM
         		TBL_PS_POPUP 
        		WHERE
-       			( 	COMPANYID = 'Top'
-                OR
-                	COMPANYID = #v_pCompanyID# )
+               	COMPANYID = #v_pCompanyID# 
             AND
             	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
@@ -722,9 +710,7 @@
                                   FROM
                                       TBL_PS_NOTICE 
                                   WHERE
-                                      (COMPANYID = 'Top'
-                                  OR
-                                      COMPANYID = #v_pCompanyID#)
+                                      COMPANYID = #v_pCompanyID#
                                   AND
                                       TENANT_ID = #tenantID#    
                                   ORDER BY
@@ -779,9 +765,7 @@
                                                         WHERE
                                                             TENANT_ID = #tenantID#
                                                         AND    
-                                                            (COMPANYID = 'Top'
-                                                        OR
-                                                            COMPANYID = #v_pCompanyID#)
+                                                            COMPANYID = #v_pCompanyID#
                                                         ORDER BY
                                                             ITEMSEQ ASC ) A
                                             LIMIT

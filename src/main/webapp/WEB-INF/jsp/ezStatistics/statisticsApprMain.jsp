@@ -360,7 +360,7 @@
 	        <span style="padding-right:5px">P = Progress</span>
 	        <span>R = Rejecting</span>
 	    </div>
-	    <div id="statisticstable">
+	    <div id="statisticstable" style="width:1635px;">
 	    </div>
 	     <div id="nodata" style="display: none; margin-top: 150px; text-align: center">
 	        <div class="statistics_nodata" style="margin: 0 auto">

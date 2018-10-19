@@ -89,6 +89,21 @@
 	                    alert("<spring:message code = 'ezApprovalG.t1290' />");
 	                    return;
 	                }
+	                
+	                /* 2018-10-15 김민성 - 기간검색 시 날짜 조건 추가 */
+	                var startYear = parseInt(document.getElementById("SYear").value);
+	                var endYear = parseInt(document.getElementById("EYear").value);
+	                var startMonth = parseInt(document.getElementById("SMonth").value);
+	                var endMonth = parseInt(document.getElementById("EMonth").value);
+	                
+	                if(startMonth < 1 || startMonth > 12 || endMonth < 1 || endMonth > 12) {
+	                	alert("<spring:message code='ezApprovalG.t10030'/>");
+	                	return;
+	                }
+	                if(startYear > endYear || ( startYear == endYear && startMonth > endMonth )) {
+	                	alert("<spring:message code='ezApprovalG.t1327'/>");
+	                	return;
+	                }
 
 	                if (document.getElementsByName("condition")[0].checked) {
 	                    if (document.getElementsByName("UserFlag")[0].checked || document.getElementsByName("UserFlag")[1].checked || document.getElementsByName("UserFlag")[2].checked || document.getElementsByName("UserFlag")[3].checked) {
@@ -250,15 +265,7 @@
 	</head>
 	<body class="mainbody">
 	    <h1><spring:message code = 'ezApprovalG.t1297' /></h1>
-	    <div id="mainmenu">	
-	        <b><spring:message code = 'ezApprovalG.t1276' /></b>
-   			<select id="SCompID" name="SCompID" onChange="selectCompanyID()">
-				<c:forEach var="item" items="${list}">
-	            	<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select><br />
-	    </div>
-	    
+	    <input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 	    <table class="content" style="margin-bottom: 10px; width: 770px;">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1298' /></th>

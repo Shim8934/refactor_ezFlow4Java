@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -100,8 +101,8 @@
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
-		   
 		    var currentpage = 1;
+		    var selRowChangeFlag = false;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -168,7 +169,6 @@
 	            }
 
 	            if (beforeJob != pListTypeValue) {
-		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
 		        if (arr_userinfo[10] == "YES" || arr_userinfo[10] == "Y")
@@ -421,6 +421,7 @@
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
 		        var pCurSelRow = oArrRows[0];
+		        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		        if (pCurSelRow != null && oArrRows.length > 0) {
 		            if (GetBujaeFlag())
 		                return;
@@ -477,7 +478,7 @@
 		                	}
 		                } else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
-		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 		                }
 		                
 		                openwindow(openLocation, "", 880, 570);
@@ -622,6 +623,8 @@
 		            var DocList = new ListView();
 		            DocList.LoadFromID("DocList");
 		            var oArrRows = DocList.GetSelectedRows();
+		            var pCurSelRow = oArrRows[0];
+			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		            if (oArrRows.length > 0)
 		                openViewDocInfo();
 		            else {
@@ -649,15 +652,29 @@
 		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
+		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" + "&orgCompanyID=" + orgCompanyID;
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
 		    function btnRedraft_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var oArrRows = DocList.GetSelectedRows();
+		        
+		        if (oArrRows.length <= 0) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        var pCurSelRow = oArrRows[0];
+		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
 		            //OpenAlertUI(pAlertContent);
@@ -724,7 +741,7 @@
 		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
 		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
 		            else
-		                RemoveDoc(pCurSelRow.getAttribute("DATA1"));
+		                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 		            if (pListTypeValue == "4")
 		                getReceivedDocList();
 		            else if (pListTypeValue == "6")
@@ -795,6 +812,10 @@
 		                    alert(pAlertContent);
 		                }
 		            }
+		        } else {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		        	alert(pAlertContent);
+		            return;
 		        }
 		    }
 		    
@@ -1074,6 +1095,8 @@
 		    function passValLeftMenu(strVal) {
 		        pageNum = 1;
 		        SQLPARADATA = "";
+		        //2018-10-11 배현상, 검색조건인 SearchCont 초기화 작업이 미처리되있어 상단에 다른탭에서 검색한 날짜가 적용되있는 오류 수정
+		        SearchCond = new Array();
 		        pListTypeValue = strVal;
 		        window.parent.frames["left"].pListTypeValue = strVal;
 		        if (pListTypeValue == "7")
@@ -1336,7 +1359,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
 
-		        var wWeigth = 630;
+		        var wWeigth = 700;
 		        var wHeigth = 480;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
@@ -1374,20 +1397,26 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
+		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
+		        	//팝업창에서 알럿창으로 변경
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
 		            return;
 		        }
-		        else
+		        else {
 		            pDocID = tr[0].getAttribute("DATA1");
+		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        }
 				
 		        //직인의뢰함에서 타입을 END로 주기위해
 		        var url;
 		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;	
 		        } else {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID;
 		        }
 		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
@@ -1779,6 +1808,10 @@
 		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 		    
+		    function getDocListByCompany(){
+		    	pageNum = 1;
+		    	getDocList();
+		    }
 		    function initselyear() {
 		        $('#sel_year').selectmenu('close');
 		    }
@@ -1846,6 +1879,18 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
+		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+						<select id="selectCompany" onchange="getDocListByCompany();">
+							<option value="">
+								<spring:message code='ezPoll.t237'/>
+							</option>
+							<c:forEach items="${companyList }" var="company">
+								<option value="${company.companyID }">
+									${company.companyName }
+								</option>
+							</c:forEach>
+						</select>
+					</c:if>
 		        </li>
 			</ul>
 		</div>

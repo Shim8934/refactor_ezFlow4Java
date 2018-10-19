@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
@@ -292,7 +293,7 @@ public interface EzApprovalGService {
 	
 	public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, String searchQuery) throws Exception;
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
@@ -346,7 +347,7 @@ public interface EzApprovalGService {
 
 	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception;
 
-	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID) throws Exception;
+	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID, String offset) throws Exception;
 
 	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception;
 
@@ -358,7 +359,7 @@ public interface EzApprovalGService {
 
 	public String getCabinetList(Document xmlDom, LoginVO userInfo)throws Exception;
 
-	public String getCabinetDetailInfo(Document xmlDom, int tenantID) throws Exception;
+	public String getCabinetDetailInfo(Document xmlDom, int tenantID, String offset) throws Exception;
 
 	public String getCabScInfo(Document xmlDom, int tenantID) throws Exception;
 
@@ -414,7 +415,7 @@ public interface EzApprovalGService {
 
 	public String getContUseDeptInfo(String pDeptID, String companyID,	String lang, int tenantId) throws Exception;
 
-	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantId) throws Exception;
+	public String registerUserContDoc(String docID, String contID, String description, String orgCompanyID, String companyID, String lang, int tenantId) throws Exception;
 
 	public String docAttachLineInfo(String docID, String id, String companyID, int tenantId) throws Exception;
 
@@ -426,7 +427,7 @@ public interface EzApprovalGService {
 
 	public String findTaskS(String deptCode, String title, String code, String companyID, int tenantId, String approvalFlag) throws Exception;
 
-	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
+	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID) throws Exception;
 
 	public String getUserContListAll(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
 	
@@ -559,10 +560,12 @@ public interface EzApprovalGService {
 	 * */
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
 	
-/*	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
-
-	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
-*/	
+//	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
+//
+//	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
+	
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
+	
 	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
@@ -573,4 +576,7 @@ public interface EzApprovalGService {
 	
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 
+	public String getDocNumZeroCnt(String companyID, int tenantID) throws Exception;
+	
+	public String setDocNumZeroCnt(String docNumZeroCnt, String companyID, int tenantID) throws Exception;
 }

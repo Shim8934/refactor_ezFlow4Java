@@ -191,7 +191,9 @@
 		      					<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
 		      				</c:if>
 		      				<%-- ezPMS --%>
+		      				<c:if test="${use_ezPMS == 'YES'}">
 		      				<li><span id="menu21" onClick="menu_change(690, event)"><spring:message code="ezPMS.t8" /></span></li>
+		      				</c:if>
 		      			</c:if>
                     	
 		      			<%-- 시스템 --%>          

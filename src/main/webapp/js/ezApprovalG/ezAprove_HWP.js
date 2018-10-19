@@ -426,6 +426,8 @@ function openOpinionUI(ret)
 	parameter[2] = KuyjeType; 
 	parameter[3] = pOrgDocID;
 	parameter[5] = window;
+	
+	parameter[98] = orgCompanyID;
     //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
     parameter[99] = "hwp";
     
@@ -498,7 +500,7 @@ function makeOpinionList(OpinionXML) {
 function openFileAttachUI()
 {
 	var parameter = pDocID;
-	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&ext=" + "hwp";
+	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
 	var feature	= "status:no;dialogWidth:535px;dialogHeight:415px;edge:sunken;scroll:no"; 
 	var ret = window.showModalDialog(url,parameter,feature);
 
@@ -618,6 +620,7 @@ function SaveApproveInfo(pApproveFlag)
 
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
+	createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 	
 	if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
@@ -648,23 +651,24 @@ function SaveApproveInfo(pApproveFlag)
 		}
 		
 		// 분리첨부가 존재할 경우
-		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
+		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
 			var sepAtt, Data, i;
 			var rtnXml = createXmlDom();
 	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
 			var sepLVXml = createXmlDom();
             	sepLVXml = loadXMLString(nonElecRecInfoXml);
-            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
+            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
             
             for (i = 0; i < rows.length; i++) {
                 sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0],"DATA1"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
             }
+            
             createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
             
 		} else if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
@@ -747,7 +751,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
+			html  : HwpCtrl.GetCloneData("", "HWP"),
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;

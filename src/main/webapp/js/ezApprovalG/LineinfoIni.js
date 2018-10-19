@@ -4,8 +4,8 @@ function Lineinfo_ini() {
     	if (approvalFlag == "S") {
             Tree_setconfig();
             Lineinfoini = true;
-            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
             InitListView();
+            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
             displayUserList(DeptID);
             ChangeLineTab("Organ");
             initJunGyul();
@@ -23,7 +23,7 @@ function Lineinfo_ini() {
 function circulation_ini() {
 	getGongRamDocInfo();
 	Tree_setconfig();
-	TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "circulation");
+	TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "circulation", orgCompanyID);
     displayUserListCC(DeptID);
     InitListViewCC();
     ChangeLineTabCC("Organ");
@@ -373,7 +373,8 @@ function InitListView() {
     				deptID 	 : arr_userinfo[4],
     				reDraft  : pReDraftFlag,
     				isUsed   : "",
-    				mode     : ""
+    				mode     : "",
+    				orgCompanyID : companyID
     				},
     		success: function(xml){
     			result = xml;
@@ -438,6 +439,9 @@ function InitListView() {
         	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
         	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
         	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4]) {
+            	    	arr_userinfo[4] = IniListData6;
+            	    }
         	        var curaprline = "";
         	        for (var i = 0; i < NodeList.length; i++) {
         	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
@@ -583,7 +587,8 @@ function InitListViewCC() {
     		data : {
     			docID : pGongRamDocID,
     			mode  : "APR",
-    			docState : "015"
+    			docState : "015",
+    			orgCompanyID : companyID
     		},
     		success: function(text){
     			result = text;

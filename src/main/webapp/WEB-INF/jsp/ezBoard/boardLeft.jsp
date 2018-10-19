@@ -75,16 +75,23 @@
 				} else if (Func == "4") {
 					WebPartToggle(level1El.item(level1El.length - 1));
 					ladder_Func(1);
+				} else if (Func == "5") {
+					WebPartToggle(level1El.item(level1El.length - 1));
+					memo_Func(1);
 				}
-		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
+		        /* 2018-09-20 홍승비 - 윈도우 온로드 시 마이게시판 우선적으로 열리는 부분 주석처리 */
+		       /*  else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
-		        }
+		        } */
 		
-		        if (Func != "1" && Func != "3" && Func != "4") {
+		        /* 2018-09-20 홍승비 - 게시판 서브메뉴로 나의게시물, 예약게시물 진입 시 좌측메뉴 하이라이트 수정 */
+		        if (Func != "1" && Func != "3" && Func != "4" && Func != "5") {
 		            if (subFunc == "1") {
+		            	ShowMyBoardItem();
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
+		            	ShowMyBoardItem();
 		                ReservationItem_onclick();
 		            }
 		            else {
@@ -119,7 +126,6 @@
 		                favoriteList();
 		            }
 		        }
-
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
@@ -220,6 +226,7 @@
 		
 		    function GetBoardTreeByPath(pBoardID, pBoardGroupID) {
 		    }
+		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {		// 일반 게시판 하위 게시판 확장
 		        var xmlRtn = createXmlDom();
 		        var TreeIdx = pNodeID;
@@ -240,22 +247,26 @@
 		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
-		        var nodeLevel = title2[0].getAttribute("nodelevel");
-		             
-		        for(var i=0; i<title2.length; i++) {
-		        	var spanW = 152 - (18 * nodeLevel);	
-		        	title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
-		        	
-		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
-		        	if (spanW < 0) {
-						 spanW = 0;
-					 }
-		        	title3[0].style.width = spanW + 'px';
-		        	title3[0].style.textOverflow = 'ellipsis';
-		        	title3[0].style.overflow = 'hidden';
+		        
+		        /* 2018-10-11 홍승비 - 접근권한 등의 문제로 트리노드를 확장할 수 없는 경우에는 건너뛰도록 수정 */
+		        if (typeof(title2[0]) != "undefined") {
+			        var nodeLevel = title2[0].getAttribute("nodelevel");
+			        for(var i=0; i<title2.length; i++) {
+			        	var spanW = 152 - (18 * nodeLevel);
+			        	title3 = title2[i].getElementsByClassName("node_normal");
+			        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
+			        	
+			        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+			        	if (spanW < 0) {
+							 spanW = 0;
+						 }
+			        	title3[0].style.width = spanW + 'px';
+			        	title3[0].style.textOverflow = 'ellipsis';
+			        	title3[0].style.overflow = 'hidden';
+			        }
 		        }
 		    }
+		    
 		    function TreeCtrl_onNodeClickNew(pNodeID, pTreeID) {
 		        try {
 		            var treeNode = new TreeNode();
@@ -487,12 +498,13 @@
 //					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
 
 				//TopBoard가 아닌 게시판의 왼쪽 게시판 리스트를 닫는다.
-				$(".fList h2").attr("class", "off");
-				$(".qst h2").attr("class", "off");
-				$(".pollDiv h2").attr("class", "off");
-				$(".myb h2").attr("class", "off");
+				$(".fList h2").attr("class", "off"); // 즐겨찾기 off
+				$(".qst h2").attr("class", "off"); // 전자설문 off
+				$(".pollDiv h2").attr("class", "off"); // 투표 off
+				$(".myb h2").attr("class", "off"); // 마이게시판 상위 off
 				$(".myb").next().attr("class", "off");//마이게시판 하위 ul off
 				$(".ApprDiv").attr("class", "off");
+				$(".ladder h2").attr("class", "off"); // 사다리게임 off
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -651,6 +663,19 @@
 		            SetTreeviewUnSelect("");
 				}
 			}
+			
+			function memo_Func(idx) {
+				$(".on").attr("class", "off");
+				$(".memo h2").attr("class", "on");
+				$(".memo").next().attr("class", "on");
+				
+				if (CrossYN()) {
+					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
+		        } else {
+		        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
+		        }
+	            SetTreeviewUnSelect("");
+			}
 
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
@@ -765,6 +790,13 @@
 		    		window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
 				}
 		    }
+		    
+		    function folder_Manage() {
+	        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+		    
+	 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -779,12 +811,13 @@
 	        	</div>
 	        	<ul></ul>		        
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		            <h2>
+		        <%-- 2018-09-20 홍승비 - window.onload 시 마이게시판 디폴트 클래스를 off로 수정 --%>
+		            <h2 class="off">
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" width="14px" />
 		            </h2>
 		        </div>
-		        <ul id="TreeCtrl_MyBoardTree_ul">
+		        <ul id="TreeCtrl_MyBoardTree_ul" class="off">
 		            <div class="tree" style='width:auto;overflow-x:hidden;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
@@ -792,17 +825,18 @@
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
 		        </ul>
 	        </c:if>
+	        <%-- 2018-09-20 홍승비 - window.onload 시 게시판리스트 디폴트 클래스를 off로 수정 --%>
 	        <div id='TopBoardsList'>
 	        	<script type="text/javascript">
 	        		parser = new DOMParser();
         		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
-       			        document.write("<h2>");
+       			        document.write("<h2 class='off'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
-           				document.write("<ul>\n");
+           				document.write("<ul class='off'>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
@@ -818,12 +852,12 @@
 	        	</div>
 	        	<ul></ul>
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		            <h2>
+		            <h2 class="off">
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" align="middle" />
 		            </h2>
 		        </div>
-		        <ul id="TreeCtrl_MyBoardTree_ul">
+		        <ul id="TreeCtrl_MyBoardTree_ul" class="off">
 		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
@@ -865,7 +899,26 @@
 			</div>
 			</c:if>
 			<ul></ul>
-
+			
+			<c:if test="${memoFlag == 'YES'}">
+			<div class="memo" onclick="memo_Func(1)">
+				<h2><span><spring:message code="ezMemo.t001" /></span></h2>
+			</div>
+			</c:if>
+			
+			<ul>
+				<!-- <div class="memoTree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
+					<div>
+						<src class="memoFoldImage"></src>
+						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)" id="memoTot">전체메모<span id="countTotal"></span></span>
+						<div class="memoFolders"></div>
+					</div>
+				</div>
+				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="folder_Manage()" style="width: 100%; display: inline-block;">메모함관리</span></h3> -->
+			</ul>
+			
+		    
 			<h3>
 				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
 			</h3>

@@ -126,9 +126,10 @@ function initReceptListView() {
 		url : "/ezApprovalG/aprDeptRequest.do",
 		data : {
 			docID : docIDorSN,
-			mode  : pMode
+			mode  : pMode,
 			//2018-06-21 재사용시 수신처정보 완료문서정보가 아닌 고정수신처 정보로 초기화
 //			isUsed : isUsed
+			orgCompanyID : companyID
 		},
 		success: function(xml){
 			result = loadXMLString(xml);

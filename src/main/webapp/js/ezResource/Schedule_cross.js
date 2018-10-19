@@ -871,6 +871,7 @@ function SaveSchedule_onClick( cmd , resItem) {
 	
 	if( typeof(resultXML) != "undefined" && getXmlString(resultXML) != "" )
 	{
+		if(doubleSubmitCheck()) return;
 	    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
 	    // 2009.11.26 - 자원등록시 자원관리자에게 자원등록 알림메일 발송
 	    xmlHttp = null;
@@ -1122,10 +1123,10 @@ function delSchedule_onClick( num, ownerID)  {
 	            schedule_repetition_del_cross_dialogArguments[0] = rgParams;
 	            schedule_repetition_del_cross_dialogArguments[1] = delSchedule_onClick_Complete;
 
-	            DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
+	            DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
 	        } else {
-	            var feature = "dialogHeight:260px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
-	            feature = feature + GetShowModalPosition(390, 260);
+	            var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
+	            feature = feature + GetShowModalPosition(390, 175);
 	            var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
 
 	            if (false != rgParams["CancelOpen"]) return (false);

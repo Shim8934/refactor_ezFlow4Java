@@ -192,6 +192,30 @@
 		        myapprfrom = $("#Sdatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        myapprto = $("#Edatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
+		        //2018-10-11 김보미 - 시작일자, 종료일자중 하나만 지정했을 경우 나머지 일자 입력하게끔 알림창 뜨게
+		        if (draftfrom != "" && draftto == "") {
+		        	alert("<spring:message code='ezApprovalG.kbm02'/>");
+		        	return;
+		        } else if (draftfrom == "" && draftto != "" ) {
+		        	alert("<spring:message code='ezApprovalG.kbm01'/>");
+		        	return;
+		        }
+		        
+		        if (apprfrom != "" && apprto == "") {
+		        	alert("<spring:message code='ezApprovalG.kbm04'/>");
+		        	return;
+		        } else if (apprfrom == "" && apprto != "" ) {
+		        	alert("<spring:message code='ezApprovalG.kbm03'/>");
+		        	return;
+		        }
+		        
+		        if (myapprfrom != "" && myapprto == "") {
+		        	alert("<spring:message code='ezApprovalG.kbm06'/>");
+		        	return;
+		        } else if (myapprfrom == "" && myapprto != "") {
+		        	alert("<spring:message code='ezApprovalG.kbm05'/>");
+		        	return;
+		        }
 		       
 			        if (draftfrom != "" && draftto != "") {
 			            if (draftfrom > draftto) {

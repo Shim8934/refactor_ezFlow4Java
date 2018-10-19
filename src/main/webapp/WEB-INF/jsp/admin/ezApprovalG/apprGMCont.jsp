@@ -28,12 +28,13 @@
 	        var CompanyID = "<c:out value='${companyID}'/>";
 	        var TopID = "<c:out value='${companyID}'/>";
 	        var listview = new ListView();
-		    
+		    var sDeptID;
+	        
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = CompanyID;
 	            InitListView();
 	            Tree_setconfig();
-	            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>");
+	            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID);
 		    });
 		    
 		    function Tree_setconfig() {
@@ -64,7 +65,8 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 		        CompanyID = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
-		        getContInfo(treeNode.GetNodeData("CN"));
+		        sDeptID = treeNode.GetNodeData("CN");
+		        getContInfo(sDeptID);
 		    }
 		    
 		    function lvtForm_onSel_Changed() { }
@@ -100,7 +102,7 @@
 		        if (CompanyID != document.getElementById("SCompID").value) {
 		            CompanyID = document.getElementById("SCompID").value;
 		            
-		            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>");
+		            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID);
 		        }
 		    }
 		    
@@ -198,7 +200,7 @@
 	            }
 	        }
 	        
-	        function btnUpdate_onclick_Complete(tempDeptID) {
+	        function btnUpdate_onclick_Complete() {
 	        	getContInfo(tempDeptID);
 	        }
 	        
@@ -213,7 +215,7 @@
 		        	data : {contID : ContID, comID : CompanyID},
 		        	success : function(result){
 		        		if (result == "TRUE") {
-			                listview.GetDataRows()[selRow].parentElement.removeChild(listview.GetDataRows()[selRow]);
+		        			getContInfo(sDeptID);
 			            } else {
 			            	alert("<spring:message code='ezApprovalG.t1587'/>");
 			            }
@@ -225,8 +227,14 @@
 	   	 	}
 	        
 		    function btnDel_onclick() {
+		        listview.LoadFromID("lvtDocForm");
+		        
+		        if (listview.GetSelectedRows() == "") {
+		        	alert("<spring:message code='ezBoard.t179'/>");
+					return;		        	
+		        }
+		        
 		    	if (confirm("<spring:message code='ezApprovalG.t999933'/>")) {
-			        listview.LoadFromID("lvtDocForm");		        
 			        var selRow = listview.GetSelectedIndexes().split(",");
 			        
 			        if (selRow) {

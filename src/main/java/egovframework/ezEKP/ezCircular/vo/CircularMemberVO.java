@@ -21,6 +21,8 @@ public class CircularMemberVO {
 	private String mail;
 	
 	int tenantID;
+	
+	private String department;
 
 	public String getCircularBMUserId() {
 		return circularBMUserId;
@@ -100,6 +102,14 @@ public class CircularMemberVO {
 
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
 	}	
 	
 	

@@ -61,6 +61,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("userId", vo.getUserId());
 		map.put("tenantId", vo.getTenant_id());
 		map.put("mode", mode);
+		map.put("companyID", vo.getCompanyID());
 		int totalLadder = ezLadderDAO.getLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("ladderCount ended.");
@@ -73,6 +74,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", vo.getUserId());
 		map.put("tenantId", vo.getTenant_id());
+		map.put("companyID", vo.getCompanyID());
 		int totalLadder = ezLadderDAO.getPartLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("partLadderCount ended.");
@@ -98,6 +100,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
 		map.put("tenantId", vo.getTenant_id());
+		map.put("companyID", vo.getCompanyID());
 		
 		int totalLadder = 0;
 		if(mode.equals("part")) {		// 참여버튼 검색
@@ -126,6 +129,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
+		map.put("companyID", vo.getCompanyID());
 	
 		if(mode.equals("pre")) {
 			List<LadderVO> ladList = ezLadderDAO.selectPreList(map);
@@ -170,6 +174,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
+		map.put("companyID", vo.getCompanyID());
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		
 		// 생성된 지 24시간 여부
@@ -218,26 +223,28 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		map.put("sort", sort);
 		map.put("sortFlag", sortFlag);
+		map.put("companyID", vo.getCompanyID());
 		
 		List<LadderVO> list = null;
 		if(mode.equals("part")) {		// 참여버튼 검색
 			list = ezLadderDAO.searchPartLadderList(map);
 		} else if(mode.equals("pre")) {	// 이전 사다리 검색
 			list = ezLadderDAO.searchPreLadderList(map);
-		}
-		else {						// 전체버튼 검색
+		} else {						// 전체버튼 검색
 			list = ezLadderDAO.searchAllLadderList(map);
 		}
 		
 		// 생성된 지 24시간 여부
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
-		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
-		
-		for(LadderVO userVO:list) {
-			if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
-				userVO.setNewFlag(1);
-			} else {
-				userVO.setNewFlag(0);
+		if(!mode.equals("pre")){
+			String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),vo.getOffset(), false);
+			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+			
+			for(LadderVO userVO:list) {
+				if(userVO.getWriteDate().toString().compareTo(nowDate) > 0) {
+					userVO.setNewFlag(1);
+				} else {
+					userVO.setNewFlag(0);
+				}
 			}
 		}
 		
@@ -252,8 +259,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	/** boh */
 	@Override
-	public List<LadderLineVO> selectSearchUser(String [] searchUserName, int tenant_id, String lang)  throws Exception {
-		String primaryLang = commonUtil.getMultiData(lang, tenant_id);
+	public List<LadderLineVO> selectSearchUser(String [] searchUserName, LadderVO ladVO)  throws Exception {
+		String primaryLang = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
 		
 		List<LadderLineVO> resultUser = new ArrayList<>();
 		Map<String, Object> dataMap = new HashMap<>();
@@ -261,8 +268,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		for(String name : searchUserName) {
 			if(name != null && !name.equals("")) {
 				dataMap.put("name", name);
-				dataMap.put("tenant_id", tenant_id);
+				dataMap.put("tenant_id", ladVO.getTenant_id());
 				dataMap.put("lang", primaryLang);
+				dataMap.put("companyID", ladVO.getCompanyID());
 				
 				List<LadderLineVO> user = ezLadderDAO.selectSearchUser(dataMap);
 				
@@ -298,6 +306,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 			ladLines.setUserId(ladLines.getUserIds()[i]);
 			ladLines.setUserName(ladLines.getUserNames()[i]);
 			ladLines.setUserName2(ladLines.getUserName2s()[i]);
+			ladLines.setDescription(ladLines.getDescriptions()[i]);
+			ladLines.setDescription2(ladLines.getDescriptions2()[i]);
 			ladLines.setItem(ladLines.getItems()[i]);
 			ladLines.setLadderOrder(i);
 			
@@ -337,15 +347,26 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	@Override
 	public List<LadderBmUserVO> selectBMUser(LadderBmUserVO bmUser) throws Exception {
+		logger.debug("selectBMUser started");
+		
 		List<LadderBmUserVO> bmUsers = ezLadderDAO.selectBMUser(bmUser);
 		
 		String lang = commonUtil.getMultiData(bmUser.getLang(), bmUser.getTenant_id());
+		// 회사 이름
+		for(LadderBmUserVO userVO : bmUsers) {
+			if(userVO.getUserId().length()>=15){
+				if(userVO.getUserId().substring(0,15).equals("anonyAttendant_")){
+					userVO.setCompany("");
+				}
+			}
+		}
 		if(lang.equals("2")) {
 			for(LadderBmUserVO userVO : bmUsers) {
 				userVO.setUserName(userVO.getUserName2());
 			}
 		}
 		
+		logger.debug("selectBMUser ended");
 		return bmUsers;
 	}
 
@@ -356,11 +377,21 @@ public class EzLadderServiceImpl implements EzLadderService {
 		ezLadderDAO.insertBMGroup(bmGroup);
 		
 		int len = bmUsers.getUserIds().length;
+		String companyID = bmGroup.getCompanyID();
 		for(int i = 0; i < len; i++) {
 			bmUsers.setUserId(bmUsers.getUserIds()[i]);
 			bmUsers.setUserName(bmUsers.getUserNames()[i]);
 			bmUsers.setUserName2(bmUsers.getUserName2s()[i]);
-			
+			bmUsers.setDescription(bmUsers.getDescriptions()[i]);
+			bmUsers.setDescription2(bmUsers.getDescriptions2()[i]);
+			bmUsers.setCompanyID(companyID);
+			if(bmUsers.getUserId().length()>=15){
+				if(bmUsers.getUserId().substring(0,15).equals("anonyAttendant_")){
+					bmUsers.setCompany("");
+					bmUsers.setDescription("");
+					bmUsers.setDescription2("");
+				}
+			}
 			ezLadderDAO.insertBMUser(bmUsers);
 		}
 	}
@@ -378,7 +409,14 @@ public class EzLadderServiceImpl implements EzLadderService {
 			bmUsers.setUserId(bmUsers.getUserIds()[i]);
 			bmUsers.setUserName(bmUsers.getUserNames()[i]);
 			bmUsers.setUserName2(bmUsers.getUserName2s()[i]);
-			
+			bmUsers.setDescription(bmUsers.getDescriptions()[i]);
+			bmUsers.setDescription2(bmUsers.getDescriptions2()[i]);
+			if(bmUsers.getUserId().length()>=15){
+				if(bmUsers.getUserId().substring(0,15).equals("anonyAttendant_")){
+					bmUsers.setDescription("");
+					bmUsers.setDescription2("");
+				}
+			}
 			ezLadderDAO.insertBMUser(bmUsers);
 		}
 	}
@@ -559,16 +597,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void deleteLadderList(String userId, String tenant_Id, String ladderId) throws Exception {
+	public void deleteLadderList(LadderVO ladVO) throws Exception {
 		logger.debug("deleteLadder started.");			// 사다리 1개 삭제
 		String deleteDate = commonUtil.getTodayUTCTime("");	// deleteDate UCT 타임 설정
-		Map<String,Object> map = new HashMap<String, Object>();	
 	
-		
-		map.put("userId", userId);
-		map.put("ladderId", ladderId);
-		map.put("tenantId", tenant_Id);
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("userId", ladVO.getUserId());
+		map.put("ladderId", ladVO.getLadderId());
+		map.put("tenantId", ladVO.getTenant_id());
 		map.put("deleteDate", deleteDate);
+		map.put("companyID", ladVO.getCompanyID());
+		
 		ezLadderDAO.deleteLadderList(map);
 		
 		logger.debug("deleteLadder ended.");
@@ -597,10 +636,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt, String lang) throws Exception {
+	public void setLadderStart(LadderVO ladVO, int size) throws Exception {
 		logger.debug("setLadderStart started.");	// lang 추가 해줘야 됨
 		// lineCnt를 이용해 lineArray를 구함
 		int height = 40;
+		int lineCnt = ladVO.getLineCnt();
 		int[] lineArray = new int[lineCnt];
 		int[] lineMap = new int[size*height];
 		lineArray = getLineArray(size, lineCnt);
@@ -609,11 +649,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 		for(int i =0; i<lineMap.length; i++) {
 			line += Integer.toString(lineMap[i]);
 		}
-		String langs = commonUtil.getMultiData(lang, Integer.parseInt(tenantId));
+		String langs = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
 		String startDate = commonUtil.getTodayUTCTime("");	// startDate UCT 타임 설정
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ladderId", ladderId);
-		map.put("tenantId", tenantId);
+		map.put("ladderId", ladVO.getLadderId());
+		map.put("tenantId", ladVO.getTenant_id());
 		map.put("startDate", startDate);
 		map.put("lineArray", line);
 		map.put("lang", langs);
@@ -645,8 +685,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 		for (int i = 0; i < size; i++) {
 			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("ladderId", ladderId);
-			m.put("tenant_id", tenantId);
+			m.put("ladderId", ladVO.getLadderId());
+			m.put("tenant_id", ladVO.getTenant_id());
 			m.put("ladderOrder", i);
 			m.put("resultUserId", list.get(load[i]).getUserId());
 			m.put("resultUserName", list.get(load[i]).getUserName());

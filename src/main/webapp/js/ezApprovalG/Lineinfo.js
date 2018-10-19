@@ -2733,7 +2733,7 @@ function checkdisabled()
 	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "002") // aprType이 진행인 경우
 	                        curaprsn = true;
 
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) // aprType이 승인인 경우
+	                    if ((GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) && pReDraftFlag != 'REDRAFT') // aprType이 승인인 경우
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = true;
 	                    else
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = false;
@@ -2917,10 +2917,12 @@ function CheckLineUser() {
     var pCurDekyul = 0;
     var pCurHapyui = 0;
     var pCurGamsa = 0;
+    var pCurWhoakin = 0;
     var i;
     var pCurSignFlag = false;
     var pCurHSignFlag = false;
     var pCurGamsaFlag = false;
+    var pCurWhoakinFlag = false;
 
     var pFirstAprType = GetAttribute(AprLineRow[CurListLen - 1], "DATA11");
     for (i = 0 ; i < CurListLen ; i++) {
@@ -2947,6 +2949,10 @@ function CheckLineUser() {
                 pCurHSignFlag = true;
             if (pCurGamsa > 0)
                 pCurGamsaFlag = true;
+            if (pCurWhoakin > 0) {
+            	//2018-10-12 배현상, 최종결재자 직전에 결재자가 대결인 경우 최종결재자의 결재유형이 확인이 올 수 있는 경우 제거
+            	pCurWhoakinFlag = true;
+            }
         }
         else if (GetAttribute(AprLineRow[i], "DATA11") == strAprType4) {
             pCurJunkyul = pCurJunkyul + 1;
@@ -2956,6 +2962,10 @@ function CheckLineUser() {
                 pCurHSignFlag = true;
             if (pCurGamsa > 0)
                 pCurGamsaFlag = true;
+        }
+        else if (GetAttribute(AprLineRow[i], "DATA11") == strAprType2) {
+        	//2018-10-12 배현상, 최종결재자 직전에 결재자가 대결인 경우 최종결재자의 결재유형이 확인이 올 수 있는 경우 제거
+        	pCurWhoakin = pCurWhoakin + 1;
         }
         else if (GetAttribute(AprLineRow[i], "DATA11") == strAprType9 || GetAttribute(AprLineRow[i], "DATA11") == strAprType8 || GetAttribute(AprLineRow[i], "DATA11") == strAprType11 || GetAttribute(AprLineRow[i], "DATA11") == strAprType12)
             pCurHapyui = pCurHapyui + 1;
@@ -3007,7 +3017,10 @@ function CheckLineUser() {
     if (pCurGamsaFlag) {
         pAlertContent = pAlertContent + "" + strLang361 + "<br> ";
     }
-
+    
+    if (pCurWhoakinFlag) {
+    	pAlertContent = pAlertContent + "" + strLangBae2 + "<br> ";
+    }
     if (pFirstAprType != strAprType18 && pFirstAprType != strAprType1 && pFirstAprType != strAprType4 && pFirstAprType != strAprType16)
         pAlertContent = pAlertContent + "" + strLang362 + "" + ConvertAprLineType(pFirstAprType, "Value") + "" + strLang363 + "<br> ";
 

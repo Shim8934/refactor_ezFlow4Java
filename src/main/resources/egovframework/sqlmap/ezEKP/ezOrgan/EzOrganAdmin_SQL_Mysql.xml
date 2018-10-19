@@ -62,7 +62,7 @@
 					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
-					<isEqual property="search_keycode" compareValue="dpetName">
+					<isEqual property="search_keycode" compareValue="deptName">
 						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
@@ -83,9 +83,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_DEPTMASTER
-     			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, EXTENSIONATTRIBUTE15, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, TENANT_ID )
+     			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, EXTENSIONATTRIBUTE15, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, MANUAL_FLAG, TENANT_ID )
      		VALUES
-     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_EXTENSIONATTRIBUTE15#, 1, #v_CN#, #v_LDAPPATH#, #nowDate#, #v_TENANT_ID# )
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_EXTENSIONATTRIBUTE15#, 1, #v_CN#, #v_LDAPPATH#, #nowDate#, #v_MANUAL_FLAG#, #v_TENANT_ID# )
 		]]>
 	</insert>
 	
@@ -100,11 +100,11 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_DEPTMASTER
-    			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, TENANT_ID,
+    			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, MANUAL_FLAG, TENANT_ID,
                     EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL, EXTENSIONATTRIBUTE11
                  )
      		VALUES
-     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_TENANT_ID#,
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_MANUAL_FLAG#, #v_TENANT_ID#,
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
@@ -127,11 +127,11 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERMASTER
-   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
+   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
                     DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2
                 )
    			VALUES
-   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
+   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
                     (SELECT DISPLAYNAME FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
@@ -635,14 +635,25 @@
           TBL_PORTALPAGE_GENERAL
             ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
           VALUES
-            ( 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6','top',1,'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6',null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3','top',1,'표준포탈페이지 A 테마','en_표준포탈페이지 A 테마',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
-            ( 'd6e9c786-3af3-4c46-809d-267c2fd96976','top',1,'d6e9c786-3af3-4c46-809d-267c2fd96976',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'd8dc7da6-7572-4853-801a-14072d823c65','top',1,'d8dc7da6-7572-4853-801a-14072d823c65',null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c','top',1,'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c',null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( '054a5b35-d8d5-4b07-9e47-d7820bf59435','top',1,'054a5b35-d8d5-4b07-9e47-d7820bf59435',null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
       ]]>
+      <isEqual property="PrimaryLang" compareValue="1" >
+   	        ( #portalItemUID9#,'top',1,#portalItemUID9#,null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalUUID#,'top',1,'표준포탈페이지 A 테마','표준포탈페이지 A 테마',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
+            ( #portalItemUID0#,'top',1,#portalItemUID0#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID1#,'top',1,#portalItemUID1#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID2#,'top',1,#portalItemUID2#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID3#,'top',1,#portalItemUID3#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+	        ( #portalItemUID9#,'top',1,#portalItemUID9#,null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalUUID#,'top',1,'標準ポータルページテーマ A','標準ポータルページテーマ A',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
+            ( #portalItemUID0#,'top',1,#portalItemUID0#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID1#,'top',1,#portalItemUID1#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID2#,'top',1,#portalItemUID2#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( #portalItemUID3#,'top',1,#portalItemUID3#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
+            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
+      </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I2" parameterClass="Map">
@@ -651,7 +662,185 @@
           TBL_PORTAL_ACL
             ( UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID )
           VALUES
-            ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3',#companyID#,#companyName#,2,2,#tenantID# )
+            (#portalUUID#,#companyID#,#companyName#,2,2,#tenantID# ),
+            (#portalItemUID0#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID1#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID2#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID3#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID4#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID5#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID6#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID7#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID8#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID9#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID10#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID11#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID12#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID13#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID14#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID15#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID16#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID17#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#portalItemUID18#,#companyID#,#companyName#,2,2,#tenantID#),
+       		(#menuItemUUID0#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID1#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID2#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID3#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID4#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID5#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID6#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID7#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID8#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID9#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID10#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID11#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID12#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID13#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID14#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID15#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID16#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID17#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID18#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID19#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID20#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID21#,'masteradmin','masteradmin',2,2,#tenantID#),
+			(#menuItemUUID22#,'masteradmin','masteradmin',2,2,#tenantID#),
+			(#menuItemUUID23#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID24#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID25#,'masteradmin','masteradmin',2,2,#tenantID#),
+			(#menuItemUUID26#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID27#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID28#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID29#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID30#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID31#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID32#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID33#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID34#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID35#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID36#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID37#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID38#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID39#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID40#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID41#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID42#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID43#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID44#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID45#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID46#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID47#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID48#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID49#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID50#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID51#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID52#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID53#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID54#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID55#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID56#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID57#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID58#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID59#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID60#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID61#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID62#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID63#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID64#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID65#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID66#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID67#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID68#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID69#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID70#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID71#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID72#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID73#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID74#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID75#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID76#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID77#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID78#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID79#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID80#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID81#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID82#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID83#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID84#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID85#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID86#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID87#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID88#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID89#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID90#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID91#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID92#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID93#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID94#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID95#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID96#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID97#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID98#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID99#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID100#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID101#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID102#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID103#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID104#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID105#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID106#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID107#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID108#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID109#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID110#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID111#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#topMenuLogoKoUUID#,#companyID#,#companyName#,2,2,#tenantID#),
+      		(#topMenuLogoJaUUID#,#companyID#,#companyName#,2,2,#tenantID#),
+      		(#topMenuLogoEnUUID#,#companyID#,#companyName#,2,2,#tenantID#),
+      		(#menuItemSUID0#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID1#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID2#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID3#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID4#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID5#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID6#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID7#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID8#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID9#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID10#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID11#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID12#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID13#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID14#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID15#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID16#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID17#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID18#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID19#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID20#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID21#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID22#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID23#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID24#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID25#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID26#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID27#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID28#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID29#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID30#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID31#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID32#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID33#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID34#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID35#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID36#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID37#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID38#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID39#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID40#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID41#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID42#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemSUID43#,#companyID#,#companyName#,2,2,#tenantID#)
       ]]>
     </insert>
     
@@ -661,24 +850,43 @@
           TBL_PORTLET_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
           VALUES
-            ( 'c06b1862-ce83-4472-91d7-fd92cee3a7ac','포토게시판_포틀릿','en_포토게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac',null,'0         ','1         ',225,'0',#companyID#,null,null,548,'iFrame    ',#tenantID# ),
-            ( 'c08c6efa-7494-4185-b1dc-09ecc908f683','공지게시판_포틀릿','en_공지게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683',' ','0         ','1         ',225,'0',#companyID#,null,null,280,null,#tenantID# ),
-            ( 'c1479aa0-824d-43ff-a7f6-999ad660378a','배너_우수사원_포틀릿','en_배너_우수사원_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c1479aa0-824d-43ff-a7f6-999ad660378a',' ','0         ','1         ',225,'0',#companyID#,null,null,330,null,#tenantID# ),
-            ( 'f90b6413-c94c-4c6f-abe5-39480da308f1','우수커뮤니티_포틀릿','en_우수커뮤니티_포틀릿',1,'/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1',' ','0         ','1         ',235,'0',#companyID#,null,null,330,null,#tenantID# ),
-            ( '0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3','슬라이드이미지_포틀릿','en_슬라이드이미지_포틀릿',1,'/ezPortal/urlPortlet.do?uID=0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3',' ','0         ','1         ',225,'0',#companyID#,null,null,517,null,#tenantID# ),
-            ( '69f68282-5617-45ca-9118-27b6170df5c3','포토_생일 통합 포틀릿','포토_생일 통합 포틀릿_en',1,'/ezPortal/urlPortlet.do?uID=69f68282-5617-45ca-9118-27b6170df5c3',' ','0         ','1         ',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            ( '73c0940e-5d44-4edc-bfa3-822fd6fd17b5','공지_슬라이드_이모저모 통합 포틀릿','공지_슬라이드_이모저모 통합 포틀릿_en',1,'/ezPortal/urlPortlet.do?uID=73c0940e-5d44-4edc-bfa3-822fd6fd17b5',' ','0         ','1         ',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            ( '7851b606-aa1c-4f96-ba9b-562432b922a6','결재사용현황_포틀릿','en_결재사용현황_포틀릿',1,'/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6',' ','0         ','1         ',225,'0',#companyID#,null,null,348,null,#tenantID# ),
-            ( '8af6e9a5-0970-45a9-9495-ba0c7a9163fd','결재_메일 통합 포틀릿','en_결재_메일 통합 포틀릿',1,'/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd',' ','0         ','1         ',235,'0',#companyID#,null,null,797,null,#tenantID# ),
-            ( '8fd70c9a-83b2-4294-a57b-9a59abe3850d','설문통계_포틀릿','en_설문통계_포틀릿',1,'/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d',' ','0         ','1         ',225,'0',#companyID#,null,null,265,null,#tenantID# ),
-            ( '94dfe6d0-043a-4284-bde5-8275aba64d6e','마이게시판_포틀릿','en_마이게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e',' ','0         ','1         ',225,'0',#companyID#,null,null,512,null,#tenantID# ),
-            ( '9b157fdc-057d-4c5c-b036-f2107adf7f0b','활용하기_포틀릿','en_활용하기_포틀릿',1,'/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b','2345235','0         ','1         ',225,'0',#companyID#,null,null,240,'DIV       ',#tenantID# ),
-            ( 'a37406b2-7a0a-48b0-a2a9-aacf811e9bd4','직원생일_포틀릿','en_직원생일_포틀릿',1,'/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4',null,'0         ','1         ',225,'0',#companyID#,null,null,338,'DIV       ',#tenantID# ),
-            ( 'a2149765-4c0b-466c-9e61-310925139d3c','사용자정보통합_포틀릿','en_사용자정보통합_포틀릿',1,'/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c',' ','0         ','1         ',220,'0',#companyID#,null,null,1150,null,#tenantID# )
       ]]>
+      <isEqual property="PrimaryLang" compareValue="1" >
+      		(#portalItemUID10#,'포토게시판_포틀릿','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
+            (#portalItemUID11#,'공지게시판_포틀릿','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
+            (#portalItemUID12#,'배너_우수사원_포틀릿','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID14#,'우수커뮤니티_포틀릿','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID4#,'슬라이드이미지_포틀릿','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
+            (#portalItemUID17#,'포토_생일 통합 포틀릿','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID15#,'결재사용현황_포틀릿','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
+            (#portalItemUID5#,'결재_메일 통합 포틀릿','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
+            (#portalItemUID6#,'설문통계_포틀릿','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
+            (#portalItemUID16#,'마이게시판_포틀릿','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
+            (#portalItemUID7#,'활용하기_포틀릿','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
+            (#portalItemUID13#,'직원생일_포틀릿','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
+            (#portalItemUID8#,'사용자정보통합_포틀릿','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+            (#portalItemUID10#,'PhotoBoard_Portlet','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
+            (#portalItemUID11#,'Notice_portlet','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
+            (#portalItemUID12#,'Banner_TopUser_Portlet','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID14#,'Community_Portlet','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID4#,'SlideImage_Portlet','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
+            (#portalItemUID17#,'Photo_Birthday_Total_Portlet','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID18#,'Notice_Slide_Total_Portlet','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID15#,'ApprovalUse_Portlet','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
+            (#portalItemUID5#,'Approval_Mail_Total_Portlet','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
+            (#portalItemUID6#,'QuestionStatistic_Portlet','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
+            (#portalItemUID16#,'MyBoard_Portlet','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
+            (#portalItemUID7#,'Using_Portlet','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
+            (#portalItemUID13#,'Birthday_Portlet','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
+            (#portalItemUID8#,'UserInfo_Portlet','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+	   </isNotEqual>
     </insert>
     
    <insert id="EzOrganAdminDAO.insertCompanyInfo_I4" parameterClass="Map">
+   	<isEqual property="PrimaryLang" compareValue="1" >
       <![CDATA[
         INSERT INTO
           TBL_THEME_GENERAL
@@ -686,6 +894,16 @@
           VALUES
             ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
       ]]>
+    </isEqual>
+    <isNotEqual property="PrimaryLang" compareValue="1" >
+   	  <![CDATA[
+        INSERT INTO
+          TBL_THEME_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
+          VALUES
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
+      ]]>
+    </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I5" parameterClass="Map">
@@ -694,30 +912,273 @@
           TBL_TOPMENU_GENERAL
             ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
           VALUES
-            ( 'd4dcceee-01f5-42da-9093-a243d3056204','top',1,'표준메뉴_일본','표준메뉴_일본',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'3',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( 'F3633607-8E8B-42A1-B777-6E2969072E58','top',1,'표준메뉴_한국','표준메뉴_한국',#userID#,#userName#,#nowDate#,null,-1,57,0,1,null,';','Y',#companyID#,'1',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( '174da7a0-e379-44bb-937d-a91216a7b459','top',1,'174da7a0-e379-44bb-937d-a91216a7b459','174da7a0-e379-44bb-937d-a91216a7b459',#userID#,#userName#,#nowDate#,null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( '29e70a07-904b-41c6-a683-4d06a0b15d85','top',1,'29e70a07-904b-41c6-a683-4d06a0b15d85','29e70a07-904b-41c6-a683-4d06a0b15d85',#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( '306fedec-66da-4070-8b54-8d1517a4545b','top',1,'306fedec-66da-4070-8b54-8d1517a4545b','306fedec-66da-4070-8b54-8d1517a4545b',#userID#,#userName#,#nowDate#,null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( '64aa1712-8a96-4b25-aa9c-51e74282d54f','top',1,'64aa1712-8a96-4b25-aa9c-51e74282d54f','64aa1712-8a96-4b25-aa9c-51e74282d54f',#userID#,#userName#,#nowDate#,null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( 'b0a4e923-d270-4353-9e81-e86c14424262','top',1,'표준메뉴_영어','표준메뉴_영어',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'2',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( 'cc6758b3-1f3f-483a-9d7a-861caca82f92','top',1,'cc6758b3-1f3f-483a-9d7a-861caca82f92','cc6758b3-1f3f-483a-9d7a-861caca82f92',#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'100;280;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( 'cd941931-9343-4186-b920-22106c63bfc1','top',1,'cd941931-9343-4186-b920-22106c63bfc1','cd941931-9343-4186-b920-22106c63bfc1',#userID#,#userName#,#nowDate#,null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+            ( #topMenuJaUUID#,'top',1,'Standard Menu_Ja','Standard Menu_Ja',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'3',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuKoUUID#,'top',1,'Standard Menu_Ko','Standard Menu_Ko',#userID#,#userName#,#nowDate#,null,-1,57,0,1,null,';','Y',#companyID#,'1',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuEnSubUUID#,'top',1,#topMenuEnSubUUID#,#topMenuEnSubUUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuKoSub2UUID#,'top',1,#topMenuKoSub2UUID#,#topMenuKoSub2UUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuJaSubUUID#,'top',1,#topMenuJaSubUUID#,#topMenuJaSubUUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuJaSub2UUID#,'top',1,#topMenuJaSub2UUID#,#topMenuJaSub2UUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuEnUUID#,'top',1,'Standard Menu_En','Standard Menu_En',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'2',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuKoSubUUID#,'top',1,#topMenuKoSubUUID#,#topMenuKoSubUUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'100;280;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuEnSub2UUID#,'top',1,#topMenuEnSub2UUID#,#topMenuEnSub2UUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
       ]]>
     </insert>
     
-    <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS" parameterClass="Map">
       <![CDATA[
         INSERT INTO
-          TBL_TASKCATEGORY
-            (CategoryCode,  Name,  Description,  OldFlag,  Name2, TENANT_ID, COMPANYID)
+          TBL_TOPMENU_ITEMS
+            (UID_,PAGEUID,PARENTPAGEUID,OWNERPAGEID,MENUITEMTYPE,DISPLAYNAME,WIDTH,HEIGHT,ROWPOS,COLUMNPOS,CANREMOVE,CANRESIZE,CANREPLACE,ALIGN,VALIGN,TOPMARGIN,BOTTOMMARGIN,LEFTMARGIN,RIGHTMARGIN,TENANT_ID)
           VALUES
-            (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng',#tenantID#, #companyID#),
-            (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng',#tenantID#, #companyID#),
-            (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng',#tenantID#, #companyID#),
-            (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng',#tenantID#, #companyID#),
-            (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng',#tenantID#, #companyID#)
+          	(#topMenuEnSubUUID#,	#topMenuEnUUID#,	'top',	#topMenuEnUUID#,	1,	#topMenuEnUUID#,	0,	110,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('201',	#topMenuEnSubUUID#,	'top',	#topMenuEnUUID#,	0,	'로고영역',	0,	100,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('201',	#topMenuJaSubUUID#,	'top',	#topMenuJaUUID#,	0,	'로고영역',	0,	100,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('201',	#topMenuKoSubUUID#,	'top',	#topMenuKoUUID#,	0,	'로고영역',	0,	100,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('202',	#topMenuEnSubUUID#,	'top',	#topMenuEnUUID#,	0,	'유틸메뉴영역',	0,	100,	10000,	2,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('202',	#topMenuJaSubUUID#,	'top',	#topMenuJaUUID#,	0,	'유틸메뉴영역',	0,	100,	10000,	2,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('202',	#topMenuKoSubUUID#,	'top',	#topMenuKoUUID#,	0,	'유틸메뉴영역',	0,	100,	10000,	2,	1,	1,	1,	'center',	'middle',	0,	0,	100,	0,	#tenantID#),
+			('203',	#topMenuKoSub2UUID#,	'top',	#topMenuKoUUID#,	0,	'메인메뉴영역',	0,	100,	10000,	1,	1,	1,	1,	'center',	'middle',	0,	0,	0,	0,	#tenantID#),
+			('203',	#topMenuJaSub2UUID#,	'top',	#topMenuJaUUID#,	0,	'메인메뉴영역',	0,	100,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('203',	#topMenuEnSub2UUID#,	'top',	#topMenuEnUUID#,	0,	'메인메뉴영역',	0,	100,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('204',	#topMenuKoSub2UUID#,	'top',	#topMenuKoUUID#,	0,	'서브메뉴영역',	0,	100,	20000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('204',	#topMenuJaSub2UUID#,	'top',	#topMenuJaUUID#,	0,	'서브메뉴영역',	0,	100,	20000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('204',	#topMenuEnSub2UUID#,	'top',	#topMenuEnUUID#,	0,	'서브메뉴영역',	0,	100,	20000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('205',	#topMenuEnSubUUID#,	'top',	#topMenuEnUUID#,	0,	'검색영역',	0,	100,	10000,	3,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('205',	#topMenuJaSubUUID#,	'top',	#topMenuJaUUID#,	0,	'검색영역',	0,	100,	10000,	3,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			('205',	#topMenuKoSubUUID#,	'top',	#topMenuKoUUID#,	0,	'검색영역',	0,	100,	10000,	3,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			(#topMenuKoSub2UUID#,	#topMenuKoUUID#,	'top',	#topMenuKoUUID#,	1,	#topMenuKoUUID#,	0,	100,	20000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			(#topMenuJaSubUUID#,	#topMenuJaUUID#,	'top',	#topMenuJaUUID#,	1,	#topMenuJaUUID#,	0,	110,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			(#topMenuJaSub2UUID#,	#topMenuJaUUID#,	'top',	#topMenuJaUUID#,	1,	#topMenuJaUUID#,	0,	100,	20000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			(#topMenuKoSubUUID#,	#topMenuKoUUID#,	'top',	#topMenuKoUUID#,	1,	#topMenuKoUUID#,	0,	110,	10000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#),
+			(#topMenuEnSub2UUID#,	#topMenuEnUUID#,	'top',	#topMenuEnUUID#,	1,	#topMenuEnUUID#,	0,	100,	20000,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	#tenantID#)
       ]]>
+    </insert>
+    
+	<insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS2" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_ITEMS
+            (UID_,PAGEUID,PARENTPAGEUID,OWNERPAGEUID,PORTLETTYPE,DISPLAYNAME,WIDTH,HEIGHT,ROWPOS,COLUMNPOS,CANREMOVE,CANRESIZE,CANREPLACE,ALIGN,VALIGN,TOPMARGIN,BOTTOMMARGIN,LEFTMARGIN,RIGHTMARGIN,MANDATORY,TENANT_ID)
+          VALUES
+          	(#portalItemUID0#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,100,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID1#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,225,50000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID2#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,110,30000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID3#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,110,40000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID9#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,225,20000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID4#,#portalItemUID9#,'top',#portalUUID#,0,'SlideImage_Portlet',517,225,10000,2,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID5#,#portalItemUID2#,'top',#portalUUID#,0,'Approval_Mail_Total_Portlet',797,235,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID6#,#portalItemUID3#,'top',#portalUUID#,0,'QuestionStatistic_Portlet',265,235,10000,2,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID7#,#portalItemUID1#,'top',#portalUUID#,0,'Using_Portlet',230,225,110000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID8#,#portalItemUID0#,'top',#portalUUID#,0,'UserInfo_Portlet',1150,220,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID10#,#portalItemUID1#,'top',#portalUUID#,0,'PhotoBoard_Portlet',558,225,10000,2,1,1,1,null,null,null,null,null,null,'2         ',#tenantID#),
+			(#portalItemUID11#,#portalItemUID9#,'top',#portalUUID#,0,'Notice_portlet',280,225,20000,1,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID12#,#portalItemUID9#,'top',#portalUUID#,0,'Banner_TopUser_Portlet',330,225,10000,3,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID13#,#portalItemUID1#,'top',#portalUUID#,0,'Birthday_Portlet',338,225,10000,3,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID14#,#portalItemUID2#,'top',#portalUUID#,0,'Community_Portlet',330,235,10000,2,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID15#,#portalItemUID3#,'top',#portalUUID#,0,'ApprovalUse_Portlet',348,235,10000,3,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID16#,#portalItemUID3#,'top',#portalUUID#,0,'MyBoard_Portlet',512,235,70000,1,1,1,1,null,null,null,null,null,null,null,#tenantID#)
+      ]]>
+    </insert>
+    
+ 	<insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS3" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_MENUITEM_ITEMS_MENUITEMS 
+          	(UID_,PARENTUID,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,SUBFLAG,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,LEFTMARGIN,WINDOWOPTION,TENANT_ID)
+          VALUES
+			(#menuItemUUID0#,'204','f932a0fe-a62b-4be0-bcfd-52e27c9c3ca5',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID1#,'202',null,#topMenuKoUUID#,'환경설정','eng_환경설정',null,3,null,'/ezPortal/environmentMain.do','main',null,null,#tenantID#),
+			(#menuItemUUID2#,'203',null,#topMenuJaUUID#,'ホーム','HOME',null,1,'d6237135-c331-4fff-92c0-2cd0584347a4','/ezPortal/myPortal.do',null,null,null,#tenantID#),
+			(#menuItemUUID3#,'203',null,#topMenuJaUUID#,'電子決裁','Approval',null,4,'e58fec85-1180-43dc-bbcf-002d86019057','/ezApprovalG/apprGMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID4#,'204',#menuItemUUID92#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID5#,'204',#menuItemUUID2#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID6#,'204','c509b9ce-a545-4bde-bc38-77786cd87c41',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID7#,'204','7ad2f4ee-5fd8-4c72-bd39-40f889c07e37',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID8#,'204',#menuItemUUID91#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID9#,'204','4c66937f-83ee-45ea-9f0b-cada9d179280',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID10#,'204','0ad5cb7c-a4b9-46d5-a7c7-6ff05bd46d5b',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID11#,'204',#menuItemUUID40#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID12#,'202',null,#topMenuJaUUID#,'設定','設定',null,3,null,'/ezPortal/environmentMain.do','main',null,' ',#tenantID#),
+			(#menuItemUUID13#,'204','4d0e8144-011d-4483-ac42-43c179b9dc87',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID14#,'203',null,#topMenuEnUUID#,'메일','메일',null,2,'46418adc-1f61-4e30-b8f8-53faebaf83b4','/ezEmail/mailMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID15#,'202',null,#topMenuJaUUID#,'ヘルプ','ヘルプ',null,4,null,'/ezPortal/help/help.do','helpWindow',null,'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0',#tenantID#),
+			(#menuItemUUID16#,'204','8a485e8a-9162-479d-a21a-fda9585e0e3e',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID17#,'203',null,#topMenuEnUUID#,'전자결재','전자결재',null,4,'8f89f7ea-cc5b-43f6-a522-d57f584fe3f7','/ezApproval/apprMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID18#,'204','49e1b202-c2ae-4a4d-980a-29239b3e6e14',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID19#,'202',null,#topMenuKoUUID#,'로그아웃','eng_로그아웃',null,5,null,'/user/login/actionLogout.do','top',null,null,#tenantID#),
+			(#menuItemUUID20#,'203',null,#topMenuJaUUID#,'メール','E-Mail',null,2,'586258b4-f2ac-4416-b9ec-328132df65d0','/ezEmail/mailMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID21#,'202',null,#topMenuJaUUID#,'管理者','管理者',null,1,null,'/admin/main.do',null,null,' ',#tenantID#),
+			(#menuItemUUID22#,'202',null,#topMenuEnUUID#,'Administrator','Administrator',null,1,null,'/admin/main.do',null,null,' ',#tenantID#),
+			(#menuItemUUID23#,'203',null,#topMenuKoUUID#,'메일','메일',null,2,'b56c7f48-99dc-4145-81ea-80e1d6f9db8d','/ezEmail/mailMain.do','main',null,' ',#tenantID#),
+			(#menuItemUUID24#,'204','7431401e-6b06-4363-ba5b-fc7026757d63',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID25#,'202',null,#topMenuKoUUID#,'관리자','eng_관리자',null,1,null,'/admin/main.do',null,null,null,#tenantID#),
+			(#menuItemUUID26#,'204','ef6672bd-e78e-4889-b7c0-edff98814f2c',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID27#,'204','f31e5262-c633-4f0d-ac95-817843fc5f38',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID28#,'204','4100d63f-5203-49f3-bf0e-22a6a4e437d1',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID29#,'204','62ef609e-ab67-4b30-bde9-0412c3378290',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID30#,'204','03b0ee1d-8cd7-4e73-afe4-4696a6662922',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID31#,'203',null,#topMenuKoUUID#,'게시판','게시판',null,5,'e45ac7ba-496d-47fa-a711-db8bb16fd95a','/ezBoard/boardMain.do','main',null,' ',#tenantID#),
+			(#menuItemUUID32#,'204',#menuItemUUID31#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID33#,'204','ac7b2e1b-71b2-4c46-b544-66468bfaf2f9',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID34#,'203',null,#topMenuEnUUID#,'게시판','게시판',null,5,'e6f32470-e5ea-4e38-9d3d-337d41fedccd','/ezBoard/boardMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID35#,'202',null,#topMenuKoUUID#,'직원조회','eng_직원조회',null,2,null,'/ezPersonal/personSearch.do',' ',null,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0',#tenantID#),
+			(#menuItemUUID36#,'204',#menuItemUUID3#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID37#,'203',null,#topMenuEnUUID#,'커뮤니티','커뮤니티en',null,6,'ac5d2eca-a340-42dc-95ae-1a4c42ff7885','/ezCommunity/communityMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID38#,'202',null,#topMenuJaUUID#,'ログアウト','ログアウト',null,5,null,'/user/login/actionLogout.do','top',null,null,#tenantID#),
+			(#menuItemUUID39#,'203',null,#topMenuJaUUID#,'設備管理','Resource',null,9,'d351b126-4e3a-486c-ab85-ef78738abead','/ezResource/resMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID40#,'203',null,#topMenuKoUUID#,'커뮤니티','커뮤니티en',null,6,'80e37141-1c98-40b4-a7dc-8298e1abdce0','/ezCommunity/communityMain.do','main',null,' ',#tenantID#),
+			(#menuItemUUID41#,'204','89c88f6b-b68e-45a8-9a2b-58817f6d6cab',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID42#,'204',#menuItemUUID17#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID43#,'203',null,#topMenuKoUUID#,'일정관리','Schedule',null,3,'c76829c2-94a9-48e5-b281-c4a8df65afcb','/ezSchedule/scheduleIndex.do?funCode=2','main',null,' ',#tenantID#),
+			(#menuItemUUID44#,'203',null,#topMenuKoUUID#,'자원관리','자원관리',null,7,'55500da7-0de3-4e2c-8acc-e52cbd8bbee8','/ezResource/resMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID45#,'202',null,#topMenuEnUUID#,'Help','Help',null,4,null,'/ezPortal/help/help.do','helpWindow',null,'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0',#tenantID#),
+			(#menuItemUUID46#,'204',#menuItemUUID43#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID47#,'204','c4cb8eef-6f1c-4c7b-b8cb-de1cd5196da9',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID48#,'204','52bd442b-58c4-4f2e-aadf-3cf6264631a5',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID49#,'203',null,#topMenuEnUUID#,'Schedule','Schedule',null,3,'388f0b77-9c53-42d5-b860-7eb1e74db215','/ezSchedule/scheduleIndex.do?funCode=2',null,null,null,#tenantID#),
+			(#menuItemUUID50#,'204','f96d5cd6-17f3-4765-9657-f1d18475ba4b',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID51#,'204','f78914fe-351f-473b-87da-ed967bce5060',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID52#,'204','64f696d4-4b57-445a-aadf-1e171ae7bcb8',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID53#,'204','a912118a-f4e7-4917-8547-71e8149fdb9d',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID54#,'204','4a213121-bb22-4d43-81df-982e1ba07be2',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID55#,'204','a52e3c9c-171e-44aa-b540-b4311f357b55',#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID56#,'204',#menuItemUUID82#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID57#,'204',#menuItemUUID20#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID58#,'204',#menuItemUUID49#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID59#,'202',null,#topMenuKoUUID#,'도움말','eng_도움말',null,4,null,'/ezPortal/help/help.do','helpWindow',null,'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0',#tenantID#),
+			(#menuItemUUID60#,'204',#menuItemUUID93#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID61#,'203',null,#topMenuJaUUID#,'掲示板','Board',null,5,'2d13f9fc-51c1-4dfe-bfa3-d0bed6a22918','/ezBoard/boardMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID62#,'204','1294c930-12b3-4fa7-9c53-86fb0261589a',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID63#,'204',#menuItemUUID94#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID64#,'204','5cf0b82b-dd98-4d68-b6e2-fc54eb1e950f',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID65#,'204','0e3e00ce-6046-4883-9afd-5b394d02e423',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID66#,'204',#menuItemUUID87#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID67#,'202',null,#topMenuEnUUID#,'Logout','Logout',null,5,null,'/user/login/actionLogout.do','top',null,' ',#tenantID#),
+			(#menuItemUUID68#,'204',#menuItemUUID61#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID69#,'204',#menuItemUUID39#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID70#,'204',#menuItemUUID14#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID72#,'202',null,#topMenuEnUUID#,'Organization ','Organization ',null,2,null,'/ezPersonal/personSearch.do',null,null,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0',#tenantID#),
+			(#menuItemUUID73#,'204','193e8246-8215-4680-9fc0-3f7a5c13e12c',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID74#,'204',#menuItemUUID76#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID75#,'204','6260bacb-398a-4391-8871-fd80142981bf',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID76#,'203',null,#topMenuEnUUID#,'홈','HOME',null,1,'8ac377c8-e8e6-463d-a44f-e6a47202b45f','/ezPortal/myPortal.do',null,null,null,#tenantID#),
+			(#menuItemUUID77#,'204',#menuItemUUID34#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID78#,'204',#menuItemUUID44#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID79#,'204',#menuItemUUID37#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID80#,'204','b8d8195c-c484-4409-a9bd-89e93d76e262',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID81#,'204','68be0f39-94ad-4b46-8ff5-304bdfddb47a',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID82#,'203',null,#topMenuJaUUID#,'日程管理','Schedule',null,3,'ecb5c796-bfce-46a0-9c42-801eca04b31b','/ezSchedule/scheduleIndex.do?funCode=2',null,null,null,#tenantID#),
+			(#menuItemUUID83#,'204','517efcdf-3e2d-4588-ba6f-14eebeee48d9',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID84#,'202',null,#topMenuJaUUID#,'組織','組織',null,2,null,'/ezPersonal/personSearch.do',null,null,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0',#tenantID#),
+			(#menuItemUUID85#,'204','109faf7e-faf4-464f-8206-c19a3880a206',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID86#,'204','763e71e3-4d56-4ecb-bfb0-6f8b743f4601',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID87#,'203',null,#topMenuKoUUID#,'전자결재','전자결재',null,4,'a2c52ee7-4e41-493d-8d58-bb26e00d52c1','/ezApprovalG/apprGMain.do','main',null,' ',#tenantID#),
+			(#menuItemUUID88#,'204','062d1b08-991f-414b-80b2-406312da7095',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID89#,'204',#menuItemUUID23#,#topMenuKoUUID#,null,null,null,null,null,null,null,100,null,#tenantID#),
+			(#menuItemUUID90#,'203',null,#topMenuJaUUID#,'コミュニティ','Community',null,6,'9dcb873f-4254-45b2-87f2-1e326a63db78','/ezCommunity/communityMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID91#,'203',null,#topMenuEnUUID#,'자원관리','자원관리',null,9,'bf71381c-4e0e-415a-82aa-dfcc1f0b4c7d','/ezResource/resMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID92#,'203',null,#topMenuKoUUID#,'홈','HOME',null,1,'d7e86d24-137e-4934-bf70-87fed28f5530','/ezPortal/myPortal.do','main',null,' ',#tenantID#),
+			(#menuItemUUID93#,'203',null,#topMenuEnUUID#,'전자결재','전자결재',null,10,'1ab34e97-4c6b-4249-a80a-4c4214486b95','/ezApprovalG/apprGMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID94#,'202',null,#topMenuEnUUID#,'Configuration','Configuration',null,3,null,'/ezPortal/environmentMain.do','main',null,' ',#tenantID#),
+			(#menuItemUUID95#,'204','0fbe027c-9241-4922-bf97-cc6d10e402c9',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID96#,'204','e254ef6f-d602-4d40-8e39-b44177a8737c',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID97#,'204','2016a429-cb39-4653-b92c-c9595c12acec',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID98#,'204','8593cc87-7630-420b-a6d5-f7a8577c5a31',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID99#,'204','8e9ebb41-5631-4c6f-9887-ec824464bce3',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID100#,'204','f6f7ecd7-1969-4025-9bcc-bbc181e41073',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID101#,'204','ce2fd9b5-3934-4cba-b13f-a32d36a5d63a',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID102#,'204','56b67047-d14a-46fa-aebb-6e95041a8929',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID103#,'204','8eef9794-1eeb-4f8d-9aa3-9c6b1126540e',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID104#,'204','47211276-30bb-45c5-8735-873b5af59e64',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID105#,'204','d29fe5ad-1dc6-413d-a208-d9c2b052acfc',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID106#,'204','36b3c83f-0062-4313-90b1-91b029f11d03',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID107#,'204','eca0b70d-7324-4c49-bc35-15e72f148fe2',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID108#,'204','ba0d5a0d-7ea9-469a-a981-a00e2b8825ec',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID109#,'204','698d7b32-1fe1-4fcc-af02-643b08fddfce',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID110#,'204','7d3b9b37-5975-4cf5-9096-1adb43f7e755',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID111#,'203',null,#topMenuJaUUID#,'回覧板','Circular',null,10,'','/ezCircular/circularIndex.do','main',null,null,#tenantID#)
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS4" parameterClass="Map">
+      <![CDATA[
+      	INSERT INTO 
+      		TBL_PORTLET_URL 
+      			(UID_,CREATORID,USERTYPE,URL,TENANT_ID) 
+      		VALUES 
+      			(#portalItemUID14#,#userID#,'1','/ezPortal/wpNewCommunity.do',#tenantID#),
+				(#portalItemUID7#,#userID#,'1','/ezPortal/wpNewGWBanner.do',#tenantID#),
+				(#portalItemUID10#,#userID#,'1','/ezPortal/wpNewPhoto.do',#tenantID#),
+				(#portalItemUID4#,#userID#,'1','/ezPortal/wpNewImage.do',#tenantID#),
+				(#portalItemUID17#,#userID#,'1','/ezPortal/wpTotalSection5.do',#tenantID#),
+				(#portalItemUID18#,#userID#,'1','/ezPortal/wpTotalSection2.do',#tenantID#),
+				(#portalItemUID15#,#userID#,'1','/ezPortal/wpNewGraph.do',#tenantID#),
+				(#portalItemUID5#,#userID#,'1','/ezPortal/wpNewApprMail.do',#tenantID#),
+				(#portalItemUID6#,#userID#,'1','/ezPortal/wpNewPoll.do',#tenantID#),
+				(#portalItemUID16#,#userID#,'1','/ezPortal/wpNewBoardSTD.do',#tenantID#),
+				(#portalItemUID8#,#userID#,'1','/ezPortal/wpTotalSection.do',#tenantID#),
+				(#portalItemUID13#,#userID#,'1','/ezPortal/wpNewBirth.do',#tenantID#),
+				(#portalItemUID11#,#userID#,'1','/ezPortal/wpNewBoard.do',#tenantID#),
+				(#portalItemUID12#,#userID#,'1','/ezPortal/wpNewSide.do',#tenantID#)
+      ]]>
+    </insert>
+
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS5" parameterClass="Map">
+      <![CDATA[
+      	INSERT INTO 
+      		TBL_MENUITEM_ITEMS_LOGOS 
+      			(UID_,OWNERPAGEID,TENANT_ID) 
+      		VALUES 
+      			(#topMenuLogoKoUUID#,#topMenuKoUUID#,#tenantID#),
+      			(#topMenuLogoJaUUID#,#topMenuJaUUID#,#tenantID#),
+      			(#topMenuLogoEnUUID#,#topMenuEnUUID#,#tenantID#)
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS6" parameterClass="Map">
+      <![CDATA[
+      	INSERT INTO 
+      		TBL_MENUITEM_ITEMS_IMAGE 
+      			(UID_,OWNERPAGEID,SKINNUM,DISPLAYNAME,DISPLAYNAME2,IMAGETYPE,NORMALIMAGEPATH,OVERIMAGEPATH,IMAGEWIDTH,IMAGEHEIGHT,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) 
+      		VALUES 
+      			(#topMenuLogoKoUUID#,#topMenuKoUUID#,1,'LogoItem','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#),
+      			(#topMenuLogoJaUUID#,#topMenuJaUUID#,1,'LogoItem','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#),
+      			(#topMenuLogoEnUUID#,#topMenuEnUUID#,1,'LogoItem','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#)
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IKMS7" parameterClass="Map">
+      <![CDATA[
+    	INSERT INTO 
+    		TBL_BOARD_MYBOARDS 
+    			(UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID, COMPANYID)
+    		VALUES
+      ]]>
+	  <isEqual property="PrimaryLang" compareValue="1" >    		 
+    			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, #tenantID# ,#companyID#)
+      </isEqual>
+      <isNotEqual property="PrimaryLang" compareValue="1" >
+      		  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, #tenantID# ,#companyID#)
+      </isNotEqual>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
+	        INSERT INTO
+	          TBL_TASKCATEGORY
+	            (CategoryCode,  Name,  Description,  OldFlag,  Name2, TENANT_ID, COMPANYID)
+	          VALUES
+    	<isEqual property="PrimaryLang" compareValue="1" > 
+	      <![CDATA[
+	            (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng',#tenantID#, #companyID#),
+	            (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng',#tenantID#, #companyID#),
+	            (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng',#tenantID#, #companyID#),
+	            (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng',#tenantID#, #companyID#),
+	            (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng',#tenantID#, #companyID#)
+	      ]]>
+	     </isEqual>
+	     <isNotEqual property="PrimaryLang" compareValue="1" >
+            (N'ZZ000001', N'共通', N'共通', NULL, N'COMMON',#tenantID#, #companyID#)
+	     </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I7" parameterClass="Map">
@@ -731,13 +1192,16 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I8" parameterClass="Map">
-      <![CDATA[
-        INSERT INTO
-          TBL_FormContainer  
-            (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID)
-        VALUES
-            (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003',#tenantID#, #companyID#)
-      ]]>
+	        INSERT INTO
+	          TBL_FormContainer  
+	            (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID)
+	        VALUES
+    	<isEqual property="PrimaryLang" compareValue="1" > 
+	            (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003',#tenantID#, #companyID#)
+	     </isEqual>
+	     <isNotEqual property="PrimaryLang" compareValue="1" >
+            (N'2004000001', N'共通', N'ALL', N'ROOT', N'共通', N'DEPT003',#tenantID#, #companyID#)
+	     </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I9" parameterClass="Map">
@@ -745,6 +1209,8 @@
           INSERT INTO
             TBL_ContainerType
               (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
+	  ]]>              
+	  <isEqual property="PrimaryLang" compareValue="1" >              
           VALUES
               (N'100', N'품의함', N'Draft',#tenantID#, #companyID#),
               (N'200', N'협조함', N'Support',#tenantID#, #companyID#),
@@ -754,7 +1220,18 @@
               (N'610', N'발신함', N'Send',#tenantID#, #companyID#),
               (N'700', N'반송함', N'Reject',#tenantID#, #companyID#),
               (N'999', N'폐기함', N'Obsolete',#tenantID#, #companyID#)
-      ]]>
+	  </isEqual>
+	  <isNotEqual property="PrimaryLang" compareValue="1" >
+		    VALUES
+              (N'100', N'稟議', N'Draft',#tenantID#, #companyID#),
+              (N'200', N'協力', N'Support',#tenantID#, #companyID#),
+              (N'300', N'監査', N'Audit',#tenantID#, #companyID#),
+              (N'500', N'受信', N'Receive',#tenantID#, #companyID#),
+              (N'600', N'合意', N'Agree',#tenantID#, #companyID#),
+              (N'610', N'発信', N'Send',#tenantID#, #companyID#),
+              (N'700', N'差し戻し', N'Reject',#tenantID#, #companyID#),
+              (N'999', N'廃棄', N'Obsolete',#tenantID#, #companyID#)
+	  </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I10" parameterClass="Map">
@@ -780,20 +1257,25 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I11" parameterClass="Map">
-      <![CDATA[
          INSERT INTO
             TBL_TASKMIDDLECATEGORY
               (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, TENANT_ID, COMPANYID) 
          VALUES
-              (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng',#tenantID#, #companyID#),
-              (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
-              (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
-              (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng',#tenantID#, #companyID#),
-              (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng',#tenantID#, #companyID#),
-              (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
-              (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
-              (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng',#tenantID#, #companyID#)
-      ]]>
+     	<isEqual property="PrimaryLang" compareValue="1" > 
+	      <![CDATA[
+	              (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng',#tenantID#, #companyID#),
+	              (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
+	              (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
+	              (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng',#tenantID#, #companyID#),
+	              (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng',#tenantID#, #companyID#),
+	              (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng',#tenantID#, #companyID#),
+	              (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng',#tenantID#, #companyID#),
+	              (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng',#tenantID#, #companyID#)
+	      ]]>
+	     </isEqual>
+	     <isNotEqual property="PrimaryLang" compareValue="1" >
+	     	(N'aa000001', N'', N'共通', N'ZZ000001', NULL, N'COMMON',#tenantID#, #companyID#)
+	     </isNotEqual>
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I12" parameterClass="Map">
@@ -972,8 +1454,8 @@
                  ('J02','005','회사','1','회사명','회사','会社','公司',#tenantID#, #companyID#),
                  ('J03','002','KMTESTOrganName','1','KMTESTOrganName',null,null,null,#tenantID#, #companyID#),
                  ('L01','0  ','다국어처리','0','다국어코드값','다국어처리','다국어처리','다국어처리',#tenantID#, #companyID#),
-                 ('L01','001','파일','1','File','File','File','File',#tenantID#, #companyID#),
-                 ('L01','002','문서','1','Document','Document','Document','Document',#tenantID#, #companyID#),
+                 ('L01','001','파일','1','File','File','ファイル','File',#tenantID#, #companyID#),
+                 ('L01','002','문서','1','Document','Document','文書','Document',#tenantID#, #companyID#),
                  ('L02','001','문서함명리스트','0','NULL','Doc. folder name','文書フォルダ名','Doc. folder name',#tenantID#, #companyID#),
                  ('L03','001','개인문서함','1','개인문서함-GetUserContTree()','Personal doc. folder','Personal doc. folder','Personal doc. folder',#tenantID#, #companyID#),
                  ('L03','002','문서함명','1','부서문서함-GetDeptContTree()','Dept. doc. folder','文書フォルダ名','Dept. doc. folder',#tenantID#, #companyID#),
@@ -1129,26 +1611,26 @@
 			('SA01','007','신청문서',		'application',	'申請',		'申?',		'0',	'신청',				#companyID#, #tenantID#),
 			('SA01','008','대외문서접수',	'eng_대외접수',	'?外から受付',	'?外接收',		'0',	'대외접수',			#companyID#, #tenantID#),
 			('SA01','009','대외문서발송',	'eng_대외발송',	'?外へ?送',	'?外?送',		'0',	'대외발송',			#companyID#, #tenantID#),
-			('SA02', '0', 		'문서상태(DocState)',		'Doc. status',	'文書?分',		'文書?分',		'0',	'문서상태',	#companyID#,	#tenantID#),
-			('SA02', '001',		'품의',						'품의_EN',		'稟議',		'품의_ZH',		'1',	'품의',		#companyID#,	#tenantID#),
-			('SA02', '002',		'협조',						'협조_EN',		'협조_JA',		'협조_ZH',		'1',	'협조',		#companyID#,	#tenantID#),
-			('SA02', '003',		'감사',						'준법감시_EN',	'준법감시_JA',	'준법감시_ZH',	'0',	'준법감시',	#companyID#,	#tenantID#),
-			('SA02', '004',		'심사',						'심사_EN',		'심사_JA',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
-			('SA02', '011',		'수신',						'수신_EN',		'수신_JA',		'수신_ZH',		'1',	'수신',		#companyID#,	#tenantID#),
-			('SA02', '012',		'협조/합의',				'기안문_EN',	'기안문_JA',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
-			('SA02', '013',		'시행',						'시행_EN',		'시행_JA',		'시행_ZH',		'0',	'시행',		#companyID#,	#tenantID#),
-			('SA02', '014',		'감사(검사부)',				'감사_EN',		'감사_JA',		'감사_ZH',		'0',	'감사',		#companyID#,	#tenantID#),
-			('SA02', '015',		'공람',						'회람_EN',		'회람_JA',		'회람_ZH',		'0',	'회람',		#companyID#,	#tenantID#),
-			('SA02', '016',		'회람',						'회람_EN',		'회람_JA',		'회람_ZH',		'0',	'회람',		#companyID#,	#tenantID#),
-			('SA02', '017',		'참조',						'참조_EN',		'참조_JA',		'참조_ZH',		'0',	'참조',		#companyID#,	#tenantID#),
-			('SA02', '018',		'사후감사',					'사후공람_EN',	'사후공람_JA',	'사후공람_ZH',	'0',	'사후공람',	#companyID#,	#tenantID#),
-			('SA02', '019',		'발송',					'발송_EN',		'발송_JA',		'발송_ZH',		'1',	'발송',		#companyID#,	#tenantID#),
-			('SA02', '020',		'신청',					'시행_EN',		'시행_JA',		'시행_ZH',		'0',	'시행',		#companyID#,	#tenantID#),
-			('SA02', '022',		'대외문서접수',			'대외접수_EN',	'대외접수_JA',	'대외접수_ZH',	'0',	'대외접수',	#companyID#,	#tenantID#),
-			('SA02', '023',		'대외문서발송',			'대외발송_EN',	'대외발송_JA',	'대외발송_ZH',	'0',	'대외발송',	#companyID#,	#tenantID#),
-			('SA02', '024',		'수신배부',					'배부_EN',		'배부_JA',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
-			('SA02', '031',		'반송',						'반송_EN',		'반송_JA',		'반송_ZH',		'0',	'반송',		#companyID#,	#tenantID#),
-			('SA02', '032',		'회송',						'회송_EN',		'회송_JA',		'회송_ZH',		'0',	'회송',		#companyID#,	#tenantID#),
+			('SA02', '0', 		'문서상태(DocState)',		'Doc. status',			'文書?分',		'文書?分',		'0',	'문서상태',	#companyID#,	#tenantID#),
+			('SA02', '001',		'품의',					'Draft',				'稟議',			'评价',			'1',	'품의',		#companyID#,	#tenantID#),
+			('SA02', '002',		'협조',					'Agreement(personal)',	'協力',			'合作',			'1',	'협조',		#companyID#,	#tenantID#),
+			('SA02', '003',		'감사',					'Audit',				'遵法監視',		'监督',			'0',	'준법감시',	#companyID#,	#tenantID#),
+			('SA02', '004',		'심사',					'심사_EN',				'심사_JA',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
+			('SA02', '011',		'수신',					'Receipt',				'受信',		'收件',		'1',	'수신',		#companyID#,	#tenantID#),
+			('SA02', '012',		'협조/합의',				'기안문_EN',				'기안문_JA',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
+			('SA02', '013',		'시행',					'Enforcement',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
+			('SA02', '014',		'감사(검사부)',				'Audit(dept.)',			'監査',		'审查',		'0',	'감사',		#companyID#,	#tenantID#),
+			('SA02', '015',		'공람',					'Display',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
+			('SA02', '016',		'회람',					'Circular',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
+			('SA02', '017',		'참조',					'Reference',			'参照',		'抄送',		'0',	'참조',		#companyID#,	#tenantID#),
+			('SA02', '018',		'사후감사',				'Public viewing(After-approval)',	'事後供覧',	'事后共览', '1',	'사후공람',	#companyID#,	#tenantID#),
+			('SA02', '019',		'발송',					'Sending',				'送信',		'发送',		'1',	'발송',		#companyID#,	#tenantID#),
+			('SA02', '020',		'신청',					'Application',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
+			('SA02', '022',		'대외문서접수',				'Receipt(outside)',		'対外受付',	'对外接收',	'0',	'대외접수',	#companyID#,	#tenantID#),
+			('SA02', '023',		'대외문서발송',				'Sending(outside)',		'対外送信',	'对外发送',	'0',	'대외발송',	#companyID#,	#tenantID#),
+			('SA02', '024',		'수신배부',				'배부_EN',				'배부_JA',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
+			('SA02', '031',		'반송',					'Rejection',			'差し戻し',	'退回',		'0',	'반송',		#companyID#,	#tenantID#),
+			('SA02', '032',		'회송',					'Returning',			'差し戻し',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
            ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# ),
            ('SA03','001','결재','Approval','決裁','审批','1','일반',#companyID#, #tenantID# ),
            ('SA03','002','확인','Confirmation','回覧','確認','1','확인',#companyID#, #tenantID# ),
@@ -1338,8 +1820,8 @@
             TBL_LISTOPTION
                 (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
          values
-                ('009',2,'기안부서',130,null,'WriterDeptName',null,null,'기안부서','기안부서','Dept.(draft)','送信依頼部門','傳出部門委託',#tenantID#, #companyID#),
-                ('009',3,'기안자',120,null,'WriterName',null,null,'기안자','기안자','Drafter','送信依頼者','傳出贊助商',#tenantID#, #companyID#),
+               ('009',2,'기안부서',130,null,'WriterDeptName',null,null,'기안부서','기안부서','Dept.(draft)','送信依頼部門','傳出部門委託',#tenantID#, #companyID#),
+               ('009',3,'기안자',120,null,'WriterName',null,null,'기안자','기안자','Drafter','送信依頼者','傳出贊助商',#tenantID#, #companyID#),
                ('009',4,'저장일시',130,null,'StartDate',null,null,'저장일시','저장일시','Save Date','保存日時','保存日期',#tenantID#, #companyID#),
                ('009',5,'문서명',100,null,'FormName',null,null,'양식명','양식명','Form title','文書名','文書名',#tenantID#, #companyID#),
                ('009',6,'첨부',30,null,'HASATTACHYN',null,null,'서버저장문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
@@ -1571,29 +2053,32 @@
                ('111',1,'문서상태',100,null,null,null,null,'문서함 문서상태 등록','문서상태','Doc. status','文書区分','文件状态',#tenantID#, #companyID#),
                ('111',2,'문서함명',100,null,null,null,null,'문서함 문서상태 등록','문서함명','Dept. doc. folder','文書フォルダ名','Dept. doc. folder',#tenantID#, #companyID#),
                ('001',1,'제목',300,'VAPRDOINGDOCLIST','DocTitle',null,null,'결재할 문서','제목','Title','見出し','标题',#tenantID#, #companyID#),
-               ('001',2,'기안부서',135,'VAPRDOINGDOCLIST','WriterDeptName',null,null,'결재할 문서','기안부서','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
-               ('001',3,'기안자',70,'VAPRDOINGDOCLIST','WriterName',null,null,'결재할 문서','기안자','Drafter','起案者','起草人',#tenantID#, #companyID#),
-               ('001',4,'기안일시',160,'VAPRDOINGDOCLIST','StartDate',null,null,'결재할 문서','기안일시','Date(draft)','起案日時','起草日期',#tenantID#, #companyID#),
-               ('001',5,'상태',50,'VAPRDOINGDOCLIST','FunctionType',null,null,'결재할 문서','상태','Status','進行状況','状态',#tenantID#, #companyID#),
-               ('001',6,'문서명',100,'VAPRDOINGDOCLIST','FormName',null,null,'결재할 문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
-               ('001',7,'첨부',30,'VAPRDOINGDOCLIST','HASATTACHYN',null,null,'결재할 문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
-               ('001',8,'공개',30,'VAPRDOINGDOCLIST','ISPUBLIC',null,null,'결재할 문서','공개','Public','公開','公开',#tenantID#, #companyID#),
+               ('001',2,'회사',135,'VAPRDOINGDOCLIST','companyName',null,null,'결재할 문서','회사','Company','会社','公司',#tenantID#,#companyID#),
+               ('001',3,'기안부서',135,'VAPRDOINGDOCLIST','WriterDeptName',null,null,'결재할 문서','기안부서','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
+               ('001',4,'기안자',70,'VAPRDOINGDOCLIST','WriterName',null,null,'결재할 문서','기안자','Drafter','起案者','起草人',#tenantID#, #companyID#),
+               ('001',5,'기안일시',160,'VAPRDOINGDOCLIST','StartDate',null,null,'결재할 문서','기안일시','Date(draft)','起案日時','起草日期',#tenantID#, #companyID#),
+               ('001',6,'상태',50,'VAPRDOINGDOCLIST','FunctionType',null,null,'결재할 문서','상태','Status','進行状況','状态',#tenantID#, #companyID#),
+               ('001',7,'문서명',100,'VAPRDOINGDOCLIST','FormName',null,null,'결재할 문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
+               ('001',8,'첨부',30,'VAPRDOINGDOCLIST','HASATTACHYN',null,null,'결재할 문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
+               ('001',9,'공개',30,'VAPRDOINGDOCLIST','ISPUBLIC',null,null,'결재할 문서','공개','Public','公開','公开',#tenantID#, #companyID#),
                ('002',1,'제목',300,'VAPRWILLDOCLIST','DocTitle',null,null,'기안한 문서','제목','Title','見出し','标题',#tenantID#, #companyID#),
-               ('002',2,'기안부서',135,'VAPRWILLDOCLIST','WriterDeptName',null,null,'기안한 문서','기안부서','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
-               ('002',3,'기안자',70,'VAPRWILLDOCLIST','WriterName',null,null,'기안한 문서','기안자','Drafter','起案者','起草人',#tenantID#, #companyID#),
-               ('002',4,'기안일시',160,'VAPRWILLDOCLIST','StartDate',null,null,'기안한 문서','기안일시','Date(draft)','起案日時','起草日期',#tenantID#, #companyID#),
-               ('002',5,'상태',50,'VAPRWILLDOCLIST','FunctionType',null,null,'기안한 문서','상태','Status','進行状況','状态',#tenantID#, #companyID#),
-               ('002',6,'문서명',100,'VAPRWILLDOCLIST','FormName',null,null,'기안한 문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
-               ('002',7,'첨부',30,'VAPRWILLDOCLIST','HASATTACHYN',null,null,'기안한 문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
-               ('002',8,'공개',30,'VAPRWILLDOCLIST','ISPUBLIC',null,null,'기안한 문서','공개','Public','公開','公开',#tenantID#, #companyID#),
+               ('002',2,'회사',135,'VAPRWILLDOCLIST','companyName',null,null,'기안한 문서','회사','Company','会社','公司',#tenantID#,#companyID#),
+               ('002',3,'기안부서',135,'VAPRWILLDOCLIST','WriterDeptName',null,null,'기안한 문서','기안부서','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
+               ('002',4,'기안자',70,'VAPRWILLDOCLIST','WriterName',null,null,'기안한 문서','기안자','Drafter','起案者','起草人',#tenantID#, #companyID#),
+               ('002',5,'기안일시',160,'VAPRWILLDOCLIST','StartDate',null,null,'기안한 문서','기안일시','Date(draft)','起案日時','起草日期',#tenantID#, #companyID#),
+               ('002',6,'상태',50,'VAPRWILLDOCLIST','FunctionType',null,null,'기안한 문서','상태','Status','進行状況','状态',#tenantID#, #companyID#),
+               ('002',7,'문서명',100,'VAPRWILLDOCLIST','FormName',null,null,'기안한 문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
+               ('002',8,'첨부',30,'VAPRWILLDOCLIST','HASATTACHYN',null,null,'기안한 문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
+               ('002',9,'공개',30,'VAPRWILLDOCLIST','ISPUBLIC',null,null,'기안한 문서','공개','Public','公開','公开',#tenantID#, #companyID#),
                ('003',1,'제목',300,'VAPRWILLDOCLIST','DocTitle',null,null,'결재진행문서','제목','Title','見出し','标题',#tenantID#, #companyID#),
-               ('003',2,'기안부서',135,'VAPRWILLDOCLIST','WriterDeptName',null,null,'결재진행문서','기안부서','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
-               ('003',3,'기안자',70,'VAPRWILLDOCLIST','WriterName',null,null,'결재진행문서','기안자','Drafter','起案者','起草人',#tenantID#, #companyID#),
-               ('003',4,'기안일시',160,'VAPRWILLDOCLIST','StartDate',null,null,'결재진행문서','기안일시','Dept.(draft)','起案日時','起草日期',#tenantID#, #companyID#),
-               ('003',5,'상태',50,'VAPRWILLDOCLIST','FunctionType',null,null,'결재진행문서','상태','Status','進行状況','状态',#tenantID#, #companyID#),
-               ('003',6,'문서명',100,'VAPRWILLDOCLIST','FormName',null,null,'결재진행문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
-               ('003',7,'첨부',30,'VAPRWILLDOCLIST','HASATTACHYN',null,null,'결재진행문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
-               ('003',8,'공개',30,'VAPRWILLDOCLIST','ISPUBLIC',null,null,'결재진행문서','공개','Public','公開','公开',#tenantID#, #companyID#),
+               ('003',2,'회사',135,'VAPRWILLDOCLIST','companyName',null,null,'결재진행문서','회사','Company','会社','公司',#tenantID#,#companyID#),
+               ('003',3,'기안부서',135,'VAPRWILLDOCLIST','WriterDeptName',null,null,'결재진행문서','기안부서','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
+               ('003',4,'기안자',70,'VAPRWILLDOCLIST','WriterName',null,null,'결재진행문서','기안자','Drafter','起案者','起草人',#tenantID#, #companyID#),
+               ('003',5,'기안일시',160,'VAPRWILLDOCLIST','StartDate',null,null,'결재진행문서','기안일시','Dept.(draft)','起案日時','起草日期',#tenantID#, #companyID#),
+               ('003',6,'상태',50,'VAPRWILLDOCLIST','FunctionType',null,null,'결재진행문서','상태','Status','進行状況','状态',#tenantID#, #companyID#),
+               ('003',7,'문서명',100,'VAPRWILLDOCLIST','FormName',null,null,'결재진행문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
+               ('003',8,'첨부',30,'VAPRWILLDOCLIST','HASATTACHYN',null,null,'결재진행문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
+               ('003',9,'공개',30,'VAPRWILLDOCLIST','ISPUBLIC',null,null,'결재진행문서','공개','Public','公開','公开',#tenantID#, #companyID#),
                ('004',1,'제목',300,'TBL_APRDOCINFO','DocTitle',null,null,'수신문서처리기','제목','Title','見出し','标题',#tenantID#, #companyID#),
                ('004',2,'문서상태',80,'TBL_APRRECEIPTPROCESSINFO','DocState',null,null,'수신문서처리기','문서상태','Doc. status','文書区分','文件状态',#tenantID#, #companyID#),
                ('004',3,'결재상태',80,'TBL_APRRECEIPTPROCESSINFO','AprState',null,null,'수신문서처리기','결재상태','Approval status','ステータス','批准状态',#tenantID#, #companyID#),
@@ -1613,12 +2098,13 @@
                ('006',1,'문서번호',150,'TBL_ENDAPRDOCINFO','DocNo',null,null,'문서함문서','문서번호','Doc. No.','文書番号','文件号',#tenantID#, #companyID#),
                ('006',2,'제목',350,'TBL_ENDAPRDOCINFO','DocTitle',null,null,'문서함문서','제목','Title','見出し','标题',#tenantID#, #companyID#),
                ('006',3,'작성자',100,'TBL_ENDAPRDOCINFO','WriterName',null,null,'문서함문서','기안자','Drafter','作成者','郵政',#tenantID#, #companyID#),
-               ('006',4,'기안부서',100,'TBL_ENDAPRDOCINFO','WriterDeptName',null,null,'문서함문서','기안부서명','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
-               ('006',5,'완료일시',160,'TBL_ENDAPRDOCINFO','EndDate',null,null,'문서함문서','완료일시','Date completed','完了日時','结束日期',#tenantID#, #companyID#),
-               ('006',6,'문서명',150,'TBL_ENDAPRDOCINFO','FormName',null,null,'문서함문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
-               ('006',7,'이관',30,'TBL_EXPENDAPRDOCINFO','EDMSYN',null,'NoUse','문서함문서','EDMS이관여부','Transfer','移管','移交',#tenantID#, #companyID#),
-               ('006',8,'첨부',30,'TBL_EXPENDAPRDOCINFO','HASATTACHYN',null,null,'문서함문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
-               ('006',9,'공개',30,'TBL_EXPENDAPRDOCINFO','ISPUBLIC',null,null,'문서함문서','공개','Public','公開','公开',#tenantID#, #companyID#),
+               ('006',4,'회사',100,'TBL_ENDAPRDOCINFO','companyName',null,null,'결재할 문서','기안부서','Company','会社','公司',#tenantID#, #companyID#),
+               ('006',5,'기안부서',100,'TBL_ENDAPRDOCINFO','WriterDeptName',null,null,'문서함문서','기안부서명','Dept.(draft)','起案部署','起草部门',#tenantID#, #companyID#),
+               ('006',6,'완료일시',160,'TBL_ENDAPRDOCINFO','EndDate',null,null,'문서함문서','완료일시','Date completed','完了日時','结束日期',#tenantID#, #companyID#),
+               ('006',7,'문서명',150,'TBL_ENDAPRDOCINFO','FormName',null,null,'문서함문서','양식명','Form title','文書名','文件名',#tenantID#, #companyID#),
+               ('006',8,'이관',30,'TBL_EXPENDAPRDOCINFO','EDMSYN',null,'NoUse','문서함문서','EDMS이관여부','Transfer','移管','移交',#tenantID#, #companyID#),
+               ('006',9,'첨부',30,'TBL_EXPENDAPRDOCINFO','HASATTACHYN',null,null,'문서함문서','첨부','Attach','添付','附件',#tenantID#, #companyID#),
+               ('006',10,'공개',30,'TBL_EXPENDAPRDOCINFO','ISPUBLIC',null,null,'문서함문서','공개','Public','公開','公开',#tenantID#, #companyID#),
                ('007',1,'제목',300,'TBL_ENDAPRDOCINFO','DocTitle',null,null,'발송대기문서','제목','Title','見出し','标题',#tenantID#, #companyID#),
                ('007',2,'발신의뢰부서',150,'TBL_ENDAPRDOCINFO','WriterDeptName',null,null,'발송대기문서','기안부서','Dept.(draft)','送信依頼部門','傳出部門委託',#tenantID#, #companyID#),
                ('007',3,'발신의뢰자',150,'TBL_ENDAPRDOCINFO','WriterName',null,null,'발송대기문서','기안자','Drafter','送信依頼者','傳出贊助商',#tenantID#, #companyID#),
@@ -1637,29 +2123,32 @@
                  (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
           VALUES
                  ('S001', 1, '제목', 'Title', '見出し', '标题', 300, 'VAPRDOINGDOCLIST', 'DocTitle', NULL, NULL, '결재할 문서', '제목', #companyID#, #tenantID#),
-                 ('S001', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
-                 ('S001', 3, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
-                 ('S001', 4, '기안일시', 'Date(draft)', '起案日時', '起草日期', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
-                 ('S001', 5, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionTypeName', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
-                 ('S001', 6, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
-                 ('S001', 7, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
-                 ('S001', 8, '공개', 'Public', '公開', '公开', 50, 'VAPRDOINGDOCLIST', 'ISPUBLIC', NULL, NULL, '결재할 문서', '공개', #companyID#, #tenantID#),
+                 ('S001', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRDOINGDOCLIST', 'companyName', NULL, NULL, '결재할 문서', '회사', #companyID#, #tenantID#),
+                 ('S001', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
+                 ('S001', 4, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
+                 ('S001', 5, '기안일시', 'Date(draft)', '起案日時', '起草日期', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
+                 ('S001', 6, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionTypeName', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
+                 ('S001', 7, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
+                 ('S001', 8, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
+                 ('S001', 9, '공개', 'Public', '公開', '公开', 50, 'VAPRDOINGDOCLIST', 'ISPUBLIC', NULL, NULL, '결재할 문서', '공개', #companyID#, #tenantID#),
                  ('S002', 1, '제목', 'Title', '見出し', '标题', 300, 'VAPRWILLDOCLIST', 'DocTitle', NULL, NULL, '기안한 문서', '제목', #companyID#, #tenantID#),
-                 ('S002', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRWILLDOCLIST', 'WriterDeptName', NULL, NULL, '기안한 문서', '기안부서', #companyID#, #tenantID#),
-                 ('S002', 3, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRWILLDOCLIST', 'WriterName', NULL, NULL, '기안한 문서', '기안자', #companyID#, #tenantID#),
-                 ('S002', 4, '기안일시', 'Date(draft)', '起案日時', '起草日期', 160, 'VAPRWILLDOCLIST', 'StartDate', NULL, NULL, '기안한 문서', '기안일시', #companyID#, #tenantID#),
-                 ('S002', 5, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRWILLDOCLIST', 'FunctionTypeName', NULL, NULL, '기안한 문서', '상태', #companyID#, #tenantID#),
-                 ('S002', 6, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRWILLDOCLIST', 'FormName', NULL, NULL, '기안한 문서', '양식명', #companyID#, #tenantID#),
-                 ('S002', 7, '첨부', 'Attach', '添付', '附件', 50, 'VAPRWILLDOCLIST', 'HASATTACHYN', NULL, NULL, '기안한 문서', '첨부', #companyID#, #tenantID#),
-                 ('S002', 8, '공개', 'Public', '公開', '公开', 50, 'VAPRWILLDOCLIST', 'ISPUBLIC', NULL, NULL, '기안한 문서', '공개', #companyID#, #tenantID#),
+                 ('S002', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '기안한 문서', '회사', #companyID#, #tenantID#),
+                 ('S002', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRWILLDOCLIST', 'WriterDeptName', NULL, NULL, '기안한 문서', '기안부서', #companyID#, #tenantID#),
+                 ('S002', 4, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRWILLDOCLIST', 'WriterName', NULL, NULL, '기안한 문서', '기안자', #companyID#, #tenantID#),
+                 ('S002', 5, '기안일시', 'Date(draft)', '起案日時', '起草日期', 160, 'VAPRWILLDOCLIST', 'StartDate', NULL, NULL, '기안한 문서', '기안일시', #companyID#, #tenantID#),
+                 ('S002', 6, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRWILLDOCLIST', 'FunctionTypeName', NULL, NULL, '기안한 문서', '상태', #companyID#, #tenantID#),
+                 ('S002', 7, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRWILLDOCLIST', 'FormName', NULL, NULL, '기안한 문서', '양식명', #companyID#, #tenantID#),
+                 ('S002', 8, '첨부', 'Attach', '添付', '附件', 50, 'VAPRWILLDOCLIST', 'HASATTACHYN', NULL, NULL, '기안한 문서', '첨부', #companyID#, #tenantID#),
+                 ('S002', 9, '공개', 'Public', '公開', '公开', 50, 'VAPRWILLDOCLIST', 'ISPUBLIC', NULL, NULL, '기안한 문서', '공개', #companyID#, #tenantID#),
                  ('S003', 1, '제목', 'Title', '見出し', '标题', 300, 'VAPRWILLDOCLIST', 'DocTitle', NULL, NULL, '결재진행문서', '제목', #companyID#, #tenantID#),
-                 ('S003', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRWILLDOCLIST', 'WriterDeptName', NULL, NULL, '결재진행문서', '기안부서', #companyID#, #tenantID#),
-                 ('S003', 3, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRWILLDOCLIST', 'WriterName', NULL, NULL, '결재진행문서', '기안자', #companyID#, #tenantID#),
-                 ('S003', 4, '기안일시', 'Dept.(draft)', '起案日時', '起草日期', 160, 'VAPRWILLDOCLIST', 'StartDate', NULL, NULL, '결재진행문서', '기안일시', #companyID#, #tenantID#),
-                 ('S003', 5, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRWILLDOCLIST', 'FunctionTypeName', NULL, NULL, '결재진행문서', '상태', #companyID#, #tenantID#),
-                 ('S003', 6, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRWILLDOCLIST', 'FormName', NULL, NULL, '결재진행문서', '양식명', #companyID#, #tenantID#),
-                 ('S003', 7, '첨부', 'Attach', '添付', '附件', 50, 'VAPRWILLDOCLIST', 'HASATTACHYN', NULL, NULL, '결재진행문서', '첨부', #companyID#, #tenantID#),
-                 ('S003', 8, '공개', 'Public', '公開', '公开', 50, 'VAPRWILLDOCLIST', 'ISPUBLIC', NULL, NULL, '결재진행문서', '공개', #companyID#, #tenantID#),
+                 ('S003', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '결재진행문서', '회사', #companyID#, #tenantID#),
+                 ('S003', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRWILLDOCLIST', 'WriterDeptName', NULL, NULL, '결재진행문서', '기안부서', #companyID#, #tenantID#),
+                 ('S003', 4, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRWILLDOCLIST', 'WriterName', NULL, NULL, '결재진행문서', '기안자', #companyID#, #tenantID#),
+                 ('S003', 5, '기안일시', 'Dept.(draft)', '起案日時', '起草日期', 160, 'VAPRWILLDOCLIST', 'StartDate', NULL, NULL, '결재진행문서', '기안일시', #companyID#, #tenantID#),
+                 ('S003', 6, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRWILLDOCLIST', 'FunctionTypeName', NULL, NULL, '결재진행문서', '상태', #companyID#, #tenantID#),
+                 ('S003', 7, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRWILLDOCLIST', 'FormName', NULL, NULL, '결재진행문서', '양식명', #companyID#, #tenantID#),
+                 ('S003', 8, '첨부', 'Attach', '添付', '附件', 50, 'VAPRWILLDOCLIST', 'HASATTACHYN', NULL, NULL, '결재진행문서', '첨부', #companyID#, #tenantID#),
+                 ('S003', 9, '공개', 'Public', '公開', '公开', 50, 'VAPRWILLDOCLIST', 'ISPUBLIC', NULL, NULL, '결재진행문서', '공개', #companyID#, #tenantID#),
                  ('S004', 1, '제목', 'Title', '見出し', '标题', 300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, '수신문서처리기', '제목', #companyID#, #tenantID#),
                  ('S004', 2, '문서상태', 'Doc. status', '文書区分', '文件状态', 110, 'TBL_APRRECEIPTPROCESSINFO', 'DocStateName', NULL, NULL, '수신문서처리기', '문서상태', #companyID#, #tenantID#),
                  ('S004', 3, '결재상태', 'Approval status', '進行段階', '批准状态', 110, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, '수신문서처리기', '결재상태', #companyID#, #tenantID#),
@@ -1678,14 +2167,15 @@
                  ('S006', 1, '문서번호', 'Doc. No.', '文書番号', '文件号', 150, 'TBL_ENDAPRDOCINFO', 'DocNo', NULL, NULL, '문서함문서', '문서번호', #companyID#, #tenantID#),
                  ('S006', 2, '제목', 'Title', '見出し', '标题', 300, 'TBL_ENDAPRDOCINFO', 'DocTitle', NULL, NULL, '문서함문서', '제목', #companyID#, #tenantID#),
                  ('S006', 3, '기안자', 'Drafter', '起案者', '起草人', 120, 'TBL_ENDAPRDOCINFO', 'WriterName', NULL, NULL, '문서함문서', '기안자', #companyID#, #tenantID#),
-                 ('S006', 4, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 130, 'TBL_ENDAPRDOCINFO', 'WriterDeptName', NULL, NULL, '문서함문서', '기안부서명', #companyID#, #tenantID#),
-                 ('S006', 5, '완료일시', 'Date completed', '完了日時', '结束日期', 130, 'TBL_ENDAPRDOCINFO', 'EndDate', NULL, NULL, '문서함문서', '완료일시', #companyID#, #tenantID#),
-                 ('S006', 6, '문서명', 'Form title', '文書名', '文件名', 150, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', #companyID#, #tenantID#),
-                 ('S006', 7, '이관', 'Transfer', '移管', '移交', 60, 'TBL_EXPENDAPRDOCINFO', 'EDMSYN', NULL, 'NoUse', '문서함문서', 'EDMS이관여부', #companyID#, #tenantID#),
-                 ('S006', 8, '구분', 'Type', '区分', '区分', 60, 'TBL_ENDAPRDOCINFO', 'DocStateName', NULL, NULL, '문서함문서', '문서상태', #companyID#, #tenantID#),
-                 ('S006', 9, '발송상태', 'Sending status', '送信状態', '发送状态', 100, NULL, 'SendFlag', NULL, NULL, '문서함문서', '발송상태', #companyID#, #tenantID#),
-                 ('S006', 10, '첨부', 'Attach', '添付', '附件', 50, NULL, 'HASATTACHYN', NULL, NULL, '문서함문서', '첨부', #companyID#, #tenantID#),
-                 ('S006', 11, '공개', 'Public', '公開', '公开', 50, NULL, 'ISPUBLIC', NULL, NULL, '문서함문서', '공개', #companyID#, #tenantID#),
+                 ('S006', 4, '회사', 'Company', '会社', '公司', 130, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '문서함문서', '회사', #companyID#, #tenantID#),
+                 ('S006', 5, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 130, 'TBL_ENDAPRDOCINFO', 'WriterDeptName', NULL, NULL, '문서함문서', '기안부서명', #companyID#, #tenantID#),
+                 ('S006', 6, '완료일시', 'Date completed', '完了日時', '结束日期', 130, 'TBL_ENDAPRDOCINFO', 'EndDate', NULL, NULL, '문서함문서', '완료일시', #companyID#, #tenantID#),
+                 ('S006', 7, '문서명', 'Form title', '文書名', '文件名', 150, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', #companyID#, #tenantID#),
+                 ('S006', 8, '이관', 'Transfer', '移管', '移交', 60, 'TBL_EXPENDAPRDOCINFO', 'EDMSYN', NULL, 'NoUse', '문서함문서', 'EDMS이관여부', #companyID#, #tenantID#),
+                 ('S006', 9, '구분', 'Type', '区分', '区分', 60, 'TBL_ENDAPRDOCINFO', 'DocStateName', NULL, NULL, '문서함문서', '문서상태', #companyID#, #tenantID#),
+                 ('S006', 10, '발송상태', 'Sending status', '送信状態', '发送状态', 100, NULL, 'SendFlag', NULL, NULL, '문서함문서', '발송상태', #companyID#, #tenantID#),
+                 ('S006', 11, '첨부', 'Attach', '添付', '附件', 50, NULL, 'HASATTACHYN', NULL, NULL, '문서함문서', '첨부', #companyID#, #tenantID#),
+                 ('S006', 12, '공개', 'Public', '公開', '公开', 50, NULL, 'ISPUBLIC', NULL, NULL, '문서함문서', '공개', #companyID#, #tenantID#),
                  ('S007', 1, '제목', 'Title', '見出し', '标题', 300, 'TBTMPAPRDOCINFO', 'DocTitle', NULL, NULL, '서버저장문서', '제목', #companyID#, #tenantID#),
                  ('S007', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 130, 'TBTMPAPRDOCINFO', 'WriterDeptName', NULL, NULL, '서버저장문서', '기안부서', #companyID#, #tenantID#),
                  ('S007', 3, '기안자', 'Drafter', '起案者', '起草人', 120, 'TBTMPAPRDOCINFO', 'WriterName', NULL, NULL, '서버저장문서', '기안자', #companyID#, #tenantID#),
@@ -1717,6 +2207,16 @@
                  ('S013', 5, '결재유형', 'Type', '処理類型', '批准类型', 120, 'TBAPRLINEINFO', 'AprType', NULL, NULL, '결재선정보(코딩)', '결재방법', #companyID#, #tenantID#),
                  ('S013', 6, '결재상태', 'Status', '進行段階', '批准状态', 80, 'TBAPRLINEINFO', 'AprState', NULL, NULL, '결재선정보(코딩)', '결재상태', #companyID#, #tenantID#),
                  ('S013', 7, '결재일시', 'Date', '処理日時', '批准日', 130, 'TBAPRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(코딩)', '결재일시', #companyID#, #tenantID#),
+                 ('S014', 1, '순번', 'No.', '順番', '序号', 35, 'TBL_APRLINEINFO', 'AprMemberSN', NULL, NULL, '결재선정보(회람)', '순번', #companyID#, #tenantID#),
+				 ('S014', 2, '성명', 'Name', '氏名', '姓名', 100, 'TBL_APRLINEINFO', 'AprMemberName', NULL, NULL, '결재선정보(회람)', '성명', #companyID#, #tenantID#),
+				 ('S014', 3, '직위', 'Title', '役職', '职位', 100, 'TBL_APRLINEINFO', 'AprMemberJobTitle', NULL, NULL, '결재선정보(회람)', '직위', #companyID#, #tenantID#),
+				 ('S014', 4, '부서', 'Dept.', '部署', '部门', 600, 'TBL_APRLINEINFO', 'AprMemberDeptName', NULL, NULL, '결재선정보(회람)', '부서명', #companyID#, #tenantID#),
+				 ('S014', 5, '회람일시', 'Date', '回覧日時', '批准日(수정해야됨)', 600, 'TBL_APRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(회람)', '회람일시', #companyID#, #tenantID#),
+                 ('S015', 1, '순번', 'No.', '順番', '序号', 35, 'TBL_APRLINEINFO', 'AprMemberSN', NULL, NULL, '결재선정보(회람)', '순번', #companyID#, #tenantID#),
+				 ('S015', 2, '성명', 'Name', '氏名', '姓名', 100, 'TBL_APRLINEINFO', 'AprMemberName', NULL, NULL, '결재선정보(회람)', '성명', #companyID#, #tenantID#),
+				 ('S015', 3, '직위', 'Title', '役職', '职位', 100, 'TBL_APRLINEINFO', 'AprMemberJobTitle', NULL, NULL, '결재선정보(회람)', '직위', #companyID#, #tenantID#),
+				 ('S015', 4, '부서', 'Dept.', '部署', '部门', 600, 'TBL_APRLINEINFO', 'AprMemberDeptName', NULL, NULL, '결재선정보(회람)', '부서명', #companyID#, #tenantID#),
+				 ('S015', 5, '회람일시', 'Date', '回覧日時', '批准日(수정해야됨)', 600, 'TBL_APRLINEINFO', 'ProcessDate', NULL, NULL, '결재선정보(회람)', '회람일시', #companyID#, #tenantID#),
                  ('S021', 1, '순번', 'No.', '順番', '序号', 35, 'TBRECEIPTPOINTINFO', 'DeptMemberSN', NULL, NULL, '수신처정보(진행)', '순번', #companyID#, #tenantID#),
                  ('S021', 2, '수신부서명', 'Dept.', '受信部署名', '收信部门名', 200, 'TBRECEIPTPOINTINFO', 'ReceiptPointName', NULL, NULL, '수신처정보(진행)', '수신부서명', #companyID#, #tenantID#),
                  ('S021', 3, '수신자성명', 'Name', '受信者氏名', '收信创建名', 200, 'TBRECEIPTPOINTINFO', 'ReceiptMemberName', NULL, NULL, '수신처정보(진행)', '수신자성명', #companyID#, #tenantID#),
@@ -2040,7 +2540,7 @@
                    ('004',7,'보존기간',55,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingPeriod','KeepingPeriod','dtKeepPeriod','기록물철 생상현황보고',null,'KEEPING PERIOD','保存期間','年龄',#tenantID#, #companyID#),
                    ('004',8,'보존방법',160,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingMethod','KeepingMethod','dtKeepMethod','기록물철 생상현황보고',null,'CONSERVATION METHOD','保存方法','如何保存',#tenantID#, #companyID#),
                    ('004',9,'보존장소',80,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingPlace','KeepingPlace','dtKeepPlace','기록물철 생상현황보고',null,'보존장소E','保存場所','保护区',#tenantID#, #companyID#),
-                   ('004',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 생상현황보고',null,'RegisterDate','登録日','注册',0, #companyID#)
+                   ('004',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 생상현황보고',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#)
       ]]>
     </insert>
     
@@ -2151,7 +2651,7 @@
 		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
 		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
 		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
-		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', null, 4),
 		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
 		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
@@ -2179,7 +2679,7 @@
 		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
 		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
 		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
-		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', null, 4),
 		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
 		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
@@ -2191,6 +2691,57 @@
 		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
     	</isEqual>
+    </insert>
+  	
+  	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
+	    INSERT INTO 
+	    	TBL_MENUITEM_ITEMS_MENUITEMS_S 
+	    		(UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) 
+	    VALUES 
+	    		(#menuItemSUID0#,#menuItemUUID3#,#topMenuJaUUID#,'承認・決裁待ち','承認・決裁待ち',1,' ','/ezApprovalG/apprGMain.do','main',' ',#tenantID#),
+				(#menuItemSUID1#,#menuItemUUID14#,#topMenuEnUUID#,'Address','Address',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',#tenantID#),
+				(#menuItemSUID2#,#menuItemUUID17#,#topMenuJaUUID#,'起案した文書','起案した文書',3,' ','/ezApproval/apprMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID3#,#menuItemUUID61#,#topMenuJaUUID#,'私の掲示','私の掲示',2,' ','/ezBoard/boardMain.do?subFunc=1','main',' ',#tenantID#),
+				(#menuItemSUID4#,#menuItemUUID3#,#topMenuJaUUID#,'起案した文書','起案した文書',3,' ','/ezApprovalG/apprGMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID5#,#menuItemUUID3#,#topMenuJaUUID#,'部署受信文書','部署受信文書',4,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID6#,#menuItemUUID17#,#topMenuJaUUID#,'決裁進捗文書','決裁進捗文書',2,' ','/ezApproval/apprMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID7#,#menuItemUUID87#,#topMenuKoUUID#,'결재할문서','결재할문서_en',1,' ','/ezApprovalG/apprGMain.do','main',' ',#tenantID#),
+				(#menuItemSUID8#,#menuItemUUID23#,#topMenuKoUUID#,'주소록','ezAddress',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',#tenantID#),
+				(#menuItemSUID9#,#menuItemUUID3#,#topMenuJaUUID#,'決裁進行中文書',' 決裁進行中文書',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID10#,#menuItemUUID34#,#topMenuEnUUID#,'Reserved post','Reserved post',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
+				(#menuItemSUID11#,#menuItemUUID14#,#topMenuEnUUID#,'E-mail','E-mail',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',#tenantID#),
+				(#menuItemSUID12#,#menuItemUUID93#,#topMenuEnUUID#,'Proposed','Proposed',4,' ','/ezApprovalG/apprGMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID13#,#menuItemUUID31#,#topMenuKoUUID#,'나의게시물','나의게시물_en',2,' ','/ezBoard/boardMain.do?subFunc=1','main',' ',#tenantID#),
+				(#menuItemSUID14#,#menuItemUUID17#,#topMenuEnUUID#,'Proposed','Proposed',3,' ','/ezApproval/apprMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID15#,#menuItemUUID17#,#topMenuJaUUID#,'部署受信箱','部署受信箱',4,' ','/ezApproval/apprMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID16#,#menuItemUUID31#,#topMenuKoUUID#,'예약게시물','예약게시물_en',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
+				(#menuItemSUID17#,#menuItemUUID17#,#topMenuEnUUID#,'Dept.receipt folder','Dept.receipt folder',4,' ','/ezApproval/apprMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID18#,#menuItemUUID31#,#topMenuKoUUID#,'전자설문','ezQuestion',4,' ','/ezBoard/boardMain.do?func=1','main',' ',#tenantID#),
+				(#menuItemSUID19#,#menuItemUUID31#,#topMenuKoUUID#,'투표','ezPoll',5,' ','/ezBoard/boardMain.do?func=3','main',' ',#tenantID#),
+				(#menuItemSUID20#,#menuItemUUID31#,#topMenuKoUUID#,'사다리게임','ezLadder',7,' ','/ezBoard/boardMain.do?func=4','main',' ',#tenantID#),
+				(#menuItemSUID21#,#menuItemUUID93#,#topMenuEnUUID#,'To be process','To be process',1,' ','/ezApprovalG/apprGMain.do','main',' ',#tenantID#),
+				(#menuItemSUID22#,#menuItemUUID20#,#topMenuJaUUID#,'アドレス帳','アドレス帳',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',#tenantID#),
+				(#menuItemSUID23#,#menuItemUUID93#,#topMenuEnUUID#,'In process','In process',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID24#,#menuItemUUID31#,#topMenuKoUUID#,'즐겨찾기','즐겨찾기_en',1,' ','/ezBoard/boardMain.do','main',' ',#tenantID#),
+				(#menuItemSUID25#,#menuItemUUID34#,#topMenuEnUUID#,'My Posts','My Posts',2,' ','/ezBoard/boardMain.do?subFunc=1','main',' ',#tenantID#),
+				(#menuItemSUID26#,#menuItemUUID17#,#topMenuEnUUID#,'To be process','To be process',1,' ','/ezApproval/apprMain.do','main',' ',#tenantID#),
+				(#menuItemSUID27#,#menuItemUUID34#,#topMenuEnUUID#,'Favorites','Favorites',1,' ','/ezBoard/boardMain.do','main',' ',#tenantID#),
+				(#menuItemSUID28#,#menuItemUUID61#,#topMenuJaUUID#,'電子アンケート','電子アンケート',4,' ','/ezBoard/boardMain.do?func=1','main',' ',#tenantID#),
+				(#menuItemSUID29#,#menuItemUUID61#,#topMenuJaUUID#,'投票','投票',5,' ','/ezBoard/boardMain.do?func=3','main',' ',#tenantID#),
+				(#menuItemSUID30#,#menuItemUUID34#,#topMenuEnUUID#,'Question','Question',4,' ','/ezBoard/boardMain.do?func=1','main',' ',#tenantID#),
+				(#menuItemSUID31#,#menuItemUUID34#,#topMenuEnUUID#,'Vote','Vote',5,' ','/ezBoard/boardMain.do?func=3','main',' ',#tenantID#),
+				(#menuItemSUID32#,#menuItemUUID23#,#topMenuKoUUID#,'메일','mail',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',#tenantID#),
+				(#menuItemSUID33#,#menuItemUUID87#,#topMenuKoUUID#,'결재진행문서','결재진행문서_en',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID34#,#menuItemUUID17#,#topMenuJaUUID#,'決裁待ちの文書','決裁待ちの文書',1,' ','/ezApproval/apprMain.do','main',' ',#tenantID#),
+				(#menuItemSUID35#,#menuItemUUID87#,#topMenuKoUUID#,'회람수신함','회람수신함_en',4,' ','/ezApprovalG/apprGMain.do?listType=99','main',' ',#tenantID#),
+				(#menuItemSUID36#,#menuItemUUID87#,#topMenuKoUUID#,'부서수신함','부서수신함_en',5,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID37#,#menuItemUUID20#,#topMenuJaUUID#,'メール','メール',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',#tenantID#),
+				(#menuItemSUID38#,#menuItemUUID87#,#topMenuKoUUID#,'기안한문서','기안한문서_en',3,' ','/ezApprovalG/apprGMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID39#,#menuItemUUID61#,#topMenuJaUUID#,'お気に入り','お気に入り',1,' ','/ezBoard/boardMain.do','main',' ',#tenantID#),
+				(#menuItemSUID40#,#menuItemUUID17#,#topMenuEnUUID#,'In process','In process',2,' ','/ezApproval/apprMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID41#,#menuItemUUID93#,#topMenuEnUUID#,'Dept.receipt folder','Dept.receipt folder',3,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID42#,#menuItemUUID61#,#topMenuJaUUID#,'予約掲示','予約掲示',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
+				(#menuItemSUID43#,#menuItemUUID43#,#topMenuKoUUID#,'업무관리','ToDo',1,' ','/ezSchedule/scheduleIndex.do?funCode=3','main',' ',#tenantID#);
     </insert>
   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
@@ -2565,7 +3116,7 @@
             FROM
             	TBL_USERMASTER_RETIRE
             WHERE
-            	TENANT_ID = #v_TENANT_ID#	
+            	TENANT_ID = #v_TENANT_ID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
 		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
@@ -2594,6 +3145,8 @@
            		TBL_USERMASTER_RETIRE 
            WHERE
                 TENANT_ID = #v_TENANT_ID#
+           AND 
+           		PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
         <include refid="EzOrganAdminDAO.searchQuery"/>
         <![CDATA[
@@ -3253,6 +3806,26 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D20" parameterClass="Map">
+        DELETE FROM 
+        	TBL_ATTITUDE_CONF
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
+        DELETE FROM
+            TBL_BOARD_MYBOARDS    
+        WHERE  
+            COMPANYID = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
+     </delete>
  
  	 <select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
 		SELECT 
@@ -3263,7 +3836,7 @@
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
-            tenant_id = #tenantID# 
+            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
 			<include refid="EzOrganAdminDAO.searchQuery"/>
 	    ORDER BY 
 	    	displayName
@@ -3278,7 +3851,7 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# 
+		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
  	 

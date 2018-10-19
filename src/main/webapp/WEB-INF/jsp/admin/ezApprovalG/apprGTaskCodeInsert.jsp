@@ -533,7 +533,9 @@
 
 		    //2016-07-18 이효진 추가.
 		    function btnSelPCode_onclick_Complete(retValue){
-		    	document.getElementById("tbSubCode").value = retValue;
+		    	if (retValue != "CANCEL") {
+			    	document.getElementById("tbSubCode").value = retValue;
+		    	}
 		    }
 	
 		    window.oncontextmenu = function () {
@@ -627,7 +629,7 @@
 	        	</c:choose>
 	        </tr>
 	        <tr class = 'approvalS'>
-	        	<th><spring:message code = 'ezApprovalG.t109' /> *</th>
+	        	<th><spring:message code = 'ezApprovalG.t109' /> <span style="color:red">*</span></th>
 	        	<td>
 		        	<select id="isPublic" style="width: 100%">
 	                    <option value="Y" id="Y"><spring:message code='ezApprovalG.t47'/></option>

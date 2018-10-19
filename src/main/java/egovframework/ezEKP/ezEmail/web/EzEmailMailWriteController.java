@@ -215,6 +215,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String docTarget = "";
 		String retransType = "";
 		
+		String orgCompanyID = "";
+		
 		String fileUploadType = "";
 		String newWindowId = "";
 		
@@ -488,10 +490,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }
         // in case of approvalG
         else if (_url.equals("") && (_cmd.equals("docsend") || _cmd.equals("docsendDotNet"))) {
-    		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
+    		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
     		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+    		orgCompanyID = request.getParameter("orgCompanyID") == null ? "" : request.getParameter("orgCompanyID").trim();
     		
         	if (_cmd.equals("docsendDotNet")) {
         		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
@@ -1070,6 +1073,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
+				if (fromAddressList.size() >= 2) {
+					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
+					
+					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
+					if (!companyDomainName.isEmpty()) {
+						for (int i = 0; i < fromAddressList.size(); i++) {
+							String[] item = fromAddressList.get(i);
+							String type = item[1];
+							
+							if (type.equals("1")) {
+								logger.debug("removing the account email address...");
+								
+								fromAddressList.remove(i);
+								
+								break;
+							}
+						}
+					}
+				}
+				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
 				} else {
@@ -1139,6 +1162,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("docImagCnt", docImagCnt);
 		model.addAttribute("docTarget", docTarget);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("retransType", retransType);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
 		model.addAttribute("displayNamePrintable", displayNamePrintable);
@@ -1382,12 +1406,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			uploadMailRootFolder.mkdirs();
 		}
 		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = pDirPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
+		
 		for (int i=0; i<cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
 			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
                 String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
-                pDirTempPath = pDirPath + commonUtil.separator + pDate;
+                pDirTempPath = largeFilePath + commonUtil.separator + pDate;
                 File file = new File(pDirTempPath);
                 
                 if (!file.exists()) {
@@ -1562,6 +1594,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
 		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = uploadMailRootPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
+		
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
 		int fileCnt = doc.getElementsByTagName("ROW").getLength();
@@ -1686,7 +1726,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
-			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
             File file = new File(bigAttachFolderPath);
             
             if (!file.exists()) {
@@ -2383,9 +2423,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (totalFileSize > changeSize) { // 대용량첨부의 경우
 			logger.debug("In case of big attachment.");
 			
+			// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+			String largeFilePath = uploadMailRootPath;
+			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+			if (useSeparatedLargeFileFolder.equals("YES")) {
+				largeFilePath += commonUtil.separator + "largeFile";
+			}
+			
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
-			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
 			File file = new File(bigAttachFolderPath);
 			
 			if (!file.exists()) {
@@ -2616,13 +2664,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             }
             
             String realPath = commonUtil.getRealPath(request);
-            String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-            pDirPath = realPath + pDirPath;
+            String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
             
             if (pBigFileUpload.equals("Y")) {
+            	// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+            	String largeFilePath = pDirPath;
+    			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+    			if (useSeparatedLargeFileFolder.equals("YES")) {
+    				largeFilePath += commonUtil.separator + "largeFile";
+    			}
+            	
                 // 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
                 pDate = EgovDateUtil.getToday("");
-                pDirTempPath = pDirPath + commonUtil.separator + pDate;
+                pDirTempPath = largeFilePath + commonUtil.separator + pDate;
             } else {
                 // 일반 첨부파일인 경우에는 tempFileUpload 폴더를 사용한다.
                 pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
@@ -4838,10 +4893,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
-		pDirPath = realPath + pDirPath;
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
+		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = pDirPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
 		
 		File templistFile = new File(xmlPath);
 		if (templistFile.exists()) {
@@ -4867,7 +4929,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					if (nodeList.item(i).getFirstChild().getTextContent().equals(realFileNM)) {
 						String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
-						String pRealFilePath = pDirPath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
+						String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
 						File bigAttachFile = new File(pRealFilePath);
 						
 						if (bigAttachFile.exists()) {
@@ -5249,8 +5311,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						map.put("dept", dept.getDisplayName());
 						map.put("title", "");
 					} else { // 공용배포그룹
+						String email = (String)address.get("cn");
+						String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyID(), "DomainName");
+						
+						// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소로 전달한다.								
+						if (!companyDomainName.isEmpty()) {
+				        	String emailId = null;
+				        	
+			        		int atSignIndex = email.indexOf("@");
+			        		
+			        		if (atSignIndex != -1) {
+			        			emailId = email.substring(0, atSignIndex);
+								email = emailId + "@" + companyDomainName;			        			
+			        		}							
+						}
+						
 						map.put("displayName", displayName); // 배포그룹 이름
-						map.put("mail", (String)address.get("cn"));  // 메일
+						map.put("mail", email);  // 메일
 						map.put("company", companyName); // 배포그룹 이름
 						map.put("dept", egovMessageSource.getMessage("ezEmail.t57",
 								locale));  //배포그룹이름
@@ -5340,7 +5417,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
 		String pResult = "";
         try {
-            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
+            pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";

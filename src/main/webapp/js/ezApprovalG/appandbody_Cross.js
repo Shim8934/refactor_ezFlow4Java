@@ -107,7 +107,8 @@ function addAttach(DocID, pFlag) {
    			async : false,
    			url : "/ezApprovalG/getLineMode.do",
    			data : {
-   					docID : DocID
+   					docID : DocID,
+   					orgCompanyID : orgCompanyID
    					},
    			success: function(xml){
    				pFlag = xml;
@@ -121,7 +122,8 @@ function addAttach(DocID, pFlag) {
 		url : "/ezApprovalG/getTotalAttachInfo.do",
 		data : {
 			docID : DocID,
-			mode  : pFlag
+			mode  : pFlag,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -168,7 +170,8 @@ function addLineInfo(DocID, pFlag) {
 		url : "/ezApprovalG/getLineList.do",
 		data : {
 			docID : DocID,
-			mode  : pFlag
+			mode  : pFlag,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;

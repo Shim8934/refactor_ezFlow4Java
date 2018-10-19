@@ -341,6 +341,11 @@
 					return;
 				}
 				
+				if (isValidName(folderName) || isValidName(folderName2)) {
+					alert('<spring:message code="ezWebFolder.t211"/>');
+					return;
+				}
+				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/addDeptFolder.do",

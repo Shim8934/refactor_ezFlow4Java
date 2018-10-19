@@ -121,6 +121,7 @@ public class EzEmailMailListController {
 		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
 		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
 		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId()); 
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -147,7 +148,7 @@ public class EzEmailMailListController {
 			folderName = dispname;
 		}
 		
-		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezJournal.t113", locale))) {
+		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezEmail.t516", locale))) {
 			folderType = "sent";
 			isSentItems = true;
 		}
@@ -189,11 +190,12 @@ public class EzEmailMailListController {
 		model.addAttribute("useSearchContent", useSearchContent);
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
+		model.addAttribute("useCountryIP", useCountryIP);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -394,7 +396,6 @@ public class EzEmailMailListController {
 				String readDate = "";
 				int nameLength = 1;
 				int readCount = 0;
-				msgto = "";
 				
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				
@@ -427,7 +428,6 @@ public class EzEmailMailListController {
 						String email = ((InternetAddress)address).getAddress();
 						
 						if (email != null) {
-							msgto += email + ";";
 							
 							if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
 								email = aliasAddressList.get(email);
@@ -794,6 +794,26 @@ public class EzEmailMailListController {
 					}
 				}
 				
+				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
+				String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+				
+				if (useCountryIP.equals("YES")) {
+					try {
+						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+						String countryCode = "";
+						
+						if (ctryCode != null && ctryCode[0] != null) {
+							countryCode = ctryCode[0].toLowerCase();
+							logger.debug("countryCode=" + countryCode);
+						}
+						
+						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
 
@@ -959,6 +979,22 @@ public class EzEmailMailListController {
 			}
 			else {
 				deleteMsgs = sourceFolder.getMessagesByUID(uids);
+				
+				// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
+				if (!cmd.equalsIgnoreCase("BMOVE")) {
+					String subject = null;
+					String from = null;
+					String receivedDate = null;
+					
+					for (Message message : deleteMsgs) {
+						subject = ezEmailUtil.getSubject(message);
+						subject = (subject != null) ? subject : "";
+						from = ezEmailUtil.getFullFromAddressOfMessage(message);
+						receivedDate = (message.getReceivedDate() != null) ? message.getReceivedDate().toString() : "";
+						
+						logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
+					}
+				}
 			}
 			
 			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());

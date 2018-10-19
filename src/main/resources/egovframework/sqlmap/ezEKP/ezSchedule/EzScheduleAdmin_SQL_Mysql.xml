@@ -34,6 +34,8 @@
 				tbl_schedule_public_dept a inner join tbl_usermaster b on a.usercn = b.cn and a.tenant_id = b.tenant_id
 			where
 				a.tenant_id = #v_TENANTID#
+			and
+				a.companyID = #v_COMPANYID#
 			order by a.idx
 		]]>
 	</select>
@@ -50,15 +52,17 @@
 				usercn = #v_USERID#
 			and
 				departmentcn = #v_DEPTID#
+			and
+        		companyid = #v_COMPANYID#
 		]]>
 	</select>
 	<!-- checked -->
 	<insert id="EzScheduleAdminDAO.scheduleSaveShareDept" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedule_public_dept(
-				usercn, 		username, 		username2, 		departmentcn, 	departmentname, 	departmentname2,	tenant_id 
+				usercn, 		username, 		username2, 		departmentcn, 	departmentname, 	departmentname2,	tenant_id	 , companyID
 			) values (
-				#v_USERID#,		#v_USERNAME#,	#v_USERNAME2#,	#v_DEPTID#,		#v_DEPTNAME#,		#v_DEPTNAME2#,		#v_TENANTID#			
+				#v_USERID#,		#v_USERNAME#,	#v_USERNAME2#,	#v_DEPTID#,		#v_DEPTNAME#,		#v_DEPTNAME2#,		#v_TENANTID#,		#v_COMPANYID#			
 			)
 		]]>			
 	</insert>

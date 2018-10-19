@@ -374,6 +374,11 @@
 	        if (selRow) {
 	            listview.DeleteRow(listview.GetSelectedRowID(listview.GetSelectedIndexes()));
 	        }
+	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+	        var totalRows = listview.GetDataRows();
+		    if(totalRows.length == 0) {
+		    	setDeleteRow("listAPRLINE1");
+		    }
 	    }
 	    function btn_searchDept_onclick() {
 	        try {
@@ -787,6 +792,11 @@
 	                alert(e.description);
 	            }
 	        }
+	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+	        var totalRows = listview.GetDataRows();
+		    if(totalRows.length == 0) {
+		    	setDeleteRow("listAPRLINE1");
+		    }
 	    }
 	    function DeptRowDelelte(SelectIndex, ColRow) {
 	        var RowDelCheck;
@@ -804,7 +814,7 @@
 	        }
 	        return ReturnVal;
 	    }
-	    var aprlinetempletname_cross_dialogArguments = new Array();
+	    var aprdepttempletname_cross_dialogArguments = new Array();
 	    var tempmode;
 	    function btn_AprDeptTempletSave_onclick(mode) {
 	
@@ -851,7 +861,7 @@
 	            }
 	
 	            if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRecSaveList_TR_noItems") {
-	                var windowName = "/ezApprovalG/aprLineTempletName.do";
+	                var windowName = "/ezApprovalG/aprDeptTempletName.do";
 	                var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
 	                var dialogValue = new Array();
 	                dialogValue[0] = pUserID;
@@ -863,8 +873,8 @@
 	                    dialogValue[3] = templisttviewname;
 	                }
 	                if (CrossYN()) {
-	                    aprlinetempletname_cross_dialogArguments[0] = dialogValue;
-	                    aprlinetempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
+	                	aprdepttempletname_cross_dialogArguments[0] = dialogValue;
+	                	aprdepttempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
 	
 	                    DivPopUpShow(340, 205, windowName);
 	                } else {

@@ -59,6 +59,7 @@
 			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
+			var orgCompanyID = "${orgCompanyID}";
 			var ext = "${ext}";
 			
 			// 문서정보를 가져오는 함수
@@ -340,6 +341,12 @@
 			            if (totalSize > 0) {
 			            	totalSize -= parseInt(GetAttribute(pAttachRow[0], "DATA8"));
 			            }
+			            
+			            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+			            var totalRows = listview.GetDataRows();
+					    if(totalRows.length == 0) {
+					    	setDeleteRow("attachList");
+					    }
 			        }
 			        else {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
@@ -770,7 +777,7 @@
 		        isfileup = true;
 		        fd.append("boardid", window.parent.pBoardID);
 		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
-		        fd.append("compid", document.getElementById("compid").value);
+		        fd.append("compid", orgCompanyID);
 		        fd.append("docid", document.getElementById("docid").value);
 		        fd.append("attachsn", pAttachSN);
 		        

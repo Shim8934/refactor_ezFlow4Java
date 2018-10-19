@@ -92,9 +92,15 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 일정공유관리 화면
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do")
-	public String  scheduleAdminShareManage() throws Exception {
+	public String  scheduleAdminShareManage(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		
 		logger.debug("============ scheduleAdminShareManage started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		return "/admin/ezSchedule/scheduleAdminShareManage";
 	}
@@ -110,7 +116,7 @@ public class EzScheduleAdminController {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 				
-		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId());
+		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
 		
 		return result;
 	}
@@ -160,8 +166,9 @@ public class EzScheduleAdminController {
 		int tenantID = loginVO.getTenantId();
 		String userID = request.getParameter("userID");
 		String deptID = request.getParameter("deptID");
+		String companyID = loginVO.getCompanyID();
 		
-		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID);
+		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID, companyID);
 		
 		if (checkCnt == 0) {
 			loginVO.setId(userID);
@@ -178,7 +185,7 @@ public class EzScheduleAdminController {
 			String deptName = organDeptVO.getDisplayName();
 			String deptName2 = organDeptVO.getDisplayName2();
 	
-			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID);
+			ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2, tenantID, companyID);
 			
 			return "SUCCESS";
 		} else {
@@ -377,21 +384,31 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveLunarUse.do")
 	@ResponseBody
-	public void	scheduleSaveLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+	public String scheduleSaveLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleSaveLunarUse started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-		String cID = request.getParameter("COMPANYID");
-		String lunarUse = request.getParameter("LUNARUSE");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		String count = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
-		
-		if (count.equals("0")) {
-			ezScheduleAdminService.scheduleInsertLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
-		} else {
-			ezScheduleAdminService.scheduleUpdateLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
+		if (userInfo == null) {
+			return "0";
+		}else{
+			
+			
+			loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
+			String cID = loginSimpleVO.getCompanyID();
+			String lunarUse = request.getParameter("LUNARUSE");
+			
+			String count = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
+			
+			if (count.equals("0")) {
+				ezScheduleAdminService.scheduleInsertLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
+			} else {
+				ezScheduleAdminService.scheduleUpdateLunarUse(cID, lunarUse, loginSimpleVO.getTenantId());
+			}
+			return "1";
 		}
+		
 	}
 	
 	/**
@@ -434,21 +451,32 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveRegi.do")
 	@ResponseBody
-	public void	scheduleSaveRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+	public String scheduleSaveRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleSaveRegi started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-		String cID = request.getParameter("COMPANYID");
-		String regi = request.getParameter("PREVIOSLYREGIUSE");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
-		
-		if (count.equals("0")) {
-			ezScheduleAdminService.scheduleInsertRegi(cID, regi, loginSimpleVO.getTenantId());
-		} else {
-			ezScheduleAdminService.scheduleUpdateRegi(cID, regi, loginSimpleVO.getTenantId());
+		if (userInfo == null) {
+			return "0";
+		}else{
+			
+			loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
+			/*String cID = request.getParameter("COMPANYID");*/
+			String cID = loginSimpleVO.getCompanyID();
+			String regi = request.getParameter("PREVIOSLYREGIUSE");
+			
+			String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
+			
+			if (count.equals("0")) {
+				ezScheduleAdminService.scheduleInsertRegi(cID, regi, loginSimpleVO.getTenantId());
+			} else {
+				ezScheduleAdminService.scheduleUpdateRegi(cID, regi, loginSimpleVO.getTenantId());
+			}
+			
+			return "1";
 		}
+		
 	}
 	
 }

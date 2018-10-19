@@ -261,6 +261,8 @@
 						AND
 							B.tenant_id = #tenantID#
 						AND
+							A.COMPANYID = #companyID#
+						AND
 							(B.response_range = '0'
 							AND
 								DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
@@ -271,7 +273,9 @@
 						OR
 							(A.user_id = #v_PUSERID#
 							AND
-								A.tenant_id = #tenantID#)
+								A.tenant_id = #tenantID#
+							AND
+								A.COMPANYID = #companyID#)
 						)
 		]]>
 		
@@ -1409,11 +1413,15 @@
 					AND
 						A.TENANT_ID = #tenantID#
 					AND
-						B.TENANT_ID = #tenantID#		
+						B.TENANT_ID = #tenantID#	
+					AND
+						A.COMPANYID = #companyID#	
 					OR
 						(A.USER_ID = #v_PUSERID#
 						AND
-							A.tenant_id = #tenantID#)
+							A.tenant_id = #tenantID#
+						AND
+							A.COMPANYID = #companyID#)
 					)
 		]]>
 		<isNotEmpty property="v_PTITLE">
@@ -1599,9 +1607,9 @@
 		<isNotEqual property="v_pDataCount" compareValue="1">
 			<![CDATA[
 				INSERT INTO TBL_POLL_ITEM
-        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID)
+        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID, COMPANYID)
         		VALUES
-        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, DATE_FORMAT(#v_pPostDate#, '%Y-%m-%d %H:%i:%s'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#)
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, DATE_FORMAT(#v_pPostDate#, '%Y-%m-%d %H:%i:%s'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#, #v_companyID#)
 			]]>
 		</isNotEqual>
 		
@@ -2257,6 +2265,8 @@
                    	RESPONSE_DATE IS NULL
                 AND
                    	B.COMPLETE_FLAG = 'Y'
+                AND
+                   	B.COMPANYID = #companyID#
               	UNION
 	            	SELECT
 	            		A.ITEM_NO 
@@ -2295,7 +2305,9 @@
                     AND
                     	A.TENANT_ID = #tenantID#	
                     AND
-                    	C.RESPONSE_RANGE = '0') CNT
+                    	C.RESPONSE_RANGE = '0'
+                   	AND
+                   		A.COMPANYID = #companyID#) CNT
 		]]>
 	</select>
 	

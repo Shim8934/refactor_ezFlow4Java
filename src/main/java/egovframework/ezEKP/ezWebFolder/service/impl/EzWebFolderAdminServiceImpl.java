@@ -802,7 +802,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			newRow1.createCell(0).setCellValue(fileLog.getFileExt());
 			drawPictureInExcel(workbook, sheet1, realPath + fileLog.getFileType(), 0, i);
 			newRow1.createCell(1).setCellValue(fileLog.getFileName());
-			newRow1.createCell(2).setCellValue(formatFileSize(Double.parseDouble(fileLog.getFileSize())));
+			newRow1.createCell(2).setCellValue(formatFileSize(fileLog.getFileSize()));
 			newRow1.createCell(3).setCellValue(primary.equals("1") ? fileLog.getCreateName1() : fileLog.getCreateName2());
 			
 			switch(fileLog.getLogType()) {

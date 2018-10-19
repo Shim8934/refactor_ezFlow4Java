@@ -101,13 +101,11 @@
 	<select id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2" remapResults="true">
 		<![CDATA[
 			SELECT 
-				CONCAT(BOARDID, ';') BOARDID  
+				BOARDID || ',' || ACCESS_ || ';' BOARDID 
 	        FROM 
 	        	TBL_Board_BoardManage 
 	        WHERE
 	        	TENANT_ID = #v_TENANTID#
-	        AND  
-	        	ACCESS_ = 0
 	        AND 
 	        	ACCESSID = #v_PACCESSID#
 	        AND 
@@ -243,7 +241,16 @@
 	                      AND 
 	                      	( C.AccessID = #v_pUserID# )
 	                      AND 
-	                      	D.ParentBoardID = #v_pRootBoardID# ) B   
+	                      	D.ParentBoardID = #v_pRootBoardID#
+	                      ]]>
+	                      <isEqual property="v_ISDEPT" compareValue="1">
+	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+		                      AND
+		                      	C.BoardGroupACL = 'Y'
+	                      	</isEqual>
+	                      </isEqual>
+	                      <![CDATA[
+	                      	) B  	                      	   
 	                ON 
 	                	A.TENANT_ID = B.TENANT_ID
 	                AND
@@ -880,6 +887,96 @@
 		]]>
 	</insert>
 	
+	<select id="EzBoardAdminDAO.getBoardTreePath" parameterClass="Map" resultClass="String" remapResults="true">
+		SELECT BOARDTREEPATH 
+		FROM tbl_board_boardinfo
+		WHERE boardid = #v_pBoardID#
+		AND tenant_id = #v_TENANTID#
+	</select>
+	
+	<update id="EzBoardAdminDAO.saveACLIncludeLowerBoard" parameterClass="Map">
+		<![CDATA[
+			UPDATE tbl_board_boardManage 
+			SET
+		]]> 
+		<isEqual property="type" compareValue="access">
+			<![CDATA[
+				ACCESS_ = #v_pAccess#	
+			]]> 
+		</isEqual>			
+		<isEqual property="type" compareValue="boardACL">
+			<![CDATA[
+				BOARDGROUPACL = #v_pBoardGroupACL#	
+			]]> 
+		</isEqual>	
+		<![CDATA[		
+			WHERE boardid IN (
+				SELECT boardid 
+			    FROM tbl_board_boardinfo
+				WHERE TENANT_ID = #v_TENANTID#
+				AND boardtreepath LIKE '%'||#v_pBoardID#||'%'
+				OR boardid = #v_pBoardID#
+			)
+			AND TENANT_ID = #v_TENANTID#
+			AND ACCESSID = #v_pAccessID#
+		]]>	
+	</update>	
+	
+	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard" parameterClass="Map">
+		MERGE INTO tbl_board_boardmanage tb1 
+		USING (SELECT * 
+		    FROM tbl_board_boardinfo 
+		    WHERE BOARDID in ( $v_upperBoadList$ ) 
+		    AND	TENANT_ID = #v_TENANTID#
+		    ) tb2
+		ON (tb1.BOARDID = tb2.BOARDID AND tb1.accessID = #v_pAccessID# )
+		WHEN MATCHED THEN
+		    UPDATE SET
+		    	<isEqual property="type" compareValue="access">
+		        ACCESS_ = #v_pAccess#
+		        </isEqual>
+		        <isEqual property="type" compareValue="boardACL">
+		        BOARDGROUPACL = #v_pBoardGroupACL#
+		        </isEqual>
+		WHEN NOT MATCHED THEN
+		    INSERT(
+		            BOARDID, 
+					ACCESSID, 
+					ACCESSNAME, 
+					ACCESSNAME2, 
+					ACCESS_, 
+				    PARENTBOARDID, 
+				    BOARDADMIN_FG, 
+				    LISTVIEW_FG, 
+				    READ_FG, 
+				    WRITE_FG, 
+				    REPLY_FG, 
+				    DELETE_FG, 
+				    INHERIT_FG, 
+				    POSTNOTICE, 
+				    BOARDGROUPACL, 
+				    TENANT_ID
+		            )
+		    VALUES(
+					tb2.BOARDID, 
+					#v_pAccessID#, 
+					#v_pAccessName#, 
+					#v_pAccessName2#, 
+					#v_pAccess#,
+				    tb2.PARENTBOARDID, 
+				    'false', 
+				    'false', 
+				    'false', 
+				    'false',   
+				    'false', 
+				    'false', 
+				    'false', 
+				    'false', 
+				    #v_pBoardGroupACL#, 
+				    #v_TENANTID# 
+		    )		
+	</insert>	
+	
 	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardBackGroundInfo ( 
@@ -1397,6 +1494,21 @@
       			AccessID = #v_pAccessID#
 		]]>
 	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteACLUnderBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM tbl_board_boardManage
+			WHERE boardid IN (
+				SELECT boardid 
+			    FROM tbl_board_boardinfo
+				WHERE TENANT_ID = #v_TENANTID#
+				AND boardtreepath LIKE '%'||#v_pBoardID#||'%'
+				OR boardid = #v_pBoardID#
+			)
+			AND TENANT_ID = #v_TENANTID#
+			AND ACCESSID = #v_pAccessID#
+		]]>	
+	</delete>	
 		
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[

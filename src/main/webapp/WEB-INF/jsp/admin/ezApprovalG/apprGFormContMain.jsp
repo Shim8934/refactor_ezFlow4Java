@@ -15,6 +15,9 @@
 			overflow-x : auto;
 			padding-right : 0px;
 		}
+		.popup h2.h2_dot {
+			padding-top: 0px;
+		}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -252,7 +255,7 @@
 			    var compDeptid = "";
 
 			    Tree_setconfig();
-			    TreeViewinitialize("", "<c:out value = '${topID}' />", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />");
+			    TreeViewinitialize("", "<c:out value = '${topID}' />/other", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />");
 			}
 			
 			function Tree_setconfig() {

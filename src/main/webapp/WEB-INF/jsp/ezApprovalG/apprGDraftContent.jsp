@@ -275,6 +275,9 @@
 	                        	parent.isEditorComplete = true;
 	                        }
 	                    }
+	                    
+	                    // 2018.10.15 필드도 free 속성일 시에 수정 가능하도록 수정
+	                    parent.FieldsAvailable();
 	
 	                    if (parent.pDraftFlag != "REDRAFT") {
   							var Body_innerHTML = "";
@@ -318,6 +321,7 @@
 	                            }
 	                            else {
 	                                try {
+	                                	isEditor = false;
 	                                    Conent_contentEditable(document.getElementById('body'));
 	                                } catch (e) { }
 	                            }
@@ -328,8 +332,6 @@
 	                    /* for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
 	                        SetAttribute(document.getElementById("body"), getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
 	                    } */
-	
-	                    parent.FieldsAvailable();
 	                }
 	            }
 	            catch (e)
@@ -386,6 +388,7 @@
 	                        }
 	                        else {
 	                            try {
+	                            	isEditor = false;
 	                                Conent_contentEditable(document.getElementById('body'));
 	                            } catch (e) { }
 	                        }
@@ -411,6 +414,24 @@
 	                else {
 	                    return document.getElementById("frame_doctitle").textContent;
 	                }
+	            } catch (e)
+	            { return ""; }
+	        }
+	        
+	        function getMustFieldsInsert() {
+	        	try {
+	        		var mustFields = $(".FIELD#doctitle, [must]");
+	        		for (var i = 0; i < mustFields.length; i++) {
+	        			var mustField = mustFields[i];
+	        			var val = $(mustField).text().trim();
+	        			if (val == "") {
+							if ($(mustField).attr('id') == "doctitle"){
+								return "doctitle";
+							} else {
+								return $(mustField).attr('must');
+							}
+						}
+	        		}
 	            } catch (e)
 	            { return ""; }
 	        }

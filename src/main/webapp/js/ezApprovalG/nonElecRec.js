@@ -142,7 +142,34 @@ function getNonElecRecInfo() {
 	
 	// 분리첨부 있을 시 저장
 	if (g_SepAttachLVXml != "") {
-		createNodeAndAppandNodeText(rtnXml, objItem, objData, "SEPERATEATTACH", g_SepAttachLVXml);
+		var objSPXml = createXmlDom();
+        	objSPXml = loadXMLString(g_SepAttachLVXml);
+        	
+		var Rows, Row, Value, node, i;
+		var oRows = SelectNodes(objSPXml, "LISTVIEWDATA/ROWS/ROW");
+		
+		node = createNodeAndAppandNode(rtnXml, objItem, node, "SEPERATEATTACH");
+	    if (oRows.length > 0) {
+	    	Rows = createNodeAndAppandNode(rtnXml, node, Rows, "ROWS");
+	        for (i = 0; i < oRows.length; i++) {
+	        	Row = createNodeAndAppandNode(rtnXml, Rows, Row, "ROW");
+	        	Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPNO", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[0]));
+	        	Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPREGTYPE", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[2]));
+	        	Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPTITLE", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[1])[0]));
+	        	Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPNUMOFPAGE", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[4])[0]));
+	        	
+	        	// 분리첨부 시청각 기록물일경우 추가저장
+	        	if (getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[2]) == "5" || getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[2]) == "6") {
+	        		Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPRECORDTYPE", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[5])[0]));
+	        		Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPSUMMARY", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[6])[0]));
+	        	} else {
+	        		Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPRECORDTYPE", "");
+	        		Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "SEPSUMMARY", "");
+	        	}
+	        	
+	        	Value = createNodeAndAppandNodeText(rtnXml, Row, Value, "CABINETID", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[1]));
+	        }
+	    }
 	} else {
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "SEPERATEATTACH", "");
 	}
@@ -186,7 +213,7 @@ function getNonElecRecInfo() {
         }
     }
 	
-	return ConvertEntityReferenceToChar(getXmlString(rtnXml));
+	return getXmlString(rtnXml);
 }
 /*
  * 결재정보를 나갔다 들어왔을때 다시 데이터를 세팅 해주는 메소드
@@ -298,7 +325,7 @@ function setNonElecRecInfo(ret) {
 		HwpCtrl.SetFieldText("nonElecRec_sendingDept", getNodeText(objNodes.item(0).childNodes(12)));		//발신기관
 		
 		//분리첨부 건수
-		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
+		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
 		count = objNodes.length;
 		if (count > 0) {
 			HwpCtrl.SetFieldText("nonElecRec_SepAttachYN", count + " 건");

@@ -371,14 +371,14 @@
 	                	schedule_repetition_del_cross_dialogArguments[0] = rgParams;
 	                	schedule_repetition_del_cross_dialogArguments[1] = btn_Delete_Complete;
 
-		                DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
+		                DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
 		            } else {
 	                	var rgParams = new Array();
 	                	rgParams["CancelOpen"] = false;
 	                	rgParams["InstanceType"] = "";
 
-	                	var feature = "dialogHeight:260px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
-	                	feature = feature + GetShowModalPosition(390, 260);
+	                	var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
+	                	feature = feature + GetShowModalPosition(390, 175);
 	                	var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
 
 	                	if (false != rgParams["CancelOpen"]) return (false);
@@ -813,7 +813,7 @@
             			<WIDTH>5%</WIDTH>
         			</HEADER>  
         			<HEADER>
-            			<NAME><spring:message code='ezResource.t193'/></NAME>
+            			<NAME><spring:message code='ezResource.t2003'/></NAME>
             			<WIDTH>5%</WIDTH>
         			</HEADER>  
         			<HEADER>

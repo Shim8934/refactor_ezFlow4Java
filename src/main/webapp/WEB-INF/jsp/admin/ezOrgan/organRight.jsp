@@ -26,6 +26,8 @@
 		    var useBizmekaSpambox = "${useBizmekaSpambox}";
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
+		    var deptTreeTopId = "${deptTreeTopId}";
+		    var changePassLength = 0;
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -57,7 +59,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -471,10 +473,15 @@
 			    
 		        selectdept_cross_dialogArguments = new Array();
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t19' />";
-		        selectdept_cross_dialogArguments[1] = mov_dept_Complete;
+		        selectdept_cross_dialogArguments[1] = mov_dept_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));		        
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
+		    function mov_dept_CompleteWithTimeout(rtnValue) {
+		    	 setTimeout(function() {
+		    		 mov_dept_Complete(rtnValue);
+	                }, 10);
+		    }
 		    
 		    function GetDeptFullPath(DeptID, topid){
 		    	var data;
@@ -527,17 +534,19 @@
 		            	url : "/admin/ezOrgan/movDept.do",
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : selectedCN},
-		            	success : function(result){
-		            		if(result == "SAME"){
+		            	success : function(result) {
+		            		if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t21' />");
-		            		}else if (result == "EMAIL_ERROR") {
+		            		} else if (result == "DIFF_COMPANY") {
+		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else if (result == "EMAIL_ERROR") {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
-		            		}else{
+		            		} else {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t27' />");
 				                getDeptFullTree(selectedCN);
 		            		}
 		            	},
-		            	error : function(){
+		            	error : function() {
 		            		alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
 		            	}
 		            });
@@ -573,7 +582,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -589,7 +598,7 @@
 					return;
 				}else if (adCount == 1){
 				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					g_xmlHTTP.send(strQuery);
@@ -609,7 +618,7 @@
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();
 					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
+					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
 					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					        g_xmlHTTP.send(strQuery);
@@ -624,7 +633,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -647,7 +656,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user"},
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
@@ -1017,6 +1026,7 @@
                     alert(strLang13);
                     return;
 				}
+		        changePassLength = listview.GetSelectedRows().length;
 		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
@@ -1038,9 +1048,6 @@
 		            listview.LoadFromID("lvUserList");
 
 		            var length = listview.GetSelectedRows().length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
-			        	return;
-		            }		            
          			var data = "";
 		            for (var i = 0; i < length; i++) {
 		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
@@ -1144,7 +1151,7 @@
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
 			    //if (CrossYN()) {
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
-		        selectdept_cross_dialogArguments[1] = mov_user_Complete;
+		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
 		        try { OpenWin.focus(); } catch (e) { }
 			    <%-- }else {
@@ -1184,6 +1191,12 @@
 			    } --%>
 			}
 			
+            function move_user_CompleteWithTimeout(rtnValue) {
+                setTimeout(function() {
+                    mov_user_Complete(rtnValue);
+                }, 10);
+            }
+            
 		    function mov_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var listview = new ListView();
@@ -1208,16 +1221,18 @@
 		            	url : "/admin/ezOrgan/movUser.do",
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : data},
-		            	success : function(result){
+		            	success : function(result) {
 		            		if (result == "EMAIL_ERROR") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		}else if (result == "SAME") {
+		            		} else if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		}else{
+		            		} else if (result == "DIFF_COMPANY") {
+		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else {
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");
 		            		}
 		            	},
-		            	error : function(){
+		            	error : function() {
 		            		alert("<spring:message code='ezOrgan.t15' />");
 		            	}
 		            });
@@ -1526,11 +1541,9 @@
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>		                
 						<c:if test="${useBizmekaTalk == 'YES'}">			
-							<c:if test="${locale eq 'ko'}">
 							<tr>
 			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 			                </tr>
-							</c:if>
 		                </c:if>
 		                <c:if test="${useDisablePopImap == 'YES'}">
 							<tr>
@@ -1543,7 +1556,7 @@
 			<tr>
 				<th style="height:30px;border-top:0px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
-					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
+					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th style="border-top:0px">
 					<select id="search_type" style="WIDTH:60px; height:22px;">

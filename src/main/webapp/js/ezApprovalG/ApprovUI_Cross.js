@@ -869,7 +869,7 @@ function openOpinionUI(ret, CompleteFunction) {
     else
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+    DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do?orgCompanyID=" + orgCompanyID + "&orgDeptID=" + OrgAprUserDeptID);
 }
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
@@ -926,7 +926,7 @@ function makeOpinionList(OpinionXML) {
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
-    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&ext=" + ext;
+    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext;
 
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
@@ -1181,7 +1181,8 @@ function getApprovInfo() {
 	 			async : false,
 	 			url : "/ezApprovalG/getLineMode.do",
 	 			data : {
-	 					docID : pDocID
+	 					docID : pDocID,
+	 					orgCompanyID : pCompanyID
 	 					},
 	 			success: function(xml){
 	 				if (xml == "END") {
@@ -1202,7 +1203,8 @@ function getApprovInfo() {
     			userID : pUserID,
     			deptID : OrgAprUserDeptID,
     			mode : pMode,
-    			chamState : docState
+    			chamState : docState,
+    			orgCompanyID : pCompanyID
     		},
     		success: function(xml){
     			result = xml;
@@ -1372,7 +1374,7 @@ function getCurApproverAprLine(type) {
 				docID    : pDocID, 
 				userID 	 : "",
 				formID   : "",
-				deptID   : arr_userinfo[4],
+				orgCompanyID : orgCompanyID,
 				isUsed   : type,
 				mode     : pMode
 				},
@@ -1592,6 +1594,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
     createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
     createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
+    createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
 
     var g_SepAttachLVXml = "";
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
@@ -1647,23 +1650,24 @@ function SaveApproveInfo(pApproveFlag) {
 		}
 		
 		// 분리첨부가 존재할 경우
-		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
+		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
 			var sepAtt, Data, i;
 			var rtnXml = createXmlDom();
 	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
 			var sepLVXml = createXmlDom();
             	sepLVXml = loadXMLString(nonElecRecInfoXml);
-            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
+            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
             
             for (i = 0; i < rows.length; i++) {
                 sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0],"DATA1"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
             }
+            
             createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
             
 		} else if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
@@ -1765,7 +1769,8 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -1806,7 +1811,8 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
-			html  : mhtBody
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(text){
 			result = text;
@@ -2742,6 +2748,7 @@ function getSusinSNInfo() {
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "orgCompanyID", orgCompanyID);
 
     xmlhttp.open("POST", "/ezApprovalG/getSusinSN.do", false);
     xmlhttp.send(xmlpara);
@@ -3035,7 +3042,7 @@ function openAaprDocAttachUI() {
         if(approvalFlag == "G") {
         	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
-        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
+        	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
     } catch (e) {
         alert(e.description);
@@ -3064,6 +3071,7 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
@@ -3385,6 +3393,7 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
@@ -3423,7 +3432,8 @@ function UpdateLineHistory() {
 			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16]
+			userDeptName2 : arr_userinfo[16],
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
@@ -3682,6 +3692,7 @@ function getNextDocInfo() {
     			docID : pDocID,
     			userID  : pUserID,
     			userDeptID  : arr_userinfo[4],
+    			orgCompanyID : orgCompanyID,
     			isIEFlag  : isIEFlag
     		},
     		success: function(xml){
@@ -3708,6 +3719,9 @@ function getNextDocInfo() {
             NextDocAprType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRTYPE"));
             NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
             NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
+            pCompanyID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "COMPANYID"));
+            docNumZeroCnt = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCNUMZEROCNT"));
+            orgCompanyID = pCompanyID;
         }
     } catch (e) { }
 }
@@ -3820,124 +3834,132 @@ function setDocNumFormat(pPrefix) {
     
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
-    Arr_Header = fieldValue.split("@");
+    Arr_Header = fieldValue.split("-");
     
-    for (i = 1; i < Arr_Header.length; i++) {
-        Header = Arr_Header[i].substr(0, 2);
-        Tail = Arr_Header[i].substr(2);
+    Arr_Header.forEach(function(item, index) {
+    	if (!item.indexOf('@')) {
+    		//@ exist
+    		Header = item.replace("@", "");
 
-        switch (Header) {
-            case "DP":
-                numHeader += DeptSymbol + Tail;
-                break;
+            switch (Header) {
+                case "DP":
+                    numHeader += DeptSymbol;
+                    break;
 
-            case "dp":
-                numHeader += DeptSymbol + Tail;
-                break;
+                case "dp":
+                    numHeader += DeptSymbol;
+                    break;
 
-            case "YY":
-                numHeader += d.getFullYear() + Tail;
-                break;
-                
-            case "yy":
-                var yyear = d.getFullYear();
-                numHeader += yyear.toString().substr(2) + Tail;
-                break;
+                case "YY":
+                    numHeader += d.getFullYear();
+                    break;
+                    
+                case "yy":
+                    var yyear = d.getFullYear();
+                    numHeader += yyear.toString().substr(2);
+                    break;
 
-            case "MM":
-                var mmonth = d.getMonth() + 1;
-                if (Number(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader += mmonth + Tail;
-                break;
+                case "MM":
+                    var mmonth = d.getMonth() + 1;
+                    if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                    numHeader += mmonth;
+                    break;
 
-            case "mm":
-                numHeader += (d.getMonth() + 1) + Tail;
-                break;
+                case "mm":
+                    numHeader += (d.getMonth() + 1);
+                    break;
 
-            case "NN":
-                break;
+                case "NN":
+                    break;
 
-            case "nn":
-                break;
+                case "nn":
+                    break;
 
-            case "cs":
-                numHeader += strLang107 + Tail;
-                break;
-                
-            case "FT":
-            	numHeader += "FT" + Tail;
-            	break;
-            	
-            case "MV":
-            	numHeader += "MV" + Tail;
-            	break;
-            	
-            case "YM":
-            	var yyear = d.getFullYear();
-                numHeader += yyear.toString().substr(2);
-                
-            	var mmonth = d.getMonth() + 1;
-                if (Number(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader += mmonth;
-                
-                var mdate = d.getDate();
-                if (Number(mdate) < 10) mdate = "0" + mdate;
-                numHeader += mdate + Tail;
-                
-                break;
-                
-            /* 단암 양식*/
-            case "D1":
-            	numHeader += "계약" + Tail;
-        		break;
-            case "D2":
-            	numHeader += "교육기안" + Tail;
-        		break;
-            case "D3":
-            	numHeader += "교육" + Tail;
-        		break;
-            case "D4":
-            	numHeader += "구매" + Tail;
-        		break;
-            case "D5":
-            	numHeader += "제" + Tail;
-        		break;
-            case "D6":
-            	numHeader += "기구" + Tail;
-        		break;
-            case "D7":
-            	numHeader += "기안" + Tail;
-        		break;
-            case "D8":
-            	numHeader += "제 문서 신청" + Tail;
-        		break;
-            case "D9":
-            	numHeader += "보고" + Tail;
-        		break;
-            case "DA":
-            	numHeader += "제조-보고" + Tail;
-        		break;
-            case "DB":
-            	numHeader += "연장근무보고서" + Tail;
-        		break;
-            case "DC":
-            	numHeader += "출장" + Tail;
-        		break;
-            case "DD":
-            	numHeader += "해외출장" + Tail;
-        		break;
-            case "DE":
-            	numHeader += "품질검사" + Tail;
-        		break;
-            case "DF":
-            	numHeader += "휴가" + Tail;
-            	break;
-        		
-            default:
-                numHeader += fieldValue;
-                break;
-        }
-    }
+                case "cs":
+                    numHeader += strLang107;
+                    break;
+                    
+                case "FT":
+                	numHeader += "FT";
+                	break;
+                	
+                case "MV":
+                	numHeader += "MV";
+                	break;
+                	
+                case "YM":
+                	var yyear = d.getFullYear();
+                    numHeader += yyear.toString().substr(2);
+                    
+                	var mmonth = d.getMonth() + 1;
+                    if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                    numHeader += mmonth;
+                    
+                    var mdate = d.getDate();
+                    if (parseInt(mdate) < 10) mdate = "0" + mdate;
+                    numHeader += mdate;
+                    
+                    break;
+                    
+                /*단암 양식*/
+                case "D1":
+                	numHeader += "계약";
+            		break;
+                case "D2":
+                	numHeader += "교육기안";
+            		break;
+                case "D3":
+                	numHeader += "교육";
+            		break;
+                case "D4":
+                	numHeader += "구매";
+            		break;
+                case "D5":
+                	numHeader += "제";
+            		break;
+                case "D6":
+                	numHeader += "기구";
+            		break;
+                case "D7":
+                	numHeader += "기안";
+            		break;
+                case "D8":
+                	numHeader += "제 문서 신청";
+            		break;
+                case "D9":
+                	numHeader += "보고";
+            		break;
+                case "DA":
+                	numHeader += "제조-보고";
+            		break;
+                case "DB":
+                	numHeader += "연장근무보고서";
+            		break;
+                case "DC":
+                	numHeader += "출장";
+            		break;
+                case "DD":
+                	numHeader += "해외출장";
+            		break;
+                case "DE":
+                	numHeader += "품질검사";
+            		break;
+                case "DF":
+                	numHeader += "휴가";
+                	break;
+
+                default:
+                    numHeader += fieldValue;
+                    break;
+            }
+    	} else {
+    		numHeader += item;
+    	}
+    	
+    	if (!(index == Arr_Header.length - 1)) {
+    		numHeader += "-";
+    	}
+    });
     
     field.textContent = numHeader;
     if (numHeader.indexOf(strLang107) > 0)

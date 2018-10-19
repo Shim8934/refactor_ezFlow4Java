@@ -559,13 +559,13 @@ function GetRecordList() {
     		
     		g_searchDate.startDate = date;
     	} else {
-    		g_searchDate.startDate = new Date(startDate);
+    		g_searchDate.startDate = new Date(startDate.replace(/-/g,'/'));
     	}
     	
         if (endDate == "") {
         	g_searchDate.endDate = new Date();
         } else {
-        	g_searchDate.endDate = new Date(endDate);
+        	g_searchDate.endDate = new Date(endDate.replace(/-/g,'/'));
         }
         
         
@@ -1592,6 +1592,8 @@ function SearchCabinet(pInitFlag) {
 
 function SearchCabinet_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
+    	//검색 시 리스트가 1페이지로 돌아가지 않는 오류 개선
+    	curpage = 1;
         g_CabSearchParamXml = rtnVal[1];
         GetCaninetList();
     }
@@ -1627,8 +1629,6 @@ function makePageSelPage(pTotalCnt) {
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
     	if (g_isSearching) {
-    	    g_isSearching = false;
-    	    
     		var startDate = g_searchDate.startDate;
     		var endDate = g_searchDate.endDate;
     		
@@ -1848,7 +1848,8 @@ function btnSearchDelivery_onclick(opnOption) {
 function btnSearchDelivery_onclick_Complete(rtnVal) {
     if (rtnVal[0] == "TRUE") {
         curpage = 1;
-
+        
+        g_isSearching = true;
         g_DeliverySearchParamXml = rtnVal[1];
         GetDocDeliveryList(g_DeliverySearchParamXml);
     }

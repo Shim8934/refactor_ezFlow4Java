@@ -68,6 +68,7 @@
 		    var opinionFlag;
 		    var includeOpinion = false;
 		    var signImageType = "${signImageType}";
+		    var orgCompanyID = "${orgCompanyID}";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -92,6 +93,7 @@
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = "Show";
+		        parameter[2] = orgCompanyID;
 		
 		        aprendopinion_dialogArgument[0] = parameter;
 		        aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
@@ -140,7 +142,8 @@
 		    		async : false,
 		    		url : "/ezApprovalG/getEndOpinionInfo.do",
 		    		data : {
-		    			docID : pDocID
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -340,7 +343,7 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', GetOpenWindowJun(765, 870));
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
 		            }
 		        }
 		    }
@@ -561,7 +564,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END");
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID=" + orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -773,7 +776,7 @@
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 
-   				  <c:if test="${approvalFlag != 'G'}">
+   				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID}">
 		          <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 		        </ul>
