@@ -20,7 +20,10 @@
 	</header>
 		<script type="text/javascript">
 		
-		var newPortalTopMenu = {};
+		var newPortalTopMenu = {
+			menuList: {},
+			menuWidth: [],
+		};
 	
 		// 로고 설정
 		var setLogo = function () {
@@ -75,8 +78,8 @@
 				//str += '<nav id="topNav" class="topNavCls" tyle="max-width:1102px;">';
 				str += '<nav id="topNav" class="topNavCls">';
 				str += '<div id="topMenuFull" class="full_nav off"><span class="icon_topmenu full_menu"></span></div>';
-				str += '<div class="countBox" style="display: block;"><span class="hidden_nav_count">+1</span><span class="icon_topmenu icon_count_arrow"></span></div>';
-				str += '<div class="countBox"><span class="hidden_nav_count">+1</span><span class="icon_topmenu icon_count_arrow"></span></div>';
+				str += '<div class="countBox" style="display: block;"><span class="hidden_nav_count" id="nav_count"></span><span class="icon_topmenu icon_count_arrow"></span></div>';
+				// str += '<div class="countBox"><span class="hidden_nav_count">+1</span><span class="icon_topmenu icon_count_arrow"></span></div>';
 				str += '<ul class="navUL" id="mainMenuList">';
 				
 				str += assembleMainMenu();
@@ -143,13 +146,48 @@
 			});
 		}
 		
- 		var newPortalTopMenuFunc = function () {
-			setTopMenu();
-			setUtilEvent();
-			setMainEvent();
+		// 메뉴 리스트의 사이즈 구하기
+		var getMenuListWidth = function () {
+ 			document.getElementById('mainMenuList').childNodes.forEach(function (item, index) {
+				newPortalTopMenu.menuWidth[index] = item.offsetWidth;
+			});	
+			console.log('list',newPortalTopMenu.menuWidth);
 		}
 		
+		// 탑메뉴 숨김메뉴 개수 표시
+		var countTopMenuList = function () {
+			// 현재 메인메뉴의 width를 구하기
+			var listWidth = document.getElementById('mainMenuList').offsetWidth;
+			
+			var sumWidth = 0;
+			var menuCnt = 0;
+			var totalMenuCnt = 0;
+			// 각 메뉴들의 사이즈를 더해서 현재 메인메뉴의 width보다 작을때를 확인.
+			newPortalTopMenu.menuWidth.forEach(function (item, index) {
+				if (sumWidth < listWidth) {
+					sumWidth += (item*1);
+					menuCnt++;
+				}
+				totalMenuCnt++;
+			});
+			document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1-1));
+		}
+		
+ 		var newPortalTopMenuFunc = function () {
+			setTopMenu();            // 헤더 전체 셋팅
+			setUtilEvent();          // 유틸메뉴 이벤트 설정
+			setMainEvent();          // 메인메뉴 이벤트 설정
+			getMenuListWidth();      // 메인메뉴 li별 사이즈 측정
+			countTopMenuList();      // 메인메뉴 카운팅
+		}
+		
+ 		
+ 		// 시작지점
 		newPortalTopMenuFunc();	
+		
+		window.onresize = function () {
+			countTopMenuList();      // 메인메뉴 카운팅
+		}
 		</script>	
 	</body>
 </html>

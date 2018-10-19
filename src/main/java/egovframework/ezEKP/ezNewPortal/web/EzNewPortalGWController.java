@@ -1303,11 +1303,18 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
-
+			MCommonVO info = mOptionService.commonInfoWeb(serverName,request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			
+			JSONObject data = new JSONObject();
+			
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
+			
+			data.put("portletList", portletList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

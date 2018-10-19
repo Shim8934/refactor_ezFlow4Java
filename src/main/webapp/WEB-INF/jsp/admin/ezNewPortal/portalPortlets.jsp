@@ -118,6 +118,13 @@ body {
 			
 		});
 	  } );
+		
+	  $("#portletAdd").on("click", portletAdd);
+	  $("#portletDel").on("click", portletDel);
+	  $("#portletOrderSave").on("click", portletOrderSave);
+	  $("#portletOrderReset").on("click", portletOrderReset);
+	  
+	  
 	</script>
 </head>
 	
@@ -125,10 +132,11 @@ body {
 	<h1>포틀릿 관리</h1>
 	<div id="mainmenu">
 		<span><b>회사 선택  : </b></span>
-		<select>
-			<option>sample</option>
-			<option>sample2</option>
-		</select>
+		<select id="ListCompany" onChange="selectCompanyID()">
+        	<c:forEach var="item" items="${companyList}">
+           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+           	</c:forEach>
+	    </select><br /><br />
 		<ul style="margin-top: 15px;">
 			<li id="portletAdd"><span>포틀릿 추가</span></li>
 			<li id="portletDel"><span>포틀릿 삭제</span></li>
@@ -139,20 +147,21 @@ body {
 	
 	<h1># 드래그 앤 드롭을 하고 순서저장 버튼을 누르면 기본 포틀릿 순서를 지정할 수 있습니다.</h1>
 	<br>
+	
 			
 	<div class="column">
-	<ul class="col-container">
-		<li class="portlet col" id="portlet1" data="por1">
-			<div class="portlet-header">게시판1</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
+	<ul id="portletListContainer" class="col-container">
+			<li class="portlet col" id="portlet1" data="por1">
+				<div class="portlet-header">게시판1</div>
+				<div class="portlet-content">
+					<div><b>포틀릿 사용  : </b></div>
+					<div><b>포틀릿 사용  : </b></div>
+					<div><b>포틀릿 사용  : </b></div>
+					<div><b>포틀릿 사용  : </b></div>
+					<div><b>포틀릿 사용  : </b></div>
+					<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
+				</div>
+			</li>
 		<li class="portlet col" id="portlet2" data="por2">
 			<div class="portlet-header">게시판2</div>
 			<div class="portlet-content">
