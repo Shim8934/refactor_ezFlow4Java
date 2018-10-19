@@ -179,19 +179,39 @@ function viewPersonalEnv() {
 
 function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
 	var data = {
-		"useQuestion" : useQuestion
+		"useQuestion" : useQuestion,
+		"useCircular" : useCircular,
+		"useMail"  : useMail,
+		"useApproval" : useApproval,
+		"useSchedule" : useSchedule
 	};
 	
 	$.ajax({
 		type : "POST",
 		url : "/ezNewPortal/unreadCounts.do",
+		data : JSON.stringify(data),
+		contentType : "application/json",
 		dataType : "json",
 		success : function(result) {
-			getCountSetting("poll", result.pollCount);
-			getCountSetting("circular", result.circularCount);
-			getCountSetting("schedule", result.scheduleCount);
-			getCountSetting("approval", result.approvalCount);
-			getCountSetting("unreadMail", result.unreadMailCount);
+			if (useQuestion === "YES") {
+				getCountSetting("poll", result.pollCount);
+			}
+			
+			if (useCircular === "YES") {
+				getCountSetting("circular", result.circularCount);
+			}
+			
+			if (useMail === "YES") {
+				getCountSetting("unreadMail", result.unreadMailCount);
+			}
+			
+			if (useApproval === "YES") {
+				getCountSetting("approval", result.approvalCount);
+			}
+			
+			if (useSchedule === "YES") {
+				getCountSetting("schedule", result.scheduleCount);
+			}
 		}
 	});
 }

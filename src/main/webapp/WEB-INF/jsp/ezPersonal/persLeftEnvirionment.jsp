@@ -49,7 +49,8 @@
 						window.parent.frames.right.document.location.href="/myoffice/ezPortal/environ/UserImage.aspx";				
 						break;
 					case "Portal_sub4": // 환경설정시 로그인 첫 화면을 특정 페이지로 선택 할수 있다. 2007-09-19
-					    window.parent.frames.right.document.location.href = "/ezPortal/startPageUser.do";	
+					    //window.parent.frames.right.document.location.href = "/ezPortal/startPageUser.do";	
+					    window.parent.frames.right.document.location.href = "/ezNewPortal/userStartPageSetting.do";
 						break;
 					case "Personal":
 						window.parent.frames.right.document.location.href="/ezPersonal/userManageWebPart.do";

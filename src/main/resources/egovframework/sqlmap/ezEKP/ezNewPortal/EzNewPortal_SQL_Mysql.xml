@@ -275,7 +275,7 @@ AND
 </select>
 
 <!-- 회사 접근 가능한 메뉴 리스트 -->
-<select id="ezNewPortal.getComppanyMenuList" parameterClass="Map" resultClass="MenuInfoVO">
+<select id="ezNewPortal.getCompanyMenuList" parameterClass="Map" resultClass="MenuInfoVO">
 <![CDATA[
 SELECT
 	comp.MENU_ID          AS MENUID,
@@ -718,7 +718,91 @@ AND
 	C.frame_default = 'Y'
 ]]>
 </select>
-<!-- 이효진-->
+
+<select id="ezNewPortal.getUserStartPage" parameterClass="Map" resultClass="MenuInfoVO">
+<![CDATA[
+SELECT
+	A.menu_id AS menuid,
+    B.menu_url AS menuurl
+FROM
+	TBL_PORTAL_STARTPAGE A
+JOIN
+	TBL_PORTAL_MENU B
+ON
+	A.menu_id = B.menu_id
+WHERE
+	A.user_id = #userId#
+AND
+	A.tenant_id = #tenantId#
+AND
+	A.company_id = #companyId#;
+]]>
+</select>
+
+<insert id="ezNewPortal.insertUserStartPage" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_STARTPAGE (
+	user_id,		tenant_id,		company_id,		menu_id
+) VALUES (
+	#userId#,		#tenantId#,		#companyId#,	#menuId#
+)
+]]>
+</insert>
+
+<update id="ezNewPortal.updateUserStartPage" parameterClass="Map">
+<![CDATA[
+UPDATE 
+	TBL_PORTAL_STARTPAGE
+SET
+	menu_id = #menuId#
+WHERE
+	user_id = #userId#
+AND
+	tenant_id = #tenantId#
+AND
+	company_id = #companyId#
+]]>
+</update>
+
+<delete id="ezNewPortal.deleteUserThemeSetting" parameterClass="Map">
+<![CDATA[
+DELETE FROM	
+	TBL_PORTAL_THEME_USER
+WHERE
+	user_id = #userId#
+AND
+	company_id = #companyId#
+AND
+	tenant_id = #tenantId#
+]]>
+</delete>
+
+<update id="ezNewPortal.updateUserThemeSetting" parameterClass="Map">
+<![CDATA[
+UPDATE
+	TBL_PORTAL_THEME_USER
+SET
+	used_theme = #usedTheme#,
+	used_frame = #usedFrame#
+WHERE
+	user_id = #userId#
+AND	
+	company_id = #companyId#
+AND
+	tenant_id = #tenantId#
+]]>
+</update>
+
+<insert id="ezNewPortal.insertUserThemeSetting" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_THEME_USER (
+	user_id,	company_id,		tenant_id,		used_theme,		used_frame
+) VALUES (
+	#userId#,	#companyId#,	#tenantId#,		#usedTheme#,	#usedFrame#
+)
+]]>
+</insert>
+<!-- 이효진--> 
 	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 			SELECT

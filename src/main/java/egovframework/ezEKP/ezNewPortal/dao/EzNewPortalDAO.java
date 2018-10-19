@@ -138,6 +138,29 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getUserThemeList", map);
 	}
 	
+	public MenuInfoVO getUserStartPage(Map<String, Object> map) {
+		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);
+	}
+	
+	public void insertUserStartPage(Map<String, Object> map) {
+		insert("ezNewPortal.insertUserStartPage", map);
+	}
+	
+	public void updateUserStartPage(Map<String, Object> map) {
+		update("ezNewPortal.updateUserStartPage", map);
+	}
+	
+	public void deleteUserThemeSetting(Map<String, Object> map) {
+		delete("ezNewPortal.deleteUserThemeSetting", map);
+	}
+	
+	public void updateUserThemeSetting(Map<String, Object> map) {
+		update("ezNewPortal.updateUserThemeSetting", map);
+	}
+	
+	public void insertUserThemeSetting(Map<String, Object> map) {
+		insert("ezNewPortal.insertUserThemeSetting", map);
+	}
 	/**
 	 * 이효진
 	 */
