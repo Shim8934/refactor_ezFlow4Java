@@ -27275,4 +27275,16 @@
 		AND
 			CN = #v_companyID#
 	</update>
+		<update id="EzApprovalG.updateOpinionInfo" parameterClass="Map">
+		 UPDATE 
+		 	TBL_APRDOCINFO
+         SET 
+         	HASOPINIONYN = 'N'
+       	 WHERE  
+       	 	DOCID = #v_DOCID#
+       	 AND
+    		TENANT_ID =#v_TENANTID#
+    	 AND
+    	 	COMPANYID = #companyID#
+	</update>
 </sqlMap>
