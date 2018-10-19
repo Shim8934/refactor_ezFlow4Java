@@ -3619,65 +3619,90 @@
 	</select>
 	
 	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
-		<![CDATA[
-			SELECT
-				A.REPLYID,
-				A.$v_UserName$ AS USERNAME,
-				A.USERID,
-				A.CONTENT,
-				A.WRITEDATE,
-				DEPTID
-	        FROM
-	        	TBL_BOARD_ONELINEREPLY A
-	        INNER JOIN
-			   ((SELECT
-					D.CN, D.DEPARTMENT as DEPTID,
-					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-					D.TENANT_ID
-				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #v_TENANTID#
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+		<isNotEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT
+					A.REPLYID,
+					A.$v_UserName$ AS USERNAME,
+					A.USERID,
+					A.CONTENT,
+					A.WRITEDATE,
+					DEPTID
+		        FROM
+		        	TBL_BOARD_ONELINEREPLY A
+		        INNER JOIN
+				   ((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #v_TENANTID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+						
+					UNION ALL
 					
-				UNION ALL
-				
-				(SELECT
-					B.cn, A2.DEPTID,
-					C.EXTENSIONATTRIBUTE2 as COMPANYID,
-					A2.TENANT_ID
-				FROM
-					TBL_USERMASTER B
-				INNER JOIN
-					TBL_ADDJOBMASTER A2
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID)) T
 				ON
-					A2.CN = B.CN
+					A.USERID = T.CN
 				AND
-					A2.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
-				ON
-					A2.DEPTID = C.CN
-				AND
-					B.TENANT_ID = C.TENANT_ID)) T
-			ON
-				A.USERID = T.CN
-			AND
-				A.TENANT_ID = T.TENANT_ID
-	        WHERE
-	        	A.TENANT_ID = #v_TENANTID#
-	        AND
-	        	T.COMPANYID = #v_COMPANYID#
-	        AND
-	       		A.BOARDID = #v_BoardID#
-			AND 
-				A.ITEMID = #v_ItemID#
-			GROUP BY
-				A.USERID, A.REPLYID
-			ORDER BY 
-				writedate ASC
-		]]>
+					A.TENANT_ID = T.TENANT_ID
+		        WHERE
+		        	A.TENANT_ID = #v_TENANTID#
+		        AND
+		        	T.COMPANYID = #v_COMPANYID#
+		        AND
+		       		A.BOARDID = #v_BoardID#
+				AND 
+					A.ITEMID = #v_ItemID#
+				GROUP BY
+					A.USERID, A.REPLYID
+				ORDER BY 
+					writedate ASC
+			]]>
+		</isNotEqual>
+		<!-- 2018-10-19 홍승비 - 익명댓글 표출 분기 추가 -->
+		<isEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT
+					REPLYID,
+					$v_UserName$ AS USERNAME,
+					USERID,
+					CONTENT,
+					WRITEDATE
+		        FROM
+		        	TBL_BOARD_ONELINEREPLY
+		        WHERE
+		        	TENANT_ID = #v_TENANTID#
+		        AND
+		       		BOARDID = #v_BoardID#
+				AND 
+					ITEMID = #v_ItemID#
+				GROUP BY
+					REPLYID
+				ORDER BY 
+					WRITEDATE  ASC
+			]]>
+		</isEqual>
 	</select>
 		
 	<select id="EzBoardDAO.checkOneLineOwner" parameterClass="Map" resultClass="Integer">

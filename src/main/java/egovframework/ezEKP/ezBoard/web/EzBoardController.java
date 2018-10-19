@@ -351,7 +351,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("pollFlag", pollFlag);
         modelMap.addAttribute("ladderFlag", ladderFlag);
         modelMap.addAttribute("memoFlag", memoFlag);
-                
+        
 		logger.debug("boardLeft ended");
 
 		return "ezBoard/boardLeft";
@@ -877,7 +877,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
-		// 여기에서 게시판정보, 게시판권한, 구분값 등등 설정하여 리턴
 		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
 		
 		if (boardPropertyVO.getAdminType() == null) {
@@ -932,6 +931,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		
 		logger.debug("boardItemList ended");
+		logger.debug("requestURL : " + requestURL);
         return requestURL;
 	}
 
@@ -971,7 +971,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				boardInfo = boardInfoTemp;
 				break;
 			}
-		}			
+		}
 		
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
@@ -2094,7 +2094,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
 		resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
 		resultXML.append("<LISTVIEWDATA>");
-		resultXML.append("<HEADERS>");	
+		resultXML.append("<HEADERS>");
 		
 		for (BoardListHeaderVO vo:headerList) {
 			resultXML.append("<HEADER>");
@@ -5007,7 +5007,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("btnStyle2", btnStyle2);
 		model.addAttribute("btnStyle3", btnStyle3);
 		model.addAttribute("oneLineReplyFlag", boardPropertyVO.getOneLineReply());
-
+		model.addAttribute("gubun", boardPropertyVO.getGuBun());
+		
 		logger.debug("boardItemViewPrintOption ended");
 		return "ezBoard/boardItemViewPrintOption";
 	}
@@ -6657,12 +6658,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
+		String gubun = request.getParameter("gubun");
 		String userName = "";
 		
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
+		/* 2018-10-19 홍승비 - 익명게시물의 댓글 표출조건 gubun값 추가 */
 		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서 대응하여 정보 보여주도록 수정 */
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -7423,7 +7426,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		/* 2018-07-02 홍승비 - 댓글 확인 시 조회자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
-		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 
@@ -7456,9 +7459,10 @@ public class EzBoardController extends EgovFileMngUtil{
     	String boardID = boardItemVO.getBoardID();
 		String itemID = boardItemVO.getItemID();
 		String userName = "";
+		String gubun = request.getParameter("gubun");
 		
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
+    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
     	for (BoardLineReplyVO reply : boardLineReplyVOList) {
     		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), userInfo.getOffset(), false));
     	}

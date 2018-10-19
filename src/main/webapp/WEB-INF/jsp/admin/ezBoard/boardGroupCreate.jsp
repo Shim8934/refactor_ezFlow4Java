@@ -31,9 +31,6 @@
 				var isAllGroupBoard = document.getElementById("allGroupBoard").checked;
 				var guBun = 0;
 				
-				// 체크되어있으면 true, 아니면 false
-				console.log("isAllGroupBoard      ::     " + isAllGroupBoard);
-				
 				if (name1 == ""){
 					alert("<spring:message code='ezBoard.t119'/>");
 					return;
