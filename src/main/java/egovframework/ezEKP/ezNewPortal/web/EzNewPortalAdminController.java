@@ -204,13 +204,119 @@ public class EzNewPortalAdminController {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			model.addAttribute("list", resultBody.get("data"));
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("themeInfo", data.get("themeInfo"));
+			model.addAttribute("frameInfos", data.get("frameInfos"));
 		}
-		
 		
 		LOGGER.debug("getPortalThemeDetail ended.");
 		
 		return "json";
+	}
+	
+	/**
+	 * 관리자 포탈 테마상세정보 수정
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/updateThemeDetail.do")
+	public void updateThemeDetail(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateThemeDetail started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezportal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("themeInfo", data.get("themeInfo"));
+			model.addAttribute("frameInfos", data.get("frameInfos"));
+		}
+		
+		LOGGER.debug("updateThemeDetail ended.");
+	}
+	
+	/**
+	 * 관리자 포탈 테마상세정보 미리보기 -> 이건 스크립트로 하고
+	 */
+	
+	/**
+	 * 관리자 메뉴 목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getMenus.do")
+	public String getMenus(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getMenus started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		LOGGER.debug("getMenus ended.");
+		return "json";
+	}
+	
+	/**
+	 * 관리자 메뉴 상세정보 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getMenuDetail.do")
+	public String getMenuDetail(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getMenus started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		LOGGER.debug("getMenus ended.");
+		return "json";
+	}
+	
+	/**
+	 * 관리자 메뉴 수정
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/updateMenu.do")
+	public void updateMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateMenu started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		LOGGER.debug("updateMenu ended.");
+	}
+	
+	/**
+	 * 관리자 메뉴 추가
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/insertMenu.do")
+	public void insertMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("insertMenu started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		LOGGER.debug("insertMenu ended.");
+	}
+	
+	/**
+	 * 관리자 메뉴 삭제
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/deleteMenu.do")
+	public void deleteMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("deleteMenu started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		LOGGER.debug("deleteMenu ended.");
+	}
+	
+	/**
+	 * 관리자 메뉴 순서조정
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/updateMenuOrder.do")
+	public void updateMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateMenuOrder started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		LOGGER.debug("updateMenuOrder ended.");
 	}
 	
 	/** ----------------------------------------------- */
@@ -222,7 +328,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/portalPortlet.do")
+	@RequestMapping(value = "/admin/ezNewPortal/portalPortlets.do")
 	public String portalManagePortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalPortlets started.");
 		
@@ -244,8 +350,9 @@ public class EzNewPortalAdminController {
 			String status = resultBody.get("status").toString();
 			
 			if (status.equals("ok")) {
-				model.addAttribute("companyList", resultBody.get("resultList"));
+				model.addAttribute("companyList", resultBody.get("data"));
 				model.addAttribute("userCompany", resultBody.get("userCompany"));
+				model.addAttribute("lang", resultBody.get("lang"));
 			}
 			
 			LOGGER.debug("portalPortlets ended.");
@@ -258,11 +365,12 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getPortlets.do")
 	@ResponseBody
-	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest req, Model model) throws Exception {
+	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
 		LOGGER.debug("getPortalPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String url = "/rest/admin/ezPortal/portlets/companies/"+ paramMap.get("companyId");;
+		String companyId = req.getParameter("companyId");
+		String url = "/rest/admin/ezPortal/portlets/companies/"+companyId;
 		
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -276,7 +384,7 @@ public class EzNewPortalAdminController {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			json = (JSONArray) data.get("PortletList");
 		}
-		
+		LOGGER.debug("json : " + json);
 		LOGGER.debug("getPortalPortlets Ended");
 		return json;
 	}

@@ -85,45 +85,127 @@ body {
 	    padding: 16px;
 	}
 	</style>
-	<script type="text/javascript">
+	<script type="text/javascript">	
+	
+	var lang = "${lang}";
+	var arrayLang = Number(lang) - 1;
+	
 	$( function() {
-	    $( ".column .col-container" ).sortable({
-	      handle: ".portlet-header",
-	      cancel: ".portlet-toggle",
-	      placeholder: "portlet"
-	    });
-	 
-	    $( ".portlet" )
-	      .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-	      .find( ".portlet-header" )
-	      .addClass( "ui-widget-header ui-corner-all" )
-	      .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
-	 
-		$( ".portlet-toggle" ).on( "click", function() {
-			var icon = $( this );
-			icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
-			icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-		  
-			var thisOrder = icon.attr('data');
-			var thisShare = thisOrder / 3;
-			var thisRest = thisOrder % 3;
-			var otherOrder = "";
-			
-			for (var int = 0; int < 9; int++) {
-				otherOrder =$('#portlet'+i+1).attr('data');
-				
-				/* if ((otherOrder / 3) === thisShare && (ortherOrder % 3) */
-			}
-			
-			
-		});
+		getPortletList();	
 	  } );
-		
+	  
+	  //이벤트 세팅
 	  $("#portletAdd").on("click", portletAdd);
 	  $("#portletDel").on("click", portletDel);
 	  $("#portletOrderSave").on("click", portletOrderSave);
 	  $("#portletOrderReset").on("click", portletOrderReset);
+	  $("#PortletInfoUpdate").on("click", PortletInfoUpdate);
 	  
+	  
+	  //이벤트 연결 함수
+	  function portletAdd() {
+		  
+	  }
+	  
+	  function portletDel() {
+			  
+	  }
+	 
+	  function portletOrderSave() {
+		  
+	  }
+	 
+	  function portletOrderReset() {
+	 	  
+	  }
+	  
+	  function PortletInfoUpdate() {
+		  
+	  }
+	  
+	  //포틀릿 리스트 불러오는 함수
+	  function getPortletList() {
+		  var companyId = $('#ListCompany option:selected').val();
+		  $.ajax({
+		    	type : "POST",
+		    	dataType : "json",
+		    	url : "/admin/ezNewPortal/getPortlets.do",
+		    	data : {
+						companyId : companyId
+		    	},
+		    	success : function(result){
+		    	/*
+		    	A.PORTLET_ID,
+				A.PORTLET_ORDER,
+			    B.PORTLET_NAME,
+				C.PORTLET_TYPE,
+			    C.MENU_ID
+		    	*/	
+				var portletId = "";
+		        var portletOrder = "";
+		   		var portletName = "";
+		   		var portletType = "";
+		   		var menuId = "";
+		   		var portletURL = "";
+		   		var portletNameList;
+				var listHTML = "";
+				var portletCnt = result.length;
+
+		          for (var i = 0; i < portletCnt; i++) {
+		        	  portletId = result[i].portletId;
+		        	  portletOrder = result[i].portletOrder;
+		        	  portletName = result[i].portletName;
+		        	  portletType = result[i].portletType;
+		        	  portletURL = result[i].connectionUrl;
+		        	  portletNameList = result[i].portletNameList;
+		        	  menuId = result[i].menuId;
+		        	  portletNameListCnt = portletNameList.length;
+		            	
+		             listHTML += "<li class='portlet col' id='" + portletId + " data1='"+portletOrder +"'>"	
+		             listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
+		             listHTML += "<div class='portlet-content'>";
+		             listHTML += "<div class='leftButton'>"
+		             listHTML += "<input type='button' id='PortletInfoUpdate' value='저장'>"
+		           	 listHTML += "</div>"
+		             listHTML += "<div><b>포틀릿 사용  : </b></div>";
+		             for (var j = 0; j < portletNameListCnt; j++) {
+		            	 listHTML += "<div>포틀릿명("+portletNameList[j].portletLang+") : <input type='text' value='"+portletNameList[j].portletName +"'></div>"
+					 }
+		             listHTML += "연결 URL : <input type='text' value='"+ portletURL +"'>";
+		             listHTML += "게시판 설정 : <input type='button' id='updateBoardType' value='설정'>";
+		             listHTML += "</div>";
+		             listHTML += "</li>";
+		            }
+		            
+		            document.getElementById("portletListContainer").innerHTML = listHTML;
+		            loadAfter();
+			},
+			error:function(request,status,error){
+			    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			   }
+		    });
+	  }
+	  
+	  function loadAfter() {
+		  $( ".column .col-container" ).sortable({
+		      handle: ".portlet-header",
+		      cancel: ".portlet-toggle",
+		      placeholder: "portlet"
+		    });
+		 
+		    $( ".portlet" )
+		      .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+		      .find( ".portlet-header" )
+		      .addClass( "ui-widget-header ui-corner-all" )
+		      .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+		 
+			$( ".portlet-toggle" ).on( "click", function() {
+				var icon = $( this );
+				icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+				icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+				
+			});
+	  }
 	  
 	</script>
 </head>
@@ -134,7 +216,7 @@ body {
 		<span><b>회사 선택  : </b></span>
 		<select id="ListCompany" onChange="selectCompanyID()">
         	<c:forEach var="item" items="${companyList}">
-           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
            	</c:forEach>
 	    </select><br /><br />
 		<ul style="margin-top: 15px;">
@@ -151,107 +233,8 @@ body {
 			
 	<div class="column">
 	<ul id="portletListContainer" class="col-container">
-			<li class="portlet col" id="portlet1" data="por1">
-				<div class="portlet-header">게시판1</div>
-				<div class="portlet-content">
-					<div><b>포틀릿 사용  : </b></div>
-					<div><b>포틀릿 사용  : </b></div>
-					<div><b>포틀릿 사용  : </b></div>
-					<div><b>포틀릿 사용  : </b></div>
-					<div><b>포틀릿 사용  : </b></div>
-					<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-				</div>
-			</li>
-		<li class="portlet col" id="portlet2" data="por2">
-			<div class="portlet-header">게시판2</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet3" data="por3">
-			<div class="portlet-header">게시판3</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet4" data="por4">
-			<div class="portlet-header">게시판4</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet5" data="por5">
-			<div class="portlet-header">게시판5</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet6" data="por6">
-			<div class="portlet-header">게시판6</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet7" data="por7">
-			<div class="portlet-header">게시판7</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet8" data="por8">
-			<div class="portlet-header">게시판8</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-		<li class="portlet col" id="portlet9" data="por9">
-			<div class="portlet-header">게시판9</div>
-			<div class="portlet-content">
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>포틀릿 사용  : </b></div>
-				<div><b>게시판설정  : </b>공지사항<button>설정</button></div>
-			</div>
-		</li>
-	</ul>
-		
+			
+	</ul>		
 	</div> 
  
  
