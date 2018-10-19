@@ -84,7 +84,7 @@ public interface EzQuestionService {
 	
 	public int callGetItemSeq(int brdID, int tenantID) throws Exception;
 	
-	public int wpCountPollCount (String userID, int tenantID, String offset) throws Exception;
+	public int wpCountPollCount (String userID, int tenantID, String offset, String companyID) throws Exception;
 	
 	public Integer getQstResponse(String brdID, String itemNo, int tenantID) throws Exception;
 	

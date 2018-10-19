@@ -533,7 +533,7 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
                 
-                if (strName == "비치" || strName == "특수목록" || strName == "연기신청") {
+                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -1581,7 +1581,7 @@ function SetUnSelected(pTableID) {
 }
 
 function setDeleteRow(nodeId) {
-	var colCount = document.getElementById(nodeId+"_TH").childElementCount;
+	var colCount = _dataSource.getElementsByTagName("ROW");
 	var oTable = document.getElementById(nodeId);
 	var oTbody = oTable.lastChild;
 	
@@ -1594,4 +1594,6 @@ function setDeleteRow(nodeId) {
 	objTd.setAttribute("colSpan", colCount);
     objTd.appendChild(oText);
     objTr.appendChild(objTd);
+    
+    oTable.setAttribute("lastSelectedRowID", "");
 }
