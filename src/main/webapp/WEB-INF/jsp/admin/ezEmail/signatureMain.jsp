@@ -242,7 +242,7 @@
 	        }
 	        
 	        function signPreviewChange(data) {
-	        	var preTxt = $(".signPreViewTxt")[0];
+	        	/* var preTxt = $(".signPreViewTxt")[0];
 	        	var preIframe = $(".signPreViewIframe");
 	        	var txtDisplay = "block";
 	        	var iframeDisplay = "none";
@@ -257,6 +257,19 @@
 	        		preTxt.style.display = txtDisplay;
 		        	preIframe[0].style.display = iframeDisplay;
 		        	preTxt.innerHTML = txtText;
+	        	} */
+	        	var preTxt = $(".signPreViewTxt")[0];
+	        	var preIframe = $(".signPreViewIframe");
+	        	var txtDisplay = "block";
+	        	var iframeDisplay = "none";
+	        	var txtContent = data[0].content;
+	        	//var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
+	        	
+	        	if (txtContent !== undefined) {
+	        		$(".signPreViewTxt")[0].style.display = "none";
+		        	preIframe.get(0).contentWindow.document.body.innerHTML = txtContent;
+	        	} else {
+	        		$(".signPreViewTxt")[0].style.display = "";
 	        	}
 	        	
 	        	
@@ -356,8 +369,7 @@
 								style='text-align: center; position: relative; top: 48%; transform: translateY(-50%); font-size:13px'>
 								<spring:message code='ezBoard.t431' />
 							</div>
-							<iframe src="" class="signPreViewIframe lmPre" id="lmPreViewIframe"
-								style="display: none; border: none; width: 100%; height: 100%;"></iframe>
+							<iframe class="signPreViewIframe" name="signPreViewIframe" style="border:none; width:100%; height:430px;" ></iframe>
 						</div>
 					</div>
 				</td>
