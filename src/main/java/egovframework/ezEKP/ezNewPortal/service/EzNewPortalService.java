@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -65,6 +66,8 @@ public interface EzNewPortalService {
 	 * @throws Exception
 	 */
 	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
+	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception;
+	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

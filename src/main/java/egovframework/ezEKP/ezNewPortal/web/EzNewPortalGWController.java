@@ -50,6 +50,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -78,8 +79,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
 public class EzNewPortalGWController {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EzNewPortalGWController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalGWController.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -144,9 +144,8 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/settingInfo/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserPortalSetting(HttpServletRequest request,
-			@PathVariable String userId, Locale locale) throws Exception {
-		LOGGER.debug("ezNewortal G/W getUserPortalSetting started.");
+	public JSONObject getUserPortalSetting(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getUserPortalSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -157,23 +156,18 @@ public class EzNewPortalGWController {
 			String portletLang = info.getLang();
 
 			// 사용자 설정 테마/프레임 가져오기
-			UserPortalSettingVO userThemeSetting = ezNewPortalService
-					.getUserPortalSetting(userId, companyId, tenantId);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 
 			// 사용자 포틀릿 순서 가져오기
-			List<PortletInfoVO> portletOrder = ezNewPortalService
-					.getPortletOrderUser(portletLang, userId, tenantId,
-							companyId);
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
 
 			// 사용자 설정 포틀릿 순서가 없으면 회사의 포틀릿 순서를 따름
 			if (portletOrder.isEmpty()) {
-				portletOrder = ezNewPortalService.getPortletOrderComp(
-						portletLang, tenantId, companyId);
+				portletOrder = ezNewPortalService.getPortletOrderComp(portletLang, tenantId, companyId);
 			}
 
 			// 회사의 슬라이더 이미지 가져오기
-			List<PersonalSliderImageVO> sliderList = ezPersonalService
-					.getSilderList(companyId, "USER", null, tenantId);
+			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(companyId, "USER", null, tenantId);
 
 			String userName = "";
 			String userTitle = "";
@@ -192,36 +186,35 @@ public class EzNewPortalGWController {
 			}
 
 			// 유저이미지
-			String imgUrl = ezOrganService.getPropertyValue(userId,
-					"extensionAttribute2", tenantId);
+			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", tenantId);
 
 			if (imgUrl != null && !imgUrl.equals("")) {
-				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO",
-						tenantId) + commonUtil.separator + imgUrl;
+				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + imgUrl;
 			}
-			
-			//메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
+
+			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
 			String useAttitude = "";
 			String useQuestion = "";
 			String useCircular = "";
 			String useMail = "";
 			String useApproval = "";
 			String useSchedule = "";
-			
-			//1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE), 전자설문(useQuestion)
+
+			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
+			// 전자설문(useQuestion)
 			useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
 			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
-			
-			//2. 메뉴에 권한이 있는지  ================ 수정하기 start
+
+			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 			if (useAttitude.equals("NO")) {
 				useAttitude = "NO";
 			}
-			
+
 			if (useQuestion.equals("NO")) {
 				useQuestion = "NO";
 			}
-			
+
 			if (useCircular.equals("NO")) {
 				useCircular = "NO";
 			}
@@ -229,8 +222,8 @@ public class EzNewPortalGWController {
 			useMail = "YES";
 			useApproval = "YES";
 			useSchedule = "YES";
-			//=================================== 여기까지 end
-			
+			// =================================== 여기까지 end
+
 			JSONObject data = new JSONObject();
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
@@ -265,23 +258,19 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/order/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updatePortletOrder(HttpServletRequest request,
-			@PathVariable String userId, @RequestBody JSONObject jsonParam)
-			throws Exception {
+	public JSONObject updatePortletOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			List<Map<String, Integer>> portletOrder = (List<Map<String, Integer>>) jsonParam
-					.get("updateOrder");
+			List<Map<String, Integer>> portletOrder = (List<Map<String, Integer>>) jsonParam.get("updateOrder");
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 
-			ezNewPortalService.updatePortletOrderUser(userId, companyId,
-					tenantId, portletOrder, portletLang);
+			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -300,8 +289,7 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/birthday/months/{month}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMonthlyBirthdayEmployees(HttpServletRequest request,
-			@PathVariable int month) throws Exception {
+	public JSONObject getMonthlyBirthdayEmployees(HttpServletRequest request, @PathVariable int month) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees started.");
 		JSONObject result = new JSONObject();
 
@@ -311,17 +299,12 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			int curPage = Integer.parseInt(request
-					.getParameter("birthdayCurPage"));
+			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage"));
 			int count = Integer.parseInt(request.getParameter("birthdayCount"));
 			int startRow = curPage * count;
 
-			int birthdayListCount = ezNewPortalService
-					.getMonthlyBirthdayEmployeesCount(companyId, tenantId,
-							month);
-			List<PortalUserInfoVO> birthdayList = ezNewPortalService
-					.getMonthlyBirthdayEmployees(companyId, tenantId, month,
-							count, startRow);
+			int birthdayListCount = ezNewPortalService.getMonthlyBirthdayEmployeesCount(companyId, tenantId, month);
+			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow);
 
 			int birthdayCurPage = 0;
 
@@ -356,8 +339,7 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/bestEmployee/months/{month}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMonthlyBestEmployee(HttpServletRequest request,
-			@PathVariable int month) throws Exception {
+	public JSONObject getMonthlyBestEmployee(HttpServletRequest request, @PathVariable int month) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getMonthlyBestEmployee started.");
 		JSONObject result = new JSONObject();
 
@@ -372,8 +354,7 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 
-			PortalUserInfoVO bestEmployee = ezNewPortalService
-					.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId);
+			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -392,8 +373,7 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserThemeList(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject getUserThemeList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserThemeList started.");
 		JSONObject result = new JSONObject();
 
@@ -405,8 +385,7 @@ public class EzNewPortalGWController {
 
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(
-					false, companyId, tenantId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -425,8 +404,7 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserMenuList(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject getUserMenuList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserMenuList started.");
 		JSONObject result = new JSONObject();
 
@@ -451,7 +429,7 @@ public class EzNewPortalGWController {
 			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
 			LOGGER.debug("list.toString() : " + userMenuList.toString());
 			if (userMenuList.size() == 0) {
-				compMenuList = ezNewPortalService.getCompanyMenuList(companyId,	tenantId, langType);
+				compMenuList = ezNewPortalService.getCompanyMenuList(companyId, tenantId, langType);
 				data.put("menuList", compMenuList);
 			} else {
 				data.put("menuList", userMenuList);
@@ -467,7 +445,7 @@ public class EzNewPortalGWController {
 			}
 			data.put("logoUrl", logoUrl);
 			data.put("roleInfo", roleInfo);
-LOGGER.debug("TopMenu Data : " + data.toJSONString());
+			LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -485,8 +463,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserMenuOrder(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject updateUserMenuOrder(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserMenuOrder started.");
 		JSONObject result = new JSONObject();
 
@@ -510,8 +487,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deleteUserMenuOrder(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject deleteUserMenuOrder(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteUserMenuOrder started.");
 		JSONObject result = new JSONObject();
 
@@ -535,15 +511,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/quickLink/company/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getQuickLinkList(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject getQuickLinkList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getQuickLinkList started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -561,8 +535,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserFrameList(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject getUserFrameList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserFrameList started.");
 		JSONObject result = new JSONObject();
 
@@ -586,8 +559,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserFrame(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject updateUserFrame(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserFrame started.");
 		JSONObject result = new JSONObject();
 
@@ -611,8 +583,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getPortletList(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject getPortletList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getPortletList started.");
 		JSONObject result = new JSONObject();
 
@@ -636,8 +607,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserPortletSetting(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject updateUserPortletSetting(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserPortletSetting started.");
 		JSONObject result = new JSONObject();
 
@@ -661,9 +631,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/themes/{themeId}/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserThemeSetting(HttpServletRequest request,
-			@PathVariable String userId, @PathVariable int themeId)
-			throws Exception {
+	public JSONObject updateUserThemeSetting(HttpServletRequest request, @PathVariable String userId, @PathVariable int themeId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserThemeSetting started.");
 		JSONObject result = new JSONObject();
 
@@ -692,8 +660,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deleteUserThemeSetting(HttpServletRequest request,
-			@PathVariable String userId) throws Exception {
+	public JSONObject deleteUserThemeSetting(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteUserThemeSetting started.");
 		JSONObject result = new JSONObject();
 
@@ -722,8 +689,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/settingInfo/unreadCounts/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUnreadCounts(HttpServletRequest request,
-			@PathVariable String userId, Locale locale) throws Exception {
+	public JSONObject getUnreadCounts(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUnreadCounts started.");
 		JSONObject result = new JSONObject();
 
@@ -738,8 +704,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String idList = "T";
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
-			String userEmail = userId + "@"
-					+ ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
 			String useQuestion = request.getParameter("useQuestion");
 			String useCircular = request.getParameter("useCircular");
@@ -748,14 +713,12 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String useSchedule = request.getParameter("useSchedule");
 
 			JSONObject data = new JSONObject();
-			
-			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail 
-					+ ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
-			
+
+			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+
 			// 전자 설문 개수 불러오기
 			if (useQuestion.equals("YES")) {
-				int pollCount = ezQuestionService.wpCountPollCount(userId,
-						tenantId, offset, companyId);
+				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
 
 				data.put("pollCount", pollCount);
 			}
@@ -764,26 +727,17 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			if (useSchedule.equals("YES")) {
 				String startDate = nowDate + " 00:00:00";
 				String endDate = nowDate + " 23:59:59";
-				String startTime = commonUtil.getDateStringInUTC(nowDate
-						+ " 00:00:00", offset, true);
-				String endTime = commonUtil.getDateStringInUTC(nowDate
-						+ " 23:59:59", offset, true);
+				String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
+				String endTime = commonUtil.getDateStringInUTC(nowDate + " 23:59:59", offset, true);
 				String indiList = "";
 				String pidList = "";
 				String pidListSub = "";
 				String indiListSub = "";
 
-				List<ScheduleSecretaryVO> tList = ezScheduleService
-						.getPublicScheduleSec(userId, portletLang, tenantId,
-								companyId);
-				List<ScheduleDeptVO> dList = ezScheduleService
-						.getPublicScheduleDept(userId, portletLang, tenantId,
-								companyId);
-				List<ScheduleCumulerVO> cList = ezScheduleService
-						.getPublicScheduleCumuler(userId, portletLang, tenantId,
-								companyId);
-				List<ScheduleGroupListVO> gList = ezScheduleService
-						.getScheduleGroupList(userId, tenantId, companyId);
+				List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, portletLang, tenantId, companyId);
+				List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, portletLang, tenantId, companyId);
+				List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, portletLang, tenantId, companyId);
+				List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, tenantId, companyId);
 
 				indiList = "'" + userId + "'";
 
@@ -825,8 +779,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 				if (gList != null && gList.size() > 0) {
 					for (int i = 0; i < gList.size(); i++) {
-						if ((dList == null || dList.size() <= 0)
-								&& (cList == null || cList.size() <= 0)) {
+						if ((dList == null || dList.size() <= 0) && (cList == null || cList.size() <= 0)) {
 							if (i == 0) {
 								pidListSub += ",";
 							}
@@ -839,8 +792,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 				if (indiListSub.equals("") || indiListSub == null) {
 					indiListSub = ",\'\'";
 				} else {
-					indiListSub = indiListSub
-							.substring(0, indiListSub.length() - 1);
+					indiListSub = indiListSub.substring(0, indiListSub.length() - 1);
 				}
 
 				indiList += indiListSub;
@@ -852,28 +804,23 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(
-						indiList, pidList, "", startTime, endTime, startDate,
-						endDate, "", offsetMin, "", tenantId, companyId, userId);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId);
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}
-			
+
 			// 회람판 개수 불러오기
 			if (useCircular.equals("YES")) {
-				int circularCount = ezCircularSerivce.getListCount("newCircular",
-						userId, tenantId, companyId);
+				int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
 				data.put("circularCount", circularCount);
 			}
 
 			// 결재할 문서 개수 불러오기
 			if (useApproval.equals("YES")) {
-				int approvalCount = ezApprovalGSerivce.getWebPartListCount("1",
-						userId, deptId, "", "COUNT", "", companyId, portletLang,
-						tenantId, offsetMin);
+				int approvalCount = ezApprovalGSerivce.getWebPartListCount("1", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
 				data.put("approvalCount", approvalCount);
 			}
-			
+
 			// 읽지 않은 메일 가져오기
 			if (useMail.equals("YES")) {
 				IMAPAccess ia = null;
@@ -881,10 +828,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 				int unreadMailCount = 0;
 
 				try {
-					ia = IMAPAccess.getInstance(
-							config.getProperty("config.MailServerAddress"),
-							config.getProperty("config.IMAPPort"), userEmail,
-							password, egovMessageSource, locale, ezEmailUtil);
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					unreadMailCount = ia.getUnreadCount(folderName);
 				} catch (Exception e) {
 
@@ -895,7 +839,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 				}
 				data.put("unreadMailCount", unreadMailCount);
 			}
-			
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -912,7 +856,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	//사용자 초기화면 정보 조회
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserStartPage (HttpServletRequest request, @PathVariable String userId) {
+	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
 
@@ -921,9 +865,9 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			
+
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
-			
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", startPage);
@@ -967,8 +911,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/companies", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyList(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getCompanyList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyList started.");
 		JSONObject result = new JSONObject();
 
@@ -982,8 +925,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
-			resultList = ezOrganAdminService.getCompanyList(primary,
-					userInfo.getTenantId());
+			resultList = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
 
 			result.put("data", resultList);
 			result.put("userCompany", userInfo.getCompanyID());
@@ -1006,20 +948,19 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 * 포탈개인화 G/W [GET] 회사별 테마 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value= "/rest/admin/ezportal/themes/companies/{companyId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/themes/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyThemes(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyThemes} started.");
 		JSONObject result = new JSONObject();
-		
+
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			
+
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			
-//			List<ThemeInfoVO> themeList = ezNewPortalService.getUserThemeList(companyId, tenantId);
+
 			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId());
-			
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", themeList);
@@ -1037,16 +978,26 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyThemeInfo(HttpServletRequest request,
-			@PathVariable int themeId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject getCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			ThemeInfoVO themeInfo = ezNewPortalService.getThemeDetail(themeId, companyId, tenantId);
+			List<FrameInfoVO> frameInfos = ezNewPortalService.getFrames(themeId, companyId, tenantId);
+			
+			JSONObject data = new JSONObject();
+			
+			data.put("themeInfo", themeInfo);
+			data.put("frameInfos", frameInfos);
+			
+			result.put("data", data);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1064,16 +1015,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyThemeInfo(HttpServletRequest request,
-			@PathVariable int themeId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1091,16 +1039,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/frames/{frameId}/preview/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyThemePreview(HttpServletRequest request,
-			@PathVariable int themeId, @PathVariable int frameId,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject getCompanyThemePreview(HttpServletRequest request, @PathVariable int themeId, @PathVariable int frameId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyThemePreview started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1118,15 +1063,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyMenuList(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject getCompanyMenuList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyMenuList started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1144,15 +1087,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyMenuOrder(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject updateCompanyMenuOrder(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1170,16 +1111,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyMenuInfo(HttpServletRequest request,
-			@PathVariable String companyId, @PathVariable int menuId)
-			throws Exception {
+	public JSONObject getCompanyMenuInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable int menuId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyMenuInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1197,16 +1135,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyMenuInfo(HttpServletRequest request,
-			@PathVariable String companyId, @PathVariable int menuId)
-			throws Exception {
+	public JSONObject updateCompanyMenuInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable int menuId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1224,16 +1159,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyMenuAuth(HttpServletRequest request,
-			@PathVariable int menuId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject getCompanyMenuAuth(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyMenuAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1251,16 +1183,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyMenuAuth(HttpServletRequest request,
-			@PathVariable int menuId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject updateCompanyMenuAuth(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1278,15 +1207,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertCompanyMenu(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject insertCompanyMenu(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyMenu started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1304,16 +1231,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deleteCompanyMenu(HttpServletRequest request,
-			@PathVariable int menuId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject deleteCompanyMenu(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1331,22 +1255,21 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyPortletList(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject getCompanyPortletList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletList started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
-			
+
 			JSONObject data = new JSONObject();
-			
+
 			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
-			
+
 			data.put("portletList", portletList);
-			
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -1364,15 +1287,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyPortletOrder(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyPortletOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1390,16 +1311,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getPortletInfo(HttpServletRequest request,
-			@PathVariable int portletId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject getPortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1417,16 +1335,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertPortlet(HttpServletRequest request,
-			@PathVariable int portletId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject insertPortlet(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1444,16 +1359,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deletePortlet(HttpServletRequest request,
-			@PathVariable int portletId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject deletePortlet(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteCompanyPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1471,16 +1383,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updatePortletInfo(HttpServletRequest request,
-			@PathVariable int portletId, @PathVariable String companyId)
-			throws Exception {
+	public JSONObject updatePortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1498,15 +1407,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/boards/tree/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getBoardTree(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject getBoardTree(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getBoardTree started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1524,15 +1431,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyLogo(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject getCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyLogo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1550,15 +1455,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertCompanyLogo(HttpServletRequest request,
-			@PathVariable String companyId) throws Exception {
+	public JSONObject insertCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyLogo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1577,8 +1480,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/boardFavorites", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getFavoriteBoardPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getFavoriteBoardPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -1587,8 +1489,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			JSONObject data = new JSONObject();
 
@@ -1596,10 +1497,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
 
-				List<FavoriteBoardVO> favNewList = ezNewPortalService
-						.getFavNewItemList(info.getUserId(),
-								info.getTenantId(), info.getCompanyId(),
-								commonUtil.getTodayUTCTime(""), limit);
+				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit);
 
 				for (FavoriteBoardVO fvo : favNewList) {
 					LOGGER.debug("resultList : " + fvo.getItemId());
@@ -1609,9 +1507,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 			} else { // 일반게시판
 
-				List<FavoriteBoardVO> favList = ezNewPortalService
-						.getFavItemList(boardId, info.getTenantId(),
-								info.getCompanyId(), limit);
+				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit);
 
 				for (FavoriteBoardVO fvo : favList) {
 					LOGGER.debug("resultList : " + fvo.getItemId());
@@ -1638,8 +1534,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/boardFavorites/lists", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getFavoriteBoardPortletList(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getFavoriteBoardPortletList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortletList started.");
 		JSONObject result = new JSONObject();
 		String userId = request.getParameter("userId");
@@ -1651,8 +1546,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 
-			List<BoardMyFavoriteVO> resultList = ezBoardService
-					.get_favoriteList(userId, mode, companyId, tenantId);
+			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
 
@@ -1680,8 +1574,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/community", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCommunityPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getCommunityPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCommunityPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -1695,8 +1588,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			JSONObject data = new JSONObject();
 			String lang = info.getLang();
 
-			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService
-					.getCommunityList(lang, companyId, tenantId);
+			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, companyId, tenantId);
 
 			// int CommuSize = CommunityList.size();
 			//
@@ -1744,8 +1636,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			// }
 			// }
 			// }
-			String commuPath = commonUtil.getUploadPath(
-					"upload_community.LOGO", tenantId);
+			String commuPath = commonUtil.getUploadPath("upload_community.LOGO", tenantId);
 
 			data.put("CommunityList", CommunityList);
 			data.put("CommuSize", CommunityList.size());
@@ -1769,8 +1660,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/community/permits", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject CommunityPermit(HttpServletRequest request)
-			throws Exception {
+	public JSONObject CommunityPermit(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCommunityPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -1783,8 +1673,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			JSONObject data = new JSONObject();
 			String clubNo = request.getParameter("clubNo");
 
-			String memberChk = ezNewPortalService.getCommunityPermit(clubNo,
-					userId, tenantId);
+			String memberChk = ezNewPortalService.getCommunityPermit(clubNo, userId, tenantId);
 
 			data.put("memberChk", memberChk);
 
@@ -1806,8 +1695,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/receivedMail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getReceivedMainPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getReceivedMainPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getReceivedMainPortlet started.");
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1829,16 +1717,12 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			try {
 				// get user credentials
 
-				String domainName = ezCommonService.getTenantConfig(
-						"DomainName", info.getTenantId());
+				String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 				String userAccount = userId + "@" + domainName;
 
 				LOGGER.debug("userEmail=" + userAccount);
 
-				ia = IMAPAccess.getInstance(
-						config.getProperty("config.MailServerAddress"),
-						config.getProperty("config.IMAPPort"), userAccount,
-						password, egovMessageSource, locale, 40 * 1000,
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, password, egovMessageSource, locale, 40 * 1000,
 						20 * 1000, ezEmailUtil);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
@@ -1847,8 +1731,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 				double mailboxQuota = storageUsageAndLimit[1]; // in KBs
 
 				// 재은 수정
-				String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage,
-						mailboxQuota);
+				String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
 				String mailPercent = "";
 				String mailboxDetail = "";
 				String mailboxQuotaStr = "";
@@ -1859,8 +1742,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 					mailboxQuotaStr = mailUse[2];
 				}
 
-				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail="
-						+ mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
+				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
 
 				Folder folder = ia.getFolder(folderPath);
 				folder.open(Folder.READ_ONLY);
@@ -1874,10 +1756,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 				// mailCount = unreadCount;
 				// }
 
-				messages = ezEmailUtil.searchFolder(ia, userAccount, folder,
-						"", "", null, null, false, false, false,
-						"receivedDate", false, 0, mailCount, false, null,
-						info.getTenantId());
+				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1895,20 +1774,17 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 					// received date
 					Date receivedDate = message.getReceivedDate();
 					String receivedDateStr = sdf.format(receivedDate);
-					receivedDateStr = commonUtil.getDateStringInUTC(
-							receivedDateStr, info.getOffset(), false);
+					receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffset(), false);
 
 					// sender
-					String sender = ezEmailUtil
-							.getFromNameOrAddressOfMessage(message);
+					String sender = ezEmailUtil.getFromNameOrAddressOfMessage(message);
 
 					// subject
 					String subject = ezEmailUtil.getSubject(message);
 					subject = (subject != null) ? subject : "";
 
 					if (ezEmailUtil.hasSecureMailFlag(message)) {
-						subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />"
-								+ subject;
+						subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
 					}
 
 					int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
@@ -1960,8 +1836,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/vote", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getVotePortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getVotePortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getVotePortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -1977,22 +1852,18 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 
 			// 진행중인 투표 중 내가 참여하고 있는 투표의 개수
-			int voteCount = ezNewPortalService.getVotePortletCount(userId,
-					companyId, deptPath, tenantId);
+			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId);
 
 			JSONObject data = new JSONObject();
 			data.put("voteCount", voteCount);
 
 			if (voteCount != 0) {
 				// 투표 정보 가져오기
-				PollQuestionVO pollQuestion = ezNewPortalService
-						.getVotePortletInfo(userId, companyId, deptPath,
-								tenantId);
+				PollQuestionVO pollQuestion = ezNewPortalService.getVotePortletInfo(userId, companyId, deptPath, tenantId);
 				int qstId = pollQuestion.getQstId();
 
 				LOGGER.debug("qstId : " + qstId);
-				List<PollAnswerVO> pollAnswer = ezNewPortalService
-						.getVotePortletAnswer(qstId, tenantId);
+				List<PollAnswerVO> pollAnswer = ezNewPortalService.getVotePortletAnswer(qstId, tenantId);
 				int pollAnswerCount = 0;
 
 				for (int i = 0; i < pollAnswer.size(); i++) {
@@ -2022,8 +1893,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/photoBoard", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getPhotoBoardPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getPhotoBoardPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getPhotoBoardPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -2039,31 +1909,26 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 																					// 포틀릿
 																					// 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
-			int photoCount = Integer.parseInt(request
-					.getParameter("photoCount"));
+			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
 			String deptPath = info.getDeptPathCode();
 			deptPath += "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
-			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(
-					companyId, tenantId, portletId, portletLang);
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
 			String boardId = portlet.getConnectionUrl();
 			data.put("boardId", boardId);
 			data.put("portletName", portlet.getPortletName());
 
 			// 게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId,
-					companyId, deptId, userId, rollInfo);
+			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 
 			if (!accessCheck) {
 				data.put("access", "false");
 			} else {
 				// 권한이 true이면 boardList불러오기
-				List<BoardItemVO> photoBoardList = ezNewPortalService
-						.getPhotoBoardPortletInfo(tenantId, boardId, startRow,
-								photoCount);
+				List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount);
 
 				data.put("access", "true");
 				data.put("photoBoardList", photoBoardList);
@@ -2087,15 +1952,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/notice", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getNoticePortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getNoticePortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getNoticePortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			int limit = 3; // 공지사항 갯수
@@ -2104,8 +1967,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			JSONObject data = new JSONObject();
 
 			List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-			noticeList = ezNewPortalService.getNoticePortletList(companyId,
-					tenantId, limit);
+			noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
 			data.put("noticeList", noticeList);
 
 			result.put("status", "ok");
@@ -2125,29 +1987,24 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/poll", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getPollPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getPollPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getPollPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
 
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
-			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId,
-					request.getParameter("userId"));
+			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"));
 
 			int itemSeq = pollInfo.getItemSeq();
-			List<PersonalLightPollVO> pollResult = ezNewPortalService
-					.getPollPortletResult(companyId, tenantId, itemSeq);
+			List<PersonalLightPollVO> pollResult = ezNewPortalService.getPollPortletResult(companyId, tenantId, itemSeq);
 
-			answerList = ezNewPortalService.getAssemblePollData(pollInfo,
-					pollResult);
+			answerList = ezNewPortalService.getAssemblePollData(pollInfo, pollResult);
 
 			JSONObject data = new JSONObject();
 			data.put("pollInfo", pollInfo);
@@ -2170,8 +2027,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/approvallist", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getApprovalListPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getApprovalListPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getApprovalListPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -2182,9 +2038,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 
 			String type = request.getParameter("type");
 
-			Map<String, Object> resultMap = ezNewPortalService.getApprovalList(
-					userId, info.getCompanyID(), info.getTenantId(),
-					info.getOffset(), type);
+			Map<String, Object> resultMap = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), info.getTenantId(), info.getOffset(), type);
 
 			JSONObject data = new JSONObject();
 			data.put("resultMap", resultMap);
@@ -2206,8 +2060,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/favoriteforms", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getFavoriteForms(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getFavoriteForms(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getFavoriteForms started.");
 		JSONObject result = new JSONObject();
 
@@ -2216,8 +2069,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(
-					userId, info.getCompanyID(), info.getTenantId());
+			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
 
 			JSONObject data = new JSONObject();
 			data.put("resultList", list);
@@ -2239,8 +2091,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/approvalstatistics", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getApprovalStatisticsPortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getApprovalStatisticsPortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getApprovalStatisticsPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -2249,9 +2100,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
-			Map<String, Object> resultMap = ezNewPortalService
-					.getApprovalStatistics(userId, info.getCompanyID(),
-							info.getTenantId());
+			Map<String, Object> resultMap = ezNewPortalService.getApprovalStatistics(userId, info.getCompanyID(), info.getTenantId());
 
 			JSONObject data = new JSONObject();
 			data.put("hour", resultMap.get("hour"));
@@ -2277,15 +2126,13 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/schedule", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getSchedulePortlet(HttpServletRequest request)
-			throws Exception {
+	public JSONObject getSchedulePortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getSchedulePortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2299,9 +2146,7 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 	}
 
 	// //////board 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath,
-			int tenantId, String companyId, String deptId, String userId,
-			String rollInfo) {
+	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) {
 		LOGGER.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
@@ -2309,21 +2154,15 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 		String rootBoardID = "top";
 
 		try {
-			String boardGroupAdmin_FG = ezBoardAdminService
-					.checkIfBoardGroupAdmin(rootBoardID, userId, deptId,
-							companyId, tenantId);
+			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, userId, deptId, companyId, tenantId);
 
 			if (rollInfo != null
-					&& (boardGroupAdmin_FG.equals("OK")
-							|| rollInfo.toLowerCase().indexOf("c=1") > -1
-							|| rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo
-							.toLowerCase().indexOf("n=1") > -1)) {
+					&& (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
 				authCheck = true;
 			} else {
 				for (int i = 0; i < deptPathCount; i++) {
 					String deptPathId = deptPathSplit[i];
-					String authCompare = ezNewPortalService.getBoardAuthCheck(
-							boardId, deptPathId, tenantId, companyId);
+					String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
 
 					if (authCompare != null) {
 						if (authCompare.equals("true")) {

@@ -29,12 +29,12 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -635,6 +635,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	public List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getComapnyThemes started.");
+		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -646,6 +647,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return list;
 	}
 	
+	@Override
+	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception {
+		return null;
+	}
+	
+	@Override
+	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception {
+		return null;
+	}
 	
 	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {

@@ -21,8 +21,8 @@
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
-			menuList: {},
-			menuWidth: [],
+			menuList: {},         // 메뉴 리스트 저장
+			menuWidth: [],        // 메뉴별 width 저장
 		};
 	
 		// 로고 설정
@@ -114,19 +114,18 @@
 		
 		// window.open 이벤트 처리하기
 		var setEvent = function (id, url, location, option) {
-			if ( id === "logoUrl" ) {
-		
-			} else {
-				var element = document.getElementById(id);
-				element.addEventListener('click', function () {
-					window.open(url, location, option);
-				});				
-			}
+			var element = document.getElementById(id);
+			element.addEventListener('click', function () {
+				window.open(url, location, option);
+			});				
 		}
 		
 		// 유틸메뉴 이벤트 모아둔 곳
 		var setUtilEvent = function () {
-			setEvent('logoUrl', '/ezPortal/myPortal.do', 'main' ,'');
+			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
+			if('${roleInfo}' === 'admin') {
+				setEvent('util_admin', '/ezPortal/environmentMain.do', 'main' ,'');	
+			}
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');			

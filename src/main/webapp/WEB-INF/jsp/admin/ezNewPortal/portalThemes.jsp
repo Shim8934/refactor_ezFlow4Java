@@ -8,8 +8,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>portalThemes</title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
-		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
-		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
+<%-- 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" /> --%>
+<%-- 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" /> --%>
 <!-- 		opensource css -->
 <!-- 		opensource css -->
 		
@@ -25,51 +25,49 @@
 		    </span>
 		</div>
 		
-		<div id="thumbnailGrid" class="main">
-			<ul id="og-grid" class="og-grid">
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="1번 테마 제목" data-description="1번 테마 설명">
-						<img src="/images/kr/main/nodata.png" alt="img01"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="2번 테마 제목" data-description="2번 테마 설명">
-						<img src="/images/kr/main/nodata.png" alt="img02"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="3번 테마 제목" data-description="3번 테마 설명">
-						<img src="/images/kr/main/nodata.png" alt="img03"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Azuki bean" data-description="Swiss chard pumpkin bunya nuts maize plantain aubergine napa cabbage soko coriander sweet pepper water spinach winter purslane shallot tigernut lentil beetroot.">
-						<img src="/images/kr/main/nodata.png" alt="img01"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Veggies sunt bona vobis" data-description="Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu.">
-						<img src="/images/kr/main/nodata.png" alt="img02"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Dandelion horseradish" data-description="Cabbage bamboo shoot broccoli rabe chickpea chard sea lettuce lettuce ricebean artichoke earthnut pea aubergine okra brussels sprout avocado tomato.">
-						<img src="/images/kr/main/nodata.png" alt="img03"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Azuki bean" data-description="Swiss chard pumpkin bunya nuts maize plantain aubergine napa cabbage soko coriander sweet pepper water spinach winter purslane shallot tigernut lentil beetroot.">
-						<img src="/images/kr/main/nodata.png" alt="img01"/>
-					</a>
-				</li>
-				<li>
-					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Veggies sunt bona vobis" data-description="Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu.">
-						<img src="/images/kr/main/nodata.png" alt="img02"/>
-					</a>
-				</li>
-			</ul>
-			
-			<a id="og-additems" href="#">add more</a>
+<!-- 		<div id="thumbnailGrid" class="main"> -->
+<!-- 			<ul id="og-grid" class="og-grid"> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="1번 테마 제목" data-description="1번 테마 설명"> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img01"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="2번 테마 제목" data-description="2번 테마 설명"> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img02"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="3번 테마 제목" data-description="3번 테마 설명"> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img03"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Azuki bean" data-description="Swiss chard pumpkin bunya nuts maize plantain aubergine napa cabbage soko coriander sweet pepper water spinach winter purslane shallot tigernut lentil beetroot."> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img01"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Veggies sunt bona vobis" data-description="Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu."> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img02"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Dandelion horseradish" data-description="Cabbage bamboo shoot broccoli rabe chickpea chard sea lettuce lettuce ricebean artichoke earthnut pea aubergine okra brussels sprout avocado tomato."> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img03"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Azuki bean" data-description="Swiss chard pumpkin bunya nuts maize plantain aubergine napa cabbage soko coriander sweet pepper water spinach winter purslane shallot tigernut lentil beetroot."> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img01"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 				<li> -->
+<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Veggies sunt bona vobis" data-description="Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu."> -->
+<!-- 						<img src="/images/kr/main/nodata.png" alt="img02"/> -->
+<!-- 					</a> -->
+<!-- 				</li> -->
+<!-- 			</ul> -->
 		</div>
 	</body>
 	
@@ -78,13 +76,14 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	
 	<!-- thumbGrid opensource -->
-	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/modernizr.custom.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/grid.js')}"></script>
+<%-- 	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/modernizr.custom.js')}"></script> --%>
+<%-- 	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/grid.js')}"></script> --%>
 	
 	<script type="text/javascript">
 		$(function() {
 			getCompanies();
-			Grid.init();
+// 			더러워서안써
+// 			Grid.init();
 		});
 		
 		var getCompanies = function() {
@@ -135,19 +134,15 @@
 					var themes = result.list;
 					var themesHTML = "";
 					
+					/* themesHTML += "<ul id='og-grid' class='og-grid'>";
 					themes.forEach(function (item, index) {
-alert(index);
-						//class 보고 찾아서  html 그림 그리면 그림 나오냐
-						themesHTML += "<ul id='og-grid' class='og-grid'>";
-						
 						themesHTML += "<li>";
 						themesHTML += "<a href='http://cargocollective.com/jaimemartinez/' data-largesrc='/images/kr/main/nodata.png' data-title='Veggies sunt bona vobis' data-description='Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu.'>";
 						themesHTML += "<img src='/images/kr/main/nodata.png' alt='img02'/>";
 						themesHTML += "</a>";
 						themesHTML += "</li>";
-					
-						themesHTML += "</ul>";
 					});
+					themesHTML += "</ul>"; */
 					
 					document.getElementById("thumbnailGrid").innerHTML = companiesHTML;
 				} else {
@@ -161,6 +156,40 @@ alert(index);
 			
 			var data = JSON.stringify({
 				companyId : companyValue
+			});
+			
+			request.send(data);
+		}
+		
+		var getThemeDetail = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getThemeDetail.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
+	
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+// 					var result = JSON.parse(request.responseText);
+					
+// 					var themeDetailHTML = "";
+					
+// 					themeDetailHTML;
+					
+// 					document.getElementById("thumbnailGrid").innerHTML = companiesHTML;
+				} else {
+					// We reached our target server, but it returned an error
+				}
+			};
+	
+			request.onerror = function() {
+			  // There was a connection error of some sort
+			};
+			
+			var data = JSON.stringify({
+				companyId : companyValue,
+				themeId : themeId
 			});
 			
 			request.send(data);
