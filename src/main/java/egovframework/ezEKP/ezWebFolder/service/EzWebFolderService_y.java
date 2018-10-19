@@ -18,9 +18,19 @@ public interface EzWebFolderService_y {
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
 			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
 			int pStart, int pEnd, String offset, String primary) throws Exception;
+
+	// 파일리스트2  root가 모든 파일들이 나오지 않는 메서드 
+	List<FileVO> getFileList2(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
+			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
+			int pStart, int pEnd, String offset, String primary) throws Exception;
 	
 	// 파일리스트의 총 개수 가져오는 메서드
 	Map<String, Integer> getFileToTalCount(String folderId, String userId, String deptId, int tenantId, String parameter,
+			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
+			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
+
+	// 파일리스트의 총 개수 가져오는 메서드
+	Map<String, Integer> getFileToTalCount2(String folderId, String userId, String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
 
