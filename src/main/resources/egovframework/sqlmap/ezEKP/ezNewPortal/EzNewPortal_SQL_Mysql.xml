@@ -13,6 +13,7 @@
 <typeAlias alias="CommunityCClubUserVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
 <typeAlias alias="PortalUserInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO"/>
 <typeAlias alias="MenuInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO"/>
+<typeAlias alias="PortletNameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -104,6 +105,22 @@
 <result property="userDeptName"			column="DEPT_NAME"/>
 <result property="userImg"				column="USER_IMG"/>
 <result property="title"				column="TITLE"/>
+</resultMap>
+<resultMap class="PortletInfoVO" id="PortletInfoCompVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletOrder" 			column="PORTLET_ORDER" />
+<result property="portletUrl" 				column="PORTLET_URL" />
+<result property="isGeneral" 				column="IS_GENERAL" 		javaType="boolean"/>
+<result property="defaultOrder" 			column="DEFAULT_ORDER" />
+<result property="portletCategory" 			column="PORTLET_CATEGORY" />
+<result property="connectionUrl" 			column="CONNECTION_URL" />
+<result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
+<result property="menuId" 					column="MENU_ID" />
+</resultMap>
+<resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletLang" 				column="PORTLET_LANG" />
+<result property="portletName" 				column="PORTLET_NAME" />
 </resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
@@ -1145,4 +1162,39 @@ SELECT c_id,
    AND tenant_id = #tenantId#
 ]]>
 </select>
+
+<select id="ezNewPortal.getPortletList"	parameterClass="Map" resultMap="PortletInfoCompVO">
+<![CDATA[
+SELECT A.PORTLET_ID,
+	   A.PORTLET_CATEGORY,
+	   IF(C.PORTLET_TYPE = 'G', 1, 0) AS IS_GENERAL,
+	   A.CONNECTION_URL,
+	   A.PORTLET_ORDER,
+       IF(A.PORTLET_USED = 'Y', 1, 0) AS PORTLET_USED,
+       C.MENU_ID,
+       C.DEFAULT_ORDER,
+       C.PORTLET_URL
+  FROM TBL_PORTAL_PORTLET_COMP A
+  JOIN TBL_PORTAL_PORTLET C
+    ON A.PORTLET_ID = C.PORTLET_ID
+ WHERE A.COMPANY_ID = #companyId#
+   AND A.TENANT_ID = #tenantId#;
+   
+]]>
+</select>
+
+<select id="ezNewPortal.getPortletNameList"	parameterClass="Map" resultMap="PortletNameInfoVO">
+ SELECT B.PORTLET_LANG,
+		  B.PORTLET_NAME,
+          A.PORTLET_ID
+  FROM TBL_PORTAL_PORTLET_COMP A
+  JOIN TBL_PORTAL_PORTLET_NAME B
+	ON A.COMPANY_ID = B.COMPANY_ID
+   AND A.TENANT_ID = B.TENANT_ID
+   AND A.PORTLET_ID = B.PORTLET_ID  
+ WHERE A.COMPANY_ID = #companyId#
+   AND A.TENANT_ID = #tenantId#
+   AND A.PORTLET_ID = #portletId#;
+</select>   
+
 </sqlMap>

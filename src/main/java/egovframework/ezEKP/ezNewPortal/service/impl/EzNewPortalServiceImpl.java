@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -773,7 +774,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("clubNo", cNo);
-		map.put("tenantID", tenantId);
+		map.put("tenantId", tenantId);
 		
 		CommunityCClubUserVO result = ezNewPortalDAO.getCommunityPermit(map);
 		
@@ -793,9 +794,24 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
-		map.put("tenantID", tenantId);
+		map.put("tenantId", tenantId);
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
+		
+		LOGGER.debug("getPortletList started");
+		return portetList;
+	}
+	
+	@Override
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) {
+		LOGGER.debug("getPortletList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("portletId", portletId);
+		
+		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
 		LOGGER.debug("getPortletList started");
 		return portetList;

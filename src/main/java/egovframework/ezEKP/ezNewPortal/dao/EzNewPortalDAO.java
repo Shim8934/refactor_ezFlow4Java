@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -235,5 +236,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortletInfoVO> getPortletList(Map<String, Object> map) {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletList", map);
+	}
+	
+	//관리자-포틀릿관리-포틀릿 리스트
+	@SuppressWarnings("unchecked")
+	public List<PortletNameInfoVO> getPortletNameList(Map<String, Object> map) {
+		return (List<PortletNameInfoVO>) list("ezNewPortal.getPortletNameList", map);
 	}
 }
