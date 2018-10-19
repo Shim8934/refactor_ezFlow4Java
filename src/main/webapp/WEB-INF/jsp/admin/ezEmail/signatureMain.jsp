@@ -362,7 +362,7 @@
 		</div>
 		
 		<!-- 버튼 -->
-		<div style="width:950px; float:left;">
+		<div style="float:left; margin-top:435px; margin-left:20px;">
 			<div class="boxNo btnpositionJsp" >
 				<a class="imgbtn" onClick="signEditPopUp(this, 'add')" style="margin-top: 15px;"><span>서명 템플릿 추가</span></a>
 			</div>
