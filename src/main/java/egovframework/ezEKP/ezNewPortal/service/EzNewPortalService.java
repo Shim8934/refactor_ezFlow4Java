@@ -65,8 +65,20 @@ public interface EzNewPortalService {
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */
 	
+	/**
+	 * 구해안
+	 */
+	
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit);
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit);
 	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception;
 	public String getCommunityPermit(String clubNo, String userId, int tenantId);
+	/**
+	 * 포틀릿목록조회
+	 * @param companyId
+	 * @param tenantId
+	 * @return List<PortletInfoVO>
+	 * @throws Exception
+	 */
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId);
 }
