@@ -123,6 +123,9 @@
 		// 유틸메뉴 이벤트 모아둔 곳
 		var setUtilEvent = function () {
 			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
+			if('${roleInfo}' === 'admin') {
+				setEvent('util_admin', '/ezPortal/environmentMain.do', 'main' ,'');	
+			}
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');			
