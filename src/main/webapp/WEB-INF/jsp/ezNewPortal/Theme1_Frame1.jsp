@@ -87,6 +87,27 @@
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
+		//권한에 없는거는 보여주지 않기
+		if (useQuestion === "NO") {
+			$("#Poll").css("display", "none");
+		}
+		
+		if (useCircular === "NO") {
+			$("#Circular").css("display", "none");
+		}
+		
+		if (useMail === "NO") {
+			$("#NewMail").css("display", "none");
+		}
+		
+		if (useApproval === "NO") {
+			$("#AprSign").css("display", "none");
+		}
+		
+		if (useSchedule === "NO") {
+			$("#Schedule").css("display", "none");
+		}
+		
 		//ajax로 count 불러오기
 		getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
 		

@@ -215,15 +215,15 @@ public class EzNewPortalGWController {
 			
 			//2. 메뉴에 권한이 있는지  ================ 수정하기 start
 			if (useAttitude.equals("NO")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useCircular.equals("NO")) {
-				useCircular = "YES";
+				useCircular = "NO";
 			}
 
 			useMail = "YES";
@@ -732,142 +732,161 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			String userEmail = userId + "@"
 					+ ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
-
-			// 전자 설문 개수 불러오기
-			int pollCount = ezQuestionService.wpCountPollCount(userId,
-					tenantId, offset, companyId);
-
-			// 오늘 일정 개수 불러오기
-			String startDate = nowDate + " 00:00:00";
-			String endDate = nowDate + " 23:59:59";
-			String startTime = commonUtil.getDateStringInUTC(nowDate
-					+ " 00:00:00", offset, true);
-			String endTime = commonUtil.getDateStringInUTC(nowDate
-					+ " 23:59:59", offset, true);
-			String indiList = "";
-			String pidList = "";
-			String pidListSub = "";
-			String indiListSub = "";
-
-			List<ScheduleSecretaryVO> tList = ezScheduleService
-					.getPublicScheduleSec(userId, portletLang, tenantId,
-							companyId);
-			List<ScheduleDeptVO> dList = ezScheduleService
-					.getPublicScheduleDept(userId, portletLang, tenantId,
-							companyId);
-			List<ScheduleCumulerVO> cList = ezScheduleService
-					.getPublicScheduleCumuler(userId, portletLang, tenantId,
-							companyId);
-			List<ScheduleGroupListVO> gList = ezScheduleService
-					.getScheduleGroupList(userId, tenantId, companyId);
-
-			indiList = "'" + userId + "'";
-
-			if (tList != null && tList.size() > 0) {
-				for (int i = 0; i < tList.size(); i++) {
-					if (i == 0) {
-						indiListSub += ",";
-					}
-					ScheduleSecretaryVO data = tList.get(i);
-					indiListSub += "\'" + data.getSecId() + "\',";
-				}
-			}
-
-			pidList = "'" + deptId + "'," + "'" + companyId + "'";
-
-			if (dList != null && dList.size() > 0) {
-				for (int i = 0; i < dList.size(); i++) {
-					if (tList == null || tList.size() <= 0) {
-						if (i == 0) {
-							pidListSub += ",";
-						}
-					}
-					ScheduleDeptVO data = dList.get(i);
-					pidListSub += "\'" + data.getDeptId() + "\',";
-				}
-			}
-
-			if (cList != null && cList.size() > 0) {
-				for (int i = 0; i < cList.size(); i++) {
-					if (dList == null || dList.size() <= 0) {
-						if (i == 0) {
-							pidListSub += ",";
-						}
-					}
-					ScheduleCumulerVO data = cList.get(i);
-					pidListSub += "\'" + data.getDeptId() + "\',";
-				}
-			}
-
-			if (gList != null && gList.size() > 0) {
-				for (int i = 0; i < gList.size(); i++) {
-					if ((dList == null || dList.size() <= 0)
-							&& (cList == null || cList.size() <= 0)) {
-						if (i == 0) {
-							pidListSub += ",";
-						}
-					}
-					ScheduleGroupListVO data = gList.get(i);
-					pidListSub += "\'" + data.getGroupId() + "\',";
-				}
-			}
-
-			if (indiListSub.equals("") || indiListSub == null) {
-				indiListSub = ",\'\'";
-			} else {
-				indiListSub = indiListSub
-						.substring(0, indiListSub.length() - 1);
-			}
-
-			indiList += indiListSub;
-
-			if (pidListSub.equals("") || pidListSub == null) {
-				pidListSub = ",\'\'";
-			} else {
-				pidListSub = pidListSub.substring(0, pidListSub.length() - 1);
-			}
-
-			pidList += pidListSub;
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(
-					indiList, pidList, "", startTime, endTime, startDate,
-					endDate, "", offsetMin, "", tenantId, companyId, userId);
-			int scheduleCount = sList.size();
-
-			// 회람판 개수 불러오기
-			int circularCount = ezCircularSerivce.getListCount("newCircular",
-					userId, tenantId, companyId);
-
-			// 결재할 문서 개수 불러오기
-			int approvalCount = ezApprovalGSerivce.getWebPartListCount("1",
-					userId, deptId, "", "COUNT", "", companyId, portletLang,
-					tenantId, offsetMin);
-
-			// 읽지 않은 메일 가져오기
-			IMAPAccess ia = null;
-			String folderName = "INBOX";
-			int unreadMailCount = 0;
-
-			try {
-				ia = IMAPAccess.getInstance(
-						config.getProperty("config.MailServerAddress"),
-						config.getProperty("config.IMAPPort"), userEmail,
-						password, egovMessageSource, locale, ezEmailUtil);
-				unreadMailCount = ia.getUnreadCount(folderName);
-			} catch (Exception e) {
-
-			} finally {
-				if (ia != null) {
-					ia.close();
-				}
-			}
+			String useQuestion = request.getParameter("useQuestion");
+			String useCircular = request.getParameter("useCircular");
+			String useMail = request.getParameter("useMail");
+			String useApproval = request.getParameter("useApproval");
+			String useSchedule = request.getParameter("useSchedule");
 
 			JSONObject data = new JSONObject();
-			data.put("pollCount", pollCount);
-			data.put("circularCount", circularCount);
-			data.put("scheduleCount", scheduleCount);
-			data.put("approvalCount", approvalCount);
-			data.put("unreadMailCount", unreadMailCount);
+			
+			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail 
+					+ ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+			
+			// 전자 설문 개수 불러오기
+			if (useQuestion.equals("YES")) {
+				int pollCount = ezQuestionService.wpCountPollCount(userId,
+						tenantId, offset, companyId);
 
+				data.put("pollCount", pollCount);
+			}
+
+			// 오늘 일정 개수 불러오기
+			if (useSchedule.equals("YES")) {
+				String startDate = nowDate + " 00:00:00";
+				String endDate = nowDate + " 23:59:59";
+				String startTime = commonUtil.getDateStringInUTC(nowDate
+						+ " 00:00:00", offset, true);
+				String endTime = commonUtil.getDateStringInUTC(nowDate
+						+ " 23:59:59", offset, true);
+				String indiList = "";
+				String pidList = "";
+				String pidListSub = "";
+				String indiListSub = "";
+
+				List<ScheduleSecretaryVO> tList = ezScheduleService
+						.getPublicScheduleSec(userId, portletLang, tenantId,
+								companyId);
+				List<ScheduleDeptVO> dList = ezScheduleService
+						.getPublicScheduleDept(userId, portletLang, tenantId,
+								companyId);
+				List<ScheduleCumulerVO> cList = ezScheduleService
+						.getPublicScheduleCumuler(userId, portletLang, tenantId,
+								companyId);
+				List<ScheduleGroupListVO> gList = ezScheduleService
+						.getScheduleGroupList(userId, tenantId, companyId);
+
+				indiList = "'" + userId + "'";
+
+				if (tList != null && tList.size() > 0) {
+					for (int i = 0; i < tList.size(); i++) {
+						if (i == 0) {
+							indiListSub += ",";
+						}
+						ScheduleSecretaryVO schedule = tList.get(i);
+						indiListSub += "\'" + schedule.getSecId() + "\',";
+					}
+				}
+
+				pidList = "'" + deptId + "'," + "'" + companyId + "'";
+
+				if (dList != null && dList.size() > 0) {
+					for (int i = 0; i < dList.size(); i++) {
+						if (tList == null || tList.size() <= 0) {
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleDeptVO schedule = dList.get(i);
+						pidListSub += "\'" + schedule.getDeptId() + "\',";
+					}
+				}
+
+				if (cList != null && cList.size() > 0) {
+					for (int i = 0; i < cList.size(); i++) {
+						if (dList == null || dList.size() <= 0) {
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleCumulerVO schedule = cList.get(i);
+						pidListSub += "\'" + schedule.getDeptId() + "\',";
+					}
+				}
+
+				if (gList != null && gList.size() > 0) {
+					for (int i = 0; i < gList.size(); i++) {
+						if ((dList == null || dList.size() <= 0)
+								&& (cList == null || cList.size() <= 0)) {
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleGroupListVO schedule = gList.get(i);
+						pidListSub += "\'" + schedule.getGroupId() + "\',";
+					}
+				}
+
+				if (indiListSub.equals("") || indiListSub == null) {
+					indiListSub = ",\'\'";
+				} else {
+					indiListSub = indiListSub
+							.substring(0, indiListSub.length() - 1);
+				}
+
+				indiList += indiListSub;
+
+				if (pidListSub.equals("") || pidListSub == null) {
+					pidListSub = ",\'\'";
+				} else {
+					pidListSub = pidListSub.substring(0, pidListSub.length() - 1);
+				}
+
+				pidList += pidListSub;
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(
+						indiList, pidList, "", startTime, endTime, startDate,
+						endDate, "", offsetMin, "", tenantId, companyId, userId);
+				int scheduleCount = sList.size();
+				data.put("scheduleCount", scheduleCount);
+			}
+			
+			// 회람판 개수 불러오기
+			if (useCircular.equals("YES")) {
+				int circularCount = ezCircularSerivce.getListCount("newCircular",
+						userId, tenantId, companyId);
+				data.put("circularCount", circularCount);
+			}
+
+			// 결재할 문서 개수 불러오기
+			if (useApproval.equals("YES")) {
+				int approvalCount = ezApprovalGSerivce.getWebPartListCount("1",
+						userId, deptId, "", "COUNT", "", companyId, portletLang,
+						tenantId, offsetMin);
+				data.put("approvalCount", approvalCount);
+			}
+			
+			// 읽지 않은 메일 가져오기
+			if (useMail.equals("YES")) {
+				IMAPAccess ia = null;
+				String folderName = "INBOX";
+				int unreadMailCount = 0;
+
+				try {
+					ia = IMAPAccess.getInstance(
+							config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.IMAPPort"), userEmail,
+							password, egovMessageSource, locale, ezEmailUtil);
+					unreadMailCount = ia.getUnreadCount(folderName);
+				} catch (Exception e) {
+
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
+				}
+				data.put("unreadMailCount", unreadMailCount);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -878,6 +897,32 @@ LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W getUserPortalSetting ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUserStartPage (HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", startPage);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getUserStartPage ended.");
 		return result;
 	}
 

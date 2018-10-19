@@ -502,6 +502,72 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getUserThemeList(map);
 	}
 	
+
+	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) {
+		LOGGER.debug("getUserStartPage started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		LOGGER.debug("getUserStartPage ended.");
+		return ezNewPortalDAO.getUserStartPage(map);
+	}
+	
+	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) {
+		LOGGER.debug("updateUserStartPage started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("menuId", menuId);
+		
+		MenuInfoVO userStartPage = ezNewPortalDAO.getUserStartPage(map);
+		
+		if (userStartPage == null) {
+			LOGGER.debug("DAO insertUserStartPage started.");
+			ezNewPortalDAO.insertUserStartPage(map);
+		} else {
+			LOGGER.debug("DAO updateUserStartPage started.");
+			ezNewPortalDAO.updateUserStartPage(map);
+		}
+		
+		
+		LOGGER.debug("updateUserStartPage ended.");
+	}
+	
+	public void deleteUserThemeSetting(String userId, int tenantId, String companyId) { 
+		LOGGER.debug("deleteUserThemeSetting started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezNewPortalDAO.deleteUserThemeSetting(map);
+		LOGGER.debug("deleteUserThemeSetting ended.");
+	}
+	
+	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId) {
+		LOGGER.debug("updateUserThemeSetting started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("usedTheme", usedTheme);
+		map.put("usedFrame", usedFrame);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		UserPortalSettingVO portalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+		
+		if (portalSetting == null) {
+			LOGGER.debug("DAO insertUserThemeSetting started.");
+			ezNewPortalDAO.insertUserThemeSetting(map);
+		} else {
+			LOGGER.debug("DAO updateUserThemeSetting started.");
+			ezNewPortalDAO.updateUserThemeSetting(map);
+		}
+		
+		LOGGER.debug("updateUserThemeSetting ended.");
+	}
+	
 	/**
 	 * 이효진
 	 */

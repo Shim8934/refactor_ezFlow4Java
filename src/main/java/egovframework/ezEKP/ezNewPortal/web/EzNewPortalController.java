@@ -96,6 +96,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
+		//초기화면 설정 확인
+		
 		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
 	}
@@ -279,13 +281,13 @@ logger.debug("TopMenu : " + data.toJSONString());
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/unreadCounts.do")
 	@ResponseBody
-	public JSONObject getUnreadCounts(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	public JSONObject getUnreadCounts(HttpServletRequest req, Model model,@RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUnreadCounts Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();		
 		String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		JSONObject unreadCounts = new JSONObject();
 		
@@ -332,6 +334,45 @@ logger.debug("TopMenu : " + data.toJSONString());
 		return "/ezNewPortal/userThemeSetting";
 	}
 	
+	//초기화면 설정 화면 호출
+	@RequestMapping(value = "/ezNewPortal/userStartPageSetting.do")
+	public String userStartPageSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("userStartPageSetting Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		//초기화면으로 설정할 수 있는 메뉴 호출
+		String menuUrl = "/rest/ezPortal/menus/users/" + userId;
+		JSONObject menuResultBody = commonUtil.getJsonFromRestApi(menuUrl, null, req, "get", null);
+		String menuStatus = menuResultBody.get("status").toString();
+
+		if (menuStatus.equals("ok")) {
+			JSONObject data = (JSONObject) menuResultBody.get("data");
+			
+			logger.debug("TopMenu : " + data.toJSONString());
+			model.addAttribute("menuList", data.get("menuList"));
+		}
+		
+		//현재 사용중인 초기화면 호출
+		String startPageUrl = "/rest/ezPortal/startpage/users/" + userId;
+		JSONObject startPageResultBody = commonUtil.getJsonFromMemoRestApi(startPageUrl, null, req, "get", null);
+		String startPageStatus = startPageResultBody.get("status").toString();
+		
+		if (startPageStatus.equals("ok")) {
+			JSONObject startPage = (JSONObject) startPageResultBody.get("data");
+			
+			if (startPage.get("menuId") == null) {
+				model.addAttribute("menuId", 0);
+				model.addAttribute("menuUrl", "/ezNewPortal/newPortalPortalPage.do");
+			} else {
+				model.addAttribute("menuId", startPage.get("menuId"));
+				model.addAttribute("menuUrl", startPage.get("menuUrl"));
+			}
+		}
+		
+		logger.debug("userStartPageSetting Start");
+		return "/ezNewPortal/userStartPageSetting";
+	}
 	/**
 	 * ----
 	 */
