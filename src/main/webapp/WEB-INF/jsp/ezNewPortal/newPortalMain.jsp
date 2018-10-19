@@ -53,8 +53,6 @@
 	    	var memoList;
 	    	var userGadget;
 	    	var layerFlag;
-	    	//var memoFlag = "<c:out value='${memoFlag}' />";
-	    	var memoFlag = "YES";
 			
 			topHeight = "56";
 
@@ -68,6 +66,8 @@
 		 	});
 		 	
 		 	$(function() {
+		    	var memoFlag = "<c:out value='${useMemo}' />";
+		    	
 		    	if(memoFlag === "YES") {
 		    		
 			    	defaultPointer();
