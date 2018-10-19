@@ -9,8 +9,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -187,6 +189,7 @@ public class LoginController {
 		String useMasteradminLogin = ezCommonService.getTenantConfig("useMasteradminLogin", tenantId);
 		boolean masteradminLogin = false;
 		String displayName1 = null;
+		String useSession = null;
 		
 		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
@@ -204,6 +207,27 @@ public class LoginController {
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
         	logger.debug("ipAddressChk=" + ipAddressChk);
+        	
+        	Map<String, Object> sessionParam = new HashMap<String, Object>();
+    		String confName = "useSession"; 
+    		sessionParam.put("tenantID", tenantId);
+    		sessionParam.put("confName", confName);
+        	
+    		useSession = ezCommonService.getUseSession(sessionParam);
+    		
+    		if (useSession == null || useSession == "") {
+    			String regdate = commonUtil.getTodayUTCTime("");
+        		sessionParam.put("tenantID", tenantId);
+        		sessionParam.put("confName", confName);
+        		sessionParam.put("property_value", "180");
+    			sessionParam.put("description", "세션 유지 시간. 단 0:세션 사용 안함");
+    			sessionParam.put("config_name", "세션 유지 시간");
+    			sessionParam.put("regdate", regdate);
+    			sessionParam.put("config_type", "일반");
+    			
+    			ezCommonService.insertUseSession(sessionParam);
+    			useSession = ezCommonService.getUseSession(sessionParam);
+        	}
         	
         	if (ipAddressChk == true) {
         		// 사용자 ID를 사용해 로그인하는 경우
@@ -344,6 +368,12 @@ public class LoginController {
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
+	        	
+	        	if (useSession != "0") {
+	        		
+	        		session = request.getSession();
+	        		session.setMaxInactiveInterval(Integer.parseInt(useSession));
+	        	}
 	        
 	        	return "redirect:/ezPortal/portalMain.do";
         		
@@ -427,9 +457,11 @@ public class LoginController {
     		        	cookieName.setPath("/");
     		        	response.addCookie(cookieName);
     		        	
-    		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
-    		        	//session = request.getSession();
-    		        	
+    		        	if (Integer.parseInt(useSession) != 0) {
+//    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
+	    		        	session = request.getSession();			// 세션 필요로 주석 해제
+	    		        	session.setMaxInactiveInterval(Integer.parseInt(useSession));		// 세션의 유지 시간 설정
+    		        	}
     		        	return "redirect:/ezPortal/portalMain.do";
     		        	
     				}

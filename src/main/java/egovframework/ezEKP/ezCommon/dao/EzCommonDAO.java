@@ -298,4 +298,15 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addDeptMasterManualFlag");
 		}
 	}
+	
+	/*세션 사용 여부 row의 존재 확인*/
+	public String getUseSession(Map<String, Object> map) {
+		logger.debug("파라미터: " + map);
+		return (String) select("EzCommonDAO.getUseSession", map);
+	}
+	
+	/*세션 사용 row가 없을 시 생성*/
+	public void insertUseSession(Map<String, Object> map) {
+		insert ("EzCommonDAO.insertUseSession", map);
+	}
 }
