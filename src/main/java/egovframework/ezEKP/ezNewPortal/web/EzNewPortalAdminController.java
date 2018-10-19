@@ -195,6 +195,34 @@ public class EzNewPortalAdminController {
 		return "json";
 	}
 	
+	/**
+	 * 관리자 포탈 테마상세정보 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getThemeDetail.do")
+	public String getPortalThemeDetail(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getPortalThemeDetail started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezportal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("list", resultBody.get("data"));
+		}
+		
+		
+		LOGGER.debug("getPortalThemeDetail ended.");
+		
+		return "json";
+	}
+	
 	/** ----------------------------------------------- */
 	
 	

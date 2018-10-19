@@ -46,7 +46,7 @@
 						url = "/admin/ezNewPortal/portalMenus.do";
 						break;
 					case "portlets" :
-						url = "/admin/ezNewPortal/portalPortlets.do";
+						url = "/admin/ezNewPortal/portalPortlet.do";
 						break;
 					case "logos" :
 						url = "/admin/ezNewPortal/portalLogos.do";
