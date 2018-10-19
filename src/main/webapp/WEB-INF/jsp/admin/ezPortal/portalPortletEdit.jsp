@@ -757,14 +757,16 @@
 				txtImage.style.display = "";
 				g_xmlhttp = null;
 			}
+			
+			/* 2018-10-16 홍승비 - 전체관리자가 관리자단에서 그룹사게시판을 선택할 수 있도록 인자 추가 */
 			var boardselect_cross_dialogArguments = new Array();
 			function SelectBoard() {		    
 			    if (CrossYN()) {
 			        boardselect_cross_dialogArguments[1] = SelectBoard_Complete;
-			        var OpenWin = window.open("/ezBoard/boardSelect.do", "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
+			        var OpenWin = window.open("/ezBoard/boardSelect.do?isAdminLeft=Y", "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
 			        try { OpenWin.focus(); } catch (e) { }
 			    } else {
-			        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:700px;DialogWidth:360px;status:no;help:no;edge:sunken" + GetShowModalPosition(360, 656));
+			        var ret = window.showModalDialog("/ezBoard/boardSelect.do?isAdminLeft=Y", "", "DialogHeight:700px;DialogWidth:360px;status:no;help:no;edge:sunken" + GetShowModalPosition(360, 656));
 			        if (typeof(ret) != "undefined") {
 			            document.getElementById("txtBoardID").value = ret[0];
 			            document.getElementById("txtBoardName").value = ret[2];

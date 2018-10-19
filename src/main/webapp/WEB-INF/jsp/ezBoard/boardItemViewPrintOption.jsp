@@ -16,6 +16,7 @@
 		    var eAttach = "false";
 		    var pItemID = "${itemID}";
 		    var pBoardID = "${boardID}";
+		    var gubun = "${gubun}";
 		    var rvalue = new Array();
 		    var ReturnFunction;
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -63,7 +64,7 @@
 		    }
 		    function getOneLineReplyCount() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&gubun=" + gubun, false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);

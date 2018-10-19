@@ -93,7 +93,7 @@
 <!-- 		{CALL EZSP_GETAPRDOCLIST(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #iv_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 		<select id ="EzApprovalG.getAprDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
-			<isEqual property="v_LISTTYPE" compareValue="1">
+			<isEqual property="v_LISTTYPEFLAG" compareValue="true">
 			
 				<![CDATA[
 				SELECT 
@@ -114,7 +114,14 @@
 											FROM 
 												VAPRDOINGDOCLIST 
 						      				WHERE 
-						      					aprmemberid IN ($v_USERIDS$) 
+						      				]]>
+						      				<isEqual property="v_LISTTYPE" compareValue="1">
+					      						aprmemberid IN ($v_USERIDS$) 
+										    </isEqual>
+										    <isEqual property="v_LISTTYPE" compareValue="11">
+												aprmemberid IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)										  
+										    </isEqual>
+						      				<![CDATA[ 
 						      				AND 
 						      					aprtype <> '015'  
 						      				AND 
@@ -158,7 +165,14 @@
 							  FROM 
 								 VENDCHAMJODOCINFO 
 							  WHERE 
-		      					aprmemberid IN ($v_USERIDS$) 
+		      				  ]]>
+		      				  <isEqual property="v_LISTTYPE" compareValue="1">
+	      					  	aprmemberid IN ($v_USERIDS$) 
+						      </isEqual>
+						      <isEqual property="v_LISTTYPE" compareValue="11">
+						      	aprmemberid IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)										  
+						      </isEqual>
+		      				  <![CDATA[  
 		      				  AND 
 		      					aprtype <> '015'  
 		      				  AND 
@@ -872,104 +886,106 @@
 						<isNotEqual property="v_LISTTYPE" compareValue="99">
 							<isNotEqual property="v_LISTTYPE" compareValue="10">
 								<isNotEqual property="v_LISTTYPE" compareValue="21">
-								<![CDATA[
-								SELECT 
-									* 
-								FROM (
-									SELECT  
+									<isNotEqual property="v_LISTTYPE" compareValue="11">
+									<![CDATA[
+									SELECT 
 										* 
-									FROM ( 
-											SELECT 
-												* 
-											FROM 
-												(
-													SELECT  
-														* 
-													FROM 
-														VAPRDOINGDOCLIST 
-		                     						WHERE 
-		                     							APRMEMBERID IN ($v_USERIDS$)
-		                     						AND 
-		                     							TENANT_ID = #v_TENANTID#
-		                     						AND
-		                     							COMPANYID IN (
-																	SELECT 
-																		EXTENSIONATTRIBUTE2 
-																	FROM 
-																		TBL_DEPTMASTER 
-																	INNER JOIN 
-																		TBL_ADDJOBMASTER 
-																	ON
-																		(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+									FROM (
+										SELECT  
+											* 
+										FROM ( 
+												SELECT 
+													* 
+												FROM 
+													(
+														SELECT  
+															* 
+														FROM 
+															VAPRDOINGDOCLIST 
+			                     						WHERE 
+			                     							APRMEMBERID IN ($v_USERIDS$)
+			                     						AND 
+			                     							TENANT_ID = #v_TENANTID#
+			                     						AND
+			                     							COMPANYID IN (
+																		SELECT 
+																			EXTENSIONATTRIBUTE2 
+																		FROM 
+																			TBL_DEPTMASTER 
+																		INNER JOIN 
+																			TBL_ADDJOBMASTER 
+																		ON
+																			(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+																			AND 
+																			TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+																		WHERE 
+																			TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
 																		AND 
-																		TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-																	WHERE 
-																		TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-																	AND 
-																		TBL_ADDJOBMASTER.CN = #v_USERID#
-																	UNION ALL
-																	SELECT 
-																		PHYSICALDELIVERYOFFICENAME
-																	FROM
-																		TBL_USERMASTER
-																	WHERE
-																		CN = #v_USERID#
-																	AND
-																		TENANT_ID = #v_TENANTID# 
-																	)
-                     				]]>
-		                     						<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-										      		AND 
-										      		 	$v_SPSUBQUERY$
-										      		</isGreaterThan>
-										      		<isNotEmpty property="v_ORDEROPTION"> 
-										      		<isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="9" >
-														<isEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
-																ORDER BY $v_ORDEROPTION$
-														</isEqual>
-														<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
-																ORDER BY $v_ORDEROPTION$, STARTDATE $v_BASICORDER$					
-														</isNotEqual>
-													</isGreaterEqual>
-													<isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="9">
-																ORDER BY $v_ORDEROPTION$, STARTDATE $v_BASICORDER$					
-													</isLessThan>
-													</isNotEmpty>
-													<isEmpty property="v_ORDEROPTION"> 
-														<isEqual property="v_LISTTYPE" compareValue="10">
-															ORDER BY ReceivedDate $v_BASICORDER$
-														</isEqual>
-														<isNotEqual property="v_LISTTYPE" compareValue="10">
-		         											ORDER BY STARTDATE $v_BASICORDER$
-														</isNotEqual>
-													</isEmpty>
-													<![CDATA[
-													)WHERE ROWNUM <= #v_PAGESIZE#) A
-													]]>
-														<isNotEmpty property="v_ORDEROPTION2"> 
-														<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
-															<isEqual property="v_ORDEROPTION2VALUE" compareValue="startdate">
-																	ORDER BY $v_ORDEROPTION2$
+																			TBL_ADDJOBMASTER.CN = #v_USERID#
+																		UNION ALL
+																		SELECT 
+																			PHYSICALDELIVERYOFFICENAME
+																		FROM
+																			TBL_USERMASTER
+																		WHERE
+																			CN = #v_USERID#
+																		AND
+																			TENANT_ID = #v_TENANTID# 
+																		)
+	                     				]]>
+			                     						<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+											      		AND 
+											      		 	$v_SPSUBQUERY$
+											      		</isGreaterThan>
+											      		<isNotEmpty property="v_ORDEROPTION"> 
+											      		<isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="9" >
+															<isEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
+																	ORDER BY $v_ORDEROPTION$
 															</isEqual>
-															<isNotEqual property="v_ORDEROPTION2VALUE" compareValue="startdate">
-																	ORDER BY $v_ORDEROPTION2$, STARTDATE $v_BASICORDER2$					
+															<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
+																	ORDER BY $v_ORDEROPTION$, STARTDATE $v_BASICORDER$					
 															</isNotEqual>
 														</isGreaterEqual>
-														<isLessThan property="v_ORDEROPTION2LENGTH"  compareValue="9">
-																	ORDER BY $v_ORDEROPTION2$, STARTDATE $v_BASICORDER2$
+														<isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="9">
+																	ORDER BY $v_ORDEROPTION$, STARTDATE $v_BASICORDER$					
 														</isLessThan>
 														</isNotEmpty>
-														<isEmpty property="v_ORDEROPTION2"> 
+														<isEmpty property="v_ORDEROPTION"> 
 															<isEqual property="v_LISTTYPE" compareValue="10">
-																ORDER BY ReceivedDate $v_BASICORDER2$
+																ORDER BY ReceivedDate $v_BASICORDER$
 															</isEqual>
 															<isNotEqual property="v_LISTTYPE" compareValue="10">
-										         				ORDER BY STARTDATE $v_BASICORDER2$
+			         											ORDER BY STARTDATE $v_BASICORDER$
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
-														)WHERE ROWNUM <= #v_PAGESIZE2#
+														)WHERE ROWNUM <= #v_PAGESIZE#) A
 														]]>
+															<isNotEmpty property="v_ORDEROPTION2"> 
+															<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
+																<isEqual property="v_ORDEROPTION2VALUE" compareValue="startdate">
+																		ORDER BY $v_ORDEROPTION2$
+																</isEqual>
+																<isNotEqual property="v_ORDEROPTION2VALUE" compareValue="startdate">
+																		ORDER BY $v_ORDEROPTION2$, STARTDATE $v_BASICORDER2$					
+																</isNotEqual>
+															</isGreaterEqual>
+															<isLessThan property="v_ORDEROPTION2LENGTH"  compareValue="9">
+																		ORDER BY $v_ORDEROPTION2$, STARTDATE $v_BASICORDER2$
+															</isLessThan>
+															</isNotEmpty>
+															<isEmpty property="v_ORDEROPTION2"> 
+																<isEqual property="v_LISTTYPE" compareValue="10">
+																	ORDER BY ReceivedDate $v_BASICORDER2$
+																</isEqual>
+																<isNotEqual property="v_LISTTYPE" compareValue="10">
+											         				ORDER BY STARTDATE $v_BASICORDER2$
+																</isNotEqual>
+															</isEmpty>
+															<![CDATA[
+															)WHERE ROWNUM <= #v_PAGESIZE2#
+															]]>
+									</isNotEqual>
                      			</isNotEqual>
                      		</isNotEqual>
                      	</isNotEqual>
@@ -11204,7 +11220,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="Integer" remapResults="true">
 		<!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
-		<isEqual property="v_LISTTYPE" compareValue="1">
+		<isEqual property="v_LISTTYPEFLAG" compareValue="true">
 		<![CDATA[
 			SELECT 
 					COUNT(DOCID) 
@@ -11214,7 +11230,14 @@
 				FROM
 						VAPRDOINGDOCLIST  
 				WHERE 
-						APRMEMBERID IN ($v_USERIDS$) 
+			]]>
+			<isEqual property="v_LISTTYPE" compareValue="1">
+				APRMEMBERID IN ($v_USERIDS$)
+			</isEqual>
+			<isEqual property="v_LISTTYPE" compareValue="11">
+				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+			</isEqual>
+			<![CDATA[
 				AND 
 						APRTYPE <> '015'
 				AND
@@ -11253,7 +11276,14 @@
 				FROM 
 					VENDCHAMJODOCINFO 
 				WHERE 
-					APRMEMBERID IN ($v_USERIDS$) 
+				]]>
+				<isEqual property="v_LISTTYPE" compareValue="1">
+					APRMEMBERID IN ($v_USERIDS$)
+				</isEqual>
+				<isEqual property="v_LISTTYPE" compareValue="11">
+					APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+				</isEqual>
+				<![CDATA[
 				AND 
 					APRTYPE <> '015'
 				AND
@@ -11523,6 +11553,7 @@
 		<isNotEqual property="v_LISTTYPE" compareValue="99">	
 		<isNotEqual property="v_LISTTYPE" compareValue="10">	
 		<isNotEqual property="v_LISTTYPE" compareValue="21">
+		<isNotEqual property="v_LISTTYPE" compareValue="11">
 			SELECT 
 				COUNT(DOCID) 
 			FROM (
@@ -11600,6 +11631,7 @@
 					)
 					WHERE 
 						1 = 1
+		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -17570,16 +17602,18 @@
     		COMPANYID = #companyID#
 	</delete>
 	
-<!-- 	<update id="EzApprovalG.updateOpinionInfo" parameterClass="Map"> -->
-<!-- 		 UPDATE  -->
-<!-- 		 	TBL_APRDOCINFO -->
-<!--          SET  -->
-<!--          	HASOPINIONYN = 'N' -->
-<!--        	 WHERE   -->
-<!--        	 	DOCID = #v_DOCID# -->
-<!--        	 AND -->
-<!--     		TENANT_ID =#v_TENANTID# -->
-<!-- 	</update> -->
+	<update id="EzApprovalG.updateOpinionInfo" parameterClass="Map">
+		 UPDATE 
+		 	TBL_APRDOCINFO
+         SET 
+         	HASOPINIONYN = 'N'
+       	 WHERE  
+       	 	DOCID = #v_DOCID#
+       	 AND
+    		TENANT_ID =#v_TENANTID#
+    	 AND
+    	 	COMPANYID = #companyID#
+	</update>
 
 <!-- 	<procedure id="EzApprovalG.deleteAttachFileInfo" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_DELETEATTACHFILEINFO(#v_DOCID#)} -->

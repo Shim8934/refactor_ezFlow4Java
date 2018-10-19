@@ -1009,7 +1009,7 @@
 	    	function ChangeListView_onClick(Div) {
 	        	pListType = Div;
 	        	ListTypeChangeIcon();
-// 	        	DisplayUserImageList();
+ 	        	DisplayUserImageList();
 	            setOrganListType(pListType);
 	    	}
 	    	

@@ -160,6 +160,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userCont = "";
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", userInfo.getTenantId());
 		String hideSusin =  ezCommonService.getTenantConfig("hideSusin", userInfo.getTenantId());
+		//공유결재문서 추가개발
+		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
 		
 		StringBuffer containers = new StringBuffer();
 		
@@ -235,7 +237,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		model.addAttribute("hideSusin", hideSusin);
 		model.addAttribute("whoKyulYN", whoKyulYN);
-
+		model.addAttribute("useShareApproval", useShareApproval);
+		
         logger.debug("apprGLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
 
