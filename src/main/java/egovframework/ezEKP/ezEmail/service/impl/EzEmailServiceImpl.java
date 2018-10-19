@@ -2276,4 +2276,32 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return list;
 	}
 	
+	@Override
+	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception {
+		logger.debug("checkUserShareId started.");
+		logger.debug("userId=" + userId + ",shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		boolean result = false;
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + userIdParam + "&" + shareIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkUserShareId";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	result = (boolean)object.get("result");
+        }
+		
+		logger.debug("checkUserShareId ended.");
+		return result;
+	}
+	
 }

@@ -514,10 +514,15 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("folderName=" + folderName);
 		
 		if (doc.getElementsByTagName("SHAREID").item(0) != null) {
-			//TODO: shareId 체크
-			
 			String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
 			logger.debug("shareId=" + shareId);
+			
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("getFolderUnreadCount ended.");
+				
+				return "";
+			}
 			
 			userEmail = shareId + "@" + domainName;
 		}
@@ -1691,7 +1696,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		IMAPAccess ia = null;
 		try {
-			//TODO: shareId 체크
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+				throw new Exception("the user cannot access the shareId.");
+			}
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);

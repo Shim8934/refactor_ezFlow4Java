@@ -600,10 +600,15 @@ public class EzEmailMailListController {
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		
 		if (doc.getElementsByTagName("SHAREID").item(0) != null) {
-			//TODO: shareId 체크
-			
 			String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
-			logger.debug("shareId=" + shareId);
+			logger.debug("userId=" + userInfo.getId() + ",shareId=" + shareId);
+			
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("getMailList ended.");
+				
+				return "";
+			}
 			
 			userEmail = shareId + "@" + domainName;
 		}
