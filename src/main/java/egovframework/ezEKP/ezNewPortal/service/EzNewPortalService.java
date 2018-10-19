@@ -60,13 +60,15 @@ public interface EzNewPortalService {
 	/**
 	 * 테마목록조회
 	 * @param admin true(admin) false(user)
-	 * @param companyId
-	 * @param tenantId
-	 * @return List<ThemeInfoVO>
-	 * @throws Exception
 	 */
 	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 회사별 테마상세정보조회
+	 */
 	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 테마별 프레임목록 및 정보 조회 
+	 */
 	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
