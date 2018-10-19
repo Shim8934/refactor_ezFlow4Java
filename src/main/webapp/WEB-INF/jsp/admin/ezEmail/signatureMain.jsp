@@ -316,10 +316,9 @@
 		    </select><br>
 	    </span><br><br>
 	    
-	    
-	    <div style="float: left; margin-right: 10px;">
+	    <div style="float: left; margin-right: 10px; position:relative;">
 	    <!-- 서명 템플릿 목록 -->
-			<table >
+			<table>
 				<tr>
 					<td>
 						<div class="lmLetterBox" style="width: 360px;" > 
@@ -347,7 +346,7 @@
 			</table>
 		</div>
 		<!-- 미리보기 -->
-		<div style="float: left;">
+		<div style="float: left; position:absolute; margin-left:370px;">
 			<table>
 			<tr>
 				<td>
@@ -367,7 +366,7 @@
 		</div>
 		
 		<!-- 버튼 -->
-		<div style="width:950px">
+		<div style="width:950px; float:left;">
 			<div class="boxNo btnpositionJsp" >
 				<a class="imgbtn" onClick="signEditPopUp(this, 'add')" style="margin-top: 15px;"><span>서명 템플릿 추가</span></a>
 			</div>
