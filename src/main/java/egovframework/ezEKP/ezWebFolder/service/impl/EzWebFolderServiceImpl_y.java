@@ -211,7 +211,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 
 		List<FileVO> filevo = new ArrayList<FileVO>();
-
+		
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
 				|| searchCreateName != "" || searchFileName != "") {
 			flag = "1";
@@ -245,6 +245,75 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			}
 		}
 
+		LOGGER.debug("getFileList ended");
+		return filevo;
+	}
+	
+	// root가 모든 파일들이 나오지 않는 메서드 
+	@Override
+	public List<FileVO> getFileList2(String folderId, String userId,
+			String deptId, int tenantId, String comId, String searchExt,
+			String searchFileName, String searchStartDate,
+			String searchEndDate, String searchCreateName,
+			String searchFileType, String searchPageCount, int pStart,
+			int pEnd, String offset, String primary) throws Exception {
+		LOGGER.debug("getFileList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
+		
+		FolderVO detailFld = ezWebFolderDAO_y.getFolderDetail(map);
+		String parentId = detailFld.getFolderUpper();
+		String folderType = detailFld.getFolderType();
+		String folderPath = detailFld.getFolderPath();
+		String flag = "0";
+		map.put("ownerId", detailFld.getOwnerId());
+		map.put("flag", flag);
+		map.put("deptId", deptId);
+		map.put("userId", userId);
+		map.put("folderPath", folderPath);
+		map.put("parentId", parentId);
+		map.put("folderType", folderType);
+		map.put("searchExt", searchExt);
+		map.put("searchFileName", searchFileName);
+		map.put("searchCreateName", searchCreateName);
+		map.put("searchFileType", searchFileType);
+		map.put("pStart", pStart);
+		map.put("pEnd", pEnd);
+		map.put("primary", primary);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
+		
+		List<FileVO> filevo = new ArrayList<FileVO>();
+		
+		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
+				|| searchCreateName != "" || searchFileName != "") {
+			flag = "1";
+			
+			if (searchEndDate != "" ) {
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+				searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+			}
+		}
+		
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		
+		List<Map<String, String>> idList = ezWebFolderService_m
+				.getPermissionIdMapList(userId, deptId, comId, tenantId);
+		System.out.println(idList);
+		map.put("idList", idList);
+		map.put("flag", flag);
+		
+		if (flag.equals("1")) {
+			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
+		} else {
+			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList2(map);
+		}
+		
 		LOGGER.debug("getFileList ended");
 		return filevo;
 	}
@@ -339,6 +408,88 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		cnt.put("fldTotalCnt", fldTotalCnt);
 		cnt.put("totalCount", totalCount);
 
+		LOGGER.debug("getFileToTalCount ended");
+		return cnt;
+	}
+
+	@Override
+	public Map<String, Integer> getFileToTalCount2(String folderId,
+			String userId, String deptId, int tenantId, String companyId,
+			String searchExt, String searchFileName, String searchStartDate,
+			String searchEndDate, String searchCreateName,
+			String searchFileType, String searchPageCount, int pStart,
+			int pEnd, String offset, String primary) throws Exception {
+		LOGGER.debug("getFileToTalCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("comId", companyId);
+		
+		FolderVO detailFld = ezWebFolderDAO_y.getFolderDetail(map);
+		String parentId = detailFld.getFolderUpper();
+		String folderType = detailFld.getFolderType();
+		String folderPath = detailFld.getFolderPath();
+		String flag = "0";
+		
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("parentId", parentId);
+		map.put("folderPath", folderPath);
+		map.put("folderType", folderType);
+		map.put("searchExt", searchExt);
+		map.put("searchFileName", searchFileName);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("searchCreateName", searchCreateName);
+		map.put("searchFileType", searchFileType);
+		map.put("searchPageCount", searchPageCount);
+		map.put("pStart", pStart);
+		map.put("pEnd", pEnd);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		
+		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
+		
+		int fileTotalCnt = 0;
+		int fldTotalCnt = 0;
+		
+		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
+				|| searchCreateName != "" || searchFileName != "") {
+			flag = "1";
+		}
+		
+		List<Map<String, String>> idList = ezWebFolderService_m
+				.getPermissionIdMapList(userId, deptId, companyId, tenantId);
+		map.put("idList", idList);
+		map.put("flag", flag);
+		
+		if (flag.equals("1")) {
+			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+		} else {
+			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+		}
+		
+		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount2(map);
+		
+		if (fileTotalCnt < 0) {
+			fileTotalCnt = 0;
+		}
+		
+		if (fldTotalCnt < 0) {
+			fldTotalCnt = 0;
+		}
+		
+		Map<String, Integer> cnt = new HashMap<String, Integer>();
+		
+		int totalCount = 0;
+		totalCount = fileTotalCnt + fldTotalCnt;
+		
+		cnt.put("fileTotalCnt", fileTotalCnt);
+		cnt.put("fldTotalCnt", fldTotalCnt);
+		cnt.put("totalCount", totalCount);
+		
 		LOGGER.debug("getFileToTalCount ended");
 		return cnt;
 	}
