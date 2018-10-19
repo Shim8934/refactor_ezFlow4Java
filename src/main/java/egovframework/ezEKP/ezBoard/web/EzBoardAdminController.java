@@ -135,13 +135,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String rollInfo = userInfo.getRollInfo(); // 전체관리자 권한 확인용
 		boolean isCompanyAdmin = false;
 		
-		/* 전체관리자라면 isCompanyAdmin 플래그를 true로 넣어준다. */
 		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
 			isCompanyAdmin = true;
 		}
-		logger.debug("isCompanyAdmin     ::     " + isCompanyAdmin);
 		
-		/* 2018-10-15 홍승비 - 그룹사게시판 표출용 전체관리자 확인 플래그 추가 */
 		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트(그룹) 표출 시 companyID 조건 추가 */
 		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId(), isCompanyAdmin);
 		
@@ -173,7 +170,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String rollInfo = userInfo.getRollInfo();
 		
 		/* 2018-10-15 홍승비 - 관리자단 게시판그룹생성 진입 시 전체관리자 여부 확인 */
-		/* 전체관리자라면 isCompanyAdmin 플래그를 true로 넣어준다. */
 		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
 			model.addAttribute("isCompanyAdmin", true);
 		}
@@ -196,15 +192,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String groupName1 = URLDecoder.decode(boardPropertyVO.getBoardGroupName(), "utf-8");
 		String groupName2 = URLDecoder.decode(boardPropertyVO.getBoardGroupName2(), "utf-8");
-		String guBun = boardPropertyVO.getGuBun();
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
 		
-		logger.debug("게시판그룹의 guBun      ::     " + guBun);
-		
-		// 그룹사게시판 옵션으로 게시판 그룹을 생성할 경우, 게시판그룹의 구분값을 "99"로 넣어준다.
-		// 게시판그룹은 PARENTBOARDID가 top이며, 원래는 구분값을 가지지 않는다(null). 또한 BOARDGROUPID도 null이다.
 		boardPropertyVO.setBoardGroupName(groupName1);
 		boardPropertyVO.setBoardGroupName2(groupName2);
 		boardPropertyVO.setAccessID(uID);
@@ -706,40 +697,43 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String orgBoardID = request.getParameter("orgBoardID");
 		String newParentBoardID = request.getParameter("newParentBoardID");
-		String newBoardGroupID = request.getParameter("newBoardGroupID"); // 이거 잘못들어가고있다.
+		String newBoardGroupID = request.getParameter("newBoardGroupID");
 		String isAllGroupBoardORG = "";
 		String isAllGroupBoardNEW = "";
 		
-		logger.debug("orgBoardID       ::     " + orgBoardID);
-		logger.debug("newParentBoardID       ::     " + newParentBoardID);
-		logger.debug("newBoardGroupID       ::     " + newBoardGroupID);
-		
 		/* 2018-10-18 홍승비 - 그룹사게시판과 일반 게시판(그룹)과는 서로 게시판 이동 불가능함 */
-		BoardPropertyVO orgBoardProp = ezBoardService.getBoardProperty(orgBoardID, userInfo.getTenantId());		
+		BoardPropertyVO orgBoardProp = ezBoardService.getBoardProperty(orgBoardID, userInfo.getTenantId());
+		
 		if (orgBoardProp.getBoardGroupID() != null) {
 			String orgBoardGroupID = orgBoardProp.getBoardGroupID();
-			
-			logger.debug("orgBoardGroupID       ::     " + orgBoardGroupID);
-			
 			BoardPropertyVO orgBoardGroupProp = ezBoardService.getBoardProperty(orgBoardGroupID, userInfo.getTenantId());
 			
 			if (orgBoardGroupProp.getGuBun() != null && orgBoardGroupProp.getGuBun().equals("99")) {
 				isAllGroupBoardORG = "Y";
 			}
 		}
-				
-		BoardPropertyVO newBoardGroupProp = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());	
-		if (newBoardGroupProp.getGuBun() != null && newBoardGroupProp.getGuBun().equals("99")) {
-			isAllGroupBoardNEW = "Y";
+		
+		BoardPropertyVO newBoardGroupProp = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());
+		
+		// 하위게시판 아래로 이동하는 경우
+		if (newBoardGroupProp.getBoardGroupID() != null) {
+			newBoardGroupID = newBoardGroupProp.getBoardGroupID();
+			BoardPropertyVO newBoardGroupProp2 = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());
+			
+			if (newBoardGroupProp2.getGuBun() != null && newBoardGroupProp2.getGuBun().equals("99")) {
+				isAllGroupBoardNEW = "Y";
+			}
+		} // 게시판그룹의 바로 아래로 이동하는 경우
+		else {
+			if (newBoardGroupProp.getGuBun() != null && newBoardGroupProp.getGuBun().equals("99")) {
+				isAllGroupBoardNEW = "Y";
+			}
 		}
 		
-		logger.debug("isAllGroupBoardORG       ::     " + isAllGroupBoardORG);
-		logger.debug("isAllGroupBoardNEW       ::     " + isAllGroupBoardNEW);
-			
-		if (isAllGroupBoardORG.equals(isAllGroupBoardNEW)) {	
+		if (isAllGroupBoardORG.equals(isAllGroupBoardNEW)) {
 			ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
 		}
-		else { // 임의로 에러를 발생시킨다.
+		else {
 			response.sendError(500);
 		}
 

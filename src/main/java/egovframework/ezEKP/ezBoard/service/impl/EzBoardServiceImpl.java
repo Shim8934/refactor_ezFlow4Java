@@ -1091,8 +1091,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getMyNoticePostItem ended");
 		return ezBoardDAO.getMyNoticePostItem(map);
 	}
-
-	// 나의게시물 리스트 ㅛ출 시 companyID 추가
+	
 	@Override
 	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
 		logger.debug("getMyBoardListItem started");
@@ -1225,9 +1224,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-
-		logger.debug("나의게시물 검색쿼리 map      ::     " + map.toString());
-		
 		
 		logger.debug("getSearchMyBoardItemList ended");
 		return ezBoardDAO.getSearchMyBoardItemList(map);
@@ -1264,8 +1260,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		
-		logger.debug("임시보관함 검색쿼리 map      ::     " + map.toString());
 		
 		logger.debug("getSearchMyBoardItemListTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemListTemp(map);
@@ -1673,8 +1667,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		logger.debug("나의게시물 검색 카운트 map      ::      " + map.toString());
-
 		logger.debug("getSearchMyBoardItemCount ended");
 		return ezBoardDAO.getSearchMyBoardItemCount(map);
 	}
@@ -1695,8 +1687,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		
-		logger.debug("임시보관함 검색 카운트 map      ::      " + map.toString());
-
 		logger.debug("getSearchMyBoardItemCountTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
 	}
@@ -2507,26 +2497,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
-		
-		logger.debug("isAdminLeft      ::     " + isAdminLeft);
-		
 		/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 설정 */
 		if (!isAdminLeft.equals("Y") || (isAdminLeft.equals("Y") && isCompanyAdmin == true)) {
 			showAllGroupBoard = "Y";
-		} else { // isAdminLeft가 Y이고, isCompanyAdmin이 false라면 그룹사게시판 표출 안함
+		} else {
 			showAllGroupBoard = "N";
 		}
 		
-		logger.debug("showAllGroupBoard     ::    "  + showAllGroupBoard);
-		
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
 		
-		// 일반 사용자의 게시판 표출 시... 그룹사게시판에는 권한이 안들어가있어서 accessID 문제로 제대로 나오지 않을것임
 		for (int i = 0; i < pAccessID.split(",").length; i++) {
 			String boardID = "";
 			
 			if (pMode == 0) {
-				// String isAdminLeft 인자를 추가해주자.
 				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard);            
 			} else {
 				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
@@ -2551,10 +2534,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						} else {
 							brdBoardTreeList.add(k);
 						}
-						
-						
-						logger.debug("가져온 게시판 리스트     ::  " + k.getBoardName());
-						
 					}
 				}
 			}
@@ -3993,8 +3972,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
 		}
 		
-		logger.debug("게시판전체 검색쿼리 리스트 map      ::     " + map.toString());
-		
 		logger.debug("getSearchAllBoardItemList ended");
 		return ezBoardDAO.getSearchAllBoardItemList(map);
 	}
@@ -4045,9 +4022,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else if (boardVO.getSubFlag().equals("YY")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
 		}
-		
-		
-		logger.debug("게시판전체 검색쿼리 카운트 map      ::     " + map.toString());
 		
 		logger.debug("getSearchAllBoardItemCount ended");
 		return ezBoardDAO.getSearchAllBoardItemCount(map);

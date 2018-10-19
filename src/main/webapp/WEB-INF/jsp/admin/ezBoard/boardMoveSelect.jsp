@@ -218,14 +218,13 @@
 			    }
 			}		
 			
-			/* 2018-10-18 홍승비 - 게시판의 그룹ID가 잘못 들어가는 부분 수정 */
 			function TreeCtrl_onNodeClick(pNodeID, pTreeID){
 			    var treeNode = new TreeNode();
 			    treeNode.LoadFromID(pNodeID);
 			    tmpSelectedBoardGroupID = "";
 			    tmpSelectedBoardGroupName = "";
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");
-			    selectedBoardGroupID = treeNode.GetNodeData("DATA3");
+			    selectedBoardGroupID = treeNode.GetNodeData("DATA1");
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			}
 			
