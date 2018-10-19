@@ -12032,6 +12032,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sendRecvMsg(receiveDeptID, docID, "BEBU", companyID, lang, tenantID);
 			return "<RESULT>TRUE</RESULT>";
 		} else {
+			//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+			ezApprovalGDAO.deleteOpinionInfo(map);
+			ezApprovalGDAO.updateOpinionInfo(map);
+			
 			for (int k = 0; k < xmlDom.getDocumentElement().getChildNodes().getLength(); k++) {
 				subSQL = doBebuDoc(docID, xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent(),
 						xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent(),
@@ -12064,10 +12068,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				ezApprovalGDAO.insertSetBebuLineInfoS(map);
 				ezApprovalGDAO.insertSetBebuExpLineInfoS(map);
-				
-				//수신문 반송시 배부하면  의견을 지워주기 위해 추가
-				ezApprovalGDAO.deleteOpinionInfo(map);
-				ezApprovalGDAO.updateOpinionInfo(map);
 				
 				ezApprovalGDAO.updateSetBebuDocInfoS(map);
 				
