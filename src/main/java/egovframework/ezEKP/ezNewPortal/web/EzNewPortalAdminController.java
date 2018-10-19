@@ -222,7 +222,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/portalPortlet.do")
+	@RequestMapping(value = "/admin/ezNewPortal/portalPortlets.do")
 	public String portalManagePortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalPortlets started.");
 		
@@ -244,8 +244,9 @@ public class EzNewPortalAdminController {
 			String status = resultBody.get("status").toString();
 			
 			if (status.equals("ok")) {
-				model.addAttribute("companyList", resultBody.get("resultList"));
+				model.addAttribute("companyList", resultBody.get("data"));
 				model.addAttribute("userCompany", resultBody.get("userCompany"));
+				model.addAttribute("lang", resultBody.get("lang"));
 			}
 			
 			LOGGER.debug("portalPortlets ended.");
@@ -258,11 +259,12 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getPortlets.do")
 	@ResponseBody
-	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest req, Model model) throws Exception {
+	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
 		LOGGER.debug("getPortalPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String url = "/rest/admin/ezPortal/portlets/companies/"+ paramMap.get("companyId");;
+		String companyId = req.getParameter("companyId");
+		String url = "/rest/admin/ezPortal/portlets/companies/"+companyId;
 		
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -276,7 +278,7 @@ public class EzNewPortalAdminController {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			json = (JSONArray) data.get("PortletList");
 		}
-		
+		LOGGER.debug("json : " + json);
 		LOGGER.debug("getPortalPortlets Ended");
 		return json;
 	}

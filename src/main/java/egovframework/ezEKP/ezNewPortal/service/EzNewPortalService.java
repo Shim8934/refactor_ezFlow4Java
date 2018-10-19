@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -90,4 +91,5 @@ public interface EzNewPortalService {
 	 * @throws Exception
 	 */
 	public List<PortletInfoVO> getPortletList(String companyId, int tenantId);
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId);
 }

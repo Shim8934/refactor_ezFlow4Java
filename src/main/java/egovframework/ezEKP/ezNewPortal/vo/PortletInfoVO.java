@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.vo;
 
+import java.util.List;
+
 public class PortletInfoVO {
 
 	private int portletId; //포틀릿 아이디
@@ -13,7 +15,15 @@ public class PortletInfoVO {
 	private String connectionUrl; //포틀릿 연결 url
 	private boolean portletUsed; //포틀릿 사용 여부 : 사용(true), 사용안함(false)
 	private String portletBoardId; // 포틀릿 연결 게시판 id
+	private List<PortletNameInfoVO> portletNameList; // 포틀릿명 리스트
 	
+	
+	public List<PortletNameInfoVO> getPortletNameList() {
+		return portletNameList;
+	}
+	public void setPortletNameList(List<PortletNameInfoVO> portletNameList) {
+		this.portletNameList = portletNameList;
+	}
 	public int getPortletId() {
 		return portletId;
 	}
@@ -83,9 +93,13 @@ public class PortletInfoVO {
 	
 	@Override
 	public String toString() {
-		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
-				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
-				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
-				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId + "]";
+		return "PortletInfoVO [portletId=" + portletId + ", portletOrder="
+				+ portletOrder + ", portletName=" + portletName + ", menuId="
+				+ menuId + ", portletUrl=" + portletUrl + ", isGeneral="
+				+ isGeneral + ", defaultOrder=" + defaultOrder
+				+ ", portletCategory=" + portletCategory + ", connectionUrl="
+				+ connectionUrl + ", portletUsed=" + portletUsed
+				+ ", portletBoardId=" + portletBoardId + ", portletNameList="
+				+ portletNameList + "]";
 	}
 }
