@@ -90,15 +90,15 @@
 			        			<td><input name="text" type="text" id="txtNewGroupName" style="width:100%" maxlength=20></td>
 			        		</tr>	
 			    		</c:if>
-			    		<%-- 2018-10-15 홍승비 - 그룹사게시판 선택 옵션 추가 --%>
-			    		<c:if test="${isCompanyAdmin == true}">
-				    		<tr>
-				    			<th style="border-left:none; border-bottom:none;">그룹사게시판 옵션</th>
-				    			<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard">그룹사게시판으로 생성 (그룹사의 모든 직원이 열람 가능한 게시판)</td>
-				    		</tr>
-			    		</c:if>
 		        	</table>
 		    	</td>
+		    <%-- 2018-10-15 홍승비 - 그룹사게시판 선택 옵션 추가 --%>
+    		<c:if test="${isCompanyAdmin == true}">
+	    		<tr>
+	    			<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /></th>
+	    			<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard"><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
+	    		</tr>
+    		</c:if>
 		  	</tr>
 		</table>
 		<div class="btnpositionJsp"><a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98" /></span></a></div>	
