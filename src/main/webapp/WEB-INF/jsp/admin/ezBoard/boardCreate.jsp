@@ -45,7 +45,13 @@
 			    $.ajax({
 					type : "POST",
 					url : "/admin/ezBoard/createBoard.do",
-					data : { boardID : newID, boardName : encodeURIComponent(name1), boardName2 : encodeURIComponent(name2), parentBoardID : ParentBoardID, boardGroupID : BoardGroupID },
+					data : {
+						boardID : newID,
+						boardName : encodeURIComponent(name1),
+						boardName2 : encodeURIComponent(name2),
+						parentBoardID : ParentBoardID,
+						boardGroupID : BoardGroupID
+					},
 					success: function(result){						
 						alert("<spring:message code='ezBoard.t109' />");	
 						
