@@ -1,4 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 <sqlMap namespace="ezNewPortalAdmin">
+	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
+	
+	<select id="ezNewPortal.getThemeDetail" parameterClass="Map" resultClass="ThemeInfoVO">
+		<![CDATA[
+			SELECT
+				B.theme_id AS themeid,
+				B.theme_name AS themename,
+			    B.theme_content AS themecontent,
+			    A.theme_used AS themeused,
+			    A.theme_default AS themedefault
+			FROM
+				TBL_PORTAL_THEME_COMP A
+			JOIN
+				TBL_PORTAL_THEME B
+			ON
+				A.theme_id = B.theme_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+				A.theme_id = #themeId#
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getFrames" parameterClass="Map" resultClass="FrameInfoVO">
+		<![CDATA[
+			SELECT
+				B.theme_id AS theme_id,
+			    B.frame_id AS framid,
+				B.frame_name AS framename,
+			    A.frame_used AS frameused,
+			    A.frame_default AS framedefault
+			FROM
+				TBL_PORTAL_FRAME_COMP A
+			JOIN
+				TBL_PORTAL_FRAME B
+			ON
+				A.theme_id = B.theme_id
+			AND
+				A.frame_id = B.frame_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+			    A.theme_id = #themeId#
+		]]>
+	</select>
+
 </sqlMap>

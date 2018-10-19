@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
+import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -187,6 +188,15 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompanyThemes", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<FrameInfoVO> getFrames(Map<String, Object> map) throws Exception {
+		return (List<FrameInfoVO>) list("ezNewPortal.getFrames", map);
+	}
+	
+	public ThemeInfoVO getThemeDetail(Map<String, Object> map) throws Exception {
+		return (ThemeInfoVO) select("ezNewPortal.getThemeDetail", map);
 	}
 	
 	@SuppressWarnings("unchecked")

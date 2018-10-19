@@ -649,12 +649,34 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception {
-		return null;
+		LOGGER.debug("getThemeDetail started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("themeId", themeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ThemeInfoVO vo = ezNewPortalDAO.getThemeDetail(map);
+		
+		LOGGER.debug("getThemeDetail ended.");
+		
+		return vo;
 	}
 	
 	@Override
 	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception {
-		return null;
+		LOGGER.debug("getFrames started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("themeId", themeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<FrameInfoVO> list = ezNewPortalDAO.getFrames(map);
+		
+		LOGGER.debug("getFrames ended.");
+		
+		return list;
 	}
 	
 	@Override
