@@ -274,7 +274,7 @@
 .divInfo {width: 100%;}
 .divInfo ul {list-style: none; padding: 8px;}
 .divInfo table + table {margin-top: 15px;}
-.divInfo .cabmemo {height: 50px; overflow: auto; margin: 8px 0px;}
+.divInfo .cabmemo {height: 90px; overflow: auto; margin: 8px 0px;}
 .divAddInfo {height: 70px;}
 .tblFileInf, .cabShareInf, .tblAddRelatedInf, .tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
 .tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td, .tblAddRelatedInf tr th, .tblAddRelatedInf tr td {border: 1px solid #ddd;}
@@ -311,18 +311,18 @@
 .ulFiles li:lastChild {padding-bottom: 5px;}
 
 .mailContDiv1  {margin: 10px 0px; border: 1px solid #ddd; min-height: 410px; height: 410px; overflow: auto;}
-.mailContDiv2  {margin: 10px 0px; border: 1px solid #ddd; min-height: 410px; height: 410px; overflow: auto;}
+.mailContDiv2  {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
 .boardContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 470px; height: 470px; overflow: auto;}
 .boardContDiv2 {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
 .optionContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 470px; height: 470px; overflow: auto;}
 .resContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 410px; height: 410px; overflow: auto;}
 .schContDiv1   {margin: 10px 0px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto;}
-.schContDiv2   {margin: 10px 0px; border: 1px solid #ddd; min-height: 341px; height: 341px; overflow: auto;}
+.schContDiv2   {margin: 10px 0px; border: 1px solid #ddd; min-height: 380px; height: 380px; overflow: auto;}
 .todoContDiv   {margin: 10px 0px; border: 1px solid #ddd; min-height: 420px; height: 420px; overflow: auto;}
 .commuContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
 .apprvContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 550px; height: 550px; overflow: auto;}
 .commuPhotoContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 470px; height: 470px; overflow: auto;}
-.journalContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 400px; height: 400px; overflow: auto;}
+.journalContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
 
 .addressContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
 .addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}
