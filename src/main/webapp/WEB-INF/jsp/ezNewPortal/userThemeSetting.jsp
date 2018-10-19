@@ -23,7 +23,57 @@ $(function(){
 	    buttons: true,
 	    fadeIn : 0
 	}).flipster('jump', $("#T" + "<c:out value='${usedTheme}'/>"));
+	
+	$("#themeInit").on("click", deleteUserThemeSetting);
+	
+	var themeList = JSON.parse('${themeList }');
+	var themeListCount = themeList.length;
+	
+	for (var i = 0; i < themeListCount; i++) {
+		var themeId = themeList[i].themeId;
+		var frameDefault = themeList[i].frameDefault;
+		$("#T" + themeId).find(".btnpositionJsp").on("click", {"themeId" : themeId, "frameDefault" : frameDefault}, updateUserThemeSetting);
+	}
+	
 });
+
+function deleteUserThemeSetting() {
+	var result = confirm("테마를 초기화하고 회사의 설정 상태로 변경하시겠습니까?");
+	
+	if (result) {
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/deleteUserThemeSetting.do",
+			success : function() {
+				window.location.reload();
+			},
+			fail : function() {
+				alert("오류가 발생하였습니다.");
+			}
+		});
+	}
+}
+
+function updateUserThemeSetting(event) {
+	var result = confirm("해당 테마를 기본 테마로 설정하시겠습니까?");
+	
+	if (result) {
+		var themeId = event.data.themeId;
+		var frameDefault = event.data.frameDefault;
+		
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/updateUserThemeSetting.do",
+			data : {"themeId" : themeId, "frameDefault" : frameDefault},
+			success : function() {
+				window.location.reload();
+			},
+			fail : function() {
+				alert("오류가 발생하였습니다.");
+			}
+		});
+	}
+}
 </script>
 <style type="text/css">
 .themeImg {
@@ -47,6 +97,13 @@ $(function(){
 
 .btnpositionJsp a.imgbtn span {
 	font-weight : normal;
+}
+
+#usedTheme {
+	text-align : center;
+	margin-top : 15px;
+	padding : 7px;
+	font-weight : bold;
 }
 </style>
 </head>
@@ -82,7 +139,14 @@ $(function(){
 				<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
 					<div class="themeImage">
 						<img src="/images/ezNewPortal/Theme1.GIF" class="themeImg">
-						<div class="btnpositionJsp"><a class="imgbtn"><span>기본 테마 선택</span></a></div>
+						<c:choose>
+							<c:when test="${theme.themeId eq usedTheme }">
+								<div id="usedTheme"><span>적용 중인 테마</span></div>	
+							</c:when>
+							<c:otherwise>
+								<div class="btnpositionJsp"><a class="imgbtn"><span>기본 테마 선택</span></a></div>
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<p class="themeContent">${theme.themeContent}</p>
 				</li>

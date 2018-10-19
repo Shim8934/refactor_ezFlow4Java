@@ -90,10 +90,35 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
-	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMain Start");
 		//초기화면 설정 확인
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/startpage/users/" + userId;
 		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		String status = resultBody.get("status").toString();
+		String returnUrl = "";
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+			if (data != null) {
+				String startUrl = data.get("menuUrl").toString();
+				
+				if (startUrl == null) {
+					returnUrl = "/ezNewPortal/newPortalPortalPage.do";
+				} else {
+					returnUrl = startUrl;
+				}
+			} else {
+				returnUrl = "/ezNewPortal/newPortalPortalPage.do";
+			}
+		}
+		
+		model.addAttribute("mainUrl", returnUrl);
+		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
 	}
@@ -165,7 +190,7 @@ logger.debug("TopMenu : " + data.toJSONString());
 			
 			String usedTheme = data.get("usedTheme").toString();
 			String usedFrame = data.get("usedFrame").toString();
-			returnUrl += "Theme" + usedTheme + "_Frame" + usedFrame;
+			returnUrl += "Theme" + usedTheme + "_" + usedFrame;
 			logger.debug("returnUrl : " + returnUrl);
 		}
 		
@@ -357,7 +382,7 @@ logger.debug("TopMenu : " + data.toJSONString());
 		if (startPageStatus.equals("ok")) {
 			JSONObject startPage = (JSONObject) startPageResultBody.get("data");
 			
-			if (startPage.get("menuId") == null) {
+			if (startPage == null) {
 				model.addAttribute("menuId", 0);
 				model.addAttribute("menuUrl", "/ezNewPortal/newPortalPortalPage.do");
 			} else {
@@ -366,8 +391,52 @@ logger.debug("TopMenu : " + data.toJSONString());
 			}
 		}
 		
-		logger.debug("userStartPageSetting Start");
+		logger.debug("userStartPageSetting End");
 		return "/ezNewPortal/userStartPageSetting";
+	}
+	
+	//사용자 초기화면 설정 실행 함수
+	@RequestMapping(value = "/ezNewPortal/updateUserStartPage.do")
+	public void updateUserStartPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updateUserStartPage Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int menuId = Integer.parseInt(req.getParameter("menuId"));
+		String url = "/rest/ezPortal/startpage/menus/" + menuId + "/users/" + userId;
+		
+		commonUtil.getJsonFromRestApi(url, null, req, "patch", null);
+		
+		logger.debug("updateUserStartPage End");
+	}
+	
+	//테마 초기화 실행 함수
+	@RequestMapping(value = "/ezNewPortal/deleteUserThemeSetting.do")
+	public void deleteUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("deleteUserThemeSetting Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/themes/users/" + userId;
+		
+		commonUtil.getJsonFromRestApi(url, null, req, "delete", null);
+		
+		logger.debug("deleteUserThemeSetting End");
+	}
+	
+	//사용자 기본 테마 설정 실행 함수
+	@RequestMapping(value = "/ezNewPortal/updateUserThemeSetting.do")
+	public void updateUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updateUserThemeSetting Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int themeId = Integer.parseInt(req.getParameter("themeId"));
+		String url = "/rest/ezPortal/themes/" + themeId + "/users/" + userId;
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("frameDefault", req.getParameter("frameDefault"));
+		
+		commonUtil.getJsonFromRestApi(url, param, req, "patch", null);
+		
+		logger.debug("updateUserThemeSetting End");		
 	}
 	/**
 	 * ----

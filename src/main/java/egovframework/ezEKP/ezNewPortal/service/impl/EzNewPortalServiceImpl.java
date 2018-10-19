@@ -266,7 +266,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 			
 			if (userPortalSetting == null) {
-				userPortalSetting.setUsedFrame(1);
+				userPortalSetting.setUsedFrame("Frame1");
 				userPortalSetting.setUsedTheme(1);
 			}
 		}

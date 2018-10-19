@@ -10,8 +10,71 @@
 <link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
 
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript">
+function selectTR(event) {
+	var menuId = event.data.menuId;
+	$("#menuList").find("tr").removeClass("selectTR");
+	$("#M" + menuId).addClass("selectTR");
+}
+
+$(function() {
+	var menuList = JSON.parse('${menuList}');
+	var menuListCount = menuList.length;
+	
+	$("#setStartPage").on("click", setStartPage);
+	
+	$("#M0").on("click", {"menuId" : 0}, selectTR);
+	$("#M0").on("dblclick", {"menuId" : 0}, setStartPage);
+	
+	for (var i = 0; i < menuListCount; i++) {
+		$("#M" + menuList[i].menuId).on("click", {"menuId" : menuList[i].menuId}, selectTR);
+		$("#M" + menuList[i].menuId).on("dblclick", {"menuId" : menuList[i].menuId}, setStartPage);
+	}
+});
+
+function setStartPage(event) {
+	var oldStartPageId = "<c:out value='${menuId}'/>";
+	var menuId = 0;
+	
+	if (event.data == undefined) {
+		var selId = $(".selectTR").attr("id");
+		menuId = selId.substring(1);
+	} else {
+		mmenuId = event.data.menuId;
+	}
+	
+	var menuName = $("#M" + menuId).find("td").eq(1).text();
+	
+	var result = confirm(menuName + "을 기본화면으로 선택하시겠습니까?");
+	
+	if (result) {
+		$.ajax({
+			type : "POST",
+			data : {"menuId" : menuId},
+			url : "/ezNewPortal/updateUserStartPage.do",
+			success : function() {
+				$("#M" + oldStartPageId).find("td").eq(2).text("");
+				$("#M" + menuId).find("td").eq(2).text("사용중");
+				alert("변경되었습니다.");
+			},
+			fail : function () {
+				alert("오류가 발생하였습니다.");
+			}
+		});
+	}
+}
 </script>
+<style type="text/css">
+.mainlist {width : 50%}
+.mainlist tr :first-child {width : 120px}
+.mainlist tr :nth-child(3) {width : 150px}
+.mainlist tr :nth-child(4) {width : 150px}
+.mainlist tr {cursor : pointer}
+.mainlist tr:hover {background-color : rgb(244,245,245)}
+.selectTR {background-color: #edf4fd;}
+</style>
 </head>
 <body class="mainbody">
 	<h1><spring:message code='ezPortal.t265'/></h1>
@@ -40,39 +103,45 @@
 			<td  class="dotted"></td>
 		</tr>
 	</table>
-	<table class="mainlist" style="width:100%"> 
+	<table class="mainlist"> 
 		<tr>
-			<th width="120">&nbsp;</th>
-			<th width=""><spring:message code='ezPortal.t268'/></th>
-			<th width="150"><spring:message code='ezPortal.t257'/></th>
-			<th width="150"> &nbsp;</th>
+			<th>&nbsp;</th>
+			<th><spring:message code='ezPortal.t268'/></th>
+			<th><spring:message code='ezPortal.t257'/></th>
+			<th> &nbsp;</th>
 		</tr>
 	</table>
-	<table class="mainlist">
+	<table id="menuList" class="mainlist">
+		<tr id="M0">
+			<td></td>
+			<td>홈</td>
+		<c:choose>
+			<c:when test="${menuId eq 0 }">
+				<td>사용중</td>
+			</c:when>
+			<c:otherwise>
+				<td></td>
+			</c:otherwise>
+		</c:choose>
+			<td></td>	
+		</tr>
 		<c:forEach items="${menuList}" var="menu">
 		<c:choose>
-			<c:when test="${menu.menuId eq 0 }">
-				<tr>
-					<td></td>
-					<td>${menu.menuName }</td>
-					<td></td>
-			        <td width="150"></td>	
-				</tr>
-			</c:when>
 			<c:when test="${menu.menuId eq menuId }">
-				<tr>
+				<tr id="M${menu.menuId }">
 					<td></td>
 					<td>${menu.menuName }</td>
 					<td>사용중</td>
-			        <td width="150"></td>	
+			        <td></td>	
 				</tr>
 			</c:when>
 			<c:otherwise>
-				<tr>
-					<td width="120"></td>
+				<tr id="M${menu.menuId }">
+					<td></td>
 					<td>${menu.menuName }</td>
-					<td width="150"></td>
-			        <td width="150"></td>	
+					<td></td>
+			        <td></td>	
+			     </tr>
 			</c:otherwise>
 		</c:choose>
 		</c:forEach>
