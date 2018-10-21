@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -618,5 +619,59 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 
 		logger.debug("checkPassword ended");
 		return pResult;
+	}
+	
+	@Override
+	public String getShareApprovalList (String userID, String offset, int tenantID) throws Exception {
+		logger.debug("getShareApprovalList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("offset", offset);
+		map.put("tenantID", tenantID);
+		
+		List<PersonalShareApprovalVO> shareApprovalList = ezPersonalDAO.getShareApprovalList(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < shareApprovalList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(shareApprovalList.get(i)));
+		}
+        
+		sb.append("</DATA>");
+		logger.debug("getShareApprovalList ended");
+		return sb.toString();
+	}
+	
+	@Override
+	public String insertShareApproval (String userID, String shareUserID, int tenantID) throws Exception {
+		logger.debug("insertShareApproval started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("shareUserID", shareUserID);
+		map.put("tenantID", tenantID);
+		map.put("shareDate", commonUtil.getTodayUTCTime(""));
+		
+		ezPersonalDAO.insertShareApproval(map);
+		
+		logger.debug("insertShareApproval ended");
+		return "OK";
+	}
+	
+	@Override
+	public String deleteShareApproval (String userID, String shareUserID, int tenantID) throws Exception {
+		logger.debug("deleteShareApproval started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("shareUserID", shareUserID.split(",")); //'id1', 'id2'형태로?? 아니면 배열해서 iterate
+		map.put("tenantID", tenantID);
+		
+		ezPersonalDAO.deleteShareApproval(map);
+		
+		logger.debug("deleteShareApproval ended");
+		return "OK";
 	}
 }
