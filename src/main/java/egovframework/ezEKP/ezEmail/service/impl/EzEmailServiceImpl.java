@@ -2139,7 +2139,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributioIncludedList";			
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributioIncludednList";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 		logger.debug("response=" + response);
 		

@@ -1355,7 +1355,7 @@
 	                            }
 	                            
 	                            pparsingXML = pparsingXML + "<DATA4>ADDRESS</DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t592' /> : " + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -2434,7 +2434,7 @@
                 pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strEmail + "</DATA1>";
                 pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
                 pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
-                pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t244' /> : " + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
                 pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                 Resultxml = loadXMLString(pparsingXML2);
                 
