@@ -25,6 +25,8 @@ public class BoardBackgroundVO {
 	private int tenantID;
 	/** 2018-06-26 홍승비 companyID 추가 */
 	private String companyID;
+	/** 2018-10-15 홍승비 - 그룹사게시판 체크용 isGroupBoard 추가*/
+	private String isAllGroupBoard;
 
 	public String getBackgroundID() {
 		return backgroundID;
@@ -97,6 +99,12 @@ public class BoardBackgroundVO {
 	}
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
+	}
+	public String getIsAllGroupBoard() {
+		return isAllGroupBoard;
+	}
+	public void setIsAllGroupBoard(String isAllGroupBoard) {
+		this.isAllGroupBoard = isAllGroupBoard;
 	}
 	
 }

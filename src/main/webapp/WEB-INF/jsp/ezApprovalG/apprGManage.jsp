@@ -220,7 +220,9 @@
 		        else if (pListTypeValue == "99") {
 		            getDocList();
 		        }
-		
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
 		        try {
 		            parent.frames["left"].getAprCount();
 		            parent.frames["left"].setPresentValue("");
