@@ -207,14 +207,14 @@ public class LoginController {
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
         	logger.debug("ipAddressChk=" + ipAddressChk);
-        	
+        	// 2018.10.22 이석화 추가 - useSession row 유무 확인
         	Map<String, Object> sessionParam = new HashMap<String, Object>();
     		String confName = "useSession"; 
     		sessionParam.put("tenantID", tenantId);
     		sessionParam.put("confName", confName);
         	
     		useSession = ezCommonService.getUseSession(sessionParam);
-    		
+    		// useSession row 없으면 추가
     		if (useSession == null || useSession == "") {
     			String regdate = commonUtil.getTodayUTCTime("");
         		sessionParam.put("property_value", "0");
@@ -370,8 +370,8 @@ public class LoginController {
 	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
 	        	if (Integer.parseInt(useSession) != 0) {
 	        		
-	        		session = request.getSession();
-	        		session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);
+	        		session = request.getSession(); 
+	        		session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);	// 세션 유지 시간 설정
 	        	}
 	        
 	        	return "redirect:/ezPortal/portalMain.do";
