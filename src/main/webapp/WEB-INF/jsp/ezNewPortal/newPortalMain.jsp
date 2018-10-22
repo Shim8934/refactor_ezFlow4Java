@@ -53,7 +53,8 @@
 	    	var memoList;
 	    	var userGadget;
 	    	var layerFlag;
-			
+	    	var memoFlag = "<c:out value='${useMemo}' />";
+	    	
 			topHeight = "56";
 
 		 	window.onresize = function () {
@@ -66,8 +67,6 @@
 		 	});
 		 	
 		 	$(function() {
-		    	var memoFlag = "<c:out value='${useMemo}' />";
-		    	
 		    	if(memoFlag === "YES") {
 		    		
 			    	defaultPointer();

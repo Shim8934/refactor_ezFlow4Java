@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -446,6 +447,13 @@ public class EzNewPortalGWController {
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
 			}
+			
+			/**
+			 * 4) 팝업 공지
+			 */
+			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUser(companyId, tenantId);
+			data.put("popupNotiList", popupNotiList);
+			
 			data.put("logoUrl", logoUrl);
 			data.put("roleInfo", roleInfo);
 			LOGGER.debug("TopMenu Data : " + data.toJSONString());
