@@ -418,20 +418,33 @@
 	            { return ""; }
 	        }
 	        
-	        function getMustFieldsInsert() {
+	        function getMustFieldsInsert(lang) {
 	        	try {
 	        		var mustFields = $(".FIELD#doctitle, [must]");
+	        		var returnval = new Array();
+	        		var resStr = "";
 	        		for (var i = 0; i < mustFields.length; i++) {
 	        			var mustField = mustFields[i];
 	        			var val = $(mustField).text().trim();
 	        			if (val == "") {
 							if ($(mustField).attr('id') == "doctitle"){
-								return "doctitle";
+								returnval.push("<spring:message code='ezApprovalG.t1330'/>");
 							} else {
-								return $(mustField).attr('must');
+								returnval.push($(mustField).attr('must'));
 							}
 						}
 	        		}
+	        		for (var i = 0; i < returnval.length; i++) {
+						resStr += returnval[i];
+						if(i < returnval.length){
+							if(lang == "3"){
+								resStr += "、";
+							} else {
+								resStr += ",";
+							}
+						}
+					}
+	        		return resStr;
 	            } catch (e)
 	            { return ""; }
 	        }
