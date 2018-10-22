@@ -2097,10 +2097,13 @@ logger.debug("map.toString()" + map.toString());
 		logger.debug("getMainMenuHTML started");
 
 		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
-
+		
 		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		
+		// 20181018 조진호 - 탑메뉴 구분을 위해 패키지 타입 추가
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
 		if (use_attitude == null || use_attitude.equals("")) {
 			use_attitude = "YES";
@@ -2147,6 +2150,14 @@ logger.debug("map.toString()" + map.toString());
 				continue;
 			}
 			
+			// 20181018 조진호 - 패키지 별 탑메뉴 다르게 나오도록 추가
+			if(packageType.equalsIgnoreCase("mail") && !menuitemLinkURL.equals("/ezEmail/mailMain.do")){
+				continue;
+			}
+			if(packageType.equalsIgnoreCase("basic") && !(menuitemLinkURL.equals("/ezEmail/mailMain.do") || menuitemLinkURL.equals("/ezBoard/boardMain.do") || menuitemLinkURL.equals("/ezSchedule/scheduleIndex.do?funCode=2"))){
+				continue;
+			}
+
 			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
 			sb.append("<li ");
 			

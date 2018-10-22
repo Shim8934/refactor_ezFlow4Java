@@ -436,6 +436,7 @@ public class CommonUtil {
 		}
 		String useSession = ezCommonService.getUseSession(sessionParam);
 		// 세션 0이면 세션 사용 안 함
+//		if (useSession != null && !useSession.equals("0")) {
 		if (useSession != "0") {
 			/* session time을 위한 처리 주석 */	
 			/* 세션 사용 위해 주석 해제*/

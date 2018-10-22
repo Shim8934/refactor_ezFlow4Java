@@ -299,7 +299,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
-	/*세션 사용 여부 row의 존재 확인*/
+	/*세션 사용 시간 get*/
 	public String getUseSession(Map<String, Object> map) {
 		return (String) select("EzCommonDAO.getUseSession", map);
 	}
