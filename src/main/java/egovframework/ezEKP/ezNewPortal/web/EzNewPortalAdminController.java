@@ -283,5 +283,35 @@ public class EzNewPortalAdminController {
 		return json;
 	}
 	
+	/**
+	 * 관리자 포탈 포틀릿목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/updatePortlets.do")
+	@ResponseBody
+	public JSONArray updatePortalPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("getPortalPortlets started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		String companyId = req.getParameter("companyId");
+		String url = "/rest/admin/ezPortal/portlets/"+portletId+"/companies/"+companyId;
+		
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());		
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "PATCH", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			json = (JSONArray) data.get("PortletList");
+		}
+		LOGGER.debug("json : " + json);
+		LOGGER.debug("getPortalPortlets Ended");
+		return json;
+	}
+	
 	/** ----------------------------------------------- */
 }
