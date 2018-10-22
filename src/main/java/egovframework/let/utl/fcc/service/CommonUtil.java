@@ -428,16 +428,18 @@ public class CommonUtil {
         int tenantID;
 		try {
 			tenantID = loginService.getTenantId(serverName);
-			sessionParam.put("useSession", "useSession");
+			
+			String confName = "useSession"; 
+    		sessionParam.put("confName", confName);
 			sessionParam.put("tenantId", tenantID);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String useSession = ezCommonService.getUseSession(sessionParam);
-		// 세션 0이면 세션 사용 안 함
+//		String useSession = ezCommonService.getUseSession(sessionParam);
+//		세션 0이면 세션 사용 안 함
 //		if (useSession != null && !useSession.equals("0")) {
-		if (useSession != "0") {
+//		if (useSession != "0") {
 			/* session time을 위한 처리 주석 */	
 			/* 세션 사용 위해 주석 해제*/
 			HttpSession session = request.getSession(false);
@@ -474,7 +476,7 @@ public class CommonUtil {
 	        	    }
 	        	}
 	        } 
-		} else {
+		/*} else {
 			
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
@@ -506,7 +508,7 @@ public class CommonUtil {
 					}
 				}
 			}
-		}
+		}*/
         return isCookie;
 	}
 	
