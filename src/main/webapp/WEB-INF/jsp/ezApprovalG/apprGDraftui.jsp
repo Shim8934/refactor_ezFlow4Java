@@ -523,7 +523,7 @@
 			            var fields = message.GetFieldsList();
 			            pDocTitle = trim_Cross(message.GetDocTitle());
 			            
-			            var mustField = message.getMustFieldsInsert();
+			            var mustField = message.getMustFieldsInsert("${userInfo.lang}");
 			            if (mustField && mustField != ""){
  			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
  			            	pAlertContent = pAlertContent.replace("@@", mustField);

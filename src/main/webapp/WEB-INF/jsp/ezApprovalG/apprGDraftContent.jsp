@@ -418,10 +418,11 @@
 	            { return ""; }
 	        }
 	        
-	        function getMustFieldsInsert() {
+	        function getMustFieldsInsert(lang) {
 	        	try {
 	        		var mustFields = $(".FIELD#doctitle, [must]");
 	        		var returnval = new Array();
+	        		var resStr = "";
 	        		for (var i = 0; i < mustFields.length; i++) {
 	        			var mustField = mustFields[i];
 	        			var val = $(mustField).text().trim();
@@ -433,7 +434,17 @@
 							}
 						}
 	        		}
-	        		return returnval;
+	        		for (var i = 0; i < returnval.length; i++) {
+						resStr += returnval[i];
+						if(i < returnval.length){
+							if(lang == "3"){
+								resStr += "、";
+							} else {
+								resStr += ",";
+							}
+						}
+					}
+	        		return resStr;
 	            } catch (e)
 	            { return ""; }
 	        }
