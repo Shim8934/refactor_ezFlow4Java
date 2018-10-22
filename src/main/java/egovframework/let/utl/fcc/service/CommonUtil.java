@@ -436,7 +436,7 @@ public class CommonUtil {
 		}
 		String useSession = ezCommonService.getUseSession(sessionParam);
 		// 세션 0이면 세션 사용 안 함
-		if (useSession != "0") {
+		if (Integer.parseInt(useSession) != 0) {
 			/* session time을 위한 처리 주석 */	
 			/* 세션 사용 위해 주석 해제*/
 			HttpSession session = request.getSession(false);
@@ -467,6 +467,7 @@ public class CommonUtil {
 	        				cookie.setMaxAge(0);
 	        				cookie.setPath("/");
 	        				response.addCookie(cookie);
+	        				session.invalidate();
 	        			}
 	        	    }
 	        	}
@@ -502,39 +503,7 @@ public class CommonUtil {
 				}
 			}
 		}
-		/*
-//        if (session != null) {
-	        if (cookies != null) {
-	            for (Cookie cookie : cookies) {
-	                if("loginCookie".equals(cookie.getName())){
-	                    //접속한 클라이언트 IP
-	                    String ip = ClientUtil.getClientIP(request);
-	                    String cValue = "";
-	                    try {
-	                        //쿠기에 저장되어 있는 IP
-	                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-	
-	                        if(cValue.split("///")[3].equals(ip)){                  
-	                            isCookie = true;
-	                        }
-	                    } catch (Exception e) {
-	                        //e.printStackTrace();
-	                    }
-	                }
-	            }
-	        }
-//        } else {
-        	if (cookies != null) {
-        		for (Cookie cookie : cookies) {
-        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-        				cookie.setMaxAge(0);
-        				cookie.setPath("/");
-        				response.addCookie(cookie);
-        			}
-        	    }
-        	}
-//        } 
-        	*/
+		
         return isCookie;
 	}
 	

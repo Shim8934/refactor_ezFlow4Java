@@ -369,7 +369,8 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 	        	
-	        	if (useSession != "0") {
+	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
+	        	if (Integer.parseInt(useSession) != 0) {
 	        		
 	        		session = request.getSession();
 	        		session.setMaxInactiveInterval(Integer.parseInt(useSession));
@@ -457,8 +458,9 @@ public class LoginController {
     		        	cookieName.setPath("/");
     		        	response.addCookie(cookieName);
     		        	
+    		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
     		        	if (Integer.parseInt(useSession) != 0) {
-//    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
+    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
 	    		        	session = request.getSession();			// 세션 필요로 주석 해제
 	    		        	session.setMaxInactiveInterval(Integer.parseInt(useSession));		// 세션의 유지 시간 설정
     		        	}
@@ -750,8 +752,10 @@ public class LoginController {
 			
         	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
-    	
-    	return "redirect:/user/login/login.do"; 
+
+       	request.getSession().invalidate();
+
+       	return "redirect:/user/login/login.do"; 
     }
     
     @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do")

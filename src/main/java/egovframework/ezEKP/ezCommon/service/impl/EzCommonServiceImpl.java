@@ -1345,5 +1345,4 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertUseSession(map);
 	}
 	
-	
 }
