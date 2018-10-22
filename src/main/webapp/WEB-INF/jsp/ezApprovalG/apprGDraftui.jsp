@@ -530,11 +530,6 @@
  			                OpenAlertUI(pAlertContent);
  			                return;
 			            }
-// 			            if (pDocTitle == "") {
-// 			                var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
-// 			                OpenAlertUI(pAlertContent);
-// 			                return;
-// 			            }
 			            if (pDocTitle.length > 127) {
 			                var pAlertContent = "<spring:message code='ezApprovalG.t132'/>";
 			                OpenAlertUI(pAlertContent);
