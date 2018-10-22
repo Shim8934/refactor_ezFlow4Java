@@ -51,6 +51,43 @@
 		]]>
 	</select>
 	
+	<select id="ezNewPortal.getMenus" parameterClass="Map" resultClass="MenuInfoVO">
+		<![CDATA[
+			SELECT
+				A.menu_id AS menuid,
+				C.menu_name AS menuname,
+				A.menu_used AS menuused,
+				A.company_lang AS companylang,
+				B.menu_url AS menuurl,
+				B.icon_url AS iconurl,
+				CASE WHEN A.company_order IS NULL
+					THEN B.default_order
+					ELSE A.company_order
+				END AS defaultorder
+			FROM
+				TBL_PORTAL_MENU_COMP A
+			JOIN
+				TBL_PORTAL_MENU B
+			ON
+				A.menu_id = B.menu_id
+			JOIN
+				TBL_PORTAL_MENU_NAME C
+			ON
+				A.tenant_id = C.tenant_id
+			AND
+				A.company_id = C.company_id
+			AND
+				A.menu_id = C.menu_id
+			AND
+				A.company_lang = C.menu_lang
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+		]]>
+	
+	</select>
+	
 	<update id="ezNewPortal.updateThemeInfo" parameterClass="Map">
 		<![CDATA[
 			UPDATE

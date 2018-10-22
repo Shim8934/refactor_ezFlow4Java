@@ -1099,22 +1099,30 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyMenuList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyMenuList started.");
+	public JSONObject getCompanyMenus(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getCompanyMenus started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", menuInfos);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyMenuList ended.");
+		
+		LOGGER.debug("ezNewPortal G/W getCompanyMenus ended.");
+		
 		return result;
 	}
 

@@ -704,6 +704,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
+	public List<MenuInfoVO> getMenus(String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenus started. companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<MenuInfoVO> list = ezNewPortalDAO.getMenus(map);
+		
+		LOGGER.debug("getMenus ended.");
+		
+		return list;
+	}
+	
+	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getFavoriteForms started.");
 		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		

@@ -75,7 +75,9 @@
 						
 						document.getElementsByClassName('bookmark')[0].innerHTML = formsHTML
 						
-						Array.from(document.getElementsByClassName('bookmarkLi')).forEach(function(element) {
+						var elementList = document.querySelectorAll('.bookmarkLi');
+							
+						[].forEach.call(elementList, function(element) {
 							element.addEventListener('click', function() {
 								checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
 							});
