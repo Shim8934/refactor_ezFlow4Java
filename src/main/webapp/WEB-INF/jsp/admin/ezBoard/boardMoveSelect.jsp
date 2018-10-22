@@ -75,8 +75,13 @@
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezBoard/getSubBoards.do",	        			
-					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
+					url : "/ezBoard/getSubBoards.do",
+					data : {
+						rootBoardID : pRootBoardID,
+						subFlag : pSubFlag,
+						selectFlag : "0",
+						isAdminLeft : "Y"
+						},
 					success: function(result){
 						ret = loadXMLString(result);				
 					}
@@ -129,7 +134,10 @@
 					dataType : "text",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",
-					data : { rootBoardID : 'top', subFlag : '0'},
+					data : {
+						rootBoardID : 'top',
+						subFlag : '0',
+						isAdminLeft : "Y"},
 					success : function(result){
 						MakeTopBoardView(result);
 					}
@@ -216,8 +224,8 @@
 			    tmpSelectedBoardGroupID = "";
 			    tmpSelectedBoardGroupName = "";
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");
-			    selectedBoardGroupID = treeNode.GetNodeData("DATA1")
-			    SelectedBoardName = treeNode.GetNodeData("DATA2")
+			    selectedBoardGroupID = treeNode.GetNodeData("DATA1");
+			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			}
 			
 			function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
