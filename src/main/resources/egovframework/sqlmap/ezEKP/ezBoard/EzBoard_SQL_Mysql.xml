@@ -362,8 +362,19 @@
 					TBL_Board_Item_ListOption  
                 WHERE
                 	TENANT_ID = #v_TENANTID#
-                AND 
-                	LISTTYPE = #v_LISTCODE#
+                AND
+                ]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = 1
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+			<![CDATA[
                 AND 
                 	VIEW_FG = 'Y' 
                 ORDER BY
@@ -385,7 +396,18 @@
                     WHERE 
                     	TENANT_ID = #v_TENANTID#
                     AND
-                    	LISTTYPE = #v_LISTCODE#
+                    ]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = 1
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+				<![CDATA[
                     AND 
                     	VIEW_FG = 'Y' 
                     ORDER BY 
@@ -403,7 +425,18 @@
                     WHERE
                     	TENANT_ID = #v_TENANTID#
                     AND 
-                    	LISTTYPE = #v_LISTCODE# 
+				]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = 1
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+				<![CDATA[
                     AND 
                     	VIEW_FG = 'Y' 
                     ORDER BY 
@@ -3638,9 +3671,7 @@
 					FROM
 						TBL_USERMASTER D
 					WHERE
-						D.TENANT_ID = #v_TENANTID#
-					AND
-						D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+						D.TENANT_ID = #v_TENANTID#)
 						
 					UNION ALL
 					
@@ -3661,15 +3692,15 @@
 					ON
 						A2.DEPTID = C.CN
 					AND
-						B.TENANT_ID = C.TENANT_ID)) T
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#)) T
 				ON
 					A.USERID = T.CN
 				AND
 					A.TENANT_ID = T.TENANT_ID
 		        WHERE
 		        	A.TENANT_ID = #v_TENANTID#
-		        AND
-		        	T.COMPANYID = #v_COMPANYID#
 		        AND
 		       		A.BOARDID = #v_BoardID#
 				AND 

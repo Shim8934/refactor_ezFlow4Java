@@ -685,6 +685,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("photoListDel ended");
 	}
 
+	/* 2018-10-19 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 */
 	@Override
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeaderBoardID started");
@@ -695,6 +696,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
+		
+		BoardPropertyVO boardProp = new BoardPropertyVO();
+		boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
+		
+		if (boardProp.getBoardGroupID() != null) {
+			BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), ezBoardVO.getTenantID());
+			
+			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
+				map.put("v_isAllGroupBoard", "Y");
+			}
+		}
 		
 		String tempString = ezBoardDAO.getListOptionBoardID(map);
 		
