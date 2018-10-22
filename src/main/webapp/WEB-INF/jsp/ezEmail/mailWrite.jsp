@@ -2151,7 +2151,7 @@
 	                    <tr>
 	                        <td style="height:100%;">
 	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;margin-bottom:1px"></iframe>
-	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
+	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;resize:none;"></textarea>
 	                        </td>
 	                    </tr>
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리

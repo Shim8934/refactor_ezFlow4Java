@@ -2138,7 +2138,7 @@ logger.debug("map.toString()" + map.toString());
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
 			/*String menuitemImageUID = result.get(i).getImageUId();*/
-			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
+			String menuitemLinkLocation = result.get(i).getLinkLocation();
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
 			
@@ -2163,7 +2163,13 @@ logger.debug("map.toString()" + map.toString());
 			
 			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
 				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-				sb.append(", \"" + "main" + "\"");
+				
+				if (menuitemLinkLocation != null && !menuitemLinkLocation.trim().equals("")) {
+					sb.append(", \"" + menuitemLinkLocation + "\"");
+				} else {
+					sb.append(", \"" + "main" + "\"");
+				}
+				
 				sb.append(", \"" + menuitemWindowOption + "\")'");
 			}
 			
