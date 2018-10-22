@@ -103,6 +103,7 @@
 		    var ext;
 		    var currentpage = 1;
 		    var selRowChangeFlag = false;
+		    var orgCompanyID = "";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -880,6 +881,7 @@
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
 		            DocID_Complete = DocID;
+		            orgCompanyID = pCurSelRow.getAttribute("orgCompanyID");
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
@@ -1399,7 +1401,6 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
-		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		        	//팝업창에서 알럿창으로 변경
