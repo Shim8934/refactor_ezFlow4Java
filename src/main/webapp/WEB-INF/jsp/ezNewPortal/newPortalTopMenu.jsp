@@ -147,10 +147,10 @@
 		
 		// 메뉴 리스트의 사이즈 구하기
 		var getMenuListWidth = function () {
- 			document.getElementById('mainMenuList').childNodes.forEach(function (item, index) {
+			var elements = document.getElementById('mainMenuList').childNodes;
+ 			Array.prototype.forEach.call(elements, function (item, index) {
 				newPortalTopMenu.menuWidth[index] = item.offsetWidth;
 			});	
-			console.log('list',newPortalTopMenu.menuWidth);
 		}
 		
 		// 탑메뉴 숨김메뉴 개수 표시
