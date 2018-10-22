@@ -437,9 +437,8 @@ public class CommonUtil {
 			e1.printStackTrace();
 		}
 		String useSession = ezCommonService.getUseSession(sessionParam);
-//		세션 0이면 세션 사용 안 함
+		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
 		if (useSession != null && !useSession.equals("0")) {
-//		if (useSession != "0") {
 			/* session time을 위한 처리 주석 */	
 			/* 세션 사용 위해 주석 해제*/
 			HttpSession session = request.getSession(false);
@@ -497,17 +496,6 @@ public class CommonUtil {
 					}
 				}
 			}
-			/*if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-						cookie.setMaxAge(0);
-						cookie.setPath("/");
-						response.addCookie(cookie);
-						
-						request.getSession().invalidate();
-					}
-				}
-			}*/
 		}
         return isCookie;
 	}

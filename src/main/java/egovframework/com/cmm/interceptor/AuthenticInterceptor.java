@@ -102,7 +102,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							cookie.setMaxAge(0);
 							cookie.setPath("/");
 							response.addCookie(cookie);
-							
+							// 2018.10.22 이석화 추가 - 세션 제거 
 							request.getSession().invalidate();
 						}
 					}

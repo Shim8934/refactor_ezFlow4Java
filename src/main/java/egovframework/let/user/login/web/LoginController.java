@@ -217,10 +217,8 @@ public class LoginController {
     		
     		if (useSession == null || useSession == "") {
     			String regdate = commonUtil.getTodayUTCTime("");
-        		sessionParam.put("tenantID", tenantId);
-        		sessionParam.put("confName", confName);
-        		sessionParam.put("property_value", "180");
-    			sessionParam.put("description", "세션 유지 시간. 단 0:세션 사용 안함");
+        		sessionParam.put("property_value", "0");
+    			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
     			sessionParam.put("config_name", "세션 유지 시간");
     			sessionParam.put("regdate", regdate);
     			sessionParam.put("config_type", "일반");
@@ -373,7 +371,7 @@ public class LoginController {
 	        	if (Integer.parseInt(useSession) != 0) {
 	        		
 	        		session = request.getSession();
-	        		session.setMaxInactiveInterval(Integer.parseInt(useSession));
+	        		session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);
 	        	}
 	        
 	        	return "redirect:/ezPortal/portalMain.do";
@@ -462,7 +460,7 @@ public class LoginController {
     		        	if (Integer.parseInt(useSession) != 0) {
     		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
 	    		        	session = request.getSession();			// 세션 필요로 주석 해제
-	    		        	session.setMaxInactiveInterval(Integer.parseInt(useSession));		// 세션의 유지 시간 설정
+	    		        	session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);		// 세션의 유지 시간 설정
     		        	}
     		        	return "redirect:/ezPortal/portalMain.do";
     		        	
@@ -730,7 +728,7 @@ public class LoginController {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
-    				
+    				// 2018.10.22 이석화 추가 - 세션 제거 
     				request.getSession().invalidate();
     			}
     	    }
@@ -754,7 +752,7 @@ public class LoginController {
 			
         	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
-
+        // 2018.10.22 이석화 추가 - 세션 제거 
        	request.getSession().invalidate();
 
        	return "redirect:/user/login/login.do"; 
