@@ -836,42 +836,46 @@
 			u.DISPLAYNAME$lang$ as writer_name,
 			d.DISPLAYNAME$lang$ as dept_name,
 			f.form_name as form_name,
-			ft.type_id as type_id,
+			f.type_id as type_id,
 			(select 
-				count(jr.reply_id) 
+				count(*) 
 			from 
 				tbl_journal_reply jr 
-			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id and jr.reply_writer in (select CN from tbl_usermaster)) as reply_count,
+			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as reply_count,
 			(select 
-				count(jf.file_id) 
+				count(*) 
 			from 
 				tbl_journal_file jf 
 			where
 				jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as file_count,
 			(select 
-				count(v.user_id) 
+				count(*) 
 			from 
-				(select 
-					user_id, journal_id, TENANT_ID 
-				from 
-					tbl_journal_view
-				union 
-				select 
-					user_id, journal_id, TENANT_ID 
-				from 
-					tbl_journal_recv 
-				where 
-					recieve_date is not null) v
+<!-- 				(select  -->
+<!-- 					user_id, journal_id, TENANT_ID  -->
+<!-- 				from  -->
+					tbl_journal_view v
+<!-- 				union  -->
+<!-- 				select  -->
+<!-- 					user_id, journal_id, TENANT_ID  -->
+<!-- 				from  -->
+<!-- 					tbl_journal_recv  -->
+<!-- 				where  -->
+<!-- 					recieve_date is not null) v -->
 			where
-				v.user_id in (select CN from tbl_usermaster)
-			and	 
 				not(v.user_id = j.journal_writer) and v.journal_id = j.journal_id and v.tenant_id = j.tenant_id) as view_count,
 			(select 
-				count(r.user_id) 
+				count(*) 
 			from 
 				tbl_journal_recv r 
 			where
-				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as total_recv,
+				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id) as total_recv,
+			(select 
+				count(*) 
+			from 
+				tbl_journal_recv r 
+			where
+				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.recieve_date is not null) as check_recv,
 			(select 
 				count(r.recieve_date) 
 			from 
@@ -879,13 +883,14 @@
 			where
 				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as check_recv,
 			ifnull(
-				(select 
-					recieve_date as is_view
-				from 
-					tbl_journal_recv 
-				where 
-					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
-				union 
+				(
+<!-- 				select  -->
+<!-- 					recieve_date as is_view -->
+<!-- 				from  -->
+<!-- 					tbl_journal_recv  -->
+<!-- 				where  -->
+<!-- 					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id -->
+<!-- 				union  -->
 				select 
 					view_date as is_view
 				from 
@@ -900,11 +905,11 @@
 		from 
 			tbl_journal j
 		inner join 
-			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
+			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id <isNotEmpty property="typeId"> and f.type_id = #typeId# </isNotEmpty>)
+<!-- 		inner join  -->
+<!-- 			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id=ft.tenant_id) -->
 		inner join 
-			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id=ft.tenant_id)
-		inner join 
-			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id)
+			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id <isNotEmpty property="deptId"> and d.CN = #deptId# </isNotEmpty>)
 		inner join 
 			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID=j.tenant_id)
 		<isNotEmpty property="recvUser">
@@ -912,15 +917,9 @@
 				tbl_journal_recv r on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		</isNotEmpty>
 		where 
-			j.tenant_id = #tenantId# and ft.company_id = #companyId#
-		<isNotEmpty property="typeId">
-			and ft.type_id = #typeId#
-		</isNotEmpty>
+			j.tenant_id = #tenantId# and f.company_id = #companyId#
 		<isNotEmpty property="journalWriter">
 			and j.journal_writer = #journalWriter#
-		</isNotEmpty>
-		<isNotEmpty property="deptId">
-			and d.CN = #deptId#
 		</isNotEmpty>
 		<isNotEmpty property="recvUser">
 			and r.user_id = #recvUser#
@@ -1176,6 +1175,43 @@
 
 	<!-- 일지 뷰 정보 저장 -->
 	<insert id="insertViewDate" parameterClass="map">
+<!-- 		<selectKey resultClass="string" keyProperty="isUser"> -->
+<!-- 			select  -->
+<!-- 				user_id -->
+<!-- 			from  -->
+<!-- 				tbl_journal_recv -->
+<!-- 			where  -->
+<!-- 				journal_id = #journalId# -->
+<!-- 			and -->
+<!-- 				tenant_id = #tenantId# -->
+<!-- 			and  -->
+<!-- 				user_id = #userId# -->
+<!-- 		</selectKey> -->
+<!-- 		<isEmpty property="isUser"> -->
+			insert into tbl_journal_view 
+				(user_id,	tenant_id,	journal_id, 	view_date)
+			values
+				(#userId#,	#tenantId#,	#journalId#,	#viewDate#)
+			on duplicate key update tenant_id = #tenantId# 
+<!-- 		</isEmpty> -->
+<!-- 		<isNotEmpty property="isUser"> -->
+<!-- 				update  -->
+<!-- 					tbl_journal_recv -->
+<!-- 				set -->
+<!-- 					recieve_date = #viewDate# -->
+<!-- 				where  -->
+<!-- 					journal_id = #journalId# -->
+<!-- 				and -->
+<!-- 					tenant_id = #tenantId# -->
+<!-- 				and  -->
+<!-- 					user_id = #userId# -->
+<!-- 				and  -->
+<!-- 					recieve_date is null -->
+<!-- 		</isNotEmpty> -->
+	</insert>
+	
+	<!-- 일지 수신자 정보 저장 -->
+	<insert id="updateRecvDate" parameterClass="map">
 		<selectKey resultClass="string" keyProperty="isUser">
 			select 
 				user_id
@@ -1188,26 +1224,19 @@
 			and 
 				user_id = #userId#
 		</selectKey>
-		<isEmpty property="isUser">
-			insert into tbl_journal_view 
-				(user_id,	tenant_id,	journal_id, 	view_date)
-			values
-				(#userId#,	#tenantId#,	#journalId#,	#viewDate#)
-			on duplicate key update tenant_id = #tenantId# 
-		</isEmpty>
 		<isNotEmpty property="isUser">
-				update 
-					tbl_journal_recv
-				set
-					recieve_date = #viewDate#
-				where 
-					journal_id = #journalId#
-				and
-					tenant_id = #tenantId#
-				and 
-					user_id = #userId#
-				and 
-					recieve_date is null
+			update 
+				tbl_journal_recv
+			set
+				recieve_date = #viewDate#
+			where 
+				journal_id = #journalId#
+			and
+				tenant_id = #tenantId#
+			and 
+				user_id = #userId#
+			and 
+				recieve_date is null
 		</isNotEmpty>
 	</insert>
 
@@ -1465,45 +1494,46 @@
 			and v.tenant_id = #tenantId#
 			and 
 				not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
-			union
-			select
-				b.user_id as user_id
-			from 
-				tbl_usermaster a 
-			inner join 
-				tbl_journal_recv b on (a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
-			where 
-				b.journal_id = #journalId#
-			and
-				a.tenant_id = #tenantId#
-			and
-				b.user_id in (select CN from tbl_usermaster)
-			and 
-				b.recieve_date is not null) us
+<!-- 			union -->
+<!-- 			select -->
+<!-- 				b.user_id as user_id -->
+<!-- 			from  -->
+<!-- 				tbl_usermaster a  -->
+<!-- 			inner join  -->
+<!-- 				tbl_journal_recv b on (a.CN = b.user_id and a.TENANT_ID = b.tenant_id) -->
+<!-- 			where  -->
+<!-- 				b.journal_id = #journalId# -->
+<!-- 			and -->
+<!-- 				a.tenant_id = #tenantId# -->
+<!-- 			and -->
+<!-- 				b.user_id in (select CN from tbl_usermaster) -->
+<!-- 			and  -->
+<!-- 				b.recieve_date is not null -->
+				) us
 	</select>
 	
 	<!-- 조회자 리스트 가져오기 -->
 	<select id="getViewerList" parameterClass="map" resultMap="receiverVO">
-		(select
-			b.user_id as user_id,
-			a.DISPLAYNAME$lang$ as user_name,
-			a.DESCRIPTION$lang$ as dept_name,
-			a.TITLE$lang$ as jikwi,
-			DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
-		from 
-			tbl_usermaster a join tbl_journal_recv b 
-		on 
-			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
-		where 
-			b.journal_id = #journalId#
-		and
-			a.tenant_id = #tenantId#
-		and
-			b.user_id in (select CN from tbl_usermaster)
-        and
-			b.recieve_date is not null)
-		union
-		(select
+<!-- 		(select -->
+<!-- 			b.user_id as user_id, -->
+<!-- 			a.DISPLAYNAME$lang$ as user_name, -->
+<!-- 			a.DESCRIPTION$lang$ as dept_name, -->
+<!-- 			a.TITLE$lang$ as jikwi, -->
+<!-- 			DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date -->
+<!-- 		from  -->
+<!-- 			tbl_usermaster a join tbl_journal_recv b  -->
+<!-- 		on  -->
+<!-- 			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id) -->
+<!-- 		where  -->
+<!-- 			b.journal_id = #journalId# -->
+<!-- 		and -->
+<!-- 			a.tenant_id = #tenantId# -->
+<!-- 		and -->
+<!-- 			b.user_id in (select CN from tbl_usermaster) -->
+<!--         and -->
+<!-- 			b.recieve_date is not null) -->
+<!-- 		union -->
+		select
 			u.cn as user_id,
 			u.DISPLAYNAME$lang$ as user_name,
 			u.DESCRIPTION$lang$ as dept_name,
@@ -1521,7 +1551,6 @@
 			v.user_id in (select CN from tbl_usermaster)
 		and 
 			not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
-		)
 		order by 5 desc
 		limit
 			#startCount#, #listCnt#

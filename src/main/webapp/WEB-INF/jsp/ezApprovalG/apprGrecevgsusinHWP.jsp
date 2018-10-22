@@ -163,7 +163,7 @@
 		                    getDocInfo();
 		
 		                    if (g_DraftFlag == "REDRAFT") {
-		                        setMenuBar("btnAssign", false);
+// 		                        setMenuBar("btnAssign", false);
 // 		                        setMenuBar("btnDistribute", false);
 		                    }
 

@@ -417,6 +417,24 @@
 	            } catch (e)
 	            { return ""; }
 	        }
+	        
+	        function getMustFieldsInsert() {
+	        	try {
+	        		var mustFields = $(".FIELD#doctitle, [must]");
+	        		for (var i = 0; i < mustFields.length; i++) {
+	        			var mustField = mustFields[i];
+	        			var val = $(mustField).text().trim();
+	        			if (val == "") {
+							if ($(mustField).attr('id') == "doctitle"){
+								return "doctitle";
+							} else {
+								return $(mustField).attr('must');
+							}
+						}
+	        		}
+	            } catch (e)
+	            { return ""; }
+	        }
 	
 	        function GetFieldsList() {
 	            try {
