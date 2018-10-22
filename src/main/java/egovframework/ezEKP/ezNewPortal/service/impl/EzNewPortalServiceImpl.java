@@ -649,17 +649,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getThemeDetail started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("themeId", themeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		ThemeInfoVO vo = ezNewPortalDAO.getThemeDetail(map);
+		ThemeInfoVO vo = ezNewPortalDAO.getThemeInfo(map);
 		
-		LOGGER.debug("getThemeDetail ended.");
+		LOGGER.debug("getThemeInfo ended.");
 		
 		return vo;
 	}

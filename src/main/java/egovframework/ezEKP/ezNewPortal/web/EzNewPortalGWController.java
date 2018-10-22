@@ -990,7 +990,7 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			
-			ThemeInfoVO themeInfo = ezNewPortalService.getThemeDetail(themeId, companyId, tenantId);
+			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId);
 			List<FrameInfoVO> frameInfos = ezNewPortalService.getFrames(themeId, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
@@ -1022,7 +1022,10 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
 
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -3,7 +3,7 @@
 <sqlMap namespace="ezNewPortalAdmin">
 	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 	
-	<select id="ezNewPortal.getThemeDetail" parameterClass="Map" resultClass="ThemeInfoVO">
+	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
 				B.theme_id AS themeid,

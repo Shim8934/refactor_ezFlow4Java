@@ -188,9 +188,9 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 테마상세정보 조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/getThemeDetail.do")
-	public String getPortalThemeDetail(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getPortalThemeDetail started.");
+	@RequestMapping(value = "/admin/ezNewPortal/getThemeInfo.do")
+	public String getPortalThemeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getPortalThemeInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -209,7 +209,7 @@ public class EzNewPortalAdminController {
 			model.addAttribute("frameInfos", data.get("frameInfos"));
 		}
 		
-		LOGGER.debug("getPortalThemeDetail ended.");
+		LOGGER.debug("getPortalThemeInfo ended.");
 		
 		return "json";
 	}
@@ -217,9 +217,9 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 테마상세정보 수정
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/updateThemeDetail.do")
-	public void updateThemeDetail(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateThemeDetail started.");
+	@RequestMapping(value = "/admin/ezNewPortal/updateThemeInfo.do")
+	public void updateThemeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateThemeInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -228,7 +228,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezportal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "fetch", null);
 				
 		String status = resultBody.get("status").toString();
 		
@@ -238,7 +238,7 @@ public class EzNewPortalAdminController {
 			model.addAttribute("frameInfos", data.get("frameInfos"));
 		}
 		
-		LOGGER.debug("updateThemeDetail ended.");
+		LOGGER.debug("updateThemeInfo ended.");
 	}
 	
 	/**
@@ -261,13 +261,13 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 메뉴 상세정보 조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/getMenuDetail.do")
-	public String getMenuDetail(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getMenus started.");
+	@RequestMapping(value = "/admin/ezNewPortal/getMenuInfo.do")
+	public String getMenuInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getMenuInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		LOGGER.debug("getMenus ended.");
+		LOGGER.debug("getInfo ended.");
 		return "json";
 	}
 	

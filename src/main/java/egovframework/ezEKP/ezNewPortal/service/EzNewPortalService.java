@@ -66,7 +66,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 회사별 테마상세정보조회
 	 */
-	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception;
+	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 테마별 프레임목록 및 정보 조회 
 	 */
