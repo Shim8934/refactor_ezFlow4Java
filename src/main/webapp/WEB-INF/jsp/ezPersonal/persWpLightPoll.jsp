@@ -119,6 +119,7 @@
 				    
 				    window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 				}
+				opener.location.reload();
 			}
 			
 		    function vote_poll_Complete() {
