@@ -406,14 +406,11 @@ var CabinetShareItem = function() {
 	}
 	
 	function getDataSuccessfully(data) {
+		var selectedTable = document.getElementById("sharedTable");
+		while (selectedTable.rows.length > 1) {selectedTable.deleteRow(1);}
+		
 		var listUser = data.shareList;
 		if (!listUser || listUser.length == 0) {return;}
-		
-		var selectedTable = document.getElementById("sharedTable");
-		
-		while (selectedTable.rows.length > 1) {
-			selectedTable.deleteRow(1);
-		}
 		
 		for (var i = 0, len = listUser.length; i < len; i++) {
 			var userId   = listUser[i]["userId"];
