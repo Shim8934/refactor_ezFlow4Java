@@ -3,7 +3,7 @@
 <sqlMap namespace="ezNewPortalAdmin">
 	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 	
-	<select id="ezNewPortal.getThemeDetail" parameterClass="Map" resultClass="ThemeInfoVO">
+	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
 				B.theme_id AS themeid,
@@ -50,5 +50,39 @@
 			    A.theme_id = #themeId#
 		]]>
 	</select>
+	
+	<update id="ezNewPortal.updateThemeInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_THEME_COMP
+			SET
+				theme_used = #themeUsed#,
+				theme_default = #themeDefault#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				theme_id = #themeId#
+		]]>
+	</update>
+	
+	<update id="ezNewPortal.updateFrameInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_FRAME_COMP
+			SET
+				frame_used = #frameUsed#,
+				frame_default = #frameDefault#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				theme_id = #themeId#
+			AND
+				frame_id = #frameId#
+		]]>
+	</update>
 
 </sqlMap>

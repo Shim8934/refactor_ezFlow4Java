@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -930,6 +931,7 @@ public class EzNewPortalGWController {
 
 			result.put("data", resultList);
 			result.put("userCompany", userInfo.getCompanyID());
+			result.put("lang", userInfo.getLang());
 			result.put("primary", primary);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -990,7 +992,7 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			
-			ThemeInfoVO themeInfo = ezNewPortalService.getThemeDetail(themeId, companyId, tenantId);
+			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId);
 			List<FrameInfoVO> frameInfos = ezNewPortalService.getFrames(themeId, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
@@ -1016,13 +1018,21 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
+	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			//이효진 jsonParam 캐스팅 잘되면 냅두고 안되면 나중에 고쳐야지
+			ThemeInfoVO themeInfo = (ThemeInfoVO) jsonParam.get("themeInfo");
+			List<FrameInfoVO> frameInfos= (List<FrameInfoVO>) jsonParam.get("frameInfos");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			ezNewPortalService.updateThemeInfo(themeInfo, frameInfos, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1251,7 +1261,7 @@ public class EzNewPortalGWController {
 		return result;
 	}
 
-	/**
+	/** 구해안 start
 	 * 포탈개인화 G/W [GET] 회사별 포틀릿 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
@@ -1268,13 +1278,18 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 
 			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
-
-			data.put("portletList", portletList);
-
+			for (PortletInfoVO pvo : portletList) {
+				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
+				pvo.setPortletNameList(portletNameList);
+			}
+						
+			data.put("PortletList", portletList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1387,10 +1402,14 @@ public class EzNewPortalGWController {
 	public JSONObject updatePortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletInfo started.");
 		JSONObject result = new JSONObject();
+		String userId = request.getParameter("userId");
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String portletLang = info.getLang();
 
 			result.put("status", "ok");
 			result.put("code", 0);

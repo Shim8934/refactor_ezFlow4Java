@@ -196,8 +196,16 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<FrameInfoVO>) list("ezNewPortal.getFrames", map);
 	}
 	
-	public ThemeInfoVO getThemeDetail(Map<String, Object> map) throws Exception {
-		return (ThemeInfoVO) select("ezNewPortal.getThemeDetail", map);
+	public ThemeInfoVO getThemeInfo(Map<String, Object> map) throws Exception {
+		return (ThemeInfoVO) select("ezNewPortal.getThemeInfo", map);
+	}
+	
+	public void updateThemeInfo(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateThemeInfo", map);
+	}
+	
+	public void updateFrameInfo(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateFrameInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")

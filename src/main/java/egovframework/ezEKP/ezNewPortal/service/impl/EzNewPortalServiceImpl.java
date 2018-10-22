@@ -649,17 +649,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public ThemeInfoVO getThemeDetail(int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getThemeDetail started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("themeId", themeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		ThemeInfoVO vo = ezNewPortalDAO.getThemeDetail(map);
+		ThemeInfoVO vo = ezNewPortalDAO.getThemeInfo(map);
 		
-		LOGGER.debug("getThemeDetail ended.");
+		LOGGER.debug("getThemeInfo ended.");
 		
 		return vo;
 	}
@@ -678,6 +678,29 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getFrames ended.");
 		
 		return list;
+	}
+	
+	@Override
+	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.getThemeId() + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map = commonUtil.transBean2Map(themeInfo);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.updateThemeInfo(map);
+		
+		for (FrameInfoVO frameInfo : frameInfos) {
+			map = commonUtil.transBean2Map(frameInfo);
+			map.put("companyId", companyId);
+			map.put("tenantId", tenantId);
+			
+			ezNewPortalDAO.updateFrameInfo(map);
+		}
+		
+		LOGGER.debug("updateThemeInfo ended.");
 	}
 	
 	@Override
