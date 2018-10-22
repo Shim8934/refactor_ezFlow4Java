@@ -236,9 +236,7 @@ public class EzNewPortalAdminController {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("themeInfo", data.get("themeInfo"));
-			model.addAttribute("frameInfos", data.get("frameInfos"));
+			
 		}
 		
 		LOGGER.debug("updateThemeInfo ended.");
@@ -257,7 +255,21 @@ public class EzNewPortalAdminController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("list", resultBody.get("data"));
+		}
+		
 		LOGGER.debug("getMenus ended.");
+		
 		return "json";
 	}
 	

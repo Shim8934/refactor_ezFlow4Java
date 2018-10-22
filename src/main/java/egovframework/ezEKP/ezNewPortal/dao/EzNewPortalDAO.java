@@ -187,6 +187,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
+	}
+	
+	//여기서부터 관리잔데 걍 다만들고 dao옮기자
+	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompanyThemes", map);
 	}
@@ -200,17 +206,17 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (ThemeInfoVO) select("ezNewPortal.getThemeInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getMenus(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getMenus", map);
+	}
+	
 	public void updateThemeInfo(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemeInfo", map);
 	}
 	
 	public void updateFrameInfo(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateFrameInfo", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getApprovalStatistics(Map<String, Object> map) throws Exception {
-		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
 	}
 	/** -------------------- */
 	

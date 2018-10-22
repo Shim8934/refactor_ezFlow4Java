@@ -75,6 +75,10 @@ public interface EzNewPortalService {
 	 * 관리자 회사별 테마정보수정(프레임 포함)
 	 */
 	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 회사별 메뉴목록조회
+	 */
+	public List<MenuInfoVO> getMenus(String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */
