@@ -17,12 +17,16 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -35,6 +39,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1465,5 +1470,32 @@ public class CommonUtil {
 		}
 
 		return sb.toString();
+	}
+	
+	public Map<String, Object> transBean2Map(Object obj) {
+	    Map<String, Object> map = new HashMap();
+	    
+	    if (obj == null) {
+	        return map;
+	    }
+	    
+	    try {
+	        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+	        
+	        for (PropertyDescriptor property : propertyDescriptors) {
+	            String key = property.getName();
+	            
+	            if (!key.equals("class")) {
+	                Method getter = property.getReadMethod();
+	                Object value = getter.invoke(obj);
+	                map.put(key, value);
+	            }
+	        }
+	    } catch (Exception e) {
+	        logger.error("transBean2Map Error " + e);
+	    }
+	    
+	    return map;
 	}
 }
