@@ -35,66 +35,32 @@
 	<script type="text/javascript">
 		initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		
-		var elementList = document.querySelectorAll('.leftMenu_btn');
+		eventSetting();
 		
-		[].forEach.call(elementList, function(element) {
-			element.addEventListener('click', function() {
-				var url = "";
-				switch(this.id) {
-					case "themes" :
-						url = "/admin/ezNewPortal/portalThemes.do";
-						break;
-					case "menus" :
-						url = "/admin/ezNewPortal/portalMenus.do";
-						break;
-					case "portlets" :
-						url = "/admin/ezNewPortal/portalPortlets.do";
-						break;
-					case "logos" :
-						url = "/admin/ezNewPortal/portalLogos.do";
-						break;
-				}
-				
-				window.open(url,"right");
-			});
-		});
-		
-		var getFavoriteForms = function() {
-			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getCompanies.do', true);
-
-			request.onload = function() {
-				if (request.status >= 200 && request.status < 400) {
-					var result = JSON.parse(request.responseText);
-					
-					var userCompany = result.userCompany;
-					var companyList = result.companyList;
-					
-					companyList.forEach(function (item, index) {
-						
-					});
-										
-					document.getElementsByClassName('bookmark')[0].innerHTML = formsHTML
-					
-					Array.from(document.getElementsByClassName('bookmarkLi')).forEach(function(element) {
-						element.addEventListener('click', function() {
-							checkBujaeOpenDraftUI(this.getAttribute("data-location"), this.getAttribute("data-type"));
-						});
-					});
-				} else {
-					// We reached our target server, but it returned an error
-				}
-			};
-
-			request.onerror = function() {
-			  // There was a connection error of some sort
-			};
-
-			var data = JSON.stringify({
-				"userId" : "${userInfo.id}"
-			});
+		var eventSetting = function() {
+			var elementList = document.querySelectorAll('.leftMenu_btn');
 			
-			request.send();
+			[].forEach.call(elementList, function(element) {
+				element.addEventListener('click', function() {
+					var url = "";
+					switch(this.id) {
+						case "themes" :
+							url = "/admin/ezNewPortal/portalThemes.do";
+							break;
+						case "menus" :
+							url = "/admin/ezNewPortal/portalMenus.do";
+							break;
+						case "portlets" :
+							url = "/admin/ezNewPortal/portalPortlets.do";
+							break;
+						case "logos" :
+							url = "/admin/ezNewPortal/portalLogos.do";
+							break;
+					}
+					
+					window.open(url,"right");
+				});
+			});
 		}
 	</script>
 </html>
