@@ -884,7 +884,7 @@ public class EzNewPortalGWController {
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
-			LOGGER.debug("startMenuId : " + startPage.getMenuId());
+			//LOGGER.debug("startMenuId : " + startPage.getMenuId());
 			
 			String useMemo = "";
 			useMemo = ezCommonService.getTenantConfig("useMemo", info.getTenantId());
