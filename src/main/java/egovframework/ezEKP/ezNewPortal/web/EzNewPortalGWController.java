@@ -1018,16 +1018,20 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
+	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			ThemeInfoVO themeInfo = (ThemeInfoVO) jsonParam.get("themeInfo");
+			List<FrameInfoVO> frameInfos= (List<FrameInfoVO>) jsonParam.get("frameInfos");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			
+			ezNewPortalService.updateThemeInfo(themeInfo, frameInfos, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -71,6 +71,7 @@ public interface EzNewPortalService {
 	 * 관리자 테마별 프레임목록 및 정보 조회 
 	 */
 	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception;
+	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

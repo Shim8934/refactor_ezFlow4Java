@@ -681,6 +681,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
+	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.getThemeId() + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		//theme업데이트
+		
+		//frame업데이트
+		
+		LOGGER.debug("updateThemeInfo ended.");
+	}
+	
+	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getFavoriteForms started.");
 		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
