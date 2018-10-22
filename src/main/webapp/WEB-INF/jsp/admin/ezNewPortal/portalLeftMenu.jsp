@@ -35,7 +35,9 @@
 	<script type="text/javascript">
 		initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		
-		Array.from(document.getElementsByClassName('leftMenu_btn')).forEach(function(element) {
+		var elementList = document.querySelectorAll('.leftMenu_btn');
+		
+		[].forEach.call(elementList, function(element) {
 			element.addEventListener('click', function() {
 				var url = "";
 				switch(this.id) {
