@@ -100,12 +100,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String returnUrl = "";
+		String useMemo = "";
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			JSONObject startPage = (JSONObject) data.get("startPage");
+			useMemo = data.get("useMemo").toString();
 			
-			if (data != null) {
-				String startUrl = data.get("menuUrl").toString();
+			if (startPage != null) {
+				String startUrl = startPage.get("menuUrl").toString();
 				
 				if (startUrl == null) {
 					returnUrl = "/ezNewPortal/newPortalPortalPage.do";
@@ -117,6 +120,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			}
 		}
 		
+		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");

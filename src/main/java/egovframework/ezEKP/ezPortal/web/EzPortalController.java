@@ -378,6 +378,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
+        
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
         	memoFlag = "YES";
         } else {

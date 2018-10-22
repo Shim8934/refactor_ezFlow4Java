@@ -200,7 +200,7 @@ public class EzNewPortalGWController {
 			useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
 			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
-
+			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 			if (useAttitude.equals("NO")) {
 				useAttitude = "NO";
@@ -848,7 +848,7 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
-	//사용자 초기화면 정보 조회
+	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) {
@@ -860,12 +860,19 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			JSONObject data = new JSONObject();
+			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
-
+			
+			String useMemo = "";
+			useMemo = ezCommonService.getTenantConfig("useMemo", info.getTenantId());
+			
+			data.put("useMemo", useMemo);
+			data.put("startPage", startPage);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", startPage);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
