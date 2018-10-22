@@ -120,7 +120,8 @@ body {
 	  }
 	  
 	  function PortletInfoUpdate() {
-		  
+	 	 var portlets = $(".portlet");
+	
 	  }
 	  
 	  //포틀릿 리스트 불러오는 함수
@@ -161,7 +162,7 @@ body {
 		        	  menuId = result[i].menuId;
 		        	  portletNameListCnt = portletNameList.length;
 		            	
-		             listHTML += "<li class='portlet col' id='" + portletId + " data1='"+portletOrder +"'>"	
+		             listHTML += "<li class='portlet col' id='portlet" + portletId + " data1='"+portletOrder +"'>"	
 		             listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
 		             listHTML += "<div class='portlet-content'>";
 		             listHTML += "<div class='leftButton'>"
