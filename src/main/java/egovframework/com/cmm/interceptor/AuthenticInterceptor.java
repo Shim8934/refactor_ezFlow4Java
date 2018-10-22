@@ -101,6 +101,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							cookie.setMaxAge(0);
 							cookie.setPath("/");
 							response.addCookie(cookie);
+							
+							request.getSession().invalidate();
 						}
 					}
 				}
