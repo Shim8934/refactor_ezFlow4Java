@@ -10,23 +10,45 @@
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
         <title><spring:message code='ezPortal.pjg11'/></title>
         <script>        
-			
-			var authkey = "oIc8P7J4MrZk4Ca4BczLODOT8p3g6esZ";
-			
-			var searchdate = new Date().toISOString().slice(0,10).replace(/-/g,"");
-			var data = "AP01";
-			
-			console.log(searchdate);
-			
-			$.ajax({
-				type     : "get",
-				dataType : "json",
-				url      : "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey="+authkey+"&searchdate="+searchdate+"&data="+data,
-				success  : function(data){
-					var parseData = JSON.parse(JSON.stringify(data));
-				}
-			});
-        </script>
+        $(document).ready(function() {
+    		var authkey = "bEpJzTo23DwqD1TOODGOlf3QuXhDrsxe";
+    		var searchdate = new Date().toISOString().slice(0,10).replace(/-/g,"");
+    		var data = "AP01";
+    		var urlData = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey="+authkey+"&searchdate="+searchdate+"&data="+data;
+    		
+    		
+    		$("#btn").click(function(e) {
+    		    $.ajax({
+    		    	url: urlData,
+    			    dataType: "JSON",
+    			    type: "GET",
+    			    jsonp: false,
+    		      jsonpCallback: 'processJSONPResponse',
+    		      success: function(result, status, xhr) {
+    		    	  console.log(result);
+    		    	  result = JSON.stringify(result);
+    		    	  for(var i=0; i<result.length; i++){
+    		    		  document.write(result[i]);
+    		    	  }
+    		      },
+    		      error: function(xhr, status, error) {
+    		        console.log("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+    		      }
+    		    });
+    		    
+    		    function processJSONPResponse(data) {
+        			console.log("Run here!");
+        			console.log(data);
+        		}
+    		  });
+    		
+    		
+    	})
+    	
+    	
+		</script>
+		<input type="button" id="btn" value="확인"/>
+	<div id="result"></div>
 	</head>
 	<body>
 	    
