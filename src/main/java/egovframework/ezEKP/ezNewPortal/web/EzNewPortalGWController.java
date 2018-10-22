@@ -149,10 +149,12 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
-
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			
 			// 사용자 설정 테마/프레임 가져오기
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
-
+			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
+			
 			// 사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
 
@@ -179,7 +181,7 @@ public class EzNewPortalGWController {
 				userTitle = info.getTitle2();
 				deptName = info.getDeptName2();
 			}
-
+			
 			// 유저이미지
 			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", tenantId);
 
@@ -217,6 +219,9 @@ public class EzNewPortalGWController {
 			useMail = "YES";
 			useApproval = "YES";
 			useSchedule = "YES";
+			
+			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useCircular : " + useCircular);
+			LOGGER.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 			// =================================== 여기까지 end
 
 			JSONObject data = new JSONObject();
@@ -239,7 +244,6 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -264,13 +268,13 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
-
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			
 			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang);
 
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -297,10 +301,13 @@ public class EzNewPortalGWController {
 			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage"));
 			int count = Integer.parseInt(request.getParameter("birthdayCount"));
 			int startRow = curPage * count;
-
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			LOGGER.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow);
+			
 			int birthdayListCount = ezNewPortalService.getMonthlyBirthdayEmployeesCount(companyId, tenantId, month);
 			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow);
-
+			
+			LOGGER.debug("birthdayListCount : " + birthdayListCount);
 			int birthdayCurPage = 0;
 
 			if (birthdayListCount != 0) {
@@ -320,7 +327,6 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -348,7 +354,8 @@ public class EzNewPortalGWController {
 			String yearAndMonth = nowYear + "-" + month;
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			
+			LOGGER.debug("yearAndMonth : " + yearAndMonth);
 			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId);
 
 			result.put("status", "ok");
@@ -377,7 +384,8 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId);
@@ -635,9 +643,11 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			int usedFrame = Integer.parseInt(request.getParameter("frameDefault"));
+			int frameDefault = Integer.parseInt(request.getParameter("frameDefault"));
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			LOGGER.debug("usedTheme : " + themeId + "usedFrame : " + frameDefault);
 			
-			ezNewPortalService.updateUserThemeSetting(themeId, usedFrame, userId, tenantId, companyId);
+			ezNewPortalService.updateUserThemeSetting(themeId, frameDefault, userId, tenantId, companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -664,6 +674,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			ezNewPortalService.deleteUserThemeSetting(userId, tenantId, companyId);
 			
@@ -706,7 +717,8 @@ public class EzNewPortalGWController {
 			String useMail = request.getParameter("useMail");
 			String useApproval = request.getParameter("useApproval");
 			String useSchedule = request.getParameter("useSchedule");
-
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			
 			JSONObject data = new JSONObject();
 
 			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
@@ -861,11 +873,14 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
+			LOGGER.debug("startMenuId : " + startPage.getMenuId());
 			
 			String useMemo = "";
 			useMemo = ezCommonService.getTenantConfig("useMemo", info.getTenantId());
+			LOGGER.debug("useMemo : " + useMemo);
 			
 			data.put("useMemo", useMemo);
 			data.put("startPage", startPage);
@@ -894,7 +909,9 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			LOGGER.debug("menuId : " + menuId);
+			
 			ezNewPortalService.updateUserStartPage(menuId, userId, tenantId, companyId);
 			
 			result.put("status", "ok");
