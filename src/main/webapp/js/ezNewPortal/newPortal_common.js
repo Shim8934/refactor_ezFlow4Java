@@ -1,6 +1,7 @@
 /**
  * 
  */
+//포틀릿 순서 업데이트
 function updatePortletOrderUser() {
 	var portlets = $(".box_shadow");
 	var updateOrder = [];
@@ -241,6 +242,7 @@ function viewPersonalEnv() {
     window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
 }
 
+//읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 ajax가져오기
 function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
 	var data = {
 		"useQuestion" : useQuestion,
@@ -258,29 +260,30 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 		dataType : "json",
 		success : function(result) {
 			if (useQuestion === "YES") {
-				getCountSetting("poll", result.pollCount);
+				setCountSetting("poll", result.pollCount);
 			}
 			
 			if (useCircular === "YES") {
-				getCountSetting("circular", result.circularCount);
+				setCountSetting("circular", result.circularCount);
 			}
 			
 			if (useMail === "YES") {
-				getCountSetting("unreadMail", result.unreadMailCount);
+				setCountSetting("unreadMail", result.unreadMailCount);
 			}
 			
 			if (useApproval === "YES") {
-				getCountSetting("approval", result.approvalCount);
+				setCountSetting("approval", result.approvalCount);
 			}
 			
 			if (useSchedule === "YES") {
-				getCountSetting("schedule", result.scheduleCount);
+				setCountSetting("schedule", result.scheduleCount);
 			}
 		}
 	});
 }
 
-function getCountSetting(countName, count) {
+//읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 setting
+function setCountSetting(countName, count) {
 	switch (countName) {
 	case "poll" : 
 		if (count > 99) {
@@ -350,7 +353,7 @@ function getCountSetting(countName, count) {
 	}
 }
 
-//생일자 불러오기
+//생일자 목록 month 세팅
 function getMonthlyBirthdayEmployees(event) {
 	if (event  != undefined) {
 		var isNext = event.data.isNext;
@@ -374,6 +377,7 @@ function getMonthlyBirthdayEmployees(event) {
 	getBirthdayEmployeesList();
 }
 
+//생일자 불러오기
 function getBirthdayEmployeesList() {
 	window.clearTimeout(timer);
 	
@@ -444,6 +448,7 @@ function getBirthdayEmployeesList() {
 	});
 }
 
+//사용자 정보 불러오기(윈도우 팝업)
 function openUserInfo(event) {
 	var userId = event.data.userId;
 	var heigth = window.screen.availHeight;
@@ -454,6 +459,7 @@ function openUserInfo(event) {
 	window.open("/ezCommon/showPersonInfo.do?id=" + userId, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 }
 
+//월별 우수사원 정보 호출
 function getMonthlyBestEmployee() {
 	$.ajax({
 		type : "POST",
@@ -479,6 +485,7 @@ function getMonthlyBestEmployee() {
 	});
 }
 
+//포틀릿 및 프레임 환경설정 열기
 function viewPortletEnv() {
 
 	var feature = GetOpenPosition(760, 645);
@@ -619,7 +626,7 @@ function checkHoliday(obj) {
 }
 
 //근태 중복 체크
-	function checkAttitude(obj) {
+function checkAttitude(obj) {
 	var returnValue = getIsAttitude(obj.getAttribute("type"));
 	
 	if (returnValue == 0) {
@@ -659,6 +666,7 @@ function setAttiBtnHover() {
 	})
 }
 
+//메뉴 열기
 function quickMenuOpen(event) {
 	var url = "";
 	var location = "";

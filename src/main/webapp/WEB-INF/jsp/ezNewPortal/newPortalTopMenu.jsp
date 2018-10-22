@@ -172,12 +172,68 @@
 			document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1-1));
 		}
 		
+		var getNotiPopup = function () {
+			var notiList = JSON.parse('${popupNotiList}');
+			
+			if (notiList != null || notiList.length != 0) {
+				for (var i = 0; i < notiList.length; i++) {
+					var notiInfo = notiList[i];
+					
+					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position);
+				}
+			}
+		}
+		
+		//위치 지정하여 팝업 열기 --- 팝업 공지사항
+		function openNotiPopup(popup_number, wWidth, wHeight, wPosition) {
+		    var wVertical, wHorizontal;
+		    
+			if(wPosition == 0) {
+		        wVertical = Math.floor(screen.height/2) - (wHeight/2); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		    } else if(wPosition == 1) {
+		        wVertical = 100; 
+		        wHorizontal = 100;
+		    } else if(wPosition == 2) {
+		        wVertical = screen.height - wHeight - 100; 
+		        wHorizontal = 100;
+		    } else if(wPosition == 3) {
+		        wVertical = 100; 
+		        wHorizontal = screen.width - wWidth - 100;
+		    } else if(wPosition == 4) {
+		        wVertical = screen.height - wHeight - 100; 
+		        wHorizontal = screen.width - wWidth - 100;
+		    } else if(wPosition == 5) {
+		        wVertical = 100; 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		    } else if(wPosition == 6) {
+		        wVertical = screen.height - wHeight - 100; 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		    } else {
+		        wVertical = 0; 
+		        wHorizontal = 0;
+		    }
+
+		    if(wVertical < 0)
+		        wVertical = 0;
+
+		    if(wHorizontal < 0)
+		        wHorizontal = 0;
+
+		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
+		        wHeight = eval(wHeight) - 60;
+
+		    window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
+					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+		}
+		
  		var newPortalTopMenuFunc = function () {
 			setTopMenu();            // 헤더 전체 셋팅
 			setUtilEvent();          // 유틸메뉴 이벤트 설정
 			setMainEvent();          // 메인메뉴 이벤트 설정
 			getMenuListWidth();      // 메인메뉴 li별 사이즈 측정
 			countTopMenuList();      // 메인메뉴 카운팅
+			getNotiPopup();          // 팝업공지 불러오기
 		}
 		
  		
