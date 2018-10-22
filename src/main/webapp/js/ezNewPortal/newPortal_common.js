@@ -74,9 +74,49 @@ function attiClock() {
     
 }
 
-function eventSetting(portletId) {
-	if (portletId == 4) { //투표
-		var url = "/js/ezNewPortal/portlets/votePortlet.js";
+function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립트 로드
+	var url = "";
+	
+	switch (portletId) {
+	case 1 : // 메일
+		url = "/js/ezNewPortal/portlets/receivedMailPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				$("#mGraphSpan").css("width", mailPercent + "px");
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+		
+		break;
+	case 2 : // 공지사항
+		url = "/js/ezNewPortal/portlets/noticePortlet.js";
+		
+		$.getScript(url)
+		.done(function (script, textStatus) {
+			try {
+				noticePortletLoadFunc();
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+			
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+		
+		break;
+	case 4 : // 투표
+		url = "/js/ezNewPortal/portlets/votePortlet.js";
 		
 		$.getScript(url)
 		.done(function(script, textStatus) {
@@ -92,8 +132,29 @@ function eventSetting(portletId) {
 			console.log(exception);
 			alert(messages.strLang2);
 		});
-	} else if (portletId == 9) { //포토게시판
-		var url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
+		
+		break;
+	case 5 : // 설문조사
+		url = "/js/ezNewPortal/portlets/pollPortlet.js";
+		
+		$.getScript(url)
+		.done(function (script, textStatus) {
+			try {
+				pollPortletLoadFunc();
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+			
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+		
+		break;
+	case 9 : //포토게시판
+		url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
 	
 		$.getScript(url)
 		.done(function(script, textStatus) {
@@ -110,8 +171,10 @@ function eventSetting(portletId) {
 			console.log(exception);
 			alert(messages.strLang2);
 		});
-	} else if (portletId === 10) {// 즐겨찾기
-		var url = "/js/ezNewPortal/portlets/favoriteBoardPortlet.js";
+		
+		break;
+	case 10 : // 즐겨찾기
+		url = "/js/ezNewPortal/portlets/favoriteBoardPortlet.js";
 		
 		$.getScript(url)
 		.done(function(script, textStatus) {
@@ -126,14 +189,10 @@ function eventSetting(portletId) {
 			console.log(exception);
 			alert(messages.strLang2);
 		});
-	} else if (portletId === 12) { // 도움말
-		helpPortletLoadFunc();
-	} else if (portletId === 2) {  // 공지사항
-		noticePortletLoadFunc();
-	} else if (portletId === 5) {  // 설문조사
-		pollPortletLoadFunc();
-	} else if (portletId === 11) {  // 커뮤니티
-		var url = "/js/ezNewPortal/portlets/communityPortlet.js";
+		
+		break;
+	case 11 : // 커뮤니티
+		url = "/js/ezNewPortal/portlets/communityPortlet.js";
 		
 		$.getScript(url)
 		.done(function(script, textStatus) {
@@ -153,22 +212,27 @@ function eventSetting(portletId) {
 			console.log(exception);
 			alert(messages.strLang2);
 		});
-	} else if (portletId === 1) { // 메일
-		var url = "/js/ezNewPortal/portlets/receivedMailPortlet.js";
+		
+		break;
+	case 12 : // 도움말
+		url = "/js/ezNewPortal/portlets/helpPortlet.js";
 		
 		$.getScript(url)
-		.done(function(script, textStatus) {
+		.done(function (script, textStatus) {
 			try {
-				$("#mGraphSpan").css("width", mailPercent + "px");
+				helpPortletLoadFunc();
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
 			}
+			
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log(exception);
 			alert(messages.strLang2);
 		});
+		
+		break;	
 	}
 }
 
@@ -217,7 +281,8 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 }
 
 function getCountSetting(countName, count) {
-	if (countName == "poll") {
+	switch (countName) {
+	case "poll" : 
 		if (count > 99) {
 			count = "99+";
 			$("#pollCount").attr("class", "iconCount");
@@ -228,7 +293,9 @@ function getCountSetting(countName, count) {
 		}
 		
 		$("#pollCount").text(count);
-	} else if (countName == "circular") {
+		
+		break;
+	case "circular" :
 		if (count > 99) {
 			count = "99+";
 			$("#circularCount").attr("class", "iconCount");
@@ -239,7 +306,9 @@ function getCountSetting(countName, count) {
 		}
 		
 		$("#circularCount").text(count);
-	} else if (countName == "schedule") {
+		
+		break;
+	case "schedule" :  
 		if (count > 99) {
 			count = "99+";
 			$("#scheduleCount").attr("class", "iconCount");
@@ -250,7 +319,9 @@ function getCountSetting(countName, count) {
 		}
 		
 		$("#scheduleCount").text(count);
-	} else if (countName == "approval") {
+		
+		break;
+	case "approval" :
 		if (count > 99) {
 			count = "99+";
 			$("#approvalCount").attr("class", "iconCount");
@@ -261,7 +332,9 @@ function getCountSetting(countName, count) {
 		}
 		
 		$("#approvalCount").text(count);
-	} else if (countName == "unreadMail") {
+		
+		break;
+	case "unreadMail" :
 		if (count > 99) {
 			count = "99+";
 			$("#unreadMailCount").attr("class", "iconCount");
@@ -272,6 +345,8 @@ function getCountSetting(countName, count) {
 		}
 		
 		$("#unreadMailCount").text(count);
+		
+		break;
 	}
 }
 
@@ -440,7 +515,7 @@ function getAttitudeList() {
 	})
 }
 
-//시간놓고 alert내용을 파라미터로 던져서 체크??
+//시간놓고 alert내용을 파라미터로 던져서 체크
 function addAttitude(obj) {
 	var pTypeId = obj.getAttribute("type");
 	var pDateType = obj.getAttribute("datetype");

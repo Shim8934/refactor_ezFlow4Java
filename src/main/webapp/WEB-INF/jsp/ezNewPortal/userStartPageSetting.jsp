@@ -40,7 +40,13 @@ function setStartPage(event) {
 	
 	if (event.data == undefined) {
 		var selId = $(".selectTR").attr("id");
-		menuId = selId.substring(1);
+		
+		if (selId == undefined) {
+			alert("시작페이지를 선택해 주세요.");
+			return;
+		} else {
+			menuId = selId.substring(1);
+		}
 	} else {
 		mmenuId = event.data.menuId;
 	}

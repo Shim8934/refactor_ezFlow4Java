@@ -24,16 +24,6 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
-<!-- 종균 시작-->
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/helpPortlet.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/noticePortlet.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/pollPortlet.js')}"></script>
-<!-- 종균 끝 -->
-<!-- 해안 시작 -->
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/communityPortlet.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/favoriteBoardPortlet.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/receivedMailPortlet.js')}"></script>
-<!-- 해안 끝 -->
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;

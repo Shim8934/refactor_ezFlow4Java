@@ -384,7 +384,8 @@ logger.debug("TopMenu : " + data.toJSONString());
 		String startPageStatus = startPageResultBody.get("status").toString();
 		
 		if (startPageStatus.equals("ok")) {
-			JSONObject startPage = (JSONObject) startPageResultBody.get("data");
+			JSONObject data = (JSONObject) startPageResultBody.get("data");
+			JSONObject startPage = (JSONObject) data.get("startPage");
 			
 			if (startPage == null) {
 				model.addAttribute("menuId", 0);
