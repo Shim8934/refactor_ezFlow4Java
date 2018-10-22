@@ -684,9 +684,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.getThemeId() + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
-		//theme업데이트
+		Map<String, Object> map = new HashMap<>();
 		
-		//frame업데이트
+		map = commonUtil.transBean2Map(themeInfo);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.updateThemeInfo(map);
+		
+		for (FrameInfoVO frameInfo : frameInfos) {
+			map = commonUtil.transBean2Map(frameInfo);
+			map.put("companyId", companyId);
+			map.put("tenantId", tenantId);
+			
+			ezNewPortalDAO.updateFrameInfo(map);
+		}
 		
 		LOGGER.debug("updateThemeInfo ended.");
 	}

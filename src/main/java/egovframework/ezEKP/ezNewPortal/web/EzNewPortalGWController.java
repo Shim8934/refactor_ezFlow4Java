@@ -1025,6 +1025,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			//이효진 jsonParam 캐스팅 잘되면 냅두고 안되면 나중에 고쳐야지
 			ThemeInfoVO themeInfo = (ThemeInfoVO) jsonParam.get("themeInfo");
 			List<FrameInfoVO> frameInfos= (List<FrameInfoVO>) jsonParam.get("frameInfos");
 
