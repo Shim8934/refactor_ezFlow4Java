@@ -19,7 +19,7 @@
 	        var totalPage = "";
 	        var BlockSize = 10;
 	        var pageNum = 1;
-	        var PageSize = 12;
+	        var PageSize = 15;
 	        var progressPollFlag = "false";
 	
 	        var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
