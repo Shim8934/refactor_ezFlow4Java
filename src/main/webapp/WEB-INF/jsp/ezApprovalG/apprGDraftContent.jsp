@@ -421,17 +421,19 @@
 	        function getMustFieldsInsert() {
 	        	try {
 	        		var mustFields = $(".FIELD#doctitle, [must]");
+	        		var returnval = new Array();
 	        		for (var i = 0; i < mustFields.length; i++) {
 	        			var mustField = mustFields[i];
 	        			var val = $(mustField).text().trim();
 	        			if (val == "") {
 							if ($(mustField).attr('id') == "doctitle"){
-								return "doctitle";
+								returnval.push("<spring:message code='ezApprovalG.t1330'/>");
 							} else {
-								return $(mustField).attr('must');
+								returnval.push($(mustField).attr('must'));
 							}
 						}
 	        		}
+	        		return returnval;
 	            } catch (e)
 	            { return ""; }
 	        }

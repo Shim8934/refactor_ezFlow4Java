@@ -525,16 +525,10 @@
 			            
 			            var mustField = message.getMustFieldsInsert();
 			            if (mustField && mustField != ""){
-			            	if (mustField == "doctitle") {
-	 			                var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
-	 			                OpenAlertUI(pAlertContent);
-	 			                return;
-	 			            } else {
-	 			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
-	 			            	pAlertContent = pAlertContent.replace("@@", mustField);
-	 			                OpenAlertUI(pAlertContent);
-	 			                return;
-	 			            }
+ 			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
+ 			            	pAlertContent = pAlertContent.replace("@@", mustField);
+ 			                OpenAlertUI(pAlertContent);
+ 			                return;
 			            }
 // 			            if (pDocTitle == "") {
 // 			                var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
