@@ -11,19 +11,12 @@
         <title><spring:message code='ezPortal.pjg11'/></title>
         <script>        
         $(document).ready(function() {
-    		var authkey = "bEpJzTo23DwqD1TOODGOlf3QuXhDrsxe";
-    		var searchdate = new Date().toISOString().slice(0,10).replace(/-/g,"");
-    		var data = "AP01";
-    		var urlData = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey="+authkey+"&searchdate="+searchdate+"&data="+data;
-    		
-    		
     		$("#btn").click(function(e) {
     		    $.ajax({
-    		    	url: urlData,
+    		    	url: "/ezExchange/exchangeRate.do",
     			    dataType: "JSON",
     			    type: "GET",
-    			    jsonp: false,
-    		      jsonpCallback: 'processJSONPResponse',
+    		        //jsonpCallback: 'processJSONPResponse',
     		      success: function(result, status, xhr) {
     		    	  console.log(result);
     		    	  result = JSON.stringify(result);
@@ -32,14 +25,9 @@
     		    	  }
     		      },
     		      error: function(xhr, status, error) {
-    		        console.log("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+    		        console.log("Result: " + status + " xhr: " + xhr + " xhr.status: " + xhr.status + " xhr.statusText: " + xhr.statusText)
     		      }
     		    });
-    		    
-    		    function processJSONPResponse(data) {
-        			console.log("Run here!");
-        			console.log(data);
-        		}
     		  });
     		
     		
