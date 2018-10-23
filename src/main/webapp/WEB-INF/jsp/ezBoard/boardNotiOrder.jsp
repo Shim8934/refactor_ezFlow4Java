@@ -10,6 +10,14 @@
 			.mainlist tr th {
 				border-top:0px;
 			}
+			<%-- 2018-10-23 홍승비 - 공지순서 테이블 내부 마우스 드래그, 셀렉트 방지 추가 --%>
+			table {
+				-ms-user-select: none; 
+				-moz-user-select: -moz-none;
+				-khtml-user-select: none;
+				-webkit-user-select: none;
+				user-select: none;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
