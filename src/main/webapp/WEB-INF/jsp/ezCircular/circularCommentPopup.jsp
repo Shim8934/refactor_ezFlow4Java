@@ -104,6 +104,9 @@
 						getCircularComment();
 					}
 				});
+				
+				$("#popup1").height(parseInt(parent.document.getElementById("iFrameLayer").style.height)-118);
+				$("#popup2").height(parseInt(parent.document.getElementById("iFrameLayer").style.height)-70);
 			});
 			
 			function swapTab(type) {
@@ -176,10 +179,10 @@
 		<!-- 18-05-24 김민성 - 회람판 > 상세정보 > 의견목록 검색 부분 UI 수정 -->
 		<c:choose>
 			<c:when test="${myCommentCount != 0 }">
-				<div style='height:702px;overflow-y:auto;'>
+				<div id="popup1" style='overflow-y:auto;'>
 			</c:when>
 			<c:otherwise>
-				<div style='height:750px;overflow-y:auto;'>
+				<div id="popup2" style='overflow-y:auto;'>
 			</c:otherwise>
 		</c:choose>
 			<%-- <table class="mainlist" style="width:99.5%;">
