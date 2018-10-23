@@ -197,7 +197,7 @@ public class EzNewPortalAdminController {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		
-		String url = "/rest/admin/ezportal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
+		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 				
