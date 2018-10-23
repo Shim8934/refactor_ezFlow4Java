@@ -60,6 +60,7 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
+	                document.execCommand("AutoUrlDetect", false, false);
 	            }
 	            catch (e)
 	            {}
