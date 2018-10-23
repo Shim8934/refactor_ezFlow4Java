@@ -42,7 +42,7 @@
 						<tr>
 							<td width="100" height="200" align="right" valign="middle" bgcolor="#FFFFFF" style="border: 1px solid #e1e3e9;
 								border-right: 0px">
-								<img src="/images/default_error.gif" width="85" height="77"></td>
+								<img src="/images/warning02.gif" width="85" height="77"></td>
 							<td valign="middle" bgcolor="#FFFFFF" style="border: 1px solid #e1e3e9; border-left: 0px;
 								line-height: 19px; color: 3c7db4; font-weight: bold">
 								<div style="font-size: 10pt">
