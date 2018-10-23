@@ -67,6 +67,30 @@
 			return str;	
 		}
 		
+		var fullMenuToggle = function () {
+			var str = '';
+			
+			str += '<ul class="full_menu_toggleUL">';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_mail"></span></dt><dd>메일</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_approval"></span></dt><dd>전자결재</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_calendar"></span></dt><dd>일정관리</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_board"></span></dt><dd>게시판</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_resource"></span></dt><dd>자원관리</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_workdiary"></span></dt><dd>업무일지</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_absenteeism"></span></dt><dd>근태관리</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_community"></span></dt><dd>커뮤니티</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_circular_edition"></span></dt><dd>회람판</dd></dl></li>';
+			str += '<li><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_collaboration"></span></dt><dd>협업</dd></dl></li>';
+			str += '<li class="subMenu"><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_addressbook"></span></dt><dd>주소록</dd></dl></li>';
+			str += '<li class="subMenu"><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_work"></span></dt><dd>업무관리</dd></dl></li>';
+			str += '<li class="subMenu"><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_survey"></span></dt><dd>전자설문</dd></dl></li>';
+			str += '<li class="subMenu"><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_voting"></span></dt><dd>투표</dd></dl></li>';
+			str += '<li class="subMenu"><dl class="full_menu_toggleDL"><dt><span class="icon_topmenu icon_nav_laddergame"></span></dt><dd>사다리게임</dd></dl></li>';
+			str += '</ul>';
+			
+			return str;	
+		}
+		
 		// 메인메뉴 설정
 		var setMainMenu = function () {
 			
@@ -85,7 +109,7 @@
 				str += assembleMainMenu();
 				
 				str += '</ul>'				
-				str += '<div class="full_menu_toggle" style="display:none;"></div>';
+				str += '<div class="full_menu_toggle">' + fullMenuToggle() + '</div>';
 				str += '</nav>';
 				str += '</li>';
 				str += '</ul>';
@@ -143,6 +167,22 @@
 					window.open(menuUrl, 'main', '');
 				});
 			});
+			
+			// 확장 버튼 이벤트
+			var topMenuFull = document.getElementById('topMenuFull');
+			var topFrame = parent.document.getElementById('topFrame');
+			var bodyTag = document.getElementsByTagName('Body')[0];
+			
+			topMenuFull.addEventListener('click', function () {
+				if (topMenuFull.className.indexOf('on') > -1) {
+					topMenuFull.className = 'full_nav off';
+					topFrame.style.position = '';
+				} else if (topMenuFull.className.indexOf('off') > -1) {
+					topMenuFull.className = 'full_nav on';
+					topFrame.style.position = 'relative';
+					bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+				}
+			});
 		}
 		
 		// 메뉴 리스트의 사이즈 구하기
@@ -185,7 +225,7 @@
 		}
 		
 		//위치 지정하여 팝업 열기 --- 팝업 공지사항
-		function openNotiPopup(popup_number, wWidth, wHeight, wPosition) {
+		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition) {
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
