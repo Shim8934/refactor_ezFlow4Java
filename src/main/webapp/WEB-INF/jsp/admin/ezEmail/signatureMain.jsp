@@ -344,16 +344,16 @@
 		</div>
 		<!-- 미리보기 -->
 		<div style="float: left; position:absolute; margin-left:370px;">
-			<table>
+			<table style="width:100%; height:100%;">
 			<tr>
 				<td>
-					<div class="lmright" style="width: 578px; height: 448px">
-						<div class="lmPreview">
+					<div class="lmright" style="width: 550px; height: 447px;">
+						<div class="lmPreview" style="overflow: hidden;">
 							<div class="signPreViewTxt"
 								style='text-align: center; position: relative; top: 48%; transform: translateY(-50%); font-size:13px'>
 								<spring:message code='ezBoard.t431' />
 							</div>
-							<iframe class="signPreViewIframe" name="signPreViewIframe" style="border:none; width:100%; height:430px;" ></iframe>
+							<iframe class="signPreViewIframe" name="signPreViewIframe" style="border:none; width:100%; height:99%;" ></iframe>
 						</div>
 					</div>
 				</td>
