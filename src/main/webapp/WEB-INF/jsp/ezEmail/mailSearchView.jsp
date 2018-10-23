@@ -638,7 +638,8 @@
 			
 			function mail_export() {
 				var exportType = "MAIL";
-				if (document.getElementById("maillist") == null){
+				if (document.getElementById("maillist") == null 
+					|| document.getElementById("maillist").childNodes[0].childNodes[0].childNodes[1] == null ){
 					alert("<spring:message code="ezEmail.t640" />");
 					return;
 				}
@@ -654,7 +655,7 @@
 				    
 				}
 				
-				if (checkMailCnt == 0) {
+				if (checkMailCnt == 0 || checkMailCnt == null) {
 					alert("<spring:message code="ezEmail.t640" />");
 					return;
 				} else {
@@ -735,6 +736,9 @@
 		        document.getElementById("ContextMenuDiv").style.display = "none";
 		    }
 		    function ContextMenuHidden() {
+		    	if (document.getElementById("ContextMenuDiv") == null ){
+		    		return;
+		    	}
 		        if (document.getElementById("ContextMenuDiv").style.display == "")
 		            HiddenContextMenu();
 		    }

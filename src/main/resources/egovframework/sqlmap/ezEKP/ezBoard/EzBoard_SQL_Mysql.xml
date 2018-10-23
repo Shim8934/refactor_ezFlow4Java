@@ -720,7 +720,8 @@
 			AND 
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
-            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 			AND
 			  	(A.APPRFLAG = 'Y' 
 			     OR A.APPRFLAG IS NULL)
@@ -1129,13 +1130,15 @@
      			  ON 
      			  	A.TENANT_ID = P.TENANT_ID
      			  AND
-     			  	(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+     			  	(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+     			  		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
      			  AND
      			  	A.BOARDID = P.BOARDID
      			  AND 
      			  	A.TENANT_ID = #v_TENANTID#
      			  AND
-     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+     			  		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
      			  AND
      			  	(A.APPRFLAG = 'Y' 
      			     OR A.APPRFLAG IS NULL)
@@ -1447,17 +1450,10 @@
               AND 
               	APPRFLAG = 'Y' 
              </isNotEmpty>
-            <isNotEmpty property="v_TEMP">
-        		ORDER BY 
-        			A.ParentWriteDate, 
-        			A.WriteDate DESC
-       		</isNotEmpty>
-       		<isEmpty property="v_TEMP">
-        		ORDER BY 
-        			A.NotiNo ASC, 
-        			A.ParentWriteDate DESC, 
-        			A.WriteDate DESC
-       		</isEmpty>
+     		ORDER BY
+     			A.NotiNo ASC,
+     			A.ParentWriteDate DESC,
+     			A.WriteDate DESC
        		LIMIT
        			#limit#, #rowCount#
 	</select>
