@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -1146,5 +1147,137 @@ public class EzEmailAdminController {
 		workbook.close();
 	
 		logger.debug("MailQuotaExcelExport controller ended.");
+	}
+	
+	/**
+	 * 공유사서함관리 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/showSharedMailboxList.do")
+	public String showSharedMailboxList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("showSharedMailboxList started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", auth.getCompanyID());
+		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
+		
+		logger.debug("showSharedMailboxList ended.");
+
+		return "admin/ezEmail/sharedMailboxList";
+	}
+	
+	/**
+	 * 회사별 공유사서함 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSharedMailboxList(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getSharedMailboxList started.");
+		
+		String returnData = "";
+		
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				returnData = "NO_PERMISSION";
+				logger.debug("getSharedMailboxInfo ended. returnData=" + returnData);
+				
+				return returnData;
+			}
+			
+			String userId = auth.getId();
+			String compId = request.getParameter("compId");
+			int tenantId = auth.getTenantId();
+			logger.debug("userId=" + userId + ",compId=" + compId + ",tenantId=" + tenantId);
+			
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxList(auth.getPrimary(), compId, auth.getTenantId());
+			
+			logger.debug("sharedMailboxList size=" + sharedMailboxList.size());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA1>");
+
+				sb.append("</CELL></ROW>");
+			}
+
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getSharedMailboxList ended.");
+		return returnData;
+	}
+	
+	/**
+	 * 공유사서함 정보 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxInfo.do")
+	public String getSharedMailboxInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getSharedMailboxInfo started.");
+
+		String resultCode = "OK";
+
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				model.addAttribute("resultCode", "NO_PERMISSION");
+				logger.debug("getSharedMailboxInfo ended.");
+				return "json";
+			}
+			
+			String userId = auth.getId();
+			String shareId = request.getParameter("shareId");
+			int tenantId = auth.getTenantId();
+			logger.debug("userId=" + userId + ",shareId=" + shareId + ",tenantId=" + tenantId);
+			
+			MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(auth.getPrimary(), shareId, auth.getTenantId());
+			
+			model.addAttribute("sharedMailboxInfo", sharedMailboxInfo);
+		} catch (Exception e) {
+			resultCode = "ERROR";
+			e.printStackTrace();
+		}
+
+		model.addAttribute("resultCode", resultCode);
+		
+		logger.debug("getSharedMailboxInfo ended.");
+		return "json";
 	}
 }

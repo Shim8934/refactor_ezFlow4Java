@@ -57,6 +57,8 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -2304,4 +2306,121 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return result;
 	}
 	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxList(String primary, String compId, int tenantId) throws Exception {
+		logger.debug("getSharedMailboxList started.");
+		logger.debug("primary=" + primary + ",compId=" + compId + ",tenantId=" + tenantId);
+		
+		List<MailSharedMailboxVO> list = new ArrayList<MailSharedMailboxVO>();
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String compIdParam = "compId=" + URLEncoder.encode(compId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + compIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxList";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	JSONArray sharedMailboxArray = (JSONArray)object.get("result");
+        	
+        	if (sharedMailboxArray != null) {
+        		MailSharedMailboxVO vo = null;
+        		
+        		for (int i = 0; i < sharedMailboxArray.size(); i++) {
+        			JSONObject sharedMailbox = (JSONObject)sharedMailboxArray.get(i);
+        			vo = new MailSharedMailboxVO();
+        			
+        			vo.setShareId((String)sharedMailbox.get("shareId"));
+        			vo.setShareMail((String)sharedMailbox.get("shareMail"));
+        			vo.setShareName1((String)sharedMailbox.get("shareName"));
+        			vo.setShareName2((String)sharedMailbox.get("shareName2"));
+        			
+        			if (primary.equals("1")) {
+        				vo.setShareName((String)sharedMailbox.get("shareName"));
+        			} else {
+        				vo.setShareName((String)sharedMailbox.get("shareName2"));
+        			}
+        			
+        			list.add(vo);
+        		}
+        	}
+        }
+		
+		logger.debug("getSharedMailboxList ended.");
+		return list;
+	}
+	
+	@Override
+	public MailSharedMailboxVO getSharedMailboxInfo(String primary, String shareId, int tenantId) throws Exception {
+		logger.debug("getSharedMailboxInfo started.");
+		logger.debug("primary=" + primary + ",shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		MailSharedMailboxVO sharedMailboxInfo = null;
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxInfo";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	JSONObject result = (JSONObject)object.get("result");
+        	
+        	if (result != null) {
+        		sharedMailboxInfo = new MailSharedMailboxVO();
+        		
+        		sharedMailboxInfo.setShareId((String)result.get("shareId"));
+        		sharedMailboxInfo.setShareMail((String)result.get("shareMail"));
+        		sharedMailboxInfo.setShareName1((String)result.get("shareName"));
+        		sharedMailboxInfo.setShareName2((String)result.get("shareName2"));
+        		
+        		if (primary.equals("1")) {
+        			sharedMailboxInfo.setShareName((String)result.get("shareName"));
+    			} else {
+    				sharedMailboxInfo.setShareName((String)result.get("shareName2"));
+    			}
+        		
+        		JSONArray userArray = (JSONArray)result.get("userList");
+        		List<MailSharedMailboxUserVO> userList = sharedMailboxInfo.getUserList();
+        		MailSharedMailboxUserVO userVO = null;
+        		
+        		for (int i = 0; i < userArray.size(); i++) {
+        			JSONObject user = (JSONObject)userArray.get(i);
+        			userVO = new MailSharedMailboxUserVO();
+        			
+        			userVO.setUserId((String)user.get("userId"));
+        			userVO.setDeptId((String)user.get("deptId"));
+        			userVO.setCompId((String)user.get("compId"));
+        			userVO.setDeletePermission((String)user.get("deletePermission"));
+        			userVO.setSendPermission((String)user.get("sendPermission"));
+        			
+        			if (primary.equals("1")) {
+        				userVO.setUserName((String)user.get("userName"));
+        				userVO.setDeptName((String)user.get("deptName"));
+        				userVO.setCompName((String)user.get("compName"));
+        			} else {
+        				userVO.setUserName((String)user.get("userName2"));
+        				userVO.setDeptName((String)user.get("deptName2"));
+        				userVO.setCompName((String)user.get("compName2"));
+        			}
+        			
+        			userList.add(userVO);
+        		}
+        	}
+        }
+		
+		logger.debug("getSharedMailboxInfo ended.");
+		return sharedMailboxInfo;
+	}
 }

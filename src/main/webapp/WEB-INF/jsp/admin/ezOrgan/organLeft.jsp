@@ -109,6 +109,9 @@
 				    case 30:
 					 	url = "/admin/ezEmail/letterMain.do";
 					 	break;
+				    case 31:
+					 	url = "/admin/ezEmail/showSharedMailboxList.do";
+					 	break;
 				}
 				window.open(url,"right");
 			}
@@ -136,7 +139,13 @@
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
     			<ul></ul>    			
-  			</h2>  
+  			</h2>
+  			
+  			<h2>
+  				<span onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+    			<ul></ul>
+  			</h2>
+  			
   			<!--
   			<h2>
   				<span onClick="goPage(20)" style="display:inline-block;width:100%;"><spring:message code='main.t1000' /></span>

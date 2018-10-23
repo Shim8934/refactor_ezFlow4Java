@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -78,4 +79,6 @@ public interface EzEmailService {
 	public List<String> aliasMailCheck(String address) throws Exception;
 	public List<Map<String, String>> getUserSharedMailboxList(String userId, String primary, int tenantId) throws Exception;
 	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception;
+	public List<MailSharedMailboxVO> getSharedMailboxList(String primary, String compId, int tenantId) throws Exception;
+	public MailSharedMailboxVO getSharedMailboxInfo(String primary, String shareId, int tenantId) throws Exception;
 }
