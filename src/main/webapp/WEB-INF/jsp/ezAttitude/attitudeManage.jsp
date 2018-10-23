@@ -855,11 +855,12 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px;">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "dept" items="${deptList}">
+								<c:if test="${dept.authType == 'M'}">
 										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+								</c:if>
 							</c:forEach>
 			      		</select>
 		      		</li>
-		      		<li></li>
 		      	</ul>
 		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
