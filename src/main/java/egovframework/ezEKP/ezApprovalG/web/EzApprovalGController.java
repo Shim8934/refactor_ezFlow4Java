@@ -5919,7 +5919,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String contType = "END";
 		String dirPath = realPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator;
-		String propList = "extensionAttribute4";
+		String propList = "extensionAttribute4;extensionAttribute5";
 		String contID = request.getParameter("contID");
 		String sQuery = request.getParameter("sQuery");
 		String type = request.getParameter("type");
@@ -5930,7 +5930,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
 		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		String buJaeInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		
+		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("endAprType", endAprType);
 		model.addAttribute("endAprState", endAprState);
 		model.addAttribute("itemID", itemID);
