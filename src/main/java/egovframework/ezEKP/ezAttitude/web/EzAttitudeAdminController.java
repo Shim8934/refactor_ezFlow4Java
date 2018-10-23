@@ -994,7 +994,7 @@ public class EzAttitudeAdminController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/check"; //
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/check";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

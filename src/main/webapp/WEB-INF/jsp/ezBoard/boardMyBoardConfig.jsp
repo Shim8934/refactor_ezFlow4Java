@@ -17,10 +17,7 @@
 	        var pType = "${type}";
 	        var pBoardID = "${boardID}";
 	
-	        window.onunload = function () {
-	            try {window.opener.parent.frames["left"].ShowMyBoardItem();} catch (e) {}
-	        };
-	
+	        /* 2018-10-23 홍승비 - 마이게시판 관리창 닫을 경우 좌측메뉴 열리는 현상 수정 */
 	        window.onload = function () {
 	            SetTreeConfig();
 	            makeTreeList();
