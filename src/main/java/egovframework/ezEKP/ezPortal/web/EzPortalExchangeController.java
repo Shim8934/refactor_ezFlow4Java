@@ -127,7 +127,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzPortalController.
 		String status = "ok";
 		
 		if(status.equals("ok")){
-			model.addAttribute(json);
+			model.addAttribute("json", json);
 		}else{
 			return "error";
 		}
@@ -137,6 +137,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzPortalController.
 		}
 		logger.debug("exchangeRateSection end");
 		
-		return "json";
+		return "/ezExchange/exchangeRate";
 	}
 }
