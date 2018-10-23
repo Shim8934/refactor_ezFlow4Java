@@ -62,6 +62,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -566,6 +567,35 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userInfo.getId());
 		
 		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		
+		// true 대신 tenant_config명 넣기
+		if (true) {
+			// 서명 템플릿 선택 (보기)
+			JSONArray returnJsonArr = new JSONArray();
+
+			try {
+				returnJsonArr = ezEmailService.selectAllSignatureTemplate(userInfo.getCompanyID(), Integer.toString(userInfo.getTenantId()));
+				logger.debug("jsonArr=" + returnJsonArr);
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+			
+			List<MailSignatureTemplateVO> resultList = new ArrayList<MailSignatureTemplateVO>();
+			
+			for (int i = 0; i < returnJsonArr.size(); i++) {
+				JSONObject obj = (JSONObject) returnJsonArr.get(i);
+				MailSignatureTemplateVO vo = new MailSignatureTemplateVO();
+				vo.setDisplayname(obj.get("displayname").toString());
+				vo.setDisplayname2(obj.get("displayname2").toString());
+				vo.setSignNo(obj.get("signNo").toString());
+				
+				resultList.add(vo);
+			}
+			
+			logger.debug("mailTemplateList=" + resultList);
+			model.addAttribute("list", resultList);
+		}
+		
 		
 		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
 		if (userInfo.getLang().equals("1")) {
