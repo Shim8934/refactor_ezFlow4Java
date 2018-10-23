@@ -1108,9 +1108,8 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			int tenantId = userInfo.getTenantId();
 			
-			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, tenantId);
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1161,10 +1160,15 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", menuInfo);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1209,7 +1213,10 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
 
 			result.put("status", "ok");
 			result.put("code", 0);

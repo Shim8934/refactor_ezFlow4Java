@@ -251,8 +251,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return portletOrderComp;
 	}
 	
-
-	@SuppressWarnings("null")
 	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");
@@ -267,11 +265,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 			
 			if (userPortalSetting == null) {
-				userPortalSetting.setUsedFrame("Frame1");
-				userPortalSetting.setUsedTheme(1);
+				UserPortalSettingVO tempSetting = new UserPortalSettingVO();
+				tempSetting.setUsedFrame("Frame1");
+				tempSetting.setUsedTheme(1);
+				
+				userPortalSetting = tempSetting;
 			}
 		}
-
+		System.out.println(userPortalSetting.toString());
 		LOGGER.debug("[Serivce] getUserPortalSetting Ended");
 		return userPortalSetting;
 	}
@@ -685,7 +686,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.getThemeId() + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
-		
 		map = commonUtil.transBean2Map(themeInfo);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -716,6 +716,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getMenus ended.");
 		
 		return list;
+	}
+	
+	@Override
+	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenuInfo started. companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		MenuInfoVO vo = ezNewPortalDAO.getMenuInfo(map);
+		
+		LOGGER.debug("getMenuInfo ended.");
+		
+		return vo;
 	}
 	
 	@Override
