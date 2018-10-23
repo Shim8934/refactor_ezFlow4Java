@@ -251,8 +251,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return portletOrderComp;
 	}
 	
-
-	@SuppressWarnings("null")
 	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");
@@ -267,11 +265,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 			
 			if (userPortalSetting == null) {
-				userPortalSetting.setUsedFrame("Frame1");
-				userPortalSetting.setUsedTheme(1);
+				UserPortalSettingVO tempSetting = new UserPortalSettingVO();
+				tempSetting.setUsedFrame("Frame1");
+				tempSetting.setUsedTheme(1);
+				
+				userPortalSetting = tempSetting;
 			}
 		}
-
+		System.out.println(userPortalSetting.toString());
 		LOGGER.debug("[Serivce] getUserPortalSetting Ended");
 		return userPortalSetting;
 	}
