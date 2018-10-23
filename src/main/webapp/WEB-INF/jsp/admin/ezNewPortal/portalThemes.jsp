@@ -12,12 +12,13 @@
 			.themeThumbnails {width : 350px; height : 200px; border : 3px solid #7d7d7d; margin-top : 15px;}
 			.themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
 			#themeList li {margin : 10px; display : inline-block;}
-			.themeImg { background-color : white; width : 400px; height : 270px; text-align : center; border: 1px solid #949292;}
+			.themeImg {position:relative;background-color : white; width : 400px; height : 270px; text-align : center; border: 1px solid #949292;}
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
+			.themeNotUsed {display:none;width:100%; height:100%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
 			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
 			.themeDetails {display : none; float:left; width:98%; border:1px solid black;position : relative;margin-left:10px;}
-			.themeSetting {float : right;margin-right : 27px;}
+			.themeSetting {float : right;margin-right : 27px;cursor:pointer;}
 			.themeSetting img {width : 17px;height : 17px;}
 			.switch {position: relative;display: inline-block;width: 60px;height: 25px;margin-left:10px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
@@ -38,7 +39,7 @@
 			.close {margin-top : 6px;}
 			.btnpositionJsp a {margin-left : 5px;}
 			.themeDefault {font-size : 15px; font-weight:bold; margin-top : 12px;}
-			.themeContent{width:450px; height : 60px; display:inline-block; margin-top:15px; border : 1px solid #928686; padding : 10px;}
+			.themeContent{overflow-y:auto; width:50%; height : 60px; display:inline-block; margin-top:15px; border : 1px solid #928686; padding : 10px;}
 			.frameInfo p {font-size : 15px; font-weight : bold;}
 			.frameList {clear : none !important; width:50%; margin-bottom:20px;}
 			.frameList tr {height:40px;}
@@ -155,6 +156,7 @@
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
 						themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
 						themesHTML += "</div>";
+						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
 						themesHTML += "</div>";
 						themesHTML += "</li>";
 						
@@ -179,7 +181,7 @@
 					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
 					themesHTML += "<hr class='themeHr'/>";
 					themesHTML += "<div class='themeTitle'>";
-					themesHTML += "<span class='themeName'>12345</span>";
+					themesHTML += "<span class='themeName'>얜 안눌림</span>";
 					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
 					themesHTML += "</div>";
 					themesHTML += "</div>";
@@ -190,7 +192,7 @@
 					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
 					themesHTML += "<hr class='themeHr'/>";
 					themesHTML += "<div class='themeTitle'>";
-					themesHTML += "<span class='themeName'>123456</span>";
+					themesHTML += "<span class='themeName'>얜 안눌림</span>";
 					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
 					themesHTML += "</div>";
 					themesHTML += "</div>";
@@ -201,7 +203,7 @@
 					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
 					themesHTML += "<hr class='themeHr'/>";
 					themesHTML += "<div class='themeTitle'>";
-					themesHTML += "<span class='themeName'>123456</span>";
+					themesHTML += "<span class='themeName'>얜 안눌림</span>";
 					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
 					themesHTML += "</div>";
 					themesHTML += "</div>";
@@ -212,6 +214,14 @@
 					//event setting
 					themes.forEach(function (item, index) {
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
+						
+						if (!item.themeUsed) {
+							$("#themeTitle" + item.themeId).parent().find(".themeNotUsed").css("display", "");
+						}
+						
+						if (item.themeDefault) {
+							$("#themeTitle" + item.themeId).parent().css("background-color", "rgb(182, 226, 255)");
+						}
 					});
 					
 					$(".close").on("click", function(){
@@ -264,7 +274,7 @@
 					frameHTML += "<th></th>";
 					
 					frameList.forEach(function (item, index) {
-						frameHTML += "<td>그림" + (index + 1) + "</td>";
+						frameHTML += "<td>그림" + (index + 1) + "</td>"; //사진 url 필요
 					});
 					
 					frameHTML += "</tr>";

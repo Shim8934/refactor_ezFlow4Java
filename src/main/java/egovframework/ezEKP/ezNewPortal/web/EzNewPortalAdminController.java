@@ -229,7 +229,7 @@ public class EzNewPortalAdminController {
 		param.put("frameInfos", paramMap.get("frameInfos"));
 		
 		
-		String url = "/rest/admin/ezportal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
+		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", null);
 				
