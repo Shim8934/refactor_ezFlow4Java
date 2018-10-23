@@ -57,8 +57,9 @@ public interface EzBoardService {
 	/* 예약게시물 표출 시 companyID 조건 추가 */
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, String companyID, int tenantID) throws Exception;
 	
+	/* 2018-10-19 홍승비 - 익명게시물의 댓글 표출조건 gubun값 추가 */
 	/* 2018-07-02 홍승비 - 댓글 확인 시 작성자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String companyID, int tenantID) throws Exception;
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String gubun, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
 	
@@ -137,8 +138,10 @@ public interface EzBoardService {
 	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
+	/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 isAdminLeft 플래그를 인자로 추가 */
 	/* 2018-06-25 홍승비 - 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가 */
-	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
+	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy,
+			String pExcludeBoardID, String lang, String isAdminLeft, boolean isCompanyAdmin, int tenantID) throws Exception;
 	
 	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
 	public int getReservedItemListCount(String userID, String companyID, int tenantID) throws Exception;

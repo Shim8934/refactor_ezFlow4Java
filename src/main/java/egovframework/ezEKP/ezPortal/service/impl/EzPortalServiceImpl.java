@@ -2184,6 +2184,9 @@ logger.debug("map.toString()" + map.toString());
 			String menuitemLinkURL = result.get(i).getLinkURL();			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
+
+			/*String menuitemImageUID = result.get(i).getImageUId();*/
+			String menuitemLinkLocation = result.get(i).getLinkLocation();
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			
 			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
@@ -2211,6 +2214,15 @@ logger.debug("map.toString()" + map.toString());
 			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
 				sb.append("<li id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 				sb.append(", \"" + "main" + "\"");
+
+				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				
+				if (menuitemLinkLocation != null && !menuitemLinkLocation.trim().equals("")) {
+					sb.append(", \"" + menuitemLinkLocation + "\"");
+				} else {
+					sb.append(", \"" + "main" + "\"");
+				}
+				
 				sb.append(", \"" + menuitemWindowOption + "\")'");
 				sb.append(">" + menuitemDisplayName + "</li>");
 			}
