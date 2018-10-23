@@ -1395,6 +1395,8 @@
 		            		arrRows[i].setAttribute("selected", "false");
 		            	}
 	            	}
+	            } else if (m_selectedTree == ListViewINPUT) {
+	            	inputAddress();
 	            }
 	        }
 	
@@ -1559,7 +1561,7 @@
 	        var g_binputLoaded = false;
 	        function inputTabButton_onClick() {
 	        	methodForTabAction(4);
-	            gubunpage = "direct";
+	        	selTab = "direct";
 	            selSpan = "inputSpan";
 	            
 	            if (g_binputLoaded == false) {
@@ -1580,6 +1582,8 @@
 	            
 	            dlmember.style.display = "none";
 	            AddrSearch.style.display = "none";
+	            
+		        m_selectedTree = ListViewINPUT;
 	        }
 	        
 	        function event_listdragend(evt) {
