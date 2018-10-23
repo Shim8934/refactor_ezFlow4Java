@@ -282,7 +282,34 @@ public class EzNewPortalAdminController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		LOGGER.debug("getInfo ended.");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		//메뉴정보요청
+		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			//메뉴정보
+			model.addAttribute("menuInfo", resultBody.get("data"));
+		}
+		
+		//해당메뉴 권한정보요청
+		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
+		
+		resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("authInfo", resultBody.get("data"));
+		}
+		
+		LOGGER.debug("getMenuInfo ended.");
+		
 		return "json";
 	}
 	

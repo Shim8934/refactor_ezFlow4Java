@@ -685,7 +685,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.getThemeId() + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
-		
 		map = commonUtil.transBean2Map(themeInfo);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -716,6 +715,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getMenus ended.");
 		
 		return list;
+	}
+	
+	@Override
+	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenuInfo started. companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		MenuInfoVO vo = ezNewPortalDAO.getMenuInfo(map);
+		
+		LOGGER.debug("getMenuInfo ended.");
+		
+		return vo;
 	}
 	
 	@Override

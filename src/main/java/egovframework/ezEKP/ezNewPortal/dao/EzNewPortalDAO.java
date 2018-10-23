@@ -211,6 +211,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<MenuInfoVO>) list("ezNewPortal.getMenus", map);
 	}
 	
+	public MenuInfoVO getMenuInfo(Map<String, Object> map) throws Exception {
+		return (MenuInfoVO) select("ezNewPortal.getMenuInfo", map);
+	}
+	
 	public void updateThemeInfo(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemeInfo", map);
 	}

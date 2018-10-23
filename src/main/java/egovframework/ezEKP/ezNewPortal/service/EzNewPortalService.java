@@ -79,6 +79,7 @@ public interface EzNewPortalService {
 	 * 관리자 회사별 메뉴목록조회
 	 */
 	public List<MenuInfoVO> getMenus(String companyId, int tenantId) throws Exception;
+	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */
