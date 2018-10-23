@@ -187,9 +187,29 @@
 		function previewSignTemplate() {
 			var contentStr = window.message.GetEditorContent();
 			
-			if (contentStr !== undefined) {
+			/* if (contentStr !== undefined) {
 				url = "/admin/ezEmail/signaturePreviewContent.do?content=" + encodeURIComponent(contentStr);
 		    	window.open(url,"_blank","width=890, height=660");
+			} */
+			
+		    var mapForm = document.createElement("form");
+		    mapForm.target = "Map";
+		    mapForm.method = "POST"; // or "post" if appropriate
+		    mapForm.action = "/admin/ezEmail/signaturePreviewContent.do";
+
+		    var mapInput = document.createElement("textarea");
+		    mapInput.innerText = contentStr;
+		    mapInput.name = "content";
+		    mapForm.appendChild(mapInput);
+
+		    document.body.appendChild(mapForm);
+
+		    map = window.open("", "Map", "width=890, height=660");
+
+			if (map) {
+			    mapForm.submit();
+			} else {
+			    alert('You must allow popups for this map to work.');
 			}
 			
 		}

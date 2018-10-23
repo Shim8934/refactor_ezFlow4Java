@@ -1395,8 +1395,10 @@ public class EzEmailAdminController {
 	 * @param String loginCookie, Model model
 	 */
 	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do")
-	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, String content) throws Exception {
+	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("signaturePreviewContent started.");
+		
+		String content = request.getParameter("content");
 		logger.debug("content=" + content);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
