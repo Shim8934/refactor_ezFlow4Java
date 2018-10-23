@@ -1553,6 +1553,15 @@
 		    function btnEdit_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
+		        
+		        var mustField = message.getMustFieldsInsert("${userInfo.lang}");
+	            if (mustField && mustField != ""){
+		            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
+		            	pAlertContent = pAlertContent.replace("@@", mustField);
+		                OpenAlertUI(pAlertContent);
+		                return;
+	            }
+		        
 		        if (Ans) {
 		            if (FirstHtml == "")
 		                FirstHtml = beforeHtml;

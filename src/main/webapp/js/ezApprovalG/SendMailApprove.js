@@ -16,7 +16,8 @@ function getAprLinefor(mode, docid) {
 		data : {
 			docID : docid,
 			mode  : mode,
-			orgCompanyID : orgCompanyID
+			orgCompanyID : orgCompanyID,
+			proxyUserFlag : ""
 		},
 		success: function(text){
 			result = text;
