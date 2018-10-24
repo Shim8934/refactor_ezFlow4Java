@@ -867,6 +867,10 @@
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
+		    
+		    function keyword_Clear() {
+		        document.getElementById('txt_keyword').value = "";
+		    }
 		    function onkeydown_start_search(evt) {
 		        if (evt.keyCode == "13") {
 		            search("quick");
