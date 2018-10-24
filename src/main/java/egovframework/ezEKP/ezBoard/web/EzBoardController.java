@@ -2021,6 +2021,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		int hlength = headerList.size();
 		
 		for (i = 0; i < hlength; i++) {
+			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
 				if (boardVO.getOrderOption().equals("")) {
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
@@ -2097,6 +2101,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<HEADERS>");
 		
 		for (BoardListHeaderVO vo:headerList) {
+			if (vo.getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
 			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
@@ -2113,6 +2121,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
+				if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+					continue;
+				}
+				
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
@@ -2440,6 +2452,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		int hlength = headerList.size();
 		
 		for (i = 0; i < hlength; i++) {
+			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
 				if (boardVO.getOrderOption().equals("")) {
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
@@ -2511,6 +2527,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<HEADERS>");
 		
 		for (BoardListHeaderVO vo:headerList) {
+			if (vo.getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
 			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
@@ -2527,6 +2547,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
+				if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+					continue;
+				}
+				
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
