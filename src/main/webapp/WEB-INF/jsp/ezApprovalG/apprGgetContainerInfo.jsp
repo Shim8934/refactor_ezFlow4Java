@@ -35,7 +35,6 @@
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> --> 
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
