@@ -148,7 +148,7 @@
 		var setUtilEvent = function () {
 			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
 			if('${roleInfo}' === 'admin') {
-				setEvent('util_admin', '/admin/main.do', 'main' ,'');	
+				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');

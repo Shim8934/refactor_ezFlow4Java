@@ -148,6 +148,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("roleInfo", data.get("roleInfo"));
 			model.addAttribute("menuList", data.get("menuList"));
 			model.addAttribute("popupNotiList", data.get("popupNotiList"));
+			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
+				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
+			}
 		}
 		
 		logger.debug("portalTopMenu End");
