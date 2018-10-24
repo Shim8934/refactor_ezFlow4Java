@@ -60,6 +60,7 @@
 	        arr_userinfo[4] = "${userInfo.deptID}";
 	        arr_userinfo[5] = "${userInfo.deptName}";
 	        arr_userinfo[6] = "${userInfo.jikChek}";
+	        arr_userinfo[7] = "${buJaeInfo}";
 	        arr_userinfo[8] = "${userInfo.email}";
 	        arr_userinfo[9] = "";
 	        arr_userinfo[10] = "${susinAdmin}";
@@ -89,6 +90,8 @@
  	        var pDocInfoValue = "1";
  	       	var nowDate = "${nowDateUTC}";
  	        var orgCompanyID = "";
+ 	       	var ext;
+ 	        var pListTypeValue;
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -189,11 +192,12 @@
 
                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
 
+                    // 개인문서함
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetUserContList();
-	                }
+	                } // 부서문서함
 	                else if (LoadSquery == "deptcontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
@@ -221,6 +225,10 @@
 		                    Init_Flag = "False";
 		                    GetDocSearch();
 	                	} else if (LoadSquery != ""){
+	                		// 후결문서함
+	                		if(LoadSquery.includes('AprType')) {
+	                			checkBujaeInfo();
+	                		}
 	                		 for (i = 0; i <= 13; i++) {
 	                             condition[i] = "";
 	                         }
@@ -252,15 +260,144 @@
 	                    subCondition = "";
 	                    GetDocSearch();
 	                }
-	
+					
+                    // 대리결재자 설정에 따른, 버튼 활성화
+	                var btnView = "";
+	                if(arr_userinfo[7] !== "" && LoadSquery.includes('AprType')) {
+		        		btnView = "false";
+		        	}
+	                btnVisible(btnView);
 	                try {
 	                    parent.frames["left"].setPresentValue("");
 	                } catch (e) { }
-	
 	            } catch (e) {
 	            }
 	        };
-	
+			
+	        // 부재자정보 체크
+	        function checkBujaeInfo() {
+		        var BString = arr_userinfo[7];
+		        if (BString != "") {
+		            var BDim = new Array("");
+		            BDim = BString.split(":");
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+		
+		            tmpStartDate = tmpStartDate.replace("/", ":");
+		            tmpEndDate = tmpEndDate.replace("/", ":");
+		            
+		            if (tmpEndDate < nowDate) {
+		                setBujaeOff();
+		                checkBujaeInfo_Complete(true);
+		                return true;
+
+		            } else if (tmpStartDate > nowDate) {
+		            	checkBujaeInfo_Complete("ING");
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true);
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false);
+		            }
+		        } else if(GetBujaeFlag()){
+		        	
+		        		tmpStartDate = proxyStartDate;
+		        		tmpEndDate = proxyEndDate;
+		        		
+		        		var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+			            if (Rtnval) {
+			                checkBujaeInfo_Complete(true);
+			            }
+			            else {
+			                checkBujaeInfo_Complete(false);
+			            }		            	
+		        } else {
+		            checkBujaeInfo_Complete("ING");
+		        }
+		    }
+		
+	        // 부재자정보 return function
+		    function checkBujaeInfo_Complete(Rtnval) {
+	            if (Rtnval == true) {
+	                setBujaeOff();
+	                btnVisible("ok");
+	            }
+	            else if (Rtnval == "ING") { }
+	            else {
+	                return;
+	            }
+	        }
+		    
+			// 부재자설정 off		        
+		    function setBujaeOff() {
+		    	var result = "";
+		    	
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/saveBujae.do",
+		    		data : {
+		    				buJae  : "",
+		    				proxy  : ""
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+		        
+		        arr_userinfo[7] = "";
+		    }
+		    
+		 	// 부재자설정에 따른 버튼 활성화 
+			function btnVisible(val) {
+				var scopeDoc = window.document;
+				// 메인버튼
+    			var mainmenu = scopeDoc.getElementById('mainmenu');
+				// 페이지레이어
+    			var tblPageRayer = scopeDoc.getElementById('tblPageRayer');
+				// 결재리스트
+    			var div_scroll = document.getElementsByClassName('div_scroll');
+				// 타이틀
+    			var title_h1 = document.getElementsByClassName('title_h1');
+				
+    			if(val === "ok") {
+	    			mainmenu.style.visibility = "visible";
+	    			tblPageRayer.style.visibility = "visible";
+	    			div_scroll[0].style.visibility = "visible";
+	    			title_h1[0].style.visibility = "visible";
+    			} else if(val === "false"){
+    				mainmenu.style.visibility = "hidden";
+	    			tblPageRayer.style.visibility = "hidden";
+	    			div_scroll[0].style.visibility = "hidden";
+	    			title_h1[0].style.visibility = "hidden";
+    			}
+		    }
+		    
+		    
+		    function GetBujaeFlag() {
+		        var BString = arr_userinfo[7];
+		        if (BString != "") {
+		            var BDim = new Array("");
+		            BDim = BString.split(":");
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+					
+		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
+		                return true;
+		            }
+		        } 
+		        setBujaeOff();
+		        return false;
+		    }
+		    
 	        var SelYearFlag = false;
 	        function onSelect_Year() {
 	            SelYearFlag = true;
@@ -1409,7 +1546,7 @@
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
 	    <div id="MOC_Div" style="display: none"></div>
-	    <h1><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+	    <h1 class="title_h1"><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
@@ -1474,7 +1611,7 @@
 		        </li>
       		</ul>
 	    </div>
-	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
+	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO;" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
