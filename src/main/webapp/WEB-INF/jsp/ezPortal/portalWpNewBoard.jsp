@@ -131,6 +131,7 @@
                 	    /* var pfirstItemID = "";                    
                         pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                       	
                         listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>"; */
+                        // 57d12c4101f94c38fde0d2ce60edd7e7a9470e06: listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer; overflow:visible;'>";
 
                         /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목 특수문자 처리 */
                         /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */

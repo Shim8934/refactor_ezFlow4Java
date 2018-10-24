@@ -55,6 +55,7 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
+	                document.execCommand("AutoUrlDetect", false, false);
 	            }
 	            catch (e)
 	            { }
@@ -435,14 +436,14 @@
 						}
 	        		}
 	        		for (var i = 0; i < returnval.length; i++) {
-						resStr += returnval[i];
-						if(i < returnval.length){
+	        			if ( i != 0 ) {
 							if(lang == "3"){
 								resStr += "、";
 							} else {
 								resStr += ",";
 							}
-						}
+	        			}
+						resStr += returnval[i];
 					}
 	        		return resStr;
 	            } catch (e)

@@ -460,7 +460,7 @@
 				                }
 				                else if (listtype == "10") {
 				                    parent.frames["right"].passValLeftMenu("10");
-				                    parent.frames["right"].checkBujaeInfo();
+				                   // parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "99") {
 				                    parent.frames["right"].passValLeftMenu("99");

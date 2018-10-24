@@ -6,6 +6,7 @@ function getMemoSortable() {
     	 containment: '#bodyFrame',
 	 	 opacity : 0.5,
 	 	 tolerance: "pointer",
+	 	 cursor: "move",
     	 update : function (event, ui) {
     		 if($("#orderOption").val() == 1) {
     			 var compareElId; 

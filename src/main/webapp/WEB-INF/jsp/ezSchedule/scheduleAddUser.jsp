@@ -455,7 +455,7 @@
 	             					<div style ="background-color:none;BORDER:#FFFFFF 0px solid;OVERFLOW:hidden;TEXT-ALIGN:left;HEIGHT:100%;">
 	                 					<table style="border-collapse:collapse;border-spacing:0px; width:650px; border:0px" id="entryList">
 	                   						<tr>
-	                     						<td style="PADDING-TOP:2px;BACKGROUND-COLOR:#f8f8f8;border-collapse:collapse;border-bottom: solid 1px #ddd; width:102px; height:25px; text-align:center" id="" deptid=""></td>
+	                     						<td style="PADDING-TOP:2px;word-break: break-all;BACKGROUND-COLOR:#f8f8f8;border-collapse:collapse;border-bottom: solid 1px #ddd; width:102px; height:25px; text-align:center" id="" deptid=""></td>
 	                     						<td style="padding-left:9px;border-collapse:collapse; border-bottom: solid 1px #dadada" >
 	                        						<table style="border:0px; padding:0px; border-collapse:collapse; border-spacing:0px" >
 	                         							<tr>

@@ -413,14 +413,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, String companyID, int tenantID) throws Exception {
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception {
 		logger.debug("getACL started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
-		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		logger.debug("getACL ended");

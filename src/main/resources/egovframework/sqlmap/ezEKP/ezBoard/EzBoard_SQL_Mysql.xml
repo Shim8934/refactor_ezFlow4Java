@@ -362,8 +362,19 @@
 					TBL_Board_Item_ListOption  
                 WHERE
                 	TENANT_ID = #v_TENANTID#
-                AND 
-                	LISTTYPE = #v_LISTCODE#
+                AND
+                ]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = 1
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+			<![CDATA[
                 AND 
                 	VIEW_FG = 'Y' 
                 ORDER BY
@@ -385,7 +396,18 @@
                     WHERE 
                     	TENANT_ID = #v_TENANTID#
                     AND
-                    	LISTTYPE = #v_LISTCODE#
+                    ]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = 1
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+				<![CDATA[
                     AND 
                     	VIEW_FG = 'Y' 
                     ORDER BY 
@@ -403,7 +425,18 @@
                     WHERE
                     	TENANT_ID = #v_TENANTID#
                     AND 
-                    	LISTTYPE = #v_LISTCODE# 
+				]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = 1
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+				<![CDATA[
                     AND 
                     	VIEW_FG = 'Y' 
                     ORDER BY 
@@ -687,7 +720,8 @@
 			AND 
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
-            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 			AND
 			  	(A.APPRFLAG = 'Y' 
 			     OR A.APPRFLAG IS NULL)
@@ -861,9 +895,7 @@
 				FROM
 					TBL_USERMASTER D
 				WHERE
-					D.TENANT_ID = #tenantID#
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					D.TENANT_ID = #tenantID#)
 					
 				UNION ALL
 				
@@ -884,15 +916,15 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#)) T
 		ON
 			A.USERID = T.CN
 		AND
 			A.TENANT_ID = T.TENANT_ID
 	   	WHERE
 	   		A.tenant_id = #tenantID#
-		AND
-			T.COMPANYID = #companyID#
 	   	AND
 	   		A.BoardID = #boardID#
 	   	AND
@@ -1096,13 +1128,15 @@
      			  ON 
      			  	A.TENANT_ID = P.TENANT_ID
      			  AND
-     			  	(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+     			  	(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+     			  		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
      			  AND
      			  	A.BOARDID = P.BOARDID
      			  AND 
      			  	A.TENANT_ID = #v_TENANTID#
      			  AND
-     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+     			  		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
      			  AND
      			  	(A.APPRFLAG = 'Y' 
      			     OR A.APPRFLAG IS NULL)
@@ -1414,17 +1448,10 @@
               AND 
               	APPRFLAG = 'Y' 
              </isNotEmpty>
-            <isNotEmpty property="v_TEMP">
-        		ORDER BY 
-        			A.ParentWriteDate, 
-        			A.WriteDate DESC
-       		</isNotEmpty>
-       		<isEmpty property="v_TEMP">
-        		ORDER BY 
-        			A.NotiNo ASC, 
-        			A.ParentWriteDate DESC, 
-        			A.WriteDate DESC
-       		</isEmpty>
+     		ORDER BY
+     			A.NotiNo ASC,
+     			A.ParentWriteDate DESC,
+     			A.WriteDate DESC
        		LIMIT
        			#limit#, #rowCount#
 	</select>
@@ -3638,9 +3665,7 @@
 					FROM
 						TBL_USERMASTER D
 					WHERE
-						D.TENANT_ID = #v_TENANTID#
-					AND
-						D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+						D.TENANT_ID = #v_TENANTID#)
 						
 					UNION ALL
 					
@@ -3661,15 +3686,15 @@
 					ON
 						A2.DEPTID = C.CN
 					AND
-						B.TENANT_ID = C.TENANT_ID)) T
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#)) T
 				ON
 					A.USERID = T.CN
 				AND
 					A.TENANT_ID = T.TENANT_ID
 		        WHERE
 		        	A.TENANT_ID = #v_TENANTID#
-		        AND
-		        	T.COMPANYID = #v_COMPANYID#
 		        AND
 		       		A.BOARDID = #v_BoardID#
 				AND 
