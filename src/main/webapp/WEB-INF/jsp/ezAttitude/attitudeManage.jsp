@@ -183,10 +183,23 @@
 	            if (document.getElementById("ListDept").length == 0) {
 		            alert("<spring:message code='ezAttitude.t53'/>");
 		        } else {
+// 		    		if (selectedDeptID != null) {
+// 		    			$('#ListDept').val("ALL");
+// 		    		} else {
+// 			            document.getElementById("ListDept").selectedIndex = 0;
+// 		    		}
+					if ($('#ListDept option').length == 2) { //권한 있는 부서가 한개밖에 없으면 "전체" 옵션을 지운다.
+						$('#ListDept option').eq(0).remove();
+					}
+					
 		    		if (selectedDeptID != null) {
-		    			$('#ListDept').val("ALL");
+		    			$('#ListDept option').each(function() {
+		    				if ($(this).val() == selectedDeptID) { //선택한 부서가 옵션에 있을 경우에만 선택되도록
+				    			$('#ListDept').val(selectedDeptID);
+		    				}
+		    			});
 		    		} else {
-			            document.getElementById("ListDept").selectedIndex = 0;
+		    			$('#ListDept option').eq(0).prop("selected", true);
 		    		}
 		        }
 
@@ -202,7 +215,7 @@
 	        });
 	        
 	        function windowResize() {
-	        	var height = document.documentElement.clientHeight - 130 - document.getElementById("mainmenu").clientHeight;
+	        	var height = document.documentElement.clientHeight - 92 - document.getElementById("mainmenu").clientHeight;
 	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
@@ -373,8 +386,6 @@
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeCheckList_after(result.list);
-	    				//근태유형 리스트
-	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
@@ -648,7 +659,7 @@
 	    	}
 	        
 	        //검색창 내부 근태유형 리스트 조회
-	        function getAttitudeTypeList(typeList, typeId) {
+	       /* function getAttitudeTypeList(typeList, typeId) {
 	    		var html = "<option value='total'><spring:message code='ezAttitude.t124' /></option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
@@ -660,7 +671,7 @@
 	    		if (typeId != "") {
 	    			$('#searchAttitudeType').val(typeId);
 	    		}
-	    	}
+	    	}*/
 	        
 	        function searchPopup() {
 	        	//searchPopup 안에 OK넣고 온클릭에  전역변수:Tab1_SelectID로 구분해서 list가져오는거 분기
@@ -845,9 +856,7 @@
 	    	<div id="mainmenu">
 				<ul>
 					<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
-		      		<li>
-		      			<span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span>
-		      		</li>
+		      		<li><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></li>
 					<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
 		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
 					<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
@@ -855,11 +864,12 @@
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px;">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "dept" items="${deptList}">
+								<c:if test="${dept.authType == 'M'}">
 										<option value="<c:out value='${dept.deptId}'/>" authType="${dept.authType}"><c:out value='${dept.deptName}'/></option>
+								</c:if>
 							</c:forEach>
 			      		</select>
 		      		</li>
-		      		<li></li>
 		      	</ul>
 		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
@@ -878,6 +888,7 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
+		<!-- 검색 팝업 -->
 	    <div id="searchPopup" class="popupwrap1" style="display:none;margin-bottom:50px;">
 	  		<div class="popupJQLayer">
 				<div class="title"><spring:message code='ezAttitude.t79'/></div>
@@ -906,7 +917,14 @@
 					</tr>
 					<tr>
 						<th style="width:90px;height:26px"><spring:message code='ezAttitude.t134'/></th>
-						<td><select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px"></select></td>
+						<td>
+							<select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px">
+								<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
+								<c:forEach var = "type" items="${typeList}">
+									<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
+								</c:forEach>
+							</select>
+						</td>
 					</tr>
 				</table>
 				<!-- /내용 -->

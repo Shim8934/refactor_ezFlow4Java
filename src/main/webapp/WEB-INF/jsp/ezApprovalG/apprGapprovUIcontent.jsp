@@ -74,6 +74,7 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
+	                document.execCommand("AutoUrlDetect", false, false);
 	            }
 	            catch (e)
 	            {}
@@ -747,6 +748,36 @@
 	
 	        function Conn_BodyFieldWrite(FieldName, FieldValue) {
 	            document.getElementById(FieldName).textContent = FieldValue;
+	        }
+	        function getMustFieldsInsert(lang) {
+	        	try {
+	        		var mustFields = $(".FIELD#doctitle, [must]");
+	        		var returnval = new Array();
+	        		var resStr = "";
+	        		for (var i = 0; i < mustFields.length; i++) {
+	        			var mustField = mustFields[i];
+	        			var val = $(mustField).text().trim();
+	        			if (val == "") {
+							if ($(mustField).attr('id') == "doctitle"){
+								returnval.push("<spring:message code='ezApprovalG.t1330'/>");
+							} else {
+								returnval.push($(mustField).attr('must'));
+							}
+						}
+	        		}
+	        		for (var i = 0; i < returnval.length; i++) {
+	        			if ( i != 0 ) {
+							if(lang == "3"){
+								resStr += "、";
+							} else {
+								resStr += ",";
+							}
+	        			}
+						resStr += returnval[i];
+					}
+	        		return resStr;
+	            } catch (e)
+	            { return ""; }
 	        }
 	    </script>
 	</head>
