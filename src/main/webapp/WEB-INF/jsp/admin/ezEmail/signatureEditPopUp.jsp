@@ -49,9 +49,17 @@
 		
 		function applyInfo() {
 			var selectedId = $("#inputInfoBody tr[selected=true]")[0].getAttribute("infoId");
-			var currentElement = window.message.xfe.getSelectedElement();
 			
+			// 태그프리
+			var currentElement = window.message.xfe.getSelectedElement();
 			currentElement.innerText = "$" + "{" + selectedId + "}";
+			
+			// 나모
+			//window.message.CrossEditor.InsertValue(1, "$" + "{" + selectedId + "}");
+			
+			// CK
+			
+			// 쿠쿠닥스  
 			
 		}
 		
@@ -198,6 +206,7 @@
 		    mapForm.action = "/admin/ezEmail/signaturePreviewContent.do";
 
 		    var mapInput = document.createElement("textarea");
+		    mapInput.style.display = "none";
 		    mapInput.innerText = contentStr;
 		    mapInput.name = "content";
 		    mapForm.appendChild(mapInput);
@@ -242,7 +251,7 @@
 					</table>
 				</div>
 				
-				<div>
+				<div style="height: 570px;">
 				<div class="leLetterEditer" style="height:490px;">
 					<iframe id="tbContentElement" class="viewbox" src="" name="message" style="padding:0; height:100%; width:70%;float:left; overflow:auto;"></iframe>
 					<div style="margin-left:10px; float:left; height:100%; width:280px;">

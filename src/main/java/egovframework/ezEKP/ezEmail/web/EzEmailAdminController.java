@@ -1163,6 +1163,12 @@ public class EzEmailAdminController {
 		logger.debug("signatureMainView started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1397,6 +1403,12 @@ public class EzEmailAdminController {
 	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do")
 	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("signaturePreviewContent started.");
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String content = request.getParameter("content");
 		logger.debug("content=" + content);
