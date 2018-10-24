@@ -2113,7 +2113,7 @@ public class EzAttitudeController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
 		
-		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
+		//전체관리자(c), 회사관리자(k), 근태관리자(wa) 면 모든부서..
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
@@ -2121,7 +2121,7 @@ public class EzAttitudeController {
 			adminFlag = "true";
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2130,8 +2130,11 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("isAllDept", isAllDept)
+//				.queryParam("userId", userInfo.getId());
 				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("isAllDept", isAllDept)
+				.queryParam("listAuthType", "R")
 				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
