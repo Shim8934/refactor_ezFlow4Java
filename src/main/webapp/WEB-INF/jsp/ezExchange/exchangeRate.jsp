@@ -19,6 +19,7 @@
 	   #close ul {margin: 0; padding: 0; list-style:none;}
 	   #close ul li span{display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
 	   #exchagneList tr, th, td{border-bottom: 1px solid #f6f6f6; text-align:center;}
+	   th {font-size:11px;}
 	   div {display: block;}
 	</style>
 	<body class="popup" style="overflow:hidden;">
