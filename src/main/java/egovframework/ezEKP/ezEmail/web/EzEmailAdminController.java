@@ -1235,7 +1235,7 @@ public class EzEmailAdminController {
 		JSONArray returnJsonArr = new JSONArray();
 
 		try {
-			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search);
+			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search, userInfo.getPrimary());
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
 			// e.printStackTrace();

@@ -2259,14 +2259,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search) throws Exception {
+	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search, String userLang) throws Exception {
 		logger.debug("selectSearchSignatureTemplate started.");
-		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ", search=" + search);
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ", search=" + search + ",userLang=" + userLang);
 		
 		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
 		String searchStr = "search=" + URLEncoder.encode(search, "UTF-8");
-		String inputParams = companyIdStr + "&" + tenantStr + "&" + searchStr;
+		String userLangStr = "userLang=" + URLEncoder.encode(userLang, "UTF-8");
+		String inputParams = companyIdStr + "&" + tenantStr + "&" + searchStr + "&" + userLangStr;
 		
 		logger.debug("inputParams=" + inputParams);
 		

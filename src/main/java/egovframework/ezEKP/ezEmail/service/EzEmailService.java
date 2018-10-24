@@ -81,7 +81,7 @@ public interface EzEmailService {
 	public List<String> aliasMailCheck(String address) throws Exception;
 	
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
-	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search) throws Exception;
+	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search, String userLang) throws Exception;
 	public void deleteSignatureTemplate(String signNo) throws Exception;
 	public JSONArray selectOneSignatureTemplate(String signNo) throws Exception;
 	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;

@@ -628,6 +628,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("signature3 : " + signature3);
 		logger.debug("serverName : " + serverName);
 		logger.debug("userId : " + userInfo.getId());
+		logger.debug("userLang=" + userInfo.getPrimary());
 		
 		model.addAttribute("signState", signState);
 		model.addAttribute("signature1", signature1);
@@ -635,6 +636,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("signature3", signature3);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("userLang", userInfo.getPrimary());
 		
 		logger.debug("mailSignature ended.");
 		

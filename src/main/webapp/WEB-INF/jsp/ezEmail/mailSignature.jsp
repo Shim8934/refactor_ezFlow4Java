@@ -300,9 +300,20 @@
 		    	<span><b>서명선택 : </b></span>
 		    	<select id="signatureSelect" onchange="selectSignTemplate(this.value)">
 		    		<option value="none">선택안함</option>
-		    		<c:forEach var="item" items="${list}">
-	        			<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname}'/></option>
-            		</c:forEach>
+            		<c:set var="userLang" value="${userLang}"/>
+            		<c:choose>
+            			<c:when test="${userLang eq '1'}">
+            				<c:forEach var="item" items="${list}">
+		        				<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname}'/></option>
+	            			</c:forEach>
+            			</c:when>
+            			<c:otherwise>
+	            			<c:forEach var="item" items="${list}">
+			        			<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname2}'/></option>
+		            		</c:forEach>
+            			</c:otherwise>
+            		</c:choose>
+		    		
 		    	</select>
 		    </div>
 	    </div>

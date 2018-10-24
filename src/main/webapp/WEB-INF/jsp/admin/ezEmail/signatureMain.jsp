@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var companyID = "${userInfo.companyID}";
+	    	var userLang = "${userInfo.primary}";
 			var m_strColorSelect = "#edf4fd";
 			var m_strColorOver = "#f4f5f5";
 			var m_strColorDefault = "#ffffff";
@@ -74,8 +75,13 @@
 	                _TD.style.borderBottom = "1px solid #f2f2f2";
 	                _TD.style.padding = "0";
 	                
-	                _SPAN.innerText = json[Cnt].displayname;
-	                _SPAN.title = json[Cnt].displayname;
+	                if (userLang != '1') {
+	                	_SPAN.innerText = json[Cnt].displayname2;
+		                _SPAN.title = json[Cnt].displayname2;
+	                } else {
+	                	_SPAN.innerText = json[Cnt].displayname;
+		                _SPAN.title = json[Cnt].displayname;
+	                }
 	                _SPAN.style.lineHeight = "30px";
 	                _SPAN.style.float = "left";
 	                _SPAN.style.display = "inline-block";
