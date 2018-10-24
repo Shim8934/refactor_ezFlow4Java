@@ -34,6 +34,7 @@ public interface EzNewPortalService {
 	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception;
 	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId) throws Exception;
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType) throws Exception;
+	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception;
 	/**
 	 * 유은정
 	 */

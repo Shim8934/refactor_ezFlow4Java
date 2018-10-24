@@ -476,14 +476,16 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserMenuOrder(HttpServletRequest request, @PathVariable String userId) throws Exception {
+	public JSONObject updateUserMenuOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserMenuOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);			
+			
+			ezNewPortalService.updateUserMenuOrder(info.getCompanyId(), info.getTenantId(), userId, jObj);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {

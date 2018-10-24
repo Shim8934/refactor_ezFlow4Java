@@ -290,6 +290,8 @@ AND
 	comp.TENANT_ID = #tenantId#
 AND
 	user.user_id = #userId#
+ORDER BY 
+	menu_order asc, default_order asc	
 </select>
 
 <!-- 회사 접근 가능한 메뉴 리스트 -->
@@ -335,6 +337,21 @@ AND
 	comp.TENANT_ID = #tenantId#
 ]]>		
 </select>
+
+<update id="ezNewPortal.updateUserMenuOrder" parameterClass="Map">
+UPDATE 
+	tbl_portal_menu_user 
+SET 
+	menu_order = #order#
+WHERE 
+	tenant_id = #tenantId#
+AND 
+	company_id = #companyId#
+AND 
+	user_id = #userId#
+AND
+	menu_id = #menuId#
+</update>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">

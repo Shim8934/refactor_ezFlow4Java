@@ -147,6 +147,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getCompanyMenuList(map);
 	}
 	
+	// 사용자 메뉴 순서 변경
+	@SuppressWarnings("unchecked")
+	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception {
+		LOGGER.debug("[Serivce] updateUserMenuOrder Started");
+
+		List<String> list = (ArrayList<String>) jObj.get("data");
+		for(int i=0; i<list.size(); i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyId", companyId);
+			map.put("tenantId", tenantId);
+			map.put("userId", userId);			
+			map.put("menuId", list.get(i));
+			map.put("order", i+1);
+			
+			LOGGER.debug("map.toString() : "  + map.toString());
+			ezNewPortalDAO.updateUserMenuOrder(map);
+		}
+		
+		LOGGER.debug("[Serivce] updateUserMenuOrder Ended");
+	}
+	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");
