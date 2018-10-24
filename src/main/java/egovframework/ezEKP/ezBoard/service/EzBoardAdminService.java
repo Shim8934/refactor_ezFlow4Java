@@ -42,8 +42,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type, int tenantID) throws Exception;
 	
-	/* 2018-06-25 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, String companyID, int tenantID) throws Exception;
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception;
 	
