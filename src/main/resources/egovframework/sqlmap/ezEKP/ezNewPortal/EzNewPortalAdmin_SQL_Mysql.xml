@@ -29,8 +29,8 @@
 	<select id="ezNewPortal.getFrames" parameterClass="Map" resultClass="FrameInfoVO">
 		<![CDATA[
 			SELECT
-				B.theme_id AS theme_id,
-			    B.frame_id AS framid,
+				B.theme_id AS themeid,
+			    B.frame_id AS frameid,
 				B.frame_name AS framename,
 				CASE WHEN A.frame_used = 'Y' THEN 1 ELSE 0 END AS frameused,
 			    CASE WHEN A.frame_default = 'Y' THEN 1 ELSE 0 END AS framedefault
