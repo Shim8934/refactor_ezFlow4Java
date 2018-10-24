@@ -13,6 +13,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>		
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	</head>
 	<body>
@@ -67,6 +69,20 @@
 			return str;	
 		}
 		
+		// 메뉴 확장 버튼에서 나오는 메뉴리스트 
+		var fullMenuToggle = function () {
+			var menuList = JSON.parse('${menuList}');
+			var str = '';
+
+			str += '<ul class="full_menu_toggleUL" id="toggleMenu">';
+			menuList.forEach(function (item, index) {
+				str += '<li data-order="'+item.menuId+'"><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ item.menuName +'</dd></dl></li>';
+			});
+			str += '</ul>';
+			
+			return str;	
+		}
+		
 		// 메인메뉴 설정
 		var setMainMenu = function () {
 			
@@ -85,7 +101,15 @@
 				str += assembleMainMenu();
 				
 				str += '</ul>'				
-				str += '<div class="full_menu_toggle" style="display:none;"></div>';
+				str += '<div class="full_menu_toggle">' + fullMenuToggle() + '</div>';
+				str += '<div class="menu_toggle_context">'
+				str += '	<span class="toggle_text"> #드래그앤 드랍으로 메뉴 순서를 조정할 수 있습니다.</span>';
+				str += '	<div class="toggle_div">';
+				str += '		<span class="topMenuBtn" id="topMenuCancel">취소</span>';
+				str += '		<span class="topMenuBtn" id="topMenuSave">저장</span>';
+				str += '		<span class="topMenuBtn" id="topMenuDefaultOrder">메뉴 순서 초기화</span>';
+				str += '	</div>';
+				str += '</div>';
 				str += '</nav>';
 				str += '</li>';
 				str += '</ul>';
@@ -131,6 +155,16 @@
 			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');			
 		}
 		
+		// 확장메뉴 순서 변경 후 저장
+		var setTopMenuSaveEvent = function () {
+			HTMLCollection.prototype.forEach = Array.prototype.forEach;
+			var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
+			
+			sortedMenu.forEach(function (item, index) {
+				console.log('order', item.dataset.order);
+			});
+		}
+		
 		// 메인메뉴 이벤트 모아둔 곳
 		var setMainEvent = function () {
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
@@ -142,6 +176,42 @@
 				item.addEventListener('click', function () {
 					window.open(menuUrl, 'main', '');
 				});
+			});
+			
+			// 확장 버튼 이벤트
+			var topMenuFull = document.getElementById('topMenuFull');
+			var topFrame = parent.document.getElementById('topFrame');
+			var bodyTag = document.getElementsByTagName('Body')[0];
+			
+			topMenuFull.addEventListener('click', function () {
+				if (topMenuFull.className.indexOf('on') > -1) {
+					topMenuFull.className = 'full_nav off';
+					topFrame.style.position = '';
+				} else if (topMenuFull.className.indexOf('off') > -1) {
+					topMenuFull.className = 'full_nav on';
+					topFrame.style.position = 'relative';
+					bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+				}
+			});
+			
+			// 드래그앤드롭
+			$('#toggleMenu').sortable();
+			$('#toggleMenu').disableSelection();
+			
+
+			// 확장메뉴에 추가된 버튼 이벤트
+			var topMenuCancel = document.getElementById('topMenuCancel');
+			var topMenuSave = document.getElementById('topMenuSave');
+			var topMenuDefaultOrder = document.getElementById('topMenuDefaultOrder');
+			
+			topMenuCancel.addEventListener('click', function () {
+				alert('cancel');
+			});
+			
+			topMenuSave.addEventListener('click', setTopMenuSaveEvent);
+			
+			topMenuDefaultOrder.addEventListener('click', function () {
+				alert('defaultOrder');
 			});
 		}
 		
@@ -185,7 +255,7 @@
 		}
 		
 		//위치 지정하여 팝업 열기 --- 팝업 공지사항
-		function openNotiPopup(popup_number, wWidth, wHeight, wPosition) {
+		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition) {
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
