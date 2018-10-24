@@ -39,9 +39,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
@@ -90,7 +92,13 @@ public class EzEmailAdminController {
 
 	@Autowired
 	private EzOrganService ezOrganService;
-
+	
+	@Autowired
+	private EzEmailUserAdminService ezEmailUserAdminService;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
+	
 	@Resource(name = "jspw")
 	private String jspw;
 
@@ -1277,6 +1285,176 @@ public class EzEmailAdminController {
 		model.addAttribute("resultCode", resultCode);
 		
 		logger.debug("getSharedMailboxInfo ended.");
+		return "json";
+	}
+	
+
+	/**
+	 * 공유사서함 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/delSharedMailbox.do")
+	public String delSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("delSharedMailbox started.");
+		
+		String result = "OK";
+		
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				result = "NO_PERMISSION";
+				model.addAttribute("result", result);
+				logger.debug("delSharedMailbox ended. result=" + result);
+				
+				return "json";
+			}
+			
+			String shareId = request.getParameter("shareId");
+			int tenantId = auth.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String mailAddr = shareId + "@" + domain;
+	        logger.debug("shareId=" + shareId + ",tenantId=" + tenantId + ",mailAddr=" + mailAddr);
+			
+	        // 해당 공유사서함의 공유자를 모두 제거한다.
+			String delResult =  ezEmailService.delSharedMailboxAllUser(shareId, tenantId);
+	        
+			if (!delResult.equals("OK")) {
+				logger.debug("delSharedMailboxAllUser failed.");
+				
+				result = "EMAIL_ERROR";
+				model.addAttribute("result", result);
+				logger.debug("delSharedMailbox ended. result=" + result);
+				
+				return "json";
+			}
+			
+			// 이메일 계정이 있는 지 확인한다.
+			int userExists = ezEmailUserAdminService.checkUserExists(mailAddr);
+			int rc = 0;
+			
+			logger.debug("userExists=" + userExists);
+			
+			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
+				// 로컬 시스템 계정을 삭제한다.
+				ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
+			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정.
+				List<String> distributionList = null;
+				String groupAddr = null;
+				
+				if (userExists == 1) { // 유효한 이메일 계정이 존재함.						
+					// 먼저 퇴직자 처리를 수행한다. 로컬 계정 삭제가 실패할 경우 복구를 위해.
+					rc = ezEmailUserAdminService.retireUser(mailAddr);
+					logger.debug("retireUser rc=" + rc);
+					
+					if (rc == 0) {
+						// 사용자가 속한 부서의 Group Email 주소를 구한다.
+						OrganUserVO userVO = ezOrganAdminService.getUserInfo(shareId, auth.getPrimary(), tenantId);
+						groupAddr = userVO.getDepartment() + "@" + domain;
+						
+						// 부서의 Group Email 주소로부터 해당 User를 제거한다.
+						rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+						logger.debug("updateGroupDel rc=" + rc);
+						
+						if (rc == -100) { // Group Email 주소에서 제거 실패함.(부모(그룹)나 자식(유저)를 찾지 못한 경우는 성공으로 취급함)
+							ezEmailUserAdminService.restoreUser(mailAddr);
+							logger.debug("removing the user '" + mailAddr + "' from its group email failed.");
+							
+							result = "EMAIL_ERROR";
+							model.addAttribute("result", result);
+							logger.debug("delSharedMailbox ended. result=" + result);
+							
+							return "json";
+						}
+						
+						// 사용자가 속한 공용배포그룹의 Group Email 주소 목록을 구한다.
+						distributionList = ezEmailUserAdminService.getUserDistributionList(mailAddr);
+						
+						for (String dist : distributionList) {
+							logger.debug("dist=" + dist);
+							
+							// 공용배포그룹의 Group Email 주소로부터 해당 User를 제거한다.
+							rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
+							
+							logger.debug("updateGroupDel rc=" + rc);							
+						}						
+					} else {
+						logger.debug("retiring the user '" + mailAddr + "' failed.");
+						
+						result = "EMAIL_ERROR";
+						model.addAttribute("result", result);
+						logger.debug("delSharedMailbox ended. result=" + result);
+						
+						return "json";
+					}
+				}
+							
+				String bizmekaResult = "ERROR";
+				
+				try {
+					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantId);
+					
+					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
+					if (useBizmekaSpambox.equals("YES")) {
+						String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantId);
+						String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantId);
+						String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantId);
+						
+						bizmekaResult = ezEmailUtil.bizmekaDeleteUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, shareId);		
+						
+						logger.debug("bizmekaResult=" + bizmekaResult);
+						
+						if (!bizmekaResult.equals("OK")) {
+							throw new Exception("bizmekaDeleteUser failed");
+						}						
+					}
+										
+					// 로컬 시스템 계정을 삭제한다.
+					ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
+				} catch (Exception e) {
+					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
+						if (distributionList != null) {
+							for (String dist : distributionList) {
+								logger.debug("dist=" + dist);
+								
+								// 공용배포그룹의 Group Email 주소에 해당 User를 추가한다.
+								rc = ezEmailUserAdminService.updateGroupAdd(dist, mailAddr);	
+								logger.debug("updateGroupAdd rc=" + rc);							
+							}													
+						}
+						
+						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+						ezEmailUserAdminService.restoreUser(mailAddr);							
+					}
+					
+					result = "EMAIL_ERROR";
+					model.addAttribute("result", result);
+					logger.debug("delSharedMailbox ended. result=" + result);
+					
+					return "json";
+				}
+				
+				// 아래 과정에서 에러가 발생하면 복구할 수는 없지만, 이미 유효한 계정이 아니므로
+				// 저장 공간은 차지하지만 해당 계정이 사용되지는 않는다. 
+				
+				// 퇴직자 계정을 삭제한다.
+				ezEmailUserAdminService.removeUser(mailAddr);
+				
+				// 해당 사용자의 메일박스들을 모두 제거한다.
+				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				
+				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
+				ezAddressService.removeUserAddress(mailAddr);
+			}
+		
+		} catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("delSharedMailbox ended. result=" + result);
 		return "json";
 	}
 }

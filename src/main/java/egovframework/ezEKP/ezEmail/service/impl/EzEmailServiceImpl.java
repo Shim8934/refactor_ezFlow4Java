@@ -2404,4 +2404,31 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSharedMailboxInfo ended.");
 		return sharedMailboxInfo;
 	}
+	
+	@Override
+	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception {
+		logger.debug("delSharedMailboxAllUser started.");
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		String result = "OK";
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/delSharedMailboxAllUser";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!((String)object.get("resultCode")).equals("OK") || (Long)object.get("reasonCode") != 0) {
+        	result = "ERROR";
+        }
+		
+		logger.debug("delSharedMailboxAllUser ended.");
+		return result;
+	}
 }
