@@ -12,22 +12,22 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		 	window.onload = function () {
-		 		if ("${portalEnv}" == "1") {
-		            //document.getElementById("Portal_sub1").parentNode.onclick()
-		            document.getElementById("Portal_sub1").onclick();
-		        } else if ("${portalEnv}" == "2") {
-		        	//document.getElementById("Portal_sub4").parentNode.onclick()
-		            document.getElementById("Portal_sub4").onclick();
-		        } else {
-		        	document.getElementById("Portal_sub1").onclick();
-		        }
-			 
-		        if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
+		 		// 20181018 조진호 - 패키지타입이 standard가 아닐때 일어나는 오류 수정
+		 		if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
 		        	//2018-08-08 김보미 - 주석제거
 		            document.getElementById("UserInfo").parentNode.onclick();
 		            document.getElementById("UserInfo").onclick();
+		        } else {
+		        	if ("${portalEnv}" == "1") {
+			            //document.getElementById("Portal_sub1").parentNode.onclick()
+			            document.getElementById("Portal_sub1").onclick();
+			        } else if ("${portalEnv}" == "2") {
+			        	//document.getElementById("Portal_sub4").parentNode.onclick()
+			            document.getElementById("Portal_sub4").onclick();
+			        } else {
+			        	document.getElementById("Portal_sub1").onclick();
+			        }
 		        }
-		        
 		    }
 			function Open_Func(pthis) {
 				switch (pthis.id) {

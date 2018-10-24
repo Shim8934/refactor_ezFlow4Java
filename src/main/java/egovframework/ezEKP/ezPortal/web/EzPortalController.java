@@ -178,13 +178,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	    	resp.addCookie(cookieID7);
 		}
 		
-		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		
-        if (packageType.equals(CommonUtil.PT_BASIC)
-        		|| packageType.equals(CommonUtil.PT_MAIL)) {
-            return "redirect:/ezEmail/mailAloneMain.do";
-        }
-		
 		String pageID = "";
 		String skinID = "1";
 		String mainUrl = "";

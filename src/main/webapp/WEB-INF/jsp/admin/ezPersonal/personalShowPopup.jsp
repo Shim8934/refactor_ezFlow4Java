@@ -31,6 +31,10 @@
 			$(document).ready(function() {
 				popupcontent.style.height = document.documentElement.clientHeight - 136 + "px";
 			});
+			
+			window.onresize = function(event) {
+				popupcontent.style.height = document.documentElement.clientHeight - 136 + "px";
+			};
 	
 			function setCookie(name, value, expiredays) {
 				var todayDate = new Date();

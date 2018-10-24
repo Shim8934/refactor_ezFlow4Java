@@ -368,7 +368,7 @@ public class EzWebFolderController_m {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", requset.getServerName());
+		headers.set("x-user-host", requset.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		RestTemplate rest = new RestTemplate();

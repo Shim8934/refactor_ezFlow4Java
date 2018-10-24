@@ -35,8 +35,6 @@
 	<script type="text/javascript">
 		initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		
-		eventSetting();
-		
 		var eventSetting = function() {
 			var elementList = document.querySelectorAll('.leftMenu_btn');
 			
@@ -62,5 +60,8 @@
 				});
 			});
 		}
+		
+		eventSetting();
+		
 	</script>
 </html>

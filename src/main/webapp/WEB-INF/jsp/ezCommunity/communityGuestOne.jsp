@@ -50,7 +50,7 @@
 		        	}
 		        		
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "USERNAME"+multiData);
-					html += "<spring:message code='ezCommunity.t587' />";
+					html += " <spring:message code='ezCommunity.t587' />";
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += " " + "<spring:message code='ezCommunity.t588' /></th>";
 					html += "</tr>";

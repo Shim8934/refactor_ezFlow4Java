@@ -8,11 +8,46 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>portalThemes</title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
-<%-- 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" /> --%>
-<%-- 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" /> --%>
-<!-- 		opensource css -->
-<!-- 		opensource css -->
-		
+		<style type="text/css">
+			.themeThumbnails {width : 350px; height : 200px; border : 3px solid #7d7d7d; margin-top : 15px;}
+			.themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
+			#themeList li {margin : 10px; display : inline-block;}
+			.themeImg {position:relative;background-color : white; width : 400px; height : 270px; text-align : center; border: 1px solid #949292;}
+			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
+			.themeTitle {margin-top : 9px;}
+			.themeNotUsed {display:none;width:100%; height:100%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
+			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
+			.themeDetails {display : none; float:left; width:98%; border:1px solid black;position : relative;margin-left:10px;}
+			.themeSetting {float : right;margin-right : 27px;cursor:pointer;}
+			.themeSetting img {width : 17px;height : 17px;}
+			.switch {position: relative;display: inline-block;width: 60px;height: 25px;margin-left:10px;}
+			.switch input {opacity: 0;width: 0;height: 0;}
+			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
+			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
+			input:checked + .slider {  background-color: #2196F3;}
+			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
+			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
+			/* Rounded sliders */
+			.slider.round {border-radius: 15px;}
+			.slider.round:before {border-radius: 50%;}
+			
+			.hideDetails {display : none;}
+			.showDetails {display : block;}
+			.themeInfo {margin : 15px;}
+			.themeActive{margin-top : 20px; font-size : 15px; font-weight : bold; display : inline-block;}
+			.btnpositionJsp {float : right; margin-top : 0px;padding-right:35px; padding-top:0px;}
+			.close {margin-top : 6px;}
+			.btnpositionJsp a {margin-left : 5px;}
+			.themeDefault {font-size : 15px; font-weight:bold; margin-top : 12px;}
+			.themeContent{overflow-y:auto; width:50%; height : 60px; display:inline-block; margin-top:15px; border : 1px solid #928686; padding : 10px;}
+			.frameInfo p {font-size : 15px; font-weight : bold;}
+			.frameList {clear : none !important; width:50%; margin-bottom:20px;}
+			.frameList tr {height:40px;}
+			.frameList tr:first-child {height : 78px;}
+			.frameList tr:first-child th {border : none; background-color:white;}
+			.frameList td {text-align : center; border:1px solid #e1e1e1;}
+			.frameList th {width:61px;}
+		</style>
 	</head>
 	
 	<body class="mainbody">
@@ -25,71 +60,50 @@
 		    </span>
 		</div>
 		
-<!-- 		<div id="thumbnailGrid" class="main"> -->
-<!-- 			<ul id="og-grid" class="og-grid"> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="1번 테마 제목" data-description="1번 테마 설명"> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img01"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="2번 테마 제목" data-description="2번 테마 설명"> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img02"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="3번 테마 제목" data-description="3번 테마 설명"> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img03"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Azuki bean" data-description="Swiss chard pumpkin bunya nuts maize plantain aubergine napa cabbage soko coriander sweet pepper water spinach winter purslane shallot tigernut lentil beetroot."> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img01"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Veggies sunt bona vobis" data-description="Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu."> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img02"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Dandelion horseradish" data-description="Cabbage bamboo shoot broccoli rabe chickpea chard sea lettuce lettuce ricebean artichoke earthnut pea aubergine okra brussels sprout avocado tomato."> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img03"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Azuki bean" data-description="Swiss chard pumpkin bunya nuts maize plantain aubergine napa cabbage soko coriander sweet pepper water spinach winter purslane shallot tigernut lentil beetroot."> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img01"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 				<li> -->
-<!-- 					<a href="http://cargocollective.com/jaimemartinez/" data-largesrc="/images/kr/main/nodata.png" data-title="Veggies sunt bona vobis" data-description="Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu."> -->
-<!-- 						<img src="/images/kr/main/nodata.png" alt="img02"/> -->
-<!-- 					</a> -->
-<!-- 				</li> -->
-<!-- 			</ul> -->
-		</div>
+		<ul id="themeList">
+		</ul>
 	</body>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	
-	<!-- thumbGrid opensource -->
-<%-- 	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/modernizr.custom.js')}"></script> --%>
-<%-- 	<script type="text/javascript" src="${util.addVer('/js/thumbnailGrid/grid.js')}"></script> --%>
-	
 	<script type="text/javascript">
+		
 		$(function() {
 			getCompanies();
-// 			더러워서안써
-// 			Grid.init();
+			getThemes();
 		});
+		
+		function openThemeDetail(event) {
+			var themeId = event.data.themeId;
+			var nowShowDetails = $(".showDetails").attr("id");
+			
+			if (nowShowDetails == "themeDetails" + themeId) { 
+				$(".themeDetails").slideUp();
+			} else {
+				$(".themeDetails").hide();
+			}
+			
+			$(".themeDetails").attr("class", "themeDetails hideDetails");
+			
+			if (nowShowDetails != "themeDetails" + themeId) {
+				getThemeDetail(themeId);
+				
+				if (nowShowDetails == undefined) {
+					$("#themeDetails" + themeId).slideDown();
+				} else {
+					$("#themeDetails" + themeId).show();
+				}
+				
+				$("#themeDetails" + themeId).attr("class", "themeDetails showDetails");
+			}
+		}
 		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getCompanies.do', true);
+			request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
 			request.setRequestHeader('Content-Type', 'application/json');
+			var companiesHTML = "";
 	
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
@@ -97,7 +111,6 @@
 					
 					var userCompany = result.userCompany;
 					var companyList = result.list;
-					var companiesHTML = "";
 					
 					companyList.forEach(function (item, index) {
 						companiesHTML += "<option value=" + item.cn + ((item.cn == userCompany) ? ' selected>' : '>') + item.displayName + "</option>";
@@ -134,17 +147,87 @@
 					var themes = result.list;
 					var themesHTML = "";
 					
-					/* themesHTML += "<ul id='og-grid' class='og-grid'>";
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
-						themesHTML += "<a href='http://cargocollective.com/jaimemartinez/' data-largesrc='/images/kr/main/nodata.png' data-title='Veggies sunt bona vobis' data-description='Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu.'>";
-						themesHTML += "<img src='/images/kr/main/nodata.png' alt='img02'/>";
-						themesHTML += "</a>";
+						themesHTML += "<div class='themeImg'>";
+						themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+						themesHTML += "<hr class='themeHr'/>";
+						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
+						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
+						themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
+						themesHTML += "</div>";
+						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
+						themesHTML += "</div>";
 						themesHTML += "</li>";
+						
+						themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
+						themesHTML += "<img src='' class='themesImgDetails' alt='img02'/>";
+						themesHTML += "<div class='themeInfo'>";
+						themesHTML += "<div class='themeActive'>테마 활성화 : <label class='switch'><input type='checkbox'><span class='slider round'></span></label></div>";
+						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn'><span>미리보기</span></a><a class='imgbtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
+						themesHTML += "<div class='themeDefault'><input type='radio'/>기본테마설정</div>";
+						themesHTML += "<div class='themeContent'></div>";
+						themesHTML += "</div>";
+						themesHTML += "<div class='frameInfo'>";
+						themesHTML += "<p>[프레임설정]</p>";
+						themesHTML += "<table class='frameList'></table>";
+						themesHTML += "</div>";
+						themesHTML += "</div>";
 					});
-					themesHTML += "</ul>"; */
 					
-					document.getElementById("thumbnailGrid").innerHTML = companiesHTML;
+
+					themesHTML += "<li>";
+					themesHTML += "<div class='themeImg'>";
+					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+					themesHTML += "<hr class='themeHr'/>";
+					themesHTML += "<div class='themeTitle'>";
+					themesHTML += "<span class='themeName'>얜 안눌림</span>";
+					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
+					themesHTML += "</div>";
+					themesHTML += "</div>";
+					themesHTML += "</li>";
+
+					themesHTML += "<li>";
+					themesHTML += "<div class='themeImg'>";
+					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+					themesHTML += "<hr class='themeHr'/>";
+					themesHTML += "<div class='themeTitle'>";
+					themesHTML += "<span class='themeName'>얜 안눌림</span>";
+					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
+					themesHTML += "</div>";
+					themesHTML += "</div>";
+					themesHTML += "</li>";
+
+					themesHTML += "<li>";
+					themesHTML += "<div class='themeImg'>";
+					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+					themesHTML += "<hr class='themeHr'/>";
+					themesHTML += "<div class='themeTitle'>";
+					themesHTML += "<span class='themeName'>얜 안눌림</span>";
+					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
+					themesHTML += "</div>";
+					themesHTML += "</div>";
+					themesHTML += "</li>";
+					
+					document.getElementById("themeList").innerHTML = themesHTML;
+					
+					//event setting
+					themes.forEach(function (item, index) {
+						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
+						
+						if (!item.themeUsed) {
+							$("#themeTitle" + item.themeId).parent().find(".themeNotUsed").css("display", "");
+						}
+						
+						if (item.themeDefault) {
+							$("#themeTitle" + item.themeId).parent().css("background-color", "rgb(182, 226, 255)");
+						}
+					});
+					
+					$(".close").on("click", function(){
+						$(".themeDetails").slideUp();
+						$(".themeDetails").attr("class", "themeDetails hideDetails");
+					});
 				} else {
 					// We reached our target server, but it returned an error
 				}
@@ -161,23 +244,66 @@
 			request.send(data);
 		}
 		
-		var getThemeDetail = function() {
+		var getThemeDetail = function(themeId) {
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getThemeDetail.do', true);
+			request.open('POST', '/admin/ezNewPortal/getThemeInfo.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 	
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
-// 					var result = JSON.parse(request.responseText);
+					var result = JSON.parse(request.responseText);
+					var theme = result.themeInfo;
+					var frameList = result.frameInfos;
 					
-// 					var themeDetailHTML = "";
+					$("#themeDetails" + theme.themeId).find(".themesImgDetails").attr("src", "/images/ezNewPortal/Theme1.GIF");
+					$("#themeDetails" + theme.themeId).find(".themeContent").text(theme.themeContent);
 					
-// 					themeDetailHTML;
+					if (theme.themeUsed) {
+						$("#themeDetails" + theme.themeId).find(".switch").find("input").prop("checked", true);
+					}
 					
-// 					document.getElementById("thumbnailGrid").innerHTML = companiesHTML;
+					if (theme.themeDefault) {
+						$("#themeDetails" + theme.themeId).find(".themeDefault").find("input").prop("checked", true);
+					}
+					
+					var frameHTML = "";
+					frameHTML += "<tr>";
+					frameHTML += "<th></th>";
+					
+					frameList.forEach(function (item, index) {
+						frameHTML += "<td>그림" + (index + 1) + "</td>"; //사진 url 필요
+					});
+					
+					frameHTML += "</tr>";
+					frameHTML += "<tr><th>기본 프레임 설정</th>";
+					
+					frameList.forEach(function (item, index) {
+						if (item.frameDefault) {
+							frameHTML += "<td><input type='radio' name='frameDefault' checked></td>";
+						} else {
+							frameHTML += "<td><input type='radio' name='frameDefault'></td>";
+						}
+						
+					});
+
+					frameHTML += "</tr>";
+					frameHTML += "<tr><th>사용자 프레임 설정</th>";
+					
+					frameList.forEach(function (item, index) {
+						if (item.frameUsed) {
+							frameHTML += "<td><input type='checkbox' name='frameUsed' checked></td>";
+						} else {
+							frameHTML += "<td><input type='checkbox' name='frameUsed'></td>";
+						}
+						
+					});
+					
+					frameHTML += "</tr>";
+					
+					$("#themeDetails" + theme.themeId).find(".frameList").html(frameHTML);
 				} else {
 					// We reached our target server, but it returned an error
 				}

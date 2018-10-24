@@ -3976,7 +3976,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		for(int i=0; i<qstTempSaveVO.size(); i++) {
 			str.append(qstTempSaveVO.get(i).getQuestionNo());
 			str.append("||");
-			str.append(qstTempSaveVO.get(i).getQuesContent());
+			//2018-10-17 김보미 - loadXMLString때문에 설문제목이 태그 형태로(<test>) 들어갈 경우 발생하는 문제 수정 
+			//str.append(qstTempSaveVO.get(i).getQuesContent());
+			str.append(qstTempSaveVO.get(i).getQuesContent().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 			str.append("||");
 			str.append(qstTempSaveVO.get(i).getAnswerType());
 			str.append("||");
