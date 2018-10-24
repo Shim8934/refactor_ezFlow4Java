@@ -148,7 +148,7 @@
 		var setUtilEvent = function () {
 			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
 			if('${roleInfo}' === 'admin') {
-				setEvent('util_admin', '/admin/main.do', 'main' ,'');	
+				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
@@ -209,9 +209,9 @@
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
 			var menuList = JSON.parse('${menuList}');
 			var menuLi = document.getElementById('mainMenuList').children;
-			
+			console.log(newPortalTopMenu.menuList);
 			menuLi.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuList['menu_' + (index + 1)].menuUrl;
+				var menuUrl = newPortalTopMenu.menuList[item.id].menuUrl;
 				item.addEventListener('click', function () {
 					window.open(menuUrl, 'main', '');
 				});
@@ -234,7 +234,7 @@
 			// 확장메뉴 링크 이벤트
 			var toggleMenu = document.getElementById('toggleMenu').children;
 			toggleMenu.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuList['menu_' + (index + 1)].menuUrl;
+				var menuUrl = newPortalTopMenu.menuList['menu_' + item.id].menuUrl;
 				item.addEventListener('click', function () {
 					window.open(menuUrl, 'main', '');
 					subMenuClickEvent('off');
