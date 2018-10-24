@@ -2274,15 +2274,21 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Override
 	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception {
+		return checkUserShareId(userId, shareId, 0, tenantId);
+	}
+	
+	@Override
+	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception {
 		logger.debug("checkUserShareId started.");
-		logger.debug("userId=" + userId + ",shareId=" + shareId + ",tenantId=" + tenantId);
+		logger.debug("userId=" + userId + ",shareId=" + shareId + ",permissionType=" + permissionType + ",tenantId=" + tenantId);
 		
 		boolean result = false;
 		
 		String tenantIdParam = "tenantId=" + tenantId;
 		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
 		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
-		String inputParams = tenantIdParam + "&" + userIdParam + "&" + shareIdParam;
+		String permissionTypeParam = "permissionType=" + permissionType;
+		String inputParams = tenantIdParam + "&" + userIdParam + "&" + shareIdParam + "&" + permissionTypeParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkUserShareId";

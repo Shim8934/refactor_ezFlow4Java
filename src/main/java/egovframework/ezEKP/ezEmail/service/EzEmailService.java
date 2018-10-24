@@ -79,6 +79,7 @@ public interface EzEmailService {
 	public List<String> aliasMailCheck(String address) throws Exception;
 	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception;
 	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception;
+	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxList(String compId, int tenantId) throws Exception;
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception;
 }
