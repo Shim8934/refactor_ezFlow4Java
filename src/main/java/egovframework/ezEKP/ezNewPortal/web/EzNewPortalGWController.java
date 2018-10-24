@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1052,8 +1053,12 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			//이효진 jsonParam 캐스팅 잘되면 냅두고 안되면 나중에 고쳐야지
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
 			JSONObject themeInfo = (JSONObject) jsonParam.get("themeInfo");
-			JSONArray frameInfos= (JSONArray) jsonParam.get("frameInfos");
+			JSONArray frameInfos = (JSONArray) jsonParam.get("frameInfos");
+			LOGGER.debug("frameInfos = " + frameInfos.toString());
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
