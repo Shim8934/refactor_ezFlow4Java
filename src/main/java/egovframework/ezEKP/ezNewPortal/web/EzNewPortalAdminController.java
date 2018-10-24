@@ -217,6 +217,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 포탈 테마상세정보 수정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateThemeInfo.do")
 	public void updateThemeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateThemeInfo started.");
@@ -225,13 +226,17 @@ public class EzNewPortalAdminController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("themeInfo", paramMap.get("themeInfo"));
-		param.put("frameInfos", paramMap.get("frameInfos"));
+		//param.put("themeInfo", paramMap.get("themeInfo"));
+		//param.put("frameInfos", paramMap.get("frameInfos"));
+		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("themeInfo", paramMap.get("themeInfo"));
+		jsonParam.put("frameInfos", paramMap.get("frameInfos"));
 		
 		
 		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
 				
 		String status = resultBody.get("status").toString();
 		
