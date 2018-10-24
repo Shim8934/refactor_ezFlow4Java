@@ -1296,16 +1296,16 @@ public class EzEmailAdminController {
 	public String delSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("delSharedMailbox started.");
 		
-		String result = "OK";
+		String resultCode = "OK";
 		
 		try {
 			// 관리자 권한체크
 			LoginVO auth = commonUtil.checkAdmin(loginCookie);
 			
 			if (auth == null) {
-				result = "NO_PERMISSION";
-				model.addAttribute("result", result);
-				logger.debug("delSharedMailbox ended. result=" + result);
+				resultCode = "NO_PERMISSION";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 				
 				return "json";
 			}
@@ -1322,9 +1322,9 @@ public class EzEmailAdminController {
 			if (!delResult.equals("OK")) {
 				logger.debug("delSharedMailboxAllUser failed.");
 				
-				result = "EMAIL_ERROR";
-				model.addAttribute("result", result);
-				logger.debug("delSharedMailbox ended. result=" + result);
+				resultCode = "EMAIL_ERROR";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 				
 				return "json";
 			}
@@ -1360,9 +1360,9 @@ public class EzEmailAdminController {
 							ezEmailUserAdminService.restoreUser(mailAddr);
 							logger.debug("removing the user '" + mailAddr + "' from its group email failed.");
 							
-							result = "EMAIL_ERROR";
-							model.addAttribute("result", result);
-							logger.debug("delSharedMailbox ended. result=" + result);
+							resultCode = "EMAIL_ERROR";
+							model.addAttribute("resultCode", resultCode);
+							logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 							
 							return "json";
 						}
@@ -1381,9 +1381,9 @@ public class EzEmailAdminController {
 					} else {
 						logger.debug("retiring the user '" + mailAddr + "' failed.");
 						
-						result = "EMAIL_ERROR";
-						model.addAttribute("result", result);
-						logger.debug("delSharedMailbox ended. result=" + result);
+						resultCode = "EMAIL_ERROR";
+						model.addAttribute("resultCode", resultCode);
+						logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 						
 						return "json";
 					}
@@ -1427,9 +1427,9 @@ public class EzEmailAdminController {
 						ezEmailUserAdminService.restoreUser(mailAddr);							
 					}
 					
-					result = "EMAIL_ERROR";
-					model.addAttribute("result", result);
-					logger.debug("delSharedMailbox ended. result=" + result);
+					resultCode = "EMAIL_ERROR";
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 					
 					return "json";
 				}
@@ -1448,13 +1448,13 @@ public class EzEmailAdminController {
 			}
 		
 		} catch (Exception e) {
-			result = "ERROR";
+			resultCode = "ERROR";
 			e.printStackTrace();
 		}
 		
-		model.addAttribute("result", result);
+		model.addAttribute("resultCode", resultCode);
 		
-		logger.debug("delSharedMailbox ended. result=" + result);
+		logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 		return "json";
 	}
 }
