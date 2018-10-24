@@ -164,7 +164,7 @@
 						themesHTML += "<img src='' class='themesImgDetails' alt='img02'/>";
 						themesHTML += "<div class='themeInfo'>";
 						themesHTML += "<div class='themeActive'>테마 활성화 : <label class='switch'><input type='checkbox'><span class='slider round'></span></label></div>";
-						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn'><span>미리보기</span></a><a class='imgbtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
+						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn previewBtn'><span>미리보기</span></a><a class='imgbtn updateThemeBtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
 						themesHTML += "<div class='themeDefault'><input type='radio'/>기본테마설정</div>";
 						themesHTML += "<div class='themeContent'></div>";
 						themesHTML += "</div>";
@@ -214,6 +214,7 @@
 					//event setting
 					themes.forEach(function (item, index) {
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
+						$("#themeDetails" + item.themeId).find(".updateThemeBtn").on("click", {"themeId" : item.themeId}, updateTheme);
 						
 						if (!item.themeUsed) {
 							$("#themeTitle" + item.themeId).parent().find(".themeNotUsed").css("display", "");
@@ -270,7 +271,7 @@
 					}
 					
 					var frameHTML = "";
-					frameHTML += "<tr>";
+					frameHTML += "<tr class='frameImg'>";
 					frameHTML += "<th></th>";
 					
 					frameList.forEach(function (item, index) {
@@ -282,9 +283,9 @@
 					
 					frameList.forEach(function (item, index) {
 						if (item.frameDefault) {
-							frameHTML += "<td><input type='radio' name='frameDefault' checked></td>";
+							frameHTML += "<td><input type='radio' value='F" + item.frameId + "' name='frameDefault' checked></td>";
 						} else {
-							frameHTML += "<td><input type='radio' name='frameDefault'></td>";
+							frameHTML += "<td><input type='radio' value='F" + item.frameId + "' name='frameDefault'></td>";
 						}
 						
 					});
@@ -294,9 +295,9 @@
 					
 					frameList.forEach(function (item, index) {
 						if (item.frameUsed) {
-							frameHTML += "<td><input type='checkbox' name='frameUsed' checked></td>";
+							frameHTML += "<td><input value='frameUsed" + item.frameId + "' type='checkbox' name='frameUsed' checked></td>";
 						} else {
-							frameHTML += "<td><input type='checkbox' name='frameUsed'></td>";
+							frameHTML += "<td><input value='frameUsed" + item.frameId + "' type='checkbox' name='frameUsed'></td>";
 						}
 						
 					});
@@ -319,6 +320,69 @@
 			});
 			
 			request.send(data);
+		}
+		
+		//테마 수정
+		var updateTheme = function(event) {
+			var result = confirm("테마 설정을 수정하시겠습니까?");
+			
+			if (result) {
+				var themeId = event.data.themeId;
+				//테마 사용여부, 테마  디폴트
+				var themeUsed = $("#themeDetails" + themeId).find(".switch").find("input").prop("checked");
+				var themeDefault = $("#themeDetails" + themeId).find(".themeDefault").find("input").prop("checked");
+				var themeInfo = {"themeUsed" : themeUsed, "themeDefault" : themeDefault, "themeId" : themeId};
+				
+				//프레임 사용여부
+				var frameList = $("#themeDetails" + themeId).find("input:checkbox[name=frameUsed]");
+				var frameListCount = frameList.length;
+				//기본프레임
+				var frameDefault = $("#themeDetails" + themeId).find("input:radio[name=frameDefault]:checked").val();
+				frameDefault = frameDefault.substring(1);
+				
+				var frameInfos = [];
+				
+				for (var i = 0; i < frameListCount; i++) {
+					var frameId = frameList[i].value;
+					frameId = frameId.substring(frameId.indexOf("d") + 1);
+					
+					var frameUsed = $("#themeDetails" + themeId).find("input:checkbox[value=" + frameList[i].value + "]").prop("checked"); 
+					var isDefault = false;
+					
+					if (frameDefault == frameId) {
+						isDefault = true;
+					}
+					
+					frameInfos.push({"themeId" : themeId, "frameId" : frameId, "frameDefault" : isDefault, "frameUsed" : frameUsed});
+				}
+				
+				var companiesObj = document.getElementById("ListCompany");
+				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+				
+				var request = new XMLHttpRequest();
+				request.open('POST', '/admin/ezNewPortal/updateThemeInfo.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
+				request.onload = function() {
+					if (request.status >= 200 && request.status < 400) {
+						
+					} else {
+						// We reached our target server, but it returned an error
+					}
+				}
+				
+				request.onerror = function() {
+					  // There was a connection error of some sort
+					};
+					
+					var data = JSON.stringify({
+						companyId : companyValue,
+						themeInfo : themeInfo,
+						frameInfos : frameInfos,
+						themeId : themeId
+					});
+					
+					request.send(data);
+			}
 		}
 	</script>
 </html>
