@@ -18,6 +18,7 @@ import javax.mail.Message;
 import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1051,8 +1052,8 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			//이효진 jsonParam 캐스팅 잘되면 냅두고 안되면 나중에 고쳐야지
-			ThemeInfoVO themeInfo = (ThemeInfoVO) jsonParam.get("themeInfo");
-			List<FrameInfoVO> frameInfos= (List<FrameInfoVO>) jsonParam.get("frameInfos");
+			JSONObject themeInfo = (JSONObject) jsonParam.get("themeInfo");
+			JSONArray frameInfos= (JSONArray) jsonParam.get("frameInfos");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
@@ -1221,8 +1222,8 @@ public class EzNewPortalGWController {
 			
 			JSONObject data = new JSONObject();
 			
-			data.put("접근", "");
-			data.put("불가", "");
+			data.put("menuAuthsY", resultMap.get("menuAuthsY"));
+			data.put("menuAuthsN", resultMap.get("menuAuthsN"));
 			
 			result.put("data", data);
 			result.put("status", "ok");

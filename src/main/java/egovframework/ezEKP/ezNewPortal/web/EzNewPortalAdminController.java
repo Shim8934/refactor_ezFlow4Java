@@ -305,7 +305,8 @@ public class EzNewPortalAdminController {
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			model.addAttribute("authInfo", resultBody.get("data"));
+			//menuAuths 안에 menuAuthsY, menuAuthsN
+			model.addAttribute("menuAuths", resultBody.get("data"));
 		}
 		
 		LOGGER.debug("getMenuInfo ended.");
