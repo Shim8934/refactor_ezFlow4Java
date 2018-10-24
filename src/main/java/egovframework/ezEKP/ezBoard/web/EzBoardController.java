@@ -965,7 +965,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan + ",everyone";
 		
 		for (int i = 0; i < userDeptPath.split(",").length; i++) {
-			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp != null) {
 				boardInfo = boardInfoTemp;
@@ -1075,7 +1075,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan+",everyone";
 		
 		for (int i=0; i<userDeptPath.split(",").length; i++) {
-			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp == null) {
 				break;
@@ -4512,7 +4512,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			BoardPropertyVO boardPropertyVO = null;
 			
 			for (int k = 0; k < userDeptPath.split(",").length; k++) {
-				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getCompanyID(), userInfo.getTenantId());
+				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getTenantId());
 				
 				if (boardPropertyVO != null) {
 					break;
