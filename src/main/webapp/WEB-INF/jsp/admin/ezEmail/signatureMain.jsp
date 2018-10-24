@@ -12,7 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var companyID = "${userInfo.companyID}";
-	    	var userLang = "${userInfo.primary}";
+	    	var userLang = "${userLang}";
 			var m_strColorSelect = "#edf4fd";
 			var m_strColorOver = "#f4f5f5";
 			var m_strColorDefault = "#ffffff";
@@ -85,7 +85,7 @@
 	                _SPAN.style.lineHeight = "30px";
 	                _SPAN.style.float = "left";
 	                _SPAN.style.display = "inline-block";
-	                _SPAN.style.width = "67%";
+	                _SPAN.style.width = "64%";
 	                _SPAN.style.whiteSpace = "nowrap";
 	                _SPAN.style.overflow = "hidden";
 	                _SPAN.style.textOverflow = "ellipsis";
@@ -99,11 +99,11 @@
 	                _DIV.style.lineHeight = "30px";
 	                var _EDIT = document.createElement("BUTTON");
 	                var _DEL = document.createElement("BUTTON");
-	                _EDIT.innerHTML = "수정";
+	                _EDIT.innerHTML = "<spring:message code='ezResource.t54'/>";
 	                _EDIT.style.marginRight = "3px";
 	                _EDIT.setAttribute("class", "lmLetterModifyBtn");
 	                _EDIT.onclick = function() { signEditPopUp(this, "modify"); };
-	                _DEL.innerHTML = "삭제";
+	                _DEL.innerHTML = "<spring:message code='ezResource.t65'/>";
 	                _DEL.setAttribute("class", "lmLetterDeleteBtn");
 	                _DEL.onclick = function() { deleteSignTemplate(this); };
 	                
@@ -119,7 +119,7 @@
 	        function deleteSignTemplate(obj) {
 	        	var signNo = obj.parentElement.parentElement.parentElement.getAttribute("signno");
 	        	
-	        	var deleteConfirm = confirm("정말로 삭제하시겠습니까?");
+	        	var deleteConfirm = confirm("<spring:message code='ezResource.t61'/>");
 	        	
 	        	if (deleteConfirm) {
 	        		$.ajax({
@@ -131,7 +131,7 @@
 		        			console.log(data);
 		        		},
 		        		complete : function(data) {
-		        			alert("삭제 하였습니다.");
+		        			alert("<spring:message code='ezEmail.t604'/>");
 		        			if (searchMode) {
 		        				// 검색 중 삭제한 리스트만 없애기
 		        				$("#signList tr[signno=" + signNo +"]").remove();
@@ -182,7 +182,7 @@
 	        	var search = document.getElementById("signSearchInput").value;
 	        	
 	        	if (search == '' || search.length == 0 || search.trim().length == 0 || search.trim().length ==0) {
-	        		alert("검색어를 입력해주세요.");
+	        		alert("<spring:message code='ezEmail.t10'/>");
 	        		return;
 	        	}
 	        	
@@ -253,7 +253,6 @@
 	        	var txtDisplay = "block";
 	        	var iframeDisplay = "none";
 	        	var txtContent = data[0].content;
-	        	//var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
 	        	
 	        	if (txtContent !== undefined) {
 	        		$(".signPreViewTxt")[0].style.display = "none";
@@ -310,7 +309,7 @@
 	    </style>
 	</head>
 	<body class="mainbody" style="height: 95%;">
-	    <h1>서명 템플릿 관리<span></span></h1>
+	    <h1><spring:message code = 'ezEmail.jje05'/><span></span></h1>
 	    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
 		    <select id="ListCompany" style="height:29px">
 	        	<c:forEach var="item" items="${list}">
@@ -327,14 +326,14 @@
 						<div class="lmLetterBox" style="width: 360px;" > 
 							<div class="lmtitle lmLetterBoxTitle">
 								<div style="border-top: 0px">
-									서명 템플릿
+									<spring:message code='ezEmail.jje06'/>
 								</div>
 									<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="height:22px;">
 									<button class="lmTop" onclick="searchSignList()">
-										검색
+										<spring:message code='ezBoard.t188'/>
 									</button>
 									<button class="lmTop" onclick="inputReset()">
-										초기화
+										<spring:message code='ezBoard.t999035'/>
 									</button>
 							</div>
 							<div style="height:418px; overflow:auto;">
@@ -370,7 +369,7 @@
 		<!-- 버튼 -->
 		<div style="float:left; margin-top:435px; margin-left:20px;">
 			<div class="boxNo btnpositionJsp" >
-				<a class="imgbtn" onClick="signEditPopUp(this, 'add')" style="margin-top: 15px;"><span>서명 템플릿 추가</span></a>
+				<a class="imgbtn" onClick="signEditPopUp(this, 'add')" style="margin-top: 15px;"><span><spring:message code='ezEmail.jje07'/></span></a>
 			</div>
 		</div>
 			

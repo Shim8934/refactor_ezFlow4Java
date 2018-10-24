@@ -179,7 +179,7 @@
     			<ul></ul>
   			</h2>
   			<h2>
-				<span onClick="goPage(31)" style="display:inline-block;width:100%;">서명 템플릿 관리</span>
+				<span onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
 			    <ul></ul>
 			</h2>
   			<c:if test="${cChk == '1'}">

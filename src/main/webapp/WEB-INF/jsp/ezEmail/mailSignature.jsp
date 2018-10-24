@@ -297,9 +297,9 @@
 		    </div>
 		    
 		    <div style="float:right; margin-right:5px;">
-		    	<span><b>서명선택 : </b></span>
+		    	<span><b><spring:message code='ezApprovalG.t435'/> : </b></span>
 		    	<select id="signatureSelect" onchange="selectSignTemplate(this.value)">
-		    		<option value="none">선택안함</option>
+		    		<option value="none"><spring:message code='ezEmail.jje15'/></option>
             		<c:set var="userLang" value="${userLang}"/>
             		<c:choose>
             			<c:when test="${userLang eq '1'}">

@@ -1183,6 +1183,7 @@ public class EzEmailAdminController {
 		}
 
 		model.addAttribute("list", resultList);
+		model.addAttribute("userLang", userInfo.getPrimary());
 
 		logger.debug("signatureMainView ended.");
 

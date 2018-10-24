@@ -32,14 +32,14 @@
 		
 		window.onload = function() {
 			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILSIGNTEMPLATE");
-			var titleTxt = "추가";
+			var titleTxt = "<spring:message code='ezBoard.t602'/>";
 			
 			if (type == "modify") {
-				titleTxt = "수정";
+				titleTxt = "<spring:message code='ezQuestion.t480'/>";
 			} 
 			
-			document.title = "서명 템플릿 " + titleTxt;
-			$(".leTitle")[0].innerText = "서명 템플릿 " + titleTxt;
+			document.title = "<spring:message code='ezEmail.jje06'/> " + titleTxt;
+			$(".leTitle")[0].innerText = "<spring:message code='ezEmail.jje06'/> " + titleTxt;
 			
 			
 			// 입력정보 클릭, mouse over 이벤트 추가
@@ -138,7 +138,7 @@
 	        			console.log(data);
 	        		},
 	        		complete : function(data) {
-	        			alert("저장하였습니다.");
+	        			alert("<spring:message code='main.sp10'/>");
 	        			window.close();
 	        			$(opener.document).find("#signList *").remove();
 	        			opener.signatureTemplateView();
@@ -154,12 +154,12 @@
 			//var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
 			if (strTrim == '' || strTrim.length == 0) {
-				alert("서명 템플릿명을 입력해주세요.");
+				alert("<spring:message code='ezEmail.jje08'/>");
 				return;
 			}
 			
 			if (txt.length > 50) {
-				alert("템플릿명은 최대 50자를 넘을 수 없습니다.");
+				alert("<spring:message code='ezEmail.jje09'/>");
 				return;
 			}
 			
@@ -217,9 +217,7 @@
 
 			if (map) {
 			    mapForm.submit();
-			} else {
-			    alert('You must allow popups for this map to work.');
-			}
+			} 
 			
 		}
 	
@@ -241,12 +239,12 @@
 							<col width="">
 						</colgroup>
 						<tr>
-							<th style="font-weight: normal">서명 템플릿명 (한글)</th>
-							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="서명 템플릿명을 입력해주세요."></td>
+							<th style="font-weight: normal"><spring:message code='ezEmail.jje10'/></th>
+							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.jje08'/>"></td>
 						</tr>
 						<tr>
-							<th style="font-weight: normal">서명 템플릿명 (영문)</th>
-							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="서명 템플릿명을 입력해주세요."></td>
+							<th style="font-weight: normal"><spring:message code='ezEmail.jje11'/></th>
+							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.jje08'/>"></td>
 						</tr>
 					</table>
 				</div>
@@ -258,49 +256,49 @@
 						<table class="content" style="width:100%; border:none;">
 							<thead id="inputInfoHeader">
 								<tr>
-									<th style="text-align:center;"><b>입력정보</b></th>
+									<th style="text-align:center;"><b><spring:message code='ezEmail.jje13'/></b></th>
 								</tr>
 							</thead>
 							
 							<tbody id="inputInfoBody">
-								<tr style="cursor: pointer;" infoId="name" infoContent="사용자 이름">
-									<td>이름</td>
+								<tr style="cursor: pointer;" infoId="name" infoContent="<spring:message code='ezStatistics.t1068'/>">
+									<td><spring:message code='ezStatistics.t1068'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="email" infoContent="이메일">
-									<td>이메일</td>
+								<tr style="cursor: pointer;" infoId="email" infoContent="<spring:message code='ezPortal.t38'/>">
+									<td><spring:message code='ezPortal.t38'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="department" infoContent="부서">
-									<td>부서</td>
+								<tr style="cursor: pointer;" infoId="department" infoContent="<spring:message code='ezPortal.t5'/>">
+									<td><spring:message code='ezPortal.t5'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="position" infoContent="직책">
-									<td>직책</td>
+								<tr style="cursor: pointer;" infoId="position" infoContent="<spring:message code='ezPersonal.t175'/>">
+									<td><spring:message code='ezPersonal.t175'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="title" infoContent="직위">
-									<td>직위</td>
+								<tr style="cursor: pointer;" infoId="title" infoContent="<spring:message code='ezPersonal.t69'/>">
+									<td><spring:message code='ezPersonal.t69'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="birth" infoContent="생년월일">
-									<td>생년월일</td>
+								<tr style="cursor: pointer;" infoId="birth" infoContent="<spring:message code='ezOrgan.t00003'/>">
+									<td><spring:message code='ezOrgan.t00003'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="empNo" infoContent="사번">
-									<td>사번</td>
+								<tr style="cursor: pointer;" infoId="empNo" infoContent="<spring:message code='ezEmail.jje14'/>">
+									<td><spring:message code='ezEmail.jje14'/></td>
 								</tr>
-								<tr  style="cursor: pointer;"infoId="officePhone" infoContent="사내전화">
-									<td>사내전화</td>
+								<tr  style="cursor: pointer;"infoId="officePhone" infoContent="<spring:message code='main.t79'/>">
+									<td><spring:message code='main.t79'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="homePhone" infoContent="전화번호">
-									<td>전화번호</td>
+								<tr style="cursor: pointer;" infoId="homePhone" infoContent="<spring:message code='main.t82'/>">
+									<td><spring:message code='main.t82'/></td>
 								</tr >
-								<tr style="cursor: pointer;" infoId="mobile" infoContent="이동전화">
-									<td>이동전화</td>
+								<tr style="cursor: pointer;" infoId="mobile" infoContent="<spring:message code='main.t80'/>">
+									<td><spring:message code='main.t80'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="fax" infoContent="팩스번호">
-									<td>팩스번호</td>
+								<tr style="cursor: pointer;" infoId="fax" infoContent="<spring:message code='main.t83'/>">
+									<td><spring:message code='main.t83'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="zipCode" infoContent="우편번호">
-									<td>우편번호</td>
+								<tr style="cursor: pointer;" infoId="zipCode" infoContent="<spring:message code='ezOrgan.t286'/>">
+									<td><spring:message code='ezOrgan.t286'/></td>
 								</tr>
-								<tr style="cursor: pointer;" infoId="address" infoContent="주소">
-									<td>주소</td>
+								<tr style="cursor: pointer;" infoId="address" infoContent="<spring:message code='ezSchedule.t23'/>">
+									<td><spring:message code='ezSchedule.t23'/></td>
 								</tr>
 							</tbody>
 						</table>
@@ -312,14 +310,14 @@
 									<td id="infoIdTarget"></td>
 								</tr>
 								<tr>
-									<th style="text-align:center;"><b>내용</b></th>
+									<th style="text-align:center;"><b><spring:message code='ezEmail.t649'/></b></th>
 									<td id="infoContentTarget"></td>
 								</tr>
 								<tr>
 									<td align="center" colspan="2" height="40px" style="border: 0px;">
 										<div id="mainmenu" style="margin-top: 7px;">
 											<ul style="width: 100%;">
-												<li class="inputInfoBtn"><span onclick="applyInfo()">적 용 </span></li>
+												<li class="inputInfoBtn"><span onclick="applyInfo()"><spring:message code='ezApprovalG.t336'/></span></li>
 											</ul>
 										</div>
 									</td>
@@ -333,7 +331,7 @@
 				
 				<div class="btnpositionNew">
 		            <a class="imgbtn"><span onClick="saveSignTemplate()"><spring:message code='main.sp09'/></span></a>
-		            <a class="imgbtn"><span onClick="previewSignTemplate()">미리보기</span></a>
+		            <a class="imgbtn"><span onClick="previewSignTemplate()"><spring:message code='ezApproval.t350'/></span></a>
 			    </div>
 			</div>
 		</div>
