@@ -155,6 +155,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	/**
+	 * 사용자 메뉴 순서 변경
+	 */
+	@RequestMapping(value = "/ezNewPortal/updateUserMenuOrder.do")
+	@ResponseBody
+	public String updateUserMenuOrder(@RequestBody JSONObject jObj, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updateUserMenuOrder Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/menus/order/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "patch", jObj);
+		String status = resultBody.get("status").toString();
+		String result = "failure";
+
+		if (status.equals("ok")) {
+			result = "success";
+		}		
+		
+		logger.debug("updateUserMenuOrder End");
+		return result;
+	}
+	
+	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do")

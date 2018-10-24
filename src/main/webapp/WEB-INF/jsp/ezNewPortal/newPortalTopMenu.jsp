@@ -43,7 +43,7 @@
 			var str = '';
 			
 				str += '<ul class="util">';
-				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="직원조회"></span></li>';
+				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="관리자"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="직원조회"></span></li>';
 				str += '<li><span class="icon_topmenu util_set" id="util_set" title="환경설정"></span></li>';
 				str += '<li><span class="icon_topmenu util_help" id="util_help" title="도움말"></span></li>';
@@ -69,14 +69,14 @@
 			return str;	
 		}
 		
-		// 메뉴 확장 버튼에서 나오는 메뉴리스트 
+		// 확장메뉴 버튼에서 나오는 메뉴리스트 
 		var fullMenuToggle = function () {
 			var menuList = JSON.parse('${menuList}');
 			var str = '';
 
 			str += '<ul class="full_menu_toggleUL" id="toggleMenu">';
 			menuList.forEach(function (item, index) {
-				str += '<li data-order="'+item.menuId+'"><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ item.menuName +'</dd></dl></li>';
+				str += '<li id="'+item.menuId+'" data-order="'+item.menuId+'"><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ item.menuName +'</dd></dl></li>';
 			});
 			str += '</ul>';
 			
@@ -148,21 +148,60 @@
 		var setUtilEvent = function () {
 			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
 			if('${roleInfo}' === 'admin') {
-				setEvent('util_admin', '/ezPortal/environmentMain.do', 'main' ,'');	
+				setEvent('util_admin', '/admin/main.do', 'main' ,'');	
 			}
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
-			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');			
+			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
+			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');	
 		}
 		
 		// 확장메뉴 순서 변경 후 저장
 		var setTopMenuSaveEvent = function () {
+			
+			if(!confirm('변경된 순서를 저장하시겠습니까?')) {
+				return;
+			}
+			
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
 			var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
 			
+			var orderObj = [];
 			sortedMenu.forEach(function (item, index) {
-				console.log('order', item.dataset.order);
+				//var temp = {};
+				//temp[(index*1) + 1] = item.id;
+				orderObj[index] = item.id; 
 			});
+			
+			console.log('orderObj: ', orderObj);
+			
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function () {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					console.log(xhr.status);
+					console.log(xhr.responseText);
+				} else {
+					console.error(xhr.responseText);
+				}
+			};
+			xhr.open('PATCH', '/ezNewPortal/updateUserMenuOrder.do');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify({data: orderObj}));			
+		}
+		
+		// 확장버튼 UI 이벤트 함수
+		var subMenuClickEvent = function (type) {
+			var topMenuFull = document.getElementById('topMenuFull');
+			var topFrame = parent.document.getElementById('topFrame');
+			var bodyTag = document.getElementsByTagName('Body')[0];			
+			if(type === 'on') {
+				topMenuFull.className = 'full_nav on';
+				topFrame.style.position = 'relative';
+				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';				
+			} else if (type === 'off'){
+				topMenuFull.className = 'full_nav off';
+				topFrame.style.position = '';				
+			}
 		}
 		
 		// 메인메뉴 이벤트 모아둔 곳
@@ -180,23 +219,27 @@
 			
 			// 확장 버튼 이벤트
 			var topMenuFull = document.getElementById('topMenuFull');
-			var topFrame = parent.document.getElementById('topFrame');
-			var bodyTag = document.getElementsByTagName('Body')[0];
-			
 			topMenuFull.addEventListener('click', function () {
 				if (topMenuFull.className.indexOf('on') > -1) {
-					topMenuFull.className = 'full_nav off';
-					topFrame.style.position = '';
+					subMenuClickEvent('off');
 				} else if (topMenuFull.className.indexOf('off') > -1) {
-					topMenuFull.className = 'full_nav on';
-					topFrame.style.position = 'relative';
-					bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+					subMenuClickEvent('on');
 				}
 			});
 			
 			// 드래그앤드롭
 			$('#toggleMenu').sortable();
 			$('#toggleMenu').disableSelection();
+			
+			// 확장메뉴 링크 이벤트
+			var toggleMenu = document.getElementById('toggleMenu').children;
+			toggleMenu.forEach(function (item, index) {
+				var menuUrl = newPortalTopMenu.menuList['menu_' + (index + 1)].menuUrl;
+				item.addEventListener('click', function () {
+					window.open(menuUrl, 'main', '');
+					subMenuClickEvent('off');
+				});
+			});
 			
 
 			// 확장메뉴에 추가된 버튼 이벤트

@@ -59,6 +59,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<MenuInfoVO> getCompanyMenuList(Map<String, Object> map) throws Exception {
 		return (List<MenuInfoVO>) list("ezNewPortal.getCompanyMenuList", map);
 	}	
+	
+	// 사용자 메뉴 순서 변경
+	public void updateUserMenuOrder(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateUserMenuOrder", map);
+	}
 	/* 박종균 끝 */
 	
 	/**

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +142,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("langType", langType);
 		return ezNewPortalDAO.getCompanyMenuList(map);
+	}
+	
+	// 사용자 메뉴 순서 변경
+	@SuppressWarnings("unchecked")
+	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception {
+		LOGGER.debug("[Serivce] updateUserMenuOrder Started");
+
+		List<String> list = (ArrayList<String>) jObj.get("data");
+		for(int i=0; i<list.size(); i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyId", companyId);
+			map.put("tenantId", tenantId);
+			map.put("userId", userId);			
+			map.put("menuId", list.get(i));
+			map.put("order", i+1);
+			
+			LOGGER.debug("map.toString() : "  + map.toString());
+			ezNewPortalDAO.updateUserMenuOrder(map);
+		}
+		
+		LOGGER.debug("[Serivce] updateUserMenuOrder Ended");
 	}
 	
 	@Override
