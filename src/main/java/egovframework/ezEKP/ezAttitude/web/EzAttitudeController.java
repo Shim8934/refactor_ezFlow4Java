@@ -136,6 +136,26 @@ public class EzAttitudeController {
 			return "cmm/error/accessDenied";
 		}
 		
+		//근태유형
+		url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", "1");
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray typeList = new JSONArray();
+		
+		if(status.equals("ok")){
+			typeList = (JSONArray) resultBody.get("data");
+		}
+		
+		model.addAttribute("typeList", typeList);
 		model.addAttribute("deptList", deptList);		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());

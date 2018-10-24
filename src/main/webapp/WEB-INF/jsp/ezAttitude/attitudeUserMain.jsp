@@ -1518,13 +1518,9 @@
 			*/
 			function authBtn() {
 	        	if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null) {
-	        		$("#btnAbsentedList").css("display","none");
-	        		$("#btnExcelDown").css("display","none");
-	        		$("#divisionBar").css("display","none");
+	        		$("#mainmenu").css("display","none");
 	        	} else {
-	        		$("#btnAbsentedList").css("display","");
-	        		$("#btnExcelDown").css("display","");
-	        		$("#divisionBar").css("display","");
+	        		$("#mainmenu").css("display","");
 	        	}
 			}
 			
