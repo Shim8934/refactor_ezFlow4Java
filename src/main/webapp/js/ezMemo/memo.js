@@ -10,6 +10,7 @@ function createMemo(memo, flag) {
 	
 	var dl = document.createElement("dl");
 	dl.setAttribute("class", "memoTit");
+	dl.setAttribute("style", "cursor:move");
 	
 	if (flag != 'layer') {
 		

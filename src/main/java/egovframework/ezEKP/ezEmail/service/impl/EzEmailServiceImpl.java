@@ -2094,7 +2094,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
 				JSONArray array = (JSONArray)responseObj.get("result");
 				
-				if (array != null && !array.equals("")) {
+				if (array != null) {
 					JSONObject obj = null;
 					while (isIncluded.equals("NO")) {
 						
@@ -2108,7 +2108,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 									if (resultCn.equals(standardCn)) {
 										isIncluded = "YES";
 										break;
-									} else if (!resultCn.equals(standardCn)) {
+									} else {
 										isIncluded = checkDistributionIsIncluded(standardCn, resultCn, tenantId);
 									}
 								} 
