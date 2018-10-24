@@ -994,11 +994,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	<select id="ezNewPortal.getCompanyThemes" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
-				B.theme_id AS themeid,
+			    B.theme_id AS themeid,
 				B.theme_name AS themename,
 			    B.theme_content AS themecontent,
-			    A.theme_used AS themeused,
-			    A.theme_default AS themedefault
+			    CASE WHEN A.theme_used = 'Y' THEN 1 ELSE 0 END AS themeused,
+			    CASE WHEN A.theme_default = 'Y' THEN 1 ELSE 0 END AS themedefault
 			FROM
 				TBL_PORTAL_THEME_COMP A
 			JOIN
