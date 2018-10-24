@@ -28,7 +28,11 @@
 			function Save(){
 				var name1 = $.trim($("#txtNewGroupName").val());
 				var name2 = $.trim($("#txtNewGroupName2").val());
-				var isAllGroupBoard = document.getElementById("allGroupBoard").checked;
+				
+				if (document.getElementById("allGroupBoard") != null) {
+					var isAllGroupBoard = document.getElementById("allGroupBoard").checked;
+				}
+				
 				var guBun = 0;
 				
 				if (name1 == ""){
@@ -43,7 +47,7 @@
 					alert("<spring:message code='ezBoard.t120'/>");
 					return;
 				}
-				if (isAllGroupBoard == true) {
+				if (isAllGroupBoard != null && isAllGroupBoard == true) {
 					guBun = 99;
 				}
 				
