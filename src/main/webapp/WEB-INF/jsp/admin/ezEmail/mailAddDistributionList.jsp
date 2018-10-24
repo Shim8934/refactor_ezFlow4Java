@@ -1109,7 +1109,7 @@
 		                    pparsingXML2 = "";
 		                    pparsingXML = "";
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
 		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1158,7 +1158,7 @@
 		                            pparsingXML2 = "";
 		                            pparsingXML = "";
 		                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 		                            pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
 		                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1209,7 +1209,7 @@
 		                    	pparsingXML2 = "";
 			                    pparsingXML = "";
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 			                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
 			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1265,7 +1265,7 @@
 		                    	pparsingXML2 = "";
 			                    pparsingXML = "";
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 			                    pparsingXML = pparsingXML + "<DATA4>DISTRIBUTION</DATA4>";
 			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " +MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1346,7 +1346,7 @@
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
-                                pparsingXML = pparsingXML + "<DATA2>" + pAddressType + "</DATA2>";
+                                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(pAddressType) + "</DATA2>";
 	                            
 	                            if (pAddressType == "mailgroup") {
 		                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(pAddressID) + "]]></DATA3>";
@@ -1355,7 +1355,7 @@
 	                            }
 	                            
 	                            pparsingXML = pparsingXML + "<DATA4>ADDRESS</DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1718,10 +1718,10 @@
 	                        
 	                        if (!IsInsert) {
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(rtnValue["name"][i]) + "</DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + rtnValue["email"][i] + "</DATA2>";
+	                            pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(rtnValue["email"][i]) + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4></DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(rtnValue["name"][i]) + " &lt;" + rtnValue["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(rtnValue["name"][i]) + " &lt;" + MakeXMLString(rtnValue["email"][i]) + "&gt;" + "</VALUE></CELL></ROW>";
 	                        }
 	                    }
 	                    
@@ -1743,63 +1743,53 @@
 	        function dlmember_click_Complete(count) {
 	            DivPopUpHidden();
 	            try {
-	                if (m_selectedWindow.id == "ListViewMsgTo") {
-	                    var listviewTo = new ListView();
-	                    listviewTo.LoadFromID("MsgToList");
-	                    var InitTrTo = listviewTo.GetDataRows();
-	                    var pparsingXML = "";
-	                    var pparsingXML2 = "";
-	                    var aa = 0;
-	                    
-	                    for (var i = 0; i < count; i++) {
-	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
-	                       
-	                        if (!IsInsert) {
-	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4></DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + " &lt;" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
-	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                            var Resultxml = loadXMLString(pparsingXML2);
-	                            
-	                            pparsingXML2 = "";
-	                            pparsingXML = "";
-	                            
-	                            var listview = new ListView();
-	                            listview.LoadFromID("MsgToList");
-	                            
-	                            var MaxID = 0;
-                                var InitTr = listview.GetDataRows();
-                                var MaxCntNum = 0;
-                                
-                                for (var j = 0  ; j < InitTr.length  ; j++) {
-                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                                    if (MaxID < curnum) {
-                                        MaxID = curnum;
-                                        MaxCntNum = j;
-                                    }
+                    var pparsingXML = "";
+                    var pparsingXML2 = "";
+                    
+                    for (var i = 0; i < count; i++) {
+                    	var strEmail = mail_select_dlmember_cross_dialogArguments[0]["email"][i];
+                    	var strName = mail_select_dlmember_cross_dialogArguments[0]["name"][i];
+                    	
+                        var listview = new ListView();
+                        listview.LoadFromID("MsgToList");
+                        var bFlag = listview.ExistRow("data1", strName);
+                        
+                        if (!bFlag) {
+                            pparsingXML = "";
+                            pparsingXML2 = "";
+                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strEmail) + "</DATA1>";
+                            pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
+                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
+                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
+                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                            Resultxml = loadXMLString(pparsingXML2);
+                            
+                            var MaxID = 0;
+                            var getlistview = new ListView();
+                            getlistview.LoadFromID("MsgToList");
+                            var InitTr = getlistview.GetDataRows();
+                            
+                            for (var j = 0  ; j < InitTr.length  ; j++) {
+                                var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+                                if (MaxID < curnum) {
+                                    MaxID = curnum;
                                 }
-
-                                var objTr = listview.AddRow(InitTr.length);
-                                if (MaxCntNum != 0) {
-                                    MaxCntNum = MaxCntNum + 1;
-                                }
-                                
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-                                listview.AddDataRow(objTr, Resultxml);
-                                document.getElementById("MsgToList").className = "receiver_list";
-                                var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
-                              
-                                for (var y = 0; y < _tdlength; y++) {
-                                    document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.textOverflow = "";
-                                    document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.overflow = "";
-                                }
-
                             }
-                        }
-	                }
+
+                            var objTr = getlistview.AddRow(InitTr.length);
+                            SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxID).substring(0, getlistview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                            getlistview.AddDataRow(objTr, Resultxml);
+                            
+	                        document.getElementById("MsgToList").className = "receiver_list";
+                            var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
+                            
+                            for (var y = 0; y < _tdlength; y++) {
+                                document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.textOverflow = "";
+                                document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.overflow = "";
+                            }
+                    	}
+					}
 	            } catch (e) { }
 	        }
 	        
@@ -1832,7 +1822,7 @@
 	                    } else {
 	                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+	                        pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strEmail) + "</DATA2>";
 	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
 	                        pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strDeptNM) + "</VALUE></CELL></ROW>";
@@ -1840,7 +1830,6 @@
 	                    }
 	
 	                    Resultxml = loadXMLString(pparsingXML);
-	                    
 	                    
 	                    var MaxID = 0;
 	                    var InitTr = listview.GetDataRows();
@@ -2315,7 +2304,7 @@
 	                    var listview = new ListView();
 	                    listview.LoadFromID("MsgToList");
 	                    
-	                    var bFlag = listview.ExistRow("DATA2", rtnValue["email"][i]);
+	                    var bFlag = listview.ExistRow("data1", rtnValue["email"][i]);
 	                    targetList = null;
 	                    
 	                    if (!bFlag) {
@@ -2323,9 +2312,9 @@
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(rtnValue["name"][i]) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + rtnValue["email"][i] + "</DATA2>";
+	                        pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(rtnValue["email"][i]) + "</DATA2>";
 	                        pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(rtnValue["name"][i]) + " &lt;" + rtnValue["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
+	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(rtnValue["name"][i]) + " &lt;" + MakeXMLString(rtnValue["email"][i]) + "&gt;" + "</VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	                        
@@ -2361,41 +2350,46 @@
 	            DivPopUpHidden();
 	            try {
 	                for (var i = 0; i < count; i++) {
+	                	var strEmail = address_select_groupemaillist_dialogArguments[0]["email"][i];
+	                	var strName = address_select_groupemaillist_dialogArguments[0]["name"][i];
+	                	
 	                    var listview = new ListView();
 	                    listview.LoadFromID("MsgToList");
-	                    var bFlag = listview.ExistRow("DATA2", address_select_groupemaillist_dialogArguments[0]["email"][i]);
-	                    targetList = null;
+	                    var bFlag = listview.ExistRow("data1", strName);
 	                    
 	                    if (!bFlag) {
 	                        pparsingXML2 = "";
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(address_select_groupemaillist_dialogArguments[0]["name"][i]) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + address_select_groupemaillist_dialogArguments[0]["email"][i] + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(address_select_groupemaillist_dialogArguments[0]["name"][i]) + " &lt;" + address_select_groupemaillist_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
+	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strEmail) + "</DATA1>";
+	                        pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
+	                        pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
+                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	                        
 	                        var MaxID = 0;
-	                        var InitTr = listview.GetDataRows();
+	                        var getlistview = new ListView();
+	                        getlistview.LoadFromID("MsgToList");
+	                        var InitTr = getlistview.GetDataRows();
 	                        
 	                        for (var j = 0  ; j < InitTr.length  ; j++) {
-	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                            if (MaxID < curnum)
+	                            var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+	                            if (MaxID < curnum) {
 	                                MaxID = curnum;
+	                            }
 	                        }
 	                        
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                        listview.AddDataRow(objTr, Resultxml);
+	                        var objTr = getlistview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxID).substring(0, getlistview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        getlistview.AddDataRow(objTr, Resultxml);
 	                        
-	                        document.getElementById(listid).className = "receiver_list";
-	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                        document.getElementById("MsgToList").className = "receiver_list";
+	                        var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
 	                        
 	                        for (var y = 0; y < _tdlength; y++) {
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+	                            document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.textOverflow = "";
+	                            document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.overflow = "";
 	                        }
 	                    
 	                    }
@@ -2435,10 +2429,10 @@
                 strEmail = document.getElementById("emailaddr").value;
                 
                 pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strEmail + "</DATA1>";
+                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strEmail) + "</DATA1>";
                 pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
                 pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
                 pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                 Resultxml = loadXMLString(pparsingXML2);
                 
