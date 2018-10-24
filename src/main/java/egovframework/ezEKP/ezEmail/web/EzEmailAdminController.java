@@ -1210,8 +1210,7 @@ public class EzEmailAdminController {
 			int tenantId = auth.getTenantId();
 			logger.debug("userId=" + userId + ",compId=" + compId + ",tenantId=" + tenantId);
 			
-			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxList(auth.getPrimary(), compId, auth.getTenantId());
-			
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxList(compId, auth.getTenantId());
 			logger.debug("sharedMailboxList size=" + sharedMailboxList.size());
 			
 			StringBuilder sb = new StringBuilder();
@@ -1267,7 +1266,7 @@ public class EzEmailAdminController {
 			int tenantId = auth.getTenantId();
 			logger.debug("userId=" + userId + ",shareId=" + shareId + ",tenantId=" + tenantId);
 			
-			MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(auth.getPrimary(), shareId, auth.getTenantId());
+			MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, auth.getTenantId());
 			
 			model.addAttribute("sharedMailboxInfo", sharedMailboxInfo);
 		} catch (Exception e) {

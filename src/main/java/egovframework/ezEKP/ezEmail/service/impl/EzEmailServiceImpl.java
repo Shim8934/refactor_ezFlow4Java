@@ -2227,9 +2227,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<Map<String, String>> getUserSharedMailboxList(String userId, String primary, int tenantId) throws Exception {
+	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception {
 		logger.debug("getUserSharedMailboxList started.");
-		logger.debug("userId=" + userId + ",primary=" + primary + ",tenantId=" + tenantId);
+		logger.debug("userId=" + userId + ",tenantId=" + tenantId);
 		
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
@@ -2259,13 +2259,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			map.put("shareId", (String)obj.get("shareId"));
         			map.put("deletePermission", (String)obj.get("deletePermission"));
         			map.put("sendPermission", (String)obj.get("sendPermission"));
-        			
-        			if (primary.equals("1")) {
-        				map.put("shareName", (String)obj.get("shareName"));
-        			} else {
-        				map.put("shareName", (String)obj.get("shareName2"));
-        			}
-        			
+    				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
         			
@@ -2307,9 +2301,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<MailSharedMailboxVO> getSharedMailboxList(String primary, String compId, int tenantId) throws Exception {
+	public List<MailSharedMailboxVO> getSharedMailboxList(String compId, int tenantId) throws Exception {
 		logger.debug("getSharedMailboxList started.");
-		logger.debug("primary=" + primary + ",compId=" + compId + ",tenantId=" + tenantId);
+		logger.debug("compId=" + compId + ",tenantId=" + tenantId);
 		
 		List<MailSharedMailboxVO> list = new ArrayList<MailSharedMailboxVO>();
 		
@@ -2337,14 +2331,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			
         			vo.setShareId((String)sharedMailbox.get("shareId"));
         			vo.setShareMail((String)sharedMailbox.get("shareMail"));
-        			vo.setShareName1((String)sharedMailbox.get("shareName"));
-        			vo.setShareName2((String)sharedMailbox.get("shareName2"));
-        			
-        			if (primary.equals("1")) {
-        				vo.setShareName((String)sharedMailbox.get("shareName"));
-        			} else {
-        				vo.setShareName((String)sharedMailbox.get("shareName2"));
-        			}
+        			vo.setShareName((String)sharedMailbox.get("shareName"));
         			
         			list.add(vo);
         		}
@@ -2356,9 +2343,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public MailSharedMailboxVO getSharedMailboxInfo(String primary, String shareId, int tenantId) throws Exception {
+	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception {
 		logger.debug("getSharedMailboxInfo started.");
-		logger.debug("primary=" + primary + ",shareId=" + shareId + ",tenantId=" + tenantId);
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
 		
 		MailSharedMailboxVO sharedMailboxInfo = null;
 		
@@ -2382,14 +2369,9 @@ public class EzEmailServiceImpl implements EzEmailService {
         		
         		sharedMailboxInfo.setShareId((String)result.get("shareId"));
         		sharedMailboxInfo.setShareMail((String)result.get("shareMail"));
+        		sharedMailboxInfo.setShareName((String)result.get("shareName"));
         		sharedMailboxInfo.setShareName1((String)result.get("shareName"));
         		sharedMailboxInfo.setShareName2((String)result.get("shareName2"));
-        		
-        		if (primary.equals("1")) {
-        			sharedMailboxInfo.setShareName((String)result.get("shareName"));
-    			} else {
-    				sharedMailboxInfo.setShareName((String)result.get("shareName2"));
-    			}
         		
         		JSONArray userArray = (JSONArray)result.get("userList");
         		List<MailSharedMailboxUserVO> userList = sharedMailboxInfo.getUserList();
@@ -2400,20 +2382,13 @@ public class EzEmailServiceImpl implements EzEmailService {
         			userVO = new MailSharedMailboxUserVO();
         			
         			userVO.setUserId((String)user.get("userId"));
+        			userVO.setUserName((String)user.get("userName"));
         			userVO.setDeptId((String)user.get("deptId"));
+        			userVO.setDeptName((String)user.get("deptName"));
         			userVO.setCompId((String)user.get("compId"));
+        			userVO.setCompName((String)user.get("compName"));
         			userVO.setDeletePermission((String)user.get("deletePermission"));
         			userVO.setSendPermission((String)user.get("sendPermission"));
-        			
-        			if (primary.equals("1")) {
-        				userVO.setUserName((String)user.get("userName"));
-        				userVO.setDeptName((String)user.get("deptName"));
-        				userVO.setCompName((String)user.get("compName"));
-        			} else {
-        				userVO.setUserName((String)user.get("userName2"));
-        				userVO.setDeptName((String)user.get("deptName2"));
-        				userVO.setCompName((String)user.get("compName2"));
-        			}
         			
         			userList.add(userVO);
         		}

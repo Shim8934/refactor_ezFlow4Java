@@ -220,7 +220,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		}
 		
-		List<Map<String, String>> shareInfoList = ezEmailService.getUserSharedMailboxList(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
+		List<Map<String, String>> shareInfoList = ezEmailService.getUserSharedMailboxList(loginInfo.getId(), loginInfo.getTenantId());
 		
 		Map<String, String> map = ezAddressService.getTopFolderSubCount(loginInfo.getTenantId(), loginInfo.getId(), loginInfo.getDeptID(), loginInfo.getCompanyID());
 		
