@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -703,23 +706,28 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.getThemeId() + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public void updateThemeInfo(JSONObject themeInfo, JSONArray frameInfos, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.get("themeId") + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
-		map = commonUtil.transBean2Map(themeInfo);
+		map = new ObjectMapper().readValue(themeInfo.toJSONString(), Map.class);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		ezNewPortalDAO.updateThemeInfo(map);
 		
-		for (FrameInfoVO frameInfo : frameInfos) {
-			map = commonUtil.transBean2Map(frameInfo);
-			map.put("companyId", companyId);
-			map.put("tenantId", tenantId);
-			
-			ezNewPortalDAO.updateFrameInfo(map);
+		for (Object item : frameInfos) {
+			if (item instanceof JSONObject) {
+				JSONObject frameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(frameInfo.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateFrameInfo(map);
+			}
 		}
 		
 		LOGGER.debug("updateThemeInfo ended.");
@@ -753,6 +761,31 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getMenuInfo ended.");
 		
 		return vo;
+	}
+	
+	@Override
+	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuId", menuId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+//		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
+//		map.put("accessType", "Y","N","TOTAL")
+		map.put("accessType", "Y");
+		List<MenuAuthVO> menuAuthsY = ezNewPortalDAO.getMenuAuth(map);
+		
+		map.put("accessType", "N");		
+		List<MenuAuthVO> menuAuthsN = ezNewPortalDAO.getMenuAuth(map);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("menuAuthsY", menuAuthsY);
+		resultMap.put("menuAuthsY", menuAuthsN);
+		
+		LOGGER.debug("getMenuAuth ended.");
+		
+		return resultMap;
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezNewPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -77,12 +78,16 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 회사별 테마정보수정(프레임 포함)
 	 */
-	public void updateThemeInfo(ThemeInfoVO themeInfo, List<FrameInfoVO> frameInfos, String companyId, int tenantId) throws Exception;
+	public void updateThemeInfo(JSONObject themeInfo, JSONArray frameInfos, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 회사별 메뉴목록조회
 	 */
 	public List<MenuInfoVO> getMenus(String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 회사별 메뉴상세정보조회
+	 */
 	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception;
+	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

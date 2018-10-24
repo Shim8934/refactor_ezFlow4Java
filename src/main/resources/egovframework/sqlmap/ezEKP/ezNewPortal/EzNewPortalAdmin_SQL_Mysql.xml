@@ -9,8 +9,8 @@
 				B.theme_id AS themeid,
 				B.theme_name AS themename,
 			    B.theme_content AS themecontent,
-			    A.theme_used AS themeused,
-			    A.theme_default AS themedefault
+			    CASE WHEN A.theme_used = 'Y' THEN 1 ELSE 0 END AS themeused,
+			    CASE WHEN A.theme_default = 'Y' THEN 1 ELSE 0 END AS themedefault
 			FROM
 				TBL_PORTAL_THEME_COMP A
 			JOIN
@@ -29,11 +29,11 @@
 	<select id="ezNewPortal.getFrames" parameterClass="Map" resultClass="FrameInfoVO">
 		<![CDATA[
 			SELECT
-				B.theme_id AS theme_id,
-			    B.frame_id AS framid,
+				B.theme_id AS themeid,
+			    B.frame_id AS frameid,
 				B.frame_name AS framename,
-			    A.frame_used AS frameused,
-			    A.frame_default AS framedefault
+				CASE WHEN A.frame_used = 'Y' THEN 1 ELSE 0 END AS frameused,
+			    CASE WHEN A.frame_default = 'Y' THEN 1 ELSE 0 END AS framedefault
 			FROM
 				TBL_PORTAL_FRAME_COMP A
 			JOIN
@@ -57,7 +57,7 @@
 			SELECT
 				A.menu_id AS menuid,
 				C.menu_name AS menuname,
-				A.menu_used AS menuused,
+				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
 				B.icon_url AS iconurl,
@@ -95,7 +95,7 @@
 				A.menu_id AS menuid,
 				B.menu_type AS menutype,
 				C.menu_name AS menuname,
-				A.menu_used AS menuused,
+				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
 				B.icon_url AS iconurl,
@@ -123,6 +123,28 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getMenuAuth" parameterClass="Map" resultClass="MenuAuthVO">
+		<![CDATA[
+			SELECT
+				menu_id AS menuid,
+				user_id AS userid,
+				user_type AS usertype,
+				CASE WHEN access_yn = 'Y' THEN 1 ELSE 0 END AS accessyn
+			FROM
+				TBL_PORTAL_MENU_AUTH
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyId#
+			AND
+				menuid = #menuid#
+			AND
+				access_yn = #accessType#
+			ORDER BY
+				user_type
 		]]>
 	</select>
 	
