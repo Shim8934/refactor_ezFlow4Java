@@ -997,10 +997,10 @@
 											TBL_USERMASTER.tenant_id = #tenantId#
 										AND
 											TBL_USERMASTER.cn = #userId#)
-			<isEqual prepend="AND" property="listAuthType" compareValue="m">
+			<isEqual prepend="AND" property="listAuthType" compareValue="M">
 				TBL_ATTITUDE_AUTH.auth_type = 'M'
 			</isEqual>
-			<isEqual prepend="AND" property="listAuthType" compareValue="r">
+			<isEqual prepend="AND" property="listAuthType" compareValue="R">
 				TBL_ATTITUDE_AUTH.auth_type = 'R'
 			</isEqual>
 			UNION
@@ -1059,10 +1059,10 @@
 											TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 										AND
 											TBL_USERMASTER.cn = #userId#)
-			<isEqual prepend="AND" property="listAuthType" compareValue="m">
+			<isEqual prepend="AND" property="listAuthType" compareValue="M">
 				TBL_ATTITUDE_AUTH.auth_type = 'M'
 			</isEqual>
-			<isEqual prepend="AND" property="listAuthType" compareValue="r">
+			<isEqual prepend="AND" property="listAuthType" compareValue="R">
 				TBL_ATTITUDE_AUTH.auth_type = 'R'
 			</isEqual>
 			UNION

@@ -568,6 +568,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String flag = request.getParameter("flag");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String docState = request.getParameter("docState");
+		//2018-10-23 이효진 대리결제 지정된 사람 결재 시 메일발송부분 권한체크때 현재결재선진행되고 다음결재선의 ID로 자꾸 비교되서
+		String proxyUserFlag = request.getParameter("proxyUserFlag");
 		
 		//2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
 		String publicityYN = request.getParameter("publicityYN");
@@ -611,7 +613,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
 							// APRSTATE 002(진행) OR 005(보류)
 							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("000")) {
-								String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+								String curAprUserID = null;
+								
+								if (proxyUserFlag == null) {
+									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+								} else {
+									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
+								}
 								
 								for (int j = 0; j < proxyUserArray.length; j++) {
 									if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
@@ -5911,7 +5919,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String contType = "END";
 		String dirPath = realPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator;
-		String propList = "extensionAttribute4";
+		String propList = "extensionAttribute4;extensionAttribute5";
 		String contID = request.getParameter("contID");
 		String sQuery = request.getParameter("sQuery");
 		String type = request.getParameter("type");
@@ -5922,7 +5930,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
 		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		String buJaeInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		
+		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("endAprType", endAprType);
 		model.addAttribute("endAprState", endAprState);
 		model.addAttribute("itemID", itemID);

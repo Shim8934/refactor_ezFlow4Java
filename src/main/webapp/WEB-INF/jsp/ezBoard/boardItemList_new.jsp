@@ -806,7 +806,7 @@
 		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 		                        <dl class="mail_item">
 		                            <dt><spring:message code="ezBoard.t425"/></dt>
-		                            <dd><span id="PreW_MailReceiver" style="display: inline-block"></span>
+		                            <dd style="padding-left:48px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
 		                            </dd>
 		                        </dl>
 		                    </div>

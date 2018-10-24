@@ -745,7 +745,17 @@
 		                CurPage = CurPage - 1;
 		            }
 		        }
-		        if (CurPage == 0) CurPage = 1;
+		        if (CurPage == 0) {
+		        	CurPage = 1;
+		        }
+		        
+		        /* 2018-10-23 홍승비 - 게시물을 삭제한 경우, 미리보기가 열려있으면 새로고침하도록 수정 (썸네일게시판) */
+                if ((document.getElementById("PreviewRayerH").style.display != "none" && document.getElementById("PreviewRayerH").style.display != "") ||
+                		(document.getElementById("PreviewRayerW").style.display != "none" && document.getElementById("PreviewRayerW").style.display != "")) {
+		        	refresh_onclick();
+		        	return;
+				}
+		        
 		        getBoardList();
 		    }
 		
@@ -1278,7 +1288,7 @@
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">
 	                            <dt><spring:message code='ezBoard.t223'/>:</dt>
-	                            <dd><span id="PreW_MailReceiver" style="display: inline-block"></span>
+	                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
 	                            </dd>
 	                        </dl>
 	                    </div>

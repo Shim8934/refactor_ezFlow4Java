@@ -80,11 +80,6 @@ public class EzAttitudeController {
 	@Autowired
 	private EzCommonService ezCommonService;
 	
-	//내꺼
-	
-	/////////////////////////////////////////
-	//니꺼
-	
 	/**
 	 * 사용자 좌측메뉴
 	 * 근태정보관리
@@ -141,6 +136,26 @@ public class EzAttitudeController {
 			return "cmm/error/accessDenied";
 		}
 		
+		//근태유형
+		url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", "1");
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray typeList = new JSONArray();
+		
+		if(status.equals("ok")){
+			typeList = (JSONArray) resultBody.get("data");
+		}
+		
+		model.addAttribute("typeList", typeList);
 		model.addAttribute("deptList", deptList);		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
@@ -2286,7 +2301,7 @@ public class EzAttitudeController {
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/check"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/check";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
