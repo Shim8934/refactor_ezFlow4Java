@@ -1216,8 +1216,15 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			int tenantId = userInfo.getTenantId();
-
+			
+			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId());
+			
+			JSONObject data = new JSONObject();
+			
+			data.put("접근", "");
+			data.put("불가", "");
+			
+			result.put("data", data);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {

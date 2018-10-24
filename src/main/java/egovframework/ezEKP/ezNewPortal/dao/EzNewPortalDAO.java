@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
@@ -213,6 +214,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public MenuInfoVO getMenuInfo(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getMenuInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuAuthVO> getMenuAuth(Map<String, Object> map) throws Exception {
+		return (List<MenuAuthVO>) list("ezNewPortal.getMenuAuth", map);
 	}
 	
 	public void updateThemeInfo(Map<String, Object> map) throws Exception {
