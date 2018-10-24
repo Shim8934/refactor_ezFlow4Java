@@ -246,8 +246,8 @@
 		            
 		            //2018-10-18 환율 링크 추가
 		            case "exchangewrite":
-		                var wWeight = "800";
-		                var wHeight = "800";
+		                var wWeight = "1200";
+		                var wHeight = "600";
 
 		                var heigth = window.screen.availHeight;
 		                var width = window.screen.availWidth;
