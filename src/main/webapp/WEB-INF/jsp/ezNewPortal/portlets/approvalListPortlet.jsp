@@ -116,6 +116,14 @@
 		        getApprovalList(type);
 		    }
 			
+			var Appmore_btnClick = function() {
+				if (document.querySelector("div.layDIV.approval dl.portlet_tab.sortablePortlet dt.on").id == "doingTab") {
+					window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+				} else {
+					window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+				}
+		    }
+			
 			var dataAssembler = function(object) {
 				var str = "";
 				
