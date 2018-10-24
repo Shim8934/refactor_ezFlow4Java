@@ -9,19 +9,35 @@
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
         <title><spring:message code='ezPortal.pjg11'/></title>
-        <table>
-             <tr>
-               <th>조회결과&nbsp</th>
-               <th>전신환 받으실때&nbsp</th>
-               <th>전신환 보내실때&nbsp</th>
-               <th>10일환가료율 &nbsp</th>
-               <th>통화코드&nbsp</th>
-               <th>장부가격&nbsp</th>
-               <th>매매기준율&nbsp</th>
-               <th>국가/통화명&nbsp</th>
-               <th>서울외국환중계장부가격&nbsp</th>
-               <th>년환가료율&nbsp</th>
-               <th>서울외국환중계매매기준율 &nbsp</th>
+	</head>
+	<style>
+	   .popup{background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; padding: 5px 10px 10px; margin: 0;}
+	   #exchangeList{table-layout:fixed; border:1px solid #eaeaea; font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+	   #exchangeList #title{background-color: #f8f8fa;}
+	   #menu {display: block; padding-left: 0px; height: 28px; margin-bottom: 15px; margin-top: 3px; vertical-align: middle; padding-bottom:10px;}
+	   #close{position: absolute; right: 10px; top: 8px; height: 35px; z-index: 1000;}
+	   #close ul {margin: 0; padding: 0; list-style:none;}
+	   #close ul li span{display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+	   #exchagneList tr, th, td{border-bottom: 1px solid #f6f6f6; text-align:center;}
+	   div {display: block;}
+	</style>
+	<body class="popup" style="overflow:hidden;">
+	<div id="normalScreen">
+	<div id="menu" style="width:730px"></div>
+	<div id="close"><ul><li><span onclick="window.close()"></span></li></ul></div>
+	<table id="exchangeList" style="width:100%; min-width:400px;">
+             <tr id="title">
+               <th>조회결과</th>
+               <th>전신환 받을때</th>
+               <th>전신환 보낼때</th>
+               <th>10일환가료율 </th>
+               <th>통화코드</th>
+               <th>장부가격</th>
+               <th>매매기준율</th>
+               <th>국가/통화명</th>
+               <th>서울외국환중계장부가격</th>
+               <th>년환가료율</th>
+               <th>서울외국환중계매매기준율 </th>
              </tr>
         <c:forEach var="i" begin="0" end="30">
         <tr>
@@ -31,7 +47,6 @@
         </tr>
         </c:forEach>
         </table>
-	</head>
-	<body>
+        </div>
 	</body>
 </html>
