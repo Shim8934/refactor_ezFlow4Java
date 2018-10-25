@@ -2213,9 +2213,6 @@ logger.debug("map.toString()" + map.toString());
 			/* 2018-08-17 장진혁 메인 대메뉴 가져오기 */
 			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
 				sb.append("<li id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-				sb.append(", \"" + "main" + "\"");
-
-				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 				
 				if (menuitemLinkLocation != null && !menuitemLinkLocation.trim().equals("")) {
 					sb.append(", \"" + menuitemLinkLocation + "\"");
