@@ -677,11 +677,13 @@
 				)
 		]]>
 			
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				A.type_id = #searchAttitudeType#
-			]]>
-		</isNotEqual>
+		<isNotEmpty property="searchAttitudeType">	
+			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+				<![CDATA[
+					A.type_id = #searchAttitudeType#
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			C.department = #searchDeptId#
 		</isNotEmpty>
@@ -752,12 +754,13 @@
 					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
 				)
 		]]>
-			
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				A.type_id = #searchAttitudeType#
-			]]>
-		</isNotEqual>
+		<isNotEmpty property="searchAttitudeType">	
+			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+				<![CDATA[
+					A.type_id = #searchAttitudeType#
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			C.DEPARTMENT = #searchDeptId#
 		</isNotEmpty>
