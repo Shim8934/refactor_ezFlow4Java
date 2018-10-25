@@ -1552,7 +1552,6 @@
 		    }
 		    function btnEdit_onclick_Complete(Ans) {
 		        DivPopUpHidden();
-		        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 		        
 		        if (Ans) {
 			        var mustField = message.getMustFieldsInsert("${userInfo.lang}");
@@ -1564,6 +1563,7 @@
 		            }
 		            if (FirstHtml == "")
 		                FirstHtml = beforeHtml;
+			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 		        }
 		        else {
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
