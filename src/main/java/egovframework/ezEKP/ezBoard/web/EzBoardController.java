@@ -4696,7 +4696,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardProp.getBoardGroupID() != null) {
 			String boardGroupID = boardProp.getBoardGroupID();
 			
-			BoardPropertyVO boardGroupProp = getBoardInfo(boardGroupID, userInfo);
+			BoardPropertyVO boardGroupProp = ezBoardService.getBoardProperty(boardGroupID, userInfo.getTenantId());
 			
 			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
 				isAllGroupBoard = "Y";
