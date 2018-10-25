@@ -612,8 +612,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		List<ApprGDocListVO> list = null;
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		
-		
 		switch (type) {
 		case "doing":
 			//결재할
@@ -660,7 +658,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return list;
 	}
 	
-	public List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId) throws Exception {
+	private List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getComapnyThemes started.");
 		
 		Map<String, Object> map = new HashMap<>();
@@ -786,6 +784,59 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getMenuAuth ended.");
 		
 		return resultMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateCompanyMenuInfo(int menuId, JSONObject menuInfo, JSONArray menuNames, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateCompanyMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		LOGGER.debug("menuInfo = " + menuInfo.toString());
+		LOGGER.debug("menuNames = " + menuNames.toString());
+		
+		boolean menuUsed = (boolean) menuInfo.get("menuUsed");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuId", menuId);
+		map.put("menuUrl", menuInfo.get("menuUrl"));
+		map.put("menuType", menuInfo.get("menuType"));
+		map.put("iconUrl", menuInfo.get("iconUrl"));
+		map.put("menuUsed", menuUsed);
+		map.put("companyLang", menuInfo.get("companyLang"));
+		
+		ezNewPortalDAO.updateCompanyMenuInfo(map);
+		
+		for (Object item : menuNames) {
+			if (item instanceof JSONObject) {
+				JSONObject menuNameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuNameInfo.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateCompanyMenuNameInfo(map);
+			}
+		}
+		
+		if (!menuUsed) {
+			//portlet used -> false
+			updateMenuPortletUsed(menuId, menuUsed, companyId, tenantId);
+		}
+		
+		LOGGER.debug("updateCompanyMenuInfo ended.");
+	}
+	
+	private void updateMenuPortletUsed(int menuId, boolean menuUsed, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + menuUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuId", menuId);
+		map.put("menuUsed", menuUsed);
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		ezNewPortalDAO.updateMenuPortletUsed(map);
+		
+		LOGGER.debug("updateMenuPortletUsed ended.");
 	}
 	
 	@Override
