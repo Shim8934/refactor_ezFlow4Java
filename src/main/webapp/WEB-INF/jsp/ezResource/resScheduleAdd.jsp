@@ -24,7 +24,11 @@
 			<%-- var g_DD = "<%=Request.QueryString["dd"]%>";
 	    	var g_MM = "<%=Request.QueryString["mm"]%>";
 	    	var g_YY = "<%=Request.QueryString["yy"]%>"; --%>
-	    	var reFlag;
+	    	var dayView = "${dayView}";
+	    	if (!dayView) {
+	    		dayView = 0;
+	    	}
+	    	var reFlag; 
 	    	var importanceVal;
 	    	var g_fromStr		= "${fromStr}";
 	    	var s_userID		= "${userInfo.id}";
@@ -605,7 +609,7 @@
 	        			<tr id="tr_STime" ${strDspMod1}>
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
-	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1'}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
+	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
 	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	           						~
 	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
