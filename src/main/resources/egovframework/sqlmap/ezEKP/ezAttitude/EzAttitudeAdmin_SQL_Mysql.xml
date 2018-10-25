@@ -678,11 +678,9 @@
 		]]>
 			
 		<isNotEmpty property="searchAttitudeType">	
-			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-				<![CDATA[
-					A.type_id = #searchAttitudeType#
-				]]>
-			</isNotEqual>
+			<![CDATA[
+				A.type_id = #searchAttitudeType#
+			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			C.department = #searchDeptId#
@@ -755,11 +753,9 @@
 				)
 		]]>
 		<isNotEmpty property="searchAttitudeType">	
-			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-				<![CDATA[
-					A.type_id = #searchAttitudeType#
-				]]>
-			</isNotEqual>
+			<![CDATA[
+				A.type_id = #searchAttitudeType#
+			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			C.DEPARTMENT = #searchDeptId#
