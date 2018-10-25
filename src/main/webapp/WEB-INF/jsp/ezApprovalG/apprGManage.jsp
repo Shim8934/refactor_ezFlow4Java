@@ -615,6 +615,9 @@
                             }
                         }
 		            	break;
+		            case "5" :
+		            	openUserInfo();
+		            	break;
 		            default:
 		        }
 		    }
