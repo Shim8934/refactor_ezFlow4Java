@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,11 +295,16 @@ public class EzNewPortalAdminController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		
+		JSONParser jp = new JSONParser();
+		resultBody = (JSONObject) jp.parse(resultBody.toJSONString());
+		
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
 			//메뉴정보
-			model.addAttribute("menuInfo", resultBody.get("data"));
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("menuInfo", data.get("menuInfo"));
+			model.addAttribute("menuNames", data.get("menuNames"));
 		}
 		
 		//해당메뉴 권한정보요청

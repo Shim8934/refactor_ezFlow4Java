@@ -131,6 +131,35 @@
 		]]>
 	</select>
 	
+	<select id="ezNewPortal.getMenuNames" parameterClass="Map" resultClass="MenuNameVO">
+		<![CDATA[
+			SELECT
+				A.menu_lang AS menulang,
+				A.menu_name AS menuname
+			FROM
+				TBL_PORTAL_MENU_NAME A
+			JOIN
+				TBL_PORTAL_MENU_COMP B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.company_id = B.company_id
+			AND
+				A.menu_id = B.menu_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+				A.menu_id = #menuId#
+			ORDER BY
+				CASE A.menu_lang WHEN B.company_lang
+					THEN 1
+					ELSE 2
+				END
+		]]>
+	</select>
+	
 	<select id="ezNewPortal.getMenuAuth" parameterClass="Map" resultClass="MenuAuthVO">
 		<![CDATA[
 			SELECT

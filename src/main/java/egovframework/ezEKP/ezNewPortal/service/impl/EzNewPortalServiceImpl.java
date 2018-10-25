@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -748,7 +749,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getMenuInfo started. companyId = " + companyId + " || tenantId = " + tenantId);
+		LOGGER.debug("getMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -760,6 +761,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getMenuInfo ended.");
 		
 		return vo;
+	}
+	
+	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
+		List<MenuNameVO> list = ezNewPortalDAO.getMenuNames(map);
+		
+		LOGGER.debug("getMenuNames ended.");
+		
+		return list;
 	}
 	
 	@Override

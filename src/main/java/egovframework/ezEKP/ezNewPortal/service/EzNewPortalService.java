@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -87,6 +88,10 @@ public interface EzNewPortalService {
 	 * 관리자 메뉴상세정보조회
 	 */
 	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴상세정보 메뉴이름조회
+	 */
+	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
 	 */

@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -219,6 +220,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public MenuInfoVO getMenuInfo(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getMenuInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuNameVO> getMenuNames(Map<String, Object> map) throws Exception {
+		return (List<MenuNameVO>) list("ezNewPortal.getMenuNames", map);
 	}
 	
 	@SuppressWarnings("unchecked")
