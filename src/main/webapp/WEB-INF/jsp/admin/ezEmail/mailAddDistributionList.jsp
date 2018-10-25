@@ -2407,11 +2407,7 @@
                 var InitTr = listview.GetDataRows();
                 
                 var bFlag = listview.ExistRow("data3", strEmail);
-                
-                if(bFlag) {
-                	alert("<spring:message code='ezEmail.lhm15' />");
-                    return;
-                } else {               
+                if(!bFlag) {
 	              pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	              pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
 	              pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strEmail) + "</DATA3>";
@@ -2444,7 +2440,6 @@
 	              if (document.getElementById("emailaddr").value != "") {
 	                  document.getElementById("emailaddr").value = "";
 	              }
-                	
                 }
             }
 	        
