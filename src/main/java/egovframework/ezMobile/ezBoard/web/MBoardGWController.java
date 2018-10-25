@@ -619,9 +619,22 @@ public class MBoardGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			String isAllGroupBoard = "";
+			
+			/* 2018-10-25 홍승비 - 모바일 그룹사게시판 즐겨찾기 분기 추가 */
+			BoardPropertyVO boardProp = ezBoardService.getBoardProperty(boardId, info.getTenantId());
+			if (boardProp.getBoardGroupID() != null) {
+				String boardGroupID = boardProp.getBoardGroupID();
+				
+				BoardPropertyVO boardGroupProp = ezBoardService.getBoardProperty(boardGroupID, info.getTenantId());
+				
+				if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
+					isAllGroupBoard = "Y";
+				}
+			}
 			
 			/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
-			mBoardService.insertFavorite(info.getUserId(), boardId, info.getCompanyId(), info.getTenantId());
+			mBoardService.insertFavorite(info.getUserId(), boardId, info.getCompanyId(), info.getTenantId(), isAllGroupBoard);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
