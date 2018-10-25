@@ -83,6 +83,7 @@
 	    var pNoneActiveX = "${nonActiveX}";
 	    var pStartday = "${startDay}";
 	    var LunarUse = false;
+	    var dayView = 0;
 	    
 	    document.onselectstart = function () { return false; };
 	    
@@ -360,9 +361,9 @@
 	       
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
-	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView="+ dayView +"&ownerID=${resID}", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        } else {
-                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView="+ dayView +"&ownerID=${resID}", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        }
 	    }
 
