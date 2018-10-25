@@ -160,8 +160,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				
 		logger.debug("useLetter=" + useLetter);
 		
+		String useSignatureTemplate = ezCommonService.getTenantConfig("useSignatureTemplate", user.getTenantId());
+		if (useSignatureTemplate == null || useSignatureTemplate.equals("")) {
+			useSignatureTemplate = "NO";
+		}
+		
+		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
+		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
 		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";

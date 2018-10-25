@@ -568,8 +568,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 		
-		// true 대신 tenant_config명 넣기
-		if (true) {
+		String useSignatureTemplate = ezCommonService.getTenantConfig("useSignatureTemplate", userInfo.getTenantId());
+		if (useSignatureTemplate == null || useSignatureTemplate.equals("")) {
+			useSignatureTemplate = "NO";
+		}
+		
+		if (useSignatureTemplate.equals("YES")) {
 			// 서명 템플릿 선택 (보기)
 			JSONArray returnJsonArr = new JSONArray();
 
@@ -629,6 +633,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("serverName : " + serverName);
 		logger.debug("userId : " + userInfo.getId());
 		logger.debug("userLang=" + userInfo.getPrimary());
+		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
 		
 		model.addAttribute("signState", signState);
 		model.addAttribute("signature1", signature1);
@@ -637,6 +642,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("userLang", userInfo.getPrimary());
+		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
 		
 		logger.debug("mailSignature ended.");
 		

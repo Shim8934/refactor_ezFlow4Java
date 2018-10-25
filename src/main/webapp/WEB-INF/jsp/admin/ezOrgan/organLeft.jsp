@@ -178,10 +178,12 @@
   				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
     			<ul></ul>
   			</h2>
+  			<c:if test="${useSignatureTemplate == 'YES'}">
   			<h2>
 				<span onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
 			    <ul></ul>
 			</h2>
+			</c:if>
   			<c:if test="${cChk == '1'}">
 			<h2>
 				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>

@@ -295,27 +295,29 @@
 	            <p id = "MailEnv_sub7"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t827' /></span></p>
 	            <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
 		    </div>
-		    
-		    <div style="float:right; margin-right:5px;">
-		    	<span><b><spring:message code='ezApprovalG.t435'/> : </b></span>
-		    	<select id="signatureSelect" onchange="selectSignTemplate(this.value)">
-		    		<option value="none"><spring:message code='ezEmail.jje15'/></option>
-            		<c:set var="userLang" value="${userLang}"/>
-            		<c:choose>
-            			<c:when test="${userLang eq '1'}">
-            				<c:forEach var="item" items="${list}">
-		        				<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname}'/></option>
-	            			</c:forEach>
-            			</c:when>
-            			<c:otherwise>
-	            			<c:forEach var="item" items="${list}">
-			        			<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname2}'/></option>
-		            		</c:forEach>
-            			</c:otherwise>
-            		</c:choose>
-		    		
-		    	</select>
-		    </div>
+		   <!-- 서명 템플릿 선택 기능 -->
+		   <c:if test="${useSignatureTemplate == 'YES'}"> 
+			    <div style="float:right; margin-right:5px;">
+			    	<span><b><spring:message code='ezEmail.jje16'/> : </b></span>
+			    	<select id="signatureSelect" onchange="selectSignTemplate(this.value)">
+			    		<option value="none"><spring:message code='ezEmail.jje15'/></option>
+	            		<c:set var="userLang" value="${userLang}"/>
+	            		<c:choose>
+	            			<c:when test="${userLang eq '1'}">
+	            				<c:forEach var="item" items="${list}">
+			        				<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname}'/></option>
+		            			</c:forEach>
+	            			</c:when>
+	            			<c:otherwise>
+		            			<c:forEach var="item" items="${list}">
+				        			<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname2}'/></option>
+			            		</c:forEach>
+	            			</c:otherwise>
+	            		</c:choose>
+			    	</select>
+			    </div>
+			</c:if>
+			
 	    </div>
 		<table id="signtable1" class="content" style="width:780px;height:510px;border:0;"> 
 		  <TR> 
