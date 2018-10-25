@@ -96,7 +96,7 @@
 		                document.getElementById("periodblock").style.display = "";
 		                document.getElementById("repeatblock").style.display = "none";
 		                show_repetition_info();
-		            }
+		            } 
 
 		            if ($.trim(repetition) != "" && pattern == "1") {
 		                show_repetition_info();
@@ -104,10 +104,13 @@
 		                document.getElementById("periodblockTR").style.display = "none";
 		            }                   
 		        } else if (datetype != ""){ 
-		        	if (datetype == "1") {
-		                document.getElementById("alldaycheck").checked = false;
+		        	//if (datetype == "1") {
+		                //document.getElementById("alldaycheck").checked = false;
 		                allday_change();
-		            }
+		            //} 
+		        } else {
+		        	//document.getElementById("alldaycheck").checked = false;
+	                allday_change();
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
@@ -139,7 +142,9 @@
 		        }
 		        
 		        //수정시 저장된 일정시간으로 설정
+		         if (scheduleid != "") {
 		        setDate();
+		         }
 		    }
 		    
 		    window.onresize = function () {   	
@@ -432,6 +437,37 @@
 	            form.submit();
 	        }
 	        
+	        function setNowTime() {
+	        	var now = new Date();
+	        	
+	        	//시작시간
+	        	var startTime;
+	        	var hour = now.getHours();
+	        	var time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		startTime = hour + ":00:00";
+	        	} else {
+	        		startTime = hour + ":30:00";
+	        	}
+	        	
+	        	//종료시간
+	        	var endTime;
+	        	now.setMinutes(now.getMinutes() + 30);
+	        	
+	        	hour = now.getHours();
+	        	time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		endTime = hour + ":00:00";
+	        	} else {
+	        		endTime = hour + ":30:00";
+	        	}
+	        	
+	        	$('#Stimepicker').timepicker('setTime', startTime);
+	        	$('#Etimepicker').timepicker('setTime', endTime);
+	    	}
+	        
 	        $(document).on('click', ".ui-timepicker-list li", function() {
 	        	timeSelect = true;
 	        })
@@ -521,11 +557,11 @@
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
-	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
+	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 	                                            	<spring:message code='ezSchedule.t369'/>
-	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                            	~
-	                                            	<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+	                                            	<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                            </span>
 	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>
