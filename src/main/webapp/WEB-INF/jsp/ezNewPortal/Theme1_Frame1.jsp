@@ -151,7 +151,7 @@
 			width : 280px;
 			height : 515px;
 			cursor : pointer;
-		}
+		} 
 		
 		#myImg {
 			width : 36px;

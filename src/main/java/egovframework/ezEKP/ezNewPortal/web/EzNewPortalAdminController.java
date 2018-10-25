@@ -441,6 +441,14 @@ public class EzNewPortalAdminController {
 		}
 	}
 	
+	@RequestMapping(value = "/admin/ezNewPortal/portalLogos.do")
+	public String portalManageLogo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("portalManageLogo started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		return "/admin/ezNewPortal/portalLogos";
+	}
+	
 	/**
 	 * 관리자 포탈 포틀릿목록 조회
 	 */
