@@ -351,4 +351,26 @@
 			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+		CREATE TABLE `jmocha`.`jmocha_mail_signature_template` (
+			  `sign_no` INT(11) NOT NULL AUTO_INCREMENT,
+			  `content` LONGTEXT NULL,
+			  `displayname` VARCHAR(45) NULL,
+			  `displayname2` VARCHAR(45) NULL,
+			  `tenant_id` MEDIUMINT(5) NULL,
+			  `company_id` VARCHAR(45) NULL,
+			  PRIMARY KEY (`sign_no`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 </sqlMap>

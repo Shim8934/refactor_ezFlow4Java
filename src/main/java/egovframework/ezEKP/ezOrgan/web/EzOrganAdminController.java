@@ -126,6 +126,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createTblIPAccessIP();
     	ezCommonService.addUserMasterManualFlag();
     	ezCommonService.addDeptMasterManualFlag();
+    	ezCommonService.createJMochaMailSignatureTemplate();
     	
     	logger.debug("init ended.");
     }

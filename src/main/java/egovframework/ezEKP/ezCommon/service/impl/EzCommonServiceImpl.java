@@ -1334,4 +1334,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addDeptMasterManualFlag() throws Exception {
 		ezCommonDAO.addDeptMasterManualFlag();
 	}
+	
+	@Override
+	public void createJMochaMailSignatureTemplate() throws Exception {
+		ezCommonDAO.createJmochaMailSignatureTemplate();
+	}
 }

@@ -298,4 +298,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addDeptMasterManualFlag");
 		}
 	}
+	
+	public void createJmochaMailSignatureTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkJMochaMailSignatureTemplate");
+		} catch (Exception e) {
+			logger.debug("tbl_access_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJMochaMailSignatureTemplate");
+		}
+	}
 }
