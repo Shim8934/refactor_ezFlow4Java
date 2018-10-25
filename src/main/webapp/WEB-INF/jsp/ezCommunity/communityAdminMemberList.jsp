@@ -117,9 +117,9 @@
 				<tr>
 					<th><spring:message code = 'ezCommunity.t31' /></th>
 					<td>
-						<input type="radio" name="flag" value="id" style="margin:0px 0px 3px 3px">
+						<input type="radio" name="flag" value="id" style="margin:0px 0px -2px 3px">
 		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t508' /></label>
-		        		<input type="radio" name="flag" value="name" checked style="margin:0px 0px 3px 3px">
+		        		<input type="radio" name="flag" value="name" checked style="margin:0px 0px -2px 3px">
 		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
 		        		<input style="height:22px" name="ser" id ="ser" type="text">
 		        		<a class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
