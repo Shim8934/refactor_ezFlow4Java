@@ -364,18 +364,22 @@
 				// 페이지레이어
     			var tblPageRayer = scopeDoc.getElementById('tblPageRayer');
 				// 결재리스트
-    			var div_scroll = document.getElementsByClassName('div_scroll');
+    			var div_scroll = scopeDoc.getElementsByClassName('div_scroll');
 				// 타이틀
-    			var title_h1 = document.getElementsByClassName('title_h1');
+    			var title_h1 = scopeDoc.getElementsByClassName('title_h1');
+				// 결재선
+				var div_AprLine = scopeDoc.getElementById('div_AprLine');
 				
     			if(val === "ok") {
 	    			mainmenu.style.visibility = "visible";
 	    			tblPageRayer.style.visibility = "visible";
+	    			div_AprLine.style.visibility = "visible";
 	    			div_scroll[0].style.visibility = "visible";
 	    			title_h1[0].style.visibility = "visible";
     			} else if(val === "false"){
     				mainmenu.style.visibility = "hidden";
 	    			tblPageRayer.style.visibility = "hidden";
+	    			div_AprLine.style.visibility = "hidden";
 	    			div_scroll[0].style.visibility = "hidden";
 	    			title_h1[0].style.visibility = "hidden";
     			}
