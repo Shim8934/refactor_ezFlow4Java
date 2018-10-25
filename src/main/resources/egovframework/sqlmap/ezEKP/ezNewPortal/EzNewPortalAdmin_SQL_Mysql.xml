@@ -126,6 +126,8 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
+			AND
+				A.menu_id = #menuId#
 		]]>
 	</select>
 	
@@ -141,9 +143,9 @@
 			WHERE
 				tenant_id = #tenantId#
 			AND
-				companyid = #companyId#
+				company_id = #companyId#
 			AND
-				menuid = #menuid#
+				menu_id = #menuId#
 			AND
 				access_yn = #accessType#
 			ORDER BY
