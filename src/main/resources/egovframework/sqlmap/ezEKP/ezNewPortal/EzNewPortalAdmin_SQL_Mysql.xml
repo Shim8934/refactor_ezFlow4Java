@@ -9,8 +9,8 @@
 				B.theme_id AS themeid,
 				B.theme_name AS themename,
 			    B.theme_content AS themecontent,
-			    CASE WHEN A.theme_used = 'Y' THEN 1 ELSE 0 END AS themeused,
-			    CASE WHEN A.theme_default = 'Y' THEN 1 ELSE 0 END AS themedefault
+			    A.theme_used AS themeused,
+			    A.theme_default AS themedefault
 			FROM
 				TBL_PORTAL_THEME_COMP A
 			JOIN
@@ -32,8 +32,8 @@
 				B.theme_id AS themeid,
 			    B.frame_id AS frameid,
 				B.frame_name AS framename,
-				CASE WHEN A.frame_used = 'Y' THEN 1 ELSE 0 END AS frameused,
-			    CASE WHEN A.frame_default = 'Y' THEN 1 ELSE 0 END AS framedefault
+				A.frame_used AS frameused,
+			    A.frame_default AS framedefault
 			FROM
 				TBL_PORTAL_FRAME_COMP A
 			JOIN
@@ -57,7 +57,7 @@
 			SELECT
 				A.menu_id AS menuid,
 				C.menu_name AS menuname,
-				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
+				A.menu_used AS menuused,
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
@@ -98,7 +98,7 @@
 				A.menu_id AS menuid,
 				B.menu_type AS menutype,
 				C.menu_name AS menuname,
-				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
+				A.menu_used AS menuused,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
 				B.icon_url AS iconurl,
@@ -137,7 +137,7 @@
 				menu_id AS menuid,
 				user_id AS userid,
 				user_type AS usertype,
-				CASE WHEN access_yn = 'Y' THEN 1 ELSE 0 END AS accessyn
+				access_yn AS accessyn
 			FROM
 				TBL_PORTAL_MENU_AUTH
 			WHERE
