@@ -207,5 +207,22 @@
 				A.menu_id = #menuId#
 		]]>
 	</update>
+	
+	<update id="ezNewPortal.updateCompanyMenuInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_MENU_NAME A
+			SET
+				menu_name = #menuName#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menu_id = #menuId#
+			AND
+				menu_lang = #menuLang#
+		]]>
+	</update>
 
 </sqlMap>
