@@ -1087,7 +1087,6 @@
 	            var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
-	            var pAddFlag = false;
 				
 	            if (m_selectedTree == orglistView) {
 		            if (p_ListOrderObject == null || p_ListOrderObject == "") {
@@ -1103,9 +1102,7 @@
 		                getlistview.LoadFromID(listid);
 		                var bFlag = getlistview.ExistRow("data1", strId);
 		                
-		                if (bFlag) {
-		                    pAddFlag = true;
-		                } else {
+		                if (!bFlag) {
 		                    pparsingXML2 = "";
 		                    pparsingXML = "";
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1140,7 +1137,7 @@
 		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 		                    }
-		                }
+		                } 
 		            } else {
 		                if (listContentArry != "") {
 		                    for (var i = 0; i < listContentArry.length; i++) {
@@ -1152,9 +1149,7 @@
 		                        getlistview.LoadFromID(listid);
 		                        var bFlag = getlistview.ExistRow("data1", strId);
 								
-		                        if (bFlag) {
-		                            pAddFlag = true;
-		                        } else {
+		                        if (!bFlag) {
 		                            pparsingXML2 = "";
 		                            pparsingXML = "";
 		                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1189,7 +1184,7 @@
 		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 		                            }
-		                        }
+		                        } 
 		                    }
 		                } else {
 		                	var organTree = new TreeView();
@@ -1203,9 +1198,7 @@
 	                        getlistview.LoadFromID(listid);
 			                var bFlag = getlistview.ExistRow("data1", strId);
 			                
-		                    if (bFlag) {
-		                        pAddFlag = true;
-		                    } else {
+		                    if (!bFlag) {
 		                    	pparsingXML2 = "";
 			                    pparsingXML = "";
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1240,9 +1233,8 @@
 			                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 			                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 			                    }
-		                    }
+		                    } 
 		                }
-		
 		            }
 	            } else if (m_selectedTree == ListViewDL) {
 	            	var pListViewDL = new ListView();
@@ -1259,9 +1251,7 @@
 	                        getlistview.LoadFromID(listid);
 			                var bFlag = getlistview.ExistRow("data1", strId);
 			                
-		                    if (bFlag) {
-		                        pAddFlag = true;
-		                    } else {
+		                    if (!bFlag) {
 		                    	pparsingXML2 = "";
 			                    pparsingXML = "";
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1296,7 +1286,7 @@
 			                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 			                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 			                    }
-		                    }
+		                    } 
 	                	}
 	                }
 	            } else if (m_selectedTree == AddressListView) {
@@ -1337,10 +1327,6 @@
 	                        getlistview.LoadFromID("MsgToList");
 	                        var bFlag = getlistview.ExistRow("data1", pAddressID);
 	                        
-		                    if (bFlag) {
-		                        pAddFlag = true;
-		                    }
-	
 	                        if (!IsInsert && !bFlag) {
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
@@ -1797,64 +1783,52 @@
 	            var organTree = new TreeView();
 	            organTree.LoadFromID("FromTreeView");
 	            var nodeIdx = organTree.GetSelectNode();
-	
-	            if (nodeIdx != -1) {
-	                var IsInsert = CheckMailReceiver(nodeIdx.GetNodeData("MAIL"), "3");
-	
-	                if (!IsInsert) {
-	                    var organTree = new TreeView();
-	                    organTree.LoadFromID("FromTreeView");
-	                    var nodeIdx = organTree.GetSelectNode();
-	                    var listid = "MsgToList";
-	                    var strSIP = "";
-	                   
-	                    var strId = nodeIdx.GetNodeData("CN");
-	                    var strDeptNM = nodeIdx.NodeName;
-	                    var strEmail = nodeIdx.GetNodeData("MAIL");
-	                   
-	                    var pparsingXML = "";
-	                    var listview = new ListView();
-	                    listview.LoadFromID(listid);
-	                    var bFlag = listview.ExistRow("DATA3", strEmail);
-	
-	                    if (bFlag) {
-	                        return;
-	                    } else {
-	                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strEmail) + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strDeptNM) + "</VALUE></CELL></ROW>";
-	                        pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                    }
-	
-	                    Resultxml = loadXMLString(pparsingXML);
-	                    
-	                    var MaxID = 0;
-	                    var InitTr = listview.GetDataRows();
-	
-	                    for (var j = 0  ; j < InitTr.length  ; j++) {
-	                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                        if (MaxID < curnum) {
-	                            MaxID = curnum;
-	                        }
-	                    }
-	
-	                    var objTr = listview.AddRow(InitTr.length);
-	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                    listview.AddDataRow(objTr, Resultxml);
-	                   
-	                    document.getElementById(listid).className = "receiver_list";
-	                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                    
-	                    for (var y = 0; y < _tdlength; y++) {
-	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                    }
-	                    
-	                }
-	            }
+	            var listid = "MsgToList";
+	           
+	            var strId = nodeIdx.GetNodeData("CN");
+	            var strName = nodeIdx.NodeName;
+	           
+	            var pparsingXML = "";
+	            var getlistview = new ListView();
+	            getlistview.LoadFromID(listid);
+	            var bFlag = getlistview.ExistRow("data1", strId);
+				
+	            if (!bFlag) {
+                    pparsingXML2 = "";
+                    pparsingXML = "";
+                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
+                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
+                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                    Resultxml = loadXMLString(pparsingXML2);
+
+                    var MaxID = 0;
+                    var InitTr = getlistview.GetDataRows();
+                    var MaxCntNum = 0;
+
+                    for (var j = 0; j < InitTr.length; j++) {
+                        var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+                        if (MaxID < curnum) {
+                            MaxID = curnum;
+                            MaxCntNum = j;
+                        }
+                    }
+
+                    var objTr = getlistview.AddRow(InitTr.length);
+                    if (MaxCntNum != 0) {
+                        MaxCntNum = MaxCntNum + 1;
+                    }
+
+                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                    getlistview.AddDataRow(objTr, Resultxml);
+
+                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+                    for (var y = 0; y < _tdlength; y++) {
+                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+                    }
+                }
 	        }
 	        
 	        function onDragEnter(evt, obj) {
@@ -2428,14 +2402,6 @@
                 strName = document.getElementById("emailname").value;
                 strEmail = document.getElementById("emailaddr").value;
                 
-                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strEmail) + "</DATA1>";
-                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
-                pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
-                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-                Resultxml = loadXMLString(pparsingXML2);
-                
                 var listview = new ListView();
                 listview.LoadFromID(listid);
                 var MaxID = 0;
@@ -2447,7 +2413,15 @@
                         return;
                     }
                 }
-
+                
+                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strEmail) + "</DATA3>";
+                pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
+                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
+                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                Resultxml = loadXMLString(pparsingXML2);
+                
                 for (var j = 0  ; j < InitTr.length  ; j++) {
                     var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
                     if (MaxID < curnum)
