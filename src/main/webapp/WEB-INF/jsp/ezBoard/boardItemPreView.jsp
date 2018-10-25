@@ -223,7 +223,7 @@
 <%-- 		        </c:if> --%>
 		        <tr>
 		          <th><spring:message code='ezBoard.t291'/></th>
-		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 15px; vertical-align: middle"></div></td>
+		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align: middle"></div></td>
 		        </tr>
 <!-- 		        추가 항목이 있을 경우 -->
 	       			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
