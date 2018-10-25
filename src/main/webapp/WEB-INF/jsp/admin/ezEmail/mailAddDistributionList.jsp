@@ -1315,19 +1315,18 @@
 	                            continue;
 	                        }
 	                        
-	                        var IsInsert;
-	                        if (pAddressType == "mailgroup") {
-                            	IsInsert = CheckMailReceiver(pAddressID, "3");
-	                        } else {
-	                            IsInsert = CheckMailReceiver(strEmail, "3");
-	                        } 
-	                        
 	                        var listid = "MsgToList";
 	                        var getlistview = new ListView();
 	                        getlistview.LoadFromID("MsgToList");
-	                        var bFlag = getlistview.ExistRow("data1", pAddressID);
 	                        
-	                        if (!IsInsert && !bFlag) {
+	                        var bFlag;
+	                        if (pAddressType == "mailgroup") {
+	                        	bFlag = getlistview.ExistRow("data3", pAddressID)
+	                        } else {
+	                        	bFlag = getlistview.ExistRow("data3", strEmail)
+	                        } 
+	                        
+	                        if (!bFlag) {
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
