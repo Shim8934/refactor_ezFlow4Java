@@ -747,12 +747,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception {
+	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getMenuInfo started. companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
 		
 		MenuInfoVO vo = ezNewPortalDAO.getMenuInfo(map);
 		

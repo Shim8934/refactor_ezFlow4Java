@@ -86,7 +86,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴상세정보조회
 	 */
-	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception;
+	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
 	 */

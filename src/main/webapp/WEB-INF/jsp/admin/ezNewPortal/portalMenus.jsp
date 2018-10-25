@@ -11,12 +11,46 @@
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			body {background-color : white;}
-			#menuList li {display : inline-block;width : 100px; border : 1px solid #000000; margin : 10px;}
+			.menu {vertical-align:top;display : inline-block;width : 100px; border : 1px solid #000000; margin : 10px;}
 			.menu dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
 			.menu dl dd {display:table-cell; width : 98px; height:56px; margin:0px; padding:0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; letter-spacing:-1px;}
 			span.icon_topmenu {margin-top : 20px;}
 			.menuUsed {background-color : #b0e4ff;}
 			.menuNotUsed {background-color : #cbcbcb;}
+			.menuDetails {list-style:none;display : none; float:left; width:98%; border:1px solid black;position : relative;}
+			.menuTitle {margin : 10px;}
+			.menuTitle span {font-size : 18px; font-weight:bold;}
+			.menuDetails hr {display:block; width:99%;}
+			.menuIconInfo {display:inline-block; margin:23px;}
+			.menuIcon {width:100px;height:100px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
+			.menuIcon span {margin:36px;}
+			.menuInfo {display:inline-block; vertical-align:top; margin-top:23px;}
+			.menuInfo ul {padding:0px;}
+			.menuInfo ul li {font-size:15px; font-weight:bold; display:block;margin-bottom:12px;}
+			.menuAuth {display:inline-block;}
+			.menuName table {margin-top:5px;}
+			.menuName table tr {height : 34px;}
+			.menuName table tr td input {width:300px; margin-left:10px;}
+			.conUrl input {width:300px; margin-left:10px;}
+			.menuName table th {border:none;background-color:white;font-size:15px;color:black;}
+			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
+			.accessOK, .accessNO {font-size:15px; font-weight:bold; margin-top:10px;}
+			.updateMenu {float : right; margin-right:20px;}
+			.btnpositionJsp {margin-top : 0px;padding:0px;}
+			.hideDetails {display : none;}
+			.menuSortable {display : inline-block;}
+			
+			/* switch */
+			.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-left:26px; margin-top:-3px;}
+			.switch input {opacity: 0;width: 0;height: 0;}
+			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
+			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
+			input:checked + .slider {  background-color: #2196F3;}
+			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
+			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
+			/* Rounded sliders */
+			.slider.round {border-radius: 15px;}
+			.slider.round:before {border-radius: 50%;}
 		</style>
 	</head>
 	
@@ -29,7 +63,6 @@
 			    </select><br /><br />
 		    </span>
 		</div>
-		
 		<ul id="menuList">
 		</ul>
 	</body>
@@ -37,6 +70,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 	<script type="text/javascript">
 		$(function(){
 			getCompanies();
@@ -103,6 +137,8 @@
 					$("#menuList").html(menusHTML);
 					
 					menuList.forEach(function (item, index) {
+						$("#menu" + item.menuId).on("click", {"menuId" : item.menuId}, openMenuDetail);
+						
 						if (item.menuUsed) {
 							$("#menu" + item.menuId).addClass("menuUsed");
 						} else {
@@ -110,6 +146,29 @@
 						}
 						
 					});
+					
+					$(".close").on("click", function(){
+						$(".menuDetails").slideUp();
+						$(".menuDetails").attr("class", "menuDetails hideDetails");
+					});
+					
+					//메뉴 드래그앤드롭
+					$("#menuList").sortable({ 
+						//handle : ".menuSortable",
+						items: "li:not(.menuDetails)",
+						start : function(event, ui) {
+							//$(".menuDetails").css("display", "none");
+							$(".menuDetails").remove();
+							
+						},
+						stop : function(event, ui) {
+							//$(".menuDetails").remove();
+						},
+						update : function(event, ui) {}
+					});
+					
+					$("#menuList").disableSelection();
+					$("#menuList").on("sortstart", function( event, ui ) { ui.placeholder.css("width","100px"); });
 				}
 			};
 			
@@ -118,7 +177,92 @@
 			var data = JSON.stringify({
 				companyId : companyValue
 			});
+			 
+			request.send(data);
+		}
+		
+		var openMenuDetail = function(event) {
+			var menuId = event.data.menuId;
+			getMenuDetail(menuId);
+		}
+		
+		var getMenuDetail = function(menuId) {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getMenuInfo.do', true);
+			request.setRequestHeader('content-type', 'application/json');
+			
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var result = JSON.parse(request.responseText);
+					var menuInfo = result.menuInfo;
+					var menusHTML = "<li class='menuDetails'>";
+					menusHTML += "<div id='menuDetails" + menuInfo.menuId + "'>";
+					menusHTML += "<div class='menuTitle'>";
+					menusHTML += "<span>" + menuInfo.menuName + "</span>";
+					menusHTML += "<div id='close' class='close'><ul><li><span></li></ul></div>";
+					menusHTML += "</div>";
+					menusHTML += "<hr/>";
+					menusHTML += "<div class='btnpositionJsp updateMenu'><a class='imgbtn updateMenuBtn'><span>저장</span></a></div>";
+					menusHTML += "<div class='menuIconInfo'>";
+					menusHTML += "<div class='menuIcon'>";
+					menusHTML += "<span class='" + menuInfo.iconUrl + "'></span>";
+					menusHTML += "</div>";
+					menusHTML += "<div class='btnpositionJsp'><a class='imgbtn'><span>아이콘등록</span></a></div></div>";
+					menusHTML += "<div class='menuInfo'>";
+					menusHTML += "<ul>";
+					menusHTML += "<li class='menuSwitch'>[메뉴 사용]<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>";
+					menusHTML += "<li class='menuName'>[메뉴명]<table class='menuNameList'></table></li>";
+					menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' value='" + menuInfo.menuUrl + "'></li>"
+					menusHTML += "</ul></div>";
+					menusHTML += "<div class='menuAuth'><div class='btnpositionJsp'><a class='imgbtn'><span>권한 설정</span></a></div>";
+					menusHTML += "<div class='accessOK'>[접근 허용]</div>";
+					menusHTML += "<div class='accessNO'>[접근 불가]</div>";
+					menusHTML += "</div>";
+					menusHTML += "</div>";
+					menusHTML += "</li>";
+					
+					var nowShowDetails = $(".menuDetails").children().attr("id");
+					
+					if (nowShowDetails == "menuDetails" + menuId) { 
+						$(".menuDetails").slideUp(function(){
+							$(".menuDetails").remove();
+						});
+					} else {
+						$(".menuDetails").remove();
+					}
+					
+					if (nowShowDetails != "menuDetails" + menuId) {
+						if (nowShowDetails == undefined) {
+							$("#menu" + menuId).after(menusHTML);
+							
+							if (menuInfo.menuUsed) {
+								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
+							}
+							
+							$(".menuDetails").slideDown();
+						} else {
+							$("#menu" + menuId).after(menusHTML);
+
+							if (menuInfo.menuUsed) {
+								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
+							}
+							
+							$(".menuDetails").show();
+						}
+					}
+				}
+			}
+			
+			request.onerror = function() {}
+			
+			var data = JSON.stringify({
+				menuId : menuId,
+				companyId : companyValue
+			});
+			 
 			request.send(data);
 		}
 	</script>

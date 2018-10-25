@@ -677,11 +677,11 @@
 				)
 		]]>
 			
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+		<isNotEmpty property="searchAttitudeType">	
 			<![CDATA[
 				A.type_id = #searchAttitudeType#
 			]]>
-		</isNotEqual>
+		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			C.department = #searchDeptId#
 		</isNotEmpty>
@@ -752,12 +752,11 @@
 					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
 				)
 		]]>
-			
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+		<isNotEmpty property="searchAttitudeType">	
 			<![CDATA[
 				A.type_id = #searchAttitudeType#
 			]]>
-		</isNotEqual>
+		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			C.DEPARTMENT = #searchDeptId#
 		</isNotEmpty>
@@ -997,11 +996,8 @@
 											TBL_USERMASTER.tenant_id = #tenantId#
 										AND
 											TBL_USERMASTER.cn = #userId#)
-			<isEqual prepend="AND" property="listAuthType" compareValue="m">
+			<isEqual prepend="AND" property="listAuthType" compareValue="M">
 				TBL_ATTITUDE_AUTH.auth_type = 'M'
-			</isEqual>
-			<isEqual prepend="AND" property="listAuthType" compareValue="r">
-				TBL_ATTITUDE_AUTH.auth_type = 'R'
 			</isEqual>
 			UNION
 			SELECT
@@ -1024,8 +1020,21 @@
 							TBL_USERMASTER.tenant_id = #tenantId#
 						AND
 							TBL_USERMASTER.cn = #userId#)
-			ORDER BY
-				deptName
+			UNION
+			SELECT
+				D.DISPLAYNAME AS dept_name,
+				D.CN AS dept_id,
+				'add' AS mine,
+				'M' AS authtype
+			FROM 
+				TBL_DEPTMASTER D
+			RIGHT JOIN 
+				TBL_ADDJOBMASTER A ON (D.CN = A.DEPTID and A.TENANT_ID = d.TENANT_ID)
+			WHERE 
+				A.CN = #userId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			ORDER BY deptname
 		</isEqual>
 		
 		<isEqual property="userAuthType" compareValue="">
@@ -1059,19 +1068,16 @@
 											TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 										AND
 											TBL_USERMASTER.cn = #userId#)
-			<isEqual prepend="AND" property="listAuthType" compareValue="m">
+			<isEqual prepend="AND" property="listAuthType" compareValue="M">
 				TBL_ATTITUDE_AUTH.auth_type = 'M'
-			</isEqual>
-			<isEqual prepend="AND" property="listAuthType" compareValue="r">
-				TBL_ATTITUDE_AUTH.auth_type = 'R'
 			</isEqual>
 			UNION
 			SELECT
 				displayname AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
-				(SELECT
-					IFNULL(A.auth_type, 'R') AS authtype
+				IFNULL((SELECT
+					A.auth_type AS authtype
 				FROM
 					TBL_ATTITUDE_AUTH A
 				WHERE
@@ -1086,7 +1092,7 @@
 									AND
 										TBL_USERMASTER.cn = #userId#)
 				AND
-					A.user_id = #userId#) AS authtype
+					A.user_id = #userId#), 'R') AS authtype
 			FROM
 				TBL_DEPTMASTER
 			WHERE
@@ -1104,8 +1110,37 @@
 							TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 						AND
 							TBL_USERMASTER.cn = #userId#)
-			ORDER BY
-				deptName
+			UNION
+			SELECT
+				D.DISPLAYNAME AS dept_name,
+				D.CN AS dept_id,
+				'add' AS mine,
+				IFNULL((SELECT
+					A.auth_type AS authtype
+				FROM
+					TBL_ATTITUDE_AUTH A
+				WHERE
+					A.auth_dept_id = (SELECT
+										department
+									FROM
+										TBL_USERMASTER
+									WHERE
+										TBL_USERMASTER.tenant_id = #tenantId#
+									AND
+										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+									AND
+										TBL_USERMASTER.cn = #userId#)
+				AND
+					A.user_id = #userId#), 'R') AS authtype
+			FROM 
+				TBL_DEPTMASTER D
+			RIGHT JOIN 
+				TBL_ADDJOBMASTER A ON (D.CN = A.DEPTID and A.TENANT_ID = d.TENANT_ID)
+			WHERE 
+				A.CN = #userId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			ORDER BY deptname
 		</isEqual>
 	</select>
 	

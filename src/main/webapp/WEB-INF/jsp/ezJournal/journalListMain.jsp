@@ -272,7 +272,6 @@
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
 				var url = "/ezJournal/journalList.do";
-				console.log("listCnt : " + listCnt);
 				var jsonParam={};
 				jsonParam["listType"] = listType;
 				jsonParam["formId"] = $("#formId").val();
@@ -452,7 +451,9 @@
 				document.getElementById("searchContent").value = "";
 		        document.getElementById("searchTitle").value = "";
 		        document.getElementById("layer_popup").style.display = "none";
-		        document.getElementById("SearchOption").setAttribute("mode", "off");
+		        if(document.getElementById("SearchOption")){
+			        document.getElementById("SearchOption").setAttribute("mode", "off");
+		        }
 		        $.modal.close();
 		    }
 			
