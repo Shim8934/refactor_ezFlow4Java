@@ -1554,15 +1554,14 @@
 		        DivPopUpHidden();
 		        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 		        
-		        var mustField = message.getMustFieldsInsert("${userInfo.lang}");
-	            if (mustField && mustField != ""){
-		            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
-		            	pAlertContent = pAlertContent.replace("@@", mustField);
-		                OpenAlertUI(pAlertContent);
-		                return;
-	            }
-		        
 		        if (Ans) {
+			        var mustField = message.getMustFieldsInsert("${userInfo.lang}");
+		            if (mustField && mustField != ""){
+			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
+			            	pAlertContent = pAlertContent.replace("@@", mustField);
+			                OpenAlertUI(pAlertContent);
+			                return;
+		            }
 		            if (FirstHtml == "")
 		                FirstHtml = beforeHtml;
 		        }
