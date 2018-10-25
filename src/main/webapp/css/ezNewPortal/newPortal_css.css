@@ -137,6 +137,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .full_menu_toggleDL > dt > span {margin-top:20px;}
 .full_menu_toggleDL > dd { display: table-cell; width:98px; height:56px; margin: 0px; padding: 0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; color:#000; letter-spacing:-1px;}
 
+.full_menu_toggleUL_edit {list-style:none; margin:0px; padding:0px;}
+.full_menu_toggleUL_edit > li { float: left; width: 100px; height: 100px; background:#fff; border: 1px dashed #d9d9d9; box-sizing: border-box; cursor:pointer;} 
 
 /* ---------ㅡmain css ---------ㅡ */ 
 /* layout */
@@ -433,9 +435,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* top_menu Button */
 .topMenuBtn{ margin:5px 5px 5px 5px; padding:2px 10px; float:right; font-size:12px; font-weight:bold; border:1px solid #bbb; background:line-gradient; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; cursor:pointer; color:#333;}
-.menu_toggle_context { display:flex; }
-.menu_toggle_context .toggle_text { display:flex; align-items:center; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; }
-.menu_toggle_context .toggle_div { margin-left:auto; }
+.menu_toggle_context { height:35px; }
+.menu_toggle_context .initOrder { float: left; }
 
 /* photo_board */
 .photo_board{}
