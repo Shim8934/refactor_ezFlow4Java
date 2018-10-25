@@ -188,6 +188,11 @@
 	                xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
+			
+			// 현재 위치에 텍스트 넣는 함수(서명 템플릿 관리>서명 템플릿 추가 및 수정 팝업창에서 사용)
+	        function setCursorAtText(text) {
+	        	xfe.insertHtmlAtCursor(text);
+	        }
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">

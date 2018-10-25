@@ -48,18 +48,12 @@
 		}
 		
 		function applyInfo() {
-			var selectedId = $("#inputInfoBody tr[selected=true]")[0].getAttribute("infoId");
+			var selected = $("#inputInfoBody tr[selected=true]")[0];
 			
-			// 태그프리
-			var currentElement = window.message.xfe.getSelectedElement();
-			currentElement.innerText = "$" + "{" + selectedId + "}";
-			
-			// 나모
-			//window.message.CrossEditor.InsertValue(1, "$" + "{" + selectedId + "}");
-			
-			// CK
-			
-			// 쿠쿠닥스  
+			if (selected != undefined) {
+				var selectedId = selected.getAttribute("infoId");
+				window.message.setCursorAtText("$" + "{" + selectedId + "}");
+			}
 			
 		}
 		
