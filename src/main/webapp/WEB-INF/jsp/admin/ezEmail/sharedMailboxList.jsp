@@ -42,11 +42,11 @@
 		        if (document.all("ListCompany") != null && document.all("ListCompany").length == 0) {
 		            alert("<spring:message code='ezEmail.t49' />");
 		        } else {
-		            company_change();
+		        	companyChange();
 		        }
 		    }
 		    
-		    function company_change() {
+		    function companyChange() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		        
 		    	$.ajax({
@@ -76,7 +76,7 @@
 	    		            document.getElementById("sharedMailboxList").innerHTML = "";
 	    		            var pUserList = new ListView();
 	    		            pUserList.SetID("sharedMailbox");
-	    		            pUserList.SetRowOnDblClick("mod_dl");
+	    		            pUserList.SetRowOnDblClick("modSharedMailbox");
 	    		            pUserList.SetRowOnClick("viewSharedMailboxInfo");
 	    		            pUserList.SetSelectFlag(false);
 	    		            pUserList.SetHeightFree(true);
@@ -152,7 +152,7 @@
 	    			        result.sharedMailboxInfo.userList.forEach(function(vo, index) {
 	    			        	var userDiv = document.createElement("DIV");
 	    			            userDiv.setAttribute("style", "margin-top:5px; margin-left:5px; cursor:pointer;");
-	    			            userDiv.setAttribute("onClick", "show_member(this)");
+	    			            userDiv.setAttribute("onClick", "showMember(this)");
 	    			            userDiv.setAttribute("id", vo.userId);
 	    			            userDiv.innerHTML = vo.userName + " (" + vo.deptName + ")";
 	    			            sharedMailboxUserDiv.appendChild(userDiv);
@@ -172,15 +172,15 @@
 	    		})
 		    }
 		
-		    function show_member(obj) {
+		    function showMember(obj) {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 420) / 2;
 		        window.open("/ezCommon/showPersonInfo.do?id=" + obj.id + "&dept=", "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
-		
-		    function del_dl() {
+
+		    function delSharedMailbox() {
 		        var listview = new ListView();
 		        listview.LoadFromID("sharedMailbox");
 		
@@ -191,82 +191,90 @@
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
 		        var selectedCount = listview.GetSelectedRows().length;
-		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if (ret) {
-			        if (selectedCount > 0) {
-				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
-				        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
-				        
-				        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
-				        xmlHTTP.send(xmlDom);
-				        
-				        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-				            alert("<spring:message code='ezEmail.t53' />");
-				            company_change();
-				            return;
-				        }
-				        
-				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
-				        company_change();
-			        } else {
-			            alert("<spring:message code='ezEmail.t51' />");		            
+		        if (selectedCount > 0) {
+		        	var shareName = listview.GetSelectedRows()[0].innerText;
+		        	var shareId = listview.GetSelectedRows()[0].getAttribute("DATA1");
+		        	
+			        if (confirm("'" + shareName + "' 공유사서함을 삭제하시겠습니까?")) {
+			        	if (confirm("공유사서함 삭제 시 공유사서함의 모든 메일이 삭제되며 복구할 수 없습니다.\n정말로 삭제하시겠습니까?")) {
+			        		$.ajax({
+				    			url: "/admin/ezEmail/delSharedMailbox.do",
+				    			type: "POST",
+				    			async: false,
+				    			dataType: 'json',
+				    			data: {'shareId' : shareId},
+				    			success: function(result) {
+				    				if (result.resultCode === "OK") {
+				    					alert("공유사서함을 삭제했습니다.");
+				    				} else if (result.resultCode === "NO_PERMISSION") {
+				    					alert("<spring:message code='ezOrgan.t302' />");
+				    				} else {
+				    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
+				    				}
+				    				
+				    				companyChange();
+				    			},
+				    			error: function(err) {
+				    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
+				    				companyChange();
+				    			}
+				        	})
+			        	}
 			        }
+		        } else {
+		        	alert("공유사서함을 선택해주세요.");
 		        }
 		    }
 		    
-		    var mail_add_distributionlist_cross_dialogArguments = new Array();
+		    var sharedMailboxDialogArguments = new Array();
 		    
-		    function add_dl() {
+		    function addSharedMailbox() {
 		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
 		        feature = feature + GetShowModalPosition(970, 670);
 		        
 		        if (CrossYN()) {
-		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
-		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		            sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do", companyId, feature);
+		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, feature);
 		            if (typeof (rtnValue) != "undefined") {
-		                company_change();
+		                companyChange();
 		            }
 		        }
 		    }
 		    
-		    function add_dl_Complete(rtnValue) {
+		    function addSharedMailboxComplete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
-		            company_change();
+		            companyChange();
 		        }
 		    }
 		    
-		    function mod_dl() {
+		    function modSharedMailbox() {
 		        var pUserList = new ListView();
 		        pUserList.LoadFromID("sharedMailbox");
 		
 		        var selnode = pUserList.GetSelectedRows();
 		        
 		        if (selnode == "") {
-		            alert("<spring:message code='ezEmail.t55' />");
+		            alert("공유사서함을 선택해주세요.");
 		            return;
 		        }
 		        
-		        var DeptID = selnode[0].getAttribute("DATA1");
+		        var shareId = selnode[0].getAttribute("DATA1");
 		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
 		        feature = feature + GetShowModalPosition(970, 670);
 		        
 		        if (CrossYN()) {
-		            mail_add_distributionlist_cross_dialogArguments = new Array();
-		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
-		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID +
-		                    "&name=" + encodeURIComponent(selnode[0].innerText), companyId, feature);
+		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, feature);
 		            
 		            if (typeof (rtnValue) != "undefined") {
-		                company_change();
+		                companyChange();
 		            }
 		        }
 		    }
@@ -288,15 +296,15 @@
 		
 		<div id="mainmenu">
 			<span><b><spring:message code='ezEmail.t59' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px;">
+			<select name="ListCompany" id="ListCompany" onchange="companyChange()" style="margin-bottom:10px;">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 	      	</select>
 			<ul>
-				<li><span onClick="add_dl()"><spring:message code='ezEmail.sharedMailbox03' /></span></li>
-		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.sharedMailbox04' /></span></li>
-		      	<li><span onClick="del_dl()"><spring:message code='ezEmail.sharedMailbox05' /></span></li>
+				<li><span onClick="addSharedMailbox()"><spring:message code='ezEmail.sharedMailbox03' /></span></li>
+		    	<li><span onClick="modSharedMailbox()"><spring:message code='ezEmail.sharedMailbox04' /></span></li>
+		      	<li><span onClick="delSharedMailbox()"><spring:message code='ezEmail.sharedMailbox05' /></span></li>
 		    </ul>
 		</div>
 		<script type="text/javascript">

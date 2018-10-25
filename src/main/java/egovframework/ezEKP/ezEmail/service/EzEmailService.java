@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
+import org.json.simple.JSONArray;
+
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -83,4 +85,5 @@ public interface EzEmailService {
 	public List<MailSharedMailboxVO> getSharedMailboxList(String compId, int tenantId) throws Exception;
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception;
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
+	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 }

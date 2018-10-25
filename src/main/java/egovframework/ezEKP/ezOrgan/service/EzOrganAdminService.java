@@ -100,4 +100,6 @@ public interface EzOrganAdminService {
 	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
+	
+	public void setDeptOrphan(String cn, int tenantId) throws Exception;
 }

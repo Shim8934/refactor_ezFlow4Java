@@ -4786,6 +4786,21 @@
 	]]>
 	</delete>
 	
+	<update id="EzOrganAdminDAO.setDeptOrphan" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+     			EXTENSIONATTRIBUTE1 = '',
+     			DEPT_CD_PATH = #v_CN#,
+     			DEPTLEVEL = '1'
+     		WHERE
+      			cn = #v_CN#
+      		AND 
+            	TENANT_ID = #v_TENANT_ID#
+		]]>
+	</update>
+	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

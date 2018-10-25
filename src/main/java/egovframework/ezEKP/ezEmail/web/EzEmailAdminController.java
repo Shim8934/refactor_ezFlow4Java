@@ -1,12 +1,16 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1457,4 +1461,457 @@ public class EzEmailAdminController {
 		logger.debug("delSharedMailbox ended. resultCode=" + resultCode);
 		return "json";
 	}
+	
+	/**
+	 * 공유사서함 추가 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/showAddSharedMailbox.do")
+	public String showAddSharedMailbox(
+			@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("showAddSharedMailbox started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptId = auth.getDeptID();
+		String compId = request.getParameter("compId");
+		String shareId = request.getParameter("shareId");
+		int tenantId = auth.getTenantId();
+		
+		String mailDomain = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+		
+		if (mailDomain.equals("")) {
+			mailDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		}
+		
+		model.addAttribute("shareId", shareId);
+		model.addAttribute("deptId", deptId);
+		model.addAttribute("compId", compId);
+		model.addAttribute("mailDomain", mailDomain);
+		
+		logger.debug("showAddSharedMailbox ended.");
+		return "admin/ezEmail/addSharedMailbox";
+	}
+	
+	/**
+	 * 공유사서함 추가 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/addSharedMailbox.do")
+	public String addSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("addSharedMailbox started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String resultCode = "OK";
+		
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				resultCode = "NO_PERMISSION";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+				
+				return "json";
+			}
+			
+			JSONParser jsonParser = new JSONParser();
+	    	JSONObject jsonObj = (JSONObject) jsonParser.parse(bodyData);
+			
+	    	String shareId = (String)jsonObj.get("shareId");
+			String shareName = (String)jsonObj.get("shareName");
+			String compId = (String)jsonObj.get("compId");
+			JSONArray userList = (JSONArray)jsonObj.get("userList");
+			int userListSize = userList.size();
+			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + "userListSize=" + userListSize);
+			
+			int tenantId = auth.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String companyDomain = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+			logger.debug("tenantId=" + tenantId + ",domain=" + domain + ",companyDomain=" + companyDomain); 
+			
+			// 공유사서함 부서가 존재하는지 확인
+			String deptId = "shared_mailbox_" + compId;
+			OrganDeptVO deptVO = ezOrganService.getDeptInfo(deptId, auth.getPrimary(), tenantId);
+			
+			// 공유사서함 부서가 없으면 생성
+			if (deptVO == null) {
+				String deptName = egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale);
+				String mailAddr = deptId + "@" + domain;
+				
+				int rc = ezEmailUserAdminService.addGroup(mailAddr);
+				
+				if (rc == 0) { // addGroup 성공
+					String bizmekaResult = "ERROR";
+					
+					// insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제
+					try {
+						
+						/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
+						String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantId);
+						
+						if (useBizmekaSpambox.equals("YES")) {
+							String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantId);
+							String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantId);
+							String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantId);
+							
+							// 비즈메카에서는 회사 밑에 공유사서함 부서를 생성한다
+							String parentDeptId = bizmekaCompanyId;
+							
+							bizmekaResult = ezEmailUtil.bizmekaAddDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+													deptId, deptName, parentDeptId);		
+							
+							logger.debug("bizmekaResult=" + bizmekaResult);
+							
+							if (!bizmekaResult.equals("OK")) {
+								throw new Exception("bizmekaAddDept failed");
+							}
+						} */
+						
+						OrganDeptVO vo = new OrganDeptVO();
+						
+						vo.setTenantId(tenantId);
+						vo.setCn(deptId);
+						vo.setDisplayName(deptName);
+						
+						// 우선은 공유사서함 부서를 회사 하위에 생성한다. 
+						vo.setParentCn(compId);
+						
+						// 인사연동 시 공유사서함 부서를 폐지시키지 않기 위해 manualFlag를 Y로 설정한다.
+						vo.setManualFlag("Y");
+						
+						// 공유사서함 부서는 company domain 적용하지 않기로 함
+//						String newMailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, deptId, compId, tenantId);
+						vo.setMail(mailAddr);
+						
+						ezOrganAdminService.insertDBData_dept(vo);
+						
+						// 조직도에 나타나게 하지 않기 위해 parentCn(상위부서ID)를 빈 문자열로 바꾼다.
+						ezOrganAdminService.setDeptOrphan(deptId, tenantId);
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						ezEmailUserAdminService.removeGroup(mailAddr);	
+						logger.debug("create sharedMailbox dept failed.");
+						
+						resultCode = "ERROR";
+						model.addAttribute("resultCode", resultCode);
+						logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+						return "json";
+					}
+				} else {
+					logger.debug("create sharedMailbox dept failed.");
+					
+					resultCode = "EMAIL_ERROR";
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+					return "json";
+				}
+			}
+			
+			// 라이센스키 확인 (공유사서함 계정도 라이센스의 유저 수에 포함된다.)
+			String checkResult = checkLicenseKey(tenantId, domain);
+			
+			if (!checkResult.equals("OK")) {
+				logger.debug("create sharedMailbox failed. check license key!");
+				resultCode = checkResult;
+				
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+				return "json";
+			}
+			
+			// JMocha Mail Server가 계정이 소문자로 저장될 필요가 있어 
+	        // 사용자 아이디를 무조건 소문자로 변환한다.
+	        // 소문자로 저장되기만 하면 메일 수신 시에는 발신자가 대소문자를 혼합해서 보내도
+	        // 수신에 문제는 없다.
+			shareId = shareId.toLowerCase();
+			
+			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
+			int cnt = ezOrganAdminService.userCheck(shareId, tenantId);
+			logger.debug("cnt=" + cnt);
+			
+			if (cnt > 0) {
+				logger.debug("create sharedMailbox account failed. '" + shareId + "' ID is already used.");
+				resultCode = "DUPLICATE";
+				
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+				return "json";
+			}
+			
+			String mailAddr = shareId + "@" + domain;
+			
+			// 이메일 시스템에 계정을 생성한다.
+			// 비밀번호는 랜덤하게 설정한다.
+			String oriPass = UUID.randomUUID().toString().replace("-", "").substring(0, 12) + "!@#";
+			
+			//TODO: delete
+			System.out.println("oriPass=" + oriPass);
+			
+			int rc = ezEmailUserAdminService.addUser(mailAddr, oriPass);
+			logger.debug("addUser rc=" + rc);
+			
+			if (rc == 0) { // addUser 성공
+				// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.					
+				String groupAddr = deptId + "@" + domain;					
+				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+				logger.debug("updateGroupAdd rc=" + rc);
+				
+				if (rc == 0) { // updateGroup 성공												
+					String bizmekaResult = "ERROR";
+					
+					// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
+					try {
+						/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
+						String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantId);
+						
+						if (useBizmekaSpambox.equals("YES")) {
+							String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantId);
+							String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantId);
+							String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantId);
+							String parentDeptId = deptId;
+							
+							bizmekaResult = ezEmailUtil.bizmekaAddUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, shareId, "", 
+												shareName, parentDeptId);		
+							
+							logger.debug("bizmekaResult=" + bizmekaResult);
+							
+							if (!bizmekaResult.equals("OK")) {
+								throw new Exception("bizmekaAddUser failed");
+							}
+						} */
+						
+						OrganUserVO vo = new OrganUserVO();
+						
+						vo.setTenantId(tenantId);
+						vo.setCn(shareId);
+						vo.setDisplayName(shareName);
+						vo.setParentCn(deptId);
+						
+						// 인사연동 시 공유사서함 계정을 퇴직처리 시키지 않기 위해 manualFlag를 Y로 설정한다.
+						vo.setManualFlag("Y");
+						
+						// 공유사서함 계정의 alias 메일주소는 jmocha_alias 테이블에 저장하지 않음
+						String newMailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, shareId, compId, tenantId);
+						vo.setMail(newMailAddr);
+						
+						String userPrincipalName = shareId + "@" + domain;
+						vo.setUpnName(userPrincipalName);
+						
+						String pass = EgovFileScrty.encryptPassword(oriPass, shareId);
+						vo.setPassword(pass);
+						
+						// 로컬 시스템에 해당 User의 계정을 생성한다.
+						ezOrganAdminService.insertDBData_user(vo, oriPass);
+						
+						String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+						
+						if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
+							createDefaultFolders(loginCookie, mailAddr, locale);
+						}
+						
+					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+						e.printStackTrace();
+						
+						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+						ezEmailUserAdminService.removeUser(mailAddr);
+						logger.debug("create sharedMailbox failed.");
+						
+						resultCode = "ERROR";
+						model.addAttribute("resultCode", resultCode);
+						logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+						return "json";
+					}
+				} else {
+					// 부서의 Group Email 주소로의 등록에 실패하면 해당 User를 삭제하고 에러를 반환한다.
+					ezEmailUserAdminService.removeUser(mailAddr);
+					logger.debug("create sharedMailbox failed. updateGroupAdd failed.");
+					
+					resultCode = "EMAIL_ERROR";
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+					return "json";
+				}
+			} else {
+				logger.debug("create sharedMailbox failed. addUser failed.");
+				
+				resultCode = "EMAIL_ERROR";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+				return "json";
+			}
+			
+			// 공유자가 있을 경우 공유자 등록
+			if (userListSize > 0) {
+				String setUsersResult = resultCode = ezEmailService.setSharedMailboxUsers(shareId, userList, tenantId);
+				
+				if (!setUsersResult.equals("OK")) {
+					logger.debug("setSharedMailboxUsers failed.");
+					
+					resultCode = "ERROR";
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+					return "json";
+				}
+			}
+			
+		} catch (Exception e) {
+			resultCode = "ERROR";
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("resultCode", resultCode);
+		
+		logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+		return "json";
+	}
+	
+	private String getEmailAddressBasedOnCompanyDomainName(String originalMailAddr, String cn, String compId, int tenantId) {
+		try {
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+			logger.debug("companyDomainName=" + companyDomainName);
+
+			// 회사별 이메일 도메인명이 설정되어 있으면 tbl_tenant_config에 있는 DomainName 대신에
+			// 해당 도메인명을 사용해 이메일 주소를 생성한다.
+			if (!companyDomainName.isEmpty()) {
+				logger.debug("Setting originalMailAddr based on companyDomainName...");
+				
+				String newMailAddr = cn + "@" + companyDomainName;
+				
+				// 해당 주소를 Alias 주소로 등록한다.
+				int rc = ezEmailUserAdminService.addGroup(newMailAddr);
+				logger.debug("addGroup rc=" + rc);
+				
+				if (rc == 0) {
+					// 해당 주소의 멤버로 원 이메일 주소를 등록한다.
+					rc = ezEmailUserAdminService.updateGroupAdd(newMailAddr, originalMailAddr);
+					logger.debug("updateGroupAdd rc=" + rc);
+					
+					if (rc == 0) {
+						// 해당 주소로 원 이메일 주소를 교체한다.
+						originalMailAddr = newMailAddr;
+						
+						logger.debug("newMailAddr=" + newMailAddr);
+					} else {
+						ezEmailUserAdminService.removeGroup(newMailAddr);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return originalMailAddr;		
+	}
+	
+	private void removeEmailAddressBasedOnCompanyDomainName(String cn, String compId, int tenantId) {
+		try {
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+			logger.debug("companyDomainName=" + companyDomainName);
+
+			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 james_recipient_rewrite 테이블에서 제거한다.								
+			if (!companyDomainName.isEmpty()) {
+				logger.debug("Removing Email Address based on companyDomainName...");
+				
+				String newMailAddr = cn + "@" + companyDomainName;
+				
+				// 해당 주소를 james_recipient_rewrite 테이블에서 제거한다.
+				ezEmailUserAdminService.removeGroup(newMailAddr);					
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String checkLicenseKey(int tenantID, String domain) throws Exception {
+		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantID);
+		
+		logger.debug("licenseKey=" + licenseKey);
+		
+		// 입력된 라이센스키가 발견되지 않는 경우
+		if (licenseKey == null || licenseKey.equals("")) {
+			logger.debug("No License Key is found.");
+			
+			return "NO_LICENSE_KEY";
+		}
+		
+		try {
+			// 라이센스키를 복호화한다.
+			licenseKey = egovFileScrty.decryptAES(licenseKey);
+		} catch (Exception e) {
+			logger.debug("License Key Decryption failed.");
+			
+			return "INVALID_LICENSE_KEY";
+		}
+		
+		logger.debug("Decrypted licenseKey=" + licenseKey);
+		
+		String items[] = licenseKey.split(":");
+		
+		if (items.length < 2) {
+			logger.debug("Number of License Key Items is less than 2");
+			
+			return "INVALID_LICENSE_KEY";					
+		}
+		
+		String licensedDomainName = items[0];
+		
+		if (!licensedDomainName.equals(domain)) {
+			logger.debug("licensedDomainName=" + licensedDomainName + ",domain=" + domain);
+			
+			return "INVALID_LICENSE_KEY";										
+		}
+		
+		String licensedUserCountStr = items[1];
+		
+		int licensedUserCount = 0; 
+				
+		try {
+			licensedUserCount = Integer.parseInt(licensedUserCountStr);
+		} catch (NumberFormatException e) {
+			logger.debug("Parsing Licensed User Count failed.");
+			
+			return "INVALID_LICENSE_KEY";										
+		}
+		
+		int userCount = ezOrganAdminService.getUserCount(tenantID);
+		
+		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
+		userCount--;
+		
+		logger.debug("licensedUserCount=" + licensedUserCount + ",userCount=" + userCount);
+				
+		if (licensedUserCount <= userCount) {
+			logger.debug("Maximum User Count already reached");
+			
+			return "MAX_USER_REACHED";															
+		}
+		
+		return "OK";
+	}
+	
+	private void createDefaultFolders(String loginCookie, String userEmail, Locale locale) throws Exception {
+		String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);		
+		IMAPAccess ia = null;
+		
+        try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+						
+			// 기본 폴더들이 없을 때 생성한다.
+			ia.getTopLevelFolders(true, false);			
+		} finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}		
+	}
+	
 }
