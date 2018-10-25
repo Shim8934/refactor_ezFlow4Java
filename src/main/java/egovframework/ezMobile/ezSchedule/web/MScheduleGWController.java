@@ -368,6 +368,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String pCompanyAdmin = "";
 			String pDeptAdmin = "";
+			String isPublic = "";
 			
 			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 	        	pCompanyAdmin = "Y";
@@ -410,6 +411,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
         		//그룹 일정
 				sb.append("<option value='7;;" + vo.getGroupId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t375", locale) + " " + vo.getGroupName() + "</option>");        		
         	}
+			
+			String chkSchedulePublic = ezCommonService.getTenantConfig("chkSchedulePublic", info.getTenantId());
+			
+			if(chkSchedulePublic == "ON") {
+				// isPublic =
+			}
+			result.put("isPublic", isPublic);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
