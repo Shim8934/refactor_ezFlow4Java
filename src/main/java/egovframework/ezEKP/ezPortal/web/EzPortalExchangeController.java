@@ -100,11 +100,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzPortalController.
 		
 		try{
 		String authkey = "bEpJzTo23DwqD1TOODGOlf3QuXhDrsxe";
-    	String searchdate = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
-    	String data = "AP01";
-    	String urlLink = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=";
-    	String add = "";
-    	
+		String searchdate = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
+		//String searchdate = "20181024";
+		String data = "AP01";
+		String urlLink = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=";
+		String add = "";
+		
 		add = add + "&searchdate=" + searchdate;
 		add = add + "&data=" + data;
 		add = urlLink + authkey + add;

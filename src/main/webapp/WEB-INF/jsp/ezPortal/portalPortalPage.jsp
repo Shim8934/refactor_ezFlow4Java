@@ -255,7 +255,7 @@
 		                var left = (width - wWeight) / 2;
 		                var top = (heigth - wHeight) / 2;
 		                window.open("/ezExchange/exchangeRate.do", "",
-		                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, scrollbars=1, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                break;
 		        }
 		    }	    
