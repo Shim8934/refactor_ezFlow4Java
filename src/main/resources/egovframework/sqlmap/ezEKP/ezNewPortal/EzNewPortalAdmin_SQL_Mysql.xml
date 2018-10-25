@@ -207,5 +207,31 @@
 				A.menu_id = #menuId#
 		]]>
 	</update>
+	
+	<update id="ezNewPortal.updateCompanyMenuNameInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_MENU_NAME
+				(menu_id, menu_lang, menu_name, company_id, tenant_id)
+			VALUES
+				(#menuId#, #menuLang#, #menuName#, #companyId#, #tenantId#)
+			ON DUPLICATE KEY UPDATE
+				menu_name = #menuName#
+		]]>
+	</update>
+	
+	<update id="ezNewPortal.updateMenuPortletUsed" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_PORTLET_COMP
+			SET
+				portlet_used = #portletUsed#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menu_id = #menuId#
+		]]>
+	</update>
 
 </sqlMap>

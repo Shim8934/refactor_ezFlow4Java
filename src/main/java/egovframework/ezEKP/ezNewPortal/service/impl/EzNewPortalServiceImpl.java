@@ -826,12 +826,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updateCompanyMenuInfo ended.");
 	}
 	
-	private void updateMenuPortletUsed(int menuId, boolean menuUsed, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + menuUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	//메뉴사용여부에 따라 관련포틀릿 사용여부 수정
+	private void updateMenuPortletUsed(int menuId, boolean portletUsed, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + portletUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
-		map.put("menuUsed", menuUsed);
+		map.put("portletUsed", portletUsed);
 		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
 		
