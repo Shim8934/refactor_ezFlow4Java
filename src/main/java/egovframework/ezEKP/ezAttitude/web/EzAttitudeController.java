@@ -136,6 +136,26 @@ public class EzAttitudeController {
 			return "cmm/error/accessDenied";
 		}
 		
+		//근태유형
+		url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", "1");
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray typeList = new JSONArray();
+		
+		if(status.equals("ok")){
+			typeList = (JSONArray) resultBody.get("data");
+		}
+		
+		model.addAttribute("typeList", typeList);
 		model.addAttribute("deptList", deptList);		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
@@ -2093,7 +2113,7 @@ public class EzAttitudeController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
 		
-		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
+		//전체관리자(c), 회사관리자(k), 근태관리자(wa) 면 모든부서..
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
@@ -2101,7 +2121,7 @@ public class EzAttitudeController {
 			adminFlag = "true";
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2110,8 +2130,11 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("isAllDept", isAllDept)
+//				.queryParam("userId", userInfo.getId());
 				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("isAllDept", isAllDept)
+				.queryParam("listAuthType", "R")
 				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();

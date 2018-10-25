@@ -1036,8 +1036,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String accessID = request.getParameter("accessID");
 		
-		/* 2018-06-25 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
-		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID, userInfo.getCompanyID(), userInfo.getTenantId());
+		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<NODES>");
