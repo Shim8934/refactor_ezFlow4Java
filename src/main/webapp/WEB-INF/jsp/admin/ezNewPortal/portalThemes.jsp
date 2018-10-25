@@ -12,15 +12,15 @@
 			.themeThumbnails {width : 350px; height : 200px; border : 3px solid #7d7d7d; margin-top : 15px;}
 			.themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
 			#themeList li {margin : 10px; display : inline-block;}
-			.themeImg {position:relative;background-color : white; width : 400px; height : 270px; text-align : center; border: 1px solid #949292;}
+			.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #949292;}
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
-			.themeNotUsed {display:none;width:100%; height:100%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
+			.themeNotUsed {display:none;width:100%; height:87%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
 			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
 			.themeDetails {display : none; float:left; width:98%; border:1px solid black;position : relative;margin-left:10px;}
 			.themeSetting {float : right;margin-right : 27px;cursor:pointer;}
 			.themeSetting img {width : 17px;height : 17px;}
-			.switch {position: relative;display: inline-block;width: 60px;height: 25px;margin-left:10px;}
+			.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-left:26px; margin-top:-3px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
 			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
 			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
@@ -34,17 +34,19 @@
 			.hideDetails {display : none;}
 			.showDetails {display : block;}
 			.themeInfo {margin : 15px;}
-			.themeActive{margin-top : 20px; font-size : 15px; font-weight : bold; display : inline-block;}
+			.themeActive{position:relative; margin-top : 20px; font-size : 15px; font-weight : bold; display : inline-block;}
+			.themeActive div {display : inline-block;}
 			.btnpositionJsp {float : right; margin-top : 0px;padding-right:35px; padding-top:0px;}
 			.close {margin-top : 6px;}
 			.btnpositionJsp a {margin-left : 5px;}
-			.themeDefault {font-size : 15px; font-weight:bold; margin-top : 12px;}
-			.themeContent{overflow-y:auto; width:50%; height : 60px; display:inline-block; margin-top:15px; border : 1px solid #928686; padding : 10px;}
+			.themeDefault {font-size : 15px; font-weight:bold; margin-top : 20px;}
+			.themeContent{margin-top:20px; overflow-y:auto; width:98%; height : 60px; display:inline-block; border : 1px solid #928686; padding : 10px;}
+
+			.frameInfo {margin : 15px;}
 			.frameInfo p {font-size : 15px; font-weight : bold;}
-			.frameList {clear : none !important; width:50%; margin-bottom:20px;}
+			.frameList {clear : none !important; width:100%; margin-bottom:20px;}
 			.frameList tr {height:40px;}
 			.frameList tr:first-child {height : 78px;}
-			.frameList tr:first-child th {border : none; background-color:white;}
 			.frameList td {text-align : center; border:1px solid #e1e1e1;}
 			.frameList th {width:61px;}
 		</style>
@@ -74,8 +76,10 @@
 			getThemes();
 		});
 		
-		function openThemeDetail(event) {
+		var openThemeDetail = function (event) {
 			var themeId = event.data.themeId;
+			getThemeDetail(themeId);
+			
 			var nowShowDetails = $(".showDetails").attr("id");
 			
 			if (nowShowDetails == "themeDetails" + themeId) { 
@@ -87,8 +91,6 @@
 			$(".themeDetails").attr("class", "themeDetails hideDetails");
 			
 			if (nowShowDetails != "themeDetails" + themeId) {
-				getThemeDetail(themeId);
-				
 				if (nowShowDetails == undefined) {
 					$("#themeDetails" + themeId).slideDown();
 				} else {
@@ -149,65 +151,30 @@
 					
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
-						themesHTML += "<div class='themeImg'>";
-						themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+						themesHTML += "<div class='theme'>";
+						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
+						themesHTML += "</div><div>";
 						themesHTML += "<hr class='themeHr'/>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
 						themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
 						themesHTML += "</div>";
-						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
-						themesHTML += "</div>";
 						themesHTML += "</li>";
 						
 						themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
-						themesHTML += "<img src='' class='themesImgDetails' alt='img02'/>";
 						themesHTML += "<div class='themeInfo'>";
-						themesHTML += "<div class='themeActive'>테마 활성화 : <label class='switch'><input type='checkbox'><span class='slider round'></span></label></div>";
+						themesHTML += "<div class='themeActive'><div>[테마 활성화] </div><label class='switch'><input type='checkbox'><span class='slider round'></span></label></div>";
 						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn previewBtn'><span>미리보기</span></a><a class='imgbtn updateThemeBtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
-						themesHTML += "<div class='themeDefault'><input type='radio'/>기본테마설정</div>";
+						themesHTML += "<div class='themeDefault'>[기본 테마 설정] <input type='radio'/></div>";
 						themesHTML += "<div class='themeContent'></div>";
 						themesHTML += "</div>";
 						themesHTML += "<div class='frameInfo'>";
-						themesHTML += "<p>[프레임설정]</p>";
+						themesHTML += "<p>[프레임 설정]</p>";
 						themesHTML += "<table class='frameList'></table>";
 						themesHTML += "</div>";
 						themesHTML += "</div>";
 					});
-					
-
-					themesHTML += "<li>";
-					themesHTML += "<div class='themeImg'>";
-					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
-					themesHTML += "<hr class='themeHr'/>";
-					themesHTML += "<div class='themeTitle'>";
-					themesHTML += "<span class='themeName'>얜 안눌림</span>";
-					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
-					themesHTML += "</div>";
-					themesHTML += "</div>";
-					themesHTML += "</li>";
-
-					themesHTML += "<li>";
-					themesHTML += "<div class='themeImg'>";
-					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
-					themesHTML += "<hr class='themeHr'/>";
-					themesHTML += "<div class='themeTitle'>";
-					themesHTML += "<span class='themeName'>얜 안눌림</span>";
-					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
-					themesHTML += "</div>";
-					themesHTML += "</div>";
-					themesHTML += "</li>";
-
-					themesHTML += "<li>";
-					themesHTML += "<div class='themeImg'>";
-					themesHTML += "<img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
-					themesHTML += "<hr class='themeHr'/>";
-					themesHTML += "<div class='themeTitle'>";
-					themesHTML += "<span class='themeName'>얜 안눌림</span>";
-					themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
-					themesHTML += "</div>";
-					themesHTML += "</div>";
-					themesHTML += "</li>";
 					
 					document.getElementById("themeList").innerHTML = themesHTML;
 					
@@ -215,13 +182,14 @@
 					themes.forEach(function (item, index) {
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
 						$("#themeDetails" + item.themeId).find(".updateThemeBtn").on("click", {"themeId" : item.themeId}, updateTheme);
+						$("#themeDetails" + item.themeId).find(".previewBtn").on("click", {"themeId" : item.themeId}, openThemePreview);
 						
 						if (!item.themeUsed) {
-							$("#themeTitle" + item.themeId).parent().find(".themeNotUsed").css("display", "");
+							$("#themeTitle" + item.themeId).parent().parent().find(".themeNotUsed").css("display", "");
 						}
 						
 						if (item.themeDefault) {
-							$("#themeTitle" + item.themeId).parent().css("background-color", "rgb(182, 226, 255)");
+							$("#themeTitle" + item.themeId).parent().parent().css("background-color", "rgb(182, 226, 255)");
 						}
 					});
 					
@@ -259,7 +227,6 @@
 					var theme = result.themeInfo;
 					var frameList = result.frameInfos;
 					
-					$("#themeDetails" + theme.themeId).find(".themesImgDetails").attr("src", "/images/ezNewPortal/Theme1.GIF");
 					$("#themeDetails" + theme.themeId).find(".themeContent").text(theme.themeContent);
 					
 					if (theme.themeUsed) {
@@ -372,17 +339,23 @@
 				
 				request.onerror = function() {
 					  // There was a connection error of some sort
-					};
+				};
 					
-					var data = JSON.stringify({
-						companyId : companyValue,
-						themeInfo : themeInfo,
-						frameInfos : frameInfos,
-						themeId : themeId
-					});
-					
-					request.send(data);
+				var data = JSON.stringify({
+					companyId : companyValue,
+					themeInfo : themeInfo,
+					frameInfos : frameInfos,
+					themeId : themeId
+				});
+				
+				request.send(data);
 			}
+		}
+		
+		//미리보기
+		var openThemePreview = function(event) {
+			var themeId = event.data.themeId;
+			alert("미리보기 눌렀음!");
 		}
 	</script>
 </html>

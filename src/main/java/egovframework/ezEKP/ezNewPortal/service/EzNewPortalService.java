@@ -68,7 +68,7 @@ public interface EzNewPortalService {
 	 */
 	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
 	/**
-	 * 관리자 회사별 테마상세정보조회
+	 * 관리자 테마상세정보조회
 	 */
 	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception;
 	/**
@@ -76,7 +76,7 @@ public interface EzNewPortalService {
 	 */
 	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception;
 	/**
-	 * 관리자 회사별 테마정보수정(프레임 포함)
+	 * 관리자 테마정보수정(프레임 포함)
 	 */
 	public void updateThemeInfo(JSONObject themeInfo, JSONArray frameInfos, String companyId, int tenantId) throws Exception;
 	/**
@@ -84,10 +84,17 @@ public interface EzNewPortalService {
 	 */
 	public List<MenuInfoVO> getMenus(String companyId, int tenantId) throws Exception;
 	/**
-	 * 관리자 회사별 메뉴상세정보조회
+	 * 관리자 메뉴상세정보조회
 	 */
 	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴별 권한목록조회
+	 */
 	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴정보 및 메뉴이름 수정
+	 */
+	public void updateCompanyMenuInfo(int menuId, JSONObject menuInfo, JSONArray menuNames, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

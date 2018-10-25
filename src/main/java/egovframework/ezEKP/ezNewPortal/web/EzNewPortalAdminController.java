@@ -321,11 +321,45 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 메뉴 수정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenu.do")
 	public void updateMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateMenu started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonParam = new JSONObject();
+		
+		//메뉴정보수정
+		jsonParam.put("menuInfo", param.get("menuInfo"));
+		jsonParam.put("menuNames", param.get("menuNames"));
+		
+		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		//메뉴권한수정
+		jsonParam = new JSONObject();
+		jsonParam.put("menuAuths", param.get("menuAuths"));
+		
+		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		
+		resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
+		
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
 		
 		LOGGER.debug("updateMenu ended.");
 	}
@@ -405,6 +439,14 @@ public class EzNewPortalAdminController {
 			LOGGER.debug("portalPortlets ended.");
 			return "/admin/ezNewPortal/portalPortlets";
 		}
+	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/portalLogos.do")
+	public String portalManageLogo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("portalManageLogo started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		return "/admin/ezNewPortal/portalLogos";
 	}
 	
 	/**
