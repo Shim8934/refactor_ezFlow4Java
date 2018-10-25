@@ -65,9 +65,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return ezBoardAdminDAO.checkIfBoardGroupAdmin(map);
 	}
 	
+	/* 2018-10-18 홍승비 - 그룹사게시판 즐겨찾기 분기 isAllGroupBoard 플래그 추가, companyID브랜치용 임시 메서드 제거 */
 	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
 	@Override
-	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception {
+	public String addMyBoards(String userID, String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception {
 		logger.debug("addMyBoards started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -77,24 +78,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_PQUERY", userID);
+		map.put("v_isAllGroupBoard", isAllGroupBoard);
 		
-		
-		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
+		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가 */
 		try {
-			// 해당 테이블이 companyID 칼럼을 가지고 있는 경우
-			if (ezBoardAdminDAO.checkCompanyIDCol() != 0) {
-				ezBoardAdminDAO.addMyBoardsComp(map);
-				ezBoardAdminDAO.getBoardTree_Set_D(map);
-			}
-			// 해당 테이블에 companyID 칼럼이 없는 경우
-			else {
-				ezBoardAdminDAO.addMyBoards(map);
-				ezBoardAdminDAO.getBoardTree_Set_D(map);
-			}
+			ezBoardAdminDAO.addMyBoards(map);
+			ezBoardAdminDAO.getBoardTree_Set_D(map);
 			
 			logger.debug("addMyBoards ended");
 			return "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "NO";
 		}
 	}
@@ -246,9 +240,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
 
+	/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 추가  */
 	/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
 	@Override
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept) throws Exception {
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept, String showAllGroupBoard) throws Exception {
 		logger.debug("brdBoardTree started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -264,6 +259,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_TENANTID", tenantID);
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
+		map.put("v_showAllGroupBoard", showAllGroupBoard);
 		
 		logger.debug("brdBoardTree ended");
 		logger.debug("map.toString() : " + map.toString());
@@ -342,8 +338,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return ezBoardAdminDAO.getMyBoardTree_get3(map);
 	}
 
+	/* 2018-10-15 홍승비 - 그룹사게시판 표출용 전체관리자 확인 플래그 isCompanyAdmin 추가 */
 	@Override
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID) throws Exception {
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception {
 		logger.debug("get_Admin_TopBoardList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -352,12 +349,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("lang", multiLang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("isCompanyAdmin", isCompanyAdmin);
 
 		logger.debug("get_Admin_TopBoardList ended");
 		return ezBoardAdminDAO.get_Admin_TopBoardList(map);
 		
 	}
 	
+	/* 2018-10-17 홍승비 - 그룹사게시판이라면 companyID 조건을 무시하도록 수정 */
 	@Override
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
 		return ezBoardAdminDAO.getBackGroundImage(boardBackgroundVO);
@@ -414,16 +413,15 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, String companyID, int tenantID) throws Exception {
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception {
 		logger.debug("getACL started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
-		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-
+		
 		logger.debug("getACL ended");
 		return ezBoardAdminDAO.getACL(map);
 	}
@@ -444,9 +442,30 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PARENTBOARDID", "top");
 		map.put("v_COMPANYID", boardPropertyVO.getCompanyID());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
+		map.put("v_LANG", boardPropertyVO.getLoginVO().getLang());
+		
+		/* 2018-10-15 홍승비 - 그룹사게시판(그룹) 생성 시 구분값 부여 */
+		if (boardPropertyVO.getGuBun().equals("99")) {
+			map.put("isAllGroupBoard", "Y");
+		}
 		
 		ezBoardAdminDAO.createBoardGroup(map);
-		ezBoardAdminDAO.createBoardGroup2(map);
+		
+		/* 2018-10-17 홍승비 - 그룹사게시판(그룹) 생성 시, 모든 회사에 '접근'권한을 부여한다. */
+		if (boardPropertyVO.getGuBun().equals("99")) {
+			List<BoardPropertyVO> companyList= ezBoardAdminDAO.getCompanyList(map);
+			for (int i=0; i < companyList.size(); i++) {
+				map.put("v_ACCESSID", companyList.get(i).getAccessID());
+				map.put("v_ACCESSNAME", companyList.get(i).getAccessName());
+				map.put("v_ACCESSNAME2", companyList.get(i).getAccessName2());
+				map.put("v_COMPANYID", companyList.get(i).getAccessID());
+				
+				ezBoardAdminDAO.createBoardGroup2(map);
+			}			
+		}
+		else {
+			ezBoardAdminDAO.createBoardGroup2(map);
+		}
 		
 		trunkBoard(boardPropertyVO.getTenantID());
 
@@ -468,17 +487,32 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_COMPANYID", boardPropertyVO.getCompanyID());
-		map.put("v_TENANTID", boardPropertyVO.getTenantID());	
+		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
-		// 현재 관리자의 companyID를 하위게시판에 부여
+		/* 2018-10-15 홍승비 - 게시판그룹의 그룹사게시판 여부를 체크하여 하위게시판 등록하도록 수정 */
+		map.put("isAllGroupBoard", boardPropertyVO.getIsAllGroupBoard());
+		
+		/* 2018-10-15 홍승비 - 그룹사게시판(하위게시판) 생성 시 디폴트 구분값 '1' 부여 */
 		ezBoardAdminDAO.createBoard_I(map);
-		ezBoardAdminDAO.createBoard_I2(map);
 		
-		// 해당 하위게시판의 경로(부모게시판 등)를 설정한다. 여기에서는 companyID가 필요없다.
+		if (boardPropertyVO.getIsAllGroupBoard().equals("Y")) {
+			List<BoardPropertyVO> companyList= ezBoardAdminDAO.getCompanyList(map);
+			for (int i=0; i < companyList.size(); i++) {
+				map.put("v_ACCESSID", companyList.get(i).getAccessID());
+				map.put("v_ACCESSNAME", companyList.get(i).getAccessName());
+				map.put("v_ACCESSNAME2", companyList.get(i).getAccessName2());
+				map.put("v_COMPANYID", companyList.get(i).getAccessID());
+				
+				ezBoardAdminDAO.createBoard_I2(map);
+			}
+		}
+		else {
+			ezBoardAdminDAO.createBoard_I2(map);
+		}
+		
 		String boardTreePath = getBoardTreePath(boardPropertyVO.getBoardID(), boardPropertyVO.getTenantID());
 		map.put("boardTreePath", boardTreePath);
 		
-		// TBL_Board_BoardInfo 테이블을 업데이트한다.(하위게시판 경로 설정 등)
 		ezBoardAdminDAO.createBoard_U(map);
 		
 		trunkBoard(boardPropertyVO.getTenantID());
@@ -639,13 +673,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 		logger.debug("moveBoard ended");
 	}
-
+	
 	@Override
 	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("saveBoardProperty started");
 
 		String boardID = boardPropertyVO.getBoardID();
-		
+		String isBoardGroup = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", boardPropertyVO.getBoardID());
@@ -666,6 +700,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
+		
+		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
+		if (boardPropertyVO.getParentBoardID().equals("top")) {
+			isBoardGroup = "Y";
+		}
+		map.put("v_isBoardGroup", isBoardGroup);
 		
 		/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
 		ezBoardAdminDAO.saveBoardProperty(map);

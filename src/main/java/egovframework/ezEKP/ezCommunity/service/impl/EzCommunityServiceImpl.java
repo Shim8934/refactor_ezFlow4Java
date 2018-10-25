@@ -1569,7 +1569,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						
 						break;
 					case 3 :
-						sb.append("<tr style='height:25px'><td colspan=\"5\" style=\"padding-left:10px\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
+						sb.append("<tr style='height:25px'><td colspan=\"5\" style=\"padding-left:10px\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": <input type=\"text\" name=\"answerETC\" style=\"width:545px\">");
 						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", userInfo.getLocale()) + "</span></a>");
 						sb.append("</td>");
 						sb.append("</tr>");
@@ -1588,12 +1588,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		//2018-07-03 김보미 - 제목th에 너비 추가
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
-//			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
-			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:550px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
+			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:545px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
 			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
 		} else {
-//			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
-			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:550px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
+			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:545px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
 			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
 		}
 		

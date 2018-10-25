@@ -28,6 +28,7 @@
 			var xmlDom_treeview = createXmlDom();
 			var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "${noneActiveX}";
+			var isAdminLeft = "${isAdminLeft}";
 			var ReturnFunction;
 			
 		    function Select() {
@@ -123,7 +124,7 @@
 			}
 			
 			function DisplayTopBoard() {
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0&isAdminLeft=" + isAdminLeft, false);
 				xmlhttp.send();
 				
 				if(xmlhttp.responseXML.text != "ERROR") {
@@ -155,7 +156,7 @@
 			}
 			
 			function GetSubBoard(pRootBoardID, pSubFlag) {
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID + "&isAdminLeft=" + isAdminLeft, false);
 				xmlhttp.send();
 				
 				return xmlhttp.responseXML;

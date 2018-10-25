@@ -347,7 +347,7 @@ public interface EzApprovalGService {
 
 	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception;
 
-	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID) throws Exception;
+	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID, String offset) throws Exception;
 
 	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception;
 
@@ -359,7 +359,7 @@ public interface EzApprovalGService {
 
 	public String getCabinetList(Document xmlDom, LoginVO userInfo)throws Exception;
 
-	public String getCabinetDetailInfo(Document xmlDom, int tenantID) throws Exception;
+	public String getCabinetDetailInfo(Document xmlDom, int tenantID, String offset) throws Exception;
 
 	public String getCabScInfo(Document xmlDom, int tenantID) throws Exception;
 
@@ -576,4 +576,7 @@ public interface EzApprovalGService {
 	
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 
+	public String getDocNumZeroCnt(String companyID, int tenantID) throws Exception;
+	
+	public String setDocNumZeroCnt(String docNumZeroCnt, String companyID, int tenantID) throws Exception;
 }

@@ -33,6 +33,11 @@
 		function ok_Click() {
 			var newName = document.getElementById("nameInput").value;
 			
+			if (newName == "") {
+				alert('<spring:message code='ezWebFolder.t400'/>');
+				return;
+			}
+
 			if (isValid(newName)) {
 				alert('<spring:message code='ezWebFolder.t211'/>');
 				return;

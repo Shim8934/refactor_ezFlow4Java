@@ -522,10 +522,13 @@
 			            var rtnSignInfo;
 			            var fields = message.GetFieldsList();
 			            pDocTitle = trim_Cross(message.GetDocTitle());
-			            if (pDocTitle == "") {
-			                var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
-			                OpenAlertUI(pAlertContent);
-			                return;
+			            
+			            var mustField = message.getMustFieldsInsert("${userInfo.lang}");
+			            if (mustField && mustField != ""){
+ 			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
+ 			            	pAlertContent = pAlertContent.replace("@@", mustField);
+ 			                OpenAlertUI(pAlertContent);
+ 			                return;
 			            }
 			            if (pDocTitle.length > 127) {
 			                var pAlertContent = "<spring:message code='ezApprovalG.t132'/>";

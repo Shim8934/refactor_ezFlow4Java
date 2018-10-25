@@ -341,6 +341,12 @@
 			            if (totalSize > 0) {
 			            	totalSize -= parseInt(GetAttribute(pAttachRow[0], "DATA8"));
 			            }
+			            
+			            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+			            var totalRows = listview.GetDataRows();
+					    if(totalRows.length == 0) {
+					    	setDeleteRow("attachList");
+					    }
 			        }
 			        else {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
