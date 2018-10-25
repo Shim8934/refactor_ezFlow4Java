@@ -1172,7 +1172,7 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
-			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(companyId, userInfo.getTenantId());
+			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
