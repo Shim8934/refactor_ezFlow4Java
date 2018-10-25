@@ -4696,7 +4696,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardProp.getBoardGroupID() != null) {
 			String boardGroupID = boardProp.getBoardGroupID();
 			
-			BoardPropertyVO boardGroupProp = getBoardInfo(boardGroupID, userInfo);
+			BoardPropertyVO boardGroupProp = ezBoardService.getBoardProperty(boardGroupID, userInfo.getTenantId());
 			
 			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
 				isAllGroupBoard = "Y";
@@ -6991,7 +6991,8 @@ public class EzBoardController extends EgovFileMngUtil{
         
         StringBuilder bodyContent = new StringBuilder();
 
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        /* 2018-10-25 홍승비 - 게시판 게시알림 메일 전송 시 폰트 다국어 설정 */
+        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
@@ -7110,7 +7111,8 @@ public class EzBoardController extends EgovFileMngUtil{
         
         StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        /* 2018-10-25 홍승비 - 게시판 답변알림 메일 전송 시 폰트 다국어 설정 */
+        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t259", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
@@ -7138,7 +7140,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 전자결재승인관련 메일전송 실행 Method
+	 * 게시판 게시물승인관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do")
 	public void sendApprnoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -7163,7 +7165,8 @@ public class EzBoardController extends EgovFileMngUtil{
         
         StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        /* 2018-10-25 홍승비 - 게시판 게시물 승인대기 알림 메일 전송 시 폰트 다국어 설정 */
+        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
@@ -7191,7 +7194,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 전자결재승인반려관련 메일전송 실행 Method
+	 * 게시판 게시물반려관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendReturnNoticeMail.do")
 	public void sendReturnNoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -7217,7 +7220,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 	        
-	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+	        /* 2018-10-25 홍승비 - 게시판 게시물 반려 메일 전송 시 폰트 다국어 설정 */
+	        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
 	        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + boardListVO.getTitle() + "</a>");
