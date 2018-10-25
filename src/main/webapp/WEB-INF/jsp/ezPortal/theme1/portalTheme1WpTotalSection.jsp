@@ -682,11 +682,6 @@
 			      			<span class="icon"><img src="/images/kr/theme01/main/quickmenu_icon09.gif"  ></span>
 			     			<span class="txt">홈페이지</span>
 			     		</li> -->
-			     		
-			     		<!-- 2018-10-18 문성업 -->
-			     		<li id="exchangewrite" onclick="btnWrite_onclick(this)">
-			      			<span class="icon"><img src="/images/kr/theme01/main/quickmenu_icon03.gif"  ></span>
-			     			<span class="txt"><spring:message code="main.t00037" /></span></li>
 					</ul>
 					<p class="btn_quick_right"><img src="/images/kr/theme01/main/quickmenu_btn_down.gif" ></p>
 				</div>

@@ -432,7 +432,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .linkBtn_close{margin:0px; padding:0px; position:absolute; right:82px; top:7px; cursor:pointer;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:46px; background:#0470e4; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
-.aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:360px; box-sizing:border-box;}
+.aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}
 .aside_quick .quickmenu li { display:block; cursor:pointer;width:100px; border-bottom:1px solid #e7e7e7; text-align:center;}
 .aside_quick .quickmenu li .icon {display:block; margin:0 auto; padding:9px 0px 5px 0px;}
 .aside_quick .quickmenu li .txt {display:block; width:78px ;text-align:center; color:#333; font-size:12px; height:30px;letter-spacing:0px; overflow:hidden; margin:0 auto; padding:2px 0px 0px 0px; word-break: break-all;line-height:15px;}
