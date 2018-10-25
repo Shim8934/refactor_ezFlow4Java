@@ -623,8 +623,8 @@
 		                }
 		                
 	            	} else if (type == "DIRECT") {
-		                createNodeAndInsertText(xmlDom, objNode, "DIRECTMAIL", memberList.item(i).getAttribute("data1"));
-		                createNodeAndInsertText(xmlDom, objNode, "DIRECTNAME", memberList.item(i).getAttribute("data2"));
+		                createNodeAndInsertText(xmlDom, objNode, "DIRECTMAIL", memberList.item(i).getAttribute("data3"));
+		                createNodeAndInsertText(xmlDom, objNode, "DIRECTNAME", memberList.item(i).getAttribute("data1"));
 	            		
 	            	} else {
 		                createNodeAndInsertText(xmlDom, objNode, "MEMBERID", memberList.item(i).getAttribute("data1"));
@@ -2406,46 +2406,46 @@
                 var MaxID = 0;
                 var InitTr = listview.GetDataRows();
                 
-                for (var z = 0; z < InitTr.length; z++) {
-                    if (InitTr[z].getAttribute("data1") == strEmail) {
-                        alert("<spring:message code='ezEmail.lhm15' />");
-                        return;
-                    }
+                var bFlag = listview.ExistRow("data3", strEmail);
+                
+                if(bFlag) {
+                	alert("<spring:message code='ezEmail.lhm15' />");
+                    return;
+                } else {               
+	              pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+	              pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+	              pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strEmail) + "</DATA3>";
+	              pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
+	              pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
+	              pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	              Resultxml = loadXMLString(pparsingXML2);
+	              
+	              for (var j = 0  ; j < InitTr.length  ; j++) {
+	                  var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+	                  if (MaxID < curnum)
+	                      MaxID = curnum;
+	              }
+	              
+	              var objTr = listview.AddRow(InitTr.length);
+	              SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	              listview.AddDataRow(objTr, Resultxml);
+	
+	              document.getElementById(listid).className = "receiver_list";
+	              var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	              for (var y = 0; y < _tdlength; y++) {
+	                  document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+	                  document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+	              }
+	              
+	              if (document.getElementById("emailname").value != "") {
+	                  document.getElementById("emailname").value = "";
+	              }
+	              
+	              if (document.getElementById("emailaddr").value != "") {
+	                  document.getElementById("emailaddr").value = "";
+	              }
+                	
                 }
-                
-                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
-                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strEmail) + "</DATA3>";
-                pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
-                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-                Resultxml = loadXMLString(pparsingXML2);
-                
-                for (var j = 0  ; j < InitTr.length  ; j++) {
-                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                    if (MaxID < curnum)
-                        MaxID = curnum;
-                }
-                
-                var objTr = listview.AddRow(InitTr.length);
-                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
-                listview.AddDataRow(objTr, Resultxml);
-
-                document.getElementById(listid).className = "receiver_list";
-                var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-                for (var y = 0; y < _tdlength; y++) {
-                    document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-                    document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-                }
-                
-                if (document.getElementById("emailname").value != "") {
-                    document.getElementById("emailname").value = "";
-                }
-                
-                if (document.getElementById("emailaddr").value != "") {
-                    document.getElementById("emailaddr").value = "";
-                }
-                
             }
 	        
 	        function AddrSearch_press() {
