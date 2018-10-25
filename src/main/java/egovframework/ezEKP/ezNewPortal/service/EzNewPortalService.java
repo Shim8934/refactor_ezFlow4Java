@@ -100,6 +100,10 @@ public interface EzNewPortalService {
 	 * 관리자 메뉴정보 및 메뉴이름 수정
 	 */
 	public void updateCompanyMenuInfo(int menuId, JSONObject menuInfo, JSONArray menuNames, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴별 권한목록 수정
+	 */
+	public void updateMenuAuth(JSONObject menuAuths, int menuId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

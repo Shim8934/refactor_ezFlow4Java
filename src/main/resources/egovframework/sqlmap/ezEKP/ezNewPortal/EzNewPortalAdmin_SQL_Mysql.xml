@@ -263,4 +263,14 @@
 		]]>
 	</update>
 
+	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_MENU_AUTH
+				(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
+			VALUES
+				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
+			ON DUPLICATE KEY UPDATE
+				access_yn = #accessYN#
+		]]>
+	</update>
 </sqlMap>

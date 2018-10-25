@@ -857,6 +857,46 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updateMenuPortletUsed ended.");
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateMenuAuth(JSONObject menuAuths, int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		LOGGER.debug("menuAuths = " + menuAuths.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//이걸 구분해서 넣을 필요가잇나 받을때 accessYN이 같이들어오면 그냥 for 하나에 다때려박아도되는데?
+		for (Object item : (JSONArray) menuAuths.get("menuAuthsY")) {
+			if (item instanceof JSONObject) {
+				JSONObject menuAuthsY = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("accessYN", true);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateMenuAuth(map);
+			}
+		}
+		
+		for (Object item : (JSONArray) menuAuths.get("menuAuthsN")) {
+			if (item instanceof JSONObject) {
+				JSONObject menuAuthsY = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("accessYN", true);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateMenuAuth(map);
+			}
+		}
+		
+		LOGGER.debug("updateMenuAuth ended.");
+	}
+	
 	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getFavoriteForms started.");
