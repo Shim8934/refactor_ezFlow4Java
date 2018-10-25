@@ -58,7 +58,7 @@
 				A.menu_id AS menuid,
 				C.menu_name AS menuname,
 				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
-				B.menuType,
+				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
 				B.icon_url AS iconurl,
@@ -192,17 +192,17 @@
 			JOIN
 				TBL_PORTAL_MENU B
 			ON
-				A.menuid = B.menuid
+				A.menu_id = B.menu_id
 			SET
-				A.menuused = #menuUsed#,
-				B.menuurl = #menuUrl#,
-				B.iconUrl = #iconUrl#
+				A.menu_used = #menuUsed#,
+				B.menu_url = #menuUrl#,
+				B.icon_url = #iconUrl#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
 			AND
-				A.menuid = #menuId#
+				A.menu_id = #menuId#
 		]]>
 	</update>
 
