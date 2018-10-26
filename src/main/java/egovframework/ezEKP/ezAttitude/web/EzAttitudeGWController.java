@@ -1361,6 +1361,10 @@ public class EzAttitudeGWController {
 				searchDeptId = "";
 			}
 			
+			if (searchAttitudeType.equals("ALL")) {
+				searchAttitudeType = "";
+			}
+			
 			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantId, searchDeptId, deptIdList);
 			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantId, searchDeptId, deptIdList, info.getPrimary());
 			
