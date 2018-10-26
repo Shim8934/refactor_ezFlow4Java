@@ -434,6 +434,7 @@
 			menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
 			menusHTML += "<div class='menuIconInfo'>";
 			menusHTML += "<div class='menuIcon'>";
+			menusHTML += "<span></span>";
 			menusHTML += "</div>";
 			menusHTML += "<div class='btnpositionJsp iconBtn'><a class='imgbtn'><span>아이콘등록</span></a></div>";
 			
@@ -516,7 +517,6 @@
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
-			iconUrl = "/images/ezNewPortal/portlet_Plus.png";
 			
 			var menuInfo = {
 				"menuUsed" : menuUsed,
