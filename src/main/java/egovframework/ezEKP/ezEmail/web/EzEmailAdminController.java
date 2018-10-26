@@ -1654,9 +1654,6 @@ public class EzEmailAdminController {
 			// 비밀번호는 랜덤하게 설정한다.
 			String oriPass = UUID.randomUUID().toString().replace("-", "").substring(0, 12) + "!@#";
 			
-			//TODO: delete
-			System.out.println("oriPass=" + oriPass);
-			
 			int rc = ezEmailUserAdminService.addUser(mailAddr, oriPass);
 			logger.debug("addUser rc=" + rc);
 			
