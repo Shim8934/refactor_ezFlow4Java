@@ -278,6 +278,22 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateMenuAuth(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateMenuAuth", map);
 	}
+	
+	public void deleteMenu(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteMenu", map);
+	}
+	
+	public void deleteMenuComp(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteMenuComp", map);
+	}
+	
+	public void deleteMenuNames(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteMenuNames", map);
+	}
+	
+	public void deleteMenuAuth(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteMenuAuth", map);
+	}
 	/** -------------------- */
 	
 	/**
