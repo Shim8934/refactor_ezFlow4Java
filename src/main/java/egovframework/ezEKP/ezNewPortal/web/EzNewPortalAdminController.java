@@ -390,7 +390,7 @@ public class EzNewPortalAdminController {
 		jsonParam.put("menuNames", paramMap.get("menuNames"));
 		jsonParam.put("menuAuths", paramMap.get("menuAuths"));
 		
-		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonParam);
 		
