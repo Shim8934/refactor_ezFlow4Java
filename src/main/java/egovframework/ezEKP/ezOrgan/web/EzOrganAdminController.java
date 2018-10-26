@@ -192,7 +192,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
-		
+		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
+
 		if (useDisablePop3Imap.equals("")) {
 			useDisablePop3Imap = "NO";
 		}
@@ -204,6 +205,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
+		model.addAttribute("useMobileManagemant", useMobileManagemant);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -3229,4 +3231,60 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}		
 	}
 	
+	
+	/**
+	 * 관리자가 조직도에서 유저선택 후 모바일 설정 버튼 클릭시 호출되는 메서드 
+	 */
+	@RequestMapping(value="/admin/ezOrgan/configMobileManaged.do")
+	public String adminMobileManaged(@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("setUserMobileManaged started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		String userName = request.getParameter("userName");
+		String userId = request.getParameter("userId");
+		logger.debug("params:userName=" + userName + ", userId=" + userId);
+		
+		String adminOrder = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
+		
+		if (adminOrder.equals("")) {
+			adminOrder = "0";
+			ezCommonService.insertUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin", adminOrder);
+		}
+		
+		model.addAttribute("userName", userName);
+		model.addAttribute("userId", userId);
+		model.addAttribute("adminOrder", adminOrder);
+		
+		logger.debug("setUserMobileManaged ended");
+		return "/admin/ezOrgan/configMobileManaged";
+	}
+	
+	/**
+	 * 관리자가 유저별 모바일 설정을 한 뒤 확인 버튼을 눌렀을 때 호출되는 메서드 
+	 */
+	@RequestMapping(value="/admin/ezOrgan/setUserMobileManaged.do")
+	public void setUserMobileManaged(@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request,HttpServletResponse response) throws Exception {
+		logger.debug("setUserMobileManaged started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String returnValue = "OK";
+		
+		int tenantId = userInfo.getTenantId();
+		String userId = request.getParameter("userId");
+		String setUsed = request.getParameter("setUsed");
+		
+		try {
+			int updateRow = ezCommonService.updateUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin", setUsed);
+			logger.debug("update count=" + updateRow + " userconfig adminOrderNotUsedMobileLogin=" + setUsed);
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		}
+		
+		response.addHeader("customStatus", returnValue);
+		logger.debug("setUserMobileManaged ended");
+	}
 }

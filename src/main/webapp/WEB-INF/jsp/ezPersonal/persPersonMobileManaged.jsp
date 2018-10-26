@@ -1,0 +1,146 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><spring:message code = 'ezPersonal.t998' /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript">
+
+		var notUsed = "${notUserMobileLogin}";
+		var adminOrder = "${adminOrder}";
+		var setUsed = 0;
+		var xhttp = null;
+
+		window.onload = function() {
+			// 관리자 사용안함 처리 
+			if (adminOrder == "1") {
+				$('#chkMobileNotUse').prop('checked', true);
+				$('#chkMobileNotUse').prop('disabled', true);
+				$('select[name=selectbox]').attr('disabled', true);
+				$('.ftbt').attr('disabled', true).css('cursor', 'default');
+			}
+			
+			// 사용자 사용안함 처리
+			if (notUsed == "1") {
+				$('#chkMobileNotUse').prop('checked', true);
+			}
+		}
+
+		// 기기별 사용여부 selectBox changed // Section? S:P
+	    function selectChange(devid, obj, section) {
+            setDevice(devid, obj.options[obj.selectedIndex].value, section);
+	    }
+	
+		// 취소버튼
+		function cancel_onclick() {
+    		window.close();
+		}	
+		
+		// 사용안함 체크박스 상태 변경 
+		function changeChk(obj) {
+			if ($('#chkMobileNotUse').is(":checked")) {
+				setUsed = 1;
+			} else {
+				setUsed = 0;
+			}
+		}
+		
+		// 전체 사용안함 버튼 
+		function setNotUsedStatus() {
+			xhttp = createXMLHttpRequest();
+			xhttp.onreadystatechange = loader;
+			xhttp.open("POST", '/ezPersonal/setMobileManaged.do?pNotUsed=' + setUsed);
+			xhttp.send();
+		}
+		
+		// 기기별 사용여부 selectBox changed
+	    function setDevice(devId, state, section) {
+	    	xhttp = createXMLHttpRequest();
+			xhttp.onreadystatechange = loader;
+			xhttp.open("POST", "/ezPersonal/setMobileDeviceInfo.do?pDevId=" + devId + "&pState=" + state);
+			xhttp.send();
+	    }
+		
+		// 기기 삭제 버튼 
+	    function deleteDevice(devid) {
+	    	xhttp = createXMLHttpRequest();
+	    	xhttp.onreadystatechange = loader;
+			xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid);
+			xhttp.send();
+	    }
+		
+	    function loader() {
+			xhttp.onreadystatechange = function() {
+			    if (this.readyState == 4 && this.status == 200) {
+			    	var response = xhttp.getResponseHeader("customStatus");
+			    	
+			       	if (response == "OK") {
+			    	   	alert("<spring:message code='ezOrgan.kyj03' />");
+			       	} else if (response == "DELETE") { 
+			       		window.location.reload(true);
+			       	} else {
+			    		alert("<spring:message code='ezOrgan.kyj04' />");
+			    	}
+			       
+			       	xhttp = null;
+			    }
+			};
+		}
+		</script>
+	</head>
+	<body class="popup">
+    	<h1><spring:message code='ezPersonal.t998'/></h1>
+    	<div id="close">
+        	<ul>
+            	<li><span onclick="cancel_onclick()"></span></li>
+        	</ul>
+    	</div>
+    	<table class="content">
+        	<tr>
+            	<th>
+            		<span><strong>사용안함</strong></span>
+            	</th>
+            	<td class="pos1" colspan="2">
+	                <input id="chkMobileNotUse" name="chkMobileNotUse" type="checkbox" 
+	                	<c:if test="${notUserMobileLogin eq 1}"> checked="checked" </c:if> onchange="changeChk(this);" />
+	                <span id="" style="color:#000000"> (※스마트폰 분실시 반드시 체크하여 주시기 바랍니다.)</span>
+				</td>
+			</tr>
+    	</table>
+    	<div class="btnposition">
+    		<input type="submit" name="btnMobilManaged" value="저장" id="btnMobilManaged" class="ftbt" onclick="setNotUsedStatus();">
+    	</div>
+    	<br/>
+    	<table class="mainlist" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: scroll;">
+            <tr>
+                <th width='30%'>등록기기</th>
+                <th width='20%'>사용여부</th>
+                <th width='30%'>등록일자</th>
+                <th width='20%'>기기삭제</th>
+            </tr>
+            <c:if test="${deviceInfo ne '0'}">
+	    		<c:forEach items="${deviceInfo}" var="list">
+		            <c:set var="notUsed" value="${list.notUsed}"></c:set>
+		            <tr height=24px bgcolor=ffffff>
+						<td>${list.devType} ${list.subType}</td>
+						<td>
+							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this,"S")'>
+								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>>사용</option>
+								<option value='1' <c:if test="${notUsed eq 1}"> selected="selected" </c:if>>사용안함</option>
+							</select>
+						</td>
+						<td>${list.regDate}</td>
+						<td class='btnposition' style="text-align:left;">
+							<input class='ftbt' type='button' value='삭제' style='cursor:pointer;' onclick="deleteDevice('${list.devId}')" />
+						</td>
+					</tr>
+	    		</c:forEach>
+    		</c:if>
+        </table>
+	</body>
+</html>
