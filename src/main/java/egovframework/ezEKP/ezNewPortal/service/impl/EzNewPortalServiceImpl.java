@@ -168,7 +168,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("userId", userId);			
-			map.put("menuId", list.get(i).get("menuId"));
+				map.put("menuId", list.get(i).get("menuId"));
 			map.put("order", list.get(i).get("order"));
 			
 			if (cnt < 1) {
@@ -960,35 +960,55 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		//권한은 셀렉트키로 받아서 ezNewPortal.updateCompanyMenuNameInfo
-		for (Object item : (JSONArray) menuAuths.get("menuAuthsY")) {
-			if (item instanceof JSONObject) {
-				JSONObject menuAuthsY = (JSONObject) item;
-				
-				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
-				map.put("menuId", menuId);
-				map.put("accessYN", true);
-				map.put("companyId", companyId);
-				map.put("tenantId", tenantId);
-				
-				ezNewPortalDAO.updateMenuAuth(map);
+		//지금 권한 안들어오지 조직도없지 선택못하지
+		if (menuAuths != null) {
+			for (Object item : (JSONArray) menuAuths.get("menuAuthsY")) {
+				if (item instanceof JSONObject) {
+					JSONObject menuAuthsY = (JSONObject) item;
+					
+					map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+					map.put("menuId", menuId);
+					map.put("accessYN", true);
+					map.put("companyId", companyId);
+					map.put("tenantId", tenantId);
+					
+					ezNewPortalDAO.updateMenuAuth(map);
+				}
 			}
-		}
-		
-		for (Object item : (JSONArray) menuAuths.get("menuAuthsN")) {
-			if (item instanceof JSONObject) {
-				JSONObject menuAuthsY = (JSONObject) item;
-				
-				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
-				map.put("menuId", menuId);
-				map.put("accessYN", true);
-				map.put("companyId", companyId);
-				map.put("tenantId", tenantId);
-				
-				ezNewPortalDAO.updateMenuAuth(map);
+			
+			for (Object item : (JSONArray) menuAuths.get("menuAuthsN")) {
+				if (item instanceof JSONObject) {
+					JSONObject menuAuthsY = (JSONObject) item;
+					
+					map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+					map.put("menuId", menuId);
+					map.put("accessYN", true);
+					map.put("companyId", companyId);
+					map.put("tenantId", tenantId);
+					
+					ezNewPortalDAO.updateMenuAuth(map);
+				}
 			}
 		}
 		
 		LOGGER.debug("insertMenu ended.");
+	}
+	
+	@Override
+	public void deleteMenu(int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("deleteMenu started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuId", menuId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.deleteMenuAuth(map);
+		ezNewPortalDAO.deleteMenuNames(map);
+		ezNewPortalDAO.deleteMenuComp(map);
+		ezNewPortalDAO.deleteMenu(map);
+		
+		LOGGER.debug("deleteMenu ended.");
 	}
 	
 	@Override

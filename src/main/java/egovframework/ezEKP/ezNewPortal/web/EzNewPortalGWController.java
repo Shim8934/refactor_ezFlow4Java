@@ -1161,14 +1161,22 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 회사별 메뉴 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyMenuOrder(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateCompanyMenuOrder(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
+			JSONArray menus = (JSONArray) jsonParam.get("menus");
+			
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1180,7 +1188,7 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuOrder ended.");
 		return result;
 	}
-
+	
 	/**
 	 * 포탈개인화 G/W [GET] 회사별 메뉴 상세정보 조회
 	 */
@@ -1362,7 +1370,11 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			ezNewPortalService.deleteMenu(menuId, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1374,7 +1386,7 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu ended.");
 		return result;
 	}
-
+	
 	/** 구해안 start
 	 * 포탈개인화 G/W [GET] 회사별 포틀릿 목록 조회
 	 */
