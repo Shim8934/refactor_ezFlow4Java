@@ -61,7 +61,7 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchAttitudeType = "total"; // 검색조건(근태유형)
+	    	var searchAttitudeType = "ALL"; // 검색조건(근태유형)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
@@ -350,13 +350,7 @@
 	        function getAttitudeCheckList(){
 	        	searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
-    			
-	        	//페이지 로딩때 리스트 안가져오고 리스트뿌린다음 가져옴 수정필요.
-	        	if ($('#searchAttitudeType').val() == null) {
-	        		searchAttitudeType = "total";
-	        	} else {
-	        		searchAttitudeType = $('#searchAttitudeType').val();
-	        	}
+	        	searchAttitudeType = $('#searchAttitudeType').val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("<spring:message code='ezAttitude.t131' />");
