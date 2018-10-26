@@ -109,6 +109,9 @@
 				    case 30:
 					 	url = "/admin/ezEmail/letterMain.do";
 					 	break;
+				    case 31:
+				    	url = "/admin/ezOrgan/jobInfoList.do";
+				    	break;
 				}
 				window.open(url,"right");
 			}
@@ -131,6 +134,7 @@
 		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
 		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
 		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
+		        <li><span id="JobInfo" style="width: 100%; display: inline-block;" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
 		    </ul>   
 		    </c:if>
   			<h2>

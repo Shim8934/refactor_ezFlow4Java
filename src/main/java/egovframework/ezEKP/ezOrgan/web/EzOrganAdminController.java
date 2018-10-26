@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -916,6 +917,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("userPrimary", userInfo.getPrimary());
 				
 		logger.debug("userInfo ended");
 		
@@ -3229,4 +3231,208 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}		
 	}
 	
+	@RequestMapping(value="/admin/ezOrgan/jobInfoList.do", produces="application/text; charset=utf8")
+	public String jobTitleList(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobInfoList started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("jobInfoList ended.");
+		return "admin/ezOrgan/jobInfoList";
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitlePopupUI.do", produces="application/text; charset=utf8")
+	public String jobTitlePopupUI(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitlePopupUI started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String mode = request.getParameter("mode");
+		String companyID = request.getParameter("companyID");
+		
+		int jobCnt = ezOrganAdminService.getTitleListCnt(type, companyID, userInfo.getTenantId());
+		
+		if (mode != null && mode.equals("Add"))
+			jobCnt++;
+		
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("jobCnt", jobCnt);
+		model.addAttribute("type", type);
+		model.addAttribute("mode", mode);
+		model.addAttribute("cn", cn);
+
+		logger.debug("jobTitlePopupUI ended.");
+		return "admin/ezOrgan/jobTitlePopupUi";
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleAction.do")
+	@ResponseBody
+	public String jobTitleAction(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleAction started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String mode = request.getParameter("mode");
+		String displayName = request.getParameter("displayName1");
+		String displayName2 = request.getParameter("displayName2");
+		String sort = request.getParameter("sort");
+		String useFlag = request.getParameter("useFlag");
+		String companyID = request.getParameter("companyID");
+		
+		String result = "";
+		if (mode.equals("Add")) {
+			result = ezOrganAdminService.setTitle(type, cn, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
+		} else if (mode.equals("Mod")) {
+			result = ezOrganAdminService.updateTitle(type, cn, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
+		}
+		
+		logger.debug("Action mode = " + mode + " | " + "Action result = " + result);
+		logger.debug("jobTitleAction ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleListView started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezOrganAdminService.getTitleList(type, companyID, userInfo.getTenantId());
+		
+		logger.debug("jobTitleListView ended.");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleDelete.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleListView started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezOrganAdminService.deleteTitle(type, cn, companyID, userInfo.getTenantId());
+		
+		logger.debug("jobTitleListView ended.");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListView.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleUserListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleUserListView started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezOrganAdminService.getTitleUserList(type, cn, userInfo.getPrimary(), companyID, userInfo.getTenantId());
+		
+		logger.debug("jobTitleUserListView ended.");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListCnt.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleUserListCnt(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleUserListCnt started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String result = String.valueOf(ezOrganAdminService.getTitleUserListCnt(type, cn, companyID, userInfo.getTenantId()));
+		
+		logger.debug("jobTitleUserListCnt ended.");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleCnt.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleCnt(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleCnt started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String result = String.valueOf(ezOrganAdminService.getTitleCnt(type, cn, companyID, userInfo.getTenantId()));
+		
+		logger.debug("jobTitleCnt ended.");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/jobTitleInfo.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("jobTitleInfo started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String rtnXml = ezOrganAdminService.getTitleInfo(type, cn, companyID, userInfo.getTenantId());
+		
+		logger.debug("jobTitleInfo ended.");
+		return rtnXml;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/getUserCompanyID.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String getUserCompanyID(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getUserCompanyID started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), userInfo.getTenantId());
+		
+		String companyID = vo.getPhysicalDeliveryOfficeName();
+		
+		logger.debug("getUserCompanyID ended.");
+		return companyID;
+	}
 }
