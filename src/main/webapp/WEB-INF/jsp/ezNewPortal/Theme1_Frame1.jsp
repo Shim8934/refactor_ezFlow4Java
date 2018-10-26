@@ -134,6 +134,14 @@
 		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
 		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
+		//퀵메뉴 on/off 버튼
+		$("#linkBtn_open").on('click', viewQuick);
+		//퀵메뉴 이동(오른쪽)
+		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
+		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
+		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
+		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
+		
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
@@ -274,9 +282,30 @@
 			</section>
 		</div>
 		<aside id="quickSide">
-			<p class="linkBtn_open"></p>
-			<div class="aside_quick">퀵메뉴</div>
-			<div class="aside_link">퀵링크</div>
+			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
+			<div class="aside_quick">
+				<p class="quickmenu_title">Quick</p>
+				<ul class="quickmenu">
+					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
+					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
+					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
+					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+				</ul>
+			</div>
+			<div class="aside_link">
+				<p class="linkmenu_title">Link</p>
+				<ul class="linkmenu" id="QuickUl">
+				<li class="linkText">닷넷데모</li><li class="linkText">협업메뉴얼</li>
+				<li class="linkText">비즈메카</li><li class="linkText">페이스북</li>
+				<li class="linkText">블로그</li>
+				</ul>
+				<div class="linkBtn">
+					<p class="btnLay">
+						<span class="linkBtn_pre" id="preBtn" onclick="QuickMove(1)"><img src="/images/ezNewPortal/link_preBtn_dis.png"></span>
+						<span class="linkBtn_next" id="nextBtn" onclick="QuickMove(2)"><img src="/images/ezNewPortal/link_nextBtn.png"></span>
+					</p>
+				</div>
+			</div>
 		</aside>
 		<section class="section_main">
 			<div class="portlet_area">
