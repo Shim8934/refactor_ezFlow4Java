@@ -32,7 +32,7 @@
 			.menuName table tr {height : 34px;}
 			.menuName table tr td input {width:300px; margin-left:10px;}
 			.conUrl input {width:300px; margin-left:10px;}
-			.menuName table th {border:none;background-color:white;font-size:15px;color:black;}
+			.menuName table th {border:none;background-color:white;font-size:13px;color:black;}
 			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
 			.accessOK, .accessNO {font-size:15px; font-weight:bold; margin-top:10px;}
 			.updateMenu {float : right; margin-right:20px;}
@@ -198,6 +198,9 @@
 				if (request.status >= 200 && request.status < 400) {
 					var result = JSON.parse(request.responseText);
 					var menuInfo = result.menuInfo;
+					var menuNames = result.menuNames;
+					var menuAuth = result.menuAuths;
+					
 					var menusHTML = "<li class='menuDetails'>";
 					menusHTML += "<div id='menuDetails" + menuInfo.menuId + "'>";
 					menusHTML += "<div class='menuTitle'>";
@@ -214,7 +217,27 @@
 					menusHTML += "<div class='menuInfo'>";
 					menusHTML += "<ul>";
 					menusHTML += "<li class='menuSwitch'>[메뉴 사용]<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>";
-					menusHTML += "<li class='menuName'>[메뉴명]<table class='menuNameList'></table></li>";
+					menusHTML += "<li class='menuName'>[메뉴명]<table class='menuNameList'>"
+					
+					menuNames.forEach(function(item, index) {
+						menusHTML += "<tr>";
+						menusHTML += "<th>메뉴명("; 
+						
+						var country = "";
+						if (item.menuLang == 1) {
+							country = "한국어";
+						} else if (item.menuLang == 2) {
+							country = "영어";
+						} else if (item.menuLang == 3) {
+							country = "일본어";
+						}
+						
+						menusHTML += country + ")</th>";
+						menusHTML += "<td><input type='text' value='" + item.menuName + "'></td>";
+						menusHTML += "</tr>";
+					});
+					
+					menusHTML += "</table></li>";
 					menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' value='" + menuInfo.menuUrl + "'></li>"
 					menusHTML += "</ul></div>";
 					menusHTML += "<div class='menuAuth'><div class='btnpositionJsp'><a class='imgbtn'><span>권한 설정</span></a></div>";
