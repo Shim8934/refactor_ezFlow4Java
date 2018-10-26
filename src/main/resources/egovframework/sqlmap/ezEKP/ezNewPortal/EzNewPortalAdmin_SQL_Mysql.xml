@@ -273,4 +273,31 @@
 				access_yn = #accessYN#
 		]]>
 	</update>
+	
+	<insert id="ezNewPortal.insertMenu" parameterClass="Map">
+		<selectKey keyProperty="menuId" resultClass="Integer">
+			SELECT
+				AUTO_INCREMENT
+			FROM
+				INFORMATION_SCHEMA.TABLES
+			WHERE
+				TABLE_NAME = "TBL_PORTAL_MENU";
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_MENU
+				(menu_id, menu_url, menu_type, icon_url, default_order)
+			VALUES
+				(#menuId#, #menuUrl#, #menuType#, #iconUrl#, null)
+		]]>
+	</insert>
+	
+	<insert id="ezNewPortal.insertMenuComp" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_MENU_COMP
+				(menu_id, menu_used, company_lang, company_order, company_id, tenant_id)
+			VALUES
+				(#menuId#, #menuUsed#, #companyLang#, (SELECT MAX(company_order) + 1 FROM TBL_PORTAL_MENU_COMP WHERE tenant_id = #tenantId# AND company_id = #companyId#), #companyId#, #tenantId#)
+		]]>
+	</insert>
 </sqlMap>

@@ -247,6 +247,14 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<MenuAuthVO>) list("ezNewPortal.getMenuAuth", map);
 	}
 	
+	public int insertMenu(Map<String, Object> map) throws Exception {
+		return (int) insert("ezNewPortal.insertMenu", map);
+	}
+	
+	public void insertMenuComp(Map<String, Object> map) throws Exception {
+		insert("ezNewPortal.insertMenuComp", map);
+	}
+	
 	public void updateThemeInfo(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemeInfo", map);
 	}
