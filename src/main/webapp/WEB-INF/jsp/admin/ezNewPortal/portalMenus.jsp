@@ -153,9 +153,11 @@
 					//메뉴 드래그앤드롭
 					$("#menuList").sortable({ 
 						//handle : ".menuSortable",
-						items: "li:not(.menuDetails, #menuAdd)",
+						items: "li.menu",
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
+							console.log(event);
+							console.log(ui);
 							$(".menuDetails").remove();
 							
 						},
