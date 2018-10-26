@@ -24276,7 +24276,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom,
-			String apprto, String mypapprfrom, String mypapprto, String draftDeptName, String docState, String AprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String pApprovUser, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception {
+			String apprto, String mypapprfrom, String mypapprto, String draftDeptName, String docState, String AprFlag, String pageSize, String pageNum, String orderCell, String orderOption,String searchStatus, String companyID, String lang, String pApprovUser, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 
 		String OrderOption1 = "";
@@ -24431,7 +24431,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (docState != null && !docState.equals("")) {
 			whereStr = whereStr + " AND DOCSTATE ='" + docState + "'";
 		}
-
+		
 		if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
 			
 			if (draftfrom != null && !draftfrom.equals("")) {
@@ -24486,6 +24486,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				aprFlag = "INMYAPPRSEARCH";
 			}	
 			
+		}
+		
+		if (searchStatus != null && !searchStatus.equals("ALL") && !searchStatus.equals("")) {
+			map.put("v_PROCESSYN", searchStatus);
 		}
 		
 		if (pApprovUser != null && !pApprovUser.equals("")) {
