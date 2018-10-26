@@ -627,7 +627,7 @@
 		
 		            arrList = strListInfo.split(";");
 		            for (i = 0; i < arrList.length - 1; i++) {
-		                if (arrList[i].split(",")[1].indexOf(SSUserID) == -1) {
+		                if (arrList[i].split(",")[1] != SSUserID) {
 		                    arrList = null;
 		                    return false;
 		                }
@@ -866,6 +866,10 @@
 		            }
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+		    }
+		    
+		    function keyword_Clear() {
+		        document.getElementById('txt_keyword').value = "";
 		    }
 		    function onkeydown_start_search(evt) {
 		        if (evt.keyCode == "13") {

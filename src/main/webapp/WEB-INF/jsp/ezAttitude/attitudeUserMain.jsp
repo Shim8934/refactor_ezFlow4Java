@@ -1517,15 +1517,13 @@
 			* [부서근태현황] 권한에따라 버튼 보이기 유무
 			*/
 			function authBtn() {
-	        	if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null) {
-	        		$("#btnAbsentedList").css("display","none");
-	        		$("#btnExcelDown").css("display","none");
-	        		$("#divisionBar").css("display","none");
-	        	} else {
-	        		$("#btnAbsentedList").css("display","");
-	        		$("#btnExcelDown").css("display","");
-	        		$("#divisionBar").css("display","");
-	        	}
+				if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null || $("#authDeptList option:selected").attr("authType") == "R") {
+					$("#btnAbsentedList").css("display","none");
+					$("#btnExcelDown").css("display","none");
+				} else {
+					$("#btnAbsentedList").css("display","");
+					$("#btnExcelDown").css("display","");
+				}
 			}
 			
 			function popup_close() {

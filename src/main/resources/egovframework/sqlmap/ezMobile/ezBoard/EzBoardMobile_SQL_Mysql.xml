@@ -592,6 +592,7 @@
         ]]>
 	</select>
   
+<!-- 2018-10-25 홍승비 - 새게시물 리스트에 그룹사게시판 게시물 포함 -->
     <select id="MBoardDAO.getNewItemList" parameterClass="Map" resultClass="MBoardNewListVO">
       <![CDATA[
           SELECT
@@ -642,7 +643,7 @@
                   WHERE   
                     TENANT_ID = #tenantID#
                   AND
-                  	COMPANYID = #companyID# 
+                  	(COMPANYID = #companyID# OR COMPANYID = '*') 
                   AND
                     USERID = #userID# ) B 
               ON 
@@ -654,13 +655,15 @@
               ON 
                 A.TENANT_ID = P.TENANT_ID
               AND
-     			A.WRITERCOMPANYID = P.COMPANYID
+     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
               AND
                 A.BOARDID = P.BOARDID
               AND 
                 A.TENANT_ID = #tenantID#
               AND
-              	A.WRITERCOMPANYID = #companyID#
+              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
               AND
                 (A.APPRFLAG = 'Y' 
                  OR A.APPRFLAG IS NULL)
@@ -694,8 +697,7 @@
                 ]]>
             </isNotEmpty>
             
-            <![CDATA[
-                       
+            <![CDATA[                  
               AND 
                 (NOT EXISTS
                     (SELECT 
@@ -711,8 +713,6 @@
                      AND 
                       S.TENANT_ID = #tenantID#
                      AND
-                     	S.COMPANYID = #companyID#
-                     AND
                       S.USERID = #userID# 
                      AND 
                       S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
@@ -722,6 +722,7 @@
             ]]>
   </select>
   
+  <!-- 2018-10-25 홍승비 - 모바일게시판 즐겨찾기에 그룹사게시판 포함 -->
   <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
 	<![CDATA[
 		SELECT 
@@ -755,7 +756,7 @@
         WHERE
             A.TENANT_ID = #tenantID#
 		AND
-			A.COMPANYID = #companyID#
+			(B.COMPANYID = #companyID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
         AND  
             (USERID = #userID#	   OR    (USERID = 'everyone'    AND    A.BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'))
         AND 
@@ -1018,6 +1019,7 @@
     ]]>
   </insert>
   
+  <!-- 2018-10-25 홍승비 - 모바일게시판 좌측게시판리스트에 그룹사게시판 포함 -->
     <select id="MBoardDAO.brdBoardTree" parameterClass="Map" resultClass="MBoardTreeVO">
         <isEqual property="mode" compareValue="1">
             <isEqual property="selectBy" compareValue="3">
@@ -1072,7 +1074,7 @@
                     WHERE
                         A.TENANT_ID = #tenantID#
 					AND
-	                	A.companyid = #companyID#
+	                	(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
                     ORDER BY 
                         A.treevieworder ASC
                   ]]>
@@ -1142,7 +1144,7 @@
                          WHERE
                             A.TENANT_ID = #tenantID#
 						AND
-	                		A.companyid = #companyID#
+	                		(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
                          ORDER BY 
                             A.TreeViewOrder ASC
                       ]]>
@@ -1174,7 +1176,7 @@
                     WHERE
                         A.TENANT_ID = #tenantID#
 					AND
-	                	A.companyid = #companyID#
+	                	(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
                     AND
                         A.PARENTBOARDID = #rootBoardID#
                     AND 
@@ -1231,113 +1233,168 @@
           ]]>
   </select>
   
+    <!-- 2018-10-25 홍승비 - 모바일게시판 새게시물 카운트에 그룹사게시판 포함 -->
     <select id="MBoardDAO.getNewBoardListCount" parameterClass="Map" resultClass="Integer">
-    <![CDATA[
-      SELECT 
-        COUNT(A.ITEMID) CNT
-          FROM 
-            TBL_Board_Item A
-            JOIN 
-              ( SELECT 
-                BOARDID,
-                TENANT_ID,
-                COMPANYID
-                  FROM 
-                    TBL_Board_MyBoards 
-                  WHERE  
-                    TENANT_ID = #tenantID#
-                  AND
-                  	COMPANYID = #companyID#
-                  AND
-                    UserID = #userID# ) B   
-            ON 
-            	A.TENANT_ID = B.TENANT_ID
-            AND
-            	A.WRITERCOMPANYID = B.COMPANYID
-            AND
-              A.BoardID = B.boardid
-            JOIN 
-              TBL_Board_BoardInfo P   
-            ON 
-              P.TENANT_ID = B.TENANT_ID
-            AND
-              P.BoardID = B.boardid
-            LEFT JOIN
-              TBL_Board_Item_Read C  
-            ON 
-              A.itemid = C.itemid
-            AND
-              C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-            AND
-              C.tenant_id = #tenantID#
-            AND
-            	C.companyid = #companyID#
-            AND
-              C.userid = #userID#
-          WHERE  
-            C.itemid IS NULL
-            ]]>
-            <isNotEmpty property="pSearchText">
-                <![CDATA[
-                    AND
-                        (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
-                            OR
-                        A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
-                ]]>
-            </isNotEmpty>
-            
-            <![CDATA[                                  
-            AND 
-              A.StartDate < #nowDate#
-            AND 
-              A.StartDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-            AND 
-              A.EndDate > #nowDate#
-            AND 
-              ( A.APPRFLAG = 'Y'
-                  OR A.APPRFLAG IS NULL )
-            ]]>
+	    <![CDATA[
+	      SELECT
+	        COUNT(A.ITEMID) CNT
+	          FROM
+	            TBL_Board_Item A
+	            JOIN
+	              ( SELECT
+	                BOARDID,
+	                TENANT_ID,
+	                COMPANYID
+	                  FROM
+	                    TBL_Board_MyBoards
+	                  WHERE
+	                    TENANT_ID = #tenantID#
+	                  AND
+	                  	(COMPANYID = #companyID# OR COMPANYID = '*')
+	                  AND
+	                    UserID = #userID# ) B
+	            ON
+					A.TENANT_ID = B.TENANT_ID
+	            AND
+	              	A.BoardID = B.boardid
+	            JOIN
+	              	TBL_Board_BoardInfo P
+	            ON
+	              	A.TENANT_ID = P.TENANT_ID
+	            AND
+					A.BoardID = P.boardid
+				AND 
+					A.TENANT_ID = #tenantID#
+				AND
+	            	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+	            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				AND 
+	              ( A.APPRFLAG = 'Y'
+	                  OR A.APPRFLAG IS NULL )
+				AND 
+				  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				AND 
+				  	A.STARTDATE <= #nowDate#
+				AND 
+				  	A.ENDDATE > #nowDate#
+				AND 
+				  	(NOT EXISTS
+								(SELECT
+									USERID
+								 FROM 
+								 	TBL_BOARD_ITEM_READ S
+								 WHERE 
+								 	S.TENANT_ID = A.TENANT_ID
+								 AND
+								 	S.BOARDID = A.BOARDID
+								 AND 
+								 	S.ITEMID = A.ITEMID
+								 AND 
+								 	S.TENANT_ID = #tenantID#
+								 AND
+								 	S.USERID = #userID#
+								 AND 
+								 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+		]]>
+	<isNotEmpty property="pSearchText">
+		<![CDATA[
+	        WHERE
+	            (A.title LIKE CONCAT('%' ,#pSearchText#, '%')
+	                OR
+	            A.writerName LIKE CONCAT('%' ,#pSearchText#, '%'))
+	    ]]>
+	</isNotEmpty>
   </select>
   
     <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
-        <![CDATA[
-          INSERT INTO TBL_Board_MyBoards ( 
-            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID 
-          )
-              ( SELECT 
-                #userID# USERID ,
-                    BOARDID ,
-                    BOARDNAME ,
-                    BOARDNAME2 ,
-                    ( SELECT 
-                      	COUNT(BOARDID) + 1
-	                FROM 
+		<isEqual  property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards (
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT
+	         		#userID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards
+	     			  WHERE
+	     			  	TENANT_ID = #tenantID#
+	     			  AND
+	     			  	(COMPANYID = #companyID#	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #userID# ),
+	                ( SELECT
+	                	CASE
+	                		WHEN MAX(VIEWORDER) IS NULL
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1
+	                	END
+	                  FROM 
 	                  	TBL_Board_MyBoards 
-	                WHERE
+	                  WHERE
 	                  	TENANT_ID = #tenantID#
-	                AND  
+	                  AND
+	     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+	                  AND
 	                  	USERID = #userID# ),
-                    ( SELECT
-                      	CASE 
-                        	WHEN MAX(VIEWORDER) IS NULL 
-                        	THEN 2 
-                        	ELSE MAX(VIEWORDER) + 1 
-                    	END 
-                      FROM 
-                      	TBL_Board_MyBoards 
-                      WHERE  
-                        TENANT_ID = #tenantID#
-                      AND
-                        USERID = #userID# ),
-                    TENANT_ID,
-                    #companyID#
-                  FROM 
-                    TBL_Board_BoardInfo 
-                  WHERE
-                    TENANT_ID = #tenantID#
-                  AND
-                    BOARDID = #boardID# )
-        ]]>
+	                TENANT_ID,
+	                '*' as COMPANYID
+	           	  FROM
+	           	  	TBL_Board_BoardInfo
+	           	  WHERE
+	           	  	TENANT_ID = #tenantID#
+	           	  AND
+	           	  	BOARDID = #boardID# )
+			]]>
+		</isEqual>
+		<isNotEqual  property="isAllGroupBoard" compareValue="Y">
+	        <![CDATA[
+	          INSERT INTO TBL_Board_MyBoards (
+	            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+	          )
+	              ( SELECT
+	                #userID# USERID ,
+	                    BOARDID ,
+	                    BOARDNAME ,
+	                    BOARDNAME2 ,
+	                    ( SELECT 
+	                      	COUNT(BOARDID) + 1
+		                FROM
+		                  	TBL_Board_MyBoards
+		                WHERE
+		                  	TENANT_ID = #tenantID#
+		                AND
+		     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+		                AND  
+		                  	USERID = #userID# ),
+	                    ( SELECT
+	                      	CASE
+	                        	WHEN MAX(VIEWORDER) IS NULL
+	                        	THEN 2
+	                        	ELSE MAX(VIEWORDER) + 1
+	                    	END
+	                      FROM
+	                      	TBL_Board_MyBoards
+	                      WHERE
+	                        TENANT_ID = #tenantID#
+	                      AND
+		     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+	                      AND
+	                        USERID = #userID# ),
+	                    TENANT_ID,
+	                    COMPANYID
+	                  FROM
+	                    TBL_Board_BoardInfo
+	                  WHERE
+	                    TENANT_ID = #tenantID#
+	                  AND
+	                    BOARDID = #boardID# )
+	        ]]>
+        </isNotEqual>
       </insert>
       
       <delete id="MBoardDAO.deleteFavorite" parameterClass="Map">

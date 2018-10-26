@@ -88,8 +88,13 @@
 	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 	    			
 	    			get_att_list();
+	    			
 				}
 			});
+			
+			if ($('#writerDept_search option').length == 2) { //권한 있는 부서가 한개밖에 없으면 "전체" 옵션을 지운다.
+				$('#writerDept_search option').eq(0).remove();
+			}
 		})
 		
 		$(function () {
