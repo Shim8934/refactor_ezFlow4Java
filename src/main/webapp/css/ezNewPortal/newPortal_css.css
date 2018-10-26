@@ -109,6 +109,8 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li:hover .util_systemlink { background-position: -84px -21px; }/* 시스템링크 */
 .util li span {margin-top:17px;}
 
+.topmenulayout { min-width: 1300px; }
+
 .topmenu {}
 .topmenu .contentlayout_right div { width: 56px; height: 54px; padding:15px 0px; border-left: 1px solid #cecece; border-right: 1px solid #cecece; text-align: center; box-sizing: border-box; cursor: pointer; }
 .topmenu .contentlayout_right div.on { border: 0px none; background: #0287db; }

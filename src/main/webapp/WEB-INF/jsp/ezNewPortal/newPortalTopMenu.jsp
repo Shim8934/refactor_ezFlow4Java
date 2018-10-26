@@ -113,15 +113,18 @@
 				
 				//str += assembleMainMenu();
 				
-				str += '</ul>'				
-				str += '<div class="full_menu_toggle"><ul class="full_menu_toggleUL" id="toggleMenu"></ul></div>';
-				str += '<div class="menu_toggle_context" id="expandMenuFooter">'
-				str += '<div id="editBtn"><img src="/images/kr/left/icon_setup.gif" /></div>';
-				str += '<div id="editMenuBtn">'
-				str += '	<span class="topMenuBtn" id="editMenuCancel">취소</span>';
-				str += '	<span class="topMenuBtn" id="editMenuSave">저장</span>';
-				str += '	<span class="topMenuBtn initOrder" id="editcompanyOrder">메뉴 순서 초기화</span>';
-				str += '</div>';
+				str += '</ul>';				
+				
+				str += '<div id="menu_toggle">';
+				str += '	<div class="full_menu_toggle"><ul class="full_menu_toggleUL" id="toggleMenu"></ul></div>';
+				str += '	<div class="menu_toggle_context" id="expandMenuFooter">'
+				str += '		<div id="editBtn"><img src="/images/kr/left/icon_setup.gif" /></div>';
+				str += '		<div id="editMenuBtn">'
+				str += '			<span class="topMenuBtn" id="editMenuCancel">취소</span>';
+				str += '			<span class="topMenuBtn" id="editMenuSave">저장</span>';
+				str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder">메뉴 순서 초기화</span>';
+				str += '		</div>';
+				str += '	</div>';				
 				str += '</div>';
 				str += '</nav>';
 				str += '</li>';
@@ -134,7 +137,7 @@
 		var setTopMenu = function () {
 			var str = '';
 			
-				str += '<ul class="contentlayout">';
+				str += '<ul class="contentlayout topmenulayout">';
 				str += '	<li class="contentlayout_left">';
 				str += setLogo();
 				str += '	</li>';
@@ -190,17 +193,30 @@
 			var topFrame = parent.document.getElementById('topFrame');
 			var bodyTag = document.getElementsByTagName('Body')[0];				
 			if(type === 'on') {
-				topMenuFull.className = 'full_nav on';
+				$("#menu_toggle").css('display', 'none');
+				$("#topMenuFull").fadeOut(0, function() {
+					$("#topMenuFull").attr("class", "full_nav on");
+					$("#topMenuFull").fadeIn(100);
+				});				
+				var screenHeight = screen.height;
 				topFrame.style.position = 'relative';
-				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';				
+				topFrame.style.minHeight = screenHeight+"px";
+				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+				$("#menu_toggle").slideDown(200);
 			} else if (type === 'off'){
-				topMenuFull.className = 'full_nav off';
-				topFrame.style.position = '';	
+				$("#topMenuFull").fadeOut(100, function() {
+					$("#topMenuFull").attr("class", "full_nav off");
+					$("#topMenuFull").fadeIn(100);
+				});
+				
+				$("#menu_toggle").slideUp(200, function() {
+					topFrame.style.position = '';	
+				});
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();				
 			}
-		}		
+		}				
 		
 		// 확장메뉴 리스트 출력
 		var setExpandMenuList = function (orderData) {
@@ -367,8 +383,8 @@
 				if (topMenuFull.className.indexOf('on') > -1) {
 					subMenuClickEvent('off');
 				} else if (topMenuFull.className.indexOf('off') > -1) {
-					subMenuClickEvent('on');
 					setExpandMenuList();
+					subMenuClickEvent('on');
 				}
 			});		
 		}		
