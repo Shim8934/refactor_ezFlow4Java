@@ -223,7 +223,7 @@
 			        	}
 			        }
 		        } else {
-		        	alert("공유사서함을 선택해주세요.");
+		        	alert("<spring:message code='ezEmail.sharedMailbox20' />");
 		        }
 		    }
 		    
@@ -258,7 +258,7 @@
 		        var selnode = pUserList.GetSelectedRows();
 		        
 		        if (selnode == "") {
-		            alert("공유사서함을 선택해주세요.");
+		            alert("<spring:message code='ezEmail.sharedMailbox20' />");
 		            return;
 		        }
 		        
