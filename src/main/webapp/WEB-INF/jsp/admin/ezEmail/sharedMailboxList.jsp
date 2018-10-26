@@ -295,8 +295,8 @@
 		<h1><spring:message code='ezEmail.sharedMailbox01' /></h1>
 		
 		<div id="mainmenu">
-			<span><b><spring:message code='ezEmail.t59' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="companyChange()" style="margin-bottom:10px;">
+			<span style="display:none;"><b><spring:message code='ezEmail.t59' /></b></span>
+			<select name="ListCompany" id="ListCompany" onchange="companyChange()" style="margin-bottom:10px; display:none;">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
