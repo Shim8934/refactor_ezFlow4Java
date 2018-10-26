@@ -1700,18 +1700,4 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return result;
 	}
 	
-	@Override
-	public void setDeptOrphan(String cn, int tenantId) throws Exception {
-		logger.debug("setDeptOrphan started.");
-		logger.debug("cn=" + cn + ",tenantId=" + tenantId);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CN", cn);
-		map.put("v_TENANT_ID", tenantId);
-		
-		ezOrganAdminDao.setDeptOrphan(map);
-		
-		logger.debug("setDeptOrphan ended.");
-	}
 }

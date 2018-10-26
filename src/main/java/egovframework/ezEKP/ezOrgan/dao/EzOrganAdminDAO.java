@@ -2065,16 +2065,4 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	delete("EzOrganAdminDAO.deleteDelUserDBData_I", map);
     }
     
-    /**
-     * 조직도에서 해당 부서가 나타나지 않도록 상위 부서 정보를 제거한다.
-     * EXTENSIONATTRIBUTE1 값을 ""로 변경
-     * 
-     * 주의 :
-     *  - 해당 부서의 하위부서 DEPT_CD_PATH 값은 바뀌지 않는다.
-     *  - james_recipient_rewrite 테이블도 변경되지 않는다.
-     */
-    public void setDeptOrphan(Map<String, Object> map) throws Exception {
-    	update("EzOrganAdminDAO.setDeptOrphan", map);
-    }
-    
 }

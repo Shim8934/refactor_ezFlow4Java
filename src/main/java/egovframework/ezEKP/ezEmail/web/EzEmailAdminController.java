@@ -1527,7 +1527,7 @@ public class EzEmailAdminController {
 			String compId = (String)jsonObj.get("compId");
 			JSONArray userList = (JSONArray)jsonObj.get("userList");
 			int userListSize = userList.size();
-			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + "userListSize=" + userListSize);
+			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + ",userListSize=" + userListSize);
 			
 			int tenantId = auth.getTenantId();
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -1590,8 +1590,11 @@ public class EzEmailAdminController {
 						
 						ezOrganAdminService.insertDBData_dept(vo);
 						
-						// 조직도에 나타나게 하지 않기 위해 parentCn(상위부서ID)를 빈 문자열로 바꾼다.
-						ezOrganAdminService.setDeptOrphan(deptId, tenantId);
+						// 조직도에 나타나게 하지 않기 위해 상위부서 정보를 없앤다.
+						ezOrganAdminService.updateProperty(deptId, "EXTENSIONATTRIBUTE1", "", "dept", tenantId);
+						ezOrganAdminService.updateProperty(deptId, "DEPTLEVEL", "1", "dept", tenantId);
+						ezOrganAdminService.updateProperty(deptId, "DEPT_CD_PATH", deptId, "dept", tenantId);
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 						
@@ -1769,6 +1772,83 @@ public class EzEmailAdminController {
 		model.addAttribute("resultCode", resultCode);
 		
 		logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+		return "json";
+	}
+	
+	/**
+	 * 공유사서함 수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/modSharedMailbox.do")
+	public String modSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("modSharedMailbox started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String resultCode = "OK";
+		
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				resultCode = "NO_PERMISSION";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("modSharedMailbox ended. resultCode=" + resultCode);
+				
+				return "json";
+			}
+			
+			JSONParser jsonParser = new JSONParser();
+	    	JSONObject jsonObj = (JSONObject) jsonParser.parse(bodyData);
+			
+	    	String shareId = (String)jsonObj.get("shareId");
+			String shareName = (String)jsonObj.get("shareName");
+			String compId = (String)jsonObj.get("compId");
+			JSONArray userList = (JSONArray)jsonObj.get("userList");
+			int userListSize = userList.size();
+			int tenantId = auth.getTenantId();
+			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + ",userListSize=" + userListSize + ",tenantId=" + tenantId);
+			
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			
+			// 공유사서함이 있는지 확인
+			OrganUserVO sharedMailbox = ezOrganAdminService.getUserInfo(shareId, auth.getPrimary(), tenantId);
+			
+			if (sharedMailbox == null) {
+				logger.debug("sharedMailbox is not exists.");
+				
+				resultCode = "ERROR";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("modSharedMailbox ended. resultCode=" + resultCode);
+				return "json";
+			}
+			
+			// 공유사서함 이름 변경 (업데이트 날짜도 변경)
+			ezOrganAdminService.updateProperty(shareId, "DISPLAYNAME", shareName, "user", tenantId);
+			ezOrganAdminService.updateProperty(shareId, "DISPLAYNAME2", shareName, "user", tenantId);
+			ezOrganAdminService.updateProperty(shareId, "updateDT", nowDate, "user", tenantId);
+			
+			// 공유자 수정
+			String setUsersResult = resultCode = ezEmailService.setSharedMailboxUsers(shareId, userList, tenantId);
+			
+			if (!setUsersResult.equals("OK")) {
+				logger.debug("setSharedMailboxUsers failed.");
+				
+				resultCode = "ERROR";
+				model.addAttribute("resultCode", resultCode);
+				logger.debug("modSharedMailbox ended. resultCode=" + resultCode);
+				return "json";
+			}
+			
+		} catch (Exception e) {
+			resultCode = "ERROR";
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("resultCode", resultCode);
+		
+		logger.debug("modSharedMailbox ended. resultCode=" + resultCode);
 		return "json";
 	}
 	
