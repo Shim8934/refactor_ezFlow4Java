@@ -38,9 +38,10 @@
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
-			menuList: {},         // 메뉴 리스트 저장
-			menuWidth: [],        // 메뉴별 width 저장
-			defaultOrder: [],        // 기본 순서 저장 
+			menuList: {},             // 메뉴 리스트 저장
+			menuWidth: [],            // 메뉴별 width 저장
+			companyOrder: [],         // 기본 순서 저장 
+			isInitOrder: false,  // 메뉴 순서 초기화일 경우.
 		};
 	
 		// 로고 설정
@@ -55,23 +56,45 @@
 		}
 		
 		// 메인메뉴 조합하는 함수
-		var assembleMainMenu = function () {
-			var menuList = JSON.parse('${menuList}');
+		var setMainMenuList = function (reData) {
+			var menuList;
+
+			if(reData === undefined) {
+				menuList = JSON.parse('${menuList}');
+			} else {
+				menuList = reData;
+			}
+			
+			document.getElementById('mainMenuList').innerHTML = '';
+			
 			var str = '';
 			menuList.forEach(function (item, index) {
+console.log('item', item);				
 				str += '<li id="menu_' + item.menuId + '">' + item.menuName + '</li>';
 				
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuList['menu_'+ item.menuId] = {
 					menuId: item.menuId,
 					menuUrl: item.menuUrl,
-					defaultOrder: item.defaultOrder,
+					companyOrder: item.companyOrder,
 					iconUrl: item.iconUrl,
 					menuName: item.menuName,
 				};
 			});
 			
-			return str;
+			document.getElementById('mainMenuList').innerHTML = str;
+			
+			// 메인메뉴 이벤트 모아둔 곳
+			HTMLCollection.prototype.forEach = Array.prototype.forEach;
+			var menuLi = document.getElementById('mainMenuList').children;
+			menuLi.forEach(function (item, index) {
+				var menuUrl = newPortalTopMenu.menuList[item.id].menuUrl;
+				item.addEventListener('click', function () {
+					window.open(menuUrl, 'main', '');
+					// 클릭하면 창닫기.
+					subMenuClickEvent('off');
+				});
+			});
 		}		
 		
 		// 메인메뉴 설정
@@ -89,7 +112,7 @@
 				// str += '<div class="countBox"><span class="hidden_nav_count">+1</span><span class="icon_topmenu icon_count_arrow"></span></div>';
 				str += '<ul class="navUL" id="mainMenuList">';
 				
-				str += assembleMainMenu();
+				//str += assembleMainMenu();
 				
 				str += '</ul>'				
 				str += '<div class="full_menu_toggle"><ul class="full_menu_toggleUL" id="toggleMenu"></ul></div>';
@@ -98,7 +121,7 @@
 				str += '<div id="editMenuBtn">'
 				str += '	<span class="topMenuBtn" id="editMenuCancel">취소</span>';
 				str += '	<span class="topMenuBtn" id="editMenuSave">저장</span>';
-				str += '	<span class="topMenuBtn initOrder" id="editDefaultOrder">메뉴 순서 초기화</span>';
+				str += '	<span class="topMenuBtn initOrder" id="editcompanyOrder">메뉴 순서 초기화</span>';
 				str += '</div>';
 				str += '</div>';
 				str += '</nav>';
@@ -162,29 +185,6 @@
 			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');	
 		}
 		
-		var setTopMenuDefaultSaveEvnet = function () {
-			HTMLCollection.prototype.forEach = Array.prototype.forEach;
-			var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
-			
-			var orderObj = [];
-			sortedMenu.forEach(function (item, index) {
-				//console.log('aaa', item);
-			});
-			
-/* 			var xhr = new XMLHttpRequest();
-			xhr.onload = function () {
-				if (xhr.status >= 200 && xhr.status < 300) {
-					console.log(xhr.responseText);
-					
-				} else {
-					console.error(xhr.responseText);
-				}
-			};
-			xhr.open('PATCH', '/ezNewPortal/updateUserMenuOrder.do');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({data: orderObj}));		 */	
-		}
-		
 		// 확장버튼 UI 이벤트 함수
 		var subMenuClickEvent = function (type) {
 			var topMenuFull = document.getElementById('topMenuFull');
@@ -197,6 +197,9 @@
 			} else if (type === 'off'){
 				topMenuFull.className = 'full_nav off';
 				topFrame.style.position = '';	
+				// 취소버튼과 같은 역할
+				var editMenuCancel = document.getElementById('editMenuCancel');
+				editMenuCancel.click();				
 			}
 		}		
 		
@@ -214,8 +217,8 @@
 			var toggleMenu = document.getElementById('toggleMenu');
 			toggleMenu.innerHTML = '';
 
-			menuList.forEach(function (item, index) {
-				str += '<li id="'+item.menuId+'" data-defaultorder="'+ item.defaultOrder +'"><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ item.menuName +'</dd></dl></li>';
+			menuList.forEach(function (item, index) {				
+				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ item.menuName +'</dd></dl></li>';
 			});
 
 			toggleMenu.innerHTML = str;
@@ -243,7 +246,14 @@
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
 
 				// 드래그앤드롭
-				$('#toggleMenu').sortable();
+				$('#toggleMenu').sortable({
+					activate: function () {
+						console.log('newPortalTopMenu.isInitOrder', newPortalTopMenu.isInitOrder);
+						if(newPortalTopMenu.isInitOrder === true) {
+							newPortalTopMenu.isInitOrder = false;
+						}
+					}
+				});
 				$('#toggleMenu').sortable("option", "disabled", false);
 				$('#toggleMenu').disableSelection();	
 				var sortedMenu = document.getElementById('toggleMenu');
@@ -264,6 +274,7 @@
 				var sortedMenu = document.getElementById('toggleMenu');
 				sortedMenu.className = 'full_menu_toggleUL';
 				
+				$('#toggleMenu').sortable();
 				$('#toggleMenu').sortable("option", "disabled", true);
 				
 				// 취소하면 버튼 처음으로 재정렬
@@ -274,17 +285,56 @@
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
 				alert('save');
+				
+				HTMLCollection.prototype.forEach = Array.prototype.forEach;
+				var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
+				
+				var orderObj = [];
+				sortedMenu.forEach(function (item, index) {
+					orderObj.push({
+						menuId: item.id,
+						order: (index*1) + 1,
+					});
+				});
+				
+	 			var xhr = new XMLHttpRequest();
+				xhr.onload = function () {
+					// 결과 값으로 다시 출력할 메뉴 가져오기.
+					if (xhr.status >= 200 && xhr.status < 300) {
+						var result = JSON.parse(xhr.responseText).data;
+						// 메뉴 리스트 다시 덮어씌우기
+						setMainMenuList(result.menuList);
+						setExpandMenuList(result.menuList);
+					} else {
+						console.error(xhr.responseText);
+					}
+				};
+				
+				// 메뉴 순서 초기화 버튼인 경우 아닌 경우 
+				console.log('newPortalTopMenu.isInitOrder',newPortalTopMenu.isInitOrder);
+				if (newPortalTopMenu.isInitOrder) {
+					console.log("delete");
+					xhr.open('DELETE', '/ezNewPortal/deleteUserMenuOrder.do');
+					xhr.send();
+				} else {
+					console.log("patch");
+					xhr.open('PATCH', '/ezNewPortal/updateUserMenuOrder.do');
+					xhr.setRequestHeader('Content-Type', 'application/json');
+					xhr.send(JSON.stringify({
+						data: orderObj,
+					}));					
+				}
 			});			
 			
-			// 순서초기화 버튼
-			var editDefaultOrder = document.getElementById('editDefaultOrder');
-			editDefaultOrder.addEventListener('click', function() {
+			// 메뉴 순서 초기화 버튼
+			var editcompanyOrder = document.getElementById('editcompanyOrder');
+			editcompanyOrder.addEventListener('click', function() {
  
 				var elements = document.getElementById('toggleMenu').childNodes;
-	 			Array.prototype.forEach.call(elements, function (item, index) {
-					newPortalTopMenu.defaultOrder[index] = {
+	 			Array.prototype.forEach.call(elements, function (item, index) { 				
+					newPortalTopMenu.companyOrder[index] = {
 						menuId: item.id,
-						defaultOrder: item.dataset.defaultorder*1,
+						companyOrder: item.dataset.companyorder*1,
 						iconUrl: newPortalTopMenu.menuList['menu_'+item.id].iconUrl,
 						menuName: newPortalTopMenu.menuList['menu_'+item.id].menuName,
 						menuUrl: newPortalTopMenu.menuList['menu_'+item.id].menuUrl,
@@ -292,18 +342,21 @@
 				});
 	 			
 	 			var temp = [];
-	 			for(var i=0; i<newPortalTopMenu.defaultOrder.length; i++ ) {
-	 				for(var j=i; j<newPortalTopMenu.defaultOrder.length; j++) {
-	 					if(newPortalTopMenu.defaultOrder[i].defaultOrder > newPortalTopMenu.defaultOrder[j].defaultOrder ) {
-	 						temp = newPortalTopMenu.defaultOrder[i];
-	 						newPortalTopMenu.defaultOrder[i] = newPortalTopMenu.defaultOrder[j];
-	 						newPortalTopMenu.defaultOrder[j] = temp;
+	 			for(var i=0; i<newPortalTopMenu.companyOrder.length; i++ ) {
+	 				for(var j=i; j<newPortalTopMenu.companyOrder.length; j++) {
+	 					if(newPortalTopMenu.companyOrder[i].companyOrder > newPortalTopMenu.companyOrder[j].companyOrder ) {
+	 						temp = newPortalTopMenu.companyOrder[i];
+	 						newPortalTopMenu.companyOrder[i] = newPortalTopMenu.companyOrder[j];
+	 						newPortalTopMenu.companyOrder[j] = temp;
 	 					}
 	 				}
 	 			};
 	 			
 				// 확장메뉴 재배치	
-	 			setExpandMenuList(newPortalTopMenu.defaultOrder);
+	 			setExpandMenuList(newPortalTopMenu.companyOrder);
+				
+				// 메뉴 순서 초기화 값 true로 변경
+				newPortalTopMenu.isInitOrder = true;
 			});			
 		}			
 		
@@ -314,59 +367,12 @@
 			topMenuFull.addEventListener('click', function () {
 				if (topMenuFull.className.indexOf('on') > -1) {
 					subMenuClickEvent('off');
-					// 취소버튼?
-					var editMenuCancel = document.getElementById('editMenuCancel');
-					editMenuCancel.click();
 				} else if (topMenuFull.className.indexOf('off') > -1) {
 					subMenuClickEvent('on');
-					setExpandMenuListEvent(); // 확장메뉴 리스트 및 이벤트 설정
+					setExpandMenuList();
 				}
 			});		
 		}		
-		
-		// 확장메뉴 순서 변경 후 저장
-		var setTopMenuSaveEvent = function () {
-			
-			if(!confirm('변경된 순서를 저장하시겠습니까?')) {
-				return;
-			}
-			
-			HTMLCollection.prototype.forEach = Array.prototype.forEach;
-			var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
-			
-			var orderObj = [];
-			sortedMenu.forEach(function (item, index) {
-				orderObj[index] = item.id; 
-			});
-			
-			var xhr = new XMLHttpRequest();
-			xhr.onload = function () {
-				if (xhr.status >= 200 && xhr.status < 300) {
-					console.log(xhr.responseText);
-					
-				} else {
-					console.error(xhr.responseText);
-				}
-			};
-			xhr.open('PATCH', '/ezNewPortal/updateUserMenuOrder.do');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({data: orderObj}));			
-		}
-		
-		// 메인메뉴 이벤트 모아둔 곳
-		var setMainEvent = function () {
-			HTMLCollection.prototype.forEach = Array.prototype.forEach;
-			var menuList = JSON.parse('${menuList}');
-			var menuLi = document.getElementById('mainMenuList').children;
-			// console.log(newPortalTopMenu.menuList);
-			menuLi.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuList[item.id].menuUrl;
-				item.addEventListener('click', function () {
-					window.open(menuUrl, 'main', '');
-				});
-			});
-
-		}
 		
 		// 메뉴 리스트의 사이즈 구하기
 		var getMenuListWidth = function () {
@@ -452,12 +458,14 @@
 		
  		var newPortalTopMenuFunc = function () {
 			setTopMenu();            // 헤더 전체 셋팅
+			setMainMenuList();       // 메인메뉴 리스트 출력
 			setUtilEvent();          // 유틸메뉴 이벤트 설정
-			setMainEvent();          // 메인메뉴 이벤트 설정
 			getMenuListWidth();      // 메인메뉴 li별 사이즈 측정
 			countTopMenuList();      // 메인메뉴 카운팅
 			getNotiPopup();          // 팝업공지 불러오기
-			setExpandMenuEvent()     // 확장메뉴 이벤트 설정
+			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
+			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
+			
 		}		
  		
  		// 시작지점

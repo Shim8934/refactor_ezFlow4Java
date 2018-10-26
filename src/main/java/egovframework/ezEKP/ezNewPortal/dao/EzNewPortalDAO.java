@@ -61,9 +61,24 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<MenuInfoVO>) list("ezNewPortal.getCompanyMenuList", map);
 	}	
 	
+	// 현재 사용자 메뉴 순서 존재여부 확인
+	public int getUserMenuOrderCnt(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getUserMenuOrderCnt", map);
+	}
+	
+	// 사용자 메뉴 순서 입력
+	public void insertUserMenuOrder(Map<String, Object> map) throws Exception {
+		insert("ezNewPortal.insertUserMenuOrder", map);
+	}
+	
 	// 사용자 메뉴 순서 변경
 	public void updateUserMenuOrder(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateUserMenuOrder", map);
+	}
+	
+	// 사용자 메뉴 순서 삭제
+	public void deleteUserMenuOrder(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteUserMenuOrder", map);
 	}
 	/* 박종균 끝 */
 	

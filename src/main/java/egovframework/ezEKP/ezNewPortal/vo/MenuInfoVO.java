@@ -11,7 +11,14 @@ public class MenuInfoVO {
 	private int defaultOrder; //메뉴 기본 순서(기본 제공)
 	private boolean menuUsed; //메뉴 사용 여부 : 사용(true), 미사용(false)
 	private String companyLang; //회사 사용 언어
+	private int companyOrder; // 회사 설정 기본 순서
 	
+	public int getCompanyOrder() {
+		return companyOrder;
+	}
+	public void setCompanyOrder(int companyOrder) {
+		this.companyOrder = companyOrder;
+	}
 	public int getMenuId() {
 		return menuId;
 	}
@@ -72,6 +79,8 @@ public class MenuInfoVO {
 				+ ", menuName=" + menuName + ", menuUrl=" + menuUrl
 				+ ", menuType=" + menuType + ", iconUrl=" + iconUrl
 				+ ", defaultOrder=" + defaultOrder + ", menuUsed=" + menuUsed
-				+ ", companyLang=" + companyLang + "]";
+				+ ", companyLang=" + companyLang + ", companyOrder="
+				+ companyOrder + "]";
 	}
+
 }

@@ -482,12 +482,23 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);			
-			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);	
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String langType = info.getLang();			
+			JSONObject data = new JSONObject();
+
 			ezNewPortalService.updateUserMenuOrder(info.getCompanyId(), info.getTenantId(), userId, jObj);
+			
+			// 리스트 다시 받아서 출력
+			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId);
+			// List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
+
+			data.put("menuList", userMenuList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -509,9 +520,21 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String langType = info.getLang();			
+			JSONObject data = new JSONObject();
+			
+			ezNewPortalService.deleteUserMenuOrder(info.getCompanyId(), info.getTenantId(), userId);
+			// 초기화 하면 회사에서 지정한 메뉴 순서로 출력
+			List<MenuInfoVO> compMenuList = ezNewPortalService.getCompanyMenuList(companyId, tenantId, langType);
+			
+			LOGGER.debug("comMenuList: " + compMenuList.toString());
+			
+			data.put("menuList", compMenuList);
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
