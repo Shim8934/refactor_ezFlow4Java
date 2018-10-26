@@ -108,7 +108,7 @@
 		            rvalue[1] = "N";
 		        
 		        //2018-10-01 김민성 - 게시물 선택인쇄 확인 옵션 추가
-		        if(document.getElementById('onl').checked != true && document.getElementById('att').checked != true) {
+		        if (rvalue[0] == "N" && rvalue[1] == "N") {
 		    		alert("<spring:message code='ezCircular.t193'/>");
 		    		return;
 		    	} 
