@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -772,18 +773,34 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getMenuInfo started. companyId = " + companyId + " || tenantId = " + tenantId);
+	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
 		
 		MenuInfoVO vo = ezNewPortalDAO.getMenuInfo(map);
 		
 		LOGGER.debug("getMenuInfo ended.");
 		
 		return vo;
+	}
+	
+	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
+		List<MenuNameVO> list = ezNewPortalDAO.getMenuNames(map);
+		
+		LOGGER.debug("getMenuNames ended.");
+		
+		return list;
 	}
 	
 	@Override
@@ -850,18 +867,59 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updateCompanyMenuInfo ended.");
 	}
 	
-	private void updateMenuPortletUsed(int menuId, boolean menuUsed, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + menuUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	//메뉴사용여부에 따라 관련포틀릿 사용여부 수정
+	private void updateMenuPortletUsed(int menuId, boolean portletUsed, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + portletUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
-		map.put("menuUsed", menuUsed);
+		map.put("portletUsed", portletUsed);
 		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
 		
 		ezNewPortalDAO.updateMenuPortletUsed(map);
 		
 		LOGGER.debug("updateMenuPortletUsed ended.");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateMenuAuth(JSONObject menuAuths, int menuId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		LOGGER.debug("menuAuths = " + menuAuths.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//이걸 구분해서 넣을 필요가잇나 받을때 accessYN이 같이들어오면 그냥 for 하나에 다때려박아도되는데?
+		for (Object item : (JSONArray) menuAuths.get("menuAuthsY")) {
+			if (item instanceof JSONObject) {
+				JSONObject menuAuthsY = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("accessYN", true);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateMenuAuth(map);
+			}
+		}
+		
+		for (Object item : (JSONArray) menuAuths.get("menuAuthsN")) {
+			if (item instanceof JSONObject) {
+				JSONObject menuAuthsY = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("accessYN", true);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateMenuAuth(map);
+			}
+		}
+		
+		LOGGER.debug("updateMenuAuth ended.");
 	}
 	
 	@Override

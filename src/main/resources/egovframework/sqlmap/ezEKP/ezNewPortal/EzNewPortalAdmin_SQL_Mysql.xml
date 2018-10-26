@@ -9,8 +9,8 @@
 				B.theme_id AS themeid,
 				B.theme_name AS themename,
 			    B.theme_content AS themecontent,
-			    CASE WHEN A.theme_used = 'Y' THEN 1 ELSE 0 END AS themeused,
-			    CASE WHEN A.theme_default = 'Y' THEN 1 ELSE 0 END AS themedefault
+			    A.theme_used AS themeused,
+			    A.theme_default AS themedefault
 			FROM
 				TBL_PORTAL_THEME_COMP A
 			JOIN
@@ -32,8 +32,8 @@
 				B.theme_id AS themeid,
 			    B.frame_id AS frameid,
 				B.frame_name AS framename,
-				CASE WHEN A.frame_used = 'Y' THEN 1 ELSE 0 END AS frameused,
-			    CASE WHEN A.frame_default = 'Y' THEN 1 ELSE 0 END AS framedefault
+				A.frame_used AS frameused,
+			    A.frame_default AS framedefault
 			FROM
 				TBL_PORTAL_FRAME_COMP A
 			JOIN
@@ -57,7 +57,7 @@
 			SELECT
 				A.menu_id AS menuid,
 				C.menu_name AS menuname,
-				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
+				A.menu_used AS menuused,
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
@@ -98,7 +98,7 @@
 				A.menu_id AS menuid,
 				B.menu_type AS menutype,
 				C.menu_name AS menuname,
-				CASE WHEN A.menu_used = 'Y' THEN 1 ELSE 0 END AS menuused,
+				A.menu_used AS menuused,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
 				B.icon_url AS iconurl,
@@ -126,6 +126,37 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
+			AND
+				A.menu_id = #menuId#
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getMenuNames" parameterClass="Map" resultClass="MenuNameVO">
+		<![CDATA[
+			SELECT
+				A.menu_lang AS menulang,
+				A.menu_name AS menuname
+			FROM
+				TBL_PORTAL_MENU_NAME A
+			JOIN
+				TBL_PORTAL_MENU_COMP B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.company_id = B.company_id
+			AND
+				A.menu_id = B.menu_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+				A.menu_id = #menuId#
+			ORDER BY
+				CASE A.menu_lang WHEN B.company_lang
+					THEN 1
+					ELSE 2
+				END
 		]]>
 	</select>
 	
@@ -135,15 +166,15 @@
 				menu_id AS menuid,
 				user_id AS userid,
 				user_type AS usertype,
-				CASE WHEN access_yn = 'Y' THEN 1 ELSE 0 END AS accessyn
+				access_yn AS accessyn
 			FROM
 				TBL_PORTAL_MENU_AUTH
 			WHERE
 				tenant_id = #tenantId#
 			AND
-				companyid = #companyId#
+				company_id = #companyId#
 			AND
-				menuid = #menuid#
+				menu_id = #menuId#
 			AND
 				access_yn = #accessType#
 			ORDER BY
@@ -205,5 +236,41 @@
 				A.menu_id = #menuId#
 		]]>
 	</update>
+	
+	<update id="ezNewPortal.updateCompanyMenuNameInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_MENU_NAME
+				(menu_id, menu_lang, menu_name, company_id, tenant_id)
+			VALUES
+				(#menuId#, #menuLang#, #menuName#, #companyId#, #tenantId#)
+			ON DUPLICATE KEY UPDATE
+				menu_name = #menuName#
+		]]>
+	</update>
+	
+	<update id="ezNewPortal.updateMenuPortletUsed" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_PORTLET_COMP
+			SET
+				portlet_used = #portletUsed#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menu_id = #menuId#
+		]]>
+	</update>
 
+	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_MENU_AUTH
+				(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
+			VALUES
+				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
+			ON DUPLICATE KEY UPDATE
+				access_yn = #accessYN#
+		]]>
+	</update>
 </sqlMap>

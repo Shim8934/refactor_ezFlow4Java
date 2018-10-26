@@ -15,6 +15,7 @@
 <typeAlias alias="MenuInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO"/>
 <typeAlias alias="PortletNameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO"/>
 <typeAlias alias="MenuAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO"/>
+<typeAlias alias="MenuNameVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuNameVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -281,7 +282,7 @@ AND
 AND
 	comp.menu_id = user.menu_id
 WHERE 
-	comp.MENU_USED = 'Y'
+	comp.MENU_USED = 1
 AND 
 	comp.COMPANY_ID = #companyId#
 AND
@@ -328,7 +329,7 @@ AND
 AND
 	comp.MENU_ID = auth.MENU_ID
 WHERE 
-	comp.MENU_USED = 'Y'
+	comp.MENU_USED = 1
 AND 
 	comp.COMPANY_ID = #companyId#
 AND
@@ -653,7 +654,7 @@ SELECT
     A.DEFAULT_ORDER,
     B.PORTLET_CATEGORY,
     B.CONNECTION_URL,
-    IF(B.PORTLET_USED = 'Y', 1, 0) AS PORTLET_USED
+    B.PORTLET_USED AS PORTLET_USED
 FROM
 	TBL_PORTAL_PORTLET A
 JOIN
@@ -787,9 +788,9 @@ WHERE
 AND
 	B.tenant_id = #tenantId#
 AND
-	B.theme_used = 'Y'
+	B.theme_used = 1
 AND
-	C.frame_default = 'Y'
+	C.frame_default = 1
 ]]>
 </select>
 
@@ -1054,8 +1055,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    B.theme_id AS themeid,
 				B.theme_name AS themename,
 			    B.theme_content AS themecontent,
-			    CASE WHEN A.theme_used = 'Y' THEN 1 ELSE 0 END AS themeused,
-			    CASE WHEN A.theme_default = 'Y' THEN 1 ELSE 0 END AS themedefault
+			    A.theme_used AS themeused,
+			    A.theme_default AS themedefault
 			FROM
 				TBL_PORTAL_THEME_COMP A
 			JOIN
@@ -1101,8 +1102,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			ON A.FRAME_ID = B.FRAME_ID
 			WHERE A.COMPANY_ID = #companyId#
 			AND A.TENANT_ID = #tenantId#
-			AND A.FRAME_DEFAULT = 'Y'
-			AND A.THEME_ID = (SELECT THEME_ID FROM TBL_PORTAL_THEME_COMP WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId# AND THEME_DEFAULT = 'Y')) AS USED_FRAME
+			AND A.FRAME_DEFAULT = 1
+			AND A.THEME_ID = (SELECT THEME_ID FROM TBL_PORTAL_THEME_COMP WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId# AND THEME_DEFAULT = 1)) AS USED_FRAME
 	FROM
 		TBL_PORTAL_THEME_COMP
 	WHERE
@@ -1110,7 +1111,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	AND
 		TENANT_ID = #tenantId#
 	AND
-		THEME_DEFAULT = 'Y'
+		THEME_DEFAULT = 1
 	LIMIT
 		1;
 ]]>
@@ -1227,7 +1228,7 @@ SELECT A.PORTLET_ID,
 	   IF(C.PORTLET_TYPE = 'G', 1, 0) AS IS_GENERAL,
 	   A.CONNECTION_URL,
 	   A.PORTLET_ORDER,
-       IF(A.PORTLET_USED = 'Y', 1, 0) AS PORTLET_USED,
+       A.PORTLET_USED AS PORTLET_USED,
        C.MENU_ID,
        C.DEFAULT_ORDER,
        C.PORTLET_URL

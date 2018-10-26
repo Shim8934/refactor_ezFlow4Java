@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -87,7 +88,11 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴상세정보조회
 	 */
-	public MenuInfoVO getMenuInfo(String companyId, int tenantId) throws Exception;
+	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴상세정보 메뉴이름조회
+	 */
+	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
 	 */
@@ -96,6 +101,10 @@ public interface EzNewPortalService {
 	 * 관리자 메뉴정보 및 메뉴이름 수정
 	 */
 	public void updateCompanyMenuInfo(int menuId, JSONObject menuInfo, JSONArray menuNames, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴별 권한목록 수정
+	 */
+	public void updateMenuAuth(JSONObject menuAuths, int menuId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
 	/** -------------------- */

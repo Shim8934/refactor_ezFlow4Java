@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -237,6 +238,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<MenuNameVO> getMenuNames(Map<String, Object> map) throws Exception {
+		return (List<MenuNameVO>) list("ezNewPortal.getMenuNames", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<MenuAuthVO> getMenuAuth(Map<String, Object> map) throws Exception {
 		return (List<MenuAuthVO>) list("ezNewPortal.getMenuAuth", map);
 	}
@@ -255,10 +261,14 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void updateCompanyMenuNameInfo(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateCompanyMenuNameInfo", map);
-	}
+ 	}
 	
 	public void updateMenuPortletUsed(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateMenuPortletUsed", map);
+	}
+	
+	public void updateMenuAuth(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateMenuAuth", map);
 	}
 	/** -------------------- */
 	

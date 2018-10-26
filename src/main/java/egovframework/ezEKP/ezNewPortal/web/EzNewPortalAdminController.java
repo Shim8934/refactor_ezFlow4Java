@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,11 +295,16 @@ public class EzNewPortalAdminController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		
+		JSONParser jp = new JSONParser();
+		resultBody = (JSONObject) jp.parse(resultBody.toJSONString());
+		
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
 			//메뉴정보
-			model.addAttribute("menuInfo", resultBody.get("data"));
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("menuInfo", data.get("menuInfo"));
+			model.addAttribute("menuNames", data.get("menuNames"));
 		}
 		
 		//해당메뉴 권한정보요청
@@ -351,7 +357,7 @@ public class EzNewPortalAdminController {
 		jsonParam = new JSONObject();
 		jsonParam.put("menuAuths", param.get("menuAuths"));
 		
-		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
 		
 		resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
 		
@@ -372,6 +378,39 @@ public class EzNewPortalAdminController {
 		LOGGER.debug("insertMenu started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonParam = new JSONObject();
+		
+		//메뉴정보추가
+		jsonParam.put("menuInfo", param.get("menuInfo"));
+		jsonParam.put("menuNames", param.get("menuNames"));
+		
+		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonParam);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		//메뉴권한수정
+		jsonParam = new JSONObject();
+		jsonParam.put("menuAuths", param.get("menuAuths"));
+		
+		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		
+		resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonParam);
+		
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
 		
 		LOGGER.debug("insertMenu ended.");
 	}
