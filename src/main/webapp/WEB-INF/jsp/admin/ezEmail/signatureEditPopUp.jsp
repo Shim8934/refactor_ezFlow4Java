@@ -63,8 +63,9 @@
 			
 			for (var i = 0; i < infoBodyChild.length; i++) {
 				infoBodyChild[i].onclick = function() { event_listclick(this); };
-				infoBodyChild[i].onmouseover = function () { event_listMover(this); };
-				infoBodyChild[i].onmouseout = function () { event_listMout(this); };
+				infoBodyChild[i].onmouseover = function() { event_listMover(this); };
+				infoBodyChild[i].onmouseout = function() { event_listMout(this); };
+				infoBodyChild[i].ondblclick = function() { applyInfo(); };
 			}
 		}
 		
