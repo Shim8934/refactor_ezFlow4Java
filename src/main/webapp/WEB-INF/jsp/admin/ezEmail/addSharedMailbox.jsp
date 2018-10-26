@@ -145,7 +145,6 @@
 	        		resultXml += "<CELL><DATA1>" + MakeXMLString(vo.userId) + "</DATA1><DATA2>" + vo.deletePermission + "</DATA2>";
 	        		resultXml += "<DATA3>" + vo.sendPermission + "</DATA3><VALUE>" + MakeXMLString(vo.userName) + "</VALUE></CELL>";
 	        		resultXml += "<CELL></CELL>";
-	        		resultXml += "<CELL></CELL>";
 	        		resultXml += "</ROW>";
 	        	})
 	        	
@@ -171,6 +170,7 @@
                 	chk.setAttribute("type", "checkbox");
                 	chk.setAttribute("id", "delete_" + row.getAttribute("DATA1"));
                 	chk.setAttribute("name", "delete_" + row.getAttribute("DATA1"));
+                	chk.style.marginRight = "5px";
                 	
                 	if (row.getAttribute("DATA2") === "Y") {
                 		chk.setAttribute("checked", true);
@@ -179,6 +179,7 @@
                 	var lbl = document.createElement("label");
                 	lbl.setAttribute("for", "delete_" + row.getAttribute("DATA1"));
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox16' />"));
+                	lbl.style.cursor = "pointer";
                 	
                 	row.childNodes[1].appendChild(lbl);
                 	row.childNodes[1].appendChild(chk);
@@ -195,9 +196,11 @@
                 	lbl = document.createElement("label");
                 	lbl.setAttribute("for", "send_" + row.getAttribute("DATA1"));
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox17' />"));
+                	lbl.style.cursor = "pointer";
                 	
-                	row.childNodes[2].appendChild(lbl);
-                	row.childNodes[2].appendChild(chk);
+                	row.childNodes[1].appendChild(lbl);
+                	row.childNodes[1].appendChild(chk);
+                	row.childNodes[1].ondblclick = function() { event.cancelBubble = true; };
                 }
 	        }
 	
@@ -978,7 +981,7 @@
                             pparsingXML = "";
                             pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                             pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1><DATA2>Y</DATA2><DATA3>Y</DATA3>";
-                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL><CELL></CELL><CELL></CELL></ROW>";
+                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL><CELL></CELL></ROW>";
                             pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                             Resultxml = loadXMLString(pparsingXML2);
 
@@ -1015,10 +1018,12 @@
                         	chk.setAttribute("id", "delete_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("name", "delete_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("checked", true);
+                        	chk.style.marginRight = "5px";
                         	
                         	var lbl = document.createElement("label");
                         	lbl.setAttribute("for", "delete_" + objTr.getAttribute("DATA1"));
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox16' />"));
+                        	lbl.style.cursor = "pointer";
                         	
                         	objTr.childNodes[1].appendChild(lbl);
                         	objTr.childNodes[1].appendChild(chk);
@@ -1032,9 +1037,11 @@
                         	lbl = document.createElement("label");
                         	lbl.setAttribute("for", "send_" + objTr.getAttribute("DATA1"));
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox17' />"));
+                        	lbl.style.cursor = "pointer";
                         	
-                        	objTr.childNodes[2].appendChild(lbl);
-                        	objTr.childNodes[2].appendChild(chk);
+                        	objTr.childNodes[1].appendChild(lbl);
+                        	objTr.childNodes[1].appendChild(chk);
+                        	objTr.childNodes[1].ondblclick = function() { event.cancelBubble = true; };
                         }
                     }
                 }
