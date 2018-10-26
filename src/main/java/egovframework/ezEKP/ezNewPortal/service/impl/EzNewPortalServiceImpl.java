@@ -153,20 +153,45 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception {
 		LOGGER.debug("[Serivce] updateUserMenuOrder Started");
 
-		List<String> list = (ArrayList<String>) jObj.get("data");
+		// 사용자 메뉴가 존재할 경우, 존재하지 않을 경우로 분기
+		Map<String, Object> cntMap = new HashMap<String, Object>();
+		cntMap.put("companyId", companyId);
+		cntMap.put("tenantId", tenantId);
+		cntMap.put("userId", userId);
+		
+		int cnt = ezNewPortalDAO.getUserMenuOrderCnt(cntMap);
+		
+		List<Map<String, Object>> list = (ArrayList<Map<String, Object>>) jObj.get("data");
+
 		for(int i=0; i<list.size(); i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("userId", userId);			
-			map.put("menuId", list.get(i));
-			map.put("order", i+1);
+			map.put("menuId", list.get(i).get("menuId"));
+			map.put("order", list.get(i).get("order"));
 			
-			LOGGER.debug("map.toString() : "  + map.toString());
-			ezNewPortalDAO.updateUserMenuOrder(map);
+			if (cnt < 1) {
+				ezNewPortalDAO.insertUserMenuOrder(map);
+			} else {
+				ezNewPortalDAO.updateUserMenuOrder(map);
+			}
 		}
-		
 		LOGGER.debug("[Serivce] updateUserMenuOrder Ended");
+	}
+	
+	// 사용자 메뉴 순서 삭제
+	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception {
+		LOGGER.debug("[Serivce] deleteUserMenuOrder Started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		ezNewPortalDAO.deleteUserMenuOrder(map);
+		
+		LOGGER.debug("[Serivce] deleteUserMenuOrder Ended");
 	}
 	
 	@Override

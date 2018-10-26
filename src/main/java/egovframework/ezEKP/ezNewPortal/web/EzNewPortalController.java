@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -160,9 +161,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 사용자 메뉴 순서 변경
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/updateUserMenuOrder.do")
 	@ResponseBody
-	public String updateUserMenuOrder(@RequestBody JSONObject jObj, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	public JSONObject updateUserMenuOrder(@RequestBody JSONObject jObj, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserMenuOrder Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -171,13 +173,44 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String status = resultBody.get("status").toString();
 		String result = "failure";
 
+		JSONObject resultObj = new JSONObject();
+		
 		if (status.equals("ok")) {
 			result = "success";
+			resultObj.put("result" , result);
+			resultObj.put("data" , resultBody.get("data"));
 		}		
 		
 		logger.debug("updateUserMenuOrder End");
-		return result;
+		return resultObj;
 	}
+	
+	/**
+	 * 사용자 메뉴 순서 초기화
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/deleteUserMenuOrder.do")
+	@ResponseBody
+	public JSONObject deleteUserMenuOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("k Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/menus/order/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "delete", null);
+		String status = resultBody.get("status").toString();
+		String result = "failure";
+
+		JSONObject resultObj = new JSONObject();
+		
+		if (status.equals("ok")) {
+			result = "success";
+			resultObj.put("result" , result);
+			resultObj.put("data" , resultBody.get("data"));
+		}		
+		
+		logger.debug("deleteUserMenuOrder End");
+		return resultObj;
+	}	
 	
 	/**
 	 * 포탈 메인 화면 호출 함수

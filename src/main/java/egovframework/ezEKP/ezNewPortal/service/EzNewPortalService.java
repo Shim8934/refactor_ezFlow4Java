@@ -36,6 +36,7 @@ public interface EzNewPortalService {
 	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId) throws Exception;
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType) throws Exception;
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception;
+	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
 	/**
 	 * 유은정
 	 */
