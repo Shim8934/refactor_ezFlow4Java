@@ -23,7 +23,7 @@
 			.menuDetails hr {display:block; width:99%;}
 			.menuIconInfo {display:inline-block; margin:43px 23px 23px 23px;}
 			.menuIcon {width:100px;height:100px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.menuIcon span {margin:36px;}
+			.menuIcon span, .menuIcon img {margin:36px;}
 			.menuInfo {display:inline-block; vertical-align:top; margin-top:23px;}
 			.menuInfo ul {padding:0px;}
 			.menuInfo ul li {font-size:15px; font-weight:bold; display:block;margin-bottom:12px;}
@@ -39,6 +39,8 @@
 			.btnpositionJsp {margin-top : 0px;padding:0px;}
 			.hideDetails {display : none;}
 			.menuSortable {display : inline-block;}
+			dt img {width:21px;height:21px;margin-top:20px;}
+			.menuIcon img {width:21px;height:21px;}
 			
 			/* switch */
 			.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-left:26px; margin-top:-3px;}
@@ -124,11 +126,17 @@
 					var result = JSON.parse(request.responseText);
 					var menuList = result.list;
 					var menusHTML = "";
-					
+					console.log(menuList);
 					menuList.forEach(function (item, index) {
 						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
-						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
+						
+						if (item.menuType == "G") {
+							menusHTML += "<dt><span class='" + item.iconUrl + "'>";
+						} else {
+							menusHTML += "<dt><img src='" + item.iconUrl + "'>";
+						}
+						
 						menusHTML += "</span></dt>";
 						menusHTML += "<dd>" + item.menuName + "</dd>";
 						menusHTML += "</li>";
