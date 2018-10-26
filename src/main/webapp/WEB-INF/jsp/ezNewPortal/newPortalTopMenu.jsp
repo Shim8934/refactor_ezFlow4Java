@@ -69,7 +69,6 @@
 			
 			var str = '';
 			menuList.forEach(function (item, index) {
-console.log('item', item);				
 				str += '<li id="menu_' + item.menuId + '">' + item.menuName + '</li>';
 				
 				// 메뉴리스트 객체 생성

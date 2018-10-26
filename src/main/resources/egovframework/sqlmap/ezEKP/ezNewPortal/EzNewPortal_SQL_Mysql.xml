@@ -273,6 +273,8 @@ AND
 	comp.TENANT_ID = auth.TENANT_ID
 AND
 	comp.MENU_ID = auth.MENU_ID
+AND 
+	comp.COMPANY_LANG = name.MENU_LANG	
 LEFT OUTER JOIN
 	tbl_portal_menu_user as user
 ON
@@ -320,6 +322,8 @@ AND
 	comp.COMPANY_ID = name.COMPANY_ID
 AND 
 	comp.TENANT_ID = name.TENANT_ID
+AND 
+	comp.COMPANY_LANG = name.MENU_LANG		
 LEFT OUTER JOIN
 	tbl_portal_menu_auth as auth
 ON
