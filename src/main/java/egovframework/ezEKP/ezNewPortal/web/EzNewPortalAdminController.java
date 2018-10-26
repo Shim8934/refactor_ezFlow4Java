@@ -386,9 +386,9 @@ public class EzNewPortalAdminController {
 		JSONObject jsonParam = new JSONObject();
 		
 		//메뉴정보추가
-		jsonParam.put("menuInfo", param.get("menuInfo"));
-		jsonParam.put("menuNames", param.get("menuNames"));
-		jsonParam.put("menuAuths", param.get("menuAuths"));
+		jsonParam.put("menuInfo", paramMap.get("menuInfo"));
+		jsonParam.put("menuNames", paramMap.get("menuNames"));
+		jsonParam.put("menuAuths", paramMap.get("menuAuths"));
 		
 		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
 		
