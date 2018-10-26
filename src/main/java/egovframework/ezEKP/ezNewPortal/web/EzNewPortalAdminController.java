@@ -412,6 +412,19 @@ public class EzNewPortalAdminController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+
 		LOGGER.debug("deleteMenu ended.");
 	}
 	
@@ -423,6 +436,21 @@ public class EzNewPortalAdminController {
 		LOGGER.debug("updateMenuOrder started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonParam = new JSONObject();
+		
+		String url = "/rest/admin/ezPortal/menus/order/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
 		
 		LOGGER.debug("updateMenuOrder ended.");
 	}

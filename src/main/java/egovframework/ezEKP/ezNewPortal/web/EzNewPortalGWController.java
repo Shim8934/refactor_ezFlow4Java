@@ -1362,7 +1362,42 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			ezNewPortalService.deleteMenu(menuId, companyId, userInfo.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu ended.");
+		return result;
+	}
+	
+	/**
+	 * 
+	 */
+	/**
+	 * 포탈개인화 G/W [PATCH] 메뉴 순서변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/order/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateMenuOrder(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			ezNewPortalService.deleteMenu(menuId, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);

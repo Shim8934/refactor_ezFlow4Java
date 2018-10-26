@@ -300,4 +300,52 @@
 				(#menuId#, #menuUsed#, #companyLang#, (SELECT MAX(company_order) + 1 FROM TBL_PORTAL_MENU_COMP WHERE tenant_id = #tenantId# AND company_id = #companyId#), #companyId#, #tenantId#)
 		]]>
 	</insert>
+	
+	<delete id="ezNewPortal.deleteMenu" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_MENU
+			WHERE
+				menuId = #menuId#
+		]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deleteMenuComp" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_MENU_COMP
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menuId = #menuId#
+		]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deleteMenuNames" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_MENU_NAME
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menuId = #menuId#
+		]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deleteMenuAuth" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_MENU_Auth
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menuId = #menuId#
+		]]>
+	</delete>
 </sqlMap>
