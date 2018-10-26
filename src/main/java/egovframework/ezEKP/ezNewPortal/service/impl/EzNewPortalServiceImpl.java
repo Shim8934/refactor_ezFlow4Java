@@ -168,7 +168,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("userId", userId);			
-			map.put("menuId", list.get(i).get("menuId"));
+				map.put("menuId", list.get(i).get("menuId"));
 			map.put("order", list.get(i).get("order"));
 			
 			if (cnt < 1) {
