@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.let.user.login.dao.LoginDAO;
@@ -1699,4 +1700,246 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		return result;
 	}
+
+	@Override
+	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
+		logger.debug("setTitle started.");
+		
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_DISPLAYNAME", displayName);
+		map.put("v_DISPLAYNAME2", displayName2);
+		map.put("v_USEFLAG", useFlag);
+		map.put("v_SORT", sort);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			ezOrganAdminDao.setTitle(map);
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("setTitle ended. result = " + rtnVal);
+		return rtnVal;
+	}
+
+	@Override
+	public String getTitleList(String type, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleList started.");
+
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
+		
+		if (jobList != null && jobList.size() > 0) {
+			rtnVal.append("<LISTVIEWDATA><ROWS>");
+			
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getCn() + "]]></VALUE>");
+				rtnVal.append("<DATA1><![CDATA[" + jobList.get(i).getCn() + "]]></DATA1>");
+				rtnVal.append("<DATA2>" + jobList.get(i).getType() + "</DATA2>");
+				rtnVal.append("<DATA3>" + jobList.get(i).getSort() + "</DATA3>");
+				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
+				rtnVal.append("</ROW>");
+			}
+			
+			rtnVal.append("</ROWS></LISTVIEWDATA>");
+		} else {
+			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
+		}
+		
+		logger.debug("getTitleList ended.");
+		
+		return rtnVal.toString();
+	}
+
+	@Override
+	public String getTitleInfo(String type, String cn, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleInfo started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		OrganJobVO vo =  ezOrganAdminDao.getTitleInfo(map);
+		
+		StringBuffer rtnVal = new StringBuffer();
+		if (vo != null) {
+			rtnVal.append("<DATA>");
+			rtnVal.append("<TYPE>" + vo.getType() + "</TYPE>");
+			rtnVal.append("<CN><![CDATA[" + vo.getCn() + "]]></CN>");
+			rtnVal.append("<DISPLAYNAME><![CDATA[" + vo.getDisplayName() + "]]></DISPLAYNAME>");
+			rtnVal.append("<DISPLAYNAME2><![CDATA[" + vo.getDisplayName2() + "]]></DISPLAYNAME2>");
+			rtnVal.append("<USEFLAG>" + vo.getUseFlag() + "</USEFLAG>");
+			rtnVal.append("<SORT>" + vo.getSort() + "</SORT>");
+			rtnVal.append("<CREATEDATE>" + vo.getCreateDate() + "</CREATEDATE>");
+			rtnVal.append("</DATA>");
+		} else {
+			rtnVal.append("<DATA></DATA>");
+		}
+		
+		logger.debug("getTitleInfo ended.");
+		return rtnVal.toString();
+	}
+	
+	@Override
+	public String updateTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
+		logger.debug("updateTitle started.");
+		
+		String rtnVal = "";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_DISPLAYNAME", displayName);
+		map.put("v_DISPLAYNAME2", displayName2);
+		map.put("v_USEFLAG", useFlag);
+		map.put("v_SORT", sort);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			ezOrganAdminDao.updateTitle(map);	//tbl_user_titlemaster
+			ezOrganAdminDao.updateTitle2(map);	//tbl_usermaster
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("updateTitle ended. result = " + rtnVal);
+		return rtnVal;
+	}
+
+	@Override
+	public String deleteTitle(String type, String cn, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteTitle started.");
+		
+		String rtnVal = "";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			ezOrganAdminDao.deleteTitle(map);
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("deleteTitle ended. result = " + rtnVal);
+		return rtnVal;
+	}
+
+	@Override
+	public String getTitleUserList(String type, String cn, String primary, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleUserList started.");
+
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);
+		
+		if (userList != null && userList.size() > 0) {
+			rtnVal.append("<LISTVIEWDATA><ROWS>");
+			
+			for (int i = 0; i < userList.size(); i++) {
+				rtnVal.append("<ROW>");
+				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getCn() +"]]></VALUE>");
+				rtnVal.append("<DATA1><![CDATA["+ userList.get(i).getDepartment() +"]]></DATA1>");
+				rtnVal.append("<DATA2><![CDATA["+ userList.get(i).getDescription() +"]]></DATA2>");
+				rtnVal.append("<DATA3><![CDATA["+ userList.get(i).getDescription2() +"]]></DATA3>");
+				rtnVal.append("<DATA4><![CDATA["+ userList.get(i).getCn() +"]]></DATA4></CELL>");
+				if (primary.equals("1")) {
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDisplayName() +"]]></VALUE></CELL>");
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTitle() +"]]></VALUE></CELL>");
+				} else {
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDisplayName2() +"]]></VALUE></CELL>");
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTitle2() +"]]></VALUE></CELL>");
+				}
+				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTelephoneNumber() +"]]></VALUE></CELL>");
+				rtnVal.append("</ROW>");
+			}
+			
+			rtnVal.append("</ROWS></LISTVIEWDATA>");
+		} else {
+			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
+		}
+		
+		logger.debug("getTitleUserList ended.");
+		
+		return rtnVal.toString();
+	}
+	
+	@Override
+	public int getTitleListCnt(String type, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleListCnt started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		int rtnCnt = ezOrganAdminDao.getTitleListCnt(map);
+		
+		logger.debug("getTitleListCnt ended.");
+		return rtnCnt;
+	}
+	
+	@Override
+	public int getTitleUserListCnt(String type, String cn, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleUserListCnt started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		int rtnCnt = ezOrganAdminDao.getTitleUserListCnt(map);
+		
+		logger.debug("getTitleUserListCnt ended.");
+		return rtnCnt;
+	}
+	
+	@Override
+	public int getTitleCnt(String type, String cn, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleCnt started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_CN", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		int rtnCnt = ezOrganAdminDao.getTitleCnt(map);
+		
+		logger.debug("getTitleCnt ended.");
+		return rtnCnt;
+	}
+
 }
