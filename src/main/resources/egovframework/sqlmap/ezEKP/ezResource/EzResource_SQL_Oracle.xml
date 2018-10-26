@@ -13,6 +13,7 @@
     <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
+	<typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -862,7 +863,7 @@
                 BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL, $v_PBRDNM$ AS BRD_NM, 
                 BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL, 
                 MAKEDATE, OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
-                OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
+                SUBSTR(OWNERID, 0, INSTR(OWNERID, ',')-1),  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
                 REPLY_MAIL_FG, RESLOCATION 
 			FROM
 				TBL_RS_BRD  
@@ -1298,8 +1299,6 @@
 			AND
 				BRD_ID = #v_PBRDID#
 			AND
-				OWNERID = #v_PUSERID#
-			AND
 				TENANT_ID = #tenantID#	
 		]]>	
 	</select>
@@ -1731,6 +1730,42 @@
 		]]>
 	</update>
 	
+	<select id="EzResourceDAO.getOwnerInfo" parameterClass="Map" resultClass="OrganUserVO">
+		  SELECT *
+				FROM ( SELECT  
+								D.CN, D.DISPLAYNAME, D.title, D.DESCRIPTION , D.DESCRIPTION2, D.department
+							FROM  
+								TBL_USERMASTER D 
+							WHERE  
+								D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+							UNION ALL 
+							SELECT  
+								B.cn, B.DISPLAYNAME, A.title, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+							FROM  
+								TBL_USERMASTER B  
+							INNER JOIN  
+								TBL_ADDJOBMASTER A  
+							ON  
+								A.CN = B.CN  
+							AND  
+								A.TENANT_ID = B.TENANT_ID        
+							RIGHT JOIN  
+								TBL_DEPTMASTER C 
+							ON  
+								A.DEPTID = C.CN 
+							AND  
+								B.TENANT_ID = C.TENANT_ID    
+							WHERE  
+								A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# ) BB
+					     <iterate prepend="WHERE BB.cn IN" property="ownerList" open="(" close=")" conjunction=",">
+					            #ownerList[]#
+					     </iterate>
+					GROUP BY
+						BB.CN
+					ORDER BY 
+						DECODE(BB.CN, #ownerID#, 1, 2)
+	</select>
+	
 	<select id="EzResourceDAO.addRessch_S1" parameterClass="Map" resultClass="String">
 		SELECT
 			APPROVEFLAG 
@@ -2004,15 +2039,17 @@
         <![CDATA[
 			SELECT
 				BRD_NM BRDNM ,
-				OWNERID ,
-				OWNERNM ,
+				HR.DISPLAYNAME OWNERNM ,
 				HR.MAIL MAILADDRESS  
 			FROM
 				TBL_RS_BRD RES
 			JOIN
 				TBL_USERMASTER HR
-			ON
-				RES.OwnerID = HR.CN
+             ]]>
+			<iterate prepend="ON HR.CN IN" property="ownerList" open="(" close=")" conjunction=",">
+				  #ownerList[]#
+			</iterate>
+			<![CDATA[
 			AND
 				RES.TENANT_ID = HR.TENANT_ID    
 			WHERE
