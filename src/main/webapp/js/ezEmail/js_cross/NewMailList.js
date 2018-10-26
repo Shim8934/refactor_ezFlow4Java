@@ -446,6 +446,7 @@ function MakeListInfoHTML(ConentObject) {
                     	if (useCountryIP == "YES" && g_foldertype == "" && p_countryCode != "") {
                     		var _img = document.createElement("img");
                     		_img.style.width = "18px";
+                    		_img.style.height = "18px";
                     		_img.style.verticalAlign = "bottom";
                     		_img.style.padding = "0px 0px 1px 0px";
                     		

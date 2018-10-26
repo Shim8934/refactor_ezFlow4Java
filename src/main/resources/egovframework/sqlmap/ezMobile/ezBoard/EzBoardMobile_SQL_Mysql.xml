@@ -592,6 +592,7 @@
         ]]>
 	</select>
   
+<!-- 2018-10-25 홍승비 - 새게시물 리스트에 그룹사게시판 게시물 포함 -->
     <select id="MBoardDAO.getNewItemList" parameterClass="Map" resultClass="MBoardNewListVO">
       <![CDATA[
           SELECT
@@ -642,7 +643,7 @@
                   WHERE   
                     TENANT_ID = #tenantID#
                   AND
-                  	COMPANYID = #companyID# 
+                  	(COMPANYID = #companyID# OR COMPANYID = '*') 
                   AND
                     USERID = #userID# ) B 
               ON 
@@ -654,13 +655,15 @@
               ON 
                 A.TENANT_ID = P.TENANT_ID
               AND
-     			A.WRITERCOMPANYID = P.COMPANYID
+     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
               AND
                 A.BOARDID = P.BOARDID
               AND 
                 A.TENANT_ID = #tenantID#
               AND
-              	A.WRITERCOMPANYID = #companyID#
+              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
               AND
                 (A.APPRFLAG = 'Y' 
                  OR A.APPRFLAG IS NULL)
@@ -694,8 +697,7 @@
                 ]]>
             </isNotEmpty>
             
-            <![CDATA[
-                       
+            <![CDATA[                  
               AND 
                 (NOT EXISTS
                     (SELECT 
@@ -710,8 +712,6 @@
                       S.ITEMID = A.ITEMID 
                      AND 
                       S.TENANT_ID = #tenantID#
-                     AND
-                     	S.COMPANYID = #companyID#
                      AND
                       S.USERID = #userID# 
                      AND 
@@ -1307,44 +1307,94 @@
   </select>
   
     <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
-        <![CDATA[
-          INSERT INTO TBL_Board_MyBoards ( 
-            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID 
-          )
-              ( SELECT 
-                #userID# USERID ,
-                    BOARDID ,
-                    BOARDNAME ,
-                    BOARDNAME2 ,
-                    ( SELECT 
-                      	COUNT(BOARDID) + 1
-	                FROM 
+		<isEqual  property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards (
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT
+	         		#userID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards
+	     			  WHERE
+	     			  	TENANT_ID = #tenantID#
+	     			  AND
+	     			  	(COMPANYID = #companyID#	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #userID# ),
+	                ( SELECT
+	                	CASE
+	                		WHEN MAX(VIEWORDER) IS NULL
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1
+	                	END
+	                  FROM 
 	                  	TBL_Board_MyBoards 
-	                WHERE
+	                  WHERE
 	                  	TENANT_ID = #tenantID#
-	                AND  
+	                  AND
+	     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+	                  AND
 	                  	USERID = #userID# ),
-                    ( SELECT
-                      	CASE 
-                        	WHEN MAX(VIEWORDER) IS NULL 
-                        	THEN 2 
-                        	ELSE MAX(VIEWORDER) + 1 
-                    	END 
-                      FROM 
-                      	TBL_Board_MyBoards 
-                      WHERE  
-                        TENANT_ID = #tenantID#
-                      AND
-                        USERID = #userID# ),
-                    TENANT_ID,
-                    #companyID#
-                  FROM 
-                    TBL_Board_BoardInfo 
-                  WHERE
-                    TENANT_ID = #tenantID#
-                  AND
-                    BOARDID = #boardID# )
-        ]]>
+	                TENANT_ID,
+	                '*' as COMPANYID
+	           	  FROM
+	           	  	TBL_Board_BoardInfo
+	           	  WHERE
+	           	  	TENANT_ID = #tenantID#
+	           	  AND
+	           	  	BOARDID = #boardID# )
+			]]>
+		</isEqual>
+		<isNotEqual  property="isAllGroupBoard" compareValue="Y">
+	        <![CDATA[
+	          INSERT INTO TBL_Board_MyBoards (
+	            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+	          )
+	              ( SELECT
+	                #userID# USERID ,
+	                    BOARDID ,
+	                    BOARDNAME ,
+	                    BOARDNAME2 ,
+	                    ( SELECT 
+	                      	COUNT(BOARDID) + 1
+		                FROM
+		                  	TBL_Board_MyBoards
+		                WHERE
+		                  	TENANT_ID = #tenantID#
+		                AND
+		     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+		                AND  
+		                  	USERID = #userID# ),
+	                    ( SELECT
+	                      	CASE
+	                        	WHEN MAX(VIEWORDER) IS NULL
+	                        	THEN 2
+	                        	ELSE MAX(VIEWORDER) + 1
+	                    	END
+	                      FROM
+	                      	TBL_Board_MyBoards
+	                      WHERE
+	                        TENANT_ID = #tenantID#
+	                      AND
+		     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+	                      AND
+	                        USERID = #userID# ),
+	                    TENANT_ID,
+	                    COMPANYID
+	                  FROM
+	                    TBL_Board_BoardInfo
+	                  WHERE
+	                    TENANT_ID = #tenantID#
+	                  AND
+	                    BOARDID = #boardID# )
+	        ]]>
+        </isNotEqual>
       </insert>
       
       <delete id="MBoardDAO.deleteFavorite" parameterClass="Map">
