@@ -306,7 +306,7 @@
 			DELETE FROM
 				TBL_PORTAL_MENU
 			WHERE
-				menuId = #menuId#
+				menu_id = #menuId#
 		]]>
 	</delete>
 	
@@ -319,7 +319,7 @@
 			AND
 				company_id = #companyId#
 			AND
-				menuId = #menuId#
+				menu_id = #menuId#
 		]]>
 	</delete>
 	
@@ -332,7 +332,7 @@
 			AND
 				company_id = #companyId#
 			AND
-				menuId = #menuId#
+				menu_id = #menuId#
 		]]>
 	</delete>
 	
@@ -345,7 +345,7 @@
 			AND
 				company_id = #companyId#
 			AND
-				menuId = #menuId#
+				menu_id = #menuId#
 		]]>
 	</delete>
 </sqlMap>
