@@ -871,6 +871,8 @@
 				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
 				args[2] = "";
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				args[5] = "";
 				
 				//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 				//if (CrossYN()) {
@@ -924,6 +926,8 @@
 				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
 				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA3");
 				
 				//2016-04-18 장진혁과장 -- Cross 버전 사용으로 인한 주석처리
 				//if (CrossYN()) {

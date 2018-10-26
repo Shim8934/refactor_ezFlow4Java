@@ -748,10 +748,10 @@ function Write() {
 
     var feature = GetOpenPosition(820, 700);
     if (CrossYN() || pNoneActiveX == "YES") {
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView="+ dayView +"&ownerID=" + ResID + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView="+ dayView +"&ownerID=" + ResID + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
 
     DragStartItemID = "";

@@ -18,8 +18,27 @@
 			var userName = "${userName}";
 			var deptID = "${deptID}";
 			var deptName = "${deptName}";
-			
+			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array() };
+			var ownerList = JSON.parse('${ownerList}');
 			window.onload = function (){
+				
+				for(var i=0; i<ownerList.length; i++) {
+					res_owner["ownerId"][i] = ownerList[i]["ownerId"];
+					res_owner["ownerDept"][i] = ownerList[i]["ownerDept"];
+					res_owner["ownerName"][i] = ownerList[i]["ownerName"];
+					res_owner["ownerName1"][i] = ownerList[i]["ownerName1"];
+					res_owner["ownerDeptName"][i] = ownerList[i]["ownerDeptName"];
+				}
+				document.getElementById("subOwner").innerHTML = "";
+				var length = res_owner.ownerName.length;
+				for(var i=1; i<length; i++) {
+					if(length-1 != i) {
+						document.getElementById("subOwner").innerHTML += res_owner["ownerName"][i] + "(" + res_owner["ownerName1"][i] + "), ";
+					}
+					else {
+						document.getElementById("subOwner").innerHTML += res_owner["ownerName"][i] + "(" + res_owner["ownerName1"][i] + ")";
+					}
+				}
 			}
 
 			function btnSave_Click() {
@@ -34,6 +53,11 @@
 					alert("<spring:message code="ezResource.t145"/>");
 					document.getElementById("Brd_NM").focus();
 					return;
+				}
+				
+				var ownerList2 = res_owner["ownerId"][0];
+				for(var i=1; i<res_owner.ownerId.length; i++) {
+					ownerList2 += "," + res_owner["ownerId"][i];
 				}
 				
 				/* 2018-05-02 서주연 #12558 */
@@ -61,7 +85,13 @@
 				createNodeInsert(xmlPara, objNode, "PARADATA");
 				createNodeAndInsertText(xmlPara, objNode, "DATA", strBrd_ID);
 				
-				if (document.getElementById("OwnDept").getAttribute("idVal", "0") == "") {
+				createNodeAndInsertText(xmlPara, objNode, "DATA", res_owner["ownerDept"][0]);	// deptID
+				createNodeAndInsertText(xmlPara, objNode, "DATA", res_owner["ownerDeptName"][0]);	// deptName
+				
+				createNodeAndInsertText(xmlPara, objNode, "DATA", ownerList2);	// userID
+				createNodeAndInsertText(xmlPara, objNode, "DATA", res_owner["ownerName"][0]);	// userName
+				
+				/* if (document.getElementById("OwnDept").getAttribute("idVal", "0") == "") {
 				    createNodeAndInsertText(xmlPara, objNode, "DATA", deptID);
 				} else {
 					createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("OwnDept").getAttribute("idVal", "0"));
@@ -83,8 +113,9 @@
 					createNodeAndInsertText(xmlPara, objNode, "DATA", userName);
 				} else {
 					createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("Owner").getAttribute("NmVal", "0"));
-				}
-				createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("Owner").getAttribute("position", "0"));
+				} */
+				//createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("Owner").getAttribute("position", "0"));
+				createNodeAndInsertText(xmlPara, objNode, "DATA", "0");
 				createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("OwnerCall").value);
 				createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("Brd_NM").value);
 				createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("ResLocation").value);
@@ -134,9 +165,12 @@
 
 			var select_person_cross_dialogArguments = new Array();
 			
-			function btnTakeOwner_Click() {
+			function btnTakeOwner_Click(val) {
+				res_owner["flag"][0] = val;
+				
+				select_person_cross_dialogArguments[0] = res_owner;
 				select_person_cross_dialogArguments[1] = btnTakeOwner_Click_Complete;
-				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(750, 550));
+				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(1050, 550));
 				try { 
 					OpenWin.focus(); 
 				} catch (e) {
@@ -146,7 +180,19 @@
 			
 			function btnTakeOwner_Click_Complete(retVal) {
 				if (typeof (retVal) != "undefined") {
-					var strOwner = retVal;
+					document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
+					document.getElementById("subOwner").innerHTML = "";
+					var length = retVal.ownerName.length;
+					for(var i=1; i<length; i++) {
+						if(length-1 != i) {
+							document.getElementById("subOwner").innerHTML += retVal["ownerName"][i] + "(" + retVal["ownerName1"][i] + "), ";
+						}
+						else {
+							document.getElementById("subOwner").innerHTML += retVal["ownerName"][i] + "(" + retVal["ownerName1"][i] + ")";
+						}
+					}
+					res_owner = retVal;
+					/* var strOwner = retVal;
 					var arrOwner;
 
 					arrOwner = strOwner.split(";");
@@ -156,7 +202,7 @@
 					document.getElementById("Owner").setAttribute("position", arrOwner[2]);
 					document.getElementById("OwnDept").value = arrOwner[3];
 					document.getElementById("OwnDept").setAttribute("idVal", arrOwner[4]);
-					document.getElementById("OwnerCall").value = arrOwner[5];
+					document.getElementById("OwnerCall").value = arrOwner[5]; */
 				}
 			}
 		</script>
@@ -180,19 +226,37 @@
 					</script>
       				<table class="content">
         				<tr>
-          					<th> <spring:message code="ezResource.t151"/></th>
-          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 100%"></td>
-          					<th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"> ${makeDate} </td>
-        				</tr>
-        				<tr>
           					<th> <spring:message code="ezResource.t153"/></th>
-          					<td><input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
-								value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly>
-								<a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span></a>
+          					<td>	
+	          					<a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewOwner');"><spring:message code="ezResource.t154"/></span></a>
+	          					<div id="Owner" style="overflow-y:auto; line-height:25px; display:inline" ><c:out value='${ownerNm}' />(<c:out value='${ownerPosition}' />)</div>
+	          						<%-- <input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
+									value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly> --%>
 							</td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxLength="20"></td>
+          					<td style="white-space:nowrap">
+          						<input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxLength="20">
+          					</td>
+          					<%-- <th> <spring:message code="ezResource.t152"/></th>
+          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"> ${makeDate} </td> --%>
+        				</tr>
+        				<tr>
+          					<th> <spring:message code="ezResource.rkms01"/></th>
+          					<td colspan="3">
+          						<table style="width:100%;">
+        							<tr>
+										<th style="border:0px; padding:0px; padding-right:2px;"><a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span></a>
+            						</th>
+										<td><div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;"></div></td>
+        							</tr>
+    							</table>
+          					<%-- <a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span></a>
+          					<div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;">
+							</div> --%>
+          						<%-- <input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
+								value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly> --%>
+          						<%-- <input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 100%"> --%>
+          					</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>

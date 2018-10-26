@@ -955,6 +955,27 @@ public class EzAttitudeAdminController {
 			list = (JSONArray) data.get("list");
 			adminCompany = (String) data.get("adminCompany");
 			
+			//근태유형
+			url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userInfo.getId())
+					.queryParam("isuse", "1");
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			JSONArray typeList = new JSONArray();
+			
+			if(status.equals("ok")){
+				typeList = (JSONArray) resultBody.get("data");
+			}
+			
+			model.addAttribute("typeList", typeList);
+			
 			model.addAttribute("list", list);
 			model.addAttribute("adminCompany", adminCompany);
 			model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
@@ -994,7 +1015,7 @@ public class EzAttitudeAdminController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/check"; //
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/check";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

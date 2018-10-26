@@ -10387,96 +10387,98 @@
 							TENANT_ID = #v_TENANTID# 
 						)
 	   		]]>
-	   	UNION ALL
-	   	<![CDATA[
-	   	SELECT 
-				COUNT(DOCID) AS COUNT 
-			FROM (
-					SELECT
-						*
-					FROM 
-						VAPRDOINGDOCLIST 
-			   		WHERE 
-			   			APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE SHAREUSERID = #v_USERID#) 
-			   		AND 
-			   			APRTYPE <> '015' 
-			   		AND 
-			   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
-			   		AND 
-			   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
-			   		AND	
-			   			TENANT_ID = #v_TENANTID#
-			   		AND
-						COMPANYID IN (
-								SELECT 
-									EXTENSIONATTRIBUTE2 
-								FROM 
-									TBL_DEPTMASTER 
-								INNER JOIN 
-									TBL_ADDJOBMASTER 
-								ON
-									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+	   	<isEqual property="v_shareApprovalFlag" compareValue="YES">
+		   	UNION ALL
+		   	<![CDATA[
+		   	SELECT 
+					COUNT(DOCID) AS COUNT 
+				FROM (
+						SELECT
+							*
+						FROM 
+							VAPRDOINGDOCLIST 
+				   		WHERE 
+				   			APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE SHAREUSERID = #v_USERID#) 
+				   		AND 
+				   			APRTYPE <> '015' 
+				   		AND 
+				   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND 
+				   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND	
+				   			TENANT_ID = #v_TENANTID#
+				   		AND
+							COMPANYID IN (
+									SELECT 
+										EXTENSIONATTRIBUTE2 
+									FROM 
+										TBL_DEPTMASTER 
+									INNER JOIN 
+										TBL_ADDJOBMASTER 
+									ON
+										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+										AND 
+										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+									WHERE 
+										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
 									AND 
-									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-								AND 
-									TBL_ADDJOBMASTER.CN = #v_USERID#
-								UNION ALL
-								SELECT 
-									PHYSICALDELIVERYOFFICENAME
-								FROM
-									TBL_USERMASTER
-								WHERE
-									CN = #v_USERID#
-								AND
-									TENANT_ID = #v_TENANTID# 
-								)
-			   		
-			   		UNION ALL
-			   			
-			   		SELECT
-		   				*
-		   			FROM
-		   				VENDCHAMJODOCINFO
-		   			WHERE
-		   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE SHAREUSERID = #v_USERID#) 
-			   		AND 
-			   			APRTYPE <> '015' 
-			   		AND 
-			   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
-			   		AND 
-			   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
-			   		AND	
-			   			TENANT_ID = #v_TENANTID#
-			   		AND
-						COMPANYID IN (
-								SELECT 
-									EXTENSIONATTRIBUTE2 
-								FROM 
-									TBL_DEPTMASTER 
-								INNER JOIN 
-									TBL_ADDJOBMASTER 
-								ON
-									(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+										TBL_ADDJOBMASTER.CN = #v_USERID#
+									UNION ALL
+									SELECT 
+										PHYSICALDELIVERYOFFICENAME
+									FROM
+										TBL_USERMASTER
+									WHERE
+										CN = #v_USERID#
+									AND
+										TENANT_ID = #v_TENANTID# 
+									)
+				   		
+				   		UNION ALL
+				   			
+				   		SELECT
+			   				*
+			   			FROM
+			   				VENDCHAMJODOCINFO
+			   			WHERE
+			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE SHAREUSERID = #v_USERID#) 
+				   		AND 
+				   			APRTYPE <> '015' 
+				   		AND 
+				   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND 
+				   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND	
+				   			TENANT_ID = #v_TENANTID#
+				   		AND
+							COMPANYID IN (
+									SELECT 
+										EXTENSIONATTRIBUTE2 
+									FROM 
+										TBL_DEPTMASTER 
+									INNER JOIN 
+										TBL_ADDJOBMASTER 
+									ON
+										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+										AND 
+										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+									WHERE 
+										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
 									AND 
-									TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-								WHERE 
-									TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-								AND 
-									TBL_ADDJOBMASTER.CN = #v_USERID#
-								UNION ALL
-								SELECT 
-									PHYSICALDELIVERYOFFICENAME
-								FROM
-									TBL_USERMASTER
-								WHERE
-									CN = #v_USERID#
-								AND
-									TENANT_ID = #v_TENANTID# 
-								)
-			   		) AS B
-   			]]>
+										TBL_ADDJOBMASTER.CN = #v_USERID#
+									UNION ALL
+									SELECT 
+										PHYSICALDELIVERYOFFICENAME
+									FROM
+										TBL_USERMASTER
+									WHERE
+										CN = #v_USERID#
+									AND
+										TENANT_ID = #v_TENANTID# 
+									)
+				   		) AS B
+	   			]]>
+		</isEqual>
 	</select>
 	
 	<update id="EzApprovalG.aprGetNewID" parameterClass="Map">
@@ -25555,10 +25557,12 @@
 		<![CDATA[
 			SELECT
 				APRMEMBERSN,
+				APRMEMBERID,
 			    APRMEMBERNAME,
 			    APRMEMBERNAME2,
 			    APRMEMBERJOBTITLE,
 			    APRMEMBERJOBTITLE2,
+			    APRMEMBERDEPTID,
 			    APRMEMBERDEPTNAME,
 			    APRMEMBERDEPTNAME2,
 			    PROCESSDATE

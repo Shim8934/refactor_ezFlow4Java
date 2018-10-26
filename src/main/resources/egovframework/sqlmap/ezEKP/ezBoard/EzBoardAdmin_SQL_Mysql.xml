@@ -799,8 +799,6 @@
 	        	TBL_BOARD_BOARDMANAGE 
 	       WHERE  
 	       		TENANT_ID = #tenantID#
-	       	AND
-	       		companyid = #companyID#
 	       AND
 	       		boardid = #pBoardID# 
 	       AND 

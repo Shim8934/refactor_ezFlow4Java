@@ -17,7 +17,7 @@
 	        var pType = "${type}";
 	        var pBoardID = "${boardID}";
 	
-	        window.onunload = function () {
+			window.onunload = function () {
 	            try {window.opener.parent.frames["left"].ShowMyBoardItem();} catch (e) {}
 	        };
 	

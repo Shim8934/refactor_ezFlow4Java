@@ -178,6 +178,7 @@ public class MBoardServiceImpl implements MBoardService {
 		String boardID = mBoardInfoVO.getBoardID();
 		String type = mBoardInfoVO.getType();
 		String apprFlag = mBoardInfoVO.getApprFlag();
+		String boardGroupID = mBoardInfoVO.getBoardGroupID();
 	    String deptPathOrgan="";
 	    
 	    for (int ch=0; ch<deptPathCode.split(",").length; ch++) {
@@ -224,6 +225,20 @@ public class MBoardServiceImpl implements MBoardService {
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(mBoardInfoVO.getBoardID(), info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		mBoardInfoVO.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
 		
+		/* 2018-10-26 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
+		mBoardInfoVO.setIsAllGroupBoard("");
+		if (boardGroupID != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("boardID", boardGroupID);
+			map.put("primary", info.getPrimary());
+			map.put("tenantID", info.getTenantId());
+			
+			MBoardInfoVO strGroupProp = mBoardDAO.getBoardProperty(map);
+			if (strGroupProp.getGuBun() != null && strGroupProp.getGuBun().equals("99")) {
+				mBoardInfoVO.setIsAllGroupBoard("Y");
+			}
+		}
+		
 	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	mBoardInfoVO.setAccess_FG("1");
 	    	mBoardInfoVO.setBoardAdmin_FG("false");
@@ -232,7 +247,10 @@ public class MBoardServiceImpl implements MBoardService {
 	    	mBoardInfoVO.setWrite_FG("true");
 	    	mBoardInfoVO.setReply_FG("true");
 	    	mBoardInfoVO.setDelete_FG("true");
-		} else if (rollInfo != null && (rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+		}
+	    /* 회사관리자, 게시관리자들은 '그룹사게시판이 아닌 경우에만' 고정된 관리자 권한을 갖는다. 전체관리자는 전부 관리자로 허용된다.*/
+	    else if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1) ||
+				(!mBoardInfoVO.getIsAllGroupBoard().equals("Y") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
 			mBoardInfoVO.setAccess_FG("1");
 			mBoardInfoVO.setBoardAdmin_FG("true");
 			mBoardInfoVO.setListView_FG("true");
@@ -1106,7 +1124,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 	/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
 	@Override
-	public void insertFavorite(String userID, String boardID, String companyID, int tenantID) throws Exception {
+	public void insertFavorite(String userID, String boardID, String companyID, int tenantID, String isAllGroupBoard) throws Exception {
 		logger.debug("insertFavorite started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1115,6 +1133,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("boardID", boardID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("isAllGroupBoard", isAllGroupBoard);
 		
 		mBoardDAO.insertFavorite(map);
 		logger.debug("insertFavorite ended");
