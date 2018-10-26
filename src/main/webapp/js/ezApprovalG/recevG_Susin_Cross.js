@@ -1891,7 +1891,17 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
         createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
         createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
-
+        
+        /*
+         * 수발신담당자 접수 > 원단위부서코드와 단위부서코드의 값이 같은 경우
+         * 
+         * pOrgDocNumdeCode는 처음 수신한 수발신부서의 단위번호코드이다.
+         * pDocNumCode의 값은 수발신담당자가 배부를 하였을 경우 
+         * 배부된 부서의 단위번호코드가 지정됨
+         */
+        if(!pDocNumCode) {
+        	pDocNumCode = pOrgDocNumCode;
+        }
         createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", pDocNumCode);
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", pOrgDocNumCode);
         
@@ -3033,6 +3043,7 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);

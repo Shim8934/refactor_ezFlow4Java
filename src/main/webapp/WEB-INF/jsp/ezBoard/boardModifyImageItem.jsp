@@ -113,6 +113,7 @@
 
 		            if (!check) {
 		                document.getElementById("file1").value = "";
+		                alert("<spring:message code ='ezCommunity.lhj03' />");
 		                return;
 		            }
 		            

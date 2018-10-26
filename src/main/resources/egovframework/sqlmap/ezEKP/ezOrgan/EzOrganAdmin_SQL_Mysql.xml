@@ -83,9 +83,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_DEPTMASTER
-     			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, EXTENSIONATTRIBUTE15, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, TENANT_ID )
+     			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, EXTENSIONATTRIBUTE15, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, MANUAL_FLAG, TENANT_ID )
      		VALUES
-     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_EXTENSIONATTRIBUTE15#, 1, #v_CN#, #v_LDAPPATH#, #nowDate#, #v_TENANT_ID# )
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_EXTENSIONATTRIBUTE15#, 1, #v_CN#, #v_LDAPPATH#, #nowDate#, #v_MANUAL_FLAG#, #v_TENANT_ID# )
 		]]>
 	</insert>
 	
@@ -100,11 +100,11 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_DEPTMASTER
-    			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, TENANT_ID,
+    			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, MANUAL_FLAG, TENANT_ID,
                     EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL, EXTENSIONATTRIBUTE11
                  )
      		VALUES
-     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_TENANT_ID#,
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_MANUAL_FLAG#, #v_TENANT_ID#,
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
@@ -127,11 +127,11 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERMASTER
-   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
+   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
                     DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2
                 )
    			VALUES
-   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
+   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
                     (SELECT DISPLAYNAME FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
@@ -852,36 +852,36 @@
           VALUES
       ]]>
       <isEqual property="PrimaryLang" compareValue="1" >
-      		(#portalItemUID10#,'포토게시판_포틀릿','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
-            (#portalItemUID11#,'공지게시판_포틀릿','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
-            (#portalItemUID12#,'배너_우수사원_포틀릿','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
-            (#portalItemUID14#,'우수커뮤니티_포틀릿','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
-            (#portalItemUID4#,'슬라이드이미지_포틀릿','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
-            (#portalItemUID17#,'포토_생일 통합 포틀릿','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            (#portalItemUID15#,'결재사용현황_포틀릿','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
-            (#portalItemUID5#,'결재_메일 통합 포틀릿','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
-            (#portalItemUID6#,'설문통계_포틀릿','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
-            (#portalItemUID16#,'마이게시판_포틀릿','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
-            (#portalItemUID7#,'활용하기_포틀릿','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
-            (#portalItemUID13#,'직원생일_포틀릿','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
-            (#portalItemUID8#,'사용자정보통합_포틀릿','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+      		(#portalItemUID10#,'포토게시판_포틀릿','PhotoBoard_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
+            (#portalItemUID11#,'공지게시판_포틀릿','Notice_portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
+            (#portalItemUID12#,'배너_우수사원_포틀릿','Banner_TopUser_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID14#,'우수커뮤니티_포틀릿','Community_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID4#,'슬라이드이미지_포틀릿','SlideImage_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
+            (#portalItemUID17#,'포토_생일 통합 포틀릿','Photo_Birthday_Total_Portlet,1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','Notice_Slide_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID15#,'결재사용현황_포틀릿','ApprovalUse_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
+            (#portalItemUID5#,'결재_메일 통합 포틀릿','Approval_Mail_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
+            (#portalItemUID6#,'설문통계_포틀릿','QuestionStatistic_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
+            (#portalItemUID16#,'마이게시판_포틀릿','MyBoard_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
+            (#portalItemUID7#,'활용하기_포틀릿','Using_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
+            (#portalItemUID13#,'직원생일_포틀릿','Birthday_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
+            (#portalItemUID8#,'사용자정보통합_포틀릿','UserInfo_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
       </isEqual>
       <isNotEqual property="PrimaryLang" compareValue="1" >
-            (#portalItemUID10#,'PhotoBoard_Portlet','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
-            (#portalItemUID11#,'Notice_portlet','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
-            (#portalItemUID12#,'Banner_TopUser_Portlet','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
-            (#portalItemUID14#,'Community_Portlet','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
-            (#portalItemUID4#,'SlideImage_Portlet','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
-            (#portalItemUID17#,'Photo_Birthday_Total_Portlet','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            (#portalItemUID18#,'Notice_Slide_Total_Portlet','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            (#portalItemUID15#,'ApprovalUse_Portlet','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
-            (#portalItemUID5#,'Approval_Mail_Total_Portlet','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
-            (#portalItemUID6#,'QuestionStatistic_Portlet','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
-            (#portalItemUID16#,'MyBoard_Portlet','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
-            (#portalItemUID7#,'Using_Portlet','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
-            (#portalItemUID13#,'Birthday_Portlet','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
-            (#portalItemUID8#,'UserInfo_Portlet','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+            (#portalItemUID10#,'PhotoBoard_Portlet','PhotoBoard_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
+            (#portalItemUID11#,'Notice_portlet','Notice_portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
+            (#portalItemUID12#,'Banner_TopUser_Portlet','Banner_TopUser_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID14#,'Community_Portlet','Community_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID4#,'SlideImage_Portlet','SlideImage_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
+            (#portalItemUID17#,'Photo_Birthday_Total_Portlet','Photo_Birthday_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID18#,'Notice_Slide_Total_Portlet','Notice_Slide_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID15#,'ApprovalUse_Portlet','ApprovalUse_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
+            (#portalItemUID5#,'Approval_Mail_Total_Portlet','Approval_Mail_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
+            (#portalItemUID6#,'QuestionStatistic_Portlet','QuestionStatistic_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
+            (#portalItemUID16#,'MyBoard_Portlet','MyBoard_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
+            (#portalItemUID7#,'Using_Portlet','Using_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
+            (#portalItemUID13#,'Birthday_Portlet','Birthday_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
+            (#portalItemUID8#,'UserInfo_Portlet','UserInfo_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
 	   </isNotEqual>
     </insert>
     
@@ -1454,8 +1454,8 @@
                  ('J02','005','회사','1','회사명','회사','会社','公司',#tenantID#, #companyID#),
                  ('J03','002','KMTESTOrganName','1','KMTESTOrganName',null,null,null,#tenantID#, #companyID#),
                  ('L01','0  ','다국어처리','0','다국어코드값','다국어처리','다국어처리','다국어처리',#tenantID#, #companyID#),
-                 ('L01','001','파일','1','File','File','File','File',#tenantID#, #companyID#),
-                 ('L01','002','문서','1','Document','Document','Document','Document',#tenantID#, #companyID#),
+                 ('L01','001','파일','1','File','File','ファイル','File',#tenantID#, #companyID#),
+                 ('L01','002','문서','1','Document','Document','文書','Document',#tenantID#, #companyID#),
                  ('L02','001','문서함명리스트','0','NULL','Doc. folder name','文書フォルダ名','Doc. folder name',#tenantID#, #companyID#),
                  ('L03','001','개인문서함','1','개인문서함-GetUserContTree()','Personal doc. folder','Personal doc. folder','Personal doc. folder',#tenantID#, #companyID#),
                  ('L03','002','문서함명','1','부서문서함-GetDeptContTree()','Dept. doc. folder','文書フォルダ名','Dept. doc. folder',#tenantID#, #companyID#),
@@ -2651,7 +2651,7 @@
 		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
 		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
 		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
-		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', null, 4),
 		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
 		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
@@ -2679,7 +2679,7 @@
 		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
 		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
 		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
-		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', null, 4),
 		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
 		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),

@@ -442,14 +442,18 @@ function MakeListInfoHTML(ConentObject) {
                     	
                     	_TR.lastChild.innerHTML = "";
                     	
+                    	// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
                     	if (useCountryIP == "YES" && g_foldertype == "" && p_countryCode != "") {
                     		var _img = document.createElement("img");
                     		_img.style.width = "18px";
+                    		_img.style.height = "18px";
                     		_img.style.verticalAlign = "bottom";
                     		_img.style.padding = "0px 0px 1px 0px";
-                			if (p_countryCode =="unknown") {
+                    		
+                			if (p_countryCode == "unknown") {
                 				p_countryCode = "qm";
                 			}
+                			
                 			_img.src = "/images/countryIcon/" + p_countryCode + ".png";
                 			_TR.lastChild.appendChild(_img);
                     	}

@@ -183,8 +183,8 @@
 		                    getDocInfo();
 		
 		                    if (g_DraftFlag == "REDRAFT") {
-		                        setMenuBar("btnAssign", false);
-		                        setMenuBar("btnDistribute", false);
+// 		                        setMenuBar("btnAssign", false);
+// 		                        setMenuBar("btnDistribute", false);
 		                    }
 		
 		                    if (g_RetFlag == "Y") {

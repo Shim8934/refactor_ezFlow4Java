@@ -815,7 +815,17 @@
                             CurPage = CurPage - 1;
                         }
                     }
-                    if (CurPage == 0) CurPage = 1;
+                    if (CurPage == 0) {
+                    	CurPage = 1;
+                    }
+                    
+                    /* 2018-10-23 홍승비 - 게시물을 삭제한 경우, 미리보기가 열려있으면 새로고침하도록 수정 (익명게시판) */
+                    if ((document.getElementById("PreviewRayerH").style.display != "none" && document.getElementById("PreviewRayerH").style.display != "") ||
+                    		(document.getElementById("PreviewRayerW").style.display != "none" && document.getElementById("PreviewRayerW").style.display != "")) {
+    		        	refresh_onclick();
+    		        	return;
+					}
+                    
                     getBoardList();
                     
                     try {
@@ -860,19 +870,28 @@
 		        	CurPage = 1;
 		        }
 		        
+		        /* 2018-10-23 홍승비 - 게시물을 삭제한 경우, 미리보기가 열려있으면 새로고침하도록 수정 (일반, QNA게시판) */
+				if ((document.getElementById("PreviewRayerH").style.display != "none" && document.getElementById("PreviewRayerH").style.display != "") ||
+                    		(document.getElementById("PreviewRayerW").style.display != "none" && document.getElementById("PreviewRayerW").style.display != "")) {
+    		        	refresh_onclick();
+    		        	return;
+					}
+		        
 		        getBoardList();
 		    }
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
+		    
+		    /* 2018-10-17 홍승비 - 작성자 ID의 '일부'가 SSUserID와 완벽하게 일치하면 참으로 리턴되는 문제 수정 */
 		    function CheckOwnerShip() {
 		        var arrList = new Array();
 		        var i = 0;
 		
 		        arrList = strListInfo.split(";");
 		        for (i = 0; i < arrList.length - 1; i++) {
-		            if (arrList[i].split(",")[1].indexOf(SSUserID) == -1) {
+		            if (arrList[i].split(",")[1] != SSUserID) {
 		                arrList = null;
 		                return false;
 		            }
@@ -1401,7 +1420,7 @@
 		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 		                        <dl class="mail_item">
 		                            <dt><spring:message code='ezBoard.t223' />:</dt>
-		                            <dd><span id="PreW_MailReceiver" style="display: inline-block"></span>
+		                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
 		                            </dd>
 		                        </dl>
 		                    </div>

@@ -473,10 +473,15 @@
 			    
 		        selectdept_cross_dialogArguments = new Array();
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t19' />";
-		        selectdept_cross_dialogArguments[1] = mov_dept_Complete;
+		        selectdept_cross_dialogArguments[1] = mov_dept_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));		        
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
+		    function mov_dept_CompleteWithTimeout(rtnValue) {
+		    	 setTimeout(function() {
+		    		 mov_dept_Complete(rtnValue);
+	                }, 10);
+		    }
 		    
 		    function GetDeptFullPath(DeptID, topid){
 		    	var data;
@@ -529,17 +534,19 @@
 		            	url : "/admin/ezOrgan/movDept.do",
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : selectedCN},
-		            	success : function(result){
-		            		if(result == "SAME"){
+		            	success : function(result) {
+		            		if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t21' />");
-		            		}else if (result == "EMAIL_ERROR") {
+		            		} else if (result == "DIFF_COMPANY") {
+		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else if (result == "EMAIL_ERROR") {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
-		            		}else{
+		            		} else {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t27' />");
 				                getDeptFullTree(selectedCN);
 		            		}
 		            	},
-		            	error : function(){
+		            	error : function() {
 		            		alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
 		            	}
 		            });
@@ -1128,6 +1135,13 @@
 		    var selectdept_cross_dialogArguments = new Array();
 		    
 			function mov_user(){
+			 	var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+			        
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
@@ -1143,8 +1157,10 @@
 		        
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
 			    //if (CrossYN()) {
+		    	document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+		    	
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
-		        selectdept_cross_dialogArguments[1] = mov_user_Complete;
+		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
 		        try { OpenWin.focus(); } catch (e) { }
 			    <%-- }else {
@@ -1184,15 +1200,28 @@
 			    } --%>
 			}
 			
+            function move_user_CompleteWithTimeout(rtnValue) {
+                setTimeout(function() {
+                    mov_user_Complete(rtnValue);
+                }, 10);
+            }
+            
 		    function mov_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var listview = new ListView();
 			        listview.LoadFromID("lvUserList");
 			        
+		            var selectedCN = document.getElementById("selectedCN").value;
+		            if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
+		                alert("<spring:message code='ezOrgan.t21' />");
+		                return;
+		            }
+		            
 		            var length = listview.GetSelectedRows().length;
 		            if (!confirm(length + "<spring:message code='ezOrgan.t14' />")){
 		                return;
 		            }
+		            
 		            var data = "";
 		            for (var i = 0; i < length; i++) {
 		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
@@ -1208,16 +1237,18 @@
 		            	url : "/admin/ezOrgan/movUser.do",
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : data},
-		            	success : function(result){
+		            	success : function(result) {
 		            		if (result == "EMAIL_ERROR") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		}else if (result == "SAME") {
+		            		} else if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		}else{
+		            		} else if (result == "DIFF_COMPANY") {
+		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else {
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");
 		            		}
 		            	},
-		            	error : function(){
+		            	error : function() {
 		            		alert("<spring:message code='ezOrgan.t15' />");
 		            	}
 		            });

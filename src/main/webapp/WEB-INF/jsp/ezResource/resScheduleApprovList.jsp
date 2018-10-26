@@ -612,7 +612,7 @@
 	        	
 	        	/* 2018.03.23 서주연 - #12123 데이터없는경우 페이지네이션 1이 없는 문제해결 */
 	        	if (i == 1) {
-		           	strtext = "<span class='off'>" + i + "</span>";
+		           	strtext = "<span class='on'>" + i + "</span>";
 	                PagingHTML += strtext;
 	            }
 	        	
@@ -813,7 +813,7 @@
             			<WIDTH>5%</WIDTH>
         			</HEADER>  
         			<HEADER>
-            			<NAME><spring:message code='ezResource.t193'/></NAME>
+            			<NAME><spring:message code='ezResource.t2003'/></NAME>
             			<WIDTH>5%</WIDTH>
         			</HEADER>  
         			<HEADER>

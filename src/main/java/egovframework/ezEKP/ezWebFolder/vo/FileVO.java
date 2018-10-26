@@ -4,7 +4,7 @@ public class FileVO {
 	private String fileId;
 	private String fileName;
 	private String filePath;
-	private String fileSize;
+	private long fileSize;
 	private String typeId;
 	private int    downloadCnt;
 	private String fileExt;
@@ -25,9 +25,18 @@ public class FileVO {
 	private String folderName;
 	private String folderPath;
 	private String deleterId;
+	private String owerId;
 	private int    tenantId;
 	private int    folderSort;
 
+	public String getOwnerId() {
+		return owerId;
+	}
+	
+	public void setOwnerId(String owerId) {
+		this.owerId = owerId;
+	}
+	
 	public String getFavouriteStatus() {
 		return favouriteStatus;
 	}
@@ -60,11 +69,11 @@ public class FileVO {
 		this.filePath = filePath;
 	}
 
-	public String getFileSize() {
+	public long getFileSize() {
 		return fileSize;
 	}
 
-	public void setFileSize(String fileSize) {
+	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
 

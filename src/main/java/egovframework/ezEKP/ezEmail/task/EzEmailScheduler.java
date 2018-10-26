@@ -888,10 +888,17 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		for (TenantVO tenantVO : tenantList) {
 			logger.debug("tenantId=" + tenantVO.getTenantId());
 			
-			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId());
-		
-			File file = new File(realPath + pUploadPath);
-			logger.debug("path=" + realPath + pUploadPath);
+			String pUploadPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId());
+			
+			// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+			String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", tenantVO.getTenantId());
+
+			if (useSeparatedLargeFileFolder.equals("YES")) {
+				pUploadPath += commonUtil.separator + "largeFile";
+			}
+			
+			File file = new File(pUploadPath);
+			logger.debug("path=" + pUploadPath);
 			
 			String bigSizeMailAttachDelDayStr = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantVO.getTenantId());
 			int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);

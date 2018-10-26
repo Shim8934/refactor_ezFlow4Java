@@ -283,7 +283,7 @@
 	
 	        function getOneLineReply() {
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+	            xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&gubun=" + gubun, false);
 	            xmlhttp.send();
 	            var xmldom = createXmlDom();
 	            

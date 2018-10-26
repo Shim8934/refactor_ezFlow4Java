@@ -67,6 +67,7 @@
         <result property="fileShareStatus"      column="FILESHARE_STATUS"		 columnIndex="21"/>        
         <result property="folderSort"      		column="FOLDER_SORT"			 columnIndex="22"/>        
         <result property="fileTypeName"         column="TYPE_NAME"          	 columnIndex="23"/>            
+        <result property="ownerId"		        column="OWNER_ID"          		 columnIndex="24"/>            
                                                                                                                                                                          
                                                                                                                                                                                 
                                                                                                                                                                                   
@@ -140,7 +141,8 @@
 					ELSE 'N'
 				END AS FILESHARE_STATUS,
 				decode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS TYPE_NAME    		
+				type.TYPE_NAME 	AS TYPE_NAME,
+				f.CREATE_ID 	AS OWNER_ID 
 		]]>	
     </sql>
     <sql id="fldSelect">
@@ -150,7 +152,7 @@
 				folder.FOLDER_ID    AS FILE_ID 	    ,     
 				folder.FOLDER_NAME1 AS FILE_NAME	,     
 				folder.FOLDER_PATH  AS FILE_PATH	,     
-				'0'					AS FILE_SIZE	,     
+				0					AS FILE_SIZE	,     
 				'folder'			AS TYPE_ID		, 	  
 				0 					AS DOWN_COUNT   ,     
 				'folder'            AS FILE_EXT     ,     
@@ -172,7 +174,8 @@
 					ELSE 'N'
 				END AS FILESHARE_STATUS,
 				decode (FILE_EXT , 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS TYPE_NAME  
+				type.TYPE_NAME 	AS TYPE_NAME,
+				folder.OWNER_ID 	AS OWNER_ID 
 		]]>			      
     </sql>
     
@@ -430,6 +433,84 @@
 			                	folder.folder_upper = #folderId#
 			                and 
 			                	folder.company_id = #comId#
+			            ) t
+			            where 1=1
+		   		]]>	
+				<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+					<![CDATA[
+						(TO_CHAR(t.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# AND TO_CHAR(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
+					]]>
+				</isNotEqual>
+				<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+					<![CDATA[
+						t.TYPE_NAME LIKE ('%' || #searchFileType# || '%')
+		       		]]> 
+				</isNotEqual>
+				
+			<![CDATA[
+				ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+                ) pchk 
+			where ROWNUM <= #pEnd# + #pStart#
+            )
+        where rownums >= #pStart# + 1
+	]]>	
+	</select>
+
+    <select id="EzWebFolderDAO_y.getFileList2" resultMap="fileVO" parameterClass="Map">
+    	<![CDATA[
+    		select * 
+    		from ( 
+	            select pchk.*, ROWNUM rownums 
+		        from (
+		        	select *
+		        	from (
+    	]]>
+   				<include refid="fileListSelect"/>
+				<![CDATA[
+				
+					from tbl_webfolder_file f inner join (
+						select *
+						from tbl_webfolder_folder  
+						where 	folder_id = #folderId# 
+							and tenant_id = #tenantId# 
+							and folder_type = #folderType# 
+						) folder 
+							on folder.folder_id  = f.folder_id
+					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId# 
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'
+					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'  
+					
+				]]>
+		        <include refid="fldSelect"/>
+		        <![CDATA[
+			            from 
+				            tbl_webfolder_filetype type LEFT OUTER JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
+				            left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+				            	and s.tenant_id = #tenantId# and s.target_type ='D'
+			            	left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+			            where 
+								folder.tenant_id = #tenantId#	 
+							and 
+								folder.FOLDER_TYPE = #folderType#
+			                and 
+			                	folder.USE_STATUS = 'Y'
+			                and 
+			                	folder.folder_upper = #folderId#
+			                and 
+			                	folder.company_id = #comId#
+		   		]]>	
+		   		<isEqual property="parentId" compareValue="root" > 
+		      	 	<isEqual property="folderType" compareValue="C" >
+	                	AND 
+	                		u.user_id IN
+	   		
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+		      	   </isEqual>  
+		         </isEqual> 
+		         <![CDATA[ 
 			            ) t
 			            where 1=1
 		   		]]>	
@@ -713,6 +794,73 @@
 			select TO_NUMBER(0) as cnt
 			from dual
 		</isEqual>
+	</select>
+
+	<select id="EzWebFolderDAO_y.getFldToTalCount2" resultClass="Integer" parameterClass="Map">   
+			<![CDATA[
+	           	SELECT count(folder.folder_id) as cnt
+	            from 
+		            tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
+		            left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+	            where 
+						folder.tenant_id = #tenantId#	 
+					and folder.FOLDER_TYPE = #folderType#
+	                and folder.USE_STATUS = 'Y'
+	                and folder.company_id = #comId#
+	                and type.tenant_id = #tenantId#
+	                and folder_path <> #folderPath#	
+			]]>
+			<isEqual property="parentId" compareValue="root" > 
+	      	 	<isEqual property="folderType" compareValue="C" >
+                	AND 
+                		u.user_id IN
+   		
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+	      	   </isEqual>  
+	         </isEqual>  
+			<isEqual property = "flag" compareValue="1" prepend="AND">
+				<![CDATA[
+					folder.folder_path like ('%'||#folderPath#||'%') 
+				]]>
+			</isEqual>
+			<isEqual property= "flag" compareValue="0" prepend="AND">
+				<![CDATA[
+					folder.folder_upper = #folderId#
+				]]>
+			</isEqual>
+	         
+			<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					type.FILE_EXT LIKE '%'|| #searchExt# || '%' ESCAPE '\'
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					(folder.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%' ESCAPE '\'
+						or
+					folder.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%' ESCAPE '\') 
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					type.TYPE_NAME LIKE ('%'|| #searchFileType#||'%')
+	       		]]> 
+			</isNotEqual>	
+			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					(folder.folder_name1 LIKE '%' || #searchFileName# || '%' ESCAPE '\'
+						or
+					folder.folder_name2 LIKE '%' || #searchFileName# || '%' ESCAPE '\') 
+	       		]]> 
+			</isNotEqual>
+			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(TO_CHAR(folder.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# 
+					AND TO_CHAR(folder.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
+				]]>
+			</isNotEqual>
 	</select>
 	<select id="EzWebFolderDAO_y.searchFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[

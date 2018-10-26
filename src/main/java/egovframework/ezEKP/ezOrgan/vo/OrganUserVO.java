@@ -111,6 +111,8 @@ public class OrganUserVO {
 	private int tenantId = -1;
 	/** 겸직사원 구분(addjob or user) */
 	private String userType;
+	/** 수동으로 추가한 사원 구분(Y/N) */
+	private String manualFlag;
 	
 	public String getCn() {
 		return cn;
@@ -550,6 +552,14 @@ public class OrganUserVO {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+	
+	public String getManualFlag() {
+		return manualFlag;
+	}
+
+	public void setManualFlag(String manualFlag) {
+		this.manualFlag = manualFlag;
 	}
 
 }

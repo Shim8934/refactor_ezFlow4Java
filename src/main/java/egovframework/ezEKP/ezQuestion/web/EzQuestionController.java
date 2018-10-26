@@ -57,7 +57,6 @@ import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
-import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
@@ -213,12 +212,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 				qst.setTitle(strbuilder.toString());
 			}				
 		}
+		
+		/* 2018-10-10 홍승비 - 전자설문 검색결과가 없는 경우 메세지 변경을 위해 title 인자 추가 */
 		logger.debug("receve="+receve);
 		model.addAttribute("qstListVO", qstListVO);
 		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("list", list);
 		model.addAttribute("receve", receve);
-		
+		model.addAttribute("titleSearch", title);
+			
 		logger.debug("qstList End");
 		return "/ezQuestion/qstList";
 	}
@@ -3974,7 +3976,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		for(int i=0; i<qstTempSaveVO.size(); i++) {
 			str.append(qstTempSaveVO.get(i).getQuestionNo());
 			str.append("||");
-			str.append(qstTempSaveVO.get(i).getQuesContent());
+			//2018-10-17 김보미 - loadXMLString때문에 설문제목이 태그 형태로(<test>) 들어갈 경우 발생하는 문제 수정 
+			//str.append(qstTempSaveVO.get(i).getQuesContent());
+			str.append(qstTempSaveVO.get(i).getQuesContent().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 			str.append("||");
 			str.append(qstTempSaveVO.get(i).getAnswerType());
 			str.append("||");

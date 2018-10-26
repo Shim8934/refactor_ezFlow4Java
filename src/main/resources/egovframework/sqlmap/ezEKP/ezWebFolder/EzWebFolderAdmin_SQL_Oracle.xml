@@ -226,7 +226,7 @@
 				CASE WHEN W.TOTAL_CAPACITY IS NOT NULL THEN W.TOTAL_CAPACITY ELSE NVL(C.TOTAL_LIMIT, 0) END AS TOTAL_CAPACITY,
 				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                                    AS JOB_TITLE,
 				(
-					SELECT NVL(SUM(TO_NUMBER(F.FILE_SIZE)), 0)
+					SELECT NVL(SUM(F.FILE_SIZE), 0)
 						FROM
 							TBL_WEBFOLDER_FILE F
 						WHERE
@@ -266,7 +266,7 @@
 								CASE WHEN W.TOTAL_CAPACITY IS NOT NULL THEN W.TOTAL_CAPACITY ELSE NVL(C.TOTAL_LIMIT, 0) END AS TOTAL_CAPACITY,
 								CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                                    AS JOB_TITLE,
 								(
-									SELECT NVL(SUM(TO_NUMBER(F.FILE_SIZE)), 0)
+									SELECT NVL(SUM(F.FILE_SIZE), 0)
 										FROM
 											TBL_WEBFOLDER_FILE F
 										WHERE
@@ -395,12 +395,7 @@
 						
 						<isNotEqual property="realColmn" compareValue="">
 							ORDER BY
-								<isEqual property="realColmn" compareValue="FILE_SIZE">
-									TO_NUMBER($realColmn$) $order$,
-								</isEqual>
-								<isNotEqual property="realColmn" compareValue="FILE_SIZE">
-									$realColmn$ $order$,
-								</isNotEqual>
+								$realColmn$ $order$,
 								l.CREATE_DATE DESC,
 								TO_NUMBER(l.LOG_ID) DESC
 						</isNotEqual>
@@ -718,7 +713,7 @@
 	
 	<select id="EzWebFolderAdminDAO.getFolderSize" resultClass="Double">
 		SELECT
-			NVL(SUM(TO_NUMBER(f.FILE_SIZE)), 0)
+			NVL(SUM(f.FILE_SIZE), 0)
 		FROM
 			TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
 		WHERE
