@@ -38,41 +38,33 @@ $(function(){
 });
 
 function deleteUserThemeSetting() {
-	var result = confirm("테마를 초기화하고 회사의 설정 상태로 변경하시겠습니까?");
-	
-	if (result) {
-		$.ajax({
-			type : "POST",
-			url : "/ezNewPortal/deleteUserThemeSetting.do",
-			success : function() {
-				window.location.reload();
-			},
-			fail : function() {
-				alert("오류가 발생하였습니다.");
-			}
-		});
-	}
+	$.ajax({
+		type : "POST",
+		url : "/ezNewPortal/deleteUserThemeSetting.do",
+		success : function() {
+			window.location.reload();
+		},
+		fail : function() {
+			alert("오류가 발생하였습니다.");
+		}
+	});
 }
 
 function updateUserThemeSetting(event) {
-	var result = confirm("해당 테마를 기본 테마로 설정하시겠습니까?");
+	var themeId = event.data.themeId;
+	var frameDefault = event.data.frameDefault;
 	
-	if (result) {
-		var themeId = event.data.themeId;
-		var frameDefault = event.data.frameDefault;
-		
-		$.ajax({
-			type : "POST",
-			url : "/ezNewPortal/updateUserThemeSetting.do",
-			data : {"themeId" : themeId, "frameDefault" : frameDefault},
-			success : function() {
-				window.location.reload();
-			},
-			fail : function() {
-				alert("오류가 발생하였습니다.");
-			}
-		});
-	}
+	$.ajax({
+		type : "POST",
+		url : "/ezNewPortal/updateUserThemeSetting.do",
+		data : {"themeId" : themeId, "frameDefault" : frameDefault},
+		success : function() {
+			window.location.reload();
+		},
+		fail : function() {
+			alert("오류가 발생하였습니다.");
+		}
+	});
 }
 </script>
 <style type="text/css">

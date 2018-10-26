@@ -1242,6 +1242,7 @@ public class EzNewPortalGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1320,13 +1321,24 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertCompanyMenu(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+	public JSONObject insertCompanyMenu(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyMenu started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
+			JSONObject menuInfo =(JSONObject) jsonParam.get("menuInfo");
+			JSONArray menuNames = (JSONArray) jsonParam.get("menuNames");
+			JSONObject menuAuths = (JSONObject) jsonParam.get("menuAuths");
+			
+			ezNewPortalService.insertMenu(menuInfo, menuNames, menuAuths, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);

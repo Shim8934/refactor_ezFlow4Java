@@ -844,6 +844,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("iconUrl", menuInfo.get("iconUrl"));
 		map.put("menuUsed", menuUsed);
 		map.put("companyLang", menuInfo.get("companyLang"));
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
 		
 		ezNewPortalDAO.updateCompanyMenuInfo(map);
 		
@@ -920,6 +922,73 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		LOGGER.debug("updateMenuAuth ended.");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void insertMenu(JSONObject menuInfo, JSONArray menuNames, JSONObject menuAuths, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("insertMenu started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//메뉴
+		map = new ObjectMapper().readValue(menuInfo.toJSONString(), Map.class);
+		
+		//tbl_portal_menu
+		int menuId = ezNewPortalDAO.insertMenu(map);
+		
+		map.put("menuId", menuId);
+		//TODO 이효진 companyLang 만들고 나면 하드코딩한거 지우고 DB에서 get
+		map.put("companyLang", 1);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.insertMenuComp(map);
+		
+		//메뉴이름
+		for (Object item : menuNames) {
+			if (item instanceof JSONObject) {
+				JSONObject menuNameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuNameInfo.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateCompanyMenuNameInfo(map);
+			}
+		}
+		
+		//권한은 셀렉트키로 받아서 ezNewPortal.updateCompanyMenuNameInfo
+		for (Object item : (JSONArray) menuAuths.get("menuAuthsY")) {
+			if (item instanceof JSONObject) {
+				JSONObject menuAuthsY = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("accessYN", true);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateMenuAuth(map);
+			}
+		}
+		
+		for (Object item : (JSONArray) menuAuths.get("menuAuthsN")) {
+			if (item instanceof JSONObject) {
+				JSONObject menuAuthsY = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("accessYN", true);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateMenuAuth(map);
+			}
+		}
+		
+		LOGGER.debug("insertMenu ended.");
 	}
 	
 	@Override
