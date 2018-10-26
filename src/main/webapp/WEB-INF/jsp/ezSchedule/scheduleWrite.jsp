@@ -123,6 +123,10 @@
 		        if (hasattach == "Y") {
 		            setAttachFileInfo("${strAttach}");
 		        }
+		        
+		        if(ispublic != "") {
+		        	document.getElementById("publicSelect").value = ispublic;
+		        }
 
 		        try{
 		            if (document.getElementById("TextTitle").value == "")
