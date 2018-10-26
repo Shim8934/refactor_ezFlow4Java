@@ -564,4 +564,26 @@ public class EzNewPortalAdminController {
 	}
 	
 	/** ----------------------------------------------- */
+	
+	/**
+	 * @author 유은정
+	 */
+	
+	//메뉴 아이콘 선택 화면 호출
+	@RequestMapping(value = "/admin/ezNewPortal/selectMenuIcon.do")
+	public String portalMenuIconSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("portalMenuIconSelect started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("portalMenuIconSelect accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("portalMenuIconSelect ended.");
+			
+			return "/admin/ezNewPortal/portalMenuIconSelect";
+		}
+	}
 }

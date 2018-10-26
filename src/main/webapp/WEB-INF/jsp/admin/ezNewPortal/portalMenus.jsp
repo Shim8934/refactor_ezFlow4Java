@@ -134,13 +134,7 @@
 					menuList.forEach(function (item, index) {
 						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
-						
-						if (item.menuType == "G") {
-							menusHTML += "<dt><span class='" + item.iconUrl + "'>";
-						} else {
-							menusHTML += "<dt><img src='" + item.iconUrl + "'>";
-						}
-						
+						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
 						menusHTML += "<dd>" + item.menuName + "</dd>";
 						menusHTML += "</li>";
@@ -230,13 +224,7 @@
 					menusHTML += "<div class='btnpositionJsp updateMenu'><a class='imgbtn updateMenuBtn'><span>저장</span></a></div>";
 					menusHTML += "<div class='menuIconInfo'>";
 					menusHTML += "<div class='menuIcon'>";
-					
-					if (menuInfo.menuType == "G") {
-						menusHTML += "<span class='" + menuInfo.iconUrl + "'></span>";
-					} else {
-						menusHTML += "<img src='" + menuInfo.iconUrl + "'/>";
-					}
-					
+					menusHTML += "<span class='" + menuInfo.iconUrl + "'></span>";
 					menusHTML += "</div>";
 					
 					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함
@@ -396,11 +384,7 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			//아이콘
-			if (menuType == "G") {
-				iconUrl = $(".menuIcon").find("span").attr("class");
-			} else {
-				iconUrl = $(".menuIcon").find("img").attr("src");
-			}
+			iconUrl = $(".menuIcon").find("span").attr("class");
 			
 			var menuInfo = {
 				"menuId" : menuId,
@@ -531,7 +515,7 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			//아이콘
-			var iconUrl = $(".menuIcon").find("img").attr("src");
+			var iconUrl = $(".menuIcon").find("span").attr("class");
 			iconUrl = "/images/ezNewPortal/portlet_Plus.png";
 			
 			var menuInfo = {
@@ -599,7 +583,12 @@
 		}
 		////구현해야할 부분/////
 		var uploadIconImg = function() {
-
+			var height = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var top = (height - 500) / 2;
+			var left = (width - 765) / 2;
+			   
+			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=342,width=500,top=" + top + ",left=" + left, "");
 		}
 		
 		var openMenuAuth = function(event) {
