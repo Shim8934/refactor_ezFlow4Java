@@ -1592,7 +1592,7 @@ public class EzEmailAdminController {
 						
 						// 조직도에 나타나게 하지 않기 위해 상위부서 정보를 없앤다.
 						ezOrganAdminService.updateProperty(deptId, "EXTENSIONATTRIBUTE1", "", "dept", tenantId);
-						ezOrganAdminService.updateProperty(deptId, "DEPTLEVEL", "1", "dept", tenantId);
+						ezOrganAdminService.updateProperty(deptId, "DEPTLEVEL", "2", "dept", tenantId);
 						ezOrganAdminService.updateProperty(deptId, "DEPT_CD_PATH", deptId, "dept", tenantId);
 						
 					} catch (Exception e) {
