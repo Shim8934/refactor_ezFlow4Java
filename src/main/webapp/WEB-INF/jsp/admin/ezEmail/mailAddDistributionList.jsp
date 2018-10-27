@@ -167,7 +167,11 @@
 	                    var nodes = SelectNodes(result, "DATA/ROW");
 	
 	                    for (var i = 0 ; i < nodes.length ; i++) {
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[1]) + "</DATA1>";
+	                        if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
+	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA1>";
+	                        } else {
+	                        	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[1]) + "</DATA1>";
+	                        }
 	                        
 	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "user"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
@@ -176,7 +180,7 @@
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distribution") {
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
-	                            pparsingXML = pparsingXML + "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA2>";
+	                            pparsingXML = pparsingXML + "<DATA3>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "(" + getNodeText(GetChildNodes(nodes[i])[3]) + ")" + "</VALUE></CELL></ROW>";
 	                        }
@@ -1743,8 +1747,8 @@
                             pparsingXML = "";
                             pparsingXML2 = "";
                         	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strEmail) + "</DATA1>";
-                            pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
+                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+                            pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strEmail) + "</DATA3>";
                             pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
                             pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
                             pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -2334,8 +2338,8 @@
 	                        pparsingXML2 = "";
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strEmail) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
+	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+	                        pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strEmail) + "</DATA3>";
 	                        pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
                             pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + MakeXMLString(strEmail) + "&gt;" + "</VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
