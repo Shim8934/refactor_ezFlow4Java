@@ -965,7 +965,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan + ",everyone";
 		
 		for (int i = 0; i < userDeptPath.split(",").length; i++) {
-			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp != null) {
 				boardInfo = boardInfoTemp;
@@ -1075,7 +1075,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan+",everyone";
 		
 		for (int i=0; i<userDeptPath.split(",").length; i++) {
-			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp == null) {
 				break;
@@ -2021,6 +2021,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		int hlength = headerList.size();
 		
 		for (i = 0; i < hlength; i++) {
+			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
 				if (boardVO.getOrderOption().equals("")) {
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
@@ -2097,6 +2101,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<HEADERS>");
 		
 		for (BoardListHeaderVO vo:headerList) {
+			if (vo.getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
 			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
@@ -2113,6 +2121,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
+				if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+					continue;
+				}
+				
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
@@ -2440,6 +2452,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		int hlength = headerList.size();
 		
 		for (i = 0; i < hlength; i++) {
+			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
 				if (boardVO.getOrderOption().equals("")) {
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
@@ -2511,6 +2527,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<HEADERS>");
 		
 		for (BoardListHeaderVO vo:headerList) {
+			if (vo.getColName().equalsIgnoreCase("ATTACHMENTS")) {
+				continue;
+			}
+			
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
 			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
@@ -2527,6 +2547,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
+				if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
+					continue;
+				}
+				
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
@@ -4512,7 +4536,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			BoardPropertyVO boardPropertyVO = null;
 			
 			for (int k = 0; k < userDeptPath.split(",").length; k++) {
-				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getCompanyID(), userInfo.getTenantId());
+				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getTenantId());
 				
 				if (boardPropertyVO != null) {
 					break;
@@ -4672,7 +4696,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardProp.getBoardGroupID() != null) {
 			String boardGroupID = boardProp.getBoardGroupID();
 			
-			BoardPropertyVO boardGroupProp = getBoardInfo(boardGroupID, userInfo);
+			BoardPropertyVO boardGroupProp = ezBoardService.getBoardProperty(boardGroupID, userInfo.getTenantId());
 			
 			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
 				isAllGroupBoard = "Y";
@@ -6967,12 +6991,13 @@ public class EzBoardController extends EgovFileMngUtil{
         
         StringBuilder bodyContent = new StringBuilder();
 
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        /* 2018-10-26 홍승비 - 게시판 게시알림 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
+        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + boardItem.getTitle() + "</a>");
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
         bodyContent.append("</DIV>");
         
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
@@ -7086,12 +7111,13 @@ public class EzBoardController extends EgovFileMngUtil{
         
         StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        /* 2018-10-26 홍승비 - 게시판 답변알림 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
+        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t259", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + title + "</span>");
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</span>");
         bodyContent.append("</DIV>");
         
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t260", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
@@ -7114,7 +7140,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 전자결재승인관련 메일전송 실행 Method
+	 * 게시판 게시물승인관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do")
 	public void sendApprnoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -7139,12 +7165,13 @@ public class EzBoardController extends EgovFileMngUtil{
         
         StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        /* 2018-10-26 홍승비 - 게시판 게시물 승인대기 알림 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
+        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + title + "</a>");
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>");
         bodyContent.append("</DIV>");
         
         String subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
@@ -7167,7 +7194,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 전자결재승인반려관련 메일전송 실행 Method
+	 * 게시판 게시물반려관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendReturnNoticeMail.do")
 	public void sendReturnNoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -7193,11 +7220,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 	        
-	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+	        /* 2018-10-26 홍승비 - 게시판 게시물 반려 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
+	        bodyContent.append("<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "' name='urn:schemas:httpmail:textdescription'>");
 	        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + boardListVO.getTitle() + "</a>");
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + content + "</a>");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardListVO.getTitle()) + "</a>");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + commonUtil.cleanValue(content) + "</a>");
 	        bodyContent.append("</DIV>");
 	        
 	        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();

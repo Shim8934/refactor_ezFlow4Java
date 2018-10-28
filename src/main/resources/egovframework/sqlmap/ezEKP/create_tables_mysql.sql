@@ -8360,7 +8360,7 @@ CREATE TABLE `tbl_rs_brd` (
   `OWNDEPTID` varchar(100) DEFAULT NULL,
   `OWNDEPTNM` varchar(100) DEFAULT NULL,
   `OWNDEPTNM2` varchar(100) DEFAULT NULL,
-  `OWNERID` varchar(24) DEFAULT NULL,
+  `OWNERID` varchar(2000) DEFAULT NULL,
   `OWNERNM` varchar(32) DEFAULT NULL,
   `OWNERNM2` varchar(32) DEFAULT NULL,
   `OWNERPOSITION` varchar(20) DEFAULT NULL,
@@ -9830,6 +9830,27 @@ CREATE TABLE `tbl_user_config` (
   `PROPERTY_NAME` varchar(100) NOT NULL,
   `PROPERTY_VALUE` varchar(2000) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`USER_ID`,`PROPERTY_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_user_titlemaster`
+--
+
+DROP TABLE IF EXISTS `tbl_user_titlemaster`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_user_titlemaster` (
+  `TYPE` varchar(50) NOT NULL,
+  `CN` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(200) DEFAULT NULL,
+  `DISPLAYNAME2` varchar(200) DEFAULT NULL,
+  `USEFLAG` varchar(2) DEFAULT NULL,
+  `SORT` int(11) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `COMPANYID` varchar(40) NOT NULL,
+  `TENANT_ID` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TYPE`,`CN`,`COMPANYID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

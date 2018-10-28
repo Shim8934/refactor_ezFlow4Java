@@ -895,9 +895,7 @@
 				FROM
 					TBL_USERMASTER D
 				WHERE
-					D.TENANT_ID = #tenantID#
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					D.TENANT_ID = #tenantID#)
 					
 				UNION ALL
 				
@@ -918,15 +916,15 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#)) T
 		ON
 			A.USERID = T.CN
 		AND
 			A.TENANT_ID = T.TENANT_ID
 	   	WHERE
 	   		A.tenant_id = #tenantID#
-		AND
-			T.COMPANYID = #companyID#
 	   	AND
 	   		A.BoardID = #boardID#
 	   	AND

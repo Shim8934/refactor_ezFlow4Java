@@ -592,6 +592,7 @@ function ToggleView(cmdView)
 function onViewDate(szCmd) {
     switch (szCmd.toUpperCase()) {
         case "DAY":
+        	dayView = 2;
             typeCal = 2;
             if (document.getElementById(g_selTDID))
                 document.getElementById(g_selTDID).style.backgroundColor = "#edf4fd";
@@ -611,6 +612,7 @@ function onViewDate(szCmd) {
             break;
             // 주보기		
         case "WEEK":
+        	dayView = 1;
             typeCal = 1;
             if (document.getElementById(g_selTDID))
                 document.getElementById(g_selTDID).style.backgroundColor = "";
@@ -630,6 +632,7 @@ function onViewDate(szCmd) {
             break;
 
         case "MONTH":
+        	dayView = 0;
             typeCal = 0;
             if (document.getElementById(g_selTDID))
                 document.getElementById(g_selTDID).style.backgroundColor = "";
