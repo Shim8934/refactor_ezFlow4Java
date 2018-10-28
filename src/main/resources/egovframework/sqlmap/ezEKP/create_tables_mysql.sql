@@ -458,21 +458,21 @@ CREATE TABLE `jmocha_distribution` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `jmocha_distribution_serve`
+-- Table structure for table `jmocha_distribution`
 --
 
-DROP TABLE IF EXISTS `jmocha_distribution_serve`;
+DROP TABLE IF EXISTS `jmocha_distribution_sub`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jmocha_distribution_serve` (
+CREATE TABLE `jmocha_distribution_sub` (
   `DOMAIN_NAME` varchar(100) NOT NULL,
   `USER_NAME` varchar(100) NOT NULL,
   `COMPANY_ID` varchar(100) NOT NULL,
-  `SERVE_MAIL` varchar(100) NOT NULL,
-  `SERVE_NAME` varchar(100) NOT NULL,
-  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SERVE_MAIL`,`SERVE_NAME`),
+  `SUB_MAIL` varchar(100) NOT NULL,
+  `SUB_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SUB_MAIL`),
   KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
-  CONSTRAINT `distribution_serve_foreign_keys` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `james_recipient_rewrite` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_distribution_sub` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `jmocha_distribution` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

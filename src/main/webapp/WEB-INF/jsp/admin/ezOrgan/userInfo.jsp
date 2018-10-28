@@ -131,6 +131,7 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+		            document.getElementById("cloud-message").style.display = "";
 		        }else{
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
@@ -809,7 +810,12 @@
 	                <input id="HomeAddr" style="WIDTH: 100%;" maxlength="150"/>
 	            </td>
 	        </tr>
-	    </table>   
+	    </table>
+	    <c:if test="${useCloud == 'YES'}">
+	    <div id="cloud-message" style="display: none; margin-top: 20px; padding-left: 10px; background: #eee; height: 100px;">
+	    	<h1>* 추가된 유저 요금은 일할계산되어 자동 익월 청구됩니다.<br>* 문의: 고객지원센터 080-258-0007</h1>
+	    </div>
+	    </c:if>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
