@@ -1827,8 +1827,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANTID", tenantID);
 		
 		try {
-			ezOrganAdminDao.updateTitle(map);	//tbl_user_titlemaster
-			ezOrganAdminDao.updateTitle2(map);	//tbl_usermaster
+			ezOrganAdminDao.updateTitle(map);	//TBL_USER_JOBMASTER
+			ezOrganAdminDao.updateTitle2(map);	//TBL_USERMASTER
 			rtnVal = "TRUE";
 		} catch (Exception e) {
 			e.printStackTrace();

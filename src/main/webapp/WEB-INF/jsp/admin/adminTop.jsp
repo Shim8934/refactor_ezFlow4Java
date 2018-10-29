@@ -205,7 +205,9 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
-		<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
+		<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+			<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
+		</c:if>
 	</body>
 </html>
 

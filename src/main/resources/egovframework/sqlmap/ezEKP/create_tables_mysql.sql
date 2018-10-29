@@ -9834,13 +9834,13 @@ CREATE TABLE `tbl_user_config` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_user_titlemaster`
+-- Table structure for table `tbl_user_jobmaster`
 --
 
-DROP TABLE IF EXISTS `tbl_user_titlemaster`;
+DROP TABLE IF EXISTS `tbl_user_jobmaster`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_user_titlemaster` (
+CREATE TABLE `tbl_user_jobmaster` (
   `TYPE` varchar(50) NOT NULL,
   `CN` varchar(100) NOT NULL,
   `DISPLAYNAME` varchar(200) DEFAULT NULL,
