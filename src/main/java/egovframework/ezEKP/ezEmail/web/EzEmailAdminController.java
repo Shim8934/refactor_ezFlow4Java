@@ -1812,7 +1812,7 @@ public class EzEmailAdminController {
 			// 공유사서함이 있는지 확인
 			OrganUserVO sharedMailbox = ezOrganAdminService.getUserInfo(shareId, auth.getPrimary(), tenantId);
 			
-			if (sharedMailbox == null) {
+			if (sharedMailbox == null || !sharedMailbox.getDepartment().equals("shared_mailbox_" + compId)) {
 				logger.debug("sharedMailbox is not exists.");
 				
 				resultCode = "ERROR";
