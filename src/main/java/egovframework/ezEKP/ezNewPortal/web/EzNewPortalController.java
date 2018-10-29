@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -259,12 +260,24 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 사용자 포틀릿 설정 리스트 출력
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getUserPortletList.do")
 	public JSONObject getUserPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserPortletList Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();		
+		String url = "/rest/ezPortal/portlets/users/" + userId;	
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "GET", null);
+		String status = resultBody.get("status").toString();	
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (status.equals("ok")) {
+			resultObj.put("data" , resultBody.get("data"));
+		}			
 		
 		logger.debug("getUserPortletList End");
-		return null;
+		return resultObj;
 	}	
 	// 종균 끝
 	

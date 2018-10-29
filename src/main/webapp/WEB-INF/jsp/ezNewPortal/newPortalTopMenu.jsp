@@ -38,10 +38,11 @@
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
-			menuList: {},             // 메뉴 리스트 저장
-			menuWidth: [],            // 메뉴별 width 저장
-			companyOrder: [],         // 기본 순서 저장 
-			isInitOrder: false,  // 메뉴 순서 초기화일 경우.
+			menuListArr: [],           // 메뉴 리스트 배열에 저장
+			menuListObj: {},           // 메뉴 리스트 객체에 저장
+			menuWidth: [],             // 메뉴별 width 저장
+			companyOrder: [],          // 기본 순서 저장 
+			isInitOrder: false,        // 메뉴 순서 초기화일 경우.
 		};
 	
 		// 로고 설정
@@ -60,19 +61,19 @@
 			var menuList;
 
 			if(reData === undefined) {
-				menuList = JSON.parse('${menuList}');
+				menuList = newPortalTopMenu.menuListArr;
 			} else {
 				menuList = reData;
 			}
 			
 			document.getElementById('mainMenuList').innerHTML = '';
 			
-			var str = '';
+ 			var str = '';
 			menuList.forEach(function (item, index) {
 				str += '<li id="menu_' + item.menuId + '">' + item.menuName + '</li>';
 				
 				// 메뉴리스트 객체 생성
-				newPortalTopMenu.menuList['menu_'+ item.menuId] = {
+				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
 					menuUrl: item.menuUrl,
 					companyOrder: item.companyOrder,
@@ -87,7 +88,7 @@
 			HTMLCollection.prototype.forEach = Array.prototype.forEach;
 			var menuLi = document.getElementById('mainMenuList').children;
 			menuLi.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuList[item.id].menuUrl;
+				var menuUrl = newPortalTopMenu.menuListObj[item.id].menuUrl;
 				item.addEventListener('click', function () {
 					window.open(menuUrl, 'main', '');
 					// 클릭하면 창닫기.
@@ -223,7 +224,7 @@
 			var menuList;
 
 			if(orderData === undefined) {
-				menuList = JSON.parse('${menuList}');
+				menuList = newPortalTopMenu.menuListArr;
 			} else {
 				menuList = orderData;
 			}
@@ -241,7 +242,7 @@
 			// 확장메뉴 링크 이벤트
 			var toggleMenu = document.getElementById('toggleMenu').children;
 			toggleMenu.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuList['menu_' + item.id].menuUrl;
+				var menuUrl = newPortalTopMenu.menuListObj['menu_' + item.id].menuUrl;
 				item.addEventListener('click', function () {
 					window.open(menuUrl, 'main', '');
 					subMenuClickEvent('off');
@@ -259,11 +260,10 @@
 			var editBtn = document.getElementById('editBtn');
 			editBtn.addEventListener('click', function () {
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-
+				
 				// 드래그앤드롭
 				$('#toggleMenu').sortable({
 					activate: function () {
-						console.log('newPortalTopMenu.isInitOrder', newPortalTopMenu.isInitOrder);
 						if(newPortalTopMenu.isInitOrder === true) {
 							newPortalTopMenu.isInitOrder = false;
 						}
@@ -283,6 +283,7 @@
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
+				
 				document.getElementById('editMenuBtn').style = 'none';
 				document.getElementById('editBtn').style = 'block';
 				
@@ -299,7 +300,16 @@
 			// 저장버튼
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
-				alert('save');
+				alert('저장하였습니다.');		
+				
+				document.getElementById('editMenuBtn').style = 'none';
+				document.getElementById('editBtn').style = 'block';
+				
+				var sortedMenu = document.getElementById('toggleMenu');
+				sortedMenu.className = 'full_menu_toggleUL';
+				
+				$('#toggleMenu').sortable();
+				$('#toggleMenu').sortable("option", "disabled", true);				
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
 				var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
@@ -317,16 +327,16 @@
 					// 결과 값으로 다시 출력할 메뉴 가져오기.
 					if (xhr.status >= 200 && xhr.status < 300) {
 						var result = JSON.parse(xhr.responseText).data;
+						newPortalTopMenu.menuListArr = result.menuList; 
 						// 메뉴 리스트 다시 덮어씌우기
 						setMainMenuList(result.menuList);
-						setExpandMenuList(result.menuList);
+						setExpandMenuList(result.menuList); 
 					} else {
 						console.error(xhr.responseText);
 					}
 				};
 				
 				// 메뉴 순서 초기화 버튼인 경우 아닌 경우 
-				console.log('newPortalTopMenu.isInitOrder',newPortalTopMenu.isInitOrder);
 				if (newPortalTopMenu.isInitOrder) {
 					xhr.open('DELETE', '/ezNewPortal/deleteUserMenuOrder.do');
 					xhr.send();
@@ -337,6 +347,7 @@
 						data: orderObj,
 					}));					
 				}
+				
 			});			
 			
 			// 메뉴 순서 초기화 버튼
@@ -348,9 +359,9 @@
 					newPortalTopMenu.companyOrder[index] = {
 						menuId: item.id,
 						companyOrder: item.dataset.companyorder*1,
-						iconUrl: newPortalTopMenu.menuList['menu_'+item.id].iconUrl,
-						menuName: newPortalTopMenu.menuList['menu_'+item.id].menuName,
-						menuUrl: newPortalTopMenu.menuList['menu_'+item.id].menuUrl,
+						iconUrl: newPortalTopMenu.menuListObj['menu_'+item.id].iconUrl,
+						menuName: newPortalTopMenu.menuListObj['menu_'+item.id].menuName,
+						menuUrl: newPortalTopMenu.menuListObj['menu_'+item.id].menuUrl,
 					};
 				});
 	 			
@@ -378,10 +389,10 @@
 			// 확장버튼 UI 이벤트 설정
 			var topMenuFull = document.getElementById('topMenuFull');
 			topMenuFull.addEventListener('click', function () {
-				if (topMenuFull.className.indexOf('on') > -1) {
+				if (topMenuFull.className.indexOf('on') > -1) { // 닫을 때
 					subMenuClickEvent('off');
-				} else if (topMenuFull.className.indexOf('off') > -1) {
-					setExpandMenuList();
+				} else if (topMenuFull.className.indexOf('off') > -1) { // 열 때
+					//setExpandMenuList();
 					subMenuClickEvent('on');
 				}
 			});		
@@ -470,6 +481,8 @@
 		}
 		
  		var newPortalTopMenuFunc = function () {
+ 			newPortalTopMenu.menuListArr = JSON.parse('${menuList}');
+		
 			setTopMenu();            // 헤더 전체 셋팅
 			setMainMenuList();       // 메인메뉴 리스트 출력
 			setUtilEvent();          // 유틸메뉴 이벤트 설정

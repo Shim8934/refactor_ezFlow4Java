@@ -461,6 +461,7 @@ LIMIT #limit#
 OFFSET #offset#
 ]]>	
 </select>
+
 <!-- 퀵 링크 전체 개수 가져오기 -->
 <select id="ezNewPortal.getQuickLinkTotalCnt" parameterClass="Map" resultClass="Integer">
 SELECT
