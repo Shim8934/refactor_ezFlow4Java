@@ -431,6 +431,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 메뉴 순서조정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenuOrder.do")
 	public void updateMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateMenuOrder started.");
