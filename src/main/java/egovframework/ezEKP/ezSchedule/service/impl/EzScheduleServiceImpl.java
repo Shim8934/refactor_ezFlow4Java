@@ -842,11 +842,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		try {
 			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 			contentPath += schedulePath;
-
-			byte[] ct = Base64.decode(content);
-			stream = new ByteArrayInputStream(ct);
+			
+			//byte[] ct = Base64.decode(content);
+			//stream = new ByteArrayInputStream(ct);
+			//bos = new FileOutputStream(contentPath);
+			
+			//2018-10-24 김혜정 ics파일 데이터를 위해 조건 추가
+			if (attach == null) {
+				stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
+			}else{
+				byte[] ct = Base64.decode(content);
+				stream = new ByteArrayInputStream(ct);
+			}
+			
 			bos = new FileOutputStream(contentPath);
-	
+			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
 			
@@ -857,15 +867,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			//첨부파일 카운트
 			String hasattach = "N";
 			
-			if(attach.getLength() > 0) {				
-				hasattach = "Y";
+			//2018-10-24 김혜정 ics파일 데이터를 위해 조건 추가
+			if(attach != null) {
+				if(attach.getLength() > 0) {				
+					hasattach = "Y";
+				}
 			}
 			//비서정보 카운트
 			String hasattendant = "N";
 			
-			if(attendantId.getLength() > 0) {				
-				hasattendant = "Y";
-			}			
+			//2018-10-24 김혜정 ics파일 데이터를 위해 조건 추가
+			if(attendantId != null) {
+				if(attendantId.getLength() > 0) {				
+					hasattendant = "Y";
+				}
+			}
 			//일정 정보 저장
 			schedulePath = mhtPath + schedulePath;
 			
@@ -898,38 +914,42 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			
 			//첨부파일 저장
 			Map<String, Object> attachMap = new HashMap<String, Object>();
-						
-			for (int i=0; i < attach.getLength(); i++) {
-				String[] files = attach.item(i).getTextContent().split("/");				
-				String fileName = files[1];
-				String filePath = files[0];
-				String fileSize = files[2];
-				
-				filePath = uploadFilePath + commonUtil.separator + filePath;
-
-				attachMap.put("v_SCHEDULEID", scheduleId);
-				attachMap.put("v_FILENAME", fileName);
-				attachMap.put("v_FILEPATH", filePath);
-				attachMap.put("v_FILESIZE", fileSize);
-				attachMap.put("v_TENANTID", tenantId);
-				
-				ezScheduleDAO.insertScheduleAttach(attachMap);
-			}					
-			
-			//참석자 관련 데이터 저장 로직			
-			for (int i=0; i < attendantId.getLength(); i++) {								
-				String v_attendantId = attendantId.item(i).getTextContent();				
-				String v_attendantName = attendantName.item(i).getTextContent();
-				String v_attendantName2 = attendantName2.item(i).getTextContent();
-				String v_attendantDeptName = attendantDeptName.item(i).getTextContent();
-				String v_attendantDeptName2 = attendantDeptName2.item(i).getTextContent();
-				
-				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId, companyID);
+			//2018-10-24 김혜정 ics파일 데이터를 위해 조건 추가
+			if(attach != null) {
+				for (int i=0; i < attach.getLength(); i++) {
+					String[] files = attach.item(i).getTextContent().split("/");				
+					String fileName = files[1];
+					String filePath = files[0];
+					String fileSize = files[2];
+					
+					filePath = uploadFilePath + commonUtil.separator + filePath;
+	
+					attachMap.put("v_SCHEDULEID", scheduleId);
+					attachMap.put("v_FILENAME", fileName);
+					attachMap.put("v_FILEPATH", filePath);
+					attachMap.put("v_FILESIZE", fileSize);
+					attachMap.put("v_TENANTID", tenantId);
+					
+					ezScheduleDAO.insertScheduleAttach(attachMap);
+				}
 			}
 			
+			//참석자 관련 데이터 저장 로직
+			//2018-10-24 김혜정 ics파일 데이터를 위해 조건 추가
+			if(attendantId != null) {
+				for (int i=0; i < attendantId.getLength(); i++) {								
+					String v_attendantId = attendantId.item(i).getTextContent();				
+					String v_attendantName = attendantName.item(i).getTextContent();
+					String v_attendantName2 = attendantName2.item(i).getTextContent();
+					String v_attendantDeptName = attendantDeptName.item(i).getTextContent();
+					String v_attendantDeptName2 = attendantDeptName2.item(i).getTextContent();
+					
+					insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId, companyID);
+				}
+			}
 			sID = scheduleId;			
 		} catch (Exception e) {
-			
+			e.printStackTrace(); //테스트를 위해 추가
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -1169,9 +1189,5 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezScheduleDAO.deleteScheduleRepe(map);
 	}
-	
-	
-	
-	
 }
 

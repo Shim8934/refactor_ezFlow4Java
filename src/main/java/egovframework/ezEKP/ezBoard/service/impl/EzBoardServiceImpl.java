@@ -241,7 +241,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getBoardList_Config(map);
 	}
 
-	/* 2018-10-24 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 */
+	/* 2018-10-29 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 (익명게시판 제외) */
 	@Override
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeader started");
@@ -252,10 +252,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
 		
-		BoardPropertyVO boardProp = new BoardPropertyVO();
-		
 		// 나의게시물, 임시보관함, 게시물 승인의 경우 게시판 ID가 없음
-		if (ezBoardVO.getBoardId() != null) {
+		if (!ezBoardVO.getBoardType().equals("2") && ezBoardVO.getBoardId() != null) {
+			BoardPropertyVO boardProp = new BoardPropertyVO();
+			
 			boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
 			
 			if (boardProp.getBoardGroupID() != null) {
@@ -701,7 +701,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("photoListDel ended");
 	}
 
-	/* 2018-10-19 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 */
+	/* 2018-10-29 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 (익명게시판 제외) */
 	@Override
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeaderBoardID started");
@@ -713,10 +713,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
 		
-		BoardPropertyVO boardProp = new BoardPropertyVO();
-		
 		// 게시판검색 기능의 경우 게시판 ID가 'all'로 들어감
-		if (ezBoardVO.getBoardId() != null && !ezBoardVO.getBoardId().equalsIgnoreCase("all")) {
+		if (!ezBoardVO.getBoardType().equals("2") && ezBoardVO.getBoardId() != null && !ezBoardVO.getBoardId().equalsIgnoreCase("all")) {
+			BoardPropertyVO boardProp = new BoardPropertyVO();
+			
 			boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
 			
 			if (boardProp.getBoardGroupID() != null) {
