@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -737,6 +738,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }
         if (vo.getInfo() != null) {
             String param = "info=" + URLEncoder.encode(vo.getInfo(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute7() != null) {
+            String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
             inputParams += "&" + param;
         }
 
@@ -2065,4 +2070,45 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	delete("EzOrganAdminDAO.deleteDelUserDBData_I", map);
     }
     
+    public void setTitle(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertTitle", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<OrganJobVO> getTitleList(Map<String, Object> map) throws Exception {
+		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitleList", map);
+	}
+    
+    public OrganJobVO getTitleInfo(Map<String, Object> map) throws Exception {
+		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleInfo", map);
+	}
+	
+	public void updateTitle(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle", map);
+	}
+	
+	public void updateTitle2(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle2", map);
+	}
+	
+	public void deleteTitle(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteTitle", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getTitleUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.selectTitleUserList", map);
+	}
+	
+	public int getTitleListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleListCnt", map);
+	}
+	
+	public int getTitleUserListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleUserListCnt", map);
+	}
+	
+	public int getTitleCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleCnt", map);
+	}
 }

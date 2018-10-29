@@ -18,7 +18,7 @@
 			var xmlHTTP = createXMLHttpRequest();
 			
 		    $(document).ready(function(){
-		    	var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		    	var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 		    		
 		    	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		    	xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
@@ -63,7 +63,7 @@
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
+		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;mail;displayName");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -81,11 +81,14 @@
 		        treeView.LoadFromID("FromTreeView");
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);        
 		    }
-		    
+		    var selectedCompanyID = "";
 		    function TreeViewNodeClick() {
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
-		        nodeIdx = treeView.GetSelectNode();        
+		        nodeIdx = treeView.GetSelectNode();
+		        
+		        selectedCompanyID = nodeIdx.GetNodeData("extensionattribute2");
+		        parent.getTitleOption(selectedCompanyID);
 		    }
 		    
 		    function deptsearch_press() {
@@ -221,7 +224,7 @@
 	        <tr>
 	            <th style="background-color: #f8f8f8; border-right:0px; border-left:0px; border-top:0px; padding-left:3px;padding-top:3px">
 	                <div style="width:100%; text-align:left">
-	                    <input name="Input" id="deptkeyword" style="WIDTH: 110px; margin: 0px;" onkeypress="deptsearch_press()" />
+	                    <input name="Input" id="deptkeyword" style="WIDTH: 110px; height:22px; margin: 0px;" onkeypress="deptsearch_press()" />
 	                    <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
 	                </div>        
 	            </th>

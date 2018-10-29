@@ -75,6 +75,9 @@
 		var check = "false";
 		var selectelem = null;
 		var popupselTContName = "";
+		//2018-10-16 김보미 - 프로그래스바
+		var startTime = "";
+		var endTime = "";
 		
 	    function window_onload() {
 	   	
@@ -661,21 +664,21 @@
 	        	popupselTContName = retVal[0];
 	        	
 	        	if(popupselTContName!=undefined && popupselTContName != "" ) {
-	        	var length = $("input:checkbox[name=myCheckbox]:checked").length;
-		        if (length > 0 && check == 'false') {
-		            if (popupselTContName == null || popupselTContName == '')
-		                alert("<spring:message code='ezApprovalG.t1676'/>")
-					else {
-					    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
-					    if (Ans) {
-					        ContMove();
-					        getDocListjson(CurPage);
-					    }
-					}
-		        } else {
-		            alert("<spring:message code='ezApprovalG.t1570'/>");
-		        }
-		        $("#checkboxAll").prop("checked", false);
+		        	var length = $("input:checkbox[name=myCheckbox]:checked").length;
+			        if (length > 0 && check == 'false') {
+			            if (popupselTContName == null || popupselTContName == '')
+			                alert("<spring:message code='ezApprovalG.t1676'/>")
+						else {
+						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
+						    if (Ans) {
+						        ContMove();
+						        getDocListjson(CurPage);
+						    }
+						}
+			        } else {
+			            alert("<spring:message code='ezApprovalG.t1570'/>");
+			        }
+			        $("#checkboxAll").prop("checked", false);
 	        	} else {
 		            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
 	        		strMoveListIDInfo = "";
@@ -791,6 +794,21 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
+		    
+	        //2018-10-16 김보미 - 프로그래스바		
+			function ShowMailProgress() {
+	        	startTime = new Date();//프로그래스바 시작시간
+				CurrenWidth = document.body.clientWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "400px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+			function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
 	    </script>
 	</head>
 	
@@ -972,4 +990,10 @@
 		</div>
 		
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
+		
+	    <!-- 2018-10-16 김보미 - 프로그레스바 -->
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+        <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+        <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
 </html>

@@ -93,12 +93,29 @@ public interface EzOrganAdminService {
 	
 	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
 	
-	public String getDistributionUserName (int tenantID, String groupName) throws Exception;
+	public String getDistributionUserName (int tenantID, String groupName, String companyId) throws Exception;
 
-	public String mailDelDistributionList(int tenantID, String cn) throws Exception;
+	public String mailDelDistributionList(int tenantID, String cn, String companyId) throws Exception;
 	
 	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
+	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
+	
+	public String getTitleList(String type, String companyID, int tenantID) throws Exception;
+	
+	public String getTitleInfo(String type, String cn, String companyID, int tenantID) throws Exception;
+
+	public String updateTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
+	
+	public String deleteTitle(String type, String cn, String companyID, int tenantID) throws Exception;
+	
+	public String getTitleUserList(String type, String cn, String primary, String companyID, int tenantID) throws Exception;
+	
+	public int getTitleListCnt(String type, String companyID, int tenantID) throws Exception;
+	
+	public int getTitleUserListCnt(String type, String cn, String companyID, int tenantID) throws Exception;
+
+	public int getTitleCnt(String type, String cn, String companyID, int tenantID) throws Exception;
 }

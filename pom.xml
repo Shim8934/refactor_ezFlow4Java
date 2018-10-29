@@ -408,6 +408,22 @@
 			<systemPath>${webappLib}/hwplib-1.2.jar</systemPath>
 		</dependency>
 		
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mnode.ical4j</groupId>
+			<artifactId>ical4j</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mnode.ical4j</groupId>
+			<artifactId>ical4j-extensions</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 	</dependencies>
 
     <build>

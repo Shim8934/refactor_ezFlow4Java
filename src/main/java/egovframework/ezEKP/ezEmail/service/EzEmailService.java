@@ -86,4 +86,5 @@ public interface EzEmailService {
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception;
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
+	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
 }

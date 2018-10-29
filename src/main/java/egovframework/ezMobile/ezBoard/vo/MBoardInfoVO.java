@@ -123,6 +123,8 @@ public class MBoardInfoVO {
 	private String displayName;
 	/** 모바일 페이지(새게시물/리스트/글읽기) 구분 */
 	private String type;
+	/** 2018-10-25 홍승비 - 그룹사게시판 체크용 isAllGroupBoard 추가*/
+	private String isAllGroupBoard;
 	
 	@Override
 	public String toString() {
@@ -522,6 +524,12 @@ public class MBoardInfoVO {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getIsAllGroupBoard() {
+		return isAllGroupBoard;
+	}
+	public void setIsAllGroupBoard(String isAllGroupBoard) {
+		this.isAllGroupBoard = isAllGroupBoard;
 	}
 	
 }
