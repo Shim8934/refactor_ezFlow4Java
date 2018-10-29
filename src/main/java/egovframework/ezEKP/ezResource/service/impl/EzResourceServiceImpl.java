@@ -25,6 +25,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
@@ -433,7 +434,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ownerID = ezResourceDAO.getAclTblBrd_S1(map);
 		logger.debug("ownerID="+ownerID);
 		
-		if (ownerID == null || ownerID.equals("")) {
+		boolean flag = false;
+		String[] ownerList = ownerID.split(",");
+		for(int i=0; i<ownerList.length; i++) {
+			if(userID.equals(ownerList[i])) {
+				flag = true;
+			}
+		}
+		
+		//if (ownerID == null || ownerID.equals("")) {
+		if(!flag) {
 			brdUpper = ezResourceDAO.getAclTblBrd_S2(map);
 			map.put("v_BRD_UPPER", brdUpper);
 			accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
@@ -470,9 +480,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						}
 				}	
 			}
-			
-	
-			
 		} else {
 			result = "Y";
 		}
@@ -703,10 +710,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception {
+	public List<ResAdminVO> getResourceAdminInfo(String brdID, int tenantID, String[] ownerList) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_BRD_ID", brdID);
 		map.put("tenantID", tenantID);
+		map.put("ownerList", ownerList);
 		return ezResourceDAO.getResourceAdminInfo(map);
 	}
 	
@@ -3580,5 +3588,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("getMonthlyRepDateTimes End");
 		return returnList;
 	}
+	
+	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception {
+		logger.debug("getOwnerInfo started");
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("ownerList", ownerList);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		map.put("ownerID", ownerList[0]);
+		
+		logger.debug("getOwnerInfo ended");
+		return ezResourceDAO.getOwnerInfo(map);
+	}
+	
 }
 

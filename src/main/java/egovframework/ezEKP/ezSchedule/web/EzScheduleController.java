@@ -1,18 +1,47 @@
 package egovframework.ezEKP.ezSchedule.web;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.filter.Filter;
+import net.fortuna.ical4j.filter.PeriodRule;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.WeekDay;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.util.MapTimeZoneCache;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -34,6 +63,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.ibm.icu.util.Calendar;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -572,6 +602,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         pOffset = loginVO.getOffset().split("\\|")[1];      
         timeZone = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
 
+        //2018-10-29 김혜정
+        String useScheduleIcs = ezCommonService.getTenantConfig("useScheduleIcs", loginVO.getTenantId());
+        
         model.addAttribute("userInfo",		loginVO);
         model.addAttribute("pOffset",		pOffset);
         model.addAttribute("timeZoneStr",	timeZone);
@@ -591,6 +624,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("useEditor",		useEditor);
         model.addAttribute("defaultTitle",	defaultTitle);
         model.addAttribute("shareList",		sb.toString());
+        model.addAttribute("useScheduleIcs", useScheduleIcs);
         
 		return "/ezSchedule/scheduleMain";
 	}
@@ -1746,13 +1780,13 @@ public class EzScheduleController extends EgovFileMngUtil {
         String enddate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    	Calendar cal = Calendar.getInstance();
-    	cal.setTime(sdf.parse(enddate));
-    	
-    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
-    		cal.add(Calendar.MINUTE, -1);        		
-    		enddate = sdf.format(cal.getTime());
-    	}
+//    	Calendar cal = Calendar.getInstance();
+//    	cal.setTime(sdf.parse(enddate));
+//    	
+//    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+//    		cal.add(Calendar.MINUTE, -1);        		
+//    		enddate = sdf.format(cal.getTime());
+//    	}
 
     	startdate = sdf.format(sdf.parse(startdate));
     	enddate = sdf.format(sdf.parse(enddate));
@@ -2670,6 +2704,403 @@ public class EzScheduleController extends EgovFileMngUtil {
         return returnValue;
     }
 	
+	/**
+	 * 일정작성 > icalendar import
+	 */
+	@RequestMapping(value = "/ezSchedule/icsImport.do", produces = "text/plain; charset=utf-8")
+	public String icsImport(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model, HttpServletResponse response) throws Exception{
+		logger.debug("icsImport start");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		
+		//Setting startDate, endDate
+		Calendar startCal = Calendar.getInstance();
+		Calendar endCal = Calendar.getInstance();
+		
+		if (startDate != null && !startDate.equals("")) {
+			String[] sDate = startDate.split("-");
+			startCal.set(Integer.parseInt(sDate[0]), Integer.parseInt(sDate[1]) - 1, Integer.parseInt(sDate[2])); 
+		}
+		
+		if (endDate != null && !endDate.equals("")) {
+			String[] eDate = endDate.split("-");
+			endCal.set(Integer.parseInt(eDate[0]), Integer.parseInt(eDate[1]) -1, Integer.parseInt(eDate[2])); 
+		}
+		
+		logger.debug("filter startCal: " + startCal.get(Calendar.YEAR) + "/" + (startCal.get(Calendar.MONTH) + 1) + "/" + startCal.get(Calendar.DAY_OF_MONTH));
+		logger.debug("filter endCal:   " + endCal.get(Calendar.YEAR)   + "/" + (endCal.get(Calendar.MONTH) + 1) + "/" + endCal.get(Calendar.DAY_OF_MONTH));
+		
+		MultipartFile multiFile = request.getFile("file1");
+		
+		//Setting default
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		String defaultPath   = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
+		String realPath      = commonUtil.getRealPath(request);
+		String scheme        = "http://";
+		
+		if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+			scheme = "https://";
+		}
+		
+		InputStream fin = null;
+		
+		try {
+			//Parsing a calendar file
+			System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache.class.getName());
+			
+			fin = new BufferedInputStream(multiFile.getInputStream()); 
+			 
+			CalendarBuilder builder = new CalendarBuilder();
+			
+			net.fortuna.ical4j.model.Calendar calendar = builder.build(fin);
+			
+			//Filtering events
+			Period period = new Period(new DateTime(startCal.getTime()), new DateTime(endCal.getTime()));
+			Filter<CalendarComponent> filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+			
+			ComponentList<CalendarComponent> cal = calendar.getComponents(Component.VEVENT);
+			
+			Collection<CalendarComponent> filterCal = filter.filter(cal);
+			
+			VEvent vEvent = null;
+		
+			for (Component c : filterCal) {
+				if (c instanceof VEvent) {
+					
+					vEvent = ((VEvent) c);
+					
+					String title = vEvent.getSummary().getValue();
+					title = title.isEmpty()? "no title": substringData(title.trim(), 100);
+					
+					String location   = substringData(vEvent.getLocation().getValue().trim(), 50);
+					String content    = vEvent.getDescription().getValue().trim();
+					String ispublic   = "";
+					String datetype   = "";
+					String repetition = "";
+					String sdate      = "";
+					String edate      = "";
+					
+					//content를 mht로 바꾸기 위해서
+					content = "<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + contentSplit(content) + "</BODY>" + "</HTML>";
+					content = contentToMHT(content, scheme, realPath, loginVO.getLocale());
+					
+					DtStart dtStart  = vEvent.getStartDate();
+					DtEnd dtEnd      = vEvent.getEndDate();
+					
+					Date dtStartDate = dtStart.getDate();
+					Date dtEndDate   = dtEnd.getDate();
+					
+					Calendar dtStartCal = Calendar.getInstance();
+					Calendar dtEndCal   = Calendar.getInstance();
+					Calendar tempEndCal = Calendar.getInstance();
+					
+					dtStartCal.setTime(dtStartDate);
+					dtEndCal.setTime(dtEndDate);
+					tempEndCal.setTime(dtEndDate);
+					
+					if (vEvent.getClassification() != null) {
+						String clazz = vEvent.getClassification().getValue();
+						
+						switch (clazz) {
+							case "PRIVATE" : ispublic = "N"; break;
+							case "PUBLIC"  : ispublic = "Y"; break;
+							default: ispublic = "N"; break;
+						}
+					}
+					else { //기본공개설정상태
+						ispublic = "Y";
+					}
+					
+					List<RRule> rrules = vEvent.getProperties(Property.RRULE);
+					if (rrules.size() == 0) { //반복일정이 없는 경우
+						if (dtStart.getParameter("VALUE") != null) {
+							if (dtStart.getParameter("VALUE").getValue().equals("DATE")) { //하루종일
+								datetype = "2";
+								
+								//시작시간 00시  설정
+								dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
+								
+								//끝날짜 00시  설정
+								dtEndCal.set(Calendar.HOUR_OF_DAY, 0);
+							}
+						}
+						else {
+							datetype = "1";
+						}
+					}
+					else { //반복설정이 있는 경우
+						datetype = "3";
+						
+						String[] info = new String[7];
+						if (rrules.size() > 1) { //한개의 이벤트에 만약 여러개 반복일정이 있다면
+							continue;
+						}
+						else {
+							RRule rrule = rrules.get(0);
+							Recur recur = rrule.getRecur();
+							
+							//Setting info[0]
+							if (recur.getUntil() == null) { //종료일없음
+								if (recur.getCount() == -1) {
+									info[0] = "-1";
+								}
+								else {
+									info[0] = String.valueOf(recur.getCount());
+								}
+							}
+							else { //종료일있음
+								info[0] = "0";
+								
+								//시간정보는 가져와야함!
+								dtEndDate = recur.getUntil();
+								dtEndCal.setTime(dtEndDate);
+								dtEndCal.set(Calendar.HOUR_OF_DAY, tempEndCal.get(Calendar.HOUR_OF_DAY));
+								dtEndCal.set(Calendar.MINUTE, tempEndCal.get(Calendar.MINUTE));
+								dtEndCal.set(Calendar.SECOND, 0);
+							}
+							
+							//Setting info[1]
+							if (dtStart.getParameters().toString().indexOf("VALUE=DATE") > -1) { //하루종일
+								info[1] = "1";
+								
+								if (info[0].equals("0")) {
+									dtEndCal.add(Calendar.DATE, 1); //종료일 있을 때에는 다음날로 설정
+								}
+								
+								//시작시간 00시
+								dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
+								
+								//끝날짜 00시
+								dtEndCal.set(Calendar.HOUR_OF_DAY, 0);
+								
+							}
+							else { //시간지정
+								info[1] = "0";
+							}
+							
+							//Setting info[2]
+							if (recur.getFrequency() != null) {
+								switch (recur.getFrequency()) {
+									case "DAILY":
+										info[2] = "0";
+										
+										//Setting info[3]
+										info[3] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+										break;
+									case "WEEKLY": 
+										info[2] = "1";
+										
+										//Setting info[3]
+										info[3] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+										
+										//Setting info[4]
+										if (recur.getDayList() != null) {
+											info[4] = "";
+											for (WeekDay weekDay : recur.getDayList()) {
+												info[4] += changeInfo(weekDay.getDay().toString());
+											}
+										}
+										break;
+									case "MONTHLY":
+										info[2] = "2";
+										
+										if (recur.getDayList().size() == 0) {
+											//Setting info[3]
+											info[3] = "1";
+											
+											//Setting info[4]
+											info[4] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+											
+											//Setting info[5]
+											info[5] = String.valueOf(recur.getMonthDayList().get(0));
+										}
+										else {
+											//Setting info[3]
+											info[3] = "2";
+											
+											//Setting info[4]
+											info[4] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+											
+											//Setting info[5] + Setting info[6]
+											if (recur.getDayList().size() > 1) { //사이즈1이여야함
+												continue;
+											}
+											else {
+												WeekDay weedkDay = recur.getDayList().get(0);
+												info[5] = weedkDay.toString().substring(0, 1);
+												
+												if (info[5].equals("-")) { //매월마지막인지체크
+													info[5] = "5";
+													info[6] = changeInfo(weedkDay.toString().substring(2));
+												}
+												else {
+													info[6] = changeInfo(weedkDay.toString().substring(1));
+												}
+											}
+										}
+										break;
+									case "YEARLY":
+										info[2] = "3";
+										
+										//Setting info[4]
+										if (recur.getInterval() == -1 || recur.getInterval() == 1) {
+											info[4] = String.valueOf(dtStartCal.get(Calendar.MONTH) + 1);
+										} 
+										else { //반복주기가 1년보다 클 때
+											continue;
+										}
+										
+										if (recur.getSetPosList().size() == 0) {
+											//Setting info[3]
+											info[3] = "1";
+											
+											//Setting info[5]
+											info[5] = String.valueOf(dtStartCal.get(Calendar.DATE));
+										}
+										else {
+											//Setting info[3]
+											info[3] = "2";
+											
+											//Setting info[5]
+											if (recur.getSetPosList().size() > 1) { //사이즈1이여야함
+												continue;
+											}
+											else {
+												info[5] = recur.getSetPosList().get(0).toString();
+											}
+											
+											//Setting info[6]
+											if (recur.getDayList().size() > 1) { //사이즈1이여야함
+												continue;
+											}
+											else {
+												WeekDay weekday = recur.getDayList().get(0);
+												info[6] = changeInfo(weekday.getDay().toString());
+											}	
+										}
+										
+										break;
+									default: break;
+								}
+							}
+						}
+						
+						ArrayList<String> list = new ArrayList<String>(Arrays.asList(info));
+						repetition = list.stream().filter(StringUtils::isNotBlank).collect(Collectors.joining("|"));
+					}
+					
+					sdate = sdf.format(dtStartCal.getTime());
+					edate = sdf.format(dtEndCal.getTime());
+					
+					//scheduletype 개인일정, importance 중요도보통 설정
+					ezScheduleService.insertSchedule(loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), "1", "2", ispublic, datetype, sdate, edate, repetition, title, location, content, null, 
+						null, null, null, null, null, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
+					
+					/*for(Object sch : c.getProperties()) {
+						System.out.println(sch);
+					}*/
+					
+					vEvent = null;
+				}
+				else{
+					logger.error("Check ics file format.");
+					model.addAttribute("result", "ERROR");
+					return "/ezSchedule/scheduleImportComplete";
+				}
+			}
+		} catch(ParserException e) {
+			logger.debug("Parse Error");
+			e.printStackTrace();
+		} catch(Exception e) {
+			logger.debug("Error");
+			e.printStackTrace();
+		} finally {
+			if (fin != null) { try { fin.close(); } catch (IOException e) {} }
+		}
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("icsImport end");
+		return "/ezSchedule/scheduleImportComplete";
+	}
+	/**
+	 * ics 파일에서 가져온 데이터의 문자열을 자르는 함수
+	 */
+	private String substringData(String data, int length) {
+		logger.debug("substringData started.");
+		
+		if (data.length() > length) {
+			data = data.substring(0, length);
+		}
+		
+		logger.debug("substringData ended.");
+		return data;
+	}
+	/**
+	 * ics 파일에서 가져온 요일 정보를 info 로 변경하는 함수
+	 */
+	private String changeInfo(String weekday) {
+		logger.debug("changeInfo started.");
+		
+		String result = "0";
+		
+		switch (weekday) {
+			case "SU" : result = "0"; break;
+			case "MO" : result = "1"; break;
+			case "TU" : result = "2"; break;
+			case "WE" : result = "3"; break;
+			case "TH" : result = "4"; break;
+			case "FR" : result = "5"; break;
+			case "SA" : result = "6"; break;
+			default : break;
+		}
+		
+		logger.debug("changeInfo ended.");
+		return result;
+	}
+	/**
+	 * ics 파일에서 가져온 content \n 단위로 문자열 분리 후 p태그로 감싸는 함수
+	 */
+	private String contentSplit(String content) {
+		logger.debug("contentSplit started.");
+		
+		String result = "";
+		String[] splitContet = content.split("\\n");
+		
+		for (int i = 0; i < splitContet.length; i++) {
+			result += "<p>" + splitContet[i] + "</p>";
+		}
+		
+		logger.debug("contentSplit ended.");
+		return result;
+	}
+	/**
+	 * ics 파일에서 가져온 content 를  mht 로 바꾸는 함수
+	 */
+	private String contentToMHT(String strHTML, String scheme, String realPath, Locale locale) throws Exception{
+		logger.debug("contentToMHT started.");
+			
+		if (strHTML != null) {
+			strHTML = strHTML.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			strHTML = strHTML.replaceAll("\\+", "%2B");
+			strHTML = URLDecoder.decode(strHTML, "utf-8");
+		}
+		
+		strHTML = strHTML.replace("replace_" + scheme, scheme);
+		
+		strHTML = commonUtil.cleanScriptValue(strHTML, "");
+		
+		String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, locale);
+		
+		logger.debug("contentToMHT ended.");
+		return mhtData;
+	}
 	/**
 	 * 업로드 날짜를 30분 단위로 구하는 함수
 	 */
