@@ -21,10 +21,12 @@ public interface EzBoardAdminService {
 	
 	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
+	/* 2018-10-15 홍승비 - 그룹사게시판 표출용 전체관리자 확인 플래그 추가 */
 	/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID) throws Exception;
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception;
 	
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept) throws Exception;
+	/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 추가 */
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept, String showAllGroupBoard) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
@@ -40,15 +42,15 @@ public interface EzBoardAdminService {
 	
 	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type, int tenantID) throws Exception;
 	
-	/* 2018-06-25 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, String companyID, int tenantID) throws Exception;
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception;
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception;
 	
+	/* 2018-10-18 홍승비 - 그룹사게시판 즐겨찾기 분기 추가 */
 	/* 2018-06-27 홍승비 - 즐겨찾기에 게시판 추가 시 companyID 삽입 */
-	public String addMyBoards(String userID, String boardID, String companyID, int tenantID) throws Exception;
+	public String addMyBoards(String userID, String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception;
 	
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	

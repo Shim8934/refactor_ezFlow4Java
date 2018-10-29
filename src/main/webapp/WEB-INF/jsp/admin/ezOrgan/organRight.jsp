@@ -871,12 +871,14 @@
 				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
 				args[2] = "";
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				args[5] = "";
 				
 				//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 620));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -924,13 +926,15 @@
 				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
 				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA3");
 				
 				//2016-04-18 장진혁과장 -- Cross 버전 사용으로 인한 주석처리
 				//if (CrossYN()) {
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 510));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -1135,6 +1139,13 @@
 		    var selectdept_cross_dialogArguments = new Array();
 		    
 			function mov_user(){
+			 	var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+			        
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
@@ -1150,6 +1161,8 @@
 		        
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
 			    //if (CrossYN()) {
+		    	document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+		    	
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
 		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
@@ -1202,10 +1215,17 @@
 		        	var listview = new ListView();
 			        listview.LoadFromID("lvUserList");
 			        
+		            var selectedCN = document.getElementById("selectedCN").value;
+		            if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
+		                alert("<spring:message code='ezOrgan.t21' />");
+		                return;
+		            }
+		            
 		            var length = listview.GetSelectedRows().length;
 		            if (!confirm(length + "<spring:message code='ezOrgan.t14' />")){
 		                return;
 		            }
+		            
 		            var data = "";
 		            for (var i = 0; i < length; i++) {
 		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");

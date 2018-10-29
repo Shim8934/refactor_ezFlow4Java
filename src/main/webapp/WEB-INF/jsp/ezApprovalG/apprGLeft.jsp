@@ -460,7 +460,7 @@
 				                }
 				                else if (listtype == "10") {
 				                    parent.frames["right"].passValLeftMenu("10");
-				                    parent.frames["right"].checkBujaeInfo();
+				                   // parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "99") {
 				                    parent.frames["right"].passValLeftMenu("99");
@@ -657,6 +657,7 @@
 		                else
 		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		            }
+		            
 		            try {
 		                // 공람할문서
 		                if (pListTypeValue != "99") {
@@ -686,6 +687,14 @@
 	                	}
 		            } catch (e) { }
 		            
+		            // 공유결재문서
+		            if (pListTypeValue != "11") {
+		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
+		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
+		            	else
+		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
+		            }
+		         
 		        } catch (e) { }
 		    }
 		
@@ -1002,7 +1011,10 @@
 			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='main.t00018'/></span></h2>
 			<ul id="iconul">
 				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><span style="width:100%;display:inline-block;" id="APPROVAL1"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
-
+				
+				<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES' }">
+					<li onclick="setPresentValue('공유결재문서');convMain('11','')"><span style="width:100%;display:inline-block;" id="APPROVAL11"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon">공유결재문서<span id=count11></span></span></li>
+				</c:if>
 				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><span style="width:100%;display:inline-block;" id="APPROVAL2"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
 				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><span style="width:100%;display:inline-block;" id="APPROVAL3"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>

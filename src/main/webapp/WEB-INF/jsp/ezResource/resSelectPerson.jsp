@@ -39,16 +39,24 @@
 		    var CurPage = "1";
 		    var pListXML_Info = null;
 		    var ReturnFunction;
+		    var m_ownerTitleList;
+		    var m_ownerWindowList;
+		    var m_selectedWindow = null;
+	        var m_selectedTree = null;
+	        var m_titleNoneSelectedColor = "white";
+	        var m_titleSelectedColor = "#f4faff";
+	        var type = "";
 			
 		window.onload = window_onload;
 		function window_onload() {
 		    try {
+		    	RetValue = opener.select_person_cross_dialogArguments[0];
 		        ReturnFunction = opener.select_person_cross_dialogArguments[1];
 		    }
 		    catch (e) {
 		    }
 
-		    window.resizeTo(780, 630);
+		    window.resizeTo(1000, 630);
 		    var xmlHTTP = createXMLHttpRequest();
 		    xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
 		    xmlHTTP.send();
@@ -56,18 +64,176 @@
 		    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 		        var treeView = new TreeView();
 		        treeView.SetConfig(xmlHTTP.responseXML);
-		    }
+		    } 
 			
 		    var strQuery = "<DATA><DEPTID>${deptID}</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 		    var xmlHTTP = createXMLHttpRequest();
 		    xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		    xmlHTTP.send(strQuery);
+		    
+		    m_ownerTitleList = new Array(Owner, subOwner);
+            m_ownerWindowList = new Array(ListViewOwner, ListViewsubOwner);
+
+            /* AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
+            AddressTreeView.attachEvent('requestdata', address_requestdata);
+            AddressTreeView.attachEvent('nodeselect', function () { address_selectnode("node") });
+            AddressTreeView.attachEvent('nodedblclick', function () { AddressTreeView.toggle(AddressTreeView.selectedIndex()) }); */
 
 		    TreeViewinitialize("${deptID}", "Top" , "", "${serverName}");
 		    ListTypeChangeIcon();
 		    
+		    ownerListview("OwnerList", "ListViewOwner");
+		    ownerListview("subOwnerList", "ListViewsubOwner");
+		    
+		    var listView = new ListView();
+            listView.LoadFromID("OwnerList");
+
+            var totalRows = listView.GetDataRows();
+            var totalLen = totalRows.length;
+            
+            var listView2 = new ListView();
+            listView2.LoadFromID("subOwnerList");
+            
+            var totalRows2 = listView2.GetDataRows();
+            var totalLen2 = totalRows2.length;
+
+            var stridlength = 0;
+            if (RetValue != undefined && RetValue["ownerId"] != undefined && RetValue["ownerId"] != "") {
+            	
+            	var pparsingXML = "";
+                var pparsingXML2 = "";
+
+                pparsingXML2 = "<LISTVIEWDATA><ROWS>"
+                var strName;
+                var strId;
+                var strName1;
+                var strName2;
+                var strDept;
+                var strDeptName1;
+                var strDeptName2;
+
+                strId = RetValue["ownerId"][0];
+                strDept = RetValue["ownerDept"][0];
+                strName = RetValue["ownerName"][0];
+                strName1 = RetValue["ownerName1"][0];
+
+                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strDept + "]]></DATA2>";
+                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
+                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
+                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "(" + strName1 + ")" + "]]></VALUE></CELL></ROW>";
+                
+                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+                var Resultxml = loadXMLString(pparsingXML2);
+            	
+            	var objTr = listView.AddRow(0);
+            	listView.AddDataRow(objTr, Resultxml);
+            	
+            	for(var i=1; i<RetValue.ownerId.length; i++) {
+	            	var pparsingXML = "";
+	                var pparsingXML2 = "";
+	
+	                pparsingXML2 = "<LISTVIEWDATA><ROWS>"
+	                var strName;
+	                var strId;
+	                var strName1;
+	                var strName2;
+	                var strDept;
+	                var strDeptName1;
+	                var strDeptName2;
+	
+	                strId = RetValue["ownerId"][i];
+	                strDept = RetValue["ownerDept"][i];
+	                strName = RetValue["ownerName"][i];
+	                strName1 = RetValue["ownerName1"][i];
+	
+	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strDept + "]]></DATA2>";
+	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
+	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
+	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "(" + strName1 + ")" + "]]></VALUE></CELL></ROW>";
+	                
+	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+	                var Resultxml = loadXMLString(pparsingXML2);
+	            	
+	            	var objTr = listView2.AddRow(i-1);
+            		listView2.AddDataRow(objTr, Resultxml);
+           		}
+            }
+            	 
+            /*    stridlength = RetValue["ownerid"].length;
+			
+            for (var i = 0; i < stridlength; i++) {
+                var pparsingXML = "";
+                var pparsingXML2 = "";
+
+                pparsingXML2 = "<LISTVIEWDATA2><ROWS>"
+                var strName;
+                var strId;
+                var strName1;
+                var strName2;
+                var strDeptName1;
+                var strDeptName2;
+
+                strName = RetValue["name"][i];
+                strId = RetValue["id"][i];
+                strName1 = RetValue["name1"][i];
+                strName2 = RetValue["name2"][i];
+                strDeptName1 = RetValue["deptname"][i];
+                strDeptName2 = RetValue["deptname2"][i];
+
+                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
+                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
+                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
+                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+                
+                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                var Resultxml = loadXMLString(pparsingXML2);
+
+                var listview = new ListView();
+                listview.LoadFromID("MsgToList");
+
+                var MaxID = 0;
+                var InitTr = listview.GetDataRows();
+
+                for (var j = 0  ; j < InitTr.length  ; j++) {
+                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                    if (MaxID < curnum)
+                        MaxID = curnum;
+                }
+
+                var objTr = listview.AddRow(InitTr.length);
+                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                
+                listview.AddDataRow(objTr, Resultxml);
+            } */
+		    
 		    ChangeListView_onClick(getOrganListType());
+            if(RetValue["flag"][0] == "ListViewOwner") {
+           	 	SelectOwnerWindow(Owner, ListViewOwner);
+            }
+            else {
+            	SelectOwnerWindow(subOwner, ListViewsubOwner);
+            }
+           	 
 		}
+		
+		function ownerListview(pID, pListView) {
+            var listview = new ListView();
+            listview.SetID(pID);
+            listview.SetHeightFree(true);
+            listview.SetSelectFlag(false);
+            listview.SetMulSelectable(true);
+            if(pID != "OwnerList") {
+            	listview.SetRowOnDblClick("DeleteOwner()");
+            }
+            listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
+            listview.DataBind(pListView);
+            listview.RowDataBind();
+        }
 
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
@@ -359,37 +525,42 @@
 		            }
 		        }
 		    }
-
+			var rtn
 		    function select_member() {
-		        if(p_ListOrderObject == null) {
-		        	return;
-		        }
-		            
-		        if(p_ListOrderObject.getAttribute("_DATA1").toLowerCase() == "user") {
-		            var UserNm;
-		            var UserID;
-		            var UDeptNm;
-		            if (userlang == "" || userlang == "1") {
-		                UserNm	 = p_ListOrderObject.getAttribute("_DATA10");
-		                UserPos  = p_ListOrderObject.getAttribute("_DATA14");
-		                UDeptNm	 = p_ListOrderObject.getAttribute("_DATA12");
-		            } else {
-		                UserNm	 = p_ListOrderObject.getAttribute("_DATA11");
-		                UserPos  = p_ListOrderObject.getAttribute("_DATA15");
-		                UDeptNm	 = p_ListOrderObject.getAttribute("_DATA13");
-		            }
-		            var UserID	 = p_ListOrderObject.getAttribute("_DATA2");
-		            var UDeptID	 = DeptID;
-		            var UserCall = p_ListOrderObject.getAttribute("_DATA8");
-		            var strRtnVal= UserNm + ";" + UserID + ";" + UserPos + ";" + UDeptNm + ";" + UDeptID + ";" + UserCall;
+		    	rtn = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array() };
+
+				var listid = "OwnerList";
+				var selList = new ListView();
+				selList.LoadFromID(listid);
+
+				var totalRows = selList.GetDataRows();
 				
-		            if (ReturnFunction != null) {
-		                ReturnFunction(strRtnVal);
-		            } else {
-		                window.returnValue = strRtnVal;
-		            }
-		            window.close();
-		        }
+				rtn["ownerId"][0] = GetAttribute(totalRows[0], "DATA1");
+				rtn["ownerDept"][0] = GetAttribute(totalRows[0], "DATA2");
+				rtn["ownerName"][0] = GetAttribute(totalRows[0], "DATA3");
+				rtn["ownerName1"][0] = GetAttribute(totalRows[0], "DATA4");
+				rtn["ownerDeptName"][0] = GetAttribute(totalRows[0], "DATA5");
+				
+				var listid2 = "subOwnerList";
+				var selList2 = new ListView();
+				selList2.LoadFromID(listid2);
+				var totalRows2 = selList2.GetDataRows();
+				var totalLen = totalRows2.length;
+
+				for (var i = 0; i < totalLen; i++) {
+					rtn["ownerId"][i+1] = GetAttribute(totalRows2[i], "DATA1");
+					rtn["ownerDept"][i+1] = GetAttribute(totalRows2[i], "DATA2");
+					rtn["ownerName"][i+1] = GetAttribute(totalRows2[i], "DATA3");
+					rtn["ownerName1"][i+1] = GetAttribute(totalRows2[i], "DATA4");
+					rtn["ownerDeptName"][i+1] = GetAttribute(totalRows2[i], "DATA5");
+				}
+				
+				if (ReturnFunction != null) {
+	                ReturnFunction(rtn);
+	            } else {
+	                window.returnValue = rtn;
+	            }
+	            window.close();
 		    }
 
 		    function ChangeListView_onClick(Div) {
@@ -479,7 +650,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { select_member(); };
+		                M_TR.ondblclick = function () { event_listDBclick(this); };
 		                
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
@@ -571,7 +742,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { select_member(); };
+		                M_TR.ondblclick = function () { event_listDBclick(this); };
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
@@ -674,6 +845,18 @@
 		        for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
 		            obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
 		        }
+		    }
+		    function event_listDBclick(obj) {
+		    	 if (m_selectedWindow != null) {
+			            var pListView = "";
+			            if (m_selectedWindow.id == "ListViewOwner") {
+			                pListView = "MsgToList";
+			            }
+			            else if (m_selectedWindow.id == "ListViewsubOwner") {
+			                pListView = "MsgCCList";
+			            }
+			            InsertOwner(pListView);
+			        }
 		    }
 		    var BlockSize = 10;
 		    function td_Create1(strtext) {
@@ -856,6 +1039,174 @@
 				
 				$("#spn_deptName").css("width", deptNameWidth);
 			}
+	        
+	        // 2018-10-23 김민성 - 관리자 추가
+	        function InsertOwner(pListView) {
+	        	if (p_ListOrderObject != "" && p_ListOrderObject != undefined) {
+	        		if(pListView == "MsgToList") {		// 관리자 추가
+	        			var userId = p_ListOrderObject.getAttribute("_data2");
+	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
+	        			var IsInsert = CheckMailReceiver(userId, "3");
+	        			if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
+	        				alert("<spring:message code='ezQuestion.t18'/>");
+		   				}
+	        			else if(IsInsert) {
+	        				alert("<spring:message code='ezQuestion.t18'/>");
+	        			}
+	        			else {
+	        				var listView = new ListView();
+	        	            listView.LoadFromID("OwnerList");
+	        	            
+	        	            var totalRows = listView.GetDataRows();
+	        	            var totalLen = totalRows.length;
+
+        	            	var pparsingXML = "";
+        	                var pparsingXML2 = "";
+
+        	                pparsingXML2 = "<LISTVIEWDATA><ROWS>"
+        	                var strName;
+        	                var strId;
+        	                var strName1;
+        	                var strName2;
+        	                var strDept;
+        	                var strDeptName1;
+        	                var strDeptName2;
+
+        	                strId = p_ListOrderObject.getAttribute("_data2");
+        	                strName = p_ListOrderObject.getAttribute("_data10");
+        	                strName1 = p_ListOrderObject.getAttribute("_data6");
+        	                strDeptName1 = p_ListOrderObject.getAttribute("_data5");
+
+        	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+        	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + DeptID + "]]></DATA2>";
+        	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
+        	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
+        	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName1 + "]]></DATA5>";
+        	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "(" + strName1 + ")" + "]]></VALUE></CELL></ROW>";
+        	                
+        	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+        	                var Resultxml = loadXMLString(pparsingXML2);
+        	            	
+        	                listView.DeleteRow(totalRows[0].id);
+        	            	var objTr = listView.AddRow(0);
+        	            	listView.AddDataRow(objTr, Resultxml);
+	        			}
+	        		}
+	        		else {				// 부관리자 추가
+	        			var userId = p_ListOrderObject.getAttribute("_data2");
+	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
+	        			if (userId == currOwner) {		// 선택한 유저가 이미 관리자에 추가된 경우
+	        				alert("<spring:message code='ezQuestion.t18'/>");
+		   				}
+	        			else {
+	        				var IsInsert = CheckMailReceiver(userId, "3");
+	        				if(!IsInsert) {
+			        			var listView = new ListView();
+		        	            listView.LoadFromID("subOwnerList");
+		        	            
+		        	            var totalRows = listView.GetDataRows();
+		        	            var totalLen = totalRows.length;
+		
+		    	            	var pparsingXML = "";
+		    	                var pparsingXML2 = "";
+		
+		    	                pparsingXML2 = "<LISTVIEWDATA><ROWS>"
+		    	                var strName;
+		    	                var strId;
+		    	                var strName1;
+		    	                var strName2;
+		    	                var strDept;
+		    	                var strDeptName1;
+		    	                var strDeptName2;
+		
+		    	                strId = p_ListOrderObject.getAttribute("_data2");
+		    	                strName = p_ListOrderObject.getAttribute("_data10");
+		    	                strName1 = p_ListOrderObject.getAttribute("_data6");
+		    	                strDeptName1 = p_ListOrderObject.getAttribute("_data5");
+		
+		    	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		    	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + DeptID + "]]></DATA2>";
+		    	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
+		    	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
+		    	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName1 + "]]></DATA5>";
+		    	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "(" + strName1 + ")" + "]]></VALUE></CELL></ROW>";
+		    	                
+		    	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+		    	                var Resultxml = loadXMLString(pparsingXML2);
+		    	            	
+		    	                var MaxID = 0;
+		                        var InitTr = listView.GetDataRows();
+		                        var MaxCntNum = 0;
+		                        for (var j = 0  ; j < InitTr.length  ; j++) {
+		                            var curnum = Number(listView.GetSelectedRowID(j).substring(listView.GetSelectedRowID(j).lastIndexOf('_') + 1), listView.GetSelectedRowID(j).length);
+		                            if (MaxID < curnum) {
+		                                MaxID = curnum;
+		                                MaxCntNum = j;
+		                            }
+		                        }
+		                        
+		    	            	var objTr = listView.AddRow(InitTr.length);
+		    	            	if (MaxCntNum != 0)
+		                            MaxCntNum = MaxCntNum + 1;
+		                        SetAttribute(objTr, "id", listView.GetSelectedRowID(MaxCntNum).substring(0, listView.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		    	            	listView.AddDataRow(objTr, Resultxml);
+	        				}
+	        			}
+	   				}
+	   			}
+	        }
+	        
+	        function DeleteOwner() {
+	            var selList = new ListView();
+	            selList.LoadFromID("subOwnerList");
+	            var arrRows = selList.GetSelectedRows();
+	            var strName = "";
+	            for (var i = 0; i < arrRows.length; i++) {
+	                selList.DeleteRow(arrRows[i].id);
+	            }
+	        }
+	        
+	        function SelectOwnerWindow(Title, selectedWindow) {
+	            for (var count = 0; count < m_ownerTitleList.length; count++) {
+	                m_ownerTitleList[count].style.fontWeight = "normal";
+	                m_ownerWindowList[count].style.backgroundColor = m_titleNoneSelectedColor;
+	                m_ownerWindowList[count].normalColor = m_titleNoneSelectedColor;
+	                m_ownerTitleList[count].setAttribute("class", "receiver_tltype02");
+	            }
+	            Title.style.fontWeight = "bold";
+	            Title.setAttribute("class", "receiver_tltype01");
+	            if (type == "")
+	                selectedWindow.style.backgroundColor = m_titleSelectedColor;
+	            else
+	                selectedWindow.style.backgroundColor = "white";
+	
+	            selectedWindow.normalColor = m_titleSelectedColor;
+	            m_selectedWindow = selectedWindow;
+	        }
+	        
+	        function CheckMailReceiver(selRow, option) {
+				var rtnValue = false;
+				var email;
+				if (option == "1")
+					email = selRow.cells[0].DATA3;
+				else if (option == "2")
+					email = selRow.cells[0].DATA2;
+				else if (option == "3")
+					email = selRow;
+
+				var _listview = new ListView();
+				_listview.LoadFromID("subOwnerList");
+				var arrRows = _listview.GetDataRows();
+
+				for (count2 = 0; count2 < arrRows.length; count2++) {
+					if (email.trim() == $("tr[id*='subOwnerList_TR']").eq(count2).attr("data1").trim()) {
+						rtnValue = true;
+						break;
+					}
+				}
+
+				return rtnValue
+			}
 		</script>
 	</head>
 	<xml id="listviewheader" style="display:none">
@@ -930,7 +1281,7 @@
 			    <table style="margin-top: 3px;">
 			        <tr>
 			            <td class="box">
-			            	<div id="TreeView" style="height: 400px; width: 300px; overflow-x: hidden; overflow-y: auto;"></div></td>
+			            	<div id="TreeView" style="height: 400px; width: 250px; overflow-x: hidden; overflow-y: auto;"></div></td>
 			            <td style="width: 5px;">&nbsp;</td>
 			            <td class="listview" style="width: 425px;" id="orglistView">
 			                <!-- <div id="OrganListView" style="border:0;width: 415px; height: 400px; overflow-x: hidden; overflow-y: auto;"></div> -->
@@ -972,6 +1323,41 @@
 			        	</tr>
 			    	</table>
 			    </td>
+			    <!-- 2018-10-19 김민성 - 자원관리 관리자 여러명 설정 관련 추가 -->
+			    <td style="vertical-align: top;">
+	                <table id="listType1" style="margin-top:1px;">
+	                    <tbody><tr id="ListMsgTo">
+	                        <td style="width: 30px; text-align: center;">
+	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertOwner('MsgToList')"><br>
+	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="">
+	                        </td>
+	                        <td style="vertical-align: top;">
+	                            <h2 id="Owner" class="receiver_tltype01" onclick="SelectOwnerWindow(Owner,ListViewOwner)" style="cursor: pointer; font-weight: bold;">
+	                                <span style="min-width: 45px;" id="ToTitleStr">관리자</span>
+	                            </h2>
+	                            <div class="receiver_borderbox">
+	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 100px; overflow: auto; background-color: rgb(244, 250, 255);" onclick="SelectOwnerWindow(ToTitle,this)" ondblclick="" class="ui-sortable"></div>
+	                            </div>
+	                        </td>
+	                    </tr>
+	                    <tr id="ListMsgCC">
+	                        <td style="width: 30px; text-align: center;">
+	                            <br>
+	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertOwner('MsgCCList')"><br>
+	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteOwner()">
+	                        </td>
+	                        <td style="vertical-align: top;">
+	                            <br>
+	                            <h2 id="subOwner" class="receiver_tltype02" onclick="SelectOwnerWindow(subOwner,ListViewsubOwner)" style="cursor: pointer; font-weight: normal;">
+	                                <span style="min-width: 45px;">부관리자</span>
+	                            </h2>
+	                            <div class="receiver_borderbox">
+	                                <div id="ListViewsubOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 283px; overflow: auto; background-color: white;" onclick="SelectOwnerWindow(CCTitle,this)" ondblclick="" class="ui-sortable"></div>
+	                            </div>
+	                        </td>
+	                    </tr>
+	                </tbody></table>
+	            </td>
 		    </tr>
 		</table>
 		<div class="btnpositionNew">

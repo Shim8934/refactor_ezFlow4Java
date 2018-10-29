@@ -40,7 +40,7 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchAttitudeType = "total"; // 검색조건(근태유형)
+	    	var searchAttitudeType = "ALL"; // 검색조건(근태유형)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
@@ -193,7 +193,7 @@
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeCheckList_after(result.list);
 	    				//근태유형 리스트
-	    				getAttitudeTypeList(result.typeList, result.typeId);
+// 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
@@ -202,6 +202,7 @@
 	    	}
 	    	
 	    	//검색 > 근태유형selectBox
+	    	/*
 	    	function getAttitudeTypeList(typeList, typeId) {
 	    		var html = "<option value='total'><spring:message code='ezAttitude.t124' /></option>";
 	    		
@@ -215,6 +216,7 @@
 	    			$('#searchAttitudeType').val(typeId);
 	    		}
 	    	}
+	    	*/
 	    	
 	    	function getAttitudeCheckList_after(result){
 	    		var resultHtml = "";
@@ -409,7 +411,14 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%"><spring:message code='ezAttitude.t134' /></td>
-					<td style="width: 12%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;height:24px"></select></td>
+					<td style="width: 12%;">
+						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;height:24px">
+							<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
+							<c:forEach var = "type" items="${typeList}">
+								<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
+							</c:forEach>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>

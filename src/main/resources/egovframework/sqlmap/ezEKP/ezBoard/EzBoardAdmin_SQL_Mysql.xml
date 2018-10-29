@@ -155,7 +155,7 @@
 			<isEqual property="v_pSelectBy" compareValue="3">
 <!-- 				쓰기 권한이 있는 게시판만 가져옴 -->
 				<![CDATA[
-					SELECT 
+					(SELECT 
 						DISTINCT A.boardid BoardID,
 	                    A.boardname BoardName,
 	                    CASE
@@ -200,16 +200,48 @@
 	                WHERE
 	                	A.TENANT_ID = #v_TENANTID#
 	                AND
-	                	A.companyid = #v_COMPANYID#
+	                	A.companyid = #v_COMPANYID#)
+				]]>
+<!-- 2018-10-16 홍승비 - 사용자는 모든 그룹사게시판을 볼 수 있다. -->
+				<isEqual property="v_showAllGroupBoard" compareValue="Y">
+	          		<![CDATA[
+	          			UNION ALL
+	          			
+		          		(SELECT 
+							boardid BoardID,
+		                    boardname BoardName,
+		                    CASE
+								WHEN (boardname2 = '' OR boardname2 IS NULL)
+								THEN boardname
+								ELSE boardname2
+							END BoardName2,
+		                    treevieworder TreeViewOrder,
+		                    boardcolor BoardColor,
+		                    gubun,
+		                    url,
+		                    '' BoardGroupACL
+		              	FROM 
+		              		TBL_Board_BoardInfo
+		              	WHERE
+		              		TENANT_ID = #v_TENANTID#
+						AND 
+	                      	ParentBoardID = #v_pRootBoardID#
+						AND 
+                			BoardID <> #v_pExcludeBoardID#
+						AND
+		              		(TRIM(CompanyID) = '' OR CompanyID IS NULL))
+	          		]]>
+	          	</isEqual>
+				<![CDATA[
 	              	ORDER BY 
-	              		A.treevieworder ASC
+	              		TreeViewOrder ASC
 				]]>
 			</isEqual>
 			<isNotEqual property="v_pSelectBy" compareValue="3">
 <!-- 				접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
 <!--                하위부서 권한체크(BOARDGROUPACL) 조건 추가 18.09.20   -->
 				<![CDATA[
-					SELECT 
+					(SELECT 
 						DISTINCT A.BoardID BoardID  ,
 	                    A.BoardName BoardName  ,
 	                    CASE
@@ -265,14 +297,47 @@
 	                WHERE
 	                	A.TENANT_ID = #v_TENANTID#
 	                AND
-	                	A.companyid = #v_COMPANYID#
+	                	A.companyid = #v_COMPANYID#)
+				]]>
+<!-- 2018-10-16 홍승비 - 사용자는 모든 그룹사게시판을 볼 수 있다. -->
+				<isEqual property="v_showAllGroupBoard" compareValue="Y">
+	          		<![CDATA[
+	          			UNION ALL
+	          			
+		          		(SELECT 
+							boardid BoardID,
+		                    boardname BoardName,
+		                    CASE
+								WHEN (boardname2 = '' OR boardname2 IS NULL)
+								THEN boardname
+								ELSE boardname2
+							END BoardName2,
+		                    treevieworder TreeViewOrder,
+		                    boardcolor BoardColor,
+		                    gubun,
+		                    url,
+		                    '' BoardGroupACL
+		              	FROM 
+		              		TBL_Board_BoardInfo
+		              	WHERE
+		              		TENANT_ID = #v_TENANTID#
+						AND 
+	                      	ParentBoardID = #v_pRootBoardID#
+						AND 
+                			BoardID <> #v_pExcludeBoardID#
+						AND
+		              		(TRIM(CompanyID) = ''	OR	CompanyID IS NULL))
+	          		]]>
+	          	</isEqual>
+				<![CDATA[
 	                ORDER BY 
-	                	A.TreeViewOrder ASC
+	                	TreeViewOrder ASC
 	        	]]>
 			</isNotEqual>
 		</isEqual>
 		<isNotEqual property="v_pMode" compareValue="1">
 <!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
+<!-- 2018-10-15 홍승비 - 전체관리자는 그룹사게시판을 리스트에 표출하도록 수정 -->
 			<![CDATA[
 				SELECT 
 					DISTINCT A.BoardID ,
@@ -292,7 +357,15 @@
           		WHERE
           			A.TENANT_ID = #v_TENANTID#
           		AND
-	                A.companyid = #v_COMPANYID#
+	                (A.companyid = #v_COMPANYID#
+			]]>
+          	<isEqual property="v_showAllGroupBoard" compareValue="Y">
+          		<![CDATA[
+          			OR	TRIM(A.companyid) = ''	OR	A.companyid IS NULL
+          		]]>
+          	</isEqual>
+          			)
+          	<![CDATA[
           		AND
           			A.PARENTBOARDID = #v_pRootBoardID#
                 AND 
@@ -686,7 +759,15 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				companyID = #companyID#
+				(companyID = #companyID#
+		]]>
+		<isEqual property="isCompanyAdmin" compareValue="true">
+			<![CDATA[
+				OR	TRIM(companyID) = ''	OR	companyID IS NULL
+			]]>
+		</isEqual>
+				)
+		<![CDATA[
 			AND
 				parentboardid = #parentBoardID#
 			ORDER BY 
@@ -718,8 +799,6 @@
 	        	TBL_BOARD_BOARDMANAGE 
 	       WHERE  
 	       		TENANT_ID = #tenantID#
-	       	AND
-	       		companyid = #companyID#
 	       AND
 	       		boardid = #pBoardID# 
 	       AND 
@@ -744,9 +823,13 @@
 	        	TBL_BOARD_BOARDBACKGROUNDINFO
 	       WHERE
 	       		tenant_id = #tenantID#
+		]]>
+	<isNotEqual property="isAllGroupBoard" compareValue="Y">
+	    <![CDATA[
 	       	AND
 	       		companyid = #companyID#
 		]]>
+	</isNotEqual>
 			<isEqual property="type" compareValue="USE">
 		       AND
 		       		isuse = 1
@@ -807,6 +890,36 @@
 		AND
 			column_name = 'COMPANYID'
 		)
+	</select>
+	
+	<!-- 2018-10-17 홍승비 - 모든 회사의 ID와 이름을 가져오는 쿼리 -->
+	<select id="EzBoardAdminDAO.getCompanyList" parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				A.CN as ACCESSID,
+             	A.DISPLAYNAME as ACCESSNAME, 
+             	A.DISPLAYNAME2 as ACCESSNAME2 
+        	FROM 
+        		( SELECT 
+        			CN,
+        			CASE #v_LANG#
+        				WHEN '1' THEN DISPLAYNAME
+        				ELSE DISPLAYNAME2   
+        				END DISPLAYNAME,
+                    CASE #v_LANG#
+                    	WHEN '1' THEN DISPLAYNAME2
+                        ELSE DISPLAYNAME   
+                        END DISPLAYNAME2,
+                  CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15                    
+               	  FROM 
+               	  	TBL_DEPTMASTER 
+               	  WHERE
+               	  	TENANT_ID = #v_TENANTID#
+               	  AND  
+               	  	(DEPTLEVEL = 1
+               	  OR 
+               	  	CN = 'Top') ) A
+		]]>
 	</select>
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
@@ -1101,90 +1214,94 @@
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_MyBoards ( 
-				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
-			)
-         	( SELECT 
-         		#v_PUSERID# USERID ,
-              	BOARDID ,
-                BOARDNAME ,
-                BOARDNAME2 ,
-                ( SELECT 
-                	COUNT(BOARDID) + 1
-     			  FROM 
-     			  	TBL_Board_MyBoards 
-     			  WHERE
-     			  	TENANT_ID = #v_TENANTID#
-     			  AND
-     			  	COMPANYID = #v_COMPANYID#
-     			  AND  
-     			  	USERID = #v_PUSERID# ),
-                ( SELECT
-                	CASE 
-                		WHEN MAX(VIEWORDER) IS NULL 
-                		THEN 2 
-                		ELSE MAX(VIEWORDER) + 1 
-                	END 
-                  FROM 
-                  	TBL_Board_MyBoards 
-                  WHERE  
-                  	TENANT_ID = #v_TENANTID#
-                  AND
-     			  	COMPANYID = #v_COMPANYID#
-                  AND
-                  	USERID = #v_PUSERID# ),
-                TENANT_ID,
-                COMPANYID
-           	  FROM 
-           	  	TBL_Board_BoardInfo 
-           	  WHERE
-           	  	TENANT_ID = #v_TENANTID#
-           	  AND
-           	  	BOARDID = #v_PBOARDID# )
-		]]>
-	</insert>
-	
-	<!-- companyID 브랜치에 master 브랜치를 merge할 경우, companyID 브랜치의 쿼리를 남기도록 한다.(companyID 삽입을 위해) -->
-	<insert id="EzBoardAdminDAO.addMyBoardsComp" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_MyBoards ( 
-				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
-			)
-         	( SELECT 
-         		#v_PUSERID# USERID ,
-              	BOARDID ,
-                BOARDNAME ,
-                BOARDNAME2 ,
-                ( SELECT 
-                	COUNT(BOARDID) + 1
-     			  FROM 
-     			  	TBL_Board_MyBoards 
-     			  WHERE
-     			  	TENANT_ID = #v_TENANTID#
-     			  AND  
-     			  	USERID = #v_PUSERID# ),
-                ( SELECT
-                	CASE 
-                		WHEN MAX(VIEWORDER) IS NULL 
-                		THEN 2 
-                		ELSE MAX(VIEWORDER) + 1 
-                	END 
-                  FROM 
-                  	TBL_Board_MyBoards 
-                  WHERE  
-                  	TENANT_ID = #v_TENANTID#
-                  AND
-                  	USERID = #v_PUSERID# ),
-                TENANT_ID,
-                COMPANYID
-           	  FROM 
-           	  	TBL_Board_BoardInfo 
-           	  WHERE
-           	  	TENANT_ID = #v_TENANTID#
-           	  AND
-           	  	BOARDID = #v_PBOARDID# )
-		]]>
+		<isEqual  property="v_isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards ( 
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT 
+	         		#v_PUSERID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT 
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards 
+	     			  WHERE
+	     			  	TENANT_ID = #v_TENANTID#
+	     			  AND
+	     			  	(COMPANYID = #v_COMPANYID#	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #v_PUSERID# ),
+	                ( SELECT
+	                	CASE 
+	                		WHEN MAX(VIEWORDER) IS NULL 
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1 
+	                	END 
+	                  FROM 
+	                  	TBL_Board_MyBoards 
+	                  WHERE  
+	                  	TENANT_ID = #v_TENANTID#
+	                  AND
+	     			  	(COMPANYID = #v_COMPANYID# 	OR COMPANYID = '*')
+	                  AND
+	                  	USERID = #v_PUSERID# ),
+	                TENANT_ID,
+	                '*' as COMPANYID
+	           	  FROM 
+	           	  	TBL_Board_BoardInfo 
+	           	  WHERE
+	           	  	TENANT_ID = #v_TENANTID#
+	           	  AND
+	           	  	BOARDID = #v_PBOARDID# )
+			]]>
+		</isEqual>
+		<isNotEqual  property="v_isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards ( 
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT 
+	         		#v_PUSERID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT 
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards 
+	     			  WHERE
+	     			  	TENANT_ID = #v_TENANTID#
+	     			  AND
+	     			  	(COMPANYID = #v_COMPANYID# 	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #v_PUSERID# ),
+	                ( SELECT
+	                	CASE 
+	                		WHEN MAX(VIEWORDER) IS NULL 
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1 
+	                	END 
+	                  FROM 
+	                  	TBL_Board_MyBoards 
+	                  WHERE  
+	                  	TENANT_ID = #v_TENANTID#
+	                  AND
+	     			  	(COMPANYID = #v_COMPANYID# 	OR COMPANYID = '*')
+	                  AND
+	                  	USERID = #v_PUSERID# ),
+	                TENANT_ID,
+	                COMPANYID
+	           	  FROM 
+	           	  	TBL_Board_BoardInfo 
+	           	  WHERE
+	           	  	TENANT_ID = #v_TENANTID#
+	           	  AND
+	           	  	BOARDID = #v_PBOARDID# )
+			]]>
+		</isNotEqual>	
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
@@ -1210,15 +1327,28 @@
 		</isNotEqual>
 	</insert>
 		
+	<!-- 2018-10-15 홍승비 - 그룹사게시판그룹(구분값 "99") 생성 시 companyID 미사용 -->
 	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID, COMPANYID
-			)
-     		VALUES ( 
-     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#, #v_COMPANYID#
-     		)
-		]]>
+		<isEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_BoardInfo ( 
+					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, GUBUN, BOARDNO, TENANT_ID
+				)
+	     		VALUES ( 
+	     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', 99, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#
+	     		)
+			]]>
+		</isEqual>
+		<isNotEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_BoardInfo ( 
+					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID, COMPANYID
+				)
+	     		VALUES ( 
+	     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#, #v_COMPANYID#
+	     		)
+			]]>
+		</isNotEqual>
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
@@ -1226,21 +1356,46 @@
 			INSERT INTO TBL_Board_BoardManage( 
 				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID, COMPANYID
 			)
-     		VALUES ( 
-     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID#, #v_COMPANYID#
-     		)
 		]]>
+		<isEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+	     		VALUES ( 
+	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, #v_COMPANYID#
+	     		)
+			]]>
+		</isEqual>
+		<isNotEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+	     		VALUES ( 
+	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID#, #v_COMPANYID#
+	     		)
+			]]>
+		</isNotEqual>
 	</insert>
+	
+	<!-- 2018-10-15 홍승비 - 그룹사게시판그룹(구분값 "99") 생성 시 companyID 미사용 -->
 	<!-- 2018-02-01 김보미 - 한줄답변컬럼(ONELINEREPLY) 기본값을 사용하기로 되게끔 변경, REPLYNOTIFY 기본값 0으로 세팅 추가 -->
 	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID
-			)
-	   		VALUES ( 
-	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '1', 0, #v_COMPANYID# 
-	   		)
-		]]>
+		<isEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_BoardInfo ( 
+					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY
+				)
+		   		VALUES ( 
+		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 1, '##000000', #v_TENANTID#, '1', 0 
+		   		)
+			]]>
+		</isEqual>
+		<isNotEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_BoardInfo ( 
+					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID
+				)
+		   		VALUES ( 
+		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '1', 0, #v_COMPANYID# 
+		   		)
+			]]>
+		</isNotEqual>
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
@@ -1248,10 +1403,21 @@
 			INSERT INTO TBL_Board_BoardManage ( 
 				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID, COMPANYID
 			)
-     		VALUES ( 
-     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#
-     		)
 		]]>
+		<isEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+	     		VALUES ( 
+	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#
+	     		)
+		]]>
+		</isEqual>
+		<isNotEqual property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				VALUES ( 
+	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#
+	     		)
+			]]>
+		</isNotEqual>
 	</insert>
 	
 	<update id="EzBoardAdminDAO.setMyBoardTreeConfig_M" parameterClass="MyFavoriteVO">
@@ -1361,30 +1527,44 @@
 	</update>	
 	
 	<update id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_BoardInfo
-      		SET 
-      			BOARDDESCRIPTION = #v_PDESCRIPTION#,
-          		ITEMEXPIRES = #v_PEXPIRES#,
-	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
-	          	URL = #v_PURL#,
-	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
-	          	GUBUN = (CASE WHEN (#v_PGUBUN# IS NULL OR #v_PGUBUN# = '') THEN 0 ELSE #v_PGUBUN# END) ,
-	          	BOARDNAME = #v_PBOARDNAME#,
-	          	DELETEAFTER = #v_PDELETEAFTER#,
-	          	BOARDCOLOR = #v_PBOARDCOLOR#,
-	          	BOARDNAME2 = #v_PBOARDNAME2#,
-	          	PORTLET = #v_PPORTLET#,
-	          	ONELINEREPLY = #v_PONELINEREPLY#,
-	          	BACKGROUND = #v_PBACKGROUND#,
-	          	FORMFLAG = #v_PFORM#,
-	          	APPRFLAG = #v_PAPPRFLAG#,
-	          	APPRMAILFLAG = #v_PAPPRMAILFLAG#
-    		WHERE
-    			TENANT_ID = #v_TENANTID#
-    		AND  
-    			BOARDID = #v_PBOARDID#
-		]]>
+		<isEqual property="v_isBoardGroup" compareValue="Y">
+			<![CDATA[
+				UPDATE TBL_Board_BoardInfo
+	      		SET 
+		          	BOARDNAME = #v_PBOARDNAME#,
+		          	BOARDNAME2 = #v_PBOARDNAME2#
+	    		WHERE
+	    			TENANT_ID = #v_TENANTID#
+	    		AND  
+	    			BOARDID = #v_PBOARDID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_isBoardGroup" compareValue="Y">
+			<![CDATA[
+				UPDATE TBL_Board_BoardInfo
+	      		SET
+	      			BOARDDESCRIPTION = #v_PDESCRIPTION#,
+	          		ITEMEXPIRES = #v_PEXPIRES#,
+		          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
+		          	URL = #v_PURL#,
+		          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
+		          	GUBUN = (CASE WHEN (#v_PGUBUN# IS NULL OR #v_PGUBUN# = '') THEN 0 ELSE #v_PGUBUN# END) ,
+		          	BOARDNAME = #v_PBOARDNAME#,
+		          	DELETEAFTER = #v_PDELETEAFTER#,
+		          	BOARDCOLOR = #v_PBOARDCOLOR#,
+		          	BOARDNAME2 = #v_PBOARDNAME2#,
+		          	PORTLET = #v_PPORTLET#,
+		          	ONELINEREPLY = #v_PONELINEREPLY#,
+		          	BACKGROUND = #v_PBACKGROUND#,
+		          	FORMFLAG = #v_PFORM#,
+		          	APPRFLAG = #v_PAPPRFLAG#,
+		          	APPRMAILFLAG = #v_PAPPRMAILFLAG#
+	    		WHERE
+	    			TENANT_ID = #v_TENANTID#
+	    		AND
+	    			BOARDID = #v_PBOARDID#
+			]]>
+		</isNotEqual>
 	</update>
 	
 	<update id="EzBoardAdminDAO.saveBoardProperty2" parameterClass="Map" >

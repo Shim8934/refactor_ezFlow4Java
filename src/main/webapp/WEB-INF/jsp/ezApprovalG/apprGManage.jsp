@@ -103,6 +103,7 @@
 		    var ext;
 		    var currentpage = 1;
 		    var selRowChangeFlag = false;
+		    var orgCompanyID = "";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -111,6 +112,10 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
+		    	if (pListTypeValue == "10") {
+		    		checkBujaeInfo_Complete(true);
+		    		return;
+	            }
 		        var BString = arr_userinfo[7];
 		        if (BString != "") {
 		            var BDim = new Array("");
@@ -161,9 +166,11 @@
 		    function checkBujaeInfo_Complete(Rtnval) {
 	            if (Rtnval == true) {
 	                setBujaeOff();
+	                btnVisible('ok');
 	            }
 	            else if (Rtnval == "ING") { }
 	            else {
+	            	btnVisible('false');
 	                setbuttonenable();
 	                return;
 	            }
@@ -213,6 +220,21 @@
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
+		            var result = "";
+			    	
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezPersonal/saveBujae.do",
+			    		data : {
+			    				buJae  : bujaeVal,
+			    				proxy  : ""
+			    				},
+			    		success: function(xml){
+			    			result = xml;
+			    		}        			
+			    	});
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
@@ -220,24 +242,31 @@
 		        else if (pListTypeValue == "99") {
 		            getDocList();
 		        }
-		
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
+		        
+		        
 		        try {
 		            parent.frames["left"].getAprCount();
 		            parent.frames["left"].setPresentValue("");
 		        } catch (e) { }
 	        }
 		    
-		        
+		  	var bujaeVal="";
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
+		    	if(pListTypeValue != "10") {
+		    		bujaeVal = "";
+		    	}
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
-		    				buJae  : "",
+		    				buJae  : bujaeVal,
 		    				proxy  : ""
 		    				},
 		    		success: function(xml){
@@ -245,6 +274,7 @@
 		    		}        			
 		    	});
 		        
+		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
 		    }
 		
@@ -585,6 +615,9 @@
                             }
                         }
 		            	break;
+		            case "5" :
+		            	openUserInfo();
+		            	break;
 		            default:
 		        }
 		    }
@@ -878,6 +911,7 @@
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
 		            DocID_Complete = DocID;
+		            orgCompanyID = pCurSelRow.getAttribute("orgCompanyID");
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
@@ -1397,7 +1431,6 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
-		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		        	//팝업창에서 알럿창으로 변경
@@ -1827,10 +1860,39 @@
                 }
 			}
 		    
+			
+			// 부재자설정에 따른 버튼 활성화 
+			function btnVisible(val) {
+				var scopeDoc = window.document;
+				// 메인버튼
+    			var mainmenu = scopeDoc.getElementById('mainmenu');
+				// 페이지레이어
+    			var tblPageRayer = scopeDoc.getElementById('tblPageRayer');
+				// 결재리스트
+    			var div_scroll = scopeDoc.getElementsByClassName('div_scroll');
+				// 타이틀
+    			var title_h1 = scopeDoc.getElementsByClassName('title_h1');
+				// 결재선
+				var div_AprLine = scopeDoc.getElementById('div_AprLine');
+				
+    			if(val === "ok") {
+	    			mainmenu.style.visibility = "visible";
+	    			tblPageRayer.style.visibility = "visible";
+	    			div_AprLine.style.visibility = "visible";
+	    			div_scroll[0].style.visibility = "visible";
+	    			title_h1[0].style.visibility = "visible";
+    			} else if(val === "false"){
+    				mainmenu.style.visibility = "hidden";
+	    			tblPageRayer.style.visibility = "hidden";
+	    			div_AprLine.style.visibility = "hidden";
+	    			div_scroll[0].style.visibility = "hidden";
+	    			title_h1[0].style.visibility = "hidden";
+    			}
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
-		<h1>
+		<h1 class="title_h1">
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
 		    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">

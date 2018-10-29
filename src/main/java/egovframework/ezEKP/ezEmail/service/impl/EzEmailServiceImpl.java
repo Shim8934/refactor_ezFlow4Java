@@ -2094,7 +2094,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
 				JSONArray array = (JSONArray)responseObj.get("result");
 				
-				if (array != null && !array.equals("")) {
+				if (array != null) {
 					JSONObject obj = null;
 					while (isIncluded.equals("NO")) {
 						
@@ -2108,7 +2108,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 									if (resultCn.equals(standardCn)) {
 										isIncluded = "YES";
 										break;
-									} else if (!resultCn.equals(standardCn)) {
+									} else {
 										isIncluded = checkDistributionIsIncluded(standardCn, resultCn, tenantId);
 									}
 								} 
@@ -2130,7 +2130,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Override
 	public List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception {
-		logger.debug("getDistributioIncludednList started.");
+		logger.debug("getDistributioUpperList started.");
 		logger.debug("userName = " + userName + ",tenantId=" + tenantId);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -2184,7 +2184,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			}
 		}						
 		
-		logger.debug("getDistributioIncludednList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug("getDistributioUpperList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		logger.debug(distributionList.toString());
 		
 		return distributionList;
@@ -2222,6 +2222,53 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("aliasMailCheck ended.");
 		
 		return resultList;
+	}
+	
+	@Override
+	public MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception {
+		logger.debug("getDistributionSub started.");
+		logger.debug("userName = " + userName + ",subMail=" + subMail + ",companyId=" + companyId + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "domainName=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&userName=" + URLEncoder.encode(userName, "UTF-8");
+		inputParams += "&companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&subMail=" + URLEncoder.encode(subMail, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSub";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		MailDistributionVO distributonSubVo = new MailDistributionVO();;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONObject resultObject = (JSONObject) responseObj.get("result");
+					
+					if (resultObject != null &&  resultObject.size() > 0) {
+						distributonSubVo.setMail((String)resultObject.get("SUB_MAIL"));
+						distributonSubVo.setName((String)resultObject.get("SUB_NAME"));
+						
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getDistributionSub ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributonSubVo.toString());
+		return distributonSubVo;
 	}
 	
 }

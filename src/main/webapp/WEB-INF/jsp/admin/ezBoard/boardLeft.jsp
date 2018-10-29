@@ -219,9 +219,10 @@
 	            }
 	        }
 	        
+	        /* 2018-10-16 홍승비 - 관리자단에서 좌측게시판리스트 하위에 접근하는지 판단하는 플래그 추가  */
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
+		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&isAdminLeft=Y", false);
 		        xmlhttp3.send();
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;

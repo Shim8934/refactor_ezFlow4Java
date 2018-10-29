@@ -120,6 +120,7 @@
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
 		    var orgCompanyID = "${orgCompanyID}";
+		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
@@ -1710,9 +1711,11 @@
 					dataType : "text",
 					async : true,
 					url : "/admin/ezBoard/getBackGroundImage.do",	        			
-					data : { type : "USE", 
-							 backGroundID: ""
-						   },
+					data : {
+						type : "USE",
+						backGroundID : "",
+						isAllGroupBoard : isAllGroupBoard
+					},
 					success: function(resultXml){
 						event_Get_listComplite(resultXml);
 					}        			
