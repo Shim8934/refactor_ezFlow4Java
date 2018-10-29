@@ -173,6 +173,10 @@
 		        <c:if test="${useReform}">
 		        	document.getElementById("TForm").style.width = "1080px";
 		        	window.resizeTo(1132, window.outerHeight);
+		        	
+		        	if (document.body.scroll === "") {
+		        		document.body.scroll = "yes";
+		        	}
 		        </c:if>
 		    });
 		
