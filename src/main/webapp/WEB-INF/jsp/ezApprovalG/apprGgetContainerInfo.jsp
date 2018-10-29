@@ -1614,7 +1614,7 @@
 		        	<c:if test = "${approvalFlag != 'G'}">
 		        		<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
-							<option value="ALL"><spring:message code='ezApprovalG.garm05'/></option>
+							<option value="ALL"><spring:message code='ezPoll.t104'/></option>
 			        	</select>  
 		        	</div>
 		        	</c:if>  

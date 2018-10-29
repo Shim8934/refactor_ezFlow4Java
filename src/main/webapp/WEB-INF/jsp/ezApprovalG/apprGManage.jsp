@@ -357,7 +357,7 @@
 		        	statusCell.removeChild(statusCell.firstChild);	
 		        }
 		        
-			    AddOption(sel_status, '<spring:message code="ezApprovalG.garm05"/>', "ALL");
+			    AddOption(sel_status, '<spring:message code="ezPoll.t104"/>', "ALL");
 			    
 			    $('#sel_status_div').show();
 			    
@@ -1997,10 +1997,15 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
+		        	<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
+			        	</select>  
+		        	</div>
 		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
-								<spring:message code='ezPoll.t237'/>
+								<spring:message code='main.t74'/>
 							</option>
 							<c:forEach items="${companyList }" var="company">
 								<option value="${company.companyID }">
@@ -2009,11 +2014,6 @@
 							</c:forEach>
 						</select>
 					</c:if>
-					<div id="sel_status_div" style="display:inline;">
-						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
-			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
-			        	</select>  
-		        	</div>
 		        </li>
 			</ul>
 		</div>
