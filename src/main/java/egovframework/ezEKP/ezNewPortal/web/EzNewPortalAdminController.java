@@ -431,6 +431,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 메뉴 순서조정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenuOrder.do")
 	public void updateMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateMenuOrder started.");
@@ -441,10 +442,11 @@ public class EzNewPortalAdminController {
 		param.put("userId", userInfo.getId());
 		
 		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("menus", paramMap.get("menus"));
 		
 		String url = "/rest/admin/ezPortal/menus/order/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -564,4 +566,26 @@ public class EzNewPortalAdminController {
 	}
 	
 	/** ----------------------------------------------- */
+	
+	/**
+	 * @author 유은정
+	 */
+	
+	//메뉴 아이콘 선택 화면 호출
+	@RequestMapping(value = "/admin/ezNewPortal/selectMenuIcon.do")
+	public String portalMenuIconSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("portalMenuIconSelect started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("portalMenuIconSelect accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("portalMenuIconSelect ended.");
+			
+			return "/admin/ezNewPortal/portalMenuIconSelect";
+		}
+	}
 }

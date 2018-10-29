@@ -11,9 +11,9 @@
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			body {background-color : white;}
-			.menu {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #000000; margin : 10px;}
-			.menu dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
-			.menu dl dd {display:table-cell; width : 98px; height:56px; margin:0px; padding:0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; letter-spacing:-1px;}
+			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #000000; margin : 10px;}
+			.menu dl dt, .menuAdd dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
+			.menu dl dd, .menuAdd dl dd {display:table-cell; width : 98px; height:56px; margin:0px; padding:0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; letter-spacing:-1px;}
 			span.icon_topmenu {margin-top : 20px;}
 			.menuUsed {background-color : #b0e4ff;}
 			.menuNotUsed {background-color : #cbcbcb;}
@@ -23,7 +23,7 @@
 			.menuDetails hr {display:block; width:99%;}
 			.menuIconInfo {display:inline-block; margin:43px 23px 23px 23px;}
 			.menuIcon {width:100px;height:100px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.menuIcon span {margin:36px;}
+			.menuIcon span, .menuIcon img {margin:36px;}
 			.menuInfo {display:inline-block; vertical-align:top; margin-top:23px;}
 			.menuInfo ul {padding:0px;}
 			.menuInfo ul li {font-size:15px; font-weight:bold; display:block;margin-bottom:12px;}
@@ -34,11 +34,17 @@
 			.conUrl input {width:300px; margin-left:10px;}
 			.menuName table th {border:none;background-color:white;font-size:13px;color:black;}
 			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
+			.menuAuthBtn {display:inline-block}
 			.accessOK, .accessNO {font-size:15px; font-weight:bold; margin-top:10px;}
 			.updateMenu, .addMenu {float : right; margin-right:20px;}
 			.btnpositionJsp {margin-top : 0px;padding:0px;}
 			.hideDetails {display : none;}
 			.menuSortable {display : inline-block;}
+			dt img {width:21px;height:21px;margin-top:20px;}
+			.menuIcon img {width:21px;height:21px;}
+			.deleteMenu {display:inline-block;margin-left:50px;vertical-align:top;margin-top:-3px;}
+			#menuAdd {border : 2px dashed black;}
+			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
 			
 			/* switch */
 			.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-left:26px; margin-top:-3px;}
@@ -135,7 +141,7 @@
 					});
 					
 					//메뉴 추가 관련
-					menusHTML += "<li class='menu' id='menuAdd'><dl><dt><span style='font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></li>";
+					menusHTML += "<li class='menuAdd' id='menuAdd'><dl><dt><span class='icon_topmenu' style='background:none; font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></li>";
 					
 					$("#menuList").html(menusHTML);
 					
@@ -156,15 +162,12 @@
 						items: "li.menu",
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
-							console.log(event);
-							console.log(ui);
 							$(".menuDetails").remove();
 							
 						},
-						stop : function(event, ui) {
-							//$(".menuDetails").remove();
-						},
-						update : function(event, ui) {}
+						update : function(event, ui) {
+							updateMenuOrder();
+						}
 					});
 					
 					$("#menuList").disableSelection();
@@ -202,25 +205,25 @@
 					var result = JSON.parse(request.responseText);
 					var menuInfo = result.menuInfo;
 					var menuNames = result.menuNames;
-					var menuAuth = result.menuAuths;
+					var menuAuthsY = result.menuAuths.menuAuthsY;
+					var menuAuthsN = result.menuAuths.menuAuthsN;
 					
 					var menusHTML = "<li class='menuDetails'>";
 					menusHTML += "<div id='menuDetails" + menuInfo.menuId + "'>";
 					menusHTML += "<div class='menuTitle'>";
 					menusHTML += "<span>" + menuInfo.menuName + "</span>";
+					
+					if (menuInfo.menuType == "A") {
+						menusHTML += "<div class='btnpositionJsp deleteMenu'><a class='imgbtn deleteMenuBtn'><span>메뉴 삭제</span></a></div>";
+					}
+					
 					menusHTML += "<div id='close' class='close'><ul><li><span></li></ul></div>";
 					menusHTML += "</div>";
 					menusHTML += "<hr/>";
 					menusHTML += "<div class='btnpositionJsp updateMenu'><a class='imgbtn updateMenuBtn'><span>저장</span></a></div>";
 					menusHTML += "<div class='menuIconInfo'>";
 					menusHTML += "<div class='menuIcon'>";
-					
-					if (menuInfo.menuType == "G") {
-						menusHTML += "<span class='" + menuInfo.iconUrl + "'></span>";
-					} else {
-						menusHTML += "<img src='" + menuInfo.iconUrl + "'/>";
-					}
-					
+					menusHTML += "<span class='" + menuInfo.iconUrl + "'></span>";
 					menusHTML += "</div>";
 					
 					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함
@@ -255,8 +258,46 @@
 					menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' value='" + menuInfo.menuUrl + "'></li>"
 					menusHTML += "</ul></div>";
 					menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
-					menusHTML += "<div class='accessOK'>[접근 허용]</div>";
-					menusHTML += "<div class='accessNO'>[접근 불가]</div>";  /////권한 가져오기
+					menusHTML += "<div class='accessOK'>[접근 허용]"
+					menusHTML += "<div>";
+					
+					if (menuAuthsY != null && menuAuthsY.length != 0) {
+						var menuAuthsYList = "";
+						
+						menuAuthsY.forEach(function(item, index) {
+							if (item.userType) {
+								menuAuthsYList += "," + item.userName;
+								menuAuthsYList += "(" + item.userDeptName + ")";
+							} else {
+								menuAuthsYList += "," + item.userDeptName;
+							}
+						});
+						
+						menusHTML += menuAuthsYList.substring(1);
+					}
+					
+					menusHTML += "</div>";
+					menusHTML += "</div>";
+					menusHTML += "<div class='accessNO'>[접근 불가]"
+					menusHTML += "<div>";
+					
+					if (menuAuthsN != null && menuAuthsN.length != 0) {
+						var menuAuthsNList = "";
+						
+						menuAuthsN.forEach(function(item, index) {
+							if (item.userType) {
+								menuAuthsNList += "," + item.userName;
+								menuAuthsNList += "(" + item.userDeptName + ")";
+							} else {
+								menuAuthsNList += "," + item.userDeptName;
+							}
+						});
+						
+						menusHTML += menuAuthsNList.substring(1);
+					}
+					
+					menusHTML += "</div>";
+					menusHTML += "</div>";
 					menusHTML += "</div>";
 					menusHTML += "</div>";
 					menusHTML += "</li>";
@@ -307,8 +348,13 @@
 					
 					//권한설정 기능
 					$(".menuAuthBtn").on("click", {"menuId" : menuInfo.menuId, "mode" : "view"}, openMenuAuth);
+					
 					//저장기능 
-					$(".updateMenuBtn").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
+					$(".updateMenu").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
+					
+					if (menuInfo.menuType == "A") {
+						$(".deleteMenu").on("click", {"menuId" : menuInfo.menuId}, deleteMenu);
+					}
 				}
 			}
 			
@@ -328,7 +374,6 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
-			var iconUrl = "";
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
@@ -337,11 +382,7 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			//아이콘
-			if (menuType == "G") {
-				iconUrl = $(".menuIcon").find("span").attr("class");
-			} else {
-				iconUrl = $(".menuIcon").find("img").attr("src");
-			}
+			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
 			var menuInfo = {
 				"menuId" : menuId,
@@ -391,6 +432,7 @@
 			menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
 			menusHTML += "<div class='menuIconInfo'>";
 			menusHTML += "<div class='menuIcon'>";
+			menusHTML += "<span></span>";
 			menusHTML += "</div>";
 			menusHTML += "<div class='btnpositionJsp iconBtn'><a class='imgbtn'><span>아이콘등록</span></a></div>";
 			
@@ -472,8 +514,7 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			//아이콘
-			var iconUrl = $(".menuIcon").find("img").attr("src");
-			iconUrl = "/images/ezNewPortal/portlet_Plus.png";
+			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
 			var menuInfo = {
 				"menuUsed" : menuUsed,
@@ -509,9 +550,43 @@
 			 
 			request.send(data);
 		}
+		
+		var deleteMenu = function (event) {
+			var response = confirm("메뉴를 삭제하시겠습니까?");
+			
+			if (response) {
+				var menuId = event.data.menuId;
+				
+				var companiesObj = document.getElementById("ListCompany");
+				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+				
+				var request = new XMLHttpRequest();
+				request.open('POST', '/admin/ezNewPortal/deleteMenu.do', true);
+				request.setRequestHeader('content-type', 'application/json');
+				
+				request.onload = function() { getMenus(); }
+				
+				request.onerror = function() {}
+				
+				var data = JSON.stringify({
+					menuId : menuId,
+					companyId : companyValue
+				});
+				 
+				request.send(data);
+			} else {
+				return;
+			}
+			
+		}
 		////구현해야할 부분/////
 		var uploadIconImg = function() {
-
+			var height = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var top = (height - 500) / 2;
+			var left = (width - 765) / 2;
+			   
+			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=342,width=500,top=" + top + ",left=" + left, "");
 		}
 		
 		var openMenuAuth = function(event) {

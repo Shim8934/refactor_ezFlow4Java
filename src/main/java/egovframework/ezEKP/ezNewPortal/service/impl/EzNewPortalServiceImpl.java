@@ -846,10 +846,10 @@ LOGGER.debug("!!!!!!!!!pageCnt :" + Math.ceil(pageCnt));
 		map.put("tenantId", tenantId);
 //		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
-		map.put("accessType", "Y");
+		map.put("accessType", "1");
 		List<MenuAuthVO> menuAuthsY = ezNewPortalDAO.getMenuAuth(map);
 		
-		map.put("accessType", "N");		
+		map.put("accessType", "0");		
 		List<MenuAuthVO> menuAuthsN = ezNewPortalDAO.getMenuAuth(map);
 		
 		Map<String, Object> resultMap = new HashMap<>();
@@ -1042,6 +1042,28 @@ LOGGER.debug("!!!!!!!!!pageCnt :" + Math.ceil(pageCnt));
 		ezNewPortalDAO.deleteMenu(map);
 		
 		LOGGER.debug("deleteMenu ended.");
+	}
+	
+	@Override
+	public void udpateMenuOrder(JSONArray menus, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateMenuOrder started. companyId = " + companyId + " || tenantId = " + tenantId);
+		LOGGER.debug("menus = " + menus.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		for (Object item : menus) {
+			if (item instanceof JSONObject) {
+				JSONObject menuInfo = (JSONObject) item;
+				map.put("menuId", menuInfo.get("menuId"));
+				map.put("companyOrder", menuInfo.get("companyOrder"));
+				
+				ezNewPortalDAO.updateMenuOrder(map);
+			}
+		}
+		
+		LOGGER.debug("updateMenuOrder ended.");
 	}
 	
 	@Override
