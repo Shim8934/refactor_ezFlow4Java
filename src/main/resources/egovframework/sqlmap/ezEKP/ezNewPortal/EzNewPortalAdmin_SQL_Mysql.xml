@@ -160,11 +160,21 @@
 		]]>
 	</select>
 	
+	<!-- 언어는 좀따해야지 -->
 	<select id="ezNewPortal.getMenuAuth" parameterClass="Map" resultClass="MenuAuthVO">
 		<![CDATA[
 			SELECT
 				menu_id AS menuid,
 				user_id AS userid,
+				CASE
+				WHEN user_type = 1
+					THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+					ELSE ''
+				END AS username,
+				CASE WHEN user_type = 1
+					THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+					ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				END AS userdeptname,
 				user_type AS usertype,
 				access_yn AS accessyn
 			FROM
@@ -274,6 +284,21 @@
 		]]>
 	</update>
 	
+	<update id="ezNewPortal.updateMenuOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_MENU_COMP
+			SET
+				menu_order = #menuOrder#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menu_id = #menuId#
+		]]>
+	</update>
+	
 	<insert id="ezNewPortal.insertMenu" parameterClass="Map">
 		<selectKey keyProperty="menuId" resultClass="Integer">
 			SELECT
@@ -339,7 +364,7 @@
 	<delete id="ezNewPortal.deleteMenuAuth" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				TBL_PORTAL_MENU_Auth
+				TBL_PORTAL_MENU_AUTH
 			WHERE
 				tenant_id = #tenantId#
 			AND

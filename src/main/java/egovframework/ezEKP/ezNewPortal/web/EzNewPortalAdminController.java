@@ -441,10 +441,11 @@ public class EzNewPortalAdminController {
 		param.put("userId", userInfo.getId());
 		
 		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("menus", paramMap.get("menus"));
 		
 		String url = "/rest/admin/ezPortal/menus/order/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
 		
 		String status = resultBody.get("status").toString();
 		
