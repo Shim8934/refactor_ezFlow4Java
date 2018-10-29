@@ -20,6 +20,10 @@
 		
 		window.onload = function() {
 			$('#userInfo').text(userName);
+			
+			if ($('#notUsed').is(":checked")) {
+				setUsed = 1;
+			} 
 		}
 		
 		function changeChk(obj) {
