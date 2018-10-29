@@ -322,6 +322,31 @@
 		
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaDistributionSub" resultClass="String">
+		<![CDATA[
+			SELECT 
+				domain_name
+			FROM 
+				JMOCHA_DISTRIBUTION_SUB
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaDistributionSub"> 
+	  CREATE TABLE "JMOCHA_DISTRIBUTION_SUB" 
+	   (
+	   	"DOMAIN_NAME" NVARCHAR2(100), 
+		"USER_NAME" NVARCHAR2(100), 
+		"COMPANY_ID" NVARCHAR2(100), 
+		"SUB_MAIL" NVARCHAR2(100), 
+		"SUB_NAME" NVARCHAR2(100), 
+		 CONSTRAINT "JMOCHA_DISTRIBUTION_SUB_PK" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "SUB_MAIL")
+		 CONSTRAINT "FK_DISTRIBUTION_SUB" FOREIGN KEY ("DOMAIN_NAME", "USER_NAME")
+		  REFERENCES "JMOCHA_DISTRIBUTION" ("DOMAIN_NAME", "USER_NAME") ON DELETE CASCADE ENABLE
+	   )
+	</statement>
+
 	<select id="EzCommonDAO.checkUserMasterManualFlag" resultClass="String">
 		<![CDATA[
 			SELECT 

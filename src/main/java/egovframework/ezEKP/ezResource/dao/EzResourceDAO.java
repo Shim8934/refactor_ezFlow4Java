@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -115,12 +116,18 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (ResGetScheduleVO) select("EzResourceDAO.chkDeletedRepResource", map);
 	}*/
 	
-	public ResAdminVO getResourceAdminInfo(Map<String, Object> map) {
-		return (ResAdminVO) select("EzResourceDAO.getResourceAdminInfo", map);
+	@SuppressWarnings("unchecked")
+	public List<ResAdminVO> getResourceAdminInfo(Map<String, Object> map) {
+		return (List<ResAdminVO>) list("EzResourceDAO.getResourceAdminInfo", map);
 	}
 	
 	public ResGetSendMailToUserVO getSendMailToUser(Map<String, Object> map) {
 		return (ResGetSendMailToUserVO) select("EzResourceDAO.getSendMailToUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getOwnerInfo(Map<String, Object> map) {
+		return (List<OrganUserVO>) list("EzResourceDAO.getOwnerInfo", map);
 	}
 	
 	public String getBrdApproveFlag(Map<String, Object> map) {
