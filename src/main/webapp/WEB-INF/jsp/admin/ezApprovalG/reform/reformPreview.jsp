@@ -17,6 +17,10 @@
 	
 	window.onload = function() {
 		try {
+			if (document.body.scroll === "") {
+				document.body.scroll = "yes";
+			}
+			
 			var divContent = document.getElementById('div_Content');
 			divContent.innerHTML = mainHtml;
 			
@@ -35,13 +39,13 @@
 		var iframeContent = document.getElementById("iframe_content");
 		var parentElement = iframeContent.parentElement;
 		
-		if (parentElement.id == 'body') {
-			var scrollHeight = iframeContent.contentWindow.document.body.scrollHeight;
-			
-			if (parentElement.scrollHeight < scrollHeight) {
-				iframeContent.style.height = (scrollHeight + 20) + "px";
-			}
+		//  		if (parentElement.id == 'body') {
+		var scrollHeight = iframeContent.contentWindow.document.body.scrollHeight;
+		
+		if (parentElement.scrollHeight < scrollHeight) {
+			iframeContent.style.height = (scrollHeight + 20) + "px";
 		}
+		//  		}
 	}
 
 	window.onunload = function() {
