@@ -266,10 +266,10 @@
 						
 						menuAuthsY.forEach(function(item, index) {
 							if (item.userType) {
-								menuAuthsYList += "," + item.userName;
+								menuAuthsYList += ", " + item.userName;
 								menuAuthsYList += "(" + item.userDeptName + ")";
 							} else {
-								menuAuthsYList += "," + item.userDeptName;
+								menuAuthsYList += ", " + item.userDeptName;
 							}
 						});
 						
@@ -579,7 +579,7 @@
 			}
 			
 		}
-		////구현해야할 부분/////
+		
 		var uploadIconImg = function() {
 			var height = window.screen.availHeight;
 			var width = window.screen.availWidth;
@@ -587,6 +587,40 @@
 			var left = (width - 765) / 2;
 			   
 			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=342,width=500,top=" + top + ",left=" + left, "");
+		}
+		
+		var updateMenuOrder = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			//메뉴 순서 가져오기
+			var menuList = $(".menu");
+			var menuListCount = menuList.length;
+			var menuOrderList = [];
+			
+			for (var i = 0; i < menuListCount; i++) {
+				var menuId = menuList[i].id;
+				menuId = menuId.substring(4);
+				var order = i + 1;
+				
+				menuOrderList.push({"companyOrder" : order, "menuId" : menuId});
+			}
+			
+			//ajax로 메뉴 순서지정
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
+			request.setRequestHeader('content-type', 'application/json');
+			
+			request.onload = function() { getMenus();}
+			
+			request.onerror = function() {}
+			
+			var data = JSON.stringify({
+				companyId : companyValue,
+				menus : menuOrderList
+			});
+			 
+			request.send(data);
 		}
 		
 		var openMenuAuth = function(event) {

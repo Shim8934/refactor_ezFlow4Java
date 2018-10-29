@@ -10,7 +10,164 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
 <link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
-
+<style type="text/css">
+	.notEmptySlider {
+		width : 280px;
+		height : 515px;
+		cursor : pointer;
+	} 
+	
+	#myImg {
+		width : 36px;
+		height : 36px;
+	}
+	.mainbg {
+		min-width : 1280px;
+	}
+	
+	#userList li {
+		cursor : pointer;
+		display: block;
+	}
+</style>
+</head>
+<body class="mainbg">
+	<div id="center">
+		<section class="section_left" style="height:1130px;">
+			<article class="rolling_info">
+				<div class="rolling" id="featured">
+            	<c:choose>
+	            	<c:when test="${not empty sliderList}">
+	            		<c:forEach items="${sliderList}" var="slider">
+		            		<c:choose>
+		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
+		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('${slider.url }')" />
+		            			</c:when>
+		           		 		<c:otherwise> 
+									<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('http://${slider.url }')" />
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+	           		</c:when>
+	            	<c:otherwise>
+		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
+		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
+	            	</c:otherwise>
+	            </c:choose>
+           	 	</div>
+           	 	<dl class="info">
+            		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
+               		<dd class="infoName">${userName} ${userTitle}</dd>
+                	<dd class="infoTeam">${deptName}</dd>
+                	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
+                	<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
+                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
+           		</dl>
+			</article>
+			<article class="time_check">
+				<div id="timeinput" class="presentTime">
+	               	<p class="timeTit" id="todayTime">현재시간</p>
+					<div id="timeFlow" class="timeText"></div>
+			    </div>
+			    <div id="atti_area" class="main_time">
+	            	<dl class="timeCheckIn">
+	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
+	                </dl>
+	                <dl class="timeCheckOut">
+	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
+	                </dl>
+		    	</div>
+				</article>
+				
+				<article class="countingIcon">
+					<div class="countingIcon01">
+						<dl id="NewMail">
+                			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
+                    		<dd class="iconText">새메일</dd>
+                    		<dd id="unreadMailCount" class="iconCount_none">0</dd>
+                		</dl>
+                		<dl id="AprSign">
+                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
+                    
+                    		<dd class="iconText">결재문서</dd>
+                    		<dd id="approvalCount" class="iconCount_none">0</dd>
+                		</dl>
+                		<dl id="Schedule">
+                  		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
+                    		<dd class="iconText">오늘일정</dd>
+                		    <dd id="scheduleCount" class="iconCount_none">0</dd>
+               			</dl>
+					</div>
+					<div class="countingIcon02">
+            			<dl id="Poll">
+                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
+                    		<dd class="iconText">전자설문</dd>                        
+                    		<dd id="pollCount" class="iconCount_none">0</dd>
+                		</dl>
+            	
+                		<dl id="Circular"> 
+                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
+                    		<dd class="iconText">회람판</dd>
+                    		<dd id="circularCount" class="iconCount_none">0</dd>
+                		</dl>
+                	</div>
+				</article>
+				<article class="birthday">
+					<div class="birthTit">
+               			<p class="birthText"><span id="curMon"></span>월 생일자</p>
+           	    		<span class="birthRighttbtn" id="birthdayNext"><img src="/images/ezNewPortal/birthday_next.png"></span>
+                		<span class="birthLeftbtn" id="birthdayPrev"><img src="/images/ezNewPortal/birthday_pre.png"></span>
+            		</div>
+            		<div id="birthcont" style="display: none;">
+            			<ul class="birthList" id="userList"></ul>
+            		</div>
+            		<div id="nodata_NewBirth" style="">
+            			<dl class="nodata">
+	            			<dt style="padding-top:33px"><img src="/images/ezNewPortal/nodata.png"></dt>
+	            			<dd>"데이터가 없습니다"</dd>
+            			</dl>
+            		</div>
+				</article>
+				<article class="bestEmployee">
+					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
+					<dl class="emDL">
+            			<dt class="emTit">이달의 우수사원</dt>
+            		</dl>
+				</article>
+			</section>
+		</div>
+		<aside id="quickSide">
+			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
+			<div class="aside_quick">
+				<p class="quickmenu_title">Quick</p>
+				<ul class="quickmenu">
+					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
+					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
+					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
+					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+				</ul>
+			</div>
+			<div class="aside_link">
+				<p class="linkmenu_title">Link</p>
+				<ul class="linkmenu" id="QuickUl">
+				</ul>
+				<div class="linkBtn">
+					<p class="btnLay" id="btnLay">
+					</p>
+				</div>
+			</div>
+		</aside>
+		<section class="section_main">
+			<div class="portlet_area">
+			</div>
+		</section>
+		
+		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
+			
+		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+<%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -271,164 +428,5 @@
 		
 	});
 	</script>
-	<style type="text/css">
-		.notEmptySlider {
-			width : 280px;
-			height : 515px;
-			cursor : pointer;
-		} 
-		
-		#myImg {
-			width : 36px;
-			height : 36px;
-		}
-		.mainbg {
-			min-width : 1280px;
-		}
-		
-		#userList li {
-			cursor : pointer;
-			display: block;
-		}
-	</style>
-</head>
-
-	<body class="mainbg">
-		<div id="center">
-			<section class="section_left" style="height:1130px;">
-				<article class="rolling_info">
-					<div class="rolling" id="featured">
-            		<c:choose>
-	            		<c:when test="${not empty sliderList}">
-	            			<c:forEach items="${sliderList}" var="slider">
-		            			<c:choose>
-		            				<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-		            					<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('${slider.url }')" />
-		            				</c:when>
-		           		 			<c:otherwise> 
-										<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('http://${slider.url }')" />
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-	            		</c:when>
-	            		<c:otherwise>
-		            		<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
-		            		<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
-	            		</c:otherwise>
-	            	</c:choose>
-           	 		</div>
-           	 		<dl class="info">
-            			<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
-               			<dd class="infoName">${userName} ${userTitle}</dd>
-                		<dd class="infoTeam">${deptName}</dd>
-                		<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
-                		<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                		<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
-           			</dl>
-				</article>
-				<article class="time_check">
-					<div id="timeinput" class="presentTime">
-	               		<p class="timeTit" id="todayTime">현재시간</p>
-						<div id="timeFlow" class="timeText"></div>
-			    	</div>
-			    	<div id="atti_area" class="main_time">
-	            	<dl class="timeCheckIn">
-	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
-	                </dl>
-	                <dl class="timeCheckOut">
-	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
-	                </dl>
-		    	</div>
-				</article>
-				
-				<article class="countingIcon">
-					<div class="countingIcon01">
-						<dl id="NewMail">
-                			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
-                    		<dd class="iconText">새메일</dd>
-                    		<dd id="unreadMailCount" class="iconCount_none">0</dd>
-                		</dl>
-                		<dl id="AprSign">
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
-                    
-                    		<dd class="iconText">결재문서</dd>
-                    		<dd id="approvalCount" class="iconCount_none">0</dd>
-                		</dl>
-                		<dl id="Schedule">
-                  		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
-                    		<dd class="iconText">오늘일정</dd>
-                		    <dd id="scheduleCount" class="iconCount_none">0</dd>
-               			</dl>
-					</div>
-					<div class="countingIcon02">
-            			<dl id="Poll">
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
-                    		<dd class="iconText">전자설문</dd>                        
-                    		<dd id="pollCount" class="iconCount_none">0</dd>
-                		</dl>
-            	
-                		<dl id="Circular"> 
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
-                    		<dd class="iconText">회람판</dd>
-                    		<dd id="circularCount" class="iconCount_none">0</dd>
-                		</dl>
-                	</div>
-				</article>
-				<article class="birthday">
-					<div class="birthTit">
-               			<p class="birthText"><span id="curMon"></span>월 생일자</p>
-           	    		<span class="birthRighttbtn" id="birthdayNext"><img src="/images/ezNewPortal/birthday_next.png"></span>
-                		<span class="birthLeftbtn" id="birthdayPrev"><img src="/images/ezNewPortal/birthday_pre.png"></span>
-            		</div>
-            		<div id="birthcont" style="display: none;">
-            			<ul class="birthList" id="userList"></ul>
-            		</div>
-            		<div id="nodata_NewBirth" style="">
-            			<dl class="nodata">
-	            			<dt style="padding-top:33px"><img src="/images/ezNewPortal/nodata.png"></dt>
-	            			<dd>"데이터가 없습니다"</dd>
-            			</dl>
-            		</div>
-				</article>
-				<article class="bestEmployee">
-					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
-					<dl class="emDL">
-            			<dt class="emTit">이달의 우수사원</dt>
-            		</dl>
-				</article>
-			</section>
-		</div>
-		<aside id="quickSide">
-			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
-			<div class="aside_quick">
-				<p class="quickmenu_title">Quick</p>
-				<ul class="quickmenu">
-					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
-				</ul>
-			</div>
-			<div class="aside_link">
-				<p class="linkmenu_title">Link</p>
-				<ul class="linkmenu" id="QuickUl">
-				</ul>
-				<div class="linkBtn">
-					<p class="btnLay" id="btnLay">
-					</p>
-				</div>
-			</div>
-		</aside>
-		<section class="section_main">
-			<div class="portlet_area">
-			</div>
-		</section>
-		
-		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
-			
-		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-		</div>
-		
 	</body>
 </html>

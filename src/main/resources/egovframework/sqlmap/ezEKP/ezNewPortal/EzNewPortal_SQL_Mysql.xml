@@ -666,6 +666,18 @@ JOIN
 	TBL_PORTAL_PORTLET C
 ON
 	A.PORTLET_ID = C.PORTLET_ID
+JOIN
+	TBL_PORTAL_PORTLET_COMP D
+ON
+	A.TENANT_ID = D.TENANT_ID
+AND
+	A.COMPANY_ID = D.COMPANY_ID
+AND
+	A.PORTLET_ID = D.PORTLET_ID
+AND
+	A.MENU_ID = D.MENU_ID
+AND	
+	D.PORTLET_USED = 1
 WHERE
 	A.USER_ID = #userId#
 AND
@@ -771,22 +783,18 @@ AND
 ]]>
 </select>
 
-<update id="ezNewPortal.updatePortletOrderUser" parameterClass="map">
+<delete id="ezNewPortal.deletePortletOrderUser" parameterClass="map">
 <![CDATA[
-UPDATE 
+DELETE FROM
 	TBL_PORTAL_PORTLET_USER
-SET
-	PORTLET_ORDER = #portletOrder#
 WHERE
-	PORTLET_ID = #portletId#
-AND
 	USER_ID = #userId#
 AND
 	COMPANY_ID = #companyId#
 AND
 	TENANT_ID = #tenantId#
 ]]>
-</update>
+</delete>
 
 <insert id="ezNewPortal.insertPortletOrderUser" parameterClass="Map">
 <![CDATA[

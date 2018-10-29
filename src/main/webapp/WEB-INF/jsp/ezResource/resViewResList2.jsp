@@ -304,13 +304,18 @@
 						resourceId   : val01						
 					},
 					success: function(result){
+						// 2018-10-19 자원 정보 레이어 팝업 부관리자 추가, 관리자 정보 조회 추가
+						var ownerID = result.resBrd.ownerID.split(";");
 						if (result.primary == "1") {						
-							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm);
+							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownDeptNm + ")");
+							$("#ownerNm").attr("ownerID", ownerID);
+							$("#ownerNm").attr("onclick", ownerID);
+							$("#submanager").html(result.resBrd.ownDeptNm);
 							$("#brdNm").html(result.resBrd.brdNm);
 						} else {
-							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm2);
+							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownDeptNm2 + ")");
+							$("#ownerNm").attr("ownerID", "mins99");
+							$("#submanager").html(result.resBrd.ownDeptNm2);
 							$("#brdNm").html(result.resBrd.brdNm2);
 						}
 						
@@ -346,6 +351,14 @@
 						
 					}
 				});	    		
+	        }
+	    	
+	    	// 2018-10-19 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
+			function OpenUserInfo(userInfo) {
+	    		var userId = userInfo.attr("ownerid");
+	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 438);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID + "&dept=" + deptID, "", feature);
 	        }
 		</script>
 	</head>
@@ -447,8 +460,8 @@
 						<td><span id="ownerNm"></span></td>
 					</tr>
 					<tr>
-						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-						<td><span id="ownerDept"></span></td>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
+						<td><span id="submanager"></span></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
