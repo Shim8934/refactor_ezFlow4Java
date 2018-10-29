@@ -110,6 +110,9 @@
 					 	url = "/admin/ezEmail/letterMain.do";
 					 	break;
 				    case 31:
+				    	url = "/admin/ezOrgan/jobInfoList.do";
+				    	break;
+				    case 32:
 				    	url = "/admin/ezEmail/signatureMain.do";
 				    	break;
 				}
@@ -121,7 +124,7 @@
 		<div id="left">
   			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="13px" height="13px"/>
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
-	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.turl = "/admin/ezEmail/signatureMain.do";24' /></c:if>
   			</div>   
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
@@ -134,6 +137,7 @@
 		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
 		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
 		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
+		        <li><span id="JobInfo" style="width: 100%; display: inline-block;" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
 		    </ul>   
 		    </c:if>
   			<h2>
@@ -180,7 +184,7 @@
   			</h2>
   			<c:if test="${useSignatureTemplate == 'YES'}">
   			<h2>
-				<span onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+				<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
 			    <ul></ul>
 			</h2>
 			</c:if>

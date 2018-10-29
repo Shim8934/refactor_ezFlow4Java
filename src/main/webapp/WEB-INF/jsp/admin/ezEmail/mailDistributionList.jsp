@@ -98,6 +98,7 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "DATA1"));
+		        createNodeAndInsertText(xmlDom, objNode, "COMPID", document.all("ListCompany").value);
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 		        xmlHTTP.onreadystatechange = getDistributionMember_after;
 		        xmlHTTP.send(xmlDom);

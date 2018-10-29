@@ -86,4 +86,6 @@ public interface EzEmailService {
 	public JSONArray selectOneSignatureTemplate(String signNo) throws Exception;
 	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
+
+	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
 }

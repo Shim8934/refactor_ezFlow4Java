@@ -133,7 +133,7 @@ public class BoardPropertyVO {
 	private String displayName;
 	/** 2018-06-25 홍승비 - 게시판 그룹에 companyID 추가 */
 	private String companyID;
-	/** 2018-10-15 홍승비 - 그룹사게시판 체크용 isGroupBoard 추가*/
+	/** 2018-10-15 홍승비 - 그룹사게시판 체크용 isAllGroupBoard 추가*/
 	private String isAllGroupBoard;
 	
 	public int getSs_board_maxRows() {

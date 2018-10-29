@@ -68,6 +68,8 @@ public interface EzCommonService {
 	
 	public void createTblIPAccessIP() throws Exception;
 	
+	public void createJMochaDistributionSub() throws Exception;
+
 	public void addUserMasterManualFlag() throws Exception;
 	
 	public void addDeptMasterManualFlag() throws Exception;
