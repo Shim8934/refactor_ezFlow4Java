@@ -216,6 +216,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return resultObj;
 	}	
 	
+	/**
+	 *	퀵 링크 가져오기 
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getQuickLink.do")
 	@ResponseBody
@@ -241,6 +244,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("getQuickLink End");
 		return resultObj;
 	}
+	
+	/**
+	 * 사용자 프레임 리스트 출력
+	 */
+	@RequestMapping(value = "/ezNewPortal/getUserFrameList.do")
+	public JSONObject getUserFrameList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getUserFrameList Start");
+		
+		logger.debug("getUserFrameList End");
+		return null;
+	}
+	
+	/**
+	 * 사용자 포틀릿 설정 리스트 출력
+	 */
+	@RequestMapping(value = "/ezNewPortal/getUserPortletList.do")
+	public JSONObject getUserPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getUserPortletList Start");
+		
+		logger.debug("getUserPortletList End");
+		return null;
+	}	
 	// 종균 끝
 	
 	

@@ -131,20 +131,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getPortalLogoInfo(map);
 	}
 	
-	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId) throws Exception {
+	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("langType", langType);
 		map.put("userId", userId);
+		map.put("deptId", deptId);
 		return ezNewPortalDAO.getUserMenuList(map);
 	}
 	
-	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType) throws Exception {
+	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("langType", langType);
+		map.put("userId", userId);
+		map.put("deptId", deptId);		
 		return ezNewPortalDAO.getCompanyMenuList(map);
 	}
 	
