@@ -269,7 +269,23 @@ AND
 AND 
 	comp.COMPANY_LANG = name.MENU_LANG		
 LEFT OUTER JOIN
-	tbl_portal_menu_auth as auth
+	(
+       SELECT * FROM tbl_portal_menu_auth
+       WHERE tenant_id = #tenantId#
+       AND company_id = #companyId#
+       AND access_YN = 0
+       AND user_id = #userId#
+       AND user_type = '1'
+       
+       UNION
+       
+       SELECT * FROM tbl_portal_menu_auth
+       WHERE tenant_id = #tenantId#
+       AND company_id = #companyId#
+       AND access_YN = 0
+       AND user_id = #deptId#
+       AND user_type = '2'     	
+	) as auth
 ON
 	comp.COMPANY_ID = auth.COMPANY_ID
 AND
@@ -326,7 +342,23 @@ AND
 AND 
 	comp.COMPANY_LANG = name.MENU_LANG		
 LEFT OUTER JOIN
-	tbl_portal_menu_auth as auth
+	(
+       SELECT * FROM tbl_portal_menu_auth
+       WHERE tenant_id = #tenantId#
+       AND company_id = #companyId#
+       AND access_YN = 0
+       AND user_id = #userId#
+       AND user_type = '1'
+       
+       UNION
+       
+       SELECT * FROM tbl_portal_menu_auth
+       WHERE tenant_id = #tenantId#
+       AND company_id = #companyId#
+       AND access_YN = 0
+       AND user_id = #deptId#
+       AND user_type = '2'     	
+	) as auth
 ON
 	comp.COMPANY_ID = auth.COMPANY_ID
 AND
@@ -341,6 +373,10 @@ AND
 	comp.COMPANY_LANG = #langType#
 AND
 	comp.TENANT_ID = #tenantId#
+AND 
+	auth.access_yn IS NULL	
+ORDER BY
+	company_order asc	
 ]]>		
 </select>
 
