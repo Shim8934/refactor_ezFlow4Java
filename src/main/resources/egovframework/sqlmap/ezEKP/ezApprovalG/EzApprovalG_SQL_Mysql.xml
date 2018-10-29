@@ -1713,6 +1713,7 @@
 		    ,WRITERNAME        AS WRITERNAME
 		    ,WRITERNAME2       AS WRITERNAME2
 		    ,HREF              AS HREF
+		    ,COMPANYID		   AS COMPANYID
 		FROM 
 			tbl_aprdocinfo
 		WHERE 

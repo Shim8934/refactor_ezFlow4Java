@@ -421,7 +421,7 @@
 			function dataAssembler(data) {
 				var str = "";
 				
-				str += '<li onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'")\'>';
+				str += '<li onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'", "'+ data.companyID +'")\'>';
 				str += '	<span class="txt">'+ data.docTitle +'</span>';
 				str += '	<span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi,'.')+'</span>';				
 				str += '	<span class="name">'+ data.writerName +'</span>';
