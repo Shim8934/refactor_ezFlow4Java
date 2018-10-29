@@ -831,8 +831,6 @@
                                  WHERE  
                                     TENANT_ID = #v_TENANTID#
                                  AND
-                                 	COMPANYID = #v_COMPANYID#
-                                 AND
                                     ItemID = #v_pItemID#
                                  AND 
                                     UserID = #v_pUserID#
@@ -843,8 +841,6 @@
                                                     TBL_Board_Item
                                                 WHERE
                                                     TENANT_ID = #v_TENANTID#
-                                                AND
-                                 					COMPANYID = #v_COMPANYID#
                                                 AND  
                                                     ItemID = #v_pItemID# ) )
             ]]>
@@ -862,8 +858,6 @@
                                     TBL_Board_Item_Read 
                                  WHERE  
                                     TENANT_ID = #v_TENANTID#
-                                 AND
-                                 	COMPANYID = #v_COMPANYID#
                                  AND
                                     ItemID = #v_pItemID#
                                  AND 

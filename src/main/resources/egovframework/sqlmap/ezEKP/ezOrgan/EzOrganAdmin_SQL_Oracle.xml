@@ -6,6 +6,7 @@
 	<typeAlias alias="OrganUserVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganProxyVO" type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
+	<typeAlias alias="OrganJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -4462,6 +4463,7 @@
 	  		<isNotNull property="birthType" prepend=","> <![CDATA[birthType = #birthType#]]></isNotNull>
 	  		<isNotNull property="birth" prepend=","> <![CDATA[birth = #birth#]]></isNotNull>
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -4785,6 +4787,188 @@
         	TENANT_ID = #v_TENANT_ID#
 	]]>
 	</delete>
+	
+	<insert id="EzOrganAdminDAO.insertTitle" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_USER_TITLEMASTER
+			(TYPE, CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, SORT, CREATEDATE, COMPANYID, TENANT_ID)
+		VALUES
+			(#v_TYPE#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_USEFLAG#, #v_SORT#, SYSDATE, #v_COMPANYID#, #v_TENANTID#)
+	]]>
+	</insert>
+	<select id="EzOrganAdminDAO.selectTitleList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		SELECT 
+			TYPE, 
+			CN, 
+			DISPLAYNAME, 
+			DISPLAYNAME2, 
+			USEFLAG, 
+			SORT, 
+			CREATEDATE,
+			COMPANYID
+		FROM 
+			TBL_USER_TITLEMASTER
+		WHERE 
+			TYPE = #v_TYPE#
+		AND
+			COMPANYID = #v_COMPANYID# 
+		AND 
+			TENANT_ID = #v_TENANTID#
+		ORDER BY
+			SORT
+	</select>
+	<select id="EzOrganAdminDAO.selectTitleInfo" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		SELECT 
+			TYPE, 
+			CN, 
+			DISPLAYNAME, 
+			DISPLAYNAME2, 
+			USEFLAG, 
+			SORT, 
+			CREATEDATE
+		FROM 
+			TBL_USER_TITLEMASTER
+		WHERE
+			CN = #v_CN#
+		AND
+			TYPE = #v_TYPE#
+		AND
+			COMPANYID = #v_COMPANYID# 
+		AND 
+			TENANT_ID = #v_TENANTID#
+	</select>
+	<update id="EzOrganAdminDAO.updateTitle" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_USER_TITLEMASTER
+		SET
+			DISPLAYNAME = #v_DISPLAYNAME#,
+			DISPLAYNAME2 = #v_DISPLAYNAME2#,
+			USEFLAG = #v_USEFLAG#,
+			SORT = #v_SORT#
+		WHERE
+			CN = #v_CN#
+		AND
+			TYPE = #v_TYPE#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	]]>
+	</update>
+	<update id="EzOrganAdminDAO.updateTitle2" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_USERMASTER
+		SET
+			TITLE = #v_DISPLAYNAME#,
+			TITLE2 = #v_DISPLAYNAME2#
+		WHERE
+			EXTENSIONATTRIBUTE7 = #v_CN#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	]]>
+	</update>
+	<delete id="EzOrganAdminDAO.deleteTitle" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_USER_TITLEMASTER
+		WHERE
+			CN = #v_CN#
+		AND
+			TYPE = #v_TYPE#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	]]>
+	</delete>
+	<select id="EzOrganAdminDAO.selectTitleUserList" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
+	<![CDATA[
+		SELECT 
+			TBL_USERMASTER.CN,
+			TBL_USERMASTER.DISPLAYNAME,
+			TBL_USERMASTER.DISPLAYNAME2,
+			TBL_USERMASTER.DEPARTMENT,
+			TBL_USERMASTER.DESCRIPTION,
+			TBL_USERMASTER.DESCRIPTION2,
+			NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+			TBL_USER_TITLEMASTER.DISPLAYNAME AS TITLE,
+			TBL_USER_TITLEMASTER.DISPLAYNAME2 AS TITLE2
+		FROM 
+			TBL_USERMASTER
+		JOIN 
+			TBL_USER_TITLEMASTER
+		ON 
+			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_TITLEMASTER.CN 
+		AND 
+			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_TITLEMASTER.COMPANYID 
+		AND 
+			TBL_USERMASTER.TENANT_ID = TBL_USER_TITLEMASTER.TENANT_ID
+		WHERE
+			TBL_USER_TITLEMASTER.TYPE = #v_TYPE#
+		AND
+			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_CN#
+		AND 
+			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+		AND
+			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+	]]>
+	</select>
+	<select id="EzOrganAdminDAO.selectTitleListCnt" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USER_TITLEMASTER
+		WHERE
+			TYPE = #v_TYPE#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+	<select id="EzOrganAdminDAO.selectTitleUserListCnt" parameterClass="Map" resultClass="int" remapResults="true">
+	<![CDATA[
+		SELECT 
+			COUNT(*)
+		FROM 
+			TBL_USERMASTER
+		JOIN 
+			TBL_USER_TITLEMASTER
+		ON 
+			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_TITLEMASTER.CN 
+		AND 
+			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_TITLEMASTER.COMPANYID 
+		AND 
+			TBL_USERMASTER.TENANT_ID = TBL_USER_TITLEMASTER.TENANT_ID
+		WHERE
+			TBL_USER_TITLEMASTER.TYPE = #v_TYPE#
+		AND
+			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_CN#
+		AND 
+			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+		AND
+			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+	]]>
+	</select>
+	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USER_TITLEMASTER
+		WHERE
+			CN = #v_CN#
+		AND
+			TYPE = #v_TYPE#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	]]>
+	</select>
 	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

@@ -15,6 +15,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -691,11 +694,18 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdID = req.getParameter("brdID");
 		}
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		// 2018-10-24 김민성 - 자원 관리자 및 부관리자 처리
+		String[] ownerList = resBrd.getOwnerID().split(",");
+		if(ownerList.length > 1) {
+			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+			model.addAttribute("ownerList", ownerInfoList);
+		}
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
 		strResLocation = resBrd.getResLocation();
 		strOwnDeptID = resBrd.getOwnDeptID();
-		strOwnerID = resBrd.getOwnerID();
+		strOwnerID = ownerList[0];
 		ownerCall = resBrd.getOwnerCall();
 		
 		if (userInfo.getPrimary().equals("1")) {
@@ -783,6 +793,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strOwnerID = "";
 		String strMakeDate = "";
 		String strApproveFlag = "";
+		List<OrganUserVO> ownerListVO;
 		
 		if (req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -793,11 +804,30 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
 			ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			// 2018-10-24 김민성 - 자원관리 관리자 조회
+			String[] ownerList = resBrd.getOwnerID().split(",");
+			if(ownerList.length != 0) {
+				ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+				
+				JSONArray jArray = new JSONArray();
+
+				for (int i = 0; i < ownerListVO.size(); i++) {
+				        JSONObject data= new JSONObject();
+				        data.put("ownerId", ownerListVO.get(i).getCn());
+				        data.put("ownerDept", ownerListVO.get(i).getDepartment());
+				        data.put("ownerName", ownerListVO.get(i).getDisplayName());
+				        data.put("ownerName1", ownerListVO.get(i).getTitle());
+				        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
+				        jArray.add(i, data);
+				 }
+				model.addAttribute("ownerList", jArray);
+			}
 			strBrdID = resBrd.getBrdID();
 			strBrdExplain = resBrd.getBrdExplain();
 			strResLocation = resBrd.getResLocation();
 			strOwnDeptID = resBrd.getOwnDeptID();
-			strOwnerID = resBrd.getOwnerID();
+			strOwnerID = ownerList[0];
 			ownerCall = resBrd.getOwnerCall();
 			
 			strBrdNm = resBrd.getBrdNm();
@@ -816,7 +846,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
 		}
-	
+		
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("userName", userInfo.getName());
@@ -851,7 +881,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
-		String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
+		String ownerList = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
+		String strOwnerID = ownerList.split(",")[0];
 		String propList = "displayName1;displayName2;title1;title2;description1;description2";
 		String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
@@ -926,7 +957,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		Locale locale = userInfo.getLocale();
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
-		String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
+		String ownerList = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
+		String strOwnerID = ownerList.split(",")[0];
 		String deptID = xmlDom.getElementsByTagName("DATA").item(1).getTextContent().trim();		// 부서ID
 		
 		String propList = "displayName1;displayName2;title1;title2;description1;description2;department";
@@ -1020,8 +1052,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String resID = req.getParameter("resourceId");
 
+		// 2018-10-23 김민성 - 자원 관리자 정보 처리
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
-	
+		String[] ownerList = resBrd.getOwnerID().split(",");
+		
+		List<OrganUserVO> ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		resBrd.setOwnerID(ownerList[0]);
+		
+		model.addAttribute("ownerList", ownerListVO);
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("resBrd", resBrd);
 
@@ -1065,7 +1104,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strBrdExplain = resBrd.getBrdExplain();
 		String strResLocation = resBrd.getResLocation();
 		//String strOwnDeptID = resBrd.getOwnDeptID();
-		String strOwnerID = resBrd.getOwnerID();
+		String strOwnerID = resBrd.getOwnerID().split(",")[0];
 		//String strOwnerCall = resBrd.getOwnerCall();
 		//String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
 		String strApproveFlag = resBrd.getApproveFlag();
@@ -1073,6 +1112,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strBrdAccess = resBrd.getBrdAccess();
 		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
 		
+		String[] OwnerList = strOwnerID.split(",");
+		for(int i=1; i<OwnerList.length; i++) {
+			if(OwnerList[i].equals(userInfo.getId())) {
+				pAdminFg = "Y";
+			}
+		}
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/
@@ -1612,6 +1657,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleManageForm.do")
 	public String scheduleManageForm(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String resID = "";
 		String brdName = "";
 		
@@ -2139,7 +2186,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		logger.debug("ownerID=" + ownerID + ",title=" + title + ",startDateTime=" + startDateTime + ",endDateTime=" + endDateTime);
 		
-		ResAdminVO resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId());
+		// 2018-10-26 김민성 - 자원관리 예약시 관리자들에게 메일 발송 처리
+		ResBrdVO resbrd = ezResourceService.getBrd(Integer.parseInt(ownerID), userInfo.getCompanyID(), userInfo.getTenantId());
+		String[] ownerList = resbrd.getOwnerID().split(",");
+		
+		List<ResAdminVO> resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId(), ownerList);
         
         StringBuilder bodyContent = new StringBuilder();
 
@@ -2151,31 +2202,31 @@ public class EzResourceController extends EgovFileMngUtil {
         	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
         }
         
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.getBrdNm()); 
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.get(0).getBrdNm()); 
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
         bodyContent.append("</DIV>");
         
-        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + resInfo.getBrdNm() + "] " + title;
+        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + resInfo.get(0).getBrdNm() + "] " + title;
         
         
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
     	from.setAddress(userInfo.getEmail());
     	
-    	String emailAddress = resInfo.getMailAddress();
-    	String accessName = resInfo.getOwnerNm();
-    	
-    	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("(")[0];
+    	for(int i=0; i<resInfo.size(); i++) {
+	    	String emailAddress = resInfo.get(i).getMailAddress();
+	    	String accessName = resInfo.get(i).getOwnerNm();
+	    	
+	    	if (accessName.indexOf("(") > -1) {
+	    		accessName = accessName.split("(")[0];
+	    	}
+	    	
+	    	InternetAddress to = new InternetAddress();
+	    	to.setPersonal(accessName, "UTF-8");
+	    	to.setAddress(emailAddress);
+	        	
+	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
     	}
-    	
-    	InternetAddress to = new InternetAddress();
-    	to.setPersonal(accessName, "UTF-8");
-    	to.setAddress(emailAddress);
-        	
-        
-        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
-        
         logger.debug("sendMail ended");
         
         return "OK";
@@ -2219,9 +2270,9 @@ public class EzResourceController extends EgovFileMngUtil {
         
         String subject = "";
         if (approve.equals("1")) {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         } else {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         }
         
     	InternetAddress from = new InternetAddress();
