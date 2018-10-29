@@ -22,7 +22,7 @@
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding: 0.4em;clear:both;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
-	.col {padding: 16px;}
+	.col {padding: 16px 16px 5px 16px;}
 	.updatePortlet {float : right;margin : 0px; padding : 0px;}
 	.boardSetting {margin:0px;padding:0px;text-align:left;}
 	.portletInfo {display:inline-block;marging-top:8px;}

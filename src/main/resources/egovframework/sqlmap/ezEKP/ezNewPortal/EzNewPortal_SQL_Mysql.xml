@@ -782,22 +782,18 @@ AND
 ]]>
 </select>
 
-<update id="ezNewPortal.updatePortletOrderUser" parameterClass="map">
+<delete id="ezNewPortal.deletePortletOrderUser" parameterClass="map">
 <![CDATA[
-UPDATE 
+DELETE FROM
 	TBL_PORTAL_PORTLET_USER
-SET
-	PORTLET_ORDER = #portletOrder#
 WHERE
-	PORTLET_ID = #portletId#
-AND
 	USER_ID = #userId#
 AND
 	COMPANY_ID = #companyId#
 AND
 	TENANT_ID = #tenantId#
 ]]>
-</update>
+</delete>
 
 <insert id="ezNewPortal.insertPortletOrderUser" parameterClass="Map">
 <![CDATA[

@@ -151,8 +151,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (UserPortalSettingVO) select("ezNewPortal.getCompPortalSetting", map);
 	}
 	
-	public void updatePortletOrderUser(Map<String, Object> map) {
-		update("ezNewPortal.updatePortletOrderUser", map);
+	public void deletePortletOrderUser(Map<String, Object> map) {
+		delete("ezNewPortal.deletePortletOrderUser", map);
 	}
 
 	public void insertPortletOrderUser(Map<String, Object> map) {

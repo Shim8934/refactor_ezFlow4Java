@@ -386,11 +386,15 @@ LOGGER.debug("!!!!!!!!!pageCnt :" + Math.ceil(pageCnt));
 				ezNewPortalDAO.insertPortletOrderUser(map);
 			}
 			
-		} else {//있으면 update
+		} else {//있으면 delete 후 insert
+			LOGGER.debug("DAO deletePortletOrderUser started.");
+			ezNewPortalDAO.deletePortletOrderUser(map);
+			
+			LOGGER.debug("DAO insertPortletOrderUser started.");
 			for (int i = 0; i < portletOrderCount; i++) {
 				map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
 				map.put("portletId", portletOrder.get(i).get("portletId"));
-				ezNewPortalDAO.updatePortletOrderUser(map);
+				ezNewPortalDAO.insertPortletOrderUser(map);
 			}
 		}
 		
