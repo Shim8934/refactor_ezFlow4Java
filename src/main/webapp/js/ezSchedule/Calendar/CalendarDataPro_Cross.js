@@ -106,7 +106,7 @@ function getCalMonthViewSource_after(text) {
             var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
-            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10) && _Dtend.substring(10) != " 00:00:00.0") { 
 
                 var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
                 var day = 1000 * 60 * 60 * 24;
@@ -646,14 +646,20 @@ function CalMonthDataBind(oAppointment) {
         }
 
         oTd.appendChild(oSpan);
-
+        
+        var getThisDate = oAppointment.o_start.getFullYear() +"-"+ leadingZeros((oAppointment.o_start.getMonth() + 1), 2) +"-"+ leadingZeros((oAppointment.o_start.getDate()), 2)
+        var getOrgStartDate = oAppointment.OrgStartDate.substring(0,10);
+        var getOrgEndDate = oAppointment.OrgEndDate.substring(0,10);
+        
         var pTime = "";
         var pSubject;
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
+        	pTime = strLang39;
+            pSubject = oAppointment.Subject;
+        } else if (oAppointment.DateType != 2) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
             pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
-        }
-        else {
+        } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
         }
@@ -772,15 +778,23 @@ function CalWeekDataBind(oAppointment, order) {
             oSpan.className = "icon_h";
             oTd.appendChild(oSpan);
         }
+        
+        var getThisDate = oAppointment.o_start.getFullYear() +"-"+ leadingZeros((oAppointment.o_start.getMonth() + 1), 2) +"-"+ leadingZeros((oAppointment.o_start.getDate()), 2)
+        var getOrgStartDate = oAppointment.OrgStartDate.substring(0,10);
+        var getOrgEndDate = oAppointment.OrgEndDate.substring(0,10);
+        
 
         var pTime = "";
         var pSubject;
 
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
+        	pTime = "";
             pSubject = oAppointment.Subject;
-        }
-        else {
+        } else if (oAppointment.DateType != 2) {
+	    	//pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        	pTime = oAppointment.dtstartDisplay
+	        pSubject = oAppointment.Subject;
+        } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
         }
@@ -1023,16 +1037,22 @@ function CalDayDataBind(oAppointment, order) {
             oSpan.className = "icon_h";
             oTd.appendChild(oSpan);
         }
-
-
+        
+        var getThisDate = oAppointment.o_start.getFullYear() +"-"+ leadingZeros((oAppointment.o_start.getMonth() + 1), 2) +"-"+ leadingZeros((oAppointment.o_start.getDate()), 2)
+        var getOrgStartDate = oAppointment.OrgStartDate.substring(0,10);
+        var getOrgEndDate = oAppointment.OrgEndDate.substring(0,10);
+        
         var pTime = "";
         var pSubject;
 
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
+        	pTime = "";
             pSubject = oAppointment.Subject;
-        }
-        else {
+        } else if (oAppointment.DateType != 2) {
+	    	//pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        	pTime = oAppointment.dtstartDisplay
+	        pSubject = oAppointment.Subject;
+        } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
         }
