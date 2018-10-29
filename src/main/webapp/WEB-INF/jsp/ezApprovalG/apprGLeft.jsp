@@ -662,14 +662,6 @@
 		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		            }
 		            
-		            // 공유결재문서
-		            if (pListTypeValue != "11") {
-		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
-		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
-		            	else
-		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
-		            }
-		            
 		            try {
 		                // 공람할문서
 		                if (pListTypeValue != "99") {
@@ -699,6 +691,14 @@
 	                	}
 		            } catch (e) { }
 		            
+		            // 공유결재문서
+		            if (pListTypeValue != "11") {
+		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
+		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
+		            	else
+		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
+		            }
+		         
 		        } catch (e) { }
 		    }
 		
