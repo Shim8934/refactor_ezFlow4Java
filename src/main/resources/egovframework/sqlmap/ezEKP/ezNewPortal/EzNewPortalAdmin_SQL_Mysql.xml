@@ -289,7 +289,7 @@
 			UPDATE
 				TBL_PORTAL_MENU_COMP
 			SET
-				menu_order = #menuOrder#
+				menu_order = #companyOrder#
 			WHERE
 				tenant_id = #tenantId#
 			AND
