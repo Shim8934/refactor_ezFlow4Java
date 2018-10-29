@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -112,7 +113,7 @@ public class EzNewPortalAdminController {
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do")
-	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset) throws Exception {
+	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response) throws Exception {
 		LOGGER.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -123,6 +124,11 @@ public class EzNewPortalAdminController {
 			return "cmm/error/adminDenied";
 		} else {
 			LOGGER.debug("portalMenus ended.");
+
+			response.setHeader("Pragma", "no-cache"); //HTTP 1.0 
+			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
+			response.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
+			response.setDateHeader("Expires", 0L); // Do not cache in proxy server
 			
 			return "/admin/ezNewPortal/portalMenus";
 		}

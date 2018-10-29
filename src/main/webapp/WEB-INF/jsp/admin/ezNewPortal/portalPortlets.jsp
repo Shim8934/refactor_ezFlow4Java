@@ -17,12 +17,11 @@
 	<style type="text/css">
 	body {min-width: 520px;background-color:white;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet {width:30%;postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top;}
+  	.portlet {postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top;}
   	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding: 0.4em;clear:both;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
-  	.col-container {width: 100%;}
 	.col {padding: 16px;}
 	.updatePortlet {float : right;margin : 0px; padding : 0px;}
 	.boardSetting {margin:0px;padding:0px;text-align:left;}
@@ -31,6 +30,9 @@
 	.portletInfoTH, .portletInfoTD {padding-bottom : 6px;}
 	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
 	.boardNotUsed {height:2.6em;}
+	.portletInfo {width : 100%;}
+	.portletInfoTD {width:100%;}
+	.portletInfoTD input {width:100%;}
 	/* switch */
 	.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-top:-13px;}
 	.switch input {opacity: 0;width: 0;height: 0;}
@@ -42,6 +44,23 @@
 	/* Rounded sliders */
 	.slider.round {border-radius: 15px;}
 	.slider.round:before {border-radius: 50%;}
+	
+	/* portlet media query */
+	@media only screen and (min-width :1921px) {
+		.portlet{ width:483px;}
+	}
+
+	@media only screen and (max-width :1920px) and (min-width :1423px) {
+		.portlet{ width:32%;}
+	}
+
+	@media only screen and (max-width :1422px) and (min-width :1280px) {
+		.portlet{width:48%;}
+	}
+
+	@media only screen and (max-width : 1279px) {
+		.portlet {width:410px;}
+	}
 	</style>
 	<script type="text/javascript">	
 	
@@ -55,7 +74,6 @@
 	  //이벤트 세팅
 	  $("#portletAdd").on("click", portletAdd);
 	  $("#portletDel").on("click", portletDel);
-	  $("#portletOrderSave").on("click", portletOrderSave);
 	  $("#portletOrderReset").on("click", portletOrderReset);
 	  $("#PortletInfoUpdate").on("click", PortletInfoUpdate);
 	  
@@ -69,7 +87,7 @@
 			  
 	  }
 	 
-	  function portletOrderSave() {
+	  function updatePortletOrder() {
 		  
 	  }
 	 
@@ -211,7 +229,6 @@
 		<ul style="margin-top: 15px;">
 			<li id="portletAdd"><span>포틀릿 추가</span></li>
 			<li id="portletDel"><span>포틀릿 삭제</span></li>
-			<li id="portletOrderSave"><span>순서저장</span></li>
 			<li id="portletOrderReset"><span>포틀릿 순서 초기화</span></li>
 		</ul>
 	</div>
