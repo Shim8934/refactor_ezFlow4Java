@@ -58,9 +58,12 @@
 			var headerData = createXmlDom();
             headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 			
-            var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
-            var Node = headerData.importNode(xmlRtn, true);
-            headerData.documentElement.appendChild(Node);
+            var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+		    if (oRows.length > 0) {
+	            var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+	            var Node = headerData.importNode(xmlRtn, true);
+	            headerData.documentElement.appendChild(Node);
+		    }
             
             document.getElementById("JobListView").innerHTML = "";
             
